@@ -7,11 +7,14 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default async function OgImage() {
-  const logoData = await readFile(
-    join(process.cwd(), "public", "elpino-wordmark-white.png"),
-    "base64",
-  );
-  const logoSrc = `data:image/png;base64,${logoData}`;
+  // public/elpino-wordmark-white.png isn't committed to the repo yet — a
+  // missing file here used to fail the entire production build (prerendering
+  // this route throws ENOENT, which Next treats as fatal). Degrade to a
+  // text-only card instead so a missing brand asset never blocks a deploy;
+  // once the real wordmark exists, this falls back to using it automatically.
+  const logoSrc = await readFile(join(process.cwd(), "public", "elpino-wordmark-white.png"), "base64")
+    .then((data) => `data:image/png;base64,${data}`)
+    .catch(() => null);
 
   return new ImageResponse(
     (
@@ -30,8 +33,13 @@ export default async function OgImage() {
           fontFamily: "system-ui, sans-serif",
         }}
       >
-        { }
-        <img src={logoSrc} alt="" height={64} />
+        {logoSrc ? (
+          <img src={logoSrc} alt="" height={64} />
+        ) : (
+          <div style={{ fontSize: 28, fontWeight: 700, color: "#ffffff", letterSpacing: "-0.01em" }}>
+            elpino
+          </div>
+        )}
 
         {/* main content */}
         <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>

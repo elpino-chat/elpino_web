@@ -1356,7 +1356,9 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
           }
         }
 
-        if (onboarding.source) setSource(onboarding.source);
+        // onboarding.source is a "this step was already completed" marker,
+        // not a value the UI displays — the step-skip below is the only
+        // thing that depends on it, so there's nothing to restore into state.
         if (onboarding.hearAboutUs) setHearAboutUs(onboarding.hearAboutUs);
         if (onboarding.googleConnected) setConnectedProviders(new Set(["gmail", "calendar"]));
         if (onboarding.source) {
