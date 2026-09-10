@@ -1,9 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { Check, LoaderCircle, Mail, X } from "lucide-react";
+import { Check, LoaderCircle, Mail, Plus, X } from "lucide-react";
+import { openRazorpayCheckout } from "@/lib/razorpay-checkout";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+type SeatPurchaseResult = {
+  orderId?: string;
+  keyId?: string;
+  amountPaise?: number;
+  seatsGranted?: number;
+  seatsAllowed?: number;
+  billedOnNextInvoice?: boolean;
+  message?: string;
+  upgradeRequired?: boolean;
+};
 
 /**
  * The compose-and-send invite modal — shared by the dashboard header's
@@ -29,8 +41,11 @@ export function InvitePeopleDialog({
   const [chips, setChips] = useState<string[]>([]);
   const [invalidDraft, setInvalidDraft] = useState(false);
   const [sending, setSending] = useState(false);
-  const [result, setResult] = useState<{ invited: string[]; skipped: { email: string; reason: string }[] } | null>(null);
+  const [result, setResult] = useState<{ invited: string[]; skipped: { email: string; reason: string; seatLimitReached?: boolean }[] } | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [buyingSeat, setBuyingSeat] = useState(false);
+  const [seatError, setSeatError] = useState<string | null>(null);
+  const [seatMessage, setSeatMessage] = useState<string | null>(null);
 
   function addChipsFrom(raw: string) {
     const candidates = raw.split(/[\s,;]+/).map((value) => value.trim()).filter(Boolean);
@@ -80,6 +95,65 @@ export function InvitePeopleDialog({
     setInvalidDraft(false);
     setResult(null);
     setError(null);
+    setSeatError(null);
+    setSeatMessage(null);
+  }
+
+  /**
+   * The backend has fully supported this for a while — POST /api/billing/seats
+   * returns either a Razorpay order (Free plan: no invoice to attach an addon
+   * to, so the browser has to pay for it directly) or an immediate grant
+   * billed on the next invoice (any paid plan). Nothing in the UI ever called
+   * it, so a seat-limited invite just showed the "$1/month" message as
+   * inert text with no way to act on it.
+   */
+  async function buySeat() {
+    if (buyingSeat) return;
+    setBuyingSeat(true);
+    setSeatError(null);
+    setSeatMessage(null);
+    try {
+      const response = await fetch("/api/billing/seats", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ quantity: 1 }),
+      });
+      const data = (await response.json().catch(() => ({}))) as SeatPurchaseResult;
+      if (!response.ok) {
+        if (data.upgradeRequired) {
+          setSeatError(`${data.message ?? "This plan doesn't support extra seats."} Upgrade from Settings → Upgrade.`);
+        } else {
+          setSeatError(data.message ?? "Could not add a seat");
+        }
+        return;
+      }
+
+      if (data.orderId && data.keyId) {
+        await openRazorpayCheckout({
+          keyId: data.keyId,
+          orderId: data.orderId,
+          amountPaise: data.amountPaise,
+          description: "Extra seat — $1/month",
+        });
+      }
+
+      // Either the addon just landed on the next invoice, or Razorpay
+      // accepted payment — either way the actual entitlement change only
+      // lands once the webhook confirms it, same caveat as plan checkout.
+      // Refill the chips that failed with a seat limit so "Send invites" is
+      // one click away instead of retyping every address.
+      const stillPending = (result?.skipped ?? []).filter((item) => item.seatLimitReached).map((item) => item.email);
+      if (stillPending.length) setChips((current) => [...new Set([...current, ...stillPending])]);
+      setSeatMessage(
+        data.billedOnNextInvoice
+          ? "Seat added — billed on your next invoice. Click Send invites to try again."
+          : "Payment received — the seat will be ready in a moment. Click Send invites to try again.",
+      );
+    } catch (checkoutIssue) {
+      setSeatError(checkoutIssue instanceof Error ? checkoutIssue.message : "Could not add a seat");
+    } finally {
+      setBuyingSeat(false);
+    }
   }
 
   async function sendInvites() {
@@ -170,6 +244,21 @@ export function InvitePeopleDialog({
                 {result.skipped.map((item) => (
                   <p key={item.email} className="text-[#858585]">{item.email} — {item.reason}</p>
                 ))}
+                {result.skipped.some((item) => item.seatLimitReached) && (
+                  <div className="pt-1">
+                    <button
+                      type="button"
+                      disabled={buyingSeat}
+                      onClick={() => void buySeat()}
+                      className="flex h-8 items-center gap-1.5 rounded-lg bg-[#17181a] px-3 text-[11.5px] font-semibold text-white transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      {buyingSeat ? <LoaderCircle size={12} className="animate-spin" /> : <Plus size={12} />}
+                      {buyingSeat ? "Adding seat…" : "Add seat — $1/month"}
+                    </button>
+                    {seatMessage && <p className="mt-2 flex items-center gap-1.5 text-[#1e8a54]"><Check size={12} /> {seatMessage}</p>}
+                    {seatError && <p className="mt-2 text-[#c0323e]">{seatError}</p>}
+                  </div>
+                )}
               </div>
             )}
           </div>
