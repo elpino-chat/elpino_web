@@ -138,6 +138,32 @@ export function GET(request: Request) {
     function mount(config) {
       var open = false;
       var iframe = null;
+      // Per-tab, not per-visitor: sessionStorage means a chat left open
+      // follows the visitor across page navigations on this tab, but a new
+      // tab starts closed. The conversation itself is restored separately
+      // and server-side (visitorToken -> /api/widget/start), so this only
+      // remembers whether the panel was showing, not what was said.
+      var OPEN_KEY = 'elpino_open_' + key;
+      // Tracks whether we own the top history entry, so closing the panel
+      // can clean it up and back-navigation can be told apart from a
+      // visitor clicking the close button.
+      var pushedHistory = false;
+      var ignoreNextPop = false;
+
+      function rememberOpen(isOpen) {
+        try {
+          if (isOpen) sessionStorage.setItem(OPEN_KEY, '1');
+          else sessionStorage.removeItem(OPEN_KEY);
+        } catch (error) {
+          // Storage blocked (private mode, partitioned third-party context).
+          // The panel just won't follow across pages — never a hard failure.
+        }
+      }
+
+      function wasOpen() {
+        try { return sessionStorage.getItem(OPEN_KEY) === '1'; }
+        catch (error) { return false; }
+      }
       var greetingLines = Array.isArray(config.greetingLines) && config.greetingLines.length > 0
         ? config.greetingLines
         : ['Hi there \\u{1F44B}', 'How can I help you today?'];
@@ -159,7 +185,13 @@ export function GET(request: Request) {
       badge.textContent = '1';
       document.body.appendChild(badge);
 
-      setTimeout(showGreeting, 2500);
+      if (wasOpen()) {
+        // Carried over from the previous page — drop straight back into the
+        // conversation. No greeting bubble: they're already talking to us.
+        setOpen(true, false);
+      } else {
+        setTimeout(showGreeting, 2500);
+      }
 
       function showGreeting() {
         if (open || greeting) return;
@@ -188,11 +220,32 @@ export function GET(request: Request) {
       }
 
       window.addEventListener('message', function (event) {
-        if (event.data && event.data.type === 'elpino:close' && open) toggle(false);
+        if (event.data && event.data.type === 'elpino:close' && open) setOpen(false);
+      });
+
+      // Opening the panel pushes a history entry, so the browser's back
+      // button closes the chat instead of navigating the visitor off the
+      // page mid-conversation. A second back then leaves as normal. This is
+      // what other widgets do that feels like a "do you really want to
+      // leave?" step — it isn't beforeunload, which browsers no longer let
+      // anyone customise anyway.
+      window.addEventListener('popstate', function () {
+        if (ignoreNextPop) { ignoreNextPop = false; return; }
+        if (!open) return;
+        // Our own entry just got popped — the panel goes away, the page
+        // stays put. pushedHistory is cleared first so closing doesn't try
+        // to pop a second time.
+        pushedHistory = false;
+        setOpen(false);
       });
 
       function toggle(startNew) {
-        open = !open;
+        setOpen(!open, startNew);
+      }
+
+      function setOpen(next, startNew) {
+        if (next === open) return;
+        open = next;
         button.innerHTML = open ? closeIcon(22) : launcherIcon();
         if (open) {
           dismissGreeting();
@@ -206,8 +259,26 @@ export function GET(request: Request) {
             document.body.appendChild(iframe);
           }
           iframe.style.display = 'block';
-        } else if (iframe) {
-          iframe.style.display = 'none';
+          rememberOpen(true);
+          if (!pushedHistory) {
+            try {
+              history.pushState({ elpinoWidget: true }, '');
+              pushedHistory = true;
+            } catch (error) {
+              // Some embedded/sandboxed contexts refuse pushState. Back
+              // then behaves normally; everything else still works.
+            }
+          }
+        } else {
+          if (iframe) iframe.style.display = 'none';
+          rememberOpen(false);
+          if (pushedHistory) {
+            // Closed by the button rather than by back — pop our own entry
+            // so we don't leave junk in the visitor's history.
+            pushedHistory = false;
+            ignoreNextPop = true;
+            try { history.back(); } catch (error) { ignoreNextPop = false; }
+          }
         }
       }
 
