@@ -3,6 +3,8 @@ node_modules/
 out/
 dist/
 .env*
+# ...but the template that documents which variables exist is tracked.
+!.env.example
 .vercel
 *.tsbuildinfo
 next-env.d.ts
