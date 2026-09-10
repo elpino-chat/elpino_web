@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { HomeHero } from "./components/home/HomeHero";
 import { FeatureCarousel } from "./components/home/FeatureCarousel";
 import { CanvasCodeSection } from "./components/home/CanvasCodeSection";
@@ -69,6 +70,17 @@ export default function Home() {
       <HomeHero />
       <CanvasCodeSection />
       <FeatureCarousel />
+      {/* Dogfooding: this is a real site tag (Settings → Tag Manager),
+          registered for this exact Cloud Run hostname — see
+          docker-compose/SETUP notes if this ever moves to a custom domain,
+          the tag would need re-registering under the new host. next/script
+          with afterInteractive matches the async loading this codebase
+          already uses for third-party scripts (see Analytics.tsx). */}
+      <Script
+        src="https://cdn.elpino.chat/tag.js"
+        data-site-key="rz_site_8e7db3a271be79a174f95d6bc4b976"
+        strategy="afterInteractive"
+      />
     </>
   );
 }
