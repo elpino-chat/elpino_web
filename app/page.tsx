@@ -78,7 +78,7 @@ export default function Home() {
           already uses for third-party scripts (see Analytics.tsx). */}
       <Script
         src="https://cdn.elpino.chat/tag.js"
-        data-site-key="rz_site_8e7db3a271be79a174f95d6bc4b976"
+        data-site-key="rz_site_99a824d0c83be6c08a18938183196f"
         strategy="afterInteractive"
       />
     </>
