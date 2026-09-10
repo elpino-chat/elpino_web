@@ -11,8 +11,30 @@ function gatewayWsOrigin() {
   return httpUrl.replace(/^http/, "ws");
 }
 
+// request.url reflects the app's own bind address (e.g. localhost:3000)
+// unless the platform's forwarded headers are trusted explicitly — Cloud
+// Run, like most platforms behind a reverse proxy, doesn't rewrite it for
+// you. Every customer's widget embeds whatever this resolves to, so
+// trusting request.url directly here silently ships a dead ORIGIN to every
+// site running the tag. Same fix as app/api/auth/_lib/redirect-url.ts uses
+// for OAuth redirects.
+function externalOrigin(request: Request): string {
+  const internal = new URL(request.url);
+  const forwardedHost = request.headers.get("x-forwarded-host")?.split(",")[0]?.trim();
+  const host = forwardedHost || request.headers.get("host")?.trim();
+  if (!host) return internal.origin;
+
+  const forwardedProto = request.headers.get("x-forwarded-proto")?.split(",")[0]?.trim();
+  const protocol = forwardedProto === "http" ? "http:" : "https:";
+  try {
+    return new URL(`${protocol}//${host}`).origin;
+  } catch {
+    return internal.origin;
+  }
+}
+
 export function GET(request: Request) {
-  const origin = new URL(request.url).origin;
+  const origin = externalOrigin(request);
   const script = `(() => {
     var ORIGIN = ${JSON.stringify(origin)};
     var WS_ORIGIN = ${JSON.stringify(gatewayWsOrigin())};
