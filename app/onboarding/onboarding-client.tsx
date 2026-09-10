@@ -1296,6 +1296,7 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
   const [hearAboutUsLoading, setHearAboutUsLoading] = useState(false);
   const [hearAboutUsError, setHearAboutUsError] = useState<string | null>(null);
   const [widgetKey, setWidgetKey] = useState<string | null>(null);
+  const [widgetKeyError, setWidgetKeyError] = useState<string | null>(null);
   const [snippetCopied, setSnippetCopied] = useState(false);
   const [activeConnector, setActiveConnector] = useState<ConnectorItem | null>(null);
   const [setupError, setSetupError] = useState<string | null>(null);
@@ -1498,16 +1499,48 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
     );
   }
 
-  // Fetch (or generate) the account's persistent widget API key on step 4.
+  // Reuse (or create) a real site tag for the domain entered in step 1, on
+  // step 4 — this used to call a separate /api/onboarding/widget-key that
+  // minted a key on the User row in auth-service, entirely disconnected
+  // from the sites table Settings → Tag Manager actually reads. That key
+  // never appeared there, and its snippet pointed at a script/attribute
+  // pair (widget.js, data-api-key) that was never real either. Using the
+  // same /api/workspace/sites endpoint Tag Manager itself uses means this
+  // is the same row, visible in the same place, with a working snippet.
   useEffect(() => {
-    if (step !== 4 || widgetKey) return;
-    fetch("/api/onboarding/widget-key", { method: "POST" })
-      .then((r) => r.json())
-      .then((data: { widgetApiKey?: string }) => {
-        if (data.widgetApiKey) setWidgetKey(data.widgetApiKey);
-      })
-      .catch(() => null);
-  }, [step, widgetKey]);
+    if (step !== 4 || widgetKey || widgetKeyError) return;
+    const hostname = (() => {
+      try { return new URL(normalizeWebsiteUrl(websiteUrl) ?? websiteUrl).hostname.toLowerCase().replace(/^www\./, ""); }
+      catch { return null; }
+    })();
+
+    async function ensureSite() {
+      const existing = await fetch("/api/workspace/sites")
+        .then((r) => (r.ok ? r.json() : null))
+        .then((data: { sites?: { publicKey: string; domain: string }[] } | null) => data?.sites ?? [])
+        .catch(() => []);
+      const match = hostname ? existing.find((site) => site.domain === hostname) : undefined;
+      if (match) return match.publicKey;
+      if (existing.length > 0) return existing[0].publicKey; // resuming onboarding after a site was already made
+
+      const created = await fetch("/api/workspace/sites", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          name: profileName.trim() || hostname || "My website",
+          domain: normalizeWebsiteUrl(websiteUrl) ?? websiteUrl,
+          allowLocalhost: false,
+          permissions: { support: true, visitors: true, analytics: true },
+        }),
+      }).then((r) => r.json().catch(() => ({}))) as { site?: { publicKey: string }; message?: string };
+      if (!created.site) throw new Error(created.message ?? "Could not create a site tag");
+      return created.site.publicKey;
+    }
+
+    ensureSite()
+      .then((publicKey) => setWidgetKey(publicKey))
+      .catch((err: unknown) => setWidgetKeyError(err instanceof Error ? err.message : "Could not create a site tag"));
+  }, [step, widgetKey, widgetKeyError, websiteUrl, profileName]);
 
   async function unlinkConnector(provider: string) {
     await fetch(`/api/connectors/${provider}`, { method: "DELETE" });
@@ -1916,9 +1949,9 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
                       {"\n  "}
                       <span className="text-[#94e2d5]">src</span>
                       <span className="text-[#6b7280]">=</span>
-                      <span className="text-[#a6e3a1]">&quot;https://cdn.elpino.chat/widget.js&quot;</span>
+                      <span className="text-[#a6e3a1]">&quot;https://cdn.elpino.chat/tag.js&quot;</span>
                       {"\n  "}
-                      <span className="text-[#94e2d5]">data-api-key</span>
+                      <span className="text-[#94e2d5]">data-site-key</span>
                       <span className="text-[#6b7280]">=</span>
                       <span className="text-[#a6e3a1]">&quot;{widgetKey ?? "generating…"}&quot;</span>
                       {"\n  "}
@@ -1936,7 +1969,7 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
                       if (!widgetKey) return;
                       void navigator.clipboard
                         .writeText(
-                          `<script\n  src="https://cdn.elpino.chat/widget.js"\n  data-api-key="${widgetKey}"\n  async\n></script>`,
+                          `<script\n  src="https://cdn.elpino.chat/tag.js"\n  data-site-key="${widgetKey}"\n  async\n></script>`,
                         )
                         .then(() => {
                           setSnippetCopied(true);
@@ -1950,8 +1983,14 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
                   </button>
                 </div>
                 <p className="mt-2 text-xs text-white/40">
-                  This is your live onboarding widget key — the embeddable widget script is coming soon.
+                  Paste this before the closing <code className="text-white/60">&lt;/body&gt;</code> tag on {(() => { try { return new URL(normalizeWebsiteUrl(websiteUrl) ?? websiteUrl).hostname; } catch { return "your site"; } })()}. Manage or add more sites later from Settings → Tag Manager.
                 </p>
+                {widgetKeyError && (
+                  <p className="mt-2 flex items-center gap-2 text-xs text-[#f38ba8]">
+                    {widgetKeyError}
+                    <button type="button" onClick={() => setWidgetKeyError(null)} className="underline hover:text-white">Retry</button>
+                  </p>
+                )}
               </div>
             </div>
 
