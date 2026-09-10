@@ -2918,7 +2918,15 @@ function TagManagerSettingsPage() {
     const response = await fetch(`/api/workspace/sites/${encodeURIComponent(tag.id)}`, { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify({ allowLocalhost: tag.allowLocalhost, permissions: tag.permissions }) });
     if (!response.ok && previous) { setSelectedTag(previous); setTags((current) => current.map((item) => item.id === previous.id ? previous : item)); setTagError("Could not save tag permissions."); }
   }
-  const tagHost = typeof window === "undefined" ? "" : window.location.origin;
+  // tag.js is served from the CDN rather than wherever this dashboard
+  // happens to be deployed (window.location.origin) — the CDN proxies it
+  // through to the app, so the script content is identical either way, but
+  // customers get a stable embed URL that survives the dashboard moving
+  // hosts (a redeploy, a new Cloud Run revision, a future custom domain).
+  // Local dev keeps the old behavior: cdn.elpino.chat proxies to the
+  // production app, not to whatever's running on localhost.
+  const isLocalDev = typeof window !== "undefined" && /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname);
+  const tagHost = isLocalDev ? window.location.origin : "https://cdn.elpino.chat";
   const snippet = selectedTag ? `<script async src="${tagHost}/tag.js" data-site-key="${selectedTag.publicKey}"></script>` : "";
 
   return (
