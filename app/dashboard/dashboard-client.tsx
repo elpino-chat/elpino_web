@@ -1118,11 +1118,62 @@ function DashboardContent({ name }: { name: string }) {
           <DetailSection title="AI report">
             <div className="rounded-lg bg-[var(--chat-customer-bg)] p-3 leading-5">
               <div className="mb-1 flex items-center gap-2 font-semibold"><Sparkles size={15} /> Conversation summary</div>
-              Summaries appear here once the AI has reviewed this conversation.
+              {/* This used to be a hardcoded "summaries appear here once the
+                  AI has reviewed this conversation" — which never happened,
+                  because nothing was bound to it. summarizeConversation()
+                  already existed and worked; the section just wasn't wired
+                  to it. Prefers the escalation summary the AI wrote when it
+                  handed the thread over, since that one exists without
+                  anyone having to ask for it. */}
+              {summary ?? conversation?.escalationSummary ? (
+                <p className="whitespace-pre-wrap">{summary ?? conversation?.escalationSummary}</p>
+              ) : (
+                <>
+                  <p className="text-[var(--chat-muted)]">No summary yet.</p>
+                  <button
+                    type="button"
+                    disabled={summarizing || messages.length === 0}
+                    onClick={() => void summarizeConversation()}
+                    className="mt-2 flex items-center gap-2 rounded-full border border-[var(--chat-divider)] px-3 py-1.5 text-xs font-medium hover:bg-[var(--chat-bg)] disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {summarizing ? <LoaderCircle size={13} className="animate-spin" /> : <Sparkles size={13} />}
+                    {summarizing ? "Summarizing…" : "Summarize with AI"}
+                  </button>
+                  {summaryError && <p className="mt-1.5 text-[11px] text-[#c0554f]">{summaryError}</p>}
+                </>
+              )}
             </div>
           </DetailSection>
-          <DetailSection title="Quick jump" collapsed />
-          <DetailSection title="Shared files" collapsed />
+          <DetailSection title="Shared files" collapsed>
+            {/* Was an empty shell. Every attachment already travels on the
+                messages this component has loaded, so this needs no fetch —
+                it just never read them. */}
+            {(() => {
+              const attachments = messages.filter((message) => message.attachmentUrl);
+              if (!attachments.length) return <p className="text-[var(--chat-muted)]">Nothing shared in this conversation yet.</p>;
+              return (
+                <div className="space-y-2">
+                  {attachments.map((message) => (
+                    <a
+                      key={message.id}
+                      href={message.attachmentUrl ?? "#"}
+                      download={message.attachmentName ?? "file"}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center gap-2.5 rounded-lg border border-[var(--chat-divider)] px-3 py-2 hover:bg-[var(--chat-customer-bg)]"
+                    >
+                      {message.attachmentType === "image" || message.attachmentType === "gif" ? (
+                        <img src={message.attachmentUrl ?? ""} alt="" className="h-8 w-8 shrink-0 rounded object-cover" />
+                      ) : (
+                        <Paperclip size={14} className="shrink-0 text-[var(--chat-muted)]" />
+                      )}
+                      <span className="min-w-0 flex-1 truncate text-[12.5px]">{message.attachmentName ?? "Attachment"}</span>
+                    </a>
+                  ))}
+                </div>
+              );
+            })()}
+          </DetailSection>
           <DetailSection title="Other conversations" collapsed />
         </div>
       </aside>
