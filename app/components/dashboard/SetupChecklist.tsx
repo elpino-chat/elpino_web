@@ -96,7 +96,11 @@ export default function SetupChecklist() {
   if (!loaded || complete) return null;
 
   return (
-    <div className="dashboard-setup-badge fixed bottom-4 right-4 z-40 flex flex-col items-end gap-2">
+    // Bottom-left, not bottom-right: several dashboard pages (Chatbot
+    // Interface settings, the live widget preview panel) dock their own
+    // content flush against the bottom-right corner, and this fixed badge
+    // sat on top of it. Nothing else currently claims bottom-left.
+    <div className="dashboard-setup-badge fixed bottom-4 left-4 z-40 flex flex-col items-start gap-2">
       {/* A 6px black frame via padding on the outer box below, rather than a
           multi-layer background-clip trick — that technique (fill on
           padding-box, border color on border-box, both from one

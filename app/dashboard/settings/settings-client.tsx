@@ -86,7 +86,6 @@ import {
   UserCheck,
   X,
   UsersRound,
-  WandSparkles,
 } from "lucide-react";
 
 type SettingsUser = { email: string; name?: string };
@@ -128,7 +127,6 @@ const workspaceItems = [
 ];
 
 const featureItems = [
-  { label: "Custom Field Manager", slug: "custom-fields", icon: WandSparkles },
   { label: "Tag Manager", slug: "tags", icon: Tag },
   { label: "Translations", slug: "translations", icon: Languages },
 ];
@@ -140,7 +138,6 @@ const pageDetails: Record<string, { description: string; action?: string; sectio
   "Security & Permissions": { description: "Control access, authentication, and workspace permissions.", sections: [{ title: "Authentication", description: "Require secure sign-in methods for workspace members.", value: "Standard" }, { title: "Default member role", description: "Access granted to newly invited teammates.", value: "Member" }, { title: "Two-factor authentication", description: "Add an extra layer of security to team accounts.", value: "Optional" }] },
   "Audit Logs": { description: "Review important workspace activity and security events.", action: "Export logs", sections: [{ title: "Recent activity", description: "Profile and workspace events from the last 30 days.", value: "Up to date" }, { title: "Data retention", description: "Audit events are retained according to your plan.", value: "30 days" }] },
   Trash: { description: "Review and restore recently deleted workspace content.", sections: [{ title: "Trash is empty", description: "Deleted conversations, templates, and automations will appear here.", value: "0 items" }] },
-  "Custom Field Manager": { description: "Create structured fields for customer and conversation data.", action: "Create field", sections: [{ title: "Customer fields", description: "Store details such as plan, region, or account owner.", value: "0 fields" }, { title: "Conversation fields", description: "Capture structured context for every request.", value: "0 fields" }] },
   "Tag Manager": { description: "Create and organize labels used throughout your workspace.", action: "Create tag", sections: [{ title: "Workspace tags", description: "Group, filter, and route conversations with shared labels.", value: "0 tags" }] },
   Translations: { description: "Configure language and translation preferences.", sections: [{ title: "Workspace language", description: "The default language used across this workspace.", value: "English" }, { title: "Automatic translation", description: "Translate supported customer conversations when needed.", value: "Off" }] },
 };
@@ -1508,8 +1505,21 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
 
   return (
     <div className="mx-auto w-full max-w-[1440px] px-7 pb-20 pt-8 text-[#17181a] sm:px-9 lg:px-10">
-      <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">AI teammate</p>
-      <h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em]">Chatbot Interface</h2>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">AI teammate</p>
+          <h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em]">Chatbot Interface</h2>
+        </div>
+        {/* Every field here autosaves 700ms after the last edit (see the
+            debounced effect above) — there's no Save button, so without this
+            a successful save was completely silent and looked identical to a
+            failed one. */}
+        {(saving || saved) && (
+          <span className={`mt-2 flex shrink-0 items-center gap-1.5 text-[12px] font-medium ${saved ? "text-[#2e8a5c]" : "text-[#667069]"}`}>
+            {saving ? <><LoaderCircle size={13} className="animate-spin" /> Saving…</> : <><Check size={14} /> Changes saved</>}
+          </span>
+        )}
+      </div>
       <p className="mt-2 max-w-xl text-[14px] leading-6 text-[#667069]">
         Give your AI teammate its own identity and behavior for {workspaceName || "this workspace"}. This is who customers meet in every conversation, on every connected site.
       </p>

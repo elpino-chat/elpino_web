@@ -2323,7 +2323,13 @@ body:has([data-dashboard-theme="dark"]) .dashboard-assignment-toast-close:hover 
   color: rgba(255, 255, 255, 0.86) !important;
 }
 
-[data-dashboard-theme="dark"] .dashboard-shell .dashboard-invite-panel,
+/* Invite-people dialog (InvitePeopleDialog.tsx): authored light by default
+   like every other themed surface — .dashboard-invite-surface is the actual
+   dialog card and is the one that matters; .dashboard-invite-panel is just
+   its gradient-border wrapper. Previously the dialog surface had no class
+   hook at all and was hardcoded dark unconditionally, so it never actually
+   responded to the dashboard theme. */
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-invite-surface,
 [data-dashboard-theme="dark"] .dashboard-shell .dashboard-invite-header,
 [data-dashboard-theme="dark"] .dashboard-shell .dashboard-invite-footer {
   background-color: #17191c !important;
@@ -2335,17 +2341,15 @@ body:has([data-dashboard-theme="dark"]) .dashboard-assignment-toast-close:hover 
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.46) !important;
 }
 
-[data-dashboard-theme="dark"] .dashboard-shell .dashboard-invite-icon {
-  background-color: rgba(255, 255, 255, 0.08) !important;
-  border-color: rgba(255, 255, 255, 0.14) !important;
-  color: #78adf0 !important;
-}
-
 [data-dashboard-theme="dark"] .dashboard-shell .dashboard-invite-label {
   color: rgba(255, 255, 255, 0.9) !important;
 }
 
-[data-dashboard-theme="dark"] .dashboard-shell .dashboard-invite-header button:hover {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-invite-close {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-invite-close:hover {
   background-color: rgba(255, 255, 255, 0.08) !important;
   color: rgba(255, 255, 255, 0.92) !important;
 }
@@ -2356,24 +2360,19 @@ body:has([data-dashboard-theme="dark"]) .dashboard-assignment-toast-close:hover 
   border-color: rgba(255, 255, 255, 0.18) !important;
 }
 
-[data-dashboard-theme="dark"] .dashboard-shell .dashboard-invite-input-shell input {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-invite-input {
   background-color: transparent !important;
   color: rgba(255, 255, 255, 0.92) !important;
 }
 
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-invite-input::placeholder {
+  color: rgba(255, 255, 255, 0.35) !important;
+}
+
 [data-dashboard-theme="dark"] .dashboard-shell .dashboard-invite-chip {
   background-color: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
   color: rgba(255, 255, 255, 0.9) !important;
-}
-
-[data-dashboard-theme="dark"] .dashboard-shell .dashboard-invite-cancel {
-  background-color: transparent !important;
-  border-color: rgba(255, 255, 255, 0.2) !important;
-  color: rgba(255, 255, 255, 0.9) !important;
-}
-
-[data-dashboard-theme="dark"] .dashboard-shell .dashboard-invite-cancel:hover {
-  background-color: rgba(255, 255, 255, 0.08) !important;
 }
 
 /* Upgrade page: explicit two-theme surfaces prevent the legacy dashboard

@@ -14,7 +14,6 @@ const SETTINGS_SECTIONS: Record<string, string> = {
   "audit-logs": "Audit Logs",
   "presence-log": "Presence Log",
   trash: "Trash",
-  "custom-fields": "Custom Field Manager",
   tags: "Tag Manager",
   translations: "Translations",
 };
