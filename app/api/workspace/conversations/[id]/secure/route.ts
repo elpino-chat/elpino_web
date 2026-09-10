@@ -1,6 +1,7 @@
 import { callGateway } from "@/app/api/auth/_lib/gateway";
 import { selectedWorkspace } from "@/app/api/_lib/workspace";
 import { requireSession } from "@/app/api/onboarding/_lib/require-user";
+import { getAuthRedirectBaseUrl } from "@/app/api/auth/_lib/redirect-url";
 
 type SecureRequest = {
   id: string;
@@ -46,9 +47,14 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     conversationId: id,
     label: body.label.trim(),
     userId: session.userId,
-    // The customer's link has to point at this app's own public origin,
-    // which only this app reliably knows.
-    origin: new URL(request.url).origin,
+    // The customer's link has to point at this app's own PUBLIC origin.
+    // new URL(request.url).origin gave the container's internal bind
+    // address on Cloud Run (literally "localhost:3000"), so every secure
+    // link ever sent to a customer was a dead URL on their machine. Same
+    // failure as tag.js had — the helper reads x-forwarded-host/proto and
+    // falls back to the configured site URL, which is the only thing that
+    // survives a platform that terminates TLS in front of the app.
+    origin: getAuthRedirectBaseUrl(request),
   }).catch(() => null);
 
   if (!result || result.error) {

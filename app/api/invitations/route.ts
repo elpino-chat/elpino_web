@@ -1,5 +1,6 @@
 import { callGateway } from "@/app/api/auth/_lib/gateway";
 import { requireSession } from "@/app/api/onboarding/_lib/require-user";
+import { getAuthRedirectBaseUrl } from "@/app/api/auth/_lib/redirect-url";
 
 type Organization = { id: string; name: string };
 
@@ -32,7 +33,10 @@ export async function POST(request: Request) {
   const emails = (body.emails ?? []).map((email) => email.trim()).filter(Boolean);
   if (!emails.length) return Response.json({ message: "Add at least one email." }, { status: 400 });
 
-  const origin = new URL(request.url).origin;
+  // Public origin, not request.url's — on Cloud Run that resolves to the
+  // container's internal bind address, which put "localhost:3000" into the
+  // invite link inside every invitation email ever sent.
+  const origin = getAuthRedirectBaseUrl(request);
   const result = await callGateway<{ invited?: string[]; skipped?: { email: string; reason: string }[]; error?: string }>(
     "/api/auth/invitations",
     { organizationId: workspace.id, emails, invitedByEmail: session.email, origin },

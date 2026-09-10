@@ -1,5 +1,6 @@
 import { callGateway, patchGateway } from "@/app/api/auth/_lib/gateway";
 import { requireSession } from "@/app/api/onboarding/_lib/require-user";
+import { getAuthRedirectBaseUrl } from "@/app/api/auth/_lib/redirect-url";
 
 type Organization = { id: string; name: string; role: string };
 type OrganizationsResult = { organizations?: Organization[]; selectedOrganizationId?: string };
@@ -13,7 +14,7 @@ type CompanyResult = { company?: Persona; error?: string };
 // origin URL, not a relative path).
 const DEFAULT_AVATAR_ICON = "widget_5";
 function defaultAvatarUrl(request: Request) {
-  return `${new URL(request.url).origin}/api/stock-icons/${DEFAULT_AVATAR_ICON}.png`;
+  return `${getAuthRedirectBaseUrl(request)}/api/stock-icons/${DEFAULT_AVATAR_ICON}.png`;
 }
 
 async function resolveSelectedOrg(email: string) {

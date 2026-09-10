@@ -1,4 +1,5 @@
 import { callGateway } from "@/app/api/auth/_lib/gateway";
+import { getAuthRedirectBaseUrl } from "@/app/api/auth/_lib/redirect-url";
 
 type WidgetConfig = { botName?: string; botAvatarUrl?: string | null; greetingLines?: string[]; permissions?: unknown };
 
@@ -6,7 +7,7 @@ type WidgetConfig = { botName?: string; botAvatarUrl?: string | null; greetingLi
 // hasn't picked an avatar yet still shows a real icon instead of the
 // generic chat-bubble SVG in the launcher button.
 function defaultAvatarUrl(request: Request) {
-  return `${new URL(request.url).origin}/api/stock-icons/widget_5.png`;
+  return `${getAuthRedirectBaseUrl(request)}/api/stock-icons/widget_5.png`;
 }
 
 export async function GET(request: Request) {

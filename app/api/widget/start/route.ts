@@ -1,5 +1,6 @@
 import { callGateway } from "@/app/api/auth/_lib/gateway";
 import { clientLocation } from "@/app/api/_lib/client-geo";
+import { getAuthRedirectBaseUrl } from "@/app/api/auth/_lib/redirect-url";
 
 type WidgetMessage = { id: string; senderType: string; senderId: string | null; body: string; createdAt: string };
 type StartResult = { allowed: boolean; visitorToken?: string; conversationId?: string; botName?: string; botAvatarUrl?: string | null; messages?: WidgetMessage[]; error?: string };
@@ -8,7 +9,7 @@ type StartResult = { allowed: boolean; visitorToken?: string; conversationId?: s
 // hasn't picked an avatar yet still shows a real icon instead of a blank/
 // initial-letter fallback.
 function defaultAvatarUrl(request: Request) {
-  return `${new URL(request.url).origin}/api/stock-icons/widget_5.png`;
+  return `${getAuthRedirectBaseUrl(request)}/api/stock-icons/widget_5.png`;
 }
 
 export async function OPTIONS() {
