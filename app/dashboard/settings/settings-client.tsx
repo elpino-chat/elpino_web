@@ -2952,7 +2952,12 @@ function TagManagerSettingsPage() {
   const WIDGET_APP_ORIGIN = "https://elpino-web-927489744703.europe-west1.run.app";
   const cspSnippet = [
     `script-src ${tagHost};`,
-    `connect-src https://api.elpino.chat wss://api.elpino.chat;`,
+    // WIDGET_APP_ORIGIN belongs in connect-src too, not just frame-src —
+    // tag.js's own config fetch (fetch(ORIGIN + '/api/widget/config...'))
+    // goes straight to the dashboard app, not through api.elpino.chat.
+    // Missing this exact origin here is what sent a customer chasing a
+    // "connect-src blocked" console error after script-src was already fixed.
+    `connect-src https://api.elpino.chat wss://api.elpino.chat ${WIDGET_APP_ORIGIN};`,
     `frame-src ${WIDGET_APP_ORIGIN};`,
   ].join("\n");
 
