@@ -11,6 +11,19 @@ function gatewayWsOrigin() {
   return httpUrl.replace(/^http/, "ws");
 }
 
+// Base for the widget's own config fetch — cdn.elpino.chat (which proxies
+// /api/widget/* to this same app; see the nginx config on the server, not
+// in this repo) rather than wherever this app is actually deployed. That
+// used to be externalOrigin(request) below, which put the app's real host
+// (a Cloud Run URL today) into it — meaning a customer's CSP connect-src
+// needed to track wherever we happen to be deployed, and changed on every
+// redeploy to a different host. cdn.elpino.chat is the one origin that's
+// meant to stay stable regardless: same reasoning as gatewayWsOrigin above,
+// just for the config fetch instead of the websocket.
+function widgetApiOrigin() {
+  return process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://cdn.elpino.chat";
+}
+
 // request.url reflects the app's own bind address (e.g. localhost:3000)
 // unless the platform's forwarded headers are trusted explicitly — Cloud
 // Run, like most platforms behind a reverse proxy, doesn't rewrite it for
@@ -34,16 +47,22 @@ function externalOrigin(request: Request): string {
 }
 
 export function GET(request: Request) {
+  // ORIGIN: wherever this app is actually deployed — only needed for the
+  // chat iframe itself (a real Next.js page, can't be served from the CDN).
+  // TAG_ORIGIN: the stable public origin for everything else the tag calls
+  // (config fetch) — see widgetApiOrigin() above.
   const origin = externalOrigin(request);
+  const tagOrigin = widgetApiOrigin();
   const script = `(() => {
     var ORIGIN = ${JSON.stringify(origin)};
+    var TAG_ORIGIN = ${JSON.stringify(tagOrigin)};
     var WS_ORIGIN = ${JSON.stringify(gatewayWsOrigin())};
     var ACCENT = '#428ce5';
     var current = document.currentScript;
     var key = current && current.dataset.siteKey;
     if (!key) return;
 
-    fetch(ORIGIN + '/api/widget/config?key=' + encodeURIComponent(key) + '&hostname=' + encodeURIComponent(location.hostname))
+    fetch(TAG_ORIGIN + '/api/widget/config?key=' + encodeURIComponent(key) + '&hostname=' + encodeURIComponent(location.hostname))
       .then(function (response) { if (!response.ok) throw new Error('Tag is not allowed on this domain'); return response.json(); })
       .then(function (payload) {
         window.ElpinoTag = { key: key, config: payload.config };

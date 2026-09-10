@@ -2950,14 +2950,15 @@ function TagManagerSettingsPage() {
   // app/tag.js/route.ts) — update this if that ever moves to a stable
   // custom domain instead of the current Cloud Run URL.
   const WIDGET_APP_ORIGIN = "https://elpino-web-927489744703.europe-west1.run.app";
+  // The config fetch used to hit wherever the dashboard app is actually
+  // deployed (a Cloud Run URL that changes on redeploy), forcing that exact
+  // host into connect-src alongside api.elpino.chat — two moving-target
+  // origins for one customer to track. tag.js now calls cdn.elpino.chat for
+  // that instead (proxied server-side to the app either way), so only
+  // WIDGET_APP_ORIGIN's iframe (frame-src) still needs the real app host.
   const cspSnippet = [
     `script-src ${tagHost};`,
-    // WIDGET_APP_ORIGIN belongs in connect-src too, not just frame-src —
-    // tag.js's own config fetch (fetch(ORIGIN + '/api/widget/config...'))
-    // goes straight to the dashboard app, not through api.elpino.chat.
-    // Missing this exact origin here is what sent a customer chasing a
-    // "connect-src blocked" console error after script-src was already fixed.
-    `connect-src https://api.elpino.chat wss://api.elpino.chat ${WIDGET_APP_ORIGIN};`,
+    `connect-src ${tagHost} https://api.elpino.chat wss://api.elpino.chat;`,
     `frame-src ${WIDGET_APP_ORIGIN};`,
   ].join("\n");
 
