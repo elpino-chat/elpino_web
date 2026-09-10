@@ -1,0 +1,49 @@
+import type { Metadata } from "next";
+import { Eyebrow } from "../components/product/Eyebrow";
+import { HeroGlow } from "../components/product/HeroGlow";
+import { TrustSection } from "../components/home/TrustSection";
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://elpino.chat";
+
+export const metadata: Metadata = {
+  title: "Trust & Security",
+  description: "See how Elpino keeps your customers' data safe — encrypted credentials, read-only payment lookups, and an AI that escalates instead of guessing.",
+  alternates: { canonical: `${SITE_URL}/trust` },
+  openGraph: {
+    title: "Trust & Security",
+    description: "See how Elpino keeps your customers' data safe.",
+    url: `${SITE_URL}/trust`,
+    type: "website",
+  },
+};
+
+export default function TrustPage() {
+  return (
+    <main className="bg-white text-black">
+      <section className="relative overflow-hidden border-b border-black/10 bg-white">
+        <HeroGlow />
+        <div className="relative mx-auto flex max-w-4xl flex-col items-center px-6 pb-16 pt-28 text-center md:px-10">
+          <Eyebrow>Elpino / Trust</Eyebrow>
+          <h1 className="max-w-2xl text-4xl font-normal leading-[1.08] tracking-tight text-[#233D4D] [text-wrap:balance] md:text-5xl">
+            It knows <span className="text-[#D9BEF4]">what it doesn&apos;t know</span>
+          </h1>
+          <p className="mt-6 max-w-xl text-sm leading-6 text-gray-600 md:text-base">
+            An AI in front of your customers has to be honest about its limits. Here&apos;s exactly how Elpino
+            protects their data, and what happens the moment it isn&apos;t sure.
+          </p>
+        </div>
+      </section>
+
+      <TrustSection hideIntro />
+
+      <section className="border-t border-black/10 bg-[#fcfcfc] px-6 py-20 text-center md:px-10 lg:px-14">
+        <p className="mb-4 text-sm text-gray-600">
+          Want the full technical breakdown of encryption, retention, and compliance?
+        </p>
+        <a href="/security-guide" className="text-sm text-[#233D4D] underline underline-offset-4 transition hover:text-[#D9BEF4]">
+          Read the security guide &rarr;
+        </a>
+      </section>
+    </main>
+  );
+}

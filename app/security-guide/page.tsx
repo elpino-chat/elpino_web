@@ -1,0 +1,72 @@
+import type { Metadata } from "next";
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://elpino.chat";
+
+export const metadata: Metadata = {
+  title: "Security Guide",
+  description: "Learn about elpino security practices and how we protect your data.",
+  alternates: { canonical: `${SITE_URL}/security-guide` },
+  openGraph: {
+    title: "Security Guide",
+    description: "Learn about elpino security.",
+    url: `${SITE_URL}/security-guide`,
+    type: "website",
+  },
+};
+
+export default function SecurityGuidePage() {
+  return (
+    <div className="flex flex-1 flex-col bg-white" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif' }}>
+      <section className="pt-20 pb-20 px-6 sm:px-10 md:px-14 border-b border-slate-200">
+        <div className="max-w-4xl mx-auto">
+          <p className="text-sm text-slate-500 mb-4">Security</p>
+          <h1 className="text-5xl md:text-6xl text-black mb-6 leading-tight" style={{ fontWeight: 500, letterSpacing: '-0.01em' }}>
+            Your data is your own
+          </h1>
+          <p className="text-lg text-slate-700 leading-relaxed max-w-2xl">
+            Security and privacy are foundational. Here's exactly how we protect your data.
+          </p>
+        </div>
+      </section>
+
+      <section className="py-20 px-6 sm:px-10 md:px-14">
+        <div className="max-w-4xl mx-auto space-y-12">
+          <div className="border-l-2 border-[#D9BEF4] pl-6">
+            <h2 className="text-2xl text-black mb-3" style={{ fontWeight: 500 }}>Encryption at Rest & In Transit</h2>
+            <p className="text-slate-600 leading-relaxed">
+              All your data is encrypted using AES-256. OAuth tokens, business data, everything. Data in transit is protected with TLS 1.3. Your data is never readable to us or anyone else.
+            </p>
+          </div>
+
+          <div className="border-l-2 border-[#D9BEF4] pl-6">
+            <h2 className="text-2xl text-black mb-3" style={{ fontWeight: 500 }}>Token Management</h2>
+            <p className="text-slate-600 leading-relaxed">
+              Your API keys and OAuth tokens for Stripe, Razorpay, and Trello are encrypted and stored securely. We only use them to make the calls you authorize. Never for model training. Never shared.
+            </p>
+          </div>
+
+          <div className="border-l-2 border-[#D9BEF4] pl-6">
+            <h2 className="text-2xl text-black mb-3" style={{ fontWeight: 500 }}>We Don't Train on Your Data</h2>
+            <p className="text-slate-600 leading-relaxed">
+              Your emails, calendar, revenue data — used only for your personal elpino experience. Not to improve our models. Not to train AI. Not at all outside your account.
+            </p>
+          </div>
+
+          <div className="border-l-2 border-[#D9BEF4] pl-6">
+            <h2 className="text-2xl text-black mb-3" style={{ fontWeight: 500 }}>Data discipline</h2>
+            <p className="text-slate-600 leading-relaxed">
+              Connector credentials are encrypted with AES-256-GCM, database and payment connections are read-only, and outbound actions always wait for your explicit approval.
+            </p>
+          </div>
+
+          <div className="border-l-2 border-[#D9BEF4] pl-6">
+            <h2 className="text-2xl text-black mb-3" style={{ fontWeight: 500 }}>Found a vulnerability?</h2>
+            <p className="text-slate-600 leading-relaxed">
+              Email <a href="mailto:security@elpino.chat" className="text-[#D9BEF4] hover:text-slate-900">security@elpino.chat</a> with details. Please don't disclose publicly until we've had time to fix it. We respond within 24 hours.
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}

@@ -1,0 +1,53 @@
+"use client";
+
+import { usePathname } from "next/navigation";
+import { Header } from "./Header";
+import { Footer } from "./Footer";
+import { CookieNotice } from "./CookieNotice";
+
+type Session = { email: string; name?: string; userId: string };
+
+export function AppShell({
+  children,
+  session,
+}: {
+  children: React.ReactNode;
+  session: Session | null;
+}) {
+  const pathname = usePathname();
+  const isBareAuthPage =
+    pathname === "/forgot-password" || pathname === "/reset-password";
+  const isMinimalHeaderAuthPage = pathname === "/login" || pathname === "/signup";
+  const isAppPage = pathname === "/onboarding" || pathname.startsWith("/dashboard");
+  const isEmbeddedWidget = pathname.startsWith("/widget");
+
+  if (isEmbeddedWidget) {
+    // The widget is a small fixed-size iframe box — nothing inside it
+    // should ever grow past that and make the outer page itself scroll.
+    // Whichever inner container needs to scroll (the message list, the
+    // pre-chat form) does so on its own; this just guarantees it's the
+    // only scrollbar.
+    return <main className="h-dvh overflow-hidden">{children}</main>;
+  }
+
+  if (isAppPage || isBareAuthPage) {
+    return <main className="flex flex-1 flex-col">{children}</main>;
+  }
+
+  if (isMinimalHeaderAuthPage) {
+    return <main className="flex min-h-screen flex-col">{children}</main>;
+  }
+
+  return (
+    <>
+      <Header session={session} variant="light" showOffer={['/', '/pricing', '/features', '/faq', '/trust', '/contact'].includes(pathname)} pricingPage={pathname === '/pricing'} />
+      {/* Header is fixed (see Header.tsx) so it no longer reserves this
+          space itself — pad it back in here, using the height Header measures
+          into --elpino-header-h so this stays correct if the offer bar is
+          dismissed or the header's own height otherwise changes. */}
+      <main className="flex flex-1 flex-col" style={{ paddingTop: 'var(--elpino-header-h, 76px)' }}>{children}</main>
+      <Footer />
+      <CookieNotice />
+    </>
+  );
+}
