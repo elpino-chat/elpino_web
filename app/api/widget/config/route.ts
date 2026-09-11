@@ -1,7 +1,14 @@
 import { callGateway } from "@/app/api/auth/_lib/gateway";
 import { getAuthRedirectBaseUrl } from "@/app/api/auth/_lib/redirect-url";
 
-type WidgetConfig = { botName?: string; botAvatarUrl?: string | null; greetingLines?: string[]; permissions?: unknown };
+type WidgetConfig = {
+  botName?: string;
+  botAvatarUrl?: string | null;
+  greetingLines?: string[];
+  permissions?: unknown;
+  /** Plan entitlement: paid tiers drop the "Powered by Elpino" footer. */
+  removeBranding?: boolean;
+};
 
 // Same default as the Chatbot Interface settings page — a workspace that
 // hasn't picked an avatar yet still shows a real icon instead of the

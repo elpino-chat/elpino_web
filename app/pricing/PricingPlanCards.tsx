@@ -1,13 +1,13 @@
 import Link from 'next/link';
 import { Check } from 'lucide-react';
-import { getPlanPrice, plans } from '../components/PricingCards';
+import { ANNUAL_SAVING_PERCENT, getAnnualTotal, getPlanPrice, plans } from '../components/PricingCards';
 
 export function PricingPlanCards({ billing }: { billing: 'monthly' | 'yearly' }) {
   return (
     <div className='grid gap-5 sm:grid-cols-2 xl:grid-cols-4'>
       {plans.map((plan) => {
         const price = getPlanPrice(plan, billing);
-        const total = (Math.round(Number(plan.price.slice(1)) * 80) * 12 / 100).toLocaleString('en-US', { maximumFractionDigits: 2 });
+        const annualTotal = getAnnualTotal(plan);
         return (
           <article key={plan.id} className='relative flex flex-col overflow-hidden rounded-2xl bg-white p-6 pt-8 shadow-[0_16px_35px_-15px_rgba(30,28,60,0.18)]'>
             {plan.id !== 'free' && <span className='absolute right-0 top-0 rounded-bl-xl bg-gradient-to-r from-[#BD87FF] to-[#929DFF] px-3 py-1 text-xs font-medium text-white'>{plan.highlighted ? 'Most popular' : 'AI + Live chat'}</span>}
@@ -17,7 +17,7 @@ export function PricingPlanCards({ billing }: { billing: 'monthly' | 'yearly' })
               <p><span className='text-[34px] font-semibold tracking-[-0.06em]'>{price}</span><span className='ml-1 text-sm'>/mo</span></p>
               {billing === 'yearly' && plan.id !== 'free' && <span className='text-xl font-semibold text-[#A2AABB] line-through'>{plan.price}</span>}
             </div>
-            <p className='mt-1 text-sm text-[#767B83]'>{plan.id === 'free' ? 'Free forever' : billing === 'yearly' ? `$${total} billed annually` : 'billed monthly'}</p>
+            <p className='mt-1 text-sm text-[#767B83]'>{plan.id === 'free' ? 'Free forever' : billing === 'yearly' ? `${annualTotal} billed annually · Save ${ANNUAL_SAVING_PERCENT}%` : 'billed monthly'}</p>
             <Link href={plan.href} className='mt-5 flex h-12 items-center justify-center rounded-full bg-[#191F19] px-4 text-base font-medium text-white transition hover:bg-[#343C34] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black'>Get started</Link>
             <Link href={plan.id === 'scale' ? '/contact' : '#comparison'} className='mt-3 w-fit text-sm underline underline-offset-4 hover:text-[#6B49A6]'>{plan.id === 'scale' ? 'or discuss a custom plan' : 'Compare all features'}</Link>
             <div className='mt-5 flex-1 border-t border-black/15 pt-5'>

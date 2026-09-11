@@ -20,6 +20,8 @@ export type Plan = {
   storageMb: number;
   /** Per-resolution price past the allowance. Null = the AI hands off instead. */
   overageUsdCents: number | null;
+  /** AI inference credit granted every period, in USD cents. Mirrors Plan.aiCreditGrantUsdCents on the backend. */
+  aiCreditGrantUsdCents: number;
   /** Launch/intro price shown instead of `price`, e.g. "$15 for your first 3 months". */
   introPrice?: string;
   introNote?: string;
@@ -33,8 +35,24 @@ export type Plan = {
 // The model in one line: upgrading buys AI resolutions, $1 buys a teammate,
 // and the two never affect each other. Everyone in a workspace shares one
 // inbox and one resolution pool no matter how many seats are open.
-export const SEAT_PRICE = '$1';
-export const FREE_SEAT_MIN_CHARGE = '$5';
+// Seats are sold in bundles, mirroring SEAT_BUNDLES in the backend catalog.
+// A standalone $1 charge loses roughly a third of itself to card processing
+// and some issuers decline it outright, so the smallest seat purchase is a
+// $2 three-pack. Buying more gets cheaper per seat.
+export const SEAT_BUNDLES = [
+  { seats: 3, price: '$2' },
+  { seats: 5, price: '$3' },
+];
+export const SEAT_PRICE = '$0.60';
+export const SEAT_BUNDLE_SUMMARY = '3 seats for $2, 5 for $3';
+
+// Annual is twelve months of service for ten months of price — the same
+// ANNUAL_MONTHS_CHARGED the backend prices against. Deriving the discount
+// from it means the badge below can never advertise a saving the checkout
+// does not actually apply, which is what the old hard-coded "Save 20%"
+// against a 0.8 multiplier did once the monthly prices moved.
+export const ANNUAL_MONTHS_CHARGED = 10;
+export const ANNUAL_SAVING_PERCENT = Math.round((1 - ANNUAL_MONTHS_CHARGED / 12) * 100);
 
 export const plans: Plan[] = [
   {
@@ -50,10 +68,12 @@ export const plans: Plan[] = [
     resolutions: 50,
     storageMb: 20,
     overageUsdCents: null,
+    aiCreditGrantUsdCents: 100,
     features: [
       '50 AI resolutions/month',
+      '$1 AI credit included every month',
       '2 seats included',
-      'Extra seats $1/month each',
+      'Seat packs from $0.60/seat',
       '20 MB knowledge base',
       'Website chat widget',
       'Shared inbox with handoff',
@@ -62,7 +82,7 @@ export const plans: Plan[] = [
   {
     id: 'starter',
     name: 'Starter',
-    price: '$12.50',
+    price: '$12',
     cadence: '/month',
     description: 'For a small team whose support has outgrown one inbox.',
     cta: 'Get started',
@@ -72,10 +92,12 @@ export const plans: Plan[] = [
     resolutions: 250,
     storageMb: 200,
     overageUsdCents: 10,
+    aiCreditGrantUsdCents: 500,
     features: [
       '250 AI resolutions/month',
+      '$5 AI credit included every month',
       '5 seats included',
-      'Extra seats $1/month each',
+      'Seat packs from $0.60/seat',
       '200 MB knowledge base',
       'Then $0.10 per resolution',
       'Visitor analytics',
@@ -94,11 +116,13 @@ export const plans: Plan[] = [
     resolutions: 2000,
     storageMb: 1000,
     overageUsdCents: 6,
+    aiCreditGrantUsdCents: 4000,
     highlighted: true,
     features: [
       '2,000 AI resolutions/month',
+      '$40 AI credit included every month',
       '15 seats included',
-      'Extra seats $1/month each',
+      'Seat packs from $0.60/seat',
       '1 GB knowledge base',
       'Then $0.06 per resolution',
       'Full AI audit trail',
@@ -118,10 +142,12 @@ export const plans: Plan[] = [
     resolutions: 12000,
     storageMb: 5000,
     overageUsdCents: 4,
+    aiCreditGrantUsdCents: 24000,
     features: [
       '12,000 AI resolutions/month',
+      '$240 AI credit included every month',
       '40 seats included',
-      'Extra seats $1/month each',
+      'Seat packs from $0.60/seat',
       '5 GB knowledge base',
       'Then $0.04 per resolution',
       'Multi-site knowledge scoping',
@@ -138,20 +164,41 @@ function CheckIcon({ className = 'text-[#D9BEF4]' }: { className?: string }) {
   );
 }
 
-/** The joined pricing-card grid used on /pricing — one source, no drift. */
-export function getPlanPrice(plan: Plan, billing: 'monthly' | 'yearly') {
-  const monthlyCents = Math.round(Number(plan.price.replace(/[^0-9.]/g, '')) * 100);
-  const cents = billing === 'yearly' ? Math.round(monthlyCents * 0.8) : monthlyCents;
+/** A plan's list price in cents, parsed from the display string once. */
+export function monthlyCents(plan: Plan): number {
+  return Math.round(Number(plan.price.replace(/[^0-9.]/g, '')) * 100);
+}
+
+/** What one year costs, in cents — ten months of the monthly price. */
+export function annualTotalCents(plan: Plan): number {
+  return monthlyCents(plan) * ANNUAL_MONTHS_CHARGED;
+}
+
+function formatUsd(cents: number): string {
   return `$${(cents / 100).toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
+}
+
+/**
+ * The per-month price to headline for a cadence — one source, no drift.
+ * Annual divides the ten-month charge across twelve months, which is where
+ * Starter's $10/month on an annual term comes from.
+ */
+export function getPlanPrice(plan: Plan, billing: 'monthly' | 'yearly') {
+  const cents = billing === 'yearly' ? Math.round(annualTotalCents(plan) / 12) : monthlyCents(plan);
+  return formatUsd(cents);
+}
+
+/** The annual total, formatted — what the customer is actually charged. */
+export function getAnnualTotal(plan: Plan): string {
+  return formatUsd(annualTotalCents(plan));
 }
 
 export function PricingCards({ billing = 'monthly', pageStyle = false }: { billing?: 'monthly' | 'yearly'; pageStyle?: boolean }) {
   return (
     <div className={`grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 ${pageStyle ? 'gap-0' : 'gap-5'}`}>
       {plans.map((plan, index) => {
-        const numericPrice = Number(plan.price.replace(/[^0-9.]/g, ''));
         const displayPrice = billing === 'yearly' ? getPlanPrice(plan, billing) : plan.introPrice ?? plan.price;
-        const annualTotal = (Math.round(numericPrice * 100 * 0.8) * 12 / 100).toLocaleString('en-US', { maximumFractionDigits: 2 });
+        const annualTotal = getAnnualTotal(plan);
 
         if (pageStyle) {
           return (
@@ -171,7 +218,7 @@ export function PricingCards({ billing = 'monthly', pageStyle = false }: { billi
                   </div>
                 </div>
                 <p className='mt-2 min-h-5 text-xs text-[#666666]'>
-                  {plan.id === 'free' ? '50 AI resolutions every month' : billing === 'yearly' ? `$${annualTotal} per year · Save 20%` : 'Monthly billing, per workspace'}
+                  {plan.id === 'free' ? '50 AI resolutions every month' : billing === 'yearly' ? `${annualTotal} per year · Save ${ANNUAL_SAVING_PERCENT}%` : 'Monthly billing, per workspace'}
                 </p>
                 <Link href={plan.href} className={`mt-7 flex min-h-14 w-full items-center justify-center rounded-none border px-4 py-3 text-base font-medium transition focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black ${plan.highlighted ? 'border-[#222222] bg-gradient-to-b from-[#343434] to-[#1C1C1C] text-white shadow-[0_2px_3px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.2)] hover:brightness-110' : 'border-[#CCCCCC] bg-gradient-to-b from-[#EEEEEE] to-[#E2E2E2] text-black shadow-[0_2px_3px_rgba(0,0,0,0.08),inset_0_1px_0_white] hover:brightness-95'}`}>
                   {plan.cta}
@@ -234,7 +281,7 @@ export function PricingCards({ billing = 'monthly', pageStyle = false }: { billi
           </div>
           {plan.id !== 'free' && (
             <p className='mt-3 text-sm text-[#667069]'>
-              {billing === 'yearly' ? `$${annualTotal} billed annually · Save 20%` : 'Billed monthly'}
+              {billing === 'yearly' ? `${annualTotal} billed annually · Save ${ANNUAL_SAVING_PERCENT}%` : 'Billed monthly'}
             </p>
           )}
           {!pageStyle && plan.introNote && billing === 'monthly' && <p className='mt-1 text-xs text-[#D9BEF4]'>{plan.introNote}</p>}

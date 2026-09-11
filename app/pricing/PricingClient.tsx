@@ -5,7 +5,7 @@ import { Fragment, useState } from 'react';
 import { ArrowUpRight, Check, Users, MessageSquare, Sparkles } from 'lucide-react';
 import { PricingPlanCards } from './PricingPlanCards';
 import { FairBillingSection } from './PricingCalculator';
-import { FREE_SEAT_MIN_CHARGE, SEAT_PRICE, plans, getPlanPrice } from '../components/PricingCards';
+import { ANNUAL_SAVING_PERCENT, SEAT_BUNDLES, SEAT_BUNDLE_SUMMARY, plans, getPlanPrice } from '../components/PricingCards';
 import { categories as faqCategories } from '../faq/faq-categories';
 
 // Reuse the billing answers from the /faq source of truth rather than keeping a
@@ -60,7 +60,7 @@ const comparisonCategories: FeatureCategory[] = [
       {
         label: 'Extra seats',
         description: 'Every teammate past the included seats, on any plan.',
-        values: ['$1/month each', '$1/month each', '$1/month each', '$1/month each'],
+        values: [SEAT_BUNDLE_SUMMARY, SEAT_BUNDLE_SUMMARY, SEAT_BUNDLE_SUMMARY, SEAT_BUNDLE_SUMMARY],
       },
       {
         label: 'Seat ceiling',
@@ -147,7 +147,7 @@ export function PricingClient() {
               {(['monthly', 'yearly'] as const).map((period) => (
                 <button key={period} type='button' aria-pressed={billing === period} onClick={() => setBilling(period)} className={`flex items-center justify-center gap-2 rounded-full px-4 py-2 text-sm transition focus-visible:outline-2 focus-visible:outline-offset-2 sm:min-w-36 ${billing === period ? 'bg-white text-black shadow-sm' : 'text-[#676D74] hover:text-black'}`}>
                   {period === 'monthly' ? 'Monthly' : 'Annually'}
-                  {period === 'yearly' && <span className='rounded-full bg-[#547FFF] px-2 py-1 text-[11px] font-medium text-white'>save 20%</span>}
+                  {period === 'yearly' && <span className='rounded-full bg-[#547FFF] px-2 py-1 text-[11px] font-medium text-white'>save {ANNUAL_SAVING_PERCENT}%</span>}
                 </button>
               ))}
             </div>
@@ -181,8 +181,8 @@ export function PricingClient() {
         <div className='mt-9 grid gap-6 md:grid-cols-2'>
           <article className='flex items-start gap-4 rounded-2xl border border-black/10 p-7'>
             <Users className='mt-1 shrink-0' size={25} aria-hidden='true' />
-            <div><h3 className='text-2xl font-medium tracking-[-0.03em]'>Additional teammates</h3><p className='mt-1'>{SEAT_PRICE}/month per extra seat</p>
-              <ul className='mt-5 list-disc space-y-2 pl-5 text-sm leading-6 text-[#757A80]'><li>Invite colleagues to your shared workspace</li><li>Work together with individual logins</li><li>Keep the same AI resolution pool</li><li>Free plan: {FREE_SEAT_MIN_CHARGE} minimum covers five extra seats</li></ul>
+            <div><h3 className='text-2xl font-medium tracking-[-0.03em]'>Additional teammates</h3><p className='mt-1'>{SEAT_BUNDLE_SUMMARY}, per month</p>
+              <ul className='mt-5 list-disc space-y-2 pl-5 text-sm leading-6 text-[#757A80]'><li>Invite colleagues to your shared workspace</li><li>Work together with individual logins</li><li>Keep the same AI resolution pool</li>{SEAT_BUNDLES.map((bundle) => <li key={bundle.seats}>{bundle.seats} seats for {bundle.price}/month</li>)}</ul>
             </div>
           </article>
           <article className='flex items-start gap-4 rounded-2xl border border-black/10 p-7'>

@@ -17,7 +17,7 @@ type WidgetMessage = {
   attachmentName?: string | null;
   createdAt: string;
 };
-type StartResult = { allowed: boolean; visitorToken?: string; conversationId?: string; botName?: string; botAvatarUrl?: string | null; greetingLines?: string[]; topic?: string | null; customerEmail?: string | null; messages?: WidgetMessage[]; error?: string };
+type StartResult = { allowed: boolean; visitorToken?: string; conversationId?: string; botName?: string; botAvatarUrl?: string | null; greetingLines?: string[]; removeBranding?: boolean; topic?: string | null; customerEmail?: string | null; messages?: WidgetMessage[]; error?: string };
 type ConversationSummary = { id: string; status: string; topic?: string | null; preview: string; time: string };
 type ChatView = "list" | "thread";
 type GifResult = { id: string; url: string; preview: string };
@@ -124,6 +124,9 @@ function WidgetContent() {
   const [botName, setBotName] = useState("Elpino Support");
   const [botAvatarUrl, setBotAvatarUrl] = useState<string | null>(null);
   const [greetingLines, setGreetingLines] = useState<string[]>(["Hi there 👋", "How can I help you today?"]);
+  // Paid plans drop the badge. Starts true so a slow or failed config load
+  // shows it rather than silently white-labelling a Free workspace.
+  const [showBranding, setShowBranding] = useState(true);
   const [visitorToken, setVisitorToken] = useState("");
   const [conversationId, setConversationId] = useState("");
   const [messages, setMessages] = useState<WidgetMessage[]>([]);
@@ -177,6 +180,7 @@ function WidgetContent() {
         if (!data.allowed) { setDenied(true); return; }
         setBotName(data.botName || "Elpino Support");
         setBotAvatarUrl(data.botAvatarUrl ?? null);
+        setShowBranding(!data.removeBranding);
         if (Array.isArray(data.greetingLines) && data.greetingLines.length > 0) setGreetingLines(data.greetingLines);
         if (data.visitorToken) writeVisitorToken(key, data.visitorToken);
 
@@ -872,9 +876,11 @@ function WidgetContent() {
           </button>
         </div>
       )}
-      <a href="https://elpino.chat" target="_blank" rel="noreferrer" className="block shrink-0 border-t py-1.5 text-center text-[9.5px] font-medium transition hover:text-white/70" style={{ borderColor: BORDER, color: MUTED }}>
-        Powered by Elpino
-      </a>
+      {showBranding && (
+        <a href="https://elpino.chat" target="_blank" rel="noreferrer" className="block shrink-0 border-t py-1.5 text-center text-[9.5px] font-medium transition hover:text-white/70" style={{ borderColor: BORDER, color: MUTED }}>
+          Powered by Elpino
+        </a>
+      )}
     </div>
   );
 }

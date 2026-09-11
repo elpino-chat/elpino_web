@@ -104,7 +104,7 @@ export function InvitePeopleDialog({
    * returns either a Razorpay order (Free plan: no invoice to attach an addon
    * to, so the browser has to pay for it directly) or an immediate grant
    * billed on the next invoice (any paid plan). Nothing in the UI ever called
-   * it, so a seat-limited invite just showed the "$1/month" message as
+   * it, so a seat-limited invite just showed the seat-price message as
    * inert text with no way to act on it.
    */
   async function buySeat() {
@@ -133,7 +133,7 @@ export function InvitePeopleDialog({
           keyId: data.keyId,
           orderId: data.orderId,
           amountPaise: data.amountPaise,
-          description: "Extra seat — $1/month",
+          description: "Extra seats",
         });
       }
 
@@ -253,7 +253,7 @@ export function InvitePeopleDialog({
                       className="flex h-8 items-center gap-1.5 rounded-lg bg-[#17181a] px-3 text-[11.5px] font-semibold text-white transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       {buyingSeat ? <LoaderCircle size={12} className="animate-spin" /> : <Plus size={12} />}
-                      {buyingSeat ? "Adding seat…" : "Add seat — $1/month"}
+                      {buyingSeat ? "Adding seats…" : "Add a seat pack — from $2/month"}
                     </button>
                     {seatMessage && <p className="mt-2 flex items-center gap-1.5 text-[#1e8a54]"><Check size={12} /> {seatMessage}</p>}
                     {seatError && <p className="mt-2 text-[#c0323e]">{seatError}</p>}
