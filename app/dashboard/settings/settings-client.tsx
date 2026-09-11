@@ -5,13 +5,19 @@ import { createPortal } from "react-dom";
 import QRCode from "qrcode";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { plans as pricingPlans } from "@/app/components/PricingCards";
+import {
+  ANNUAL_SAVING_PERCENT,
+  getAnnualTotal,
+  getPlanPrice,
+  plans as pricingPlans,
+} from "@/app/components/PricingCards";
 import { openRazorpayCheckout } from "@/lib/razorpay-checkout";
 import { Switch } from "@/components/ui/switch";
 import { readDashboardTheme, saveDashboardTheme, type DashboardAppearance } from "@/app/components/dashboard/DashboardThemeProvider";
 import { InvitePeopleDialog } from "@/app/components/dashboard/InvitePeopleDialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { PreChatFormEditor, type PreChatField } from "@/app/dashboard/components/prechat-form-editor";
+import { SUPPORTED_LANGUAGES } from "@/app/dashboard/settings/languages";
 import {
   computeCoverage,
   defaultAvailability,
@@ -107,6 +113,29 @@ function useMyRole() {
   return role;
 }
 
+/**
+ * The workspace the signed-in user is currently in, with its name and their
+ * role — what the Danger Zone needs to decide between "Delete workspace"
+ * (owner) and "Remove workspace" (everyone else) and to name the workspace
+ * in the confirmation copy.
+ */
+function useCurrentWorkspace() {
+  const [workspace, setWorkspace] = useState<{ id: string; name: string; role: string } | null>(null);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    fetch("/api/organizations")
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: { organizations?: { id: string; name: string; role: string }[]; selectedOrganizationId?: string } | null) => {
+        const organizations = data?.organizations ?? [];
+        const selected = organizations.find((org) => org.id === data?.selectedOrganizationId) ?? organizations[0];
+        setWorkspace(selected ?? null);
+      })
+      .catch(() => setWorkspace(null))
+      .finally(() => setLoading(false));
+  }, []);
+  return { workspace, loading };
+}
+
 // Personal to the signed-in user, independent of which workspace they're in.
 const accountItems = [
   { label: "General", slug: "", icon: Settings },
@@ -139,7 +168,6 @@ const pageDetails: Record<string, { description: string; action?: string; sectio
   "Audit Logs": { description: "Review important workspace activity and security events.", action: "Export logs", sections: [{ title: "Recent activity", description: "Profile and workspace events from the last 30 days.", value: "Up to date" }, { title: "Data retention", description: "Audit events are retained according to your plan.", value: "30 days" }] },
   Trash: { description: "Review and restore recently deleted workspace content.", sections: [{ title: "Trash is empty", description: "Deleted conversations, templates, and automations will appear here.", value: "0 items" }] },
   "Tag Manager": { description: "Create and organize labels used throughout your workspace.", action: "Create tag", sections: [{ title: "Workspace tags", description: "Group, filter, and route conversations with shared labels.", value: "0 tags" }] },
-  Translations: { description: "Configure language and translation preferences.", sections: [{ title: "Workspace language", description: "The default language used across this workspace.", value: "English" }, { title: "Automatic translation", description: "Translate supported customer conversations when needed.", value: "Off" }] },
 };
 
 function FeatureSettingsPage({ title }: { title: string }) {
@@ -201,11 +229,21 @@ function AIUsageSettingsPage() {
   const [loadingEvents, setLoadingEvents] = useState(false);
 
   const [creditsCents, setCreditsCents] = useState<number | null>(null);
+  // Where the balance came from. The grant resets every period; purchased
+  // credit does not, and the split is the whole reason buying credit is worth
+  // doing, so the UI says which is which rather than showing one number.
+  const [grantedCents, setGrantedCents] = useState(0);
+  const [purchasedCents, setPurchasedCents] = useState(0);
+  const [autoRecharge, setAutoRecharge] = useState<AutoRechargeSettings | null>(null);
+  const [isOwner, setIsOwner] = useState(false);
   const [loadingCredits, setLoadingCredits] = useState(true);
   const [addOpen, setAddOpen] = useState(false);
   const [addAmount, setAddAmount] = useState("");
+  const [saveCard, setSaveCard] = useState(true);
   const [adding, setAdding] = useState(false);
   const [addError, setAddError] = useState<string | null>(null);
+  const [addNotice, setAddNotice] = useState<string | null>(null);
+  const [autoBusy, setAutoBusy] = useState(false);
 
   useEffect(() => {
     fetch("/api/workspace/sites")
@@ -218,7 +256,13 @@ function AIUsageSettingsPage() {
     setLoadingCredits(true);
     fetch("/api/workspace/usage/credits")
       .then((response) => (response.ok ? response.json() : null))
-      .then((data: { balanceCents?: number | null } | null) => setCreditsCents(data?.balanceCents ?? null))
+      .then((data: CreditsResponse | null) => {
+        setCreditsCents(data?.balanceCents ?? null);
+        setGrantedCents(data?.grantedCents ?? 0);
+        setPurchasedCents(data?.purchasedCents ?? 0);
+        setAutoRecharge(data?.autoRecharge ?? null);
+        setIsOwner(Boolean(data?.isOwner));
+      })
       .catch(() => setCreditsCents(null))
       .finally(() => setLoadingCredits(false));
   }
@@ -251,6 +295,15 @@ function AIUsageSettingsPage() {
     setSelectedSiteIds((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]));
   }
 
+  /**
+   * Buys AI credit through Razorpay.
+   *
+   * The balance does not move here. This opens an order, the customer pays in
+   * Razorpay's modal, and the signed webhook credits the workspace — the same
+   * contract as a plan upgrade. Before this, the dialog called an endpoint
+   * that incremented the balance straight from the number in the input, with
+   * no payment behind it at all.
+   */
   async function submitAddCredits() {
     const dollars = Number(addAmount);
     if (!dollars || dollars <= 0 || adding) {
@@ -259,22 +312,67 @@ function AIUsageSettingsPage() {
     }
     setAdding(true);
     setAddError(null);
+    setAddNotice(null);
     try {
-      const response = await fetch("/api/workspace/usage/credits/add", {
+      const response = await fetch("/api/workspace/usage/credits/checkout", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ amountCents: Math.round(dollars * 100) }),
+        body: JSON.stringify({ amountCents: Math.round(dollars * 100), saveCard }),
       });
-      const data = (await response.json().catch(() => ({}))) as { balanceCents?: number; message?: string };
-      if (!response.ok || data.balanceCents === undefined) {
-        setAddError(data.message ?? "Could not add credits");
+      const data = (await response.json().catch(() => ({}))) as {
+        orderId?: string;
+        keyId?: string;
+        amountMinor?: number;
+        currency?: string;
+        message?: string;
+      };
+      if (!response.ok || !data.orderId || !data.keyId) {
+        setAddError(data.message ?? "Could not start the top-up");
         return;
       }
-      setCreditsCents(data.balanceCents);
+
+      await openRazorpayCheckout({
+        keyId: data.keyId,
+        orderId: data.orderId,
+        amountPaise: data.amountMinor,
+        description: `$${dollars.toFixed(2)} of AI credit`,
+      });
+
       setAddOpen(false);
       setAddAmount("");
+      setAddNotice("Payment received — your credit will appear in a moment.");
+      // Razorpay has taken the money, but the webhook decides the balance.
+      // Re-read rather than adding the amount optimistically.
+      loadCredits();
+    } catch (issue) {
+      setAddError(issue instanceof Error ? issue.message : "Could not add credits");
     } finally {
       setAdding(false);
+    }
+  }
+
+  /** Turns auto-recharge on or off, or adjusts what it charges. */
+  async function saveAutoRecharge(patch: {
+    enabled?: boolean;
+    amountCents?: number | null;
+    monthlyCapCents?: number | null;
+  }) {
+    setAutoBusy(true);
+    setAddError(null);
+    try {
+      const response = await fetch("/api/workspace/usage/credits/auto-recharge", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(patch),
+      });
+      const data = (await response.json().catch(() => ({}))) as { message?: string };
+      if (!response.ok) {
+        setAddError(data.message ?? "Could not update auto-recharge");
+        return;
+      }
+      loadCredits();
+    } finally {
+      setAutoBusy(false);
     }
   }
 
@@ -316,6 +414,12 @@ function AIUsageSettingsPage() {
           <div>
             <p className="text-[11px] font-medium text-[#6D7D85]">AI credits remaining</p>
             <p className="mt-0.5 text-[24px] font-semibold tracking-[-0.02em]">{loadingCredits ? "…" : formatCents(creditsCents ?? 0)}</p>
+            {!loadingCredits && (creditsCents ?? 0) > 0 && (
+              <p className="mt-0.5 text-[11px] text-[#8A9299]">
+                {formatCents(grantedCents)} from your plan this month
+                {purchasedCents > 0 ? ` · ${formatCents(purchasedCents)} purchased, never expires` : ""}
+              </p>
+            )}
           </div>
           <div className="ml-4 border-l border-[#E1E5E8] pl-4">
             <p className="text-[11px] font-medium text-[#6D7D85]">Spent today</p>
@@ -475,13 +579,80 @@ function AIUsageSettingsPage() {
         )}
       </section>
 
+      {addNotice && (
+        <div role="status" className="mt-4 rounded-2xl border border-[#CBD9D0] bg-[#F5FAF7] px-5 py-3 text-[12.5px] text-[#33684C]">{addNotice}</div>
+      )}
+
+      {isOwner && (
+        <section className="mt-4 rounded-[20px] border border-[#DDE4E8] bg-white p-5">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <h3 className="text-[14px] font-semibold">Auto-recharge</h3>
+              <p className="mt-1 max-w-lg text-[12px] leading-5 text-[#667069]">
+                {autoRecharge?.cardOnFile
+                  ? `Top up automatically when your balance falls below ${autoRecharge.thresholdPercent}% of the recharge amount, so the AI never stops mid-conversation.`
+                  : "Add credits once with \u201cSave this card\u201d ticked, and you can have us top you up automatically when the balance runs low."}
+              </p>
+            </div>
+            <Switch
+              checked={Boolean(autoRecharge?.enabled)}
+              disabled={autoBusy || !autoRecharge?.cardOnFile}
+              onCheckedChange={(next) =>
+                void saveAutoRecharge({
+                  enabled: next,
+                  // Default to topping up by what is already on the balance
+                  // plan-wise, but never below the $5 minimum charge.
+                  amountCents: autoRecharge?.amountCents ?? 1000,
+                  monthlyCapCents: autoRecharge?.monthlyCapCents ?? 5000,
+                })
+              }
+            />
+          </div>
+
+          {autoRecharge?.lastError && (
+            <p role="alert" className="mt-3 rounded-xl border border-[#E9C8CC] bg-[#FFF7F7] px-3 py-2 text-[11.5px] text-[#A5414B]">{autoRecharge.lastError}</p>
+          )}
+
+          {autoRecharge?.enabled && (
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              <label className="block">
+                <span className="block text-[11.5px] font-semibold text-[#17233A]">Recharge by</span>
+                <select
+                  value={String(autoRecharge.amountCents ?? 1000)}
+                  disabled={autoBusy}
+                  onChange={(event) => void saveAutoRecharge({ amountCents: Number(event.target.value) })}
+                  className="mt-1.5 h-10 w-full rounded-xl border border-[#DDE4E8] bg-white px-3 text-[12.5px]"
+                >
+                  {[500, 1000, 2500, 5000, 10000].map((cents) => (
+                    <option key={cents} value={cents}>{formatCents(cents)}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="block">
+                <span className="block text-[11.5px] font-semibold text-[#17233A]">Never more than, per month</span>
+                <select
+                  value={String(autoRecharge.monthlyCapCents ?? 5000)}
+                  disabled={autoBusy}
+                  onChange={(event) => void saveAutoRecharge({ monthlyCapCents: Number(event.target.value) })}
+                  className="mt-1.5 h-10 w-full rounded-xl border border-[#DDE4E8] bg-white px-3 text-[12.5px]"
+                >
+                  {[2500, 5000, 10000, 25000, 50000].map((cents) => (
+                    <option key={cents} value={cents}>{formatCents(cents)}</option>
+                  ))}
+                </select>
+              </label>
+            </div>
+          )}
+        </section>
+      )}
+
       {addOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/35 p-4 backdrop-blur-[2px]" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setAddOpen(false); }}>
           <div role="dialog" aria-modal="true" className="dashboard-add-credits-dialog w-full max-w-[380px] overflow-hidden rounded-[24px] border border-black/10 bg-white shadow-[0_28px_80px_rgba(15,23,42,0.24)]">
             <div className="flex items-start justify-between border-b border-[#E5E9EB] px-6 py-5">
               <div>
                 <h3 className="text-[16px] font-semibold tracking-[-0.02em]">Add AI credits</h3>
-                <p className="mt-1 text-[12px] text-[#667069]">No payment provider is connected yet — this tops up your internal credits balance directly.</p>
+                <p className="mt-1 text-[12px] text-[#667069]">Paid through Razorpay. Credit lands once the payment clears and never expires.</p>
               </div>
               <button type="button" onClick={() => setAddOpen(false)} className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg hover:bg-[#F0F2F3]"><X size={16} /></button>
             </div>
@@ -496,9 +667,16 @@ function AIUsageSettingsPage() {
                   <button key={amount} type="button" onClick={() => setAddAmount(String(amount))} className="h-8 rounded-full border border-[#DDE4E8] px-3 text-[11.5px] font-semibold text-[#17233A] transition hover:bg-[#F7F8FA]">${amount}</button>
                 ))}
               </div>
+              <label className="mt-4 flex cursor-pointer items-start gap-2.5 rounded-xl border border-[#DDE4E8] p-3">
+                <input type="checkbox" checked={saveCard} onChange={(event) => setSaveCard(event.target.checked)} className="mt-0.5 h-4 w-4 accent-[#11120f]" />
+                <span>
+                  <span className="block text-[12px] font-semibold">Save this card</span>
+                  <span className="mt-0.5 block text-[11px] leading-4 text-[#667069]">Needed if you want auto-recharge later. You can turn it off any time.</span>
+                </span>
+              </label>
               {addError && <p className="mt-3 text-[11.5px] text-[#c63f4d]">{addError}</p>}
               <button type="button" disabled={adding} onClick={() => void submitAddCredits()} className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#11120f] text-[13px] font-semibold text-white transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-60">
-                {adding ? <LoaderCircle size={14} className="animate-spin" /> : <Check size={14} />} Add to balance
+                {adding ? <LoaderCircle size={14} className="animate-spin" /> : <Check size={14} />} Continue to payment
               </button>
             </div>
           </div>
@@ -507,6 +685,25 @@ function AIUsageSettingsPage() {
     </div>
   );
 }
+
+type AutoRechargeSettings = {
+  enabled: boolean;
+  amountCents: number | null;
+  thresholdPercent: number;
+  monthlyCapCents: number | null;
+  /** Whether a reusable card token is saved. Auto-recharge needs one. */
+  cardOnFile: boolean;
+  /** Why it last stopped, if it did. Cleared by the next successful charge. */
+  lastError: string | null;
+};
+
+type CreditsResponse = {
+  balanceCents?: number | null;
+  grantedCents?: number;
+  purchasedCents?: number;
+  autoRecharge?: AutoRechargeSettings | null;
+  isOwner?: boolean;
+};
 
 type TeamMemberRow = { id: string; email: string; name: string | null; avatarUrl: string | null };
 type TeamRow = { id: string; name: string; description: string | null; createdAt: string; members: TeamMemberRow[] };
@@ -767,6 +964,21 @@ function TeamsSettingsPage() {
 function UpgradeSettingsPage() {
   const [checkoutPlan, setCheckoutPlan] = useState<string | null>(null);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
+  const [cadence, setCadence] = useState<"monthly" | "annual">("monthly");
+  // Which plan the workspace is actually on. Without this the grid hard-coded
+  // Free as "Current plan", so a paying customer was shown their own tier as
+  // an upgrade and Free as what they were already on.
+  const [entitlement, setEntitlement] = useState<Entitlement | null>(null);
+
+  useEffect(() => {
+    fetch("/api/billing/status")
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: { entitlement?: Entitlement } | null) => setEntitlement(data?.entitlement ?? null))
+      .catch(() => undefined);
+  }, []);
+
+  const currentPlanId = entitlement?.planId ?? "free";
+  const currentRank = pricingPlans.findIndex((item) => item.id === currentPlanId);
 
   async function startCheckout(planId: string) {
     setCheckoutPlan(planId);
@@ -775,7 +987,7 @@ function UpgradeSettingsPage() {
       const response = await fetch("/api/billing/checkout", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ planId }),
+        body: JSON.stringify({ planId, cadence }),
       });
       const data = (await response.json().catch(() => ({}))) as {
         subscriptionId?: string;
@@ -791,7 +1003,7 @@ function UpgradeSettingsPage() {
       await openRazorpayCheckout({
         keyId: data.keyId,
         subscriptionId: data.subscriptionId,
-        description: `${plan?.name ?? "Elpino"} plan — monthly`,
+        description: `${plan?.name ?? "Elpino"} plan — ${cadence === "annual" ? "annual" : "monthly"}`,
       });
 
       // Razorpay has taken the payment, but the plan only changes once their
@@ -815,7 +1027,20 @@ function UpgradeSettingsPage() {
         </div>
         <div className="flex items-center gap-3">
           <Link href="/pricing" className="dashboard-plan-comparison text-[13px] font-semibold text-[#11120f] underline decoration-black/20 underline-offset-4 hover:decoration-black">Full plan comparison</Link>
-          <div className="dashboard-pricing-pill rounded-full border border-[#D8D5CE] bg-[#FAF9F6] px-4 py-2 text-[12px] font-medium text-[#657069]">Flat monthly pricing</div>
+          <div className="dashboard-pricing-pill flex items-center gap-1 rounded-full border border-[#D8D5CE] bg-[#FAF9F6] p-1" role="group" aria-label="Billing cadence">
+            {(["monthly", "annual"] as const).map((option) => (
+              <button
+                key={option}
+                type="button"
+                onClick={() => setCadence(option)}
+                aria-pressed={cadence === option}
+                className={`rounded-full px-3.5 py-1.5 text-[12px] font-semibold capitalize transition ${cadence === option ? "bg-[#11120f] text-white" : "text-[#657069] hover:text-[#11120f]"}`}
+              >
+                {option}
+                {option === "annual" && <span className="ml-1.5 text-[10px] font-bold uppercase tracking-[0.08em]">save {ANNUAL_SAVING_PERCENT}%</span>}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -828,17 +1053,29 @@ function UpgradeSettingsPage() {
             <div className="pt-10">
               <h3 className="text-[28px] font-medium tracking-[-0.04em] text-[#11120f]">{plan.name}</h3>
               <p className="mt-2 min-h-[66px] text-[14px] leading-5 text-[#667069]">{plan.description}</p>
-              <div className="dashboard-plan-price mt-6 flex items-end gap-1 border-b border-[#D8D5CE] pb-5"><span className="text-[43px] font-medium tracking-[-0.06em] text-[#11120f]">{plan.price}</span>{plan.id !== "free" && <span className="pb-1.5 text-[14px] text-[#667069]">/mo</span>}</div>
+              <div className="dashboard-plan-price mt-6 flex items-end gap-1 border-b border-[#D8D5CE] pb-5"><span className="text-[43px] font-medium tracking-[-0.06em] text-[#11120f]">{getPlanPrice(plan, cadence === "annual" ? "yearly" : "monthly")}</span>{plan.id !== "free" && <span className="pb-1.5 text-[14px] text-[#667069]">/mo</span>}</div>
+              {plan.id !== "free" && <p className="mt-2 text-[12px] text-[#667069]">{cadence === "annual" ? `${getAnnualTotal(plan)} billed yearly` : "Billed monthly"}</p>}
             </div>
             <ul className="mt-5 space-y-3">
               {plan.features.map((feature) => <li key={feature} className="flex gap-2.5 text-[13px] leading-5 text-[#46505a]"><Check size={16} strokeWidth={2.5} className="mt-0.5 shrink-0 text-[#11120f]" /> {feature}</li>)}
             </ul>
             <div className="mt-auto pt-6">
-              {plan.id === "free" ? (
+              {plan.id === currentPlanId ? (
                 <button type="button" disabled className="dashboard-current-plan h-12 w-full rounded-full border border-[#CBD7DC] bg-[#FAF9F6] text-[13px] font-semibold text-[#657069]">Current plan</button>
+              ) : plan.id === "free" ? (
+                // Moving back to Free is a cancellation, not a checkout —
+                // there is nothing to charge for, so it goes through the
+                // billing page's cancel flow rather than Razorpay.
+                <Link href="/dashboard/settings/billing" className="dashboard-plan-cta flex h-12 w-full items-center justify-center gap-2 rounded-full border border-[#CBD7DC] bg-white text-[13px] font-semibold text-[#11120f] transition hover:border-[#11120f]">
+                  Downgrade to Free <ArrowRight size={13} />
+                </Link>
               ) : (
                 <button type="button" disabled={checkoutPlan !== null} onClick={() => void startCheckout(plan.id)} className={`dashboard-plan-cta flex h-12 w-full items-center justify-center gap-2 rounded-full text-[13px] font-semibold transition disabled:opacity-60 ${plan.highlighted ? "dashboard-plan-cta-primary border border-[#11120f] bg-[#11120f] text-white hover:bg-black" : "border border-[#CBD7DC] bg-white text-[#11120f] hover:border-[#11120f] hover:bg-[#11120f] hover:text-white"}`}>
-                  {checkoutPlan === plan.id ? <><LoaderCircle size={14} className="animate-spin" /> Opening checkout</> : <>Upgrade to {plan.name} <ArrowRight size={13} /></>}
+                  {checkoutPlan === plan.id ? (
+                    <><LoaderCircle size={14} className="animate-spin" /> Opening checkout</>
+                  ) : (
+                    <>{currentRank > -1 && pricingPlans.findIndex((item) => item.id === plan.id) < currentRank ? "Switch to" : "Upgrade to"} {plan.name} <ArrowRight size={13} /></>
+                  )}
                 </button>
               )}
             </div>
@@ -867,7 +1104,11 @@ type Entitlement = {
   seatsPurchased: number;
   seatsAllowed: number;
   seatsMax: number | null;
-  seatPriceUsdCents: number;
+  /** Cheapest per-seat rate across the bundles, for the "from" price. */
+  seatFromUsdCents?: number;
+  seatBundles?: { seats: number; usdCents: number; inrPaise: number }[];
+  /** AI credit this plan grants each period, in USD cents. */
+  aiCreditGrantUsdCents?: number;
   resolutionsIncluded: number;
   resolutionsUsed: number;
   resolutionsRemaining: number;
@@ -878,9 +1119,37 @@ type Entitlement = {
   knowledgeBytesAllowed: number;
   knowledgeBytesRemaining: number;
   canResolve: boolean;
+  cadence?: "monthly" | "annual";
+  currency?: string;
+  removeBranding?: boolean;
+  /** A plan change started but not yet confirmed by Razorpay's webhook. */
+  pendingPlanId?: string | null;
+  /** Cancellation requested; the plan runs to the end of the paid period. */
+  cancelling?: boolean;
   currentPeriodStart: string;
   currentPeriodEnd: string | null;
 };
+
+/** A real payment from /api/billing/payments, as opposed to the placeholder
+ *  invoice shape the history tab used to render from a field nothing set. */
+type BillingPayment = {
+  id: string;
+  kind: string;
+  amountMinor?: number;
+  amountPaise: number;
+  currency: string;
+  status: string;
+  createdAt: string;
+};
+
+/** Formats a Razorpay amount, which is always in the smallest currency unit. */
+function formatMoney(amountMinor: number, currency: string): string {
+  try {
+    return new Intl.NumberFormat(undefined, { style: "currency", currency }).format(amountMinor / 100);
+  } catch {
+    return `${(amountMinor / 100).toFixed(2)} ${currency}`;
+  }
+}
 
 type BillingStatus = {
   entitlement?: Entitlement;
@@ -930,13 +1199,30 @@ function BillingSettingsPage() {
   const [billing, setBilling] = useState<BillingStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
+  // Billing history came from `billing.invoices`, which /api/billing/status
+  // has never returned — so the tab was permanently empty even for workspaces
+  // with real charges behind them. The payments endpoint is the actual
+  // source, and it has existed all along with nothing calling it.
+  const [payments, setPayments] = useState<BillingPayment[]>([]);
+  const [cancelOpen, setCancelOpen] = useState(false);
+  const [cancelBusy, setCancelBusy] = useState(false);
+  const [cancelError, setCancelError] = useState<string | null>(null);
+  const [cancelNotice, setCancelNotice] = useState<string | null>(null);
+
+  function loadStatus() {
+    return fetch("/api/billing/status")
+      .then((response) => (response.ok ? response.json() : Promise.reject()))
+      .then((data: BillingStatus) => setBilling(data))
+      .catch(() => setLoadError(true));
+  }
 
   useEffect(() => {
-    fetch("/api/billing/status")
-      .then((response) => response.ok ? response.json() : Promise.reject())
-      .then((data: BillingStatus) => setBilling(data))
-      .catch(() => setLoadError(true))
-      .finally(() => setLoading(false));
+    void loadStatus().finally(() => setLoading(false));
+    fetch("/api/billing/payments")
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: { payments?: BillingPayment[] } | null) => setPayments(data?.payments ?? []))
+      .catch(() => undefined);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const entitlement = billing?.entitlement;
@@ -945,7 +1231,29 @@ function BillingSettingsPage() {
   const status = entitlement?.status ?? "active";
   const periodEnd = entitlement?.currentPeriodEnd ?? undefined;
   const paymentMethod = billing?.paymentMethod;
-  const invoices = billing?.invoices ?? [];
+  const cadence = entitlement?.cadence ?? "monthly";
+  const cancelling = Boolean(entitlement?.cancelling) || status === "cancelling";
+
+  async function cancelSubscription() {
+    setCancelBusy(true);
+    setCancelError(null);
+    try {
+      const response = await fetch("/api/billing/subscription/cancel", { method: "POST" });
+      const data = (await response.json().catch(() => ({}))) as { message?: string; effectiveAt?: string | null };
+      if (!response.ok) throw new Error(data.message ?? "Could not cancel your subscription.");
+      setCancelNotice(
+        data.effectiveAt
+          ? `Your plan stays active until ${new Date(data.effectiveAt).toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" })}, then moves to Free.`
+          : "Your plan will move to Free at the end of the current period.",
+      );
+      setCancelOpen(false);
+      await loadStatus();
+    } catch (issue) {
+      setCancelError(issue instanceof Error ? issue.message : "Could not cancel your subscription.");
+    } finally {
+      setCancelBusy(false);
+    }
+  }
 
   return (
     <div className="dashboard-billing-page mx-auto w-full max-w-[1040px] px-7 pb-16 pt-9 text-[#11120f] sm:px-9 lg:px-10">
@@ -976,7 +1284,13 @@ function BillingSettingsPage() {
             <div className="flex items-center justify-between"><span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#EEF3F5]"><CalendarDays size={18} /></span><span className="text-[11px] font-medium text-[#6D7D85]">Billing cycle</span></div>
             <h3 className="mt-5 text-[18px] font-medium">{plan.id === "free" ? "No upcoming charge" : "Next payment"}</h3>
             <p className="mt-2 text-[13px] text-[#667069]">{periodEnd ? new Date(periodEnd).toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" }) : plan.id === "free" ? "Upgrade whenever your team is ready." : "Monthly subscription"}</p>
-            <div className="mt-auto border-t border-[#E5E9EB] pt-4 text-[12px] text-[#667069]">Your plan buys AI resolutions. Extra teammates are ${(entitlement?.seatPriceUsdCents ?? 100) / 100}/month each.</div>
+            <div className="mt-auto border-t border-[#E5E9EB] pt-4 text-[12px] text-[#667069]">
+              {cancelling
+                ? "Cancelled — this plan runs to the end of the period, then moves to Free."
+                : entitlement?.pendingPlanId
+                  ? "Finishing your plan change — it lands as soon as your payment is confirmed."
+                  : `Billed ${cadence === "annual" ? "yearly" : "monthly"}. Your plan buys AI resolutions; extra teammates come in seat packs from $${((entitlement?.seatFromUsdCents ?? 60) / 100).toFixed(2)} a seat.`}
+            </div>
           </article>
 
           <MeterCard
@@ -985,9 +1299,15 @@ function BillingSettingsPage() {
             total={entitlement?.resolutionsIncluded ?? 0}
             unit="this period"
             footer={
-              entitlement?.overageUsdCents != null
-                ? `Past the allowance, extra resolutions are $${(entitlement.overageUsdCents / 100).toFixed(2)} each.`
-                : "At the limit the AI hands new conversations to your team instead of answering. Escalations are never billed."
+              (entitlement?.aiCreditGrantUsdCents ?? 0) > 0
+                ? `Includes $${((entitlement?.aiCreditGrantUsdCents ?? 0) / 100).toFixed(2)} of AI credit every period. ${
+                    entitlement?.overageUsdCents != null
+                      ? `Past the resolution allowance, extra replies are $${(entitlement.overageUsdCents / 100).toFixed(2)} each.`
+                      : "At the limit the AI hands new conversations to your team instead of answering — escalations are never billed."
+                  }`
+                : entitlement?.overageUsdCents != null
+                  ? `Past the allowance, extra resolutions are $${(entitlement.overageUsdCents / 100).toFixed(2)} each.`
+                  : "At the limit the AI hands new conversations to your team instead of answering. Escalations are never billed."
             }
           />
 
@@ -996,7 +1316,7 @@ function BillingSettingsPage() {
             used={entitlement?.seatsAllowed ?? 0}
             total={entitlement?.seatsMax ?? entitlement?.seatsAllowed ?? 0}
             unit="in this workspace"
-            footer={`${entitlement?.seatsIncluded ?? 0} included with ${plan.name}${(entitlement?.seatsPurchased ?? 0) > 0 ? `, ${entitlement?.seatsPurchased} added at $1/month` : ""}. Adding seats never changes your resolution allowance.`}
+            footer={`${entitlement?.seatsIncluded ?? 0} included with ${plan.name}${(entitlement?.seatsPurchased ?? 0) > 0 ? `, ${entitlement?.seatsPurchased} added in seat packs` : ""}. Adding seats never changes your resolution allowance.`}
           />
 
           <MeterCard
@@ -1008,7 +1328,37 @@ function BillingSettingsPage() {
           />
 
           <button type="button" onClick={() => setTab("payment")} className="group flex items-center gap-4 rounded-2xl border border-[#DDE4E8] p-5 text-left hover:bg-[#FAFBFB]"><span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#EEF3F5]"><CreditCard size={19} /></span><span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">Payment method</span><span className="mt-1 block text-[12px] text-[#667069]">{paymentMethod?.last4 ? `${paymentMethod.brand ?? "Card"} ending in ${paymentMethod.last4}` : "No payment method saved"}</span></span><ArrowRight size={16} className="transition group-hover:translate-x-1" /></button>
-          <button type="button" onClick={() => setTab("history")} className="group flex items-center gap-4 rounded-2xl border border-[#DDE4E8] p-5 text-left hover:bg-[#FAFBFB]"><span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#EEF3F5]"><ReceiptText size={19} /></span><span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">Billing history</span><span className="mt-1 block text-[12px] text-[#667069]">{invoices.length ? `${invoices.length} invoice${invoices.length === 1 ? "" : "s"}` : "No invoices yet"}</span></span><ArrowRight size={16} className="transition group-hover:translate-x-1" /></button>
+          <button type="button" onClick={() => setTab("history")} className="group flex items-center gap-4 rounded-2xl border border-[#DDE4E8] p-5 text-left hover:bg-[#FAFBFB]"><span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#EEF3F5]"><ReceiptText size={19} /></span><span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">Billing history</span><span className="mt-1 block text-[12px] text-[#667069]">{payments.length ? `${payments.length} payment${payments.length === 1 ? "" : "s"}` : "No payments yet"}</span></span><ArrowRight size={16} className="transition group-hover:translate-x-1" /></button>
+
+          {cancelNotice && <div role="status" className="md:col-span-2 rounded-2xl border border-[#CBD9D0] bg-[#F5FAF7] px-5 py-4 text-[13px] text-[#33684C]">{cancelNotice}</div>}
+
+          {plan.id !== "free" && !cancelling && (
+            <div className="md:col-span-2 rounded-2xl border border-[#E6E3DC] bg-[#FAF9F6] p-5">
+              {cancelOpen ? (
+                <div>
+                  <p className="text-[14px] font-semibold">Cancel your {plan.name} plan?</p>
+                  <p className="mt-1.5 text-[12px] leading-5 text-[#667069]">
+                    You keep {plan.name} until the end of the period you have already paid for. After that the workspace moves to Free: {pricingPlans[0].resolutions} AI resolutions a month, {pricingPlans[0].seatsIncluded} seats, and purchased seats are released.
+                  </p>
+                  {cancelError && <p role="alert" className="mt-3 text-[12px] text-[#A5414B]">{cancelError}</p>}
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <button type="button" disabled={cancelBusy} onClick={() => void cancelSubscription()} className="flex h-10 items-center gap-2 rounded-full bg-[#A5414B] px-5 text-[12px] font-semibold text-white transition hover:bg-[#8E3640] disabled:opacity-60">
+                      {cancelBusy && <LoaderCircle size={13} className="animate-spin" />} Yes, cancel at period end
+                    </button>
+                    <button type="button" disabled={cancelBusy} onClick={() => { setCancelOpen(false); setCancelError(null); }} className="h-10 rounded-full border border-[#CBD7DC] bg-white px-5 text-[12px] font-semibold text-[#11120f]">Keep my plan</button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                  <div>
+                    <p className="text-[14px] font-semibold">Cancel subscription</p>
+                    <p className="mt-1 text-[12px] text-[#667069]">Moves the workspace to Free at the end of the period you have paid for. No refund is taken back.</p>
+                  </div>
+                  <button type="button" onClick={() => setCancelOpen(true)} className="h-10 rounded-full border border-[#D9C2C5] bg-white px-5 text-[12px] font-semibold text-[#A5414B] transition hover:bg-[#FFF7F7]">Cancel subscription</button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
 
@@ -1024,7 +1374,23 @@ function BillingSettingsPage() {
       {!loading && tab === "history" && (
         <div className="mt-7 overflow-hidden rounded-[24px] border border-[#DDE4E8] bg-white">
           <div className="flex items-center justify-between border-b border-[#E5E9EB] px-6 py-5"><div><h3 className="text-[18px] font-medium">Billing history</h3><p className="mt-1 text-[12px] text-[#667069]">Download invoices and review previous charges.</p></div></div>
-          {invoices.length ? <div>{invoices.map((invoice, index) => <div key={invoice.id ?? index} className={`flex items-center gap-4 px-6 py-4 ${index ? "border-t border-[#EDF0F1]" : ""}`}><span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#EEF3F5]"><ReceiptText size={16} /></span><div className="min-w-0 flex-1"><p className="text-[13px] font-semibold">{invoice.id ?? `Invoice ${index + 1}`}</p><p className="mt-0.5 text-[11px] text-[#667069]">{invoice.date ? new Date(invoice.date).toLocaleDateString() : "Billing invoice"}</p></div><span className="text-[13px] font-semibold">{typeof invoice.amount === "number" ? `$${invoice.amount}` : invoice.amount ?? "—"}</span><span className="rounded-full bg-[#EEF8F2] px-2.5 py-1 text-[10px] font-semibold capitalize text-[#34845c]">{invoice.status ?? "paid"}</span>{invoice.url ? <a href={invoice.url} target="_blank" rel="noreferrer" aria-label="Download invoice" className="rounded-lg p-2 hover:bg-[#F1F3F4]"><Download size={16} /></a> : <span className="w-8" />}</div>)}</div> : <div className="flex flex-col items-center px-5 py-14 text-center"><span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#EEF3F5]"><ReceiptText size={23} /></span><h4 className="mt-4 text-[15px] font-semibold">No billing history yet</h4><p className="mt-2 max-w-sm text-[12px] leading-5 text-[#667069]">Invoices and payment receipts will appear here after your first paid billing cycle.</p></div>}
+          {payments.length ? (
+            <div>
+              {payments.map((payment, index) => (
+                <div key={payment.id} className={`flex items-center gap-4 px-6 py-4 ${index ? "border-t border-[#EDF0F1]" : ""}`}>
+                  <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#EEF3F5]"><ReceiptText size={16} /></span>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[13px] font-semibold capitalize">{payment.kind === "seats" ? "Extra seats" : payment.kind === "overage" ? "Resolution overage" : "Subscription"}</p>
+                    <p className="mt-0.5 text-[11px] text-[#667069]">{new Date(payment.createdAt).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })}</p>
+                  </div>
+                  <span className="text-[13px] font-semibold">{formatMoney(payment.amountMinor ?? payment.amountPaise, payment.currency)}</span>
+                  <span className={`rounded-full px-2.5 py-1 text-[10px] font-semibold capitalize ${payment.status === "failed" ? "bg-[#FDF1F2] text-[#A5414B]" : "bg-[#EEF8F2] text-[#34845c]"}`}>{payment.status}</span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center px-5 py-14 text-center"><span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#EEF3F5]"><ReceiptText size={23} /></span><h4 className="mt-4 text-[15px] font-semibold">No billing history yet</h4><p className="mt-2 max-w-sm text-[12px] leading-5 text-[#667069]">Payments and receipts will appear here after your first paid billing cycle.</p></div>
+          )}
         </div>
       )}
     </div>
@@ -1034,6 +1400,211 @@ function BillingSettingsPage() {
 type AiPersona = { id: string; name: string; aiName: string; aiAvatarUrl: string | null; aiPersona: string | null; chatbotAccent: string; chatbotTheme: "light" | "dark" | "auto"; greetingLines: string[] };
 
 type Account = { email: string; name: string | null; avatarUrl: string | null; emailVerified: boolean; twoFactorEnabled: boolean };
+
+type WorkspaceRef = { id: string; name: string };
+type DeletionPlan = { canDelete: boolean; blocked: WorkspaceRef[]; soloOwned: WorkspaceRef[]; memberOf: WorkspaceRef[] };
+
+/**
+ * Delete workspace / Remove workspace / Delete account, gated behind
+ * type-to-confirm for the two truly irreversible ones. "Remove workspace"
+ * (leaving one you don't own) only asks for a click — you can always be
+ * re-invited, so it doesn't carry the same weight as destroying data.
+ */
+function DangerZoneSection() {
+  const { workspace, loading: loadingWorkspace } = useCurrentWorkspace();
+  const isOwner = workspace?.role === "owner";
+
+  const [open, setOpen] = useState<"workspace" | "account" | null>(null);
+  const [confirmText, setConfirmText] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const [plan, setPlan] = useState<DeletionPlan | null>(null);
+  const [loadingPlan, setLoadingPlan] = useState(false);
+
+  async function openAccountDialog() {
+    setOpen("account");
+    setError(null);
+    setConfirmText("");
+    setLoadingPlan(true);
+    try {
+      const response = await fetch("/api/account/delete-plan");
+      const data = (await response.json().catch(() => ({}))) as DeletionPlan & { message?: string };
+      if (!response.ok) {
+        setError(data.message ?? "Could not check your account");
+        setPlan(null);
+      } else {
+        setPlan(data);
+      }
+    } catch {
+      setError("Could not check your account");
+      setPlan(null);
+    } finally {
+      setLoadingPlan(false);
+    }
+  }
+
+  function closeDialog() {
+    setOpen(null);
+    setConfirmText("");
+    setError(null);
+    setPlan(null);
+  }
+
+  async function removeWorkspace() {
+    setBusy(true);
+    setError(null);
+    try {
+      const response = await fetch("/api/workspace/danger/leave-workspace", { method: "POST" });
+      const data = (await response.json().catch(() => ({}))) as { message?: string };
+      if (!response.ok) {
+        setError(data.message ?? "Could not remove this workspace");
+        return;
+      }
+      window.location.assign("/dashboard");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function confirmDestroy() {
+    if (!open) return;
+    setBusy(true);
+    setError(null);
+    try {
+      const endpoint = open === "workspace" ? "/api/workspace/danger/delete-workspace" : "/api/account/delete";
+      const response = await fetch(endpoint, { method: "POST" });
+      const data = (await response.json().catch(() => ({}))) as { message?: string };
+      if (!response.ok) {
+        setError(data.message ?? "Something went wrong");
+        return;
+      }
+      window.location.assign(open === "account" ? "/login" : "/dashboard");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  const requiredText = open === "workspace" ? workspace?.name ?? "" : "DELETE";
+  const confirmReady = open === "account" ? confirmText === "DELETE" : confirmText.trim() === requiredText.trim() && requiredText.trim() !== "";
+
+  return (
+    <div className="mx-auto mt-8 w-full max-w-[1120px] px-8 sm:px-10 lg:px-12">
+      <div className="rounded-2xl border border-[#f2c7c7] bg-[#fff9f9] p-6">
+        <div className="flex items-center gap-2 text-[#8f3d45]">
+          <CircleAlert size={16} />
+          <h3 className="text-[14px] font-semibold">Danger zone</h3>
+        </div>
+
+        {!loadingWorkspace && workspace && (
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-[#f2dede] pt-4">
+            <div>
+              <p className="text-[13px] font-medium text-[#17181a]">{isOwner ? "Delete this workspace" : "Remove this workspace"}</p>
+              <p className="mt-1 max-w-md text-[12px] text-[#8a7373]">
+                {isOwner
+                  ? `Permanently deletes "${workspace.name}" — every conversation, customer, knowledge base article, and its subscription. This cannot be undone.`
+                  : `Removes you from "${workspace.name}". Your open conversations are handed to a teammate first. You can be re-invited later.`}
+              </p>
+            </div>
+            {isOwner ? (
+              <button type="button" onClick={() => { setOpen("workspace"); setError(null); setConfirmText(""); }} className="flex h-10 shrink-0 items-center gap-2 rounded-full border border-[#e5b3b3] bg-white px-4 text-[12px] font-semibold text-[#A64A53] transition hover:bg-[#fff3f3]">
+                <Trash2 size={13} /> Delete workspace
+              </button>
+            ) : (
+              <button type="button" disabled={busy} onClick={() => void removeWorkspace()} className="flex h-10 shrink-0 items-center gap-2 rounded-full border border-[#e5b3b3] bg-white px-4 text-[12px] font-semibold text-[#A64A53] transition hover:bg-[#fff3f3] disabled:cursor-not-allowed disabled:opacity-60">
+                {busy ? <LoaderCircle size={13} className="animate-spin" /> : <LogOut size={13} />} Remove workspace
+              </button>
+            )}
+          </div>
+        )}
+
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-[#f2dede] pt-4">
+          <div>
+            <p className="text-[13px] font-medium text-[#17181a]">Delete your account</p>
+            <p className="mt-1 max-w-md text-[12px] text-[#8a7373]">Permanently deletes your account and every workspace only you own. Workspaces you share with teammates are left, not destroyed.</p>
+          </div>
+          <button type="button" onClick={() => void openAccountDialog()} className="flex h-10 shrink-0 items-center gap-2 rounded-full border border-[#e5b3b3] bg-white px-4 text-[12px] font-semibold text-[#A64A53] transition hover:bg-[#fff3f3]">
+            <Trash2 size={13} /> Delete account
+          </button>
+        </div>
+
+        {open && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/35 p-4 backdrop-blur-[2px]" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) closeDialog(); }}>
+            <div role="dialog" aria-modal="true" className="w-full max-w-[420px] overflow-hidden rounded-[24px] border border-black/10 bg-white shadow-[0_28px_80px_rgba(15,23,42,0.24)]">
+              <div className="flex items-start justify-between border-b border-[#E5E9EB] px-6 py-5">
+                <div>
+                  <h3 className="text-[16px] font-semibold tracking-[-0.02em] text-[#8f3d45]">
+                    {open === "workspace" ? `Delete "${workspace?.name}"?` : "Delete your account?"}
+                  </h3>
+                  <p className="mt-1 text-[12px] text-[#667069]">This cannot be undone.</p>
+                </div>
+                <button type="button" onClick={closeDialog} className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg hover:bg-[#F0F2F3]"><X size={16} /></button>
+              </div>
+
+              <div className="p-6">
+                {open === "account" && loadingPlan && <p className="text-[12.5px] text-[#667069]">Checking your workspaces…</p>}
+
+                {open === "account" && !loadingPlan && plan && !plan.canDelete && (
+                  <div>
+                    <p className="text-[12.5px] leading-5 text-[#667069]">
+                      You're the only owner of workspaces that still have other people in them. Delete these, or remove the other members, before deleting your account:
+                    </p>
+                    <ul className="mt-3 space-y-1.5">
+                      {plan.blocked.map((item) => (
+                        <li key={item.id} className="rounded-lg bg-[#FAF9F6] px-3 py-2 text-[12.5px] font-medium">{item.name}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {open === "account" && !loadingPlan && plan?.canDelete && (
+                  <div className="text-[12.5px] leading-5 text-[#667069]">
+                    {plan.soloOwned.length > 0 && (
+                      <p>
+                        Deletes {plan.soloOwned.length === 1 ? "the workspace" : `all ${plan.soloOwned.length} workspaces`} you solely own: {plan.soloOwned.map((w) => `"${w.name}"`).join(", ")}.
+                      </p>
+                    )}
+                    {plan.memberOf.length > 0 && (
+                      <p className="mt-2">You'll be removed from {plan.memberOf.map((w) => `"${w.name}"`).join(", ")} — those workspaces are left as they are.</p>
+                    )}
+                  </div>
+                )}
+
+                {(open === "workspace" || (open === "account" && plan?.canDelete)) && (
+                  <div className="mt-4">
+                    <label className="block text-[11.5px] font-semibold text-[#17233A]">
+                      {open === "workspace" ? `Type "${requiredText}" to confirm` : 'Type "DELETE" to confirm'}
+                    </label>
+                    <input
+                      value={confirmText}
+                      onChange={(event) => setConfirmText(event.target.value)}
+                      placeholder={requiredText}
+                      className="mt-2 h-11 w-full rounded-xl border border-[#DDE4E8] px-3 text-[13px] outline-none focus:border-[#A64A53] focus:ring-2 focus:ring-[#A64A53]/10"
+                    />
+                  </div>
+                )}
+
+                {error && <p role="alert" className="mt-3 text-[11.5px] text-[#c63f4d]">{error}</p>}
+
+                {(open === "workspace" || (open === "account" && plan?.canDelete)) && (
+                  <button
+                    type="button"
+                    disabled={busy || !confirmReady}
+                    onClick={() => void confirmDestroy()}
+                    className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#A64A53] text-[13px] font-semibold text-white transition hover:bg-[#8f3d45] disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {busy ? <LoaderCircle size={14} className="animate-spin" /> : <Trash2 size={14} />}
+                    {open === "workspace" ? "Delete workspace" : "Delete account"}
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 function GeneralSettingsPage({ user }: { user: SettingsUser }) {
   const router = useRouter();
@@ -1386,6 +1957,8 @@ function GeneralSettingsPage({ user }: { user: SettingsUser }) {
           {saving ? <><RefreshCw size={14} className="animate-spin" /> Saving...</> : <><Save size={14} /> Save changes</>}
         </button>
       </div>
+
+      <DangerZoneSection />
     </>
   );
 }
@@ -2325,6 +2898,117 @@ function PeopleSettingsPage() {
       </div>
 
       <InvitePeopleDialog open={dialogOpen} onClose={() => setDialogOpen(false)} onInvited={loadInvitations} />
+    </div>
+  );
+}
+
+/**
+ * The dashboard language: what agents read customer messages in. Customer
+ * messages written in another language get an on-demand "See translation"
+ * button in the inbox that translates into whatever is picked here.
+ *
+ * Separate from the AI's own reply language, which it infers per-conversation
+ * from the customer rather than following a workspace-wide setting — this
+ * page is purely about what a human teammate sees.
+ */
+function TranslationSettingsPage() {
+  const { workspace } = useCurrentWorkspace();
+  const isOwner = workspace?.role === "owner";
+
+  const [language, setLanguage] = useState("en");
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("/api/workspace/dashboard-language")
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: { dashboardLanguage?: string } | null) => setLanguage(data?.dashboardLanguage ?? "en"))
+      .catch(() => undefined)
+      .finally(() => setLoading(false));
+  }, []);
+
+  async function changeLanguage(code: string) {
+    const previous = language;
+    setLanguage(code);
+    setSaving(true);
+    setSaved(false);
+    setError(null);
+    try {
+      const response = await fetch("/api/workspace/dashboard-language", {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ code }),
+      });
+      const data = (await response.json().catch(() => ({}))) as { dashboardLanguage?: string; message?: string };
+      if (!response.ok) {
+        setLanguage(previous);
+        setError(data.message ?? "Could not update the workspace language");
+        return;
+      }
+      setSaved(true);
+    } catch {
+      setLanguage(previous);
+      setError("Could not update the workspace language");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  const currentName = SUPPORTED_LANGUAGES.find((item) => item.code === language)?.name ?? "English";
+
+  return (
+    <div className="mx-auto w-full max-w-[980px] px-7 pb-16 pt-9 text-[#11120f] sm:px-9 lg:px-10">
+      <div>
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Workspace</p>
+        <h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em]">Translations</h2>
+        <p className="mt-2 max-w-2xl text-[14px] leading-6 text-[#667069]">
+          Pick the language your team reads the dashboard in. When a customer writes in a different language, their message gets a &quot;See translation&quot; button in the inbox — nothing is translated automatically or shown to the customer.
+        </p>
+      </div>
+
+      <div className="mt-8 overflow-hidden rounded-[24px] border border-[#DDE4E8] bg-white">
+        <div className="border-b border-[#E5E9EB] px-6 py-5">
+          <h3 className="text-[18px] font-medium">Workspace language</h3>
+          <p className="mt-1 text-[12px] text-[#667069]">The default language used across this workspace.</p>
+        </div>
+        <div className="flex flex-wrap items-center justify-between gap-4 px-6 py-5">
+          <div className="min-w-0">
+            <p className="text-[14px] font-semibold">{loading ? "Loading…" : currentName}</p>
+            {!isOwner && <p className="mt-1 text-[12px] text-[#8a7373]">Only the workspace owner can change this.</p>}
+          </div>
+          <select
+            value={language}
+            disabled={loading || saving || !isOwner}
+            onChange={(event) => void changeLanguage(event.target.value)}
+            className="h-11 min-w-[220px] rounded-xl border border-[#DDE4E8] bg-white px-3 text-[13px] outline-none focus:border-[#11120f] focus:ring-2 focus:ring-[#11120f]/8 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {SUPPORTED_LANGUAGES.map((item) => (
+              <option key={item.code} value={item.code}>{item.name}</option>
+            ))}
+          </select>
+        </div>
+        {(saving || saved || error) && (
+          <div className="border-t border-[#E9ECEE] px-6 py-3 text-[12px]">
+            {saving && <span className="flex items-center gap-1.5 text-[#667069]"><LoaderCircle size={13} className="animate-spin" /> Saving…</span>}
+            {!saving && saved && <span className="flex items-center gap-1.5 text-[#2e8a5c]"><Check size={13} /> Saved</span>}
+            {!saving && error && <span className="text-[#c63f4d]">{error}</span>}
+          </div>
+        )}
+      </div>
+
+      <div className="mt-6 rounded-[24px] border border-[#DDE4E8] bg-[#FAF9F6] p-6">
+        <div className="flex items-start gap-4">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white"><Languages size={18} /></span>
+          <div>
+            <p className="text-[14px] font-semibold">How translation works in the inbox</p>
+            <p className="mt-1.5 max-w-xl text-[12.5px] leading-5 text-[#667069]">
+              Customer messages always show in the language they were written in. If a message isn&apos;t in {currentName}, a small &quot;See translation&quot; link appears under it — click it to translate that one message into {currentName}, or click again to switch back to the original. Translating is on demand and per message, so it only runs for messages someone actually asks about.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -3301,6 +3985,8 @@ export function SettingsClient({ user, page = "General", auditView = "all" }: { 
           <PresenceLogSettingsPage />
         ) : currentPage === "Tag Manager" ? (
           <TagManagerSettingsPage />
+        ) : currentPage === "Translations" ? (
+          <TranslationSettingsPage />
         ) : (
           <FeatureSettingsPage title={currentPage} />
         )}
