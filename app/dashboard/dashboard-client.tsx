@@ -30,6 +30,7 @@ import {
   X,
 } from "lucide-react";
 import { BRAND_GRADIENT } from "@/lib/gradient";
+import { SUPPORTED_LANGUAGES } from "@/app/dashboard/settings/languages";
 import MessageMarkdown from "@/app/components/MessageMarkdown";
 import TypingDots from "@/app/components/TypingDots";
 import {
@@ -137,12 +138,32 @@ function DashboardContent({ name }: { name: string }) {
   const [loading, setLoading] = useState(true);
   const [draft, setDraft] = useState("");
   const [sending, setSending] = useState(false);
+  const [translatingDraft, setTranslatingDraft] = useState(false);
+  // What the composer held before the last "Translate" swap, so the small
+  // "Undo" next to the result can put it back without the agent retyping.
+  const [preTranslateDraft, setPreTranslateDraft] = useState<string | null>(null);
+  const [translateError, setTranslateError] = useState<string | null>(null);
   const [customerTyping, setCustomerTyping] = useState(false);
   const [ticketState, setTicketState] = useState<"idle" | "creating">("idle");
   const [ticket, setTicket] = useState<CreatedTicket | null>(null);
   const [ticketError, setTicketError] = useState<string | null>(null);
   const [myAccountId, setMyAccountId] = useState<string | null>(null);
+  // Gates opening a secure request — reveal is owner-only server-side, and
+  // showing "Open once" to someone it will just 403 for is exactly the kind
+  // of dead control this file's own comments already warn against.
+  const [myRole, setMyRole] = useState<string | null>(null);
   const [joining, setJoining] = useState(false);
+  // Translation cache, per message id — filled the first time "See
+  // translation" is clicked, and never re-fetched after that unless the
+  // conversation changes (a fresh mount clears it, same as `messages` does).
+  // `null` means "already checked, and it's already in the workspace
+  // language" — distinct from "not checked yet" (absent) so a second click
+  // doesn't call the backend again just to find that out twice.
+  const [translations, setTranslations] = useState<Record<string, { text: string | null; detectedLanguage: string }>>({});
+  const [translating, setTranslating] = useState<Set<string>>(new Set());
+  // Which cached translations are currently being shown in place of the
+  // original — toggled per message by clicking the link again.
+  const [showingTranslation, setShowingTranslation] = useState<Set<string>>(new Set());
   const [resolving, setResolving] = useState(false);
   const [emojiOpen, setEmojiOpen] = useState(false);
   const [secureOpen, setSecureOpen] = useState(false);
@@ -153,6 +174,11 @@ function DashboardContent({ name }: { name: string }) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [unclaiming, setUnclaiming] = useState(false);
+  // Leaving is not reversible from the agent's side — the thread goes back
+  // to the AI (or waits unassigned if it was escalated) and the customer
+  // sees "<name> left the chat". Worth one confirmation, since the button
+  // sits next to Resolve and the two do very different things.
+  const [confirmLeave, setConfirmLeave] = useState(false);
   const [summarizing, setSummarizing] = useState(false);
   const [summary, setSummary] = useState<string | null>(null);
   const [summaryError, setSummaryError] = useState<string | null>(null);
@@ -192,6 +218,10 @@ function DashboardContent({ name }: { name: string }) {
     setSearchQuery("");
     setSummary(null);
     setSummaryError(null);
+    setTranslations({});
+    setShowingTranslation(new Set());
+    setPreTranslateDraft(null);
+    setTranslateError(null);
 
     function load() {
       Promise.all([
@@ -231,6 +261,14 @@ function DashboardContent({ name }: { name: string }) {
       .then((response) => (response.ok ? response.json() : null))
       .then((data: { account?: { id?: string } } | null) => setMyAccountId(data?.account?.id ?? null))
       .catch(() => setMyAccountId(null));
+    fetch("/api/organizations")
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: { organizations?: { id: string; role: string }[]; selectedOrganizationId?: string } | null) => {
+        const organizations = data?.organizations ?? [];
+        const selected = organizations.find((org) => org.id === data?.selectedOrganizationId) ?? organizations[0];
+        setMyRole(selected?.role ?? null);
+      })
+      .catch(() => setMyRole(null));
   }, []);
 
   function notifyTyping() {
@@ -245,6 +283,7 @@ function DashboardContent({ name }: { name: string }) {
     if (!body || sending || !conversationId) return;
     setSending(true);
     setDraft("");
+    setPreTranslateDraft(null);
     try {
       const response = await fetch(`/api/workspace/conversations/${encodeURIComponent(conversationId)}/messages`, {
         method: "POST",
@@ -255,6 +294,48 @@ function DashboardContent({ name }: { name: string }) {
       if (data.message) setMessages((current) => [...current, data.message as Message]);
     } finally {
       setSending(false);
+    }
+  }
+
+  /**
+   * "Translate" in the composer — the mirror of "See translation" on a
+   * customer's message. Replaces the draft with a translation into whatever
+   * language the customer last wrote in, so an agent can type their reply in
+   * their own language and still send it in the customer's.
+   */
+  async function translateReplyDraft() {
+    const text = draft.trim();
+    if (!text || translatingDraft || !conversationId) return;
+    setTranslatingDraft(true);
+    setTranslateError(null);
+    try {
+      const response = await fetch(`/api/workspace/conversations/${encodeURIComponent(conversationId)}/translate-draft`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ text }),
+      });
+      const data = (await response.json().catch(() => ({}))) as { translatedText?: string | null; targetLanguage?: string; message?: string };
+      if (!response.ok) {
+        // Was silently swallowed before — a customer-less conversation, a
+        // model hiccup, anything failing here looked identical to a working
+        // button that decided there was nothing to translate.
+        setTranslateError(data.message ?? "Could not translate this reply.");
+        return;
+      }
+      // A null translatedText means the customer already writes in the
+      // workspace's language — the draft is correct as typed, nothing to
+      // swap in, and no "Undo" is needed for a change that didn't happen.
+      if (data.translatedText) {
+        setPreTranslateDraft(text);
+        setDraft(data.translatedText);
+      } else {
+        const languageLabel = SUPPORTED_LANGUAGES.find((item) => item.code === data.targetLanguage)?.name ?? "the customer's language";
+        setTranslateError(`Already in ${languageLabel} — nothing to translate.`);
+      }
+    } catch {
+      setTranslateError("Could not reach the translation service.");
+    } finally {
+      setTranslatingDraft(false);
     }
   }
 
@@ -394,6 +475,46 @@ function DashboardContent({ name }: { name: string }) {
     }
   }
 
+  /**
+   * "See translation" under a customer message. Cached on the backend after
+   * the first call, so toggling it back and forth — or another agent
+   * opening the same thread — never re-spends on the model; this just flips
+   * which text is shown once the cache is warm.
+   */
+  async function toggleTranslation(messageId: string) {
+    if (showingTranslation.has(messageId)) {
+      setShowingTranslation((current) => { const next = new Set(current); next.delete(messageId); return next; });
+      return;
+    }
+    if (translations[messageId]) {
+      // A null cached text means the model already checked and found this
+      // message is in the workspace's own language — nothing to reveal, so
+      // clicking again is a no-op rather than toggling on to show the exact
+      // same text back under a "See original" label.
+      if (translations[messageId].text) setShowingTranslation((current) => new Set(current).add(messageId));
+      return;
+    }
+    if (!conversationId || translating.has(messageId)) return;
+    setTranslating((current) => new Set(current).add(messageId));
+    try {
+      const response = await fetch(`/api/workspace/conversations/${encodeURIComponent(conversationId)}/translate`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ messageId }),
+      });
+      const data = (await response.json().catch(() => ({}))) as { translatedBody?: string | null; detectedLanguage?: string; message?: string };
+      if (!response.ok) return;
+      setTranslations((current) => ({ ...current, [messageId]: { text: data.translatedBody ?? null, detectedLanguage: data.detectedLanguage ?? "" } }));
+      // A message the model finds is already in the workspace's language has
+      // nothing to show in its place — showing "the translation" would just
+      // be the same text again, so the toggle stays off rather than
+      // revealing a no-op.
+      if (data.translatedBody) setShowingTranslation((current) => new Set(current).add(messageId));
+    } finally {
+      setTranslating((current) => { const next = new Set(current); next.delete(messageId); return next; });
+    }
+  }
+
   async function loadSecureRequests() {
     if (!conversationId) return;
     const response = await fetch(`/api/workspace/conversations/${encodeURIComponent(conversationId)}/secure`, { cache: "no-store" });
@@ -401,19 +522,17 @@ function DashboardContent({ name }: { name: string }) {
     setSecureRequests(data.requests ?? []);
   }
 
-  async function createSecureRequest(label: string) {
-    if (!conversationId || !label.trim()) return;
+  async function createSecureRequest(label: string): Promise<{ ok: boolean; message?: string }> {
+    if (!conversationId || !label.trim()) return { ok: false, message: "Open a conversation first." };
     const response = await fetch(`/api/workspace/conversations/${encodeURIComponent(conversationId)}/secure`, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ label }),
     });
     const data = (await response.json().catch(() => ({}))) as { message?: string };
-    if (!response.ok) {
-      setTicketError(data.message ?? "Could not create the request.");
-      return;
-    }
+    if (!response.ok) return { ok: false, message: data.message ?? "Could not create the request." };
     await loadSecureRequests();
+    return { ok: true };
   }
 
   /**
@@ -689,14 +808,55 @@ function DashboardContent({ name }: { name: string }) {
               <button
                 type="button"
                 disabled={unclaiming}
-                onClick={() => void unclaimConversation()}
-                title="Hand this thread back — to the AI, unless it was escalated"
+                onClick={() => setConfirmLeave(true)}
+                title="Leave this chat — it goes back to the AI, unless it was escalated"
                 className="ml-2 flex h-9 items-center gap-1.5 rounded-lg border border-[var(--chat-divider)] px-3 text-[12.5px] font-semibold hover:bg-[var(--chat-customer-bg)] disabled:opacity-60"
               >
                 {unclaiming ? <LoaderCircle size={15} className="animate-spin" /> : <UserRound size={15} />}
-                Hand back
+                Leave chat
               </button>
             )}
+            {confirmLeave && (
+              <div
+                className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0b0f14]/40 p-4 backdrop-blur-[2px]"
+                role="presentation"
+                onMouseDown={(event) => { if (event.target === event.currentTarget) setConfirmLeave(false); }}
+              >
+                <div role="dialog" aria-modal="true" aria-label="Leave this chat" className="w-full max-w-[420px] rounded-2xl border border-[var(--chat-divider)] bg-[var(--chat-surface)] p-6 shadow-[0_24px_70px_rgba(15,23,42,0.24)]">
+                  <h3 className="text-[17px] font-semibold">Leave this chat?</h3>
+                  <p className="mt-2 text-[13px] leading-6 text-[var(--chat-muted)]">
+                    {/* escalationReason stands in for the backend's
+                        escalatedAt, which isn't sent to this component —
+                        escalate() sets both, so its presence means the same
+                        thing: a human was asked for deliberately, and
+                        unclaim() will leave it unassigned rather than
+                        handing it back to the AI. */}
+                    {conversation?.escalationReason
+                      ? "The customer will see that you left, and the chat waits unassigned until another teammate picks it up. It will not go back to the AI, because a human was asked for."
+                      : "The customer will see that you left, and the AI takes the conversation back over."}
+                  </p>
+                  <div className="mt-5 flex items-center justify-end gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setConfirmLeave(false)}
+                      className="flex h-10 items-center rounded-lg border border-[var(--chat-divider)] px-4 text-[13px] font-semibold hover:bg-[var(--chat-customer-bg)]"
+                    >
+                      Stay
+                    </button>
+                    <button
+                      type="button"
+                      disabled={unclaiming}
+                      onClick={() => { setConfirmLeave(false); void unclaimConversation(); }}
+                      className="chat-action-primary flex h-10 items-center gap-2 rounded-lg px-4 text-[13px] font-semibold disabled:opacity-60"
+                    >
+                      {unclaiming ? <LoaderCircle size={15} className="animate-spin" /> : null}
+                      Leave chat
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+            <SecureRequestDialog open={secureOpen} onClose={() => setSecureOpen(false)} onCreate={createSecureRequest} />
             <button
               type="button"
               onClick={() => void resolveConversation()}
@@ -846,9 +1006,36 @@ function DashboardContent({ name }: { name: string }) {
                                     title={new Date(message.createdAt).toLocaleString()}
                                     className={`chat-line text-left text-[13.5px] leading-[1.55] ${isTeam ? "chat-line-team" : "chat-line-customer"}`}
                                   >
-                                    <MessageMarkdown text={message.body} />
+                                    <MessageMarkdown
+                                      text={showingTranslation.has(message.id) ? translations[message.id]?.text ?? message.body : message.body}
+                                    />
                                   </div>
                                 )}
+                                {/* Translation is per customer message, on
+                                    demand — never shown for a teammate's own
+                                    reply, and never fetched until clicked. */}
+                                {message.body && !isTeam && (() => {
+                                  const cached = translations[message.id];
+                                  const alreadyMatches = cached && !cached.text;
+                                  return (
+                                    <button
+                                      type="button"
+                                      onClick={() => void toggleTranslation(message.id)}
+                                      disabled={translating.has(message.id) || alreadyMatches}
+                                      className="flex items-center gap-1 text-[11px] font-medium text-[var(--chat-muted)] transition hover:text-[var(--chat-text,inherit)] disabled:cursor-default"
+                                    >
+                                      {translating.has(message.id) ? (
+                                        <>Translating…</>
+                                      ) : alreadyMatches ? (
+                                        <><Globe2 size={11} /> Already in {cached.detectedLanguage || "your language"}</>
+                                      ) : showingTranslation.has(message.id) ? (
+                                        <><Globe2 size={11} /> See original</>
+                                      ) : (
+                                        <><Globe2 size={11} /> See translation</>
+                                      )}
+                                    </button>
+                                  );
+                                })()}
                               </div>
                             ))}
                           </div>
@@ -929,7 +1116,7 @@ function DashboardContent({ name }: { name: string }) {
               <div className="rounded-xl bg-[var(--chat-surface)]">
               <textarea
                 value={draft}
-                onChange={(event) => { setDraft(event.target.value); notifyTyping(); }}
+                onChange={(event) => { setDraft(event.target.value); setPreTranslateDraft(null); notifyTyping(); }}
                 onKeyDown={(event) => {
                   if (event.key === "Enter" && !event.shiftKey) {
                     event.preventDefault();
@@ -994,6 +1181,31 @@ function DashboardContent({ name }: { name: string }) {
                 >
                   <Lock size={17} />
                 </button>
+                <button
+                  type="button"
+                  onClick={() => void translateReplyDraft()}
+                  disabled={!draft.trim() || translatingDraft}
+                  aria-label="Translate this reply into the customer's language"
+                  title={draft.trim() ? "Translate into the customer's language" : "Type a reply first"}
+                  className="p-1.5 opacity-70 hover:opacity-100 disabled:cursor-default disabled:opacity-30"
+                >
+                  {translatingDraft ? <LoaderCircle size={17} className="animate-spin" /> : <Globe2 size={17} />}
+                </button>
+                {preTranslateDraft && (
+                  <button
+                    type="button"
+                    onClick={() => { setDraft(preTranslateDraft); setPreTranslateDraft(null); }}
+                    className="text-[11px] font-medium text-[var(--chat-muted)] underline decoration-dotted underline-offset-2 hover:text-[var(--chat-text,inherit)]"
+                  >
+                    Undo translate
+                  </button>
+                )}
+                {translateError && (
+                  <span className="flex items-center gap-1.5 text-[11px] font-medium text-[#c0554f]">
+                    {translateError}
+                    <button type="button" onClick={() => setTranslateError(null)} className="underline hover:no-underline">Dismiss</button>
+                  </span>
+                )}
                 <span className="ml-auto" />
                 <button
                   type="button"
@@ -1089,7 +1301,13 @@ function DashboardContent({ name }: { name: string }) {
                 Ask for a password, key, or server detail without it landing in the chat history. The
                 customer gets a single-use link; you get one look, then it is destroyed.
               </p>
-              <SecureRequestForm onCreate={createSecureRequest} open={secureOpen} setOpen={setSecureOpen} />
+              <button
+                type="button"
+                onClick={() => setSecureOpen(true)}
+                className="flex h-9 w-full items-center justify-center gap-1.5 rounded-lg border border-[var(--chat-divider)] text-[12.5px] font-semibold hover:bg-[var(--chat-customer-bg)]"
+              >
+                <Lock size={14} /> Request private info
+              </button>
               {secureRequests.map((request) => (
                 <div key={request.id} className="rounded-lg border border-[var(--chat-divider)] p-3">
                   <p className="text-[12.5px] font-medium">{request.label}</p>
@@ -1103,13 +1321,17 @@ function DashboardContent({ name }: { name: string }) {
                           : "Expired"}
                   </p>
                   {request.status === "submitted" && (
-                    <button
-                      type="button"
-                      onClick={() => void revealSecret(request)}
-                      className="chat-action-primary mt-2 flex h-8 w-full items-center justify-center gap-1.5 rounded-lg text-[12px] font-semibold"
-                    >
-                      <Eye size={13} /> Open once
-                    </button>
+                    myRole === "owner" ? (
+                      <button
+                        type="button"
+                        onClick={() => void revealSecret(request)}
+                        className="chat-action-primary mt-2 flex h-8 w-full items-center justify-center gap-1.5 rounded-lg text-[12px] font-semibold"
+                      >
+                        <Eye size={13} /> Open once
+                      </button>
+                    ) : (
+                      <p className="mt-2 text-[11px] text-[var(--chat-muted)]">Only the workspace owner can open this.</p>
+                    )
                   )}
                 </div>
               ))}
@@ -1134,7 +1356,7 @@ function DashboardContent({ name }: { name: string }) {
                     type="button"
                     disabled={summarizing || messages.length === 0}
                     onClick={() => void summarizeConversation()}
-                    className="mt-2 flex items-center gap-2 rounded-full border border-[var(--chat-divider)] px-3 py-1.5 text-xs font-medium hover:bg-[var(--chat-bg)] disabled:cursor-not-allowed disabled:opacity-50"
+                    className="mt-2 flex items-center gap-2 rounded-full border border-[var(--chat-divider)] px-3 py-1.5 text-xs font-medium hover:bg-[var(--chat-surface)] disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {summarizing ? <LoaderCircle size={13} className="animate-spin" /> : <Sparkles size={13} />}
                     {summarizing ? "Summarizing…" : "Summarize with AI"}
@@ -1186,64 +1408,93 @@ function DashboardContent({ name }: { name: string }) {
  * has to be specific enough that they know what to paste — "your password" is
  * a worse prompt than "the SSH password for app-prod-01".
  */
-function SecureRequestForm({
-  onCreate,
+/**
+ * Centered, not tucked in the details sidebar — the sidebar is collapsible
+ * and can be scrolled past or hidden on a narrow screen, so a request
+ * triggered from the composer or the "..." menu used to land in a form the
+ * agent might never see open. A modal is reachable from wherever the click
+ * came from.
+ */
+function SecureRequestDialog({
   open,
-  setOpen,
+  onClose,
+  onCreate,
 }: {
-  onCreate: (label: string) => Promise<void>;
   open: boolean;
-  setOpen: (open: boolean) => void;
+  onClose: () => void;
+  onCreate: (label: string) => Promise<{ ok: boolean; message?: string }>;
 }) {
   const [label, setLabel] = useState("");
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  if (!open) {
-    return (
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="flex h-9 w-full items-center justify-center gap-1.5 rounded-lg border border-[var(--chat-divider)] text-[12.5px] font-semibold hover:bg-[var(--chat-customer-bg)]"
-      >
-        <Lock size={14} /> Request private info
-      </button>
-    );
+  if (!open) return null;
+
+  function close() {
+    onClose();
+    setLabel("");
+    setError(null);
+  }
+
+  async function submit() {
+    if (!label.trim() || busy) return;
+    setBusy(true);
+    setError(null);
+    try {
+      const result = await onCreate(label.trim());
+      if (!result.ok) {
+        setError(result.message ?? "Could not create the request.");
+        return;
+      }
+      close();
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (
-    <div className="space-y-2">
-      <input
-        value={label}
-        onChange={(event) => setLabel(event.target.value)}
-        placeholder="e.g. SSH password for app-prod-01"
-        maxLength={120}
-        className="h-9 w-full rounded-lg border border-[var(--chat-divider)] bg-transparent px-3 text-[12.5px] outline-none focus:border-[var(--chat-line-text)]"
-      />
-      <div className="flex gap-2">
-        <button
-          type="button"
-          disabled={!label.trim() || busy}
-          onClick={async () => {
-            setBusy(true);
-            try {
-              await onCreate(label.trim());
-              setLabel("");
-              setOpen(false);
-            } finally {
-              setBusy(false);
-            }
-          }}
-          className="chat-action-primary flex h-9 flex-1 items-center justify-center gap-1.5 rounded-lg text-[12.5px] font-semibold"
-        >
-          {busy ? <LoaderCircle size={13} className="animate-spin" /> : <Lock size={13} />} Send link
-        </button>
-        <button
-          type="button"
-          onClick={() => { setOpen(false); setLabel(""); }}
-          className="h-9 rounded-lg border border-[var(--chat-divider)] px-3 text-[12.5px] font-semibold hover:bg-[var(--chat-customer-bg)]"
-        >
-          Cancel
-        </button>
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0b0f14]/40 p-4 backdrop-blur-[2px]"
+      role="presentation"
+      onMouseDown={(event) => { if (event.target === event.currentTarget) close(); }}
+    >
+      <div role="dialog" aria-modal="true" aria-label="Request private information" className="w-full max-w-[420px] rounded-2xl border border-[var(--chat-divider)] bg-[var(--chat-surface)] p-6 shadow-[0_24px_70px_rgba(15,23,42,0.24)]">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h3 className="flex items-center gap-2 text-[17px] font-semibold"><Lock size={16} /> Request private info</h3>
+            <p className="mt-2 text-[13px] leading-6 text-[var(--chat-muted)]">
+              Ask for a password, key, or server detail without it landing in the chat history. The customer gets a single-use link; you get one look, then it is destroyed.
+            </p>
+          </div>
+          <button type="button" onClick={close} aria-label="Close" className="shrink-0 rounded-lg p-1.5 opacity-60 hover:bg-[var(--chat-customer-bg)] hover:opacity-100">
+            <X size={16} />
+          </button>
+        </div>
+
+        <input
+          autoFocus
+          value={label}
+          onChange={(event) => setLabel(event.target.value)}
+          onKeyDown={(event) => { if (event.key === "Enter") void submit(); }}
+          placeholder="e.g. SSH password for app-prod-01"
+          maxLength={120}
+          className="mt-5 h-11 w-full rounded-lg border border-[var(--chat-divider)] bg-transparent px-3 text-[13px] outline-none focus:border-[var(--chat-line-text)]"
+        />
+        {error && <p role="alert" className="mt-2 text-[12px] text-[#c0554f]">{error}</p>}
+
+        <div className="mt-5 flex items-center justify-end gap-2">
+          <button type="button" onClick={close} className="flex h-10 items-center rounded-lg border border-[var(--chat-divider)] px-4 text-[13px] font-semibold hover:bg-[var(--chat-customer-bg)]">
+            Cancel
+          </button>
+          <button
+            type="button"
+            disabled={!label.trim() || busy}
+            onClick={() => void submit()}
+            className="chat-action-primary flex h-10 items-center gap-2 rounded-lg px-4 text-[13px] font-semibold disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {busy ? <LoaderCircle size={14} className="animate-spin" /> : <Lock size={13} />} Send link
+          </button>
+        </div>
       </div>
     </div>
   );
