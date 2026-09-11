@@ -33,7 +33,7 @@ export function FinalCta() {
                 href="/signup"
                 className="inline-flex h-13 items-center justify-center border-2 border-[#D9BEF4] bg-[#D9BEF4] px-8 text-sm font-semibold text-white transition-colors hover:bg-white hover:border-white hover:text-black"
               >
-                Start free trial
+                Start free
               </a>
               <a
                 href="/pricing"

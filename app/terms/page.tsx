@@ -65,13 +65,13 @@ export default function TermsPage() {
         },
         {
           id: "subscriptions",
-          title: "Trials, Subscriptions & Billing",
+          title: "Subscriptions & Billing",
           body: (
             <>
               <p>
-                New accounts start with a free trial with full access to paid features. When the
-                trial ends, your account moves to the Free plan with reduced functionality unless
-                you subscribe.
+                New accounts start on the Free plan, which has no time limit and needs no payment
+                method. Paid plans add AI resolution allowance, seats, and knowledge base capacity;
+                you can move to a paid plan, or back to Free, at any time.
               </p>
               <ul>
                 <li>

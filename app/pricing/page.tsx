@@ -6,12 +6,12 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://elpino.chat";
 export const metadata: Metadata = {
   title: "Pricing",
   description:
-    "Elpino pricing: your plan buys AI resolutions, extra teammates are $1/month on every plan. Escalations to a human are never billed.",
+    "Elpino pricing: your plan buys AI resolutions, extra teammates come in seat packs from $0.60 a seat. Escalations to a human are never billed.",
   alternates: { canonical: `${SITE_URL}/pricing` },
   openGraph: {
     title: "Pricing",
     description:
-      "Pay for answers, not for seats. Elpino plans buy AI resolutions; extra teammates cost $1/month on every plan.",
+      "Pay for answers, not for seats. Elpino plans buy AI resolutions; extra teammates come in seat packs from $0.60 a seat.",
     url: `${SITE_URL}/pricing`,
     type: "website",
   },
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Pricing",
     description:
-      "Pay for answers, not for seats — Elpino plans buy AI resolutions, teammates cost $1/month.",
+      "Pay for answers, not for seats — Elpino plans buy AI resolutions, teammates come in seat packs from $0.60 a seat.",
   },
 };
 
@@ -34,10 +34,10 @@ const productSchema = {
   url: SITE_URL,
   offers: [
     { "@type": "Offer", name: "Free", price: "0", priceCurrency: "USD" },
-    { "@type": "Offer", name: "Starter (monthly)", price: "12.50", priceCurrency: "USD" },
+    { "@type": "Offer", name: "Starter (monthly)", price: "12", priceCurrency: "USD" },
     { "@type": "Offer", name: "Starter (annual)", price: "120", priceCurrency: "USD" },
-    { "@type": "Offer", name: "Growth (annual)", price: "566.40", priceCurrency: "USD" },
-    { "@type": "Offer", name: "Scale (annual)", price: "2870.40", priceCurrency: "USD" },
+    { "@type": "Offer", name: "Growth (annual)", price: "590", priceCurrency: "USD" },
+    { "@type": "Offer", name: "Scale (annual)", price: "2990", priceCurrency: "USD" },
     { "@type": "Offer", name: "Growth", price: "59", priceCurrency: "USD" },
     { "@type": "Offer", name: "Scale", price: "299", priceCurrency: "USD" },
   ],

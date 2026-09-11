@@ -71,7 +71,7 @@ export const categories: FaqCategory[] = [
     items: [
       {
         q: "What do the plans cost?",
-        a: "Free is $0. Monthly plans are Starter at $12.50 with 250 resolutions, Growth at $59 with 2,000, and Scale at $299 with 12,000. Annual billing saves 20%: Starter is $10/month ($120 billed annually), Growth is $47.20/month ($566.40 annually), and Scale is $239.20/month ($2,870.40 annually).",
+        a: "Free is $0. Monthly plans are Starter at $12 with 250 resolutions, Growth at $59 with 2,000, and Scale at $299 with 12,000. Annual billing is two months free — you pay for ten months and get twelve: Starter is $120 a year ($10/month), Growth is $590 ($49.17/month), and Scale is $2,990 ($249.17/month).",
       },
       {
         q: "What's a \"resolution\"?",

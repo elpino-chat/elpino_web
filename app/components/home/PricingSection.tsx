@@ -20,7 +20,7 @@ export function PricingSection() {
           One price, no surprise overage.
         </h2>
         <p className="mt-6 max-w-xl text-sm leading-6 text-gray-600 md:text-base">
-          Every paid plan starts with a 10-day free trial of the full product, no credit card required.
+          Start on Free with 50 AI resolutions a month — no credit card, no time limit. Upgrade when you outgrow it.
         </p>
 
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">

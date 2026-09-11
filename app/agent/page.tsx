@@ -409,7 +409,7 @@ export default function AgentPage() {
           href="/signup"
           className="inline-flex items-center gap-2 border-2 border-black bg-[#D9BEF4] px-8 py-4 text-white font-semibold shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
         >
-          Start free trial
+          Start free
         </a>
       </section>
     </main>

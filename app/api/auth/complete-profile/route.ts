@@ -1,5 +1,5 @@
 import { callGateway } from "../_lib/gateway";
-import { jsonError, normalizeEmail, setAuthCookie, signAuthToken } from "../_lib/auth-store";
+import { jsonError, setAuthCookie, signAuthToken } from "../_lib/auth-store";
 
 type CompleteProfileResult = {
   identity?: { email: string; name?: string; needsOnboarding?: boolean; tokenVersion?: number };
@@ -37,14 +37,6 @@ export async function POST(request: Request) {
   // Account now exists with a password — this is where the session actually starts.
   const jwt = signAuthToken(result.identity);
   await setAuthCookie(jwt);
-
-  // Auto-start 10-day trial on first login; idempotent if already started.
-  const userId = normalizeEmail(result.identity.email);
-  callGateway("/api/billing/trial/start", {
-    userId,
-    email: result.identity.email,
-    name: result.identity.name,
-  }).catch(() => undefined);
 
   return Response.json({
     email: result.identity.email,

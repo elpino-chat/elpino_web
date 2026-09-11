@@ -3,7 +3,7 @@ import Link from "next/link";
 export function ProductCta({
   title,
   detail,
-  ctaLabel = "Start free trial",
+  ctaLabel = "Start free",
   ctaHref = "/signup",
   secondaryLabel,
   secondaryHref,

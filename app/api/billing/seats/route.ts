@@ -1,12 +1,15 @@
 import { callGateway } from "@/app/api/auth/_lib/gateway";
-import { selectedWorkspace } from "@/app/api/_lib/workspace";
+import { requireWorkspaceOwner } from "@/app/api/_lib/workspace";
 import { requireSession } from "@/app/api/onboarding/_lib/require-user";
 
 type SeatPurchaseResult = {
   /** Free plan: a one-off Razorpay order the browser must complete. */
   orderId?: string;
   keyId?: string;
+  /** Smallest unit of `currency` — paise for INR, cents for USD. */
+  amountMinor?: number;
   amountPaise?: number;
+  currency?: string;
   seatsGranted?: number;
   /** Paid plans: the seat lands on the next invoice, nothing to pay now. */
   seatsAllowed?: number;
@@ -16,7 +19,8 @@ type SeatPurchaseResult = {
 };
 
 /**
- * Buys seats at $1/month each.
+ * Buys seats in bundles — 3 for $2, 5 for $3, whichever combination covers
+ * the request most cheaply. A bare $1 charge is a bad unit of payment.
  *
  * On a paid plan this returns immediately — the seat is added and billed as
  * an addon on the invoice already scheduled. On Free there is no invoice to
@@ -33,11 +37,11 @@ export async function POST(request: Request) {
     return Response.json({ message: "quantity must be at least 1" }, { status: 400 });
   }
 
-  const workspace = await selectedWorkspace(session.email);
-  if (!workspace) return Response.json({ message: "No workspace selected" }, { status: 404 });
+  const owner = await requireWorkspaceOwner(session.email);
+  if (!owner.ok) return Response.json({ message: owner.message }, { status: owner.status });
 
   const result = await callGateway<SeatPurchaseResult>("/api/billing/seats", {
-    companyId: workspace.id,
+    companyId: owner.workspace.id,
     quantity,
   }).catch(() => null);
 
@@ -60,11 +64,11 @@ export async function DELETE(request: Request) {
     return Response.json({ message: "quantity must be at least 1" }, { status: 400 });
   }
 
-  const workspace = await selectedWorkspace(session.email);
-  if (!workspace) return Response.json({ message: "No workspace selected" }, { status: 404 });
+  const owner = await requireWorkspaceOwner(session.email);
+  if (!owner.ok) return Response.json({ message: owner.message }, { status: owner.status });
 
   const result = await callGateway<{ seatsPendingRelease?: number; error?: string }>("/api/billing/seats/release", {
-    companyId: workspace.id,
+    companyId: owner.workspace.id,
     quantity,
   }).catch(() => null);
 

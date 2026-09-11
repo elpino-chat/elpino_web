@@ -26,7 +26,7 @@ export function FinalCtaSection() {
             href="/signup"
             className="inline-flex h-12 items-center justify-center rounded-full bg-[#D9BEF4] px-8 text-base font-normal text-[#233D4D] transition hover:bg-[#CBB8F0]"
           >
-            Start free trial
+            Start free
           </Link>
           <Link
             href="/pricing"
