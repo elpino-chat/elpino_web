@@ -1633,7 +1633,7 @@ function GeneralSettingsPage({ user }: { user: SettingsUser }) {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [dashboardAppearance, setDashboardAppearance] = useState<DashboardAppearance>("light");
+  const [dashboardAppearance, setDashboardAppearance] = useState<DashboardAppearance>("dark");
 
   const [twoFaBusy, setTwoFaBusy] = useState(false);
   const [twoFaSetup, setTwoFaSetup] = useState<{ secret: string; otpauthUrl: string } | null>(null);
@@ -1885,7 +1885,7 @@ function GeneralSettingsPage({ user }: { user: SettingsUser }) {
         <div className="grid grid-cols-[310px_minmax(0,1fr)] gap-10 max-xl:grid-cols-[270px_minmax(0,1fr)] max-lg:grid-cols-1 max-lg:gap-5">
           <div><h3 className="dashboard-settings-heading text-base font-semibold">Dashboard appearance</h3><p className="dashboard-settings-subdesc mt-1 max-w-[285px] text-[12px] leading-[1.55] text-[#858585]">Personalize the dashboard canvas, navigation, buttons, and active states. These choices do not change your customer-facing chatbot.</p></div>
           <div className="min-w-0">
-            <div><p className="dashboard-settings-heading text-base font-semibold">Appearance</p><p className="dashboard-settings-subdesc mt-1 text-sm text-[#858585]">Choose light or dark mode, or follow your device preference.</p><div className="mt-4 flex flex-wrap gap-4">{([['light','Light'],['dark','Dark'],['system','System']] as const).map(([value,label]) => <button key={value} type="button" onClick={() => updateDashboardAppearance(value)} className="text-left"><span className={`block h-[70px] w-[116px] overflow-hidden rounded-lg border-2 p-2 transition ${dashboardAppearance === value ? "border-white/70" : "border-white/10"} ${value === "dark" ? "bg-[#202327]" : value === "system" ? "bg-gradient-to-r from-[#fafafa] from-50% to-[#202327] to-50%" : "bg-[#fafafa]"}`}><span className={`block h-2 w-8 rounded ${value === "dark" ? "bg-white/35" : "bg-black/20"}`} /><span className={`mt-2 block h-2 w-16 rounded ${value === "dark" ? "bg-white/20" : "bg-black/10"}`} /></span><span className={`mt-2 block text-[11px] font-normal ${dashboardAppearance === value ? "text-white/90" : "text-white/55"}`}>{label}</span></button>)}</div></div>
+            <div><p className="dashboard-settings-heading text-base font-semibold">Appearance</p><p className="dashboard-settings-subdesc mt-1 text-sm text-[#858585]">Elpino's dashboard is dark — System will follow your device once a light theme ships.</p><div className="mt-4 flex flex-wrap gap-4">{([['dark','Dark'],['system','System']] as const).map(([value,label]) => <button key={value} type="button" onClick={() => updateDashboardAppearance(value)} className="text-left"><span className={`block h-[70px] w-[116px] overflow-hidden rounded-lg border-2 p-2 transition ${dashboardAppearance === value ? "border-white/70" : "border-white/10"} bg-[#202327]`}><span className="block h-2 w-8 rounded bg-white/35" /><span className="mt-2 block h-2 w-16 rounded bg-white/20" /></span><span className={`mt-2 block text-[11px] font-normal ${dashboardAppearance === value ? "text-white/90" : "text-white/55"}`}>{label}</span></button>)}</div></div>
           </div>
         </div>
 

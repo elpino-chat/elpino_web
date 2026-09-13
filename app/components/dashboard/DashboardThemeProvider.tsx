@@ -2,18 +2,28 @@
 
 import { useEffect, useState } from "react";
 
-export type DashboardAppearance = "light" | "dark" | "system";
+// "light" dropped: the dashboard shell and every page surface are a fixed
+// charcoal workspace regardless of this setting (see the unconditional
+// #dashboard-settings-page-style rules in globals.css), so a saved "light"
+// preference only ever meant text and backgrounds disagreeing with each
+// other. "system" is kept as a distinct choice for a future real light
+// theme, but resolves to dark today the same as picking Dark directly —
+// there's no OS-driven light path to honor yet.
+export type DashboardAppearance = "dark" | "system";
 export const DASHBOARD_THEME_EVENT = "elpino-dashboard-theme";
 export const DASHBOARD_THEME_KEY = "elpino-dashboard-theme";
 
 type DashboardTheme = { accent: string; appearance: DashboardAppearance };
-const fallback: DashboardTheme = { accent: "#428CE5", appearance: "light" };
+const fallback: DashboardTheme = { accent: "#428CE5", appearance: "dark" };
 
 export function readDashboardTheme(): DashboardTheme {
   if (typeof window === "undefined") return fallback;
   try {
-    const saved = JSON.parse(window.localStorage.getItem(DASHBOARD_THEME_KEY) ?? "null") as Partial<DashboardTheme> | null;
-    return { accent: saved?.accent ?? fallback.accent, appearance: saved?.appearance ?? fallback.appearance };
+    const saved = JSON.parse(window.localStorage.getItem(DASHBOARD_THEME_KEY) ?? "null") as Partial<{ accent: string; appearance: string }> | null;
+    // A workspace saved "light" before that option was removed — fall back
+    // to dark rather than carry an appearance value that no longer exists.
+    const appearance = saved?.appearance === "dark" || saved?.appearance === "system" ? saved.appearance : fallback.appearance;
+    return { accent: saved?.accent ?? fallback.accent, appearance };
   } catch { return fallback; }
 }
 
@@ -40,20 +50,17 @@ function contrastColorFor(hex: string): string {
 
 export default function DashboardThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<DashboardTheme>(fallback);
-  const [systemDark, setSystemDark] = useState(false);
 
   useEffect(() => {
     setTheme(readDashboardTheme());
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
-    const syncSystem = () => setSystemDark(media.matches);
     const syncTheme = (event: Event) => setTheme((event as CustomEvent<DashboardTheme>).detail);
-    syncSystem();
-    media.addEventListener("change", syncSystem);
     window.addEventListener(DASHBOARD_THEME_EVENT, syncTheme);
-    return () => { media.removeEventListener("change", syncSystem); window.removeEventListener(DASHBOARD_THEME_EVENT, syncTheme); };
+    return () => window.removeEventListener(DASHBOARD_THEME_EVENT, syncTheme);
   }, []);
 
-  const resolved = theme.appearance === "system" ? (systemDark ? "dark" : "light") : theme.appearance;
+  // "system" has no OS-driven light path to resolve to yet — see the
+  // DashboardAppearance comment above — so both choices render dark today.
+  const resolved = "dark";
   const style = { "--dashboard-accent": theme.accent, "--dashboard-accent-contrast": contrastColorFor(theme.accent) } as React.CSSProperties;
   return <div data-dashboard-theme={resolved} style={style} className="flex h-full min-h-0 w-full flex-col">{children}</div>;
 }

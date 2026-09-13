@@ -1653,23 +1653,18 @@ body {
   color: rgba(0, 0, 0, 0.42) !important;
 }
 
-/* Tag Manager's table text/row-hover/callout boxes are authored with a
-   light-mode-only bg (bg-white/5 in the component, which reads as a subtle
-   highlight against this surface's dark-by-default background) — restore
-   their original light-mode look explicitly, same pattern as the rest of
-   this block. The table surface and header stay transparent in both themes
-   (no background override needed for those). */
-[data-dashboard-theme="light"] .dashboard-shell .dashboard-settings-surface .dashboard-tag-table-text {
-  color: rgba(0, 0, 0, 0.8) !important;
-}
-
-[data-dashboard-theme="light"] .dashboard-shell .dashboard-settings-surface .dashboard-tag-table-header {
-  color: #000000 !important;
-}
-
-[data-dashboard-theme="light"] .dashboard-shell .dashboard-settings-surface .dashboard-tag-action-trigger:hover {
-  background-color: rgba(0, 0, 0, 0.06) !important;
-}
+/* Tag Manager's table text/row-hover/callout boxes were once authored with
+   a light-mode-only bg, needing their colors restored under
+   [data-dashboard-theme="light"] — but Settings later became a fixed
+   charcoal workspace in every theme (see the unconditional
+   #dashboard-settings-page rule further down this file), so the JSX's own
+   dark-authored classes (text-white/80 etc.) are correct as-is now. Those
+   restore-for-light rules were never removed, so they still fired whenever
+   theme="light", forcing black text onto a surface that no longer actually
+   turns white — invisible text. Removed here; the install dialog and the
+   portaled row-actions menu below are unaffected (they render outside
+   .dashboard-settings-surface, so the permanent-dark rule doesn't reach
+   them, and they legitimately still follow the theme toggle). */
 
 /* Install/Permissions dialog: not portaled (it renders inline inside
    TagManagerSettingsPage), but it's nested several levels below
@@ -1734,23 +1729,11 @@ body {
   background-color: rgba(255, 100, 100, 0.12);
 }
 
-[data-dashboard-theme="light"] .dashboard-shell .dashboard-settings-surface .dashboard-tag-table-row:hover {
-  background-color: #fafbfb !important;
-}
-
-[data-dashboard-theme="light"] .dashboard-shell .dashboard-settings-surface .dashboard-tag-empty-icon {
-  background-color: #f0f2f4 !important;
-}
-
-[data-dashboard-theme="light"] .dashboard-shell .dashboard-settings-surface .dashboard-tag-steps {
-  background-color: #faf9f6 !important;
-}
-
-[data-dashboard-theme="light"] .dashboard-shell .dashboard-settings-surface [class*="border-t"],
-[data-dashboard-theme="light"] .dashboard-shell .dashboard-settings-surface [class*="border-b"],
-[data-dashboard-theme="light"] .dashboard-shell .dashboard-settings-surface .divide-y > :not(:first-child) {
-  border-color: rgba(0, 0, 0, 0.1) !important;
-}
+/* dashboard-tag-table-row:hover, dashboard-tag-empty-icon, dashboard-tag-steps,
+   and the border-color resets that used to live here were the same
+   now-obsolete light-theme restoration removed above — Settings is
+   permanently dark, so these never actually applied against a real light
+   background either. */
 
 .dashboard-nav-active {
   border-color: var(--dashboard-accent, #428ce5);
@@ -3253,13 +3236,16 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
 #dashboard-settings-page .dashboard-settings-surface [class*="bg-[#fbfbfb]"],
 #dashboard-settings-page .dashboard-settings-surface [class*="bg-[#f8f8f7]"],
 #dashboard-settings-page .dashboard-settings-surface [class*="bg-[#FAFBFB]"],
-#dashboard-settings-page .dashboard-settings-surface [class*="bg-[#fafbfb]"] {
+#dashboard-settings-page .dashboard-settings-surface [class*="bg-[#fafbfb]"],
+#dashboard-settings-page .dashboard-settings-surface [class*="bg-[#FAF9F6]"],
+#dashboard-settings-page .dashboard-settings-surface [class*="bg-[#faf9f6]"] {
   background-color: #262626 !important;
 }
 #dashboard-settings-page .dashboard-settings-surface :is(h1, h2, h3, h4, h5, label),
 #dashboard-settings-page .dashboard-settings-surface [class*="text-black"],
 #dashboard-settings-page .dashboard-settings-surface [class*="text-[#121315]"],
-#dashboard-settings-page .dashboard-settings-surface [class*="text-[#17181a]"] {
+#dashboard-settings-page .dashboard-settings-surface [class*="text-[#17181a]"],
+#dashboard-settings-page .dashboard-settings-surface [class*="text-[#11120f]"] {
   color: rgb(255 255 255 / 0.9) !important;
 }
 #dashboard-settings-page .dashboard-settings-surface :is(.dashboard-settings-subdesc, [class*="text-[#858585]"], [class*="text-[#686d71]"]) {
