@@ -1,8 +1,10 @@
 "use client";
 
 import { Suspense, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
+  ArrowLeft,
   ArrowRight,
   BookOpen,
   Bot,
@@ -74,6 +76,13 @@ type SecureRequest = {
 const POLL_MS = 2000;
 const TYPING_PING_MS = 2000;
 
+// How recently a visitor has to have been seen (Customer.lastSeenAt, bumped
+// on widget activity) to count as "online" on their profile card. There's no
+// live presence socket for visitors, so this is a proxy — long enough that
+// the 2s conversation poll doesn't flicker it, short enough that it stops
+// claiming "online" once someone's actually gone.
+const VISITOR_ONLINE_WINDOW_MS = 2 * 60 * 1000;
+
 // Attachments travel as data URIs, exactly as the widget sends them, so the
 // ceiling has to sit under the services' 8 MB body-parser limit with room for
 // base64's ~33% overhead.
@@ -92,7 +101,7 @@ function DetailSection({
 }) {
   const [collapsed, setCollapsed] = useState(initiallyCollapsed);
   return (
-    <section className="border-b border-[var(--chat-divider)]">
+    <section className="dashboard-detail-section border-b border-[var(--chat-divider)]">
       <button
         type="button"
         onClick={() => setCollapsed((value) => !value)}
@@ -143,10 +152,17 @@ function DashboardContent({ name }: { name: string }) {
   // "Undo" next to the result can put it back without the agent retyping.
   const [preTranslateDraft, setPreTranslateDraft] = useState<string | null>(null);
   const [translateError, setTranslateError] = useState<string | null>(null);
+  // A resolved conversation hides the reply composer by default — there's
+  // nothing left to do until someone reopens it — but sending a message is
+  // already how reopening works server-side (see resolveConversation's own
+  // comment), so this only needs to reveal the same composer, not implement
+  // a second way to reopen.
+  const [wantsToReplyAfterResolve, setWantsToReplyAfterResolve] = useState(false);
   const [customerTyping, setCustomerTyping] = useState(false);
   const [ticketState, setTicketState] = useState<"idle" | "creating">("idle");
   const [ticket, setTicket] = useState<CreatedTicket | null>(null);
   const [ticketError, setTicketError] = useState<string | null>(null);
+  const [ticketDialogOpen, setTicketDialogOpen] = useState(false);
   const [myAccountId, setMyAccountId] = useState<string | null>(null);
   // Gates opening a secure request — reveal is owner-only server-side, and
   // showing "Open once" to someone it will just 403 for is exactly the kind
@@ -222,6 +238,7 @@ function DashboardContent({ name }: { name: string }) {
     setShowingTranslation(new Set());
     setPreTranslateDraft(null);
     setTranslateError(null);
+    setWantsToReplyAfterResolve(false);
 
     function load() {
       Promise.all([
@@ -556,7 +573,18 @@ function DashboardContent({ name }: { name: string }) {
     await loadSecureRequests();
   }
 
-  async function createTicket() {
+  // Opens the ticket dialog rather than filing a ticket outright — clicking
+  // "Ticket" used to POST immediately with no title/summary/destination
+  // control, which is invisible the moment a workspace has more than one
+  // project tool connected (which of them? which Asana project?) and gives
+  // no chance to see or edit what's about to be filed.
+  function openTicketDialog() {
+    if (!conversationId) return;
+    setTicketError(null);
+    setTicketDialogOpen(true);
+  }
+
+  async function createTicket(input: { title: string; note: string; provider?: string; asanaProjectGid?: string }) {
     if (!conversationId || ticketState === "creating") return;
     setTicketState("creating");
     setTicketError(null);
@@ -564,11 +592,12 @@ function DashboardContent({ name }: { name: string }) {
       const response = await fetch(`/api/workspace/conversations/${encodeURIComponent(conversationId)}/ticket`, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({}),
+        body: JSON.stringify(input),
       });
       const data = (await response.json()) as { ticket?: CreatedTicket; message?: string };
       if (!response.ok || !data.ticket) throw new Error(data.message ?? "Could not create the ticket.");
       setTicket(data.ticket);
+      setTicketDialogOpen(false);
     } catch (issue) {
       setTicketError(issue instanceof Error ? issue.message : "Could not create the ticket.");
     } finally {
@@ -644,16 +673,27 @@ function DashboardContent({ name }: { name: string }) {
   const aiAvatarUrl = conversation?.aiAvatarUrl || DEFAULT_BOT_AVATAR;
   const isMine = !!myAccountId && conversation?.assignedUserId === myAccountId;
   const assignedElsewhere = !!conversation?.assignedUserId && conversation.assignedUserId !== myAccountId;
+  const isResolved = conversation?.status === "resolved";
+  const showComposer = !isResolved || wantsToReplyAfterResolve;
   const place = formatPlace(conversation?.location);
   const device = formatDevice(conversation?.location?.userAgent);
   const ip = conversation?.location?.ip ?? null;
+  // The green dot on the visitor's avatar used to be hardcoded on regardless
+  // of anything real — every visitor showed "online" forever, including one
+  // from a conversation that ended days ago. There's no live visitor
+  // presence socket (unlike the teammate one above), only lastSeenAt, bumped
+  // on widget activity — so "online" here means "seen very recently", not
+  // "has the tab open right now". Close enough to be honest without a
+  // heartbeat connection this product doesn't have yet.
+  const visitorSeenAtMs = conversation?.location?.seenAt ? new Date(conversation.location.seenAt).getTime() : null;
+  const visitorOnline = visitorSeenAtMs !== null && Date.now() - visitorSeenAtMs < VISITOR_ONLINE_WINDOW_MS;
   // Text-only, against what's already loaded — no reason to round-trip to
   // the server for a search over a few dozen messages already in memory.
   const searchTerm = searchQuery.trim().toLowerCase();
   const visibleMessages = searchTerm ? messages.filter((message) => message.body.toLowerCase().includes(searchTerm)) : messages;
 
   return (
-    <div className="dashboard-page-surface dashboard-conversation flex h-full min-w-0">
+    <div id="dashboard-chat-interface" className="dashboard-page-surface dashboard-conversation flex h-full min-w-0">
       {/* The only place the value is ever visible. It exists in this
           component's state and nowhere else — the server destroyed its copy
           before this rendered, so closing the panel loses it for good, and
@@ -705,22 +745,34 @@ function DashboardContent({ name }: { name: string }) {
         </div>
       )}
 
-      <section className="flex min-w-0 flex-1 flex-col border-r border-[var(--chat-divider)] bg-[var(--chat-surface)]">
-        <header className="flex h-[58px] shrink-0 items-center border-b border-[var(--chat-divider)] px-4">
+      <section className="dashboard-chat-center flex min-w-0 flex-1 flex-col border-r border-[var(--chat-divider)] bg-[var(--chat-surface)]">
+        <header className="dashboard-chat-header flex h-16 shrink-0 flex-nowrap items-center border-b border-[var(--chat-divider)] px-3 sm:px-5">
+          {/* Only reachable on mobile, where the list and the open chat
+              trade places instead of sitting side by side — this is what
+              gets you back to it. */}
+          <Link
+            href="/dashboard/inbox"
+            aria-label="Back to conversations"
+            className="-ml-1.5 mr-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[var(--chat-muted)] transition hover:bg-[var(--chat-customer-bg)] lg:hidden"
+          >
+            <ArrowLeft size={18} />
+          </Link>
           <span className="chat-avatar-customer relative flex h-9 w-9 items-center justify-center rounded-full text-xs font-bold">
             {customerInitials}
             <span className="absolute -bottom-px -right-px h-2.5 w-2.5 rounded-full border-2 border-[var(--chat-surface)] bg-[#35b92c]" />
           </span>
-          <div className="ml-3 min-w-0">
+          <div className="ml-2.5 min-w-0 sm:ml-3">
             <div className="flex items-center gap-2">
               <h1 className="truncate text-[15px] font-semibold">{customerName}</h1>
+              {/* Redundant with the Resolve button's own state, and the
+                  first thing to go when space is tight. */}
               {conversation && (
-                <span className="rounded-full border border-[var(--chat-divider)] px-2 py-0.5 text-[10px] font-semibold text-[var(--chat-muted)]">
+                <span className="hidden shrink-0 rounded-full border border-[var(--chat-divider)] px-2 py-0.5 text-[10px] font-semibold text-[var(--chat-muted)] sm:inline-block">
                   {conversation.status.toUpperCase()}
                 </span>
               )}
             </div>
-            <p className="mt-0.5 flex items-center gap-1 text-[11px] text-[var(--chat-muted)]">
+            <p className="mt-0.5 hidden items-center gap-1 text-[11px] text-[var(--chat-muted)] sm:flex">
               {place ? <><MapPin size={11} className="shrink-0" /> {place}</> : "Customer support"}
             </p>
           </div>
@@ -734,33 +786,27 @@ function DashboardContent({ name }: { name: string }) {
                 onClick={() => void joinConversation()}
                 disabled={joining}
                 title="Take this conversation and reply yourself"
-                className="chat-action-primary flex h-9 items-center gap-1.5 rounded-lg px-3.5 text-[12.5px] font-semibold"
+                className="chat-action-primary flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-[12.5px] font-semibold sm:px-3.5"
               >
                 {joining ? <LoaderCircle size={15} className="animate-spin" /> : <UserRound size={15} />}
-                {joining ? "Joining…" : assignedElsewhere ? "Take over" : "Join chat"}
+                <span className="hidden sm:inline">{joining ? "Joining…" : assignedElsewhere ? "Take over" : "Join chat"}</span>
               </button>
             )}
-            {isMine && (
-              <span className="flex h-9 items-center gap-1.5 rounded-lg border border-[var(--chat-divider)] px-3 text-[12px] font-semibold text-[var(--chat-muted)]">
+            {/* Purely informational (not a control), so the first thing
+                dropped when space is tight — the header's own "back to a
+                full list" context already implies this on mobile. */}
+            {isMine && !isResolved && (
+              <span className="hidden h-9 items-center gap-1.5 rounded-lg border border-[var(--chat-divider)] px-3 text-[12px] font-semibold text-[var(--chat-muted)] sm:flex">
                 <UserRound size={14} /> You&apos;re handling this
               </span>
             )}
-            <button
-              type="button"
-              onClick={() => void createTicket()}
-              disabled={ticketState === "creating"}
-              title="Create a ticket in your connected project tool"
-              className="flex h-9 items-center gap-1.5 rounded-lg border border-[var(--chat-divider)] px-3 text-[12.5px] font-semibold hover:bg-[var(--chat-customer-bg)] disabled:opacity-60"
-            >
-              {ticketState === "creating" ? <LoaderCircle size={15} className="animate-spin" /> : <TicketPlus size={15} />}
-              Ticket
-            </button>
+            {/* Relocated into the "..." menu below sm — see moreOpen below. */}
             <button
               type="button"
               onClick={() => setSearchOpen((open) => { if (open) setSearchQuery(""); return !open; })}
               aria-label="Search conversation"
               aria-pressed={searchOpen}
-              className={`rounded-lg p-2 hover:bg-[var(--chat-customer-bg)] hover:opacity-100 ${searchOpen ? "opacity-100 bg-[var(--chat-customer-bg)]" : "opacity-70"}`}
+              className={`hidden rounded-lg p-2 hover:bg-[var(--chat-customer-bg)] hover:opacity-100 sm:block ${searchOpen ? "opacity-100 bg-[var(--chat-customer-bg)]" : "opacity-70"}`}
             >
               <Search size={18} />
             </button>
@@ -790,6 +836,13 @@ function DashboardContent({ name }: { name: string }) {
                   <div className="absolute right-0 top-full z-20 mt-1 w-56 overflow-hidden rounded-xl border border-[var(--chat-divider)] bg-[var(--chat-surface)] py-1 shadow-[0_16px_40px_-20px_rgba(15,18,22,0.45)]">
                     <button
                       type="button"
+                      onClick={() => { setMoreOpen(false); setSearchOpen((open) => { if (open) setSearchQuery(""); return !open; }); }}
+                      className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left text-[13px] hover:bg-[var(--chat-customer-bg)] sm:hidden"
+                    >
+                      <Search size={15} /> {searchOpen ? "Close search" : "Search conversation"}
+                    </button>
+                    <button
+                      type="button"
                       onClick={() => { setMoreOpen(false); setSecureOpen(true); }}
                       className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left text-[13px] hover:bg-[var(--chat-customer-bg)]"
                     >
@@ -804,16 +857,16 @@ function DashboardContent({ name }: { name: string }) {
                 and needed just as often (auto-assigned to someone who can't
                 take it right now, not just a thread someone deliberately
                 claimed and finished). */}
-            {conversation?.assignedUserId && (
+            {conversation?.assignedUserId && !isResolved && (
               <button
                 type="button"
                 disabled={unclaiming}
                 onClick={() => setConfirmLeave(true)}
                 title="Leave this chat — it goes back to the AI, unless it was escalated"
-                className="ml-2 flex h-9 items-center gap-1.5 rounded-lg border border-[var(--chat-divider)] px-3 text-[12.5px] font-semibold hover:bg-[var(--chat-customer-bg)] disabled:opacity-60"
+                className="ml-2 flex h-9 items-center gap-1.5 rounded-lg border border-[var(--chat-divider)] px-2.5 text-[12.5px] font-semibold hover:bg-[var(--chat-customer-bg)] disabled:opacity-60 sm:px-3"
               >
                 {unclaiming ? <LoaderCircle size={15} className="animate-spin" /> : <UserRound size={15} />}
-                Leave chat
+                <span className="hidden sm:inline">Leave chat</span>
               </button>
             )}
             {confirmLeave && (
@@ -857,15 +910,23 @@ function DashboardContent({ name }: { name: string }) {
               </div>
             )}
             <SecureRequestDialog open={secureOpen} onClose={() => setSecureOpen(false)} onCreate={createSecureRequest} />
+            <TicketDialog
+              open={ticketDialogOpen}
+              onClose={() => setTicketDialogOpen(false)}
+              conversationId={conversationId}
+              busy={ticketState === "creating"}
+              error={ticketError}
+              onCreate={createTicket}
+            />
             <button
               type="button"
               onClick={() => void resolveConversation()}
               disabled={resolving || conversation?.status === "resolved"}
               title={conversation?.status === "resolved" ? "This conversation is already resolved" : "Mark this conversation as resolved"}
-              className="chat-action-primary ml-2 flex h-9 items-center gap-2 rounded-lg px-4 text-[13px] font-semibold disabled:opacity-50"
+              className="chat-action-primary ml-2 flex h-9 items-center gap-2 rounded-lg px-2.5 text-[13px] font-semibold disabled:opacity-50 sm:px-4"
             >
               {resolving ? <LoaderCircle size={15} className="animate-spin" /> : <CheckCircle2 size={15} />}
-              {conversation?.status === "resolved" ? "Resolved" : resolving ? "Resolving…" : "Resolve"}
+              <span className="hidden sm:inline">{conversation?.status === "resolved" ? "Resolved" : resolving ? "Resolving…" : "Resolve"}</span>
             </button>
           </div>
         </header>
@@ -929,8 +990,8 @@ function DashboardContent({ name }: { name: string }) {
               </button>
             </div>
           )}
-          <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 py-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            <div className="mx-auto max-w-3xl">
+          <div ref={scrollRef} className="dashboard-message-scroll flex-1 overflow-y-auto px-6 py-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="mx-auto max-w-[820px]">
               {loading ? (
                 <div className="flex min-h-[200px] items-center justify-center text-[12px] text-[var(--chat-muted)]"><LoaderCircle size={15} className="mr-2 animate-spin" /> Loading conversation</div>
               ) : messages.length === 0 ? (
@@ -1096,6 +1157,21 @@ function DashboardContent({ name }: { name: string }) {
           </div>
 
           <div className="relative shrink-0 px-5 pb-4">
+            {!showComposer ? (
+              <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[var(--chat-divider)] bg-[var(--chat-customer-bg)] px-4 py-3.5">
+                <span className="flex items-center gap-2 text-[13px] text-[var(--chat-muted)]">
+                  <CheckCircle2 size={15} className="shrink-0 text-[#35b92c]" /> This conversation is resolved.
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setWantsToReplyAfterResolve(true)}
+                  className="flex h-8 items-center gap-1.5 rounded-lg border border-[var(--chat-divider)] px-3 text-[12.5px] font-semibold hover:bg-[var(--chat-surface)]"
+                >
+                  Reply anyway
+                </button>
+              </div>
+            ) : (
+            <>
             {emojiOpen && (
               <div className="absolute bottom-full left-5 z-10 mb-2 w-[268px] rounded-xl border border-[var(--chat-divider)] bg-[var(--chat-surface)] p-2 shadow-[0_16px_40px_-20px_rgba(15,18,22,0.45)]">
                 <div className="grid grid-cols-8 gap-0.5">
@@ -1112,7 +1188,7 @@ function DashboardContent({ name }: { name: string }) {
                 </div>
               </div>
             )}
-            <div className="overflow-hidden rounded-2xl border-[3px] border-[var(--chat-team-bg)] bg-[var(--chat-team-bg)]">
+            <div className="dashboard-reply-composer overflow-hidden rounded-xl border border-[var(--chat-divider)] bg-[var(--chat-surface)]">
               <div className="rounded-xl bg-[var(--chat-surface)]">
               <textarea
                 value={draft}
@@ -1165,7 +1241,7 @@ function DashboardContent({ name }: { name: string }) {
                 </button>
                 <button
                   type="button"
-                  onClick={() => void createTicket()}
+                  onClick={openTicketDialog}
                   aria-label="Create a ticket about this conversation"
                   title="Create a ticket"
                   className="p-1.5 opacity-70 hover:opacity-100"
@@ -1213,13 +1289,16 @@ function DashboardContent({ name }: { name: string }) {
                   disabled={!draft.trim() || sending}
                   className="chat-action-primary ml-2 flex h-8 items-center overflow-hidden rounded-lg"
                   aria-label="Send message"
+                  title="Send message"
                 >
                   <span className="flex h-full w-10 items-center justify-center">{sending ? <LoaderCircle size={15} className="animate-spin" /> : <Send size={17} />}</span>
-                  <span className="flex h-5 w-6 items-center justify-center border-l border-current/25"><ChevronDown size={13} /></span>
+                  <span className="flex h-5 w-6 items-center justify-center border-l border-current/25" title="More send options"><ChevronDown size={13} /></span>
                 </button>
               </div>
               </div>
             </div>
+            </>
+            )}
           </div>
         </div>
       </section>
@@ -1231,45 +1310,59 @@ function DashboardContent({ name }: { name: string }) {
           hidden, so detailsOpen never matters there. */}
       {detailsOpen && <div className="fixed inset-0 z-30 bg-black/30 xl:hidden" onClick={() => setDetailsOpen(false)} />}
       <aside
-        className={`${detailsOpen ? "fixed inset-y-0 right-0 z-40 flex shadow-[-16px_0_40px_rgba(15,18,22,0.18)]" : "hidden"} w-[310px] shrink-0 flex-col bg-[var(--chat-surface)] xl:static xl:z-auto xl:flex xl:shadow-none`}
+        id="dashboard-customer-details"
+        className={`${detailsOpen ? "fixed inset-y-0 right-0 z-40 flex w-full shadow-[-16px_0_40px_rgba(15,18,22,0.18)] sm:w-[340px]" : "hidden"} shrink-0 flex-col border-l border-[var(--chat-divider)] bg-[var(--chat-surface)] xl:static xl:z-auto xl:flex xl:w-[340px] xl:shadow-none`}
       >
         <div className="border-b border-[var(--chat-divider)] p-5">
           <div className="flex items-center gap-3">
+            {/* Full-bleed below sm means the backdrop underneath isn't
+                reachable to close this — needs its own explicit close. */}
+            <button
+              type="button"
+              onClick={() => setDetailsOpen(false)}
+              aria-label="Close details"
+              className="-ml-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[var(--chat-muted)] transition hover:bg-[var(--chat-customer-bg)] xl:hidden"
+            >
+              <X size={18} />
+            </button>
             <span className="chat-avatar-customer relative flex h-14 w-14 items-center justify-center rounded-full text-sm font-bold">
               {customerInitials}
-              <span className="absolute -bottom-px -right-px h-4 w-4 rounded-full border-2 border-[var(--chat-surface)] bg-[#35b92c]" />
+              <span
+                title={visitorOnline ? "Active in the last couple of minutes" : "Not currently active"}
+                className={`absolute -bottom-px -right-px h-4 w-4 rounded-full border-2 border-[var(--chat-surface)] ${visitorOnline ? "bg-[#35b92c]" : "bg-[var(--chat-muted)]"}`}
+              />
             </span>
             <div className="min-w-0">
               <h2 className="truncate text-[17px] font-bold">{customerName}</h2>
-              <p className="mt-1 text-[11px] font-medium text-[var(--chat-muted)]">Website visitor</p>
+              <p className="mt-1 text-[11px] font-medium text-[var(--chat-muted)]">Website visitor · {visitorOnline ? "Online" : "Offline"}</p>
             </div>
           </div>
           {(conversation?.email || conversation?.phone || conversation?.topic) && (
-            <div className="dashboard-contact-card mt-4 space-y-1.5 rounded-lg p-3 text-[12px]">
+            <div className="dashboard-contact-card mt-4 space-y-2 rounded-lg p-3 text-[12px]">
               {conversation?.topic && (
-                <p><span className="font-semibold">Topic: </span>{conversation.topic}</p>
+                <p className="flex items-center justify-between gap-3"><span className="text-[var(--chat-muted)]">Topic</span><span className="truncate font-medium">{conversation.topic}</span></p>
               )}
               {conversation?.email && (
-                <p className="truncate"><span className="font-semibold">Email: </span>{conversation.email}</p>
+                <p className="flex items-center justify-between gap-3"><span className="text-[var(--chat-muted)]">Email</span><span className="truncate font-medium">{conversation.email}</span></p>
               )}
               {conversation?.phone && (
-                <p><span className="font-semibold">Phone: </span>{conversation.phone}</p>
+                <p className="flex items-center justify-between gap-3"><span className="text-[var(--chat-muted)]">Phone</span><span className="font-medium">{conversation.phone}</span></p>
               )}
             </div>
           )}
           <button
             type="button"
-            onClick={() => void createTicket()}
+            onClick={openTicketDialog}
             disabled={ticketState === "creating"}
             className="chat-action-primary mt-4 flex h-10 w-full items-center justify-center gap-2 rounded-lg text-[13px] font-semibold"
           >
             {ticketState === "creating" ? <LoaderCircle size={16} className="animate-spin" /> : <TicketPlus size={16} />}
             Create ticket
           </button>
-          <button type="button" className="mt-2 flex h-10 w-full items-center justify-center gap-2 rounded-lg border border-[var(--chat-divider)] text-[13px] font-semibold hover:bg-[var(--chat-customer-bg)]">
+          <a href="/dashboard/contacts" className="mt-2 flex h-10 w-full items-center justify-center gap-2 rounded-lg border border-[var(--chat-divider)] text-[13px] font-semibold hover:bg-[var(--chat-customer-bg)]">
             <UserRound size={16} />
             View customer profile
-          </button>
+          </a>
         </div>
 
         <div className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -1289,18 +1382,12 @@ function DashboardContent({ name }: { name: string }) {
               // Said plainly rather than shown as blanks: locally, and on any
               // deployment without a CDN resolving visitor geo, there is
               // genuinely nothing to show and a guess would be worse.
-              <p className="text-[12px] leading-5 text-[var(--chat-muted)]">
-                No location recorded for this visitor. Geo and IP come from the CDN in front of the
-                app — locally, or without visitor location headers enabled, nothing is captured.
-              </p>
+              <p className="text-[12px] leading-5 text-[var(--chat-muted)]">No location or device details were recorded for this visitor.</p>
             )}
           </DetailSection>
           <DetailSection title="Secure requests">
             <div className="space-y-3">
-              <p className="text-[12px] leading-5 text-[var(--chat-muted)]">
-                Ask for a password, key, or server detail without it landing in the chat history. The
-                customer gets a single-use link; you get one look, then it is destroyed.
-              </p>
+              <p className="text-[12px] leading-5 text-[var(--chat-muted)]">Request private information through a secure, single-use link.</p>
               <button
                 type="button"
                 onClick={() => setSecureOpen(true)}
@@ -1495,6 +1582,244 @@ function SecureRequestDialog({
             {busy ? <LoaderCircle size={14} className="animate-spin" /> : <Lock size={13} />} Send link
           </button>
         </div>
+      </div>
+    </div>
+  );
+}
+
+type TicketDraftProvider = { provider: "trello" | "asana"; label: string; detail: string | null };
+type TicketDraft = {
+  providers: TicketDraftProvider[];
+  asanaProjects: { gid: string; name: string }[];
+  suggestedTitle: string;
+  suggestedNote: string;
+};
+type ExistingTicket = { provider: string; id: string; url: string | null; title: string; createdAt: string };
+
+function TicketDialog({
+  open,
+  onClose,
+  conversationId,
+  busy,
+  error,
+  onCreate,
+}: {
+  open: boolean;
+  onClose: () => void;
+  conversationId: string | null;
+  busy: boolean;
+  error: string | null;
+  onCreate: (input: { title: string; note: string; provider?: string; asanaProjectGid?: string }) => Promise<void>;
+}) {
+  // "list" shows what's already been filed for this conversation, so
+  // clicking "Ticket" a second time doesn't just reopen a blank form as if
+  // nothing had happened yet — "create" is the actual filing form, reached
+  // either because nothing exists yet or because "Create another ticket"
+  // was clicked from the list.
+  const [mode, setMode] = useState<"checking" | "list" | "create">("checking");
+  const [existingTickets, setExistingTickets] = useState<ExistingTicket[]>([]);
+  const [draft, setDraft] = useState<TicketDraft | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [title, setTitle] = useState("");
+  const [note, setNote] = useState("");
+  const [provider, setProvider] = useState<string>("");
+  const [asanaProjectGid, setAsanaProjectGid] = useState<string>("");
+
+  // Checked fresh each time the dialog opens: whatever was already filed for
+  // this conversation, since another agent could have filed one since the
+  // last time this tab looked.
+  useEffect(() => {
+    if (!open || !conversationId) return;
+    let cancelled = false;
+    setMode("checking");
+    setExistingTickets([]);
+    setDraft(null);
+    setLoadError(null);
+    fetch(`/api/workspace/conversations/${encodeURIComponent(conversationId)}/ticket`)
+      .then(async (response) => {
+        const data = (await response.json()) as { tickets?: ExistingTicket[] };
+        if (cancelled) return;
+        const tickets = data.tickets ?? [];
+        setExistingTickets(tickets);
+        setMode(tickets.length > 0 ? "list" : "create");
+      })
+      .catch(() => {
+        if (!cancelled) setMode("create");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [open, conversationId]);
+
+  // Fetched on demand rather than alongside the existing-tickets check: an
+  // AI-drafted title/summary costs real inference money (see ticketDraft in
+  // agent.service.ts), so it should only be requested when someone is
+  // actually about to file a ticket, not every time the dialog merely opens
+  // to show what already exists.
+  useEffect(() => {
+    if (mode !== "create" || !conversationId) return;
+    let cancelled = false;
+    setLoading(true);
+    setLoadError(null);
+    setDraft(null);
+    fetch(`/api/workspace/conversations/${encodeURIComponent(conversationId)}/ticket/draft`, { method: "POST" })
+      .then(async (response) => {
+        const data = (await response.json()) as TicketDraft & { message?: string };
+        if (cancelled) return;
+        if (!response.ok) throw new Error(data.message ?? "Could not prepare the ticket.");
+        setDraft(data);
+        setTitle(data.suggestedTitle ?? "");
+        setNote(data.suggestedNote ?? "");
+        setProvider(data.providers[0]?.provider ?? "");
+        setAsanaProjectGid("");
+      })
+      .catch((issue: unknown) => {
+        if (!cancelled) setLoadError(issue instanceof Error ? issue.message : "Could not prepare the ticket.");
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [mode, conversationId]);
+
+  if (!open) return null;
+
+  async function submit() {
+    if (!title.trim() || busy) return;
+    await onCreate({
+      title: title.trim(),
+      note: note.trim(),
+      provider: provider || undefined,
+      asanaProjectGid: provider === "asana" && asanaProjectGid ? asanaProjectGid : undefined,
+    });
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0b0f14]/40 p-4 backdrop-blur-[2px]"
+      role="presentation"
+      onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}
+    >
+      <div role="dialog" aria-modal="true" aria-label="Create ticket" className="w-full max-w-[480px] rounded-2xl border border-[var(--chat-divider)] bg-[var(--chat-surface)] p-6 shadow-[0_24px_70px_rgba(15,23,42,0.24)]">
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="flex items-center gap-2 text-[17px] font-semibold"><TicketPlus size={16} /> {mode === "list" ? "Tickets for this conversation" : "Create ticket"}</h3>
+          <button type="button" onClick={onClose} aria-label="Close" className="shrink-0 rounded-lg p-1.5 opacity-60 hover:bg-[var(--chat-customer-bg)] hover:opacity-100">
+            <X size={16} />
+          </button>
+        </div>
+
+        {mode === "checking" ? (
+          <div className="mt-6 flex items-center justify-center gap-2 py-8 text-[13px] text-[var(--chat-muted)]">
+            <LoaderCircle size={16} className="animate-spin" /> Checking for existing tickets…
+          </div>
+        ) : mode === "list" ? (
+          <div className="mt-4 space-y-3.5">
+            <div className="space-y-2">
+              {existingTickets.map((t) => (
+                <a
+                  key={`${t.provider}:${t.id}`}
+                  href={t.url ?? undefined}
+                  target={t.url ? "_blank" : undefined}
+                  rel={t.url ? "noreferrer" : undefined}
+                  className={`block rounded-lg border border-[var(--chat-divider)] p-3 ${t.url ? "hover:bg-[var(--chat-customer-bg)]" : "cursor-default"}`}
+                >
+                  <p className="text-[12.5px] font-medium">{t.title}</p>
+                  <p className="mt-1 text-[11px] text-[var(--chat-muted)]">
+                    {t.provider === "asana" ? "Asana" : "Trello"} · {new Date(t.createdAt).toLocaleString()}
+                  </p>
+                </a>
+              ))}
+            </div>
+            <button
+              type="button"
+              onClick={() => setMode("create")}
+              className="flex h-9 w-full items-center justify-center gap-1.5 rounded-lg border border-[var(--chat-divider)] text-[12.5px] font-semibold hover:bg-[var(--chat-customer-bg)]"
+            >
+              <TicketPlus size={14} /> Create another ticket
+            </button>
+          </div>
+        ) : loading ? (
+          <div className="mt-6 flex items-center justify-center gap-2 py-8 text-[13px] text-[var(--chat-muted)]">
+            <LoaderCircle size={16} className="animate-spin" /> Summarizing this conversation…
+          </div>
+        ) : loadError ? (
+          <p role="alert" className="mt-4 text-[13px] leading-5 text-[#c0554f]">{loadError}</p>
+        ) : draft ? (
+          <div className="mt-4 space-y-3.5">
+            <label className="block text-[12.5px] font-semibold">
+              Send to
+              <select
+                value={provider}
+                onChange={(event) => { setProvider(event.target.value); setAsanaProjectGid(""); }}
+                className="mt-1.5 h-10 w-full rounded-lg border border-[var(--chat-divider)] bg-transparent px-2.5 text-[13px] font-normal outline-none focus:border-[var(--chat-line-text)]"
+              >
+                {draft.providers.map((option) => (
+                  <option key={option.provider} value={option.provider}>
+                    {option.label}{option.detail ? ` — ${option.detail}` : ""}
+                  </option>
+                ))}
+              </select>
+            </label>
+            {provider === "asana" && draft.asanaProjects.length > 0 && (
+              <label className="block text-[12.5px] font-semibold">
+                Project
+                <select
+                  value={asanaProjectGid}
+                  onChange={(event) => setAsanaProjectGid(event.target.value)}
+                  className="mt-1.5 h-10 w-full rounded-lg border border-[var(--chat-divider)] bg-transparent px-2.5 text-[13px] font-normal outline-none focus:border-[var(--chat-line-text)]"
+                >
+                  <option value="">No project — just the workspace</option>
+                  {draft.asanaProjects.map((p) => (
+                    <option key={p.gid} value={p.gid}>{p.name}</option>
+                  ))}
+                </select>
+              </label>
+            )}
+            <label className="block text-[12.5px] font-semibold">
+              Heading
+              <input
+                autoFocus
+                value={title}
+                onChange={(event) => setTitle(event.target.value)}
+                maxLength={200}
+                className="mt-1.5 h-10 w-full rounded-lg border border-[var(--chat-divider)] bg-transparent px-3 text-[13px] font-normal outline-none focus:border-[var(--chat-line-text)]"
+              />
+            </label>
+            <label className="block text-[12.5px] font-semibold">
+              Details <span className="font-normal text-[var(--chat-muted)]">(AI-summarized — edit freely)</span>
+              <textarea
+                value={note}
+                onChange={(event) => setNote(event.target.value)}
+                rows={5}
+                className="mt-1.5 w-full resize-none rounded-lg border border-[var(--chat-divider)] bg-transparent px-3 py-2 text-[13px] font-normal leading-5 outline-none focus:border-[var(--chat-line-text)]"
+              />
+            </label>
+            <p className="text-[11.5px] leading-4 text-[var(--chat-muted)]">
+              Customer name, email, and topic are attached automatically below this.
+            </p>
+          </div>
+        ) : null}
+
+        {error && <p role="alert" className="mt-3 text-[12px] text-[#c0554f]">{error}</p>}
+
+        {mode === "create" && (
+        <div className="mt-5 flex items-center justify-end gap-2">
+          <button type="button" onClick={onClose} className="flex h-10 items-center rounded-lg border border-[var(--chat-divider)] px-4 text-[13px] font-semibold hover:bg-[var(--chat-customer-bg)]">
+            Cancel
+          </button>
+          <button
+            type="button"
+            disabled={!draft || !title.trim() || busy}
+            onClick={() => void submit()}
+            className="chat-action-primary flex h-10 items-center gap-2 rounded-lg px-4 text-[13px] font-semibold disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {busy ? <LoaderCircle size={14} className="animate-spin" /> : <TicketPlus size={13} />} Create ticket
+          </button>
+        </div>
+        )}
       </div>
     </div>
   );

@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Bot, LifeBuoy, Lightbulb, LoaderCircle, Mail, MessageSquare, Phone, Search, User, Users, X } from "lucide-react";
+import { ArrowLeft, Bot, Download, LifeBuoy, Lightbulb, LoaderCircle, Mail, MessageSquare, Phone, RefreshCw, Search, User, Users, X } from "lucide-react";
+import { useMobileDrawer } from "@/app/components/dashboard/mobile-drawer-context";
 
 type Contact = {
   id: string;
@@ -34,10 +35,12 @@ type SessionMessage = {
 };
 
 export function ContactsClient() {
+  const { open: toolsOpen, setOpen: setToolsOpen } = useMobileDrawer();
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const [openContact, setOpenContact] = useState<Contact | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     fetch("/api/contacts", { cache: "no-store" })
@@ -57,21 +60,62 @@ export function ContactsClient() {
     );
   }, [contacts, query]);
 
-  return (
-    <div className="relative flex h-full min-h-0 overflow-hidden bg-white text-[#17181a]">
-      <main className="dashboard-page-surface dashboard-contacts-main-surface m-0.5 flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-black/20 bg-white shadow-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <div className="shrink-0 border-b border-[#eceeef] px-6 py-5">
-          <h1 className="text-[19px] font-normal tracking-[-0.02em] text-black">Contacts</h1>
-          <p className="mt-0.5 text-[12.5px] text-[#74787c]">People who left their details through your website widget</p>
+  async function refreshContacts() {
+    setRefreshing(true);
+    try {
+      const response = await fetch("/api/contacts", { cache: "no-store" });
+      const data = response.ok ? await response.json() as { contacts?: Contact[] } : { contacts: [] };
+      setContacts(data.contacts ?? []);
+    } finally {
+      setRefreshing(false);
+    }
+  }
 
-          <div className="mt-4 flex max-w-xs items-center gap-2 rounded-lg border border-[#DDE4E8] px-2.5 py-2">
-            <Search size={14} className="text-[#8a9298]" />
-            <input
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search contacts"
-              className="w-full bg-transparent text-[13px] outline-none placeholder:text-[#9aa1a6]"
-            />
+  async function downloadXlsx() {
+    const XLSX = await import("xlsx");
+    const rows = filtered.map((contact) => ({
+      Name: contact.name,
+      Email: contact.email ?? "",
+      Phone: contact.phone ?? "",
+      "First seen": new Date(contact.createdAt),
+      "Last updated": new Date(contact.updatedAt),
+      Sessions: contact.sourceCount,
+      "Custom fields": Object.entries(contact.customFields).map(([key, value]) => `${key}: ${value}`).join("; "),
+    }));
+    const sheet = XLSX.utils.json_to_sheet(rows, { cellDates: true });
+    sheet["!cols"] = [{ wch: 24 }, { wch: 30 }, { wch: 18 }, { wch: 14 }, { wch: 14 }, { wch: 10 }, { wch: 38 }];
+    if (sheet["!ref"]) sheet["!autofilter"] = { ref: sheet["!ref"] };
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, sheet, "Contacts");
+    XLSX.writeFile(workbook, `contacts-${new Date().toISOString().slice(0, 10)}.xlsx`, { compression: true });
+  }
+
+  return (
+    <div id="dashboard-contacts-page" className="dashboard-contacts-shell relative flex h-full min-h-0 overflow-hidden bg-[#262626] text-white">
+      <main className="dashboard-page-surface dashboard-contacts-main-surface flex min-h-0 flex-1 flex-col overflow-hidden bg-[#262626] shadow-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="shrink-0 border-b border-white/10 px-6 py-7 lg:px-10">
+          <p className="text-xs font-normal uppercase tracking-[0.16em] text-white/40">People</p>
+          <h1 className="mt-2 text-3xl font-normal tracking-[-0.03em] text-white/95">Contacts</h1>
+          <p className="mt-2 text-sm text-white/45">People who left their details through your website widget</p>
+
+          <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
+            <div className="dashboard-contacts-search flex h-9 w-full max-w-sm items-center gap-2 rounded-lg border border-white/10 bg-white/[0.045] px-3">
+              <Search size={14} className="text-white/40" />
+              <input
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Search contacts"
+                className="w-full bg-transparent text-[13px] text-white/90 outline-none placeholder:text-white/35"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <button type="button" onClick={() => void downloadXlsx()} disabled={filtered.length === 0} className="flex h-9 items-center gap-2 rounded-lg border border-white/10 px-3 text-xs font-normal text-white/70 transition hover:bg-white/[0.07] hover:text-white disabled:cursor-not-allowed disabled:opacity-35">
+                <Download size={15} /> Download XLSX
+              </button>
+              <button type="button" onClick={() => void refreshContacts()} disabled={refreshing} className="flex h-9 items-center gap-2 rounded-lg border border-white/10 px-3 text-xs font-normal text-white/70 transition hover:bg-white/[0.07] hover:text-white disabled:opacity-50">
+                <RefreshCw size={15} className={refreshing ? "animate-spin" : ""} /> Refresh
+              </button>
+            </div>
           </div>
 
           <p className="mt-3 text-[10px] font-bold uppercase tracking-[0.12em] text-[#74787c]">
@@ -87,66 +131,115 @@ export function ContactsClient() {
           ) : filtered.length === 0 ? (
             <EmptyState />
           ) : (
-            <table className="dashboard-contacts-table w-full border-collapse text-left text-[14px]">
-              <thead className="sticky top-0 z-[1] bg-white">
-                <tr className="border-b border-[#eceeef] text-[11.5px] font-bold uppercase tracking-[0.08em] text-[#8a9298]">
-                  <th className="px-6 py-3 font-bold">Name</th>
-                  <th className="px-4 py-3 font-bold">Email</th>
-                  <th className="px-4 py-3 font-bold">Phone</th>
-                  <th className="px-4 py-3 font-bold">First seen</th>
-                  <th className="px-4 py-3 font-bold">Sessions</th>
-                </tr>
-              </thead>
-              <tbody>
+            <>
+              {/* A 5-column table has no honest way to fit a phone screen —
+                  below md this becomes a stacked card list instead, same
+                  tap-to-open-details behavior either way. */}
+              <div className="divide-y divide-white/[0.07] md:hidden">
                 {filtered.map((contact) => (
-                  <tr
+                  <button
                     key={contact.id}
+                    type="button"
                     onClick={() => setOpenContact(contact)}
-                    className="cursor-pointer border-b border-[#f0f1f2] transition hover:bg-[#f7f8f8]"
+                    className="flex w-full items-center gap-3 px-4 py-3.5 text-left transition hover:bg-white/[0.04]"
                   >
-                    <td className="px-6 py-3">
-                      <span className="flex min-w-0 items-center gap-2.5">
-                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#EAF0F5] text-[11px] font-semibold text-[#2b5b82]">
-                          {initials(contact.name)}
-                        </span>
-                        <span className="truncate font-medium text-black">{contact.name}</span>
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#EAF0F5] text-[11px] font-semibold text-[#2b5b82]">
+                      {initials(contact.name)}
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-[13.5px] font-medium text-white/90">{contact.name}</span>
+                      <span className="mt-0.5 block truncate text-[12px] text-white/45">
+                        {contact.email ?? contact.phone ?? "No contact details"}
                       </span>
-                    </td>
-                    <td className="px-4 py-3 text-black">{contact.email ?? <span className="text-[#a5acb0]">—</span>}</td>
-                    <td className="px-4 py-3 text-black">{contact.phone ?? <span className="text-[#a5acb0]">—</span>}</td>
-                    <td className="px-4 py-3 text-black">{new Date(contact.createdAt).toLocaleDateString()}</td>
-                    <td className="px-4 py-3 text-black">{contact.sourceCount}</td>
-                  </tr>
+                    </span>
+                    <span className="shrink-0 text-[11px] text-white/35">{contact.sourceCount} session{contact.sourceCount === 1 ? "" : "s"}</span>
+                  </button>
                 ))}
-              </tbody>
-            </table>
+              </div>
+              <table className="dashboard-contacts-table hidden w-full border-collapse text-left text-[14px] md:table">
+                <thead className="sticky top-0 z-[1] bg-[#292a2b]">
+                  <tr className="border-b border-[#eceeef] text-[11.5px] font-bold uppercase tracking-[0.08em] text-[#8a9298]">
+                    <th className="px-6 py-3 font-bold">Name</th>
+                    <th className="px-4 py-3 font-bold">Email</th>
+                    <th className="px-4 py-3 font-bold">Phone</th>
+                    <th className="px-4 py-3 font-bold">First seen</th>
+                    <th className="px-4 py-3 font-bold">Sessions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filtered.map((contact) => (
+                    <tr
+                      key={contact.id}
+                      onClick={() => setOpenContact(contact)}
+                      className="cursor-pointer border-b border-white/[0.07] transition hover:bg-white/[0.04]"
+                    >
+                      <td className="px-6 py-3">
+                        <span className="flex min-w-0 items-center gap-2.5">
+                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#EAF0F5] text-[11px] font-semibold text-[#2b5b82]">
+                            {initials(contact.name)}
+                          </span>
+                          <span className="truncate font-medium text-black">{contact.name}</span>
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-black">{contact.email ?? <span className="text-[#a5acb0]">—</span>}</td>
+                      <td className="px-4 py-3 text-black">{contact.phone ?? <span className="text-[#a5acb0]">—</span>}</td>
+                      <td className="px-4 py-3 text-black">{new Date(contact.createdAt).toLocaleDateString()}</td>
+                      <td className="px-4 py-3 text-black">{contact.sourceCount}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </>
           )}
         </div>
       </main>
 
-      <aside className="dashboard-secondary-sidebar my-0.5 mr-0.5 hidden h-[calc(100%_-_4px)] w-[340px] shrink-0 flex-col overflow-hidden rounded-xl border border-black/20 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)] lg:flex">
+      {/* Kept mounted (not `hidden`) below lg so the slide has something to
+          animate — see SpacePanel.tsx for the same trick and why. This one
+          slides from the right, matching where it docks at lg+. */}
+      <div
+        className={`fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 lg:hidden ${toolsOpen ? "opacity-100" : "pointer-events-none opacity-0"}`}
+        onClick={() => setToolsOpen(false)}
+      />
+      <aside
+        id="dashboard-contacts-tools"
+        className={`dashboard-secondary-sidebar dashboard-contacts-tools fixed inset-y-0 right-0 z-50 flex h-full w-[320px] shrink-0 flex-col overflow-hidden border-l border-white/10 bg-[#262626] shadow-[-8px_0_30px_rgba(0,0,0,0.35)] transition-transform duration-300 ease-in-out lg:static lg:z-auto lg:w-[320px] lg:translate-x-0 lg:shadow-none ${
+          toolsOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        <div className="flex items-center justify-between border-b border-white/10 px-4 py-3 lg:hidden">
+          <p className="text-[13px] font-medium text-white/80">Resources</p>
+          <button
+            type="button"
+            onClick={() => setToolsOpen(false)}
+            aria-label="Close"
+            className="flex h-8 w-8 items-center justify-center rounded-full text-white/70 transition hover:bg-white/[0.07]"
+          >
+            <X size={17} />
+          </button>
+        </div>
         <div className="space-y-3 p-3">
-          <div className="min-h-44 rounded-xl bg-gradient-to-br from-[#7467E8] via-[#428ce5] to-[#39B487] p-[2.5px]">
-            <div className="flex h-full flex-col justify-between rounded-[9px] bg-white p-4">
+          <div className="dashboard-contact-tool-card min-h-44 rounded-xl border border-white/10 bg-[#262626] p-[2.5px]">
+            <div className="flex h-full flex-col justify-between rounded-[9px] bg-[#262626] p-4">
               <div>
                 <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#EAF0F5]"><LifeBuoy size={18} color="#2b5b82" /></span>
-                <h3 className="mt-2.5 text-[15px] font-semibold text-black">Need help?</h3>
-                <p className="mt-1 line-clamp-2 text-[13px] leading-5 text-[#667069]">Questions about contacts or widget data? We're happy to help.</p>
+                <h3 className="mt-2.5 text-[15px] font-semibold text-white/90">Need help?</h3>
+                <p className="mt-1 line-clamp-2 text-[13px] leading-5 text-white/60">Questions about contacts or widget data? We're happy to help.</p>
               </div>
-              <Link href="/contact" className="mt-4 flex h-8 w-fit items-center gap-1.5 rounded-md border border-[#DDE4E8] bg-white px-3.5 text-[12.5px] font-semibold text-black transition hover:bg-[#f7f8f8]">
+              <Link href="/contact" className="mt-4 flex h-8 w-fit items-center gap-1.5 rounded-md border border-white/15 bg-transparent px-3.5 text-[12.5px] font-normal text-white/90 transition hover:bg-white/[0.06]">
                 Contact support
               </Link>
             </div>
           </div>
 
-          <div className="min-h-44 rounded-xl bg-white p-4">
+          <div className="dashboard-contact-tool-card min-h-44 rounded-xl border border-white/10 bg-[#262626] p-4">
             <div className="flex h-full flex-col justify-between">
               <div>
                 <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#FDF0E4]"><Lightbulb size={18} color="#B8621B" /></span>
-                <h3 className="mt-2.5 text-[15px] font-semibold text-black">Request a feature</h3>
-                <p className="mt-1 line-clamp-2 text-[13px] leading-5 text-[#667069]">Missing something in Contacts? Tell us what you'd like to see next.</p>
+                <h3 className="mt-2.5 text-[15px] font-semibold text-white/90">Request a feature</h3>
+                <p className="mt-1 line-clamp-2 text-[13px] leading-5 text-white/60">Missing something in Contacts? Tell us what you'd like to see next.</p>
               </div>
-              <Link href="/contact" className="mt-4 flex h-8 w-fit items-center gap-1.5 rounded-md border border-[#DDE4E8] bg-white px-3.5 text-[12.5px] font-semibold text-black transition hover:bg-[#f7f8f8]">
+              <Link href="/contact" className="mt-4 flex h-8 w-fit items-center gap-1.5 rounded-md border border-white/15 bg-transparent px-3.5 text-[12.5px] font-normal text-white/90 transition hover:bg-white/[0.06]">
                 Send feedback
               </Link>
             </div>
@@ -178,7 +271,7 @@ function ContactPanel({ contact, onClose }: { contact: Contact; onClose: () => v
   return (
     <div className="absolute inset-0 z-20 flex justify-end">
       <button type="button" aria-label="Close panel" onClick={onClose} className="absolute inset-0 bg-black/20" />
-      <aside className="relative flex h-full w-full max-w-[440px] flex-col overflow-hidden border-l border-[#E3E4DF] bg-white shadow-[-8px_0_30px_rgba(15,23,42,0.12)]">
+      <aside className="dashboard-contact-drawer relative flex h-full w-full max-w-[440px] flex-col overflow-hidden border-l border-white/10 bg-[#292a2b] shadow-[-12px_0_36px_rgba(0,0,0,0.32)]">
         {activeSession ? (
           <SessionThread session={activeSession} onBack={() => setActiveSession(null)} />
         ) : (
@@ -348,7 +441,7 @@ function SessionThread({ session, onBack }: { session: ContactSession; onBack: (
 
 function EmptyState() {
   return (
-    <div className="mt-7 flex min-h-[420px] flex-col items-center justify-center rounded-[24px] border border-[#DDE4E8] bg-white text-center">
+    <div className="mt-7 flex min-h-[420px] flex-col items-center justify-center rounded-xl border border-white/10 bg-[#292a2b] text-center">
       <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F0F2F4] text-[#667078]"><Users size={20} /></span>
       <p className="mt-3 text-[14px] font-semibold">No contacts yet</p>
       <p className="mt-1 max-w-sm text-[11.5px] leading-5 text-[#687178]">Contacts appear here automatically once a visitor fills in their name and email or phone in the chat widget.</p>

@@ -115,7 +115,7 @@ export function NotificationsBell({
               return (
                 <Link
                   key={entry.id}
-                  href={`/dashboard?conversation=${encodeURIComponent(entry.conversationId)}`}
+                  href={`/dashboard/inbox?conversation=${encodeURIComponent(entry.conversationId)}`}
                   onClick={() => onOpenChange(false)}
                   title={arrivedLabel}
                   className="dashboard-notification-row flex items-start gap-3 border-b border-[#f1f2f3] px-4 py-3 text-left transition hover:bg-[#f7f8fa] last:border-b-0"

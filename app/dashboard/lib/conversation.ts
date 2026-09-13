@@ -1,4 +1,4 @@
-// Shared between the Inbox (/dashboard) and AI Assist (/dashboard/ai-assist).
+// Shared between the Team Inbox and AI Assist views under /dashboard/inbox.
 // Both render the same conversation from the same API, so the grouping rules,
 // the visitor formatting, and the message shape have to agree — when they
 // drifted, the same thread looked like two different conversations depending

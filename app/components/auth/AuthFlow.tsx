@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import api from "@/lib/api";
@@ -95,34 +95,6 @@ function DropdownIcon() {
   );
 }
 
-function AuthOption({
-  icon,
-  label,
-  onClick,
-  disabled,
-  className = "",
-}: {
-  icon: ReactNode;
-  label: string;
-  onClick?: () => void;
-  disabled?: boolean;
-  className?: string;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      className={`flex w-full items-center justify-center gap-3 rounded-xl border border-[#DDDAD3] bg-white py-4 text-black transition duration-200 hover:-translate-y-0.5 hover:border-black/30 hover:shadow-[0_8px_24px_rgba(17,18,15,0.06)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
-    >
-      <span className="flex items-center justify-center">{icon}</span>
-      <span className="text-center text-base font-medium leading-none text-black">
-        {label}
-      </span>
-    </button>
-  );
-}
-
 function OtpInput({
   value,
   onChange,
@@ -208,7 +180,7 @@ export function AuthFlow({ initialMode }: { initialMode: "login" | "signup" }) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [agreeToTerms, setAgreeToTerms] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(initialMode === "login");
   const [pendingVerifyEmail, setPendingVerifyEmail] = useState<string | null>(null);
   const [existingAccountEmail, setExistingAccountEmail] = useState<string | null>(null);
   const [otp, setOtp] = useState("");
@@ -425,306 +397,92 @@ export function AuthFlow({ initialMode }: { initialMode: "login" | "signup" }) {
     setExistingAccountEmail(null);
   };
 
-  const fieldClass =
-    "mt-2 h-14 w-full rounded-xl border border-[#DDDAD3] bg-[#f8f9f9] px-4 text-base font-normal text-black outline-none transition placeholder:text-black/35 focus:border-black/50 focus:ring-2 focus:ring-black/10";
-  const primaryButtonClass =
-    "mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-black text-sm font-semibold text-white transition duration-200 hover:-translate-y-0.5 hover:bg-black/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/30 focus-visible:ring-offset-2 focus-visible:ring-offset-white active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50";
+  const loginExperience = mode === "login" ? (
+    <main lang={language} className="relative min-h-screen bg-white font-display text-[#202124] antialiased">
+      <div className="absolute inset-x-0 top-0 h-[3px] bg-[linear-gradient(90deg,#ff8157_0%,#d9bef4_45%,#428ce5_100%)]" />
 
-  const mirrored = mode === "login";
+      <section className="relative z-10 mx-auto flex min-h-screen w-full max-w-[420px] flex-col items-center justify-center px-6 py-16 text-center">
+        <Link href="/" aria-label="Elpino home" className="inline-flex rounded-[10px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#428CE5]/35 focus-visible:ring-offset-4">
+          <Image src="/icon.png" alt="Elpino" width={40} height={40} priority className="h-10 w-10 rounded-[10px] object-cover" />
+        </Link>
 
-  return (
-      <main lang={language} className={`relative min-h-screen bg-white font-display text-[#222733] antialiased lg:grid lg:h-screen ${mirrored ? "lg:grid-cols-[1fr_2fr]" : "lg:grid-cols-[2fr_1fr]"} lg:overflow-hidden`}>
-        <div className="absolute inset-x-0 top-0 h-[3px] bg-[#2563eb]" />
-        <div className={`pointer-events-none fixed inset-y-0 z-10 hidden w-1/3 bg-white lg:block ${mirrored ? "left-0 shadow-[18px_0_42px_rgba(15,23,42,0.12)]" : "right-0 shadow-[-18px_0_42px_rgba(15,23,42,0.12)]"}`} />
+        {!pendingVerifyEmail && (
+          <div className="mt-5 animate-[fadeIn_.55s_ease-out_both]">
+            <h1 className="text-[22px] font-bold leading-tight tracking-[-0.02em] text-black">Your AI support.</h1>
+            <p className="text-[22px] font-bold leading-tight tracking-[-0.02em] text-black/30">Log in to your Elpino account</p>
+          </div>
+        )}
 
-        <header className={`fixed top-7 z-30 hidden h-10 w-1/3 items-center bg-white px-7 lg:flex xl:px-9 ${mirrored ? "left-0 justify-start" : "right-0 justify-end"}`}>
-          <div className="flex w-full items-center gap-2 sm:gap-3">
-            <Link href="/" aria-label="Elpino home" className="mr-auto inline-flex rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1447ff]/30">
-              <Image src="/icon.png" alt="Elpino" width={32} height={32} className="h-8 w-8 rounded-md object-cover" />
-            </Link>
-            <div className="relative order-2">
+        <div className="mt-8 w-full text-left">
+          {pendingVerifyEmail ? (
+            <form onSubmit={handleVerifyOtp} className="w-full text-center">
+              <h1 className="text-center text-[22px] font-bold tracking-[-0.02em] text-black">{t("auth.signup.enterCode")}</h1>
+              <p className="mt-2 text-center text-[14px] text-black/45">{pendingVerifyEmail}{" "}<button type="button" onClick={handleChangeEmail} className="font-medium text-[#347dce] hover:underline">{t("auth.signup.changeEmail")}</button></p>
+              <OtpInput value={otp} onChange={setOtp} disabled={Boolean(loading)} />
+              <button type="submit" disabled={Boolean(loading) || otp.length !== 6} className="mt-7 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#2563eb] text-[15px] font-semibold text-white transition hover:bg-[#1d4ed8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb]/40 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40">
+                {loading === "email" && <Spinner />}{t("auth.signup.verifyBtn")}
+              </button>
+              <button type="button" onClick={handleResendOtp} disabled={resending} className="mt-5 w-full text-center text-[14px] font-medium text-[#347dce] hover:underline disabled:opacity-50">{resent ? t("auth.signup.codeSent") : resending ? t("auth.signup.sending") : t("auth.signup.resendCode")}</button>
+            </form>
+          ) : (
+            <>
+              <form onSubmit={handleEmailLogin} className="w-full space-y-4">
+                <div>
+                  <label htmlFor="login-email" className="mb-2 block text-[13px] font-medium text-black/70">{t("auth.signup.emailLabel")}</label>
+                  <input id="login-email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder={t("auth.signup.emailPlaceholder")} type="email" autoComplete="email" required autoFocus className="h-12 w-full rounded-xl border border-black/15 bg-white px-4 text-[15px] outline-none transition placeholder:text-black/30 hover:border-black/25 focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/10" />
+                  <p className="mt-2 text-[12px] leading-5 text-black/40">Use your work email to easily collaborate with your team</p>
+                </div>
+                <div>
+                  <div className="mb-2 flex items-center justify-between">
+                    <label htmlFor="login-password" className="text-[13px] font-medium text-black/70">{t("auth.signup.passwordLabel")}</label>
+                    <Link href="/forgot-password" className="text-[12px] font-medium text-[#347dce] hover:underline">{t("auth.signup.forgotPassword")}</Link>
+                  </div>
+                  <input id="login-password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder={t("auth.signup.passwordPlaceholder")} type="password" autoComplete="current-password" minLength={8} required className="h-12 w-full rounded-xl border border-black/15 bg-white px-4 text-[15px] outline-none transition placeholder:text-black/30 hover:border-black/25 focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/10" />
+                </div>
+                <button type="submit" disabled={Boolean(loading)} className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#2563eb] text-[15px] font-semibold text-white transition hover:bg-[#1d4ed8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb]/40 focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-50">
+                  {loading === "email" && <Spinner />}{t("auth.signup.signIn")}
+                </button>
+              </form>
+
+              <div className="my-6 flex items-center gap-4" aria-hidden="true">
+                <div className="h-px flex-1 bg-black/10" />
+                <span className="text-[12px] text-black/40">or continue with</span>
+                <div className="h-px flex-1 bg-black/10" />
+              </div>
+
               <button
                 type="button"
-                onClick={() => setLanguageOpen((open) => !open)}
-                aria-expanded={languageOpen}
-                aria-haspopup="listbox"
-                className="flex h-10 items-center gap-2 rounded-full border border-black/20 bg-white px-3 text-sm font-normal text-[#454b59] transition hover:border-[#1447ff]/40 hover:bg-[#f8f9ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb]/25"
+                onClick={handleGoogleLogin}
+                disabled={Boolean(loading)}
+                className="flex h-12 w-full items-center justify-center gap-3 rounded-xl border border-black/12 bg-white text-[15px] font-normal text-black transition hover:-translate-y-0.5 hover:border-black/25 hover:shadow-[0_8px_20px_rgba(17,18,15,0.06)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                <FlagImage
-                  countryCode={LANGUAGES.find((item) => item.code === language)?.countryCode || "gb"}
-                  alt=""
-                />
-                <span className="hidden 2xl:inline">{LANGUAGES.find((item) => item.code === language)?.name}</span>
-                <DropdownIcon />
+                <span className="flex h-5 w-5 items-center justify-center">{loading === "google" ? <Spinner dark /> : <GoogleIcon />}</span>
+                <span>Continue with Google</span>
               </button>
 
-              {languageOpen && (
-                <>
-                  <button className="fixed inset-0 z-40 cursor-default" aria-label="Close language menu" onClick={() => setLanguageOpen(false)} />
-                  <div className="absolute right-0 top-[calc(100%+8px)] z-50 w-60 overflow-hidden rounded-[14px] border border-[#e0e2e7] bg-white p-2 shadow-[0_18px_50px_rgba(26,32,44,0.14)]">
-                    <div className="px-3 pb-2 pt-1 text-[11px] font-bold uppercase tracking-[0.14em] text-[#89909f]">{signupLabels.choose}</div>
-                    <div className="max-h-[310px] overflow-y-auto overscroll-contain">
-                      {LANGUAGES.map((item) => (
-                        <button
-                          type="button"
-                          role="option"
-                          aria-selected={language === item.code}
-                          key={item.code}
-                          onClick={() => {
-                            setLanguage(item.code);
-                            setLanguageOpen(false);
-                          }}
-                          className={`flex w-full items-center gap-3 rounded-[9px] px-3 py-2.5 text-left text-sm transition ${language === item.code ? "bg-[#eff6ff] font-semibold text-[#1d4ed8]" : "text-[#404653] hover:bg-[#f5f6f7]"}`}
-                        >
-                          <FlagImage countryCode={item.countryCode} alt="" />
-                          <span>{item.name}</span>
-                          {language === item.code && <span className="ml-auto text-[#2563eb]">✓</span>}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
+              <p className="mt-7 text-center text-[14px] text-black/45">{t("auth.signup.noAccount")}{" "}<Link href="/signup" className="font-semibold text-[#202124] underline decoration-black/20 underline-offset-4 transition hover:decoration-black/70">{t("auth.signup.signup")}</Link></p>
 
-            <button
-              type="button"
-              onClick={() => toast.info("How can we help? Email support@elpino.chat")}
-              className="order-1 inline-flex h-10 items-center px-2 text-sm font-normal text-[#1447ff] transition hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1447ff]/25"
-            >
-              <span>{t("auth.signup.needHelp")}</span>
-            </button>
+              <p className="mt-8 text-center text-[12px] leading-5 text-black/35">
+                {t("auth.signup.agreeText")} <Link href="/terms" className="text-black/55 underline hover:text-black/80">{t("auth.signup.terms")}</Link> {t("auth.signup.and")} <Link href="/privacy" className="text-black/55 underline hover:text-black/80">{t("auth.signup.privacy")}</Link>.
+              </p>
 
-            <Link
-              href="/login"
-              className="hidden"
-            >
-              {t("auth.signup.login")}
-            </Link>
-          </div>
-        </header>
-
-        <section className="mx-auto grid min-h-[calc(100vh-6rem)] max-w-[1280px] items-center gap-16 px-6 pb-10 pt-8 lg:contents">
-          <div className={`relative z-20 mx-auto w-full max-w-[500px] ${mirrored ? "lg:col-start-1" : "lg:col-start-2"} lg:row-start-1 lg:h-screen lg:overflow-y-auto lg:px-10 lg:pb-16 lg:pt-28 lg:[scrollbar-width:none] lg:[&::-webkit-scrollbar]:hidden xl:px-14`}>
-            {!pendingVerifyEmail && !verifiedEmail && (
-              <div className="mb-7 text-left">
-                <h1 className="text-[27px] font-normal leading-tight tracking-[-0.025em] text-[#292e3a] sm:text-[30px]">
-                  {mode === "login" ? t("auth.signup.loginScreen.title") : t("auth.signup.title")}
-                </h1>
-                <p className="mt-2 text-[14px] leading-6 text-[#313747] sm:text-[15px]">
-                  {mode === "login" ? t("auth.signup.loginScreen.subtitle") : t("auth.signup.subtitle")}
-                </p>
-              </div>
-            )}
-
-            {verifiedEmail ? (
-              <form onSubmit={handleCompleteProfile} className="w-full">
-                <h1 className="text-[22px] font-normal leading-tight tracking-[-0.02em] text-[#292e3a] sm:text-[24px]">
-                  {t("auth.signup.setPasswordHeading")}
-                </h1>
-                <p className="mt-2 text-sm text-[#454b59]">{t("auth.signup.setPasswordSubheading")}</p>
-
-                <label htmlFor="profile-name" className="mb-2 mt-5 block text-[15px] font-normal text-[#343b49]">
-                  {t("auth.signup.nameLabel")}
-                </label>
-                <input
-                  id="profile-name"
-                  value={profileName}
-                  onChange={(event) => setProfileName(event.target.value)}
-                  placeholder={t("auth.signup.namePlaceholder")}
-                  type="text"
-                  autoComplete="name"
-                  required
-                  autoFocus
-                  className="h-10 w-full rounded-[8px] border border-black/20 bg-[#f8f9f9] px-3 text-[14px] outline-none transition placeholder:text-[#858c9a] focus:bg-white focus:ring-2 focus:ring-[#2563eb]/30"
-                />
-
-                <label htmlFor="profile-password" className="mb-2 mt-4 block text-[15px] font-normal text-[#343b49]">
-                  {t("auth.signup.passwordLabel")}
-                </label>
-                <div className="relative">
-                  <input
-                    id="profile-password"
-                    value={newPassword}
-                    onChange={(event) => setNewPassword(event.target.value)}
-                    placeholder={t("auth.signup.passwordPlaceholder")}
-                    type={showNewPassword ? "text" : "password"}
-                    autoComplete="new-password"
-                    required
-                    className="h-10 w-full rounded-[8px] border border-black/20 bg-[#f8f9f9] px-3 pr-14 text-[14px] outline-none transition placeholder:text-[#858c9a] focus:bg-white focus:ring-2 focus:ring-[#2563eb]/30"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowNewPassword((value) => !value)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-[#1d4ed8] hover:underline"
-                  >
-                    {showNewPassword ? t("auth.signup.hidePassword") : t("auth.signup.showPassword")}
-                  </button>
-                </div>
-
-                <label htmlFor="profile-confirm-password" className="mb-2 mt-4 block text-[15px] font-normal text-[#343b49]">
-                  {t("auth.signup.confirmPasswordLabel")}
-                </label>
-                <input
-                  id="profile-confirm-password"
-                  value={confirmNewPassword}
-                  onChange={(event) => setConfirmNewPassword(event.target.value)}
-                  placeholder={t("auth.signup.confirmPasswordPlaceholder")}
-                  type={showNewPassword ? "text" : "password"}
-                  autoComplete="new-password"
-                  required
-                  className="h-10 w-full rounded-[8px] border border-black/20 bg-[#f8f9f9] px-3 text-[14px] outline-none transition placeholder:text-[#858c9a] focus:bg-white focus:ring-2 focus:ring-[#2563eb]/30"
-                />
-                {confirmNewPassword.length > 0 && confirmNewPassword !== newPassword && (
-                  <p className="mt-1.5 text-[12px] text-red-600">{t("auth.signup.passwordsDontMatch")}</p>
-                )}
-
-                <button
-                  type="submit"
-                  disabled={
-                    Boolean(loading) ||
-                    !profileName.trim() ||
-                    newPassword.length < 8 ||
-                    newPassword !== confirmNewPassword
-                  }
-                  className="mt-5 flex h-10 w-full items-center justify-center gap-2 rounded-md bg-[#1447ff] text-[14px] font-normal text-white transition hover:bg-[#0f3be0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1447ff]/30 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  {loading === "profile" && <Spinner />}
-                  {t("auth.signup.continueBtn")}
-                </button>
-                <p className="mt-4 text-left text-[13px] leading-5 text-[#6b7180]">
-                  {t("auth.signup.agreeText")} <Link href="/terms" className="font-medium text-[#1d4ed8] hover:underline">{t("auth.signup.terms")}</Link> {t("auth.signup.and")} <Link href="/privacy" className="font-medium text-[#1d4ed8] hover:underline">{t("auth.signup.privacy")}</Link>.
-                </p>
-              </form>
-            ) : pendingVerifyEmail ? (
-              <form onSubmit={handleVerifyOtp} className="w-full">
-                <h1 className="text-[22px] font-normal leading-tight tracking-[-0.02em] text-[#292e3a] sm:text-[24px]">
-                  {t("auth.signup.enterCode")}
-                </h1>
-                <p className="mt-2 text-left text-sm text-[#454b59]">
-                  {pendingVerifyEmail}{" "}
-                  <button type="button" onClick={handleChangeEmail} className="font-medium text-[#1d4ed8] hover:underline">
-                    {t("auth.signup.changeEmail")}
-                  </button>
-                </p>
-                <OtpInput value={otp} onChange={setOtp} disabled={Boolean(loading)} />
-                <button type="submit" disabled={Boolean(loading) || otp.length !== 6} className="mt-5 flex h-10 w-full items-center justify-center gap-2 rounded-md bg-[#1447ff] text-[14px] font-normal text-white transition hover:bg-[#0f3be0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1447ff]/30 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-[#1447ff]">
-                  {loading === "email" && <Spinner />}
-                  {t("auth.signup.verifyBtn")}
-                </button>
-                <button type="button" onClick={handleResendOtp} disabled={resending} className="mt-4 w-full text-center text-sm font-semibold text-[#1d4ed8] hover:underline disabled:opacity-50">
-                  {resent ? t("auth.signup.codeSent") : resending ? t("auth.signup.sending") : t("auth.signup.resendCode")}
-                </button>
-              </form>
-            ) : (
-              <>
-                <form onSubmit={handleEmailLogin} className="w-full">
-                  {!showPassword ? (
-                    <div>
-                      <label htmlFor="signup-email" className="mb-2 block text-[15px] font-normal text-[#343b49]">
-                        {t("auth.signup.emailLabel")}
-                      </label>
-                      <input id="signup-email" value={email} onChange={(event) => { setEmail(event.target.value); setExistingAccountEmail(null); }} placeholder={t("auth.signup.emailPlaceholder")} type="email" autoComplete="email" required autoFocus className="h-10 w-full rounded-[8px] border border-black/20 bg-[#f8f9f9] px-3 text-[14px] outline-none transition placeholder:text-[#858c9a] focus:bg-white focus:ring-2 focus:ring-[#2563eb]/30" />
-                    </div>
-                  ) : (
-                    <>
-                      <button type="button" onClick={() => setShowPassword(false)} className="mb-3 text-sm font-medium text-[#1d4ed8] hover:underline">← {signupLabels.change}</button>
-                      <div className="rounded-[10px] border border-[#e0e2e8] bg-[#f8f9fa] px-4 py-3 text-sm text-[#4c5260]">{email}</div>
-                      <div className="mt-4 flex items-center justify-between">
-                        <label className="block text-sm font-medium text-[#303643]" htmlFor="signup-password">{t("auth.signup.passwordLabel")}</label>
-                        {mode === "login" && (
-                          <Link href="/forgot-password" className="text-xs font-medium text-[#1d4ed8] hover:underline">
-                            {t("auth.signup.forgotPassword")}
-                          </Link>
-                        )}
-                      </div>
-                      <input id="signup-password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder={t("auth.signup.passwordPlaceholder")} type="password" autoComplete={mode === "login" ? "current-password" : "new-password"} minLength={8} required autoFocus className="mt-2 h-[51px] w-full rounded-[10px] border border-[#9ca3b8] bg-white px-4 text-[16px] outline-none transition placeholder:text-[#7a8090] focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/15" />
-                    </>
-                  )}
-                  <button type="submit" disabled={Boolean(loading)} className="mt-3 flex h-10 w-full items-center justify-center gap-2 rounded-md bg-[#1447ff] text-[14px] font-normal text-white transition hover:bg-[#0f3be0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1447ff]/30 focus-visible:ring-offset-2 disabled:cursor-wait disabled:bg-[#1447ff]">
-                    {loading === "email" && <Spinner />}
-                    {showPassword ? (mode === "login" ? t("auth.signup.signIn") : t("auth.signup.createWorkspace")) : t("auth.signup.continueBtn")}
-                  </button>
-                </form>
-
-                {existingAccountEmail && (
-                  <div className="mt-3 rounded-md border border-[#f2c7c7] bg-[#fff7f7] px-3 py-2.5 text-[13px] leading-5 text-[#6f2929]" role="alert">
-                    {t("auth.signup.accountExists")} {existingAccountEmail}.{" "}
-                    <Link href={`/login?email=${encodeURIComponent(existingAccountEmail)}`} className="font-medium text-[#1447ff] underline underline-offset-2">
-                      {t("auth.signup.tryLogin")}
-                    </Link>
-                    .
-                  </div>
-                )}
-
-                {!showPassword && (
-                  <>
-                    <div className="my-5 flex items-center gap-3" aria-hidden="true">
-                      <div className="h-px flex-1 bg-black/15" />
-                      <span className="text-[11px] font-normal uppercase tracking-[0.14em] text-black/45">OR</span>
-                      <div className="h-px flex-1 bg-black/15" />
-                    </div>
-                    <div className="grid grid-cols-1 gap-2.5">
-                      <AuthOption icon={loading === "google" ? <Spinner dark /> : <GoogleIcon />} label={t("auth.signup.continueGoogle")} onClick={handleGoogleLogin} disabled={Boolean(loading)} className="!h-10 !rounded-md !border-[#9ca3b8] !py-0 [&>span:last-child]:!text-[14px] [&>span:last-child]:!font-normal" />
-                    </div>
-                  </>
-                )}
-
-                <p className="mt-4 text-left text-[14px] leading-6 text-[#424858]">
-                  {t("auth.signup.agreeText")} <Link href="/terms" className="font-medium text-[#1d4ed8] hover:underline">{t("auth.signup.terms")}</Link> {t("auth.signup.and")}<br className="hidden sm:block" /> <Link href="/privacy" className="font-medium text-[#1d4ed8] hover:underline">{t("auth.signup.privacy")}</Link>.
-                </p>
-                <div className="mt-7 rounded-[9px] bg-[#f4f4f5] px-4 py-3.5 text-left text-[14px] text-[#454b59]">
-                  {mode === "login" ? (
-                    <>
-                      {t("auth.signup.noAccount")} <Link href="/signup" className="font-normal text-[#1d4ed8] hover:underline">{t("auth.signup.signup")}</Link>
-                    </>
-                  ) : (
-                    <>
-                      {t("auth.signup.hasAccount")} <Link href="/login" className="font-normal text-[#1d4ed8] hover:underline">{t("auth.signup.login")}</Link>
-                    </>
-                  )}
-                </div>
-              </>
-            )}
-          </div>
-
-          <div className={`hidden lg:fixed lg:inset-y-0 lg:flex lg:w-2/3 ${mirrored ? "lg:right-0 lg:col-start-2" : "lg:left-0"}`}>
-            <div className="group relative h-full w-full animate-[fadeIn_.7s_ease-out_both] overflow-hidden bg-[#eef4ff] shadow-[0_20px_60px_rgba(15,23,42,0.13)]">
-              <Image
-                src={mode === "login" ? "/images/login-support-illustration.png" : "/images/customer-growth-illustration.png"}
-                alt={mode === "login" ? "A support specialist welcoming a customer into their secure workspace" : "A team building stronger customer relationships and growing together"}
-                fill
-                sizes="(min-width: 1024px) 67vw, 0px"
-                className={`object-cover ${mode === "login" ? "object-[center_38%]" : "object-center"}`}
-                priority
-              />
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#06142f]/95 via-[#07152f]/35 to-[#07152f]/5" />
-              <Link href="/" aria-label="Elpino home" className="absolute left-10 top-7 z-10 inline-flex xl:left-14">
-                <Image
-                  src="/elpino-wordmark-white.png"
-                  alt="Elpino"
-                  width={136}
-                  height={40}
-                  className="h-8 w-auto object-contain drop-shadow-[0_2px_10px_rgba(0,0,0,0.2)]"
-                />
-              </Link>
-              <div className="hidden">
+              <div className="relative mt-8 flex justify-center">
                 <button
                   type="button"
                   onClick={() => setLanguageOpen((open) => !open)}
                   aria-expanded={languageOpen}
                   aria-haspopup="listbox"
-                  className="flex h-12 items-center gap-2.5 rounded-[10px] border border-white/70 bg-transparent px-4 text-base font-semibold text-white shadow-[0_8px_28px_rgba(7,21,47,0.16)] backdrop-blur-[2px] transition hover:border-white hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 [&>svg]:text-white"
+                  className="flex h-9 items-center gap-2 rounded-full border border-black/15 bg-white px-3 text-[13px] text-black/55 transition hover:border-black/30"
                 >
                   <FlagImage countryCode={LANGUAGES.find((item) => item.code === language)?.countryCode || "gb"} alt="" />
-                  <span>{LANGUAGES.find((item) => item.code === language)?.name}</span>
+                  <span>Language: {LANGUAGES.find((item) => item.code === language)?.name}</span>
                   <DropdownIcon />
                 </button>
 
                 {languageOpen && (
                   <>
                     <button className="fixed inset-0 z-40 cursor-default" aria-label="Close language menu" onClick={() => setLanguageOpen(false)} />
-                    <div className="absolute right-0 top-[calc(100%+8px)] z-50 w-60 overflow-hidden rounded-[14px] border border-[#e0e2e7] bg-white p-2 shadow-[0_18px_50px_rgba(7,21,47,0.22)]">
+                    <div className="absolute bottom-[calc(100%+8px)] left-1/2 z-50 w-60 -translate-x-1/2 overflow-hidden rounded-[14px] border border-[#e0e2e7] bg-white p-2 text-left shadow-[0_18px_50px_rgba(26,32,44,0.14)]">
                       <div className="px-3 pb-2 pt-1 text-[11px] font-bold uppercase tracking-[0.14em] text-[#89909f]">{signupLabels.choose}</div>
                       <div className="max-h-[310px] overflow-y-auto overscroll-contain">
                         {LANGUAGES.map((item) => (
@@ -749,18 +507,252 @@ export function AuthFlow({ initialMode }: { initialMode: "login" | "signup" }) {
                   </>
                 )}
               </div>
-              <div className="absolute bottom-10 left-10 right-10 text-left xl:bottom-14 xl:left-14 xl:right-14">
-                <p className="max-w-[680px] text-[42px] font-normal leading-[1.06] tracking-[-0.04em] text-white xl:text-[56px]">
-                  {mode === "login" ? t("auth.signup.loginScreen.formTitle") : t("auth.signup.formTitle")}
-                </p>
-                <p className="mt-3 max-w-[480px] text-[15px] leading-6 text-white/75 xl:text-[17px]">
-                  {mode === "login" ? t("auth.signup.loginScreen.formSubtitle") : t("auth.signup.formSubtitle")}
-                </p>
-              </div>
-            </div>
+            </>
+          )}
+        </div>
+      </section>
+
+      <button
+        type="button"
+        onClick={() => toast.info("How can we help? Email support@elpino.chat")}
+        aria-label={t("auth.signup.needHelp")}
+        className="fixed bottom-6 right-6 flex h-9 w-9 items-center justify-center rounded-full border border-black/15 bg-white text-[15px] text-black/45 shadow-sm transition hover:text-black/80"
+      >
+        ?
+      </button>
+    </main>
+  ) : null;
+
+  if (loginExperience) return loginExperience;
+
+  return (
+    <main lang={language} className="relative min-h-screen bg-white font-display text-[#202124] antialiased">
+      <div className="absolute inset-x-0 top-0 h-[3px] bg-[linear-gradient(90deg,#ff8157_0%,#d9bef4_45%,#428ce5_100%)]" />
+
+      <section className="relative z-10 mx-auto flex min-h-screen w-full max-w-[420px] flex-col items-center justify-center px-6 py-16 text-center">
+        <Link href="/" aria-label="Elpino home" className="inline-flex rounded-[10px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#428CE5]/35 focus-visible:ring-offset-4">
+          <Image src="/icon.png" alt="Elpino" width={40} height={40} priority className="h-10 w-10 rounded-[10px] object-cover" />
+        </Link>
+
+        {!pendingVerifyEmail && !verifiedEmail && (
+          <div className="mt-5 animate-[fadeIn_.55s_ease-out_both]">
+            <h1 className="text-[22px] font-bold leading-tight tracking-[-0.02em] text-black">{t("auth.signup.title")}</h1>
+            <p className="mt-1 text-[15px] leading-6 text-black/45">{t("auth.signup.subtitle")}</p>
           </div>
-        </section>
-      </main>
+        )}
+
+        <div className="mt-8 w-full text-left">
+          {verifiedEmail ? (
+            <form onSubmit={handleCompleteProfile} className="w-full">
+              <h1 className="text-center text-2xl font-medium tracking-[-0.03em]">{t("auth.signup.setPasswordHeading")}</h1>
+              <p className="mt-2 text-center text-sm text-black/50">{t("auth.signup.setPasswordSubheading")}</p>
+
+              <label htmlFor="profile-name" className="mb-2 mt-5 block text-[13px] font-medium text-black/70">
+                {t("auth.signup.nameLabel")}
+              </label>
+              <input
+                id="profile-name"
+                value={profileName}
+                onChange={(event) => setProfileName(event.target.value)}
+                placeholder={t("auth.signup.namePlaceholder")}
+                type="text"
+                autoComplete="name"
+                required
+                autoFocus
+                className="h-12 w-full rounded-xl border border-black/15 bg-white px-4 text-[15px] outline-none transition placeholder:text-black/30 hover:border-black/25 focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/10"
+              />
+
+              <label htmlFor="profile-password" className="mb-2 mt-4 block text-[13px] font-medium text-black/70">
+                {t("auth.signup.passwordLabel")}
+              </label>
+              <div className="relative">
+                <input
+                  id="profile-password"
+                  value={newPassword}
+                  onChange={(event) => setNewPassword(event.target.value)}
+                  placeholder={t("auth.signup.passwordPlaceholder")}
+                  type={showNewPassword ? "text" : "password"}
+                  autoComplete="new-password"
+                  required
+                  className="h-12 w-full rounded-xl border border-black/15 bg-white px-4 pr-14 text-[15px] outline-none transition placeholder:text-black/30 hover:border-black/25 focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowNewPassword((value) => !value)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-[#347dce] hover:underline"
+                >
+                  {showNewPassword ? t("auth.signup.hidePassword") : t("auth.signup.showPassword")}
+                </button>
+              </div>
+
+              <label htmlFor="profile-confirm-password" className="mb-2 mt-4 block text-[13px] font-medium text-black/70">
+                {t("auth.signup.confirmPasswordLabel")}
+              </label>
+              <input
+                id="profile-confirm-password"
+                value={confirmNewPassword}
+                onChange={(event) => setConfirmNewPassword(event.target.value)}
+                placeholder={t("auth.signup.confirmPasswordPlaceholder")}
+                type={showNewPassword ? "text" : "password"}
+                autoComplete="new-password"
+                required
+                className="h-12 w-full rounded-xl border border-black/15 bg-white px-4 text-[15px] outline-none transition placeholder:text-black/30 hover:border-black/25 focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/10"
+              />
+              {confirmNewPassword.length > 0 && confirmNewPassword !== newPassword && (
+                <p className="mt-1.5 text-[12px] text-red-600">{t("auth.signup.passwordsDontMatch")}</p>
+              )}
+
+              <button
+                type="submit"
+                disabled={
+                  Boolean(loading) ||
+                  !profileName.trim() ||
+                  newPassword.length < 8 ||
+                  newPassword !== confirmNewPassword
+                }
+                className="mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#2563eb] text-[15px] font-semibold text-white transition hover:bg-[#1d4ed8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb]/40 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {loading === "profile" && <Spinner />}
+                {t("auth.signup.continueBtn")}
+              </button>
+              <p className="mt-4 text-center text-[12px] leading-5 text-black/35">
+                {t("auth.signup.agreeText")} <Link href="/terms" className="text-black/55 underline hover:text-black/80">{t("auth.signup.terms")}</Link> {t("auth.signup.and")} <Link href="/privacy" className="text-black/55 underline hover:text-black/80">{t("auth.signup.privacy")}</Link>.
+              </p>
+            </form>
+          ) : pendingVerifyEmail ? (
+            <form onSubmit={handleVerifyOtp} className="w-full text-center">
+              <h1 className="text-center text-[22px] font-bold tracking-[-0.02em] text-black">{t("auth.signup.enterCode")}</h1>
+              <p className="mt-2 text-center text-[14px] text-black/45">
+                {pendingVerifyEmail}{" "}
+                <button type="button" onClick={handleChangeEmail} className="font-medium text-[#347dce] hover:underline">
+                  {t("auth.signup.changeEmail")}
+                </button>
+              </p>
+              <OtpInput value={otp} onChange={setOtp} disabled={Boolean(loading)} />
+              <button type="submit" disabled={Boolean(loading) || otp.length !== 6} className="mt-7 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#2563eb] text-[15px] font-semibold text-white transition hover:bg-[#1d4ed8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb]/40 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40">
+                {loading === "email" && <Spinner />}{t("auth.signup.verifyBtn")}
+              </button>
+              <button type="button" onClick={handleResendOtp} disabled={resending} className="mt-5 w-full text-center text-[14px] font-medium text-[#347dce] hover:underline disabled:opacity-50">
+                {resent ? t("auth.signup.codeSent") : resending ? t("auth.signup.sending") : t("auth.signup.resendCode")}
+              </button>
+            </form>
+          ) : (
+            <>
+              <form onSubmit={handleEmailLogin} className="w-full space-y-4">
+                {!showPassword ? (
+                  <div>
+                    <label htmlFor="signup-email" className="mb-2 block text-[13px] font-medium text-black/70">
+                      {t("auth.signup.emailLabel")}
+                    </label>
+                    <input id="signup-email" value={email} onChange={(event) => { setEmail(event.target.value); setExistingAccountEmail(null); }} placeholder={t("auth.signup.emailPlaceholder")} type="email" autoComplete="email" required autoFocus className="h-12 w-full rounded-xl border border-black/15 bg-white px-4 text-[15px] outline-none transition placeholder:text-black/30 hover:border-black/25 focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/10" />
+                  </div>
+                ) : (
+                  <div>
+                    <button type="button" onClick={() => setShowPassword(false)} className="mb-3 text-sm font-medium text-[#347dce] hover:underline">← {signupLabels.change}</button>
+                    <div className="rounded-xl border border-black/12 bg-[#fafafa] px-4 py-3 text-sm text-black/60">{email}</div>
+                    <label className="mb-2 mt-4 block text-[13px] font-medium text-black/70" htmlFor="signup-password">{t("auth.signup.passwordLabel")}</label>
+                    <input id="signup-password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder={t("auth.signup.passwordPlaceholder")} type="password" autoComplete="new-password" minLength={8} required autoFocus className="h-12 w-full rounded-xl border border-black/15 bg-white px-4 text-[15px] outline-none transition placeholder:text-black/30 hover:border-black/25 focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/10" />
+                  </div>
+                )}
+                <button type="submit" disabled={Boolean(loading)} className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#2563eb] text-[15px] font-semibold text-white transition hover:bg-[#1d4ed8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb]/40 focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-50">
+                  {loading === "email" && <Spinner />}
+                  {showPassword ? t("auth.signup.createWorkspace") : t("auth.signup.continueBtn")}
+                </button>
+              </form>
+
+              {existingAccountEmail && (
+                <div className="mt-3 rounded-xl border border-[#f2c7c7] bg-[#fff7f7] px-3 py-2.5 text-[13px] leading-5 text-[#6f2929]" role="alert">
+                  {t("auth.signup.accountExists")} {existingAccountEmail}.{" "}
+                  <Link href={`/login?email=${encodeURIComponent(existingAccountEmail)}`} className="font-medium text-[#1447ff] underline underline-offset-2">
+                    {t("auth.signup.tryLogin")}
+                  </Link>
+                  .
+                </div>
+              )}
+
+              {!showPassword && (
+                <>
+                  <div className="my-6 flex items-center gap-4" aria-hidden="true">
+                    <div className="h-px flex-1 bg-black/10" />
+                    <span className="text-[12px] text-black/40">or continue with</span>
+                    <div className="h-px flex-1 bg-black/10" />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleGoogleLogin}
+                    disabled={Boolean(loading)}
+                    className="flex h-12 w-full items-center justify-center gap-3 rounded-xl border border-black/12 bg-white text-[15px] font-normal text-black transition hover:-translate-y-0.5 hover:border-black/25 hover:shadow-[0_8px_20px_rgba(17,18,15,0.06)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    <span className="flex h-5 w-5 items-center justify-center">{loading === "google" ? <Spinner dark /> : <GoogleIcon />}</span>
+                    <span>Continue with Google</span>
+                  </button>
+                </>
+              )}
+
+              <p className="mt-7 text-center text-[14px] text-black/45">
+                {t("auth.signup.hasAccount")}{" "}
+                <Link href="/login" className="font-semibold text-[#202124] underline decoration-black/20 underline-offset-4 transition hover:decoration-black/70">{t("auth.signup.login")}</Link>
+              </p>
+
+              <p className="mt-8 text-center text-[12px] leading-5 text-black/35">
+                {t("auth.signup.agreeText")} <Link href="/terms" className="text-black/55 underline hover:text-black/80">{t("auth.signup.terms")}</Link> {t("auth.signup.and")} <Link href="/privacy" className="text-black/55 underline hover:text-black/80">{t("auth.signup.privacy")}</Link>.
+              </p>
+
+              <div className="relative mt-8 flex justify-center">
+                <button
+                  type="button"
+                  onClick={() => setLanguageOpen((open) => !open)}
+                  aria-expanded={languageOpen}
+                  aria-haspopup="listbox"
+                  className="flex h-9 items-center gap-2 rounded-full border border-black/15 bg-white px-3 text-[13px] text-black/55 transition hover:border-black/30"
+                >
+                  <FlagImage countryCode={LANGUAGES.find((item) => item.code === language)?.countryCode || "gb"} alt="" />
+                  <span>Language: {LANGUAGES.find((item) => item.code === language)?.name}</span>
+                  <DropdownIcon />
+                </button>
+
+                {languageOpen && (
+                  <>
+                    <button className="fixed inset-0 z-40 cursor-default" aria-label="Close language menu" onClick={() => setLanguageOpen(false)} />
+                    <div className="absolute bottom-[calc(100%+8px)] left-1/2 z-50 w-60 -translate-x-1/2 overflow-hidden rounded-[14px] border border-[#e0e2e7] bg-white p-2 text-left shadow-[0_18px_50px_rgba(26,32,44,0.14)]">
+                      <div className="px-3 pb-2 pt-1 text-[11px] font-bold uppercase tracking-[0.14em] text-[#89909f]">{signupLabels.choose}</div>
+                      <div className="max-h-[310px] overflow-y-auto overscroll-contain">
+                        {LANGUAGES.map((item) => (
+                          <button
+                            type="button"
+                            role="option"
+                            aria-selected={language === item.code}
+                            key={item.code}
+                            onClick={() => {
+                              setLanguage(item.code);
+                              setLanguageOpen(false);
+                            }}
+                            className={`flex w-full items-center gap-3 rounded-[9px] px-3 py-2.5 text-left text-sm transition ${language === item.code ? "bg-[#eff6ff] font-semibold text-[#1d4ed8]" : "text-[#404653] hover:bg-[#f5f6f7]"}`}
+                          >
+                            <FlagImage countryCode={item.countryCode} alt="" />
+                            <span>{item.name}</span>
+                            {language === item.code && <span className="ml-auto text-[#2563eb]">✓</span>}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+      </section>
+
+      <button
+        type="button"
+        onClick={() => toast.info("How can we help? Email support@elpino.chat")}
+        aria-label={t("auth.signup.needHelp")}
+        className="fixed bottom-6 right-6 flex h-9 w-9 items-center justify-center rounded-full border border-black/15 bg-white text-[15px] text-black/45 shadow-sm transition hover:text-black/80"
+      >
+        ?
+      </button>
+    </main>
   );
 }
 

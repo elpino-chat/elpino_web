@@ -38,7 +38,7 @@ export function AssignmentToast({
     setBusy("join");
     try {
       await fetch(`/api/workspace/conversations/${encodeURIComponent(notification.conversationId)}/claim`, { method: "POST" });
-      router.push(`/dashboard?conversation=${encodeURIComponent(notification.conversationId)}`);
+      router.push(`/dashboard/inbox?conversation=${encodeURIComponent(notification.conversationId)}`);
     } finally {
       onDismiss();
     }

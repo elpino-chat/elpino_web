@@ -29,10 +29,13 @@ export async function POST(request: Request) {
   const owner = await requireWorkspaceOwner(session.email);
   if (!owner.ok) return Response.json({ message: owner.message }, { status: owner.status });
 
-  const body = (await request.json().catch(() => ({}))) as { amountCents?: number; saveCard?: boolean };
+  const body = (await request.json().catch(() => ({}))) as { amountCents?: number; saveCard?: boolean; phone?: string };
   const amountCents = Math.round(Number(body.amountCents));
   if (!Number.isFinite(amountCents) || amountCents <= 0) {
     return Response.json({ message: "Enter a positive amount." }, { status: 400 });
+  }
+  if (body.saveCard && !body.phone?.trim()) {
+    return Response.json({ message: "A phone number is required to save a card for auto-recharge." }, { status: 400 });
   }
 
   const result = await callGateway<TopUpResult>("/api/workspace/usage/credits/checkout", {
@@ -41,6 +44,7 @@ export async function POST(request: Request) {
     saveCard: Boolean(body.saveCard),
     email: session.email,
     name: session.name,
+    phone: body.phone?.trim(),
   }).catch(() => null);
 
   if (!result || result.error || !result.orderId) {

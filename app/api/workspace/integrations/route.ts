@@ -1,7 +1,13 @@
 import { callGateway } from "@/app/api/auth/_lib/gateway";
 import { selectedWorkspaceId } from "./_lib/workspace";
 
-type Integration = { provider: string; authType: string; status: string; connectedAt: string };
+type Integration = {
+  provider: string;
+  authType: string;
+  status: string;
+  connectedAt: string;
+  metadata?: { workspaceGid?: string; workspaceName?: string } | null;
+};
 
 export async function GET() {
   const companyId = await selectedWorkspaceId();

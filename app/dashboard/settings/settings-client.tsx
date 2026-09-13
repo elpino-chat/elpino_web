@@ -17,6 +17,7 @@ import { readDashboardTheme, saveDashboardTheme, type DashboardAppearance } from
 import { InvitePeopleDialog } from "@/app/components/dashboard/InvitePeopleDialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { PreChatFormEditor, type PreChatField } from "@/app/dashboard/components/prechat-form-editor";
+import { useMobileDrawer } from "@/app/components/dashboard/mobile-drawer-context";
 import { SUPPORTED_LANGUAGES } from "@/app/dashboard/settings/languages";
 import {
   computeCoverage,
@@ -48,6 +49,7 @@ import {
   CheckCircle2,
   ChevronDown,
   ChevronLeft,
+  ChevronRight,
   CircleGauge,
   CircleAlert,
   CircleHelp,
@@ -240,6 +242,7 @@ function AIUsageSettingsPage() {
   const [addOpen, setAddOpen] = useState(false);
   const [addAmount, setAddAmount] = useState("");
   const [saveCard, setSaveCard] = useState(true);
+  const [savePhone, setSavePhone] = useState("");
   const [adding, setAdding] = useState(false);
   const [addError, setAddError] = useState<string | null>(null);
   const [addNotice, setAddNotice] = useState<string | null>(null);
@@ -310,6 +313,12 @@ function AIUsageSettingsPage() {
       setAddError("Enter a positive dollar amount.");
       return;
     }
+    // Razorpay rejects a saved-card order for a customer with no phone number
+    // on file — checked here so the customer sees it before a round trip.
+    if (saveCard && !savePhone.trim()) {
+      setAddError("Enter a phone number to save this card.");
+      return;
+    }
     setAdding(true);
     setAddError(null);
     setAddNotice(null);
@@ -317,7 +326,7 @@ function AIUsageSettingsPage() {
       const response = await fetch("/api/workspace/usage/credits/checkout", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ amountCents: Math.round(dollars * 100), saveCard }),
+        body: JSON.stringify({ amountCents: Math.round(dollars * 100), saveCard, phone: saveCard ? savePhone.trim() : undefined }),
       });
       const data = (await response.json().catch(() => ({}))) as {
         orderId?: string;
@@ -340,6 +349,7 @@ function AIUsageSettingsPage() {
 
       setAddOpen(false);
       setAddAmount("");
+      setSavePhone("");
       setAddNotice("Payment received — your credit will appear in a moment.");
       // Razorpay has taken the money, but the webhook decides the balance.
       // Re-read rather than adding the amount optimistically.
@@ -397,20 +407,23 @@ function AIUsageSettingsPage() {
   const hasUsage = Boolean(summary && summary.totalRequests > 0);
 
   return (
-    <div className="dashboard-ai-usage-page mx-auto w-full max-w-[1200px] px-6 pb-16 pt-8 text-[#17191b] sm:px-9">
+    <div className="dashboard-ai-usage-page mx-auto w-full max-w-[1280px] px-6 pb-16 pt-8 text-white/90 sm:px-9">
       <header className="flex flex-wrap items-start justify-between gap-5">
         <div>
-            <h2 className="text-[30px] font-medium tracking-[-0.04em]">AI usage</h2>
-            <p className="mt-2 text-[13px] text-[#707980]">Monitor token consumption and spend across your workspace. Dates are shown in UTC.</p>
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-violet-300/15 bg-violet-400/10 px-2.5 py-1 text-[11px] font-medium text-violet-200">
+              <Sparkles size={12} /> Workspace intelligence
+            </div>
+            <h2 className="text-[30px] font-medium tracking-[-0.04em] text-white/90">AI Usage</h2>
+            <p className="mt-2 text-[13px] text-white/60">Monitor token consumption and spend across your workspace. Dates are shown in UTC.</p>
         </div>
-        <button type="button" onClick={exportCsv} disabled={!events.length} className="flex h-10 items-center gap-2 rounded-lg border border-[#dfe3e6] px-3.5 text-[12px] font-semibold transition hover:bg-[#f7f8f8] disabled:cursor-not-allowed disabled:opacity-40">
+        <button type="button" onClick={exportCsv} disabled={!events.length} className="flex h-10 items-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-3.5 text-[12px] font-medium text-white/90 transition hover:bg-white/[0.08] disabled:cursor-not-allowed disabled:opacity-40">
           <Download size={15} /> Export CSV
         </button>
       </header>
 
-      <section className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[#DDE4E8] bg-[#FAFBFB] p-5">
+      <section className="dashboard-ai-credit-card mt-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.035] p-5">
         <div className="flex items-center gap-4">
-          <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#11120f] text-white"><CreditCard size={18} /></span>
+          <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-[#6d5ce7] to-[#8b5cf6] text-white shadow-[0_8px_24px_rgba(109,92,231,0.25)]"><CreditCard size={18} /></span>
           <div>
             <p className="text-[11px] font-medium text-[#6D7D85]">AI credits remaining</p>
             <p className="mt-0.5 text-[24px] font-semibold tracking-[-0.02em]">{loadingCredits ? "…" : formatCents(creditsCents ?? 0)}</p>
@@ -426,12 +439,12 @@ function AIUsageSettingsPage() {
             <p className="mt-0.5 text-[16px] font-semibold">{loadingSummary ? "…" : formatCents(summary?.todaySpendCents ?? 0)}</p>
           </div>
         </div>
-        <button type="button" onClick={() => setAddOpen(true)} className="flex h-10 items-center gap-2 rounded-lg bg-[#11120f] px-4 text-[12px] font-semibold text-white transition hover:bg-black">
+        <button type="button" onClick={() => setAddOpen(true)} className="flex h-10 items-center gap-2 rounded-lg bg-[#6d5ce7] px-4 text-[12px] font-medium text-white transition hover:bg-[#7b6bed]">
           <Plus size={14} /> Add credits
         </button>
       </section>
 
-      <div className="sticky top-0 z-10 -mx-2 mt-5 border-y border-[#eceeef] bg-white/95 px-2 py-3 backdrop-blur">
+      <div className="dashboard-ai-usage-toolbar sticky top-0 z-10 -mx-2 mt-5 border-y border-white/10 bg-[#262626]/95 px-2 py-3 backdrop-blur">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <Popover open={scopeOpen} onOpenChange={setScopeOpen}>
             <PopoverTrigger className="flex min-h-10 max-w-[420px] flex-wrap items-center gap-1.5 rounded-lg border border-[#dfe3e6] bg-white px-3 py-1.5 text-[13px]">
@@ -501,7 +514,7 @@ function AIUsageSettingsPage() {
                     <input type="date" value={startDate} max={endDate || undefined} onChange={(event) => setStartDate(event.target.value)} className="h-9 min-w-0 rounded-lg border border-[#dfe3e6] px-2 text-[11px]" />
                     <input type="date" value={endDate} min={startDate || undefined} onChange={(event) => setEndDate(event.target.value)} className="h-9 min-w-0 rounded-lg border border-[#dfe3e6] px-2 text-[11px]" />
                   </div>
-                  <button type="button" disabled={!startDate || !endDate} onClick={() => { setRange("custom"); setCustomOpen(false); }} className="mt-2 h-9 w-full rounded-lg bg-[#1f2224] text-[11px] font-semibold text-white disabled:bg-[#dfe2e4]">Apply custom range</button>
+                  <button type="button" disabled={!startDate || !endDate} onClick={() => { setRange("custom"); setCustomOpen(false); }} className="mt-2 h-9 w-full rounded-lg bg-[#1f2224] text-[11px] font-semibold text-white disabled:bg-[#dfe2e4] disabled:text-[#9aa0a4]">Apply custom range</button>
                 </div>
               </div>
             )}
@@ -674,8 +687,21 @@ function AIUsageSettingsPage() {
                   <span className="mt-0.5 block text-[11px] leading-4 text-[#667069]">Needed if you want auto-recharge later. You can turn it off any time.</span>
                 </span>
               </label>
+              {saveCard && (
+                <div className="mt-3">
+                  <label className="block text-[12.5px] font-semibold text-[#17233A]">Phone number</label>
+                  <input
+                    value={savePhone}
+                    onChange={(event) => setSavePhone(event.target.value.replace(/[^0-9+ ]/g, ""))}
+                    placeholder="+1 555 000 1234"
+                    inputMode="tel"
+                    className="mt-2 h-11 w-full rounded-xl border border-[#DDE4E8] px-3 text-[13px] outline-none focus:border-[#11120f] focus:ring-2 focus:ring-[#11120f]/8"
+                  />
+                  <p className="mt-1.5 text-[11px] leading-4 text-[#667069]">Required by Razorpay to save a card for auto-recharge.</p>
+                </div>
+              )}
               {addError && <p className="mt-3 text-[11.5px] text-[#c63f4d]">{addError}</p>}
-              <button type="button" disabled={adding} onClick={() => void submitAddCredits()} className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#11120f] text-[13px] font-semibold text-white transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-60">
+              <button type="button" disabled={adding || (saveCard && !savePhone.trim())} onClick={() => void submitAddCredits()} className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#11120f] text-[13px] font-semibold text-white transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-60">
                 {adding ? <LoaderCircle size={14} className="animate-spin" /> : <Check size={14} />} Continue to payment
               </button>
             </div>
@@ -1018,23 +1044,22 @@ function UpgradeSettingsPage() {
   }
 
   return (
-    <div className="dashboard-upgrade-page mx-auto w-full max-w-[1180px] bg-white px-7 pb-16 pt-9 text-[#11120f] sm:px-9 lg:px-10">
+    <div className="dashboard-upgrade-page mx-auto w-full max-w-[1240px] bg-[#262626] px-7 pb-16 pt-8 text-white/90 sm:px-9 lg:px-10">
       <div className="flex flex-wrap items-end justify-between gap-5">
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Four simple plans</p>
-          <h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em] text-[#11120f]">Choose your workspace</h2>
-          <p className="mt-3 max-w-2xl text-[15px] leading-6 text-[#56646b]">AI answers your customers instantly, and a real teammate steps in when it cannot. One flat monthly price, no conversation tax.</p>
+          <p className="text-xs font-normal uppercase tracking-[0.16em] text-white/40">Plans</p>
+          <h2 className="mt-2 text-3xl font-normal tracking-[-0.03em] text-white/95">Choose the right plan</h2>
+          <p className="mt-2 max-w-2xl text-[13px] leading-6 text-white/60">Upgrade as your team grows. Change or cancel your plan anytime from Billing.</p>
         </div>
         <div className="flex items-center gap-3">
-          <Link href="/pricing" className="dashboard-plan-comparison text-[13px] font-semibold text-[#11120f] underline decoration-black/20 underline-offset-4 hover:decoration-black">Full plan comparison</Link>
-          <div className="dashboard-pricing-pill flex items-center gap-1 rounded-full border border-[#D8D5CE] bg-[#FAF9F6] p-1" role="group" aria-label="Billing cadence">
+          <div className="dashboard-pricing-pill flex items-center gap-1 rounded-xl border border-white/10 bg-white/[0.035] p-1" role="group" aria-label="Billing cadence">
             {(["monthly", "annual"] as const).map((option) => (
               <button
                 key={option}
                 type="button"
                 onClick={() => setCadence(option)}
                 aria-pressed={cadence === option}
-                className={`rounded-full px-3.5 py-1.5 text-[12px] font-semibold capitalize transition ${cadence === option ? "bg-[#11120f] text-white" : "text-[#657069] hover:text-[#11120f]"}`}
+                className={`dashboard-pricing-option rounded-lg px-3.5 py-2 text-[12px] font-medium capitalize transition ${cadence === option ? "dashboard-pricing-option-active bg-[#428ce5] text-white" : "text-white/55 hover:bg-white/[0.05] hover:text-white/90"}`}
               >
                 {option}
                 {option === "annual" && <span className="ml-1.5 text-[10px] font-bold uppercase tracking-[0.08em]">save {ANNUAL_SAVING_PERCENT}%</span>}
@@ -1046,31 +1071,31 @@ function UpgradeSettingsPage() {
 
       {checkoutError && <div role="alert" className="dashboard-checkout-error mt-5 rounded-xl border border-[#ecc9cd] bg-[#fff6f7] px-4 py-3 text-[12px] text-[#a33f49]">{checkoutError}</div>}
 
-      <div className="mt-9 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {pricingPlans.map((plan) => (
-          <article key={plan.id} className={`dashboard-plan-card ${plan.highlighted ? "dashboard-plan-highlighted" : ""} relative flex min-h-[540px] flex-col overflow-hidden rounded-[24px] border p-7 transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_70px_rgba(35,61,77,0.14)] ${plan.highlighted ? "border-[#D8D5CE] bg-[#FAF9F6] shadow-[0_18px_50px_rgba(17,18,15,0.08)]" : "border-[#DDE4E8] bg-white"}`}>
-            {plan.highlighted && <div className="dashboard-plan-badge absolute right-5 top-5 rounded-full bg-white px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#11120f]">Best value</div>}
-            <div className="pt-10">
-              <h3 className="text-[28px] font-medium tracking-[-0.04em] text-[#11120f]">{plan.name}</h3>
-              <p className="mt-2 min-h-[66px] text-[14px] leading-5 text-[#667069]">{plan.description}</p>
-              <div className="dashboard-plan-price mt-6 flex items-end gap-1 border-b border-[#D8D5CE] pb-5"><span className="text-[43px] font-medium tracking-[-0.06em] text-[#11120f]">{getPlanPrice(plan, cadence === "annual" ? "yearly" : "monthly")}</span>{plan.id !== "free" && <span className="pb-1.5 text-[14px] text-[#667069]">/mo</span>}</div>
-              {plan.id !== "free" && <p className="mt-2 text-[12px] text-[#667069]">{cadence === "annual" ? `${getAnnualTotal(plan)} billed yearly` : "Billed monthly"}</p>}
+          <article key={plan.id} className={`dashboard-plan-card ${plan.highlighted ? "dashboard-plan-highlighted" : ""} relative flex min-h-[480px] flex-col overflow-hidden rounded-xl border p-5 transition ${plan.highlighted ? "border-[#428ce5]/35 bg-[#428ce5]/[0.07]" : "border-white/10 bg-white/[0.035]"}`}>
+            <div className="flex min-h-6 items-center justify-between gap-2">{plan.id === currentPlanId ? <span className="dashboard-plan-current-badge rounded-full bg-[#428ce5]/15 px-2.5 py-1 text-[10px] font-medium text-[#91c4ff]">Current plan</span> : <span />}{plan.highlighted && <span className="dashboard-plan-badge rounded-full bg-[#428ce5]/15 px-2.5 py-1 text-[10px] font-medium text-[#b8d9ff]">Recommended</span>}</div>
+            <div className="pt-5">
+              <h3 className="text-[24px] font-medium tracking-[-0.04em] text-white/90">{plan.name}</h3>
+              <p className="mt-2 min-h-[60px] text-[13px] leading-5 text-white/60">{plan.description}</p>
+              <div className="dashboard-plan-price mt-5 flex items-end gap-1 border-b border-white/10 pb-4"><span className="text-[38px] font-medium tracking-[-0.06em] text-white/90">{getPlanPrice(plan, cadence === "annual" ? "yearly" : "monthly")}</span>{plan.id !== "free" && <span className="pb-1.5 text-[13px] text-white/60">/mo</span>}</div>
+              {plan.id !== "free" && <p className="mt-2 text-[12px] text-white/45">{cadence === "annual" ? `${getAnnualTotal(plan)} billed yearly` : "Billed monthly"}</p>}
             </div>
             <ul className="mt-5 space-y-3">
-              {plan.features.map((feature) => <li key={feature} className="flex gap-2.5 text-[13px] leading-5 text-[#46505a]"><Check size={16} strokeWidth={2.5} className="mt-0.5 shrink-0 text-[#11120f]" /> {feature}</li>)}
+              {plan.features.map((feature) => <li key={feature} className="flex gap-2.5 text-[12.5px] leading-5 text-white/70"><Check size={15} strokeWidth={2.2} className="mt-0.5 shrink-0 text-[#5ca5fa]" /> {feature}</li>)}
             </ul>
             <div className="mt-auto pt-6">
               {plan.id === currentPlanId ? (
-                <button type="button" disabled className="dashboard-current-plan h-12 w-full rounded-full border border-[#CBD7DC] bg-[#FAF9F6] text-[13px] font-semibold text-[#657069]">Current plan</button>
+                <button type="button" disabled className="dashboard-current-plan h-10 w-full rounded-lg border border-white/10 bg-white/[0.04] text-[12px] font-medium text-white/50">Current plan</button>
               ) : plan.id === "free" ? (
                 // Moving back to Free is a cancellation, not a checkout —
                 // there is nothing to charge for, so it goes through the
                 // billing page's cancel flow rather than Razorpay.
-                <Link href="/dashboard/settings/billing" className="dashboard-plan-cta flex h-12 w-full items-center justify-center gap-2 rounded-full border border-[#CBD7DC] bg-white text-[13px] font-semibold text-[#11120f] transition hover:border-[#11120f]">
+                <Link href="/dashboard/settings/billing" className="dashboard-plan-cta flex h-10 w-full items-center justify-center gap-2 rounded-lg border border-white/10 text-[12px] font-medium text-white/70 transition hover:bg-white/[0.06] hover:text-white/90">
                   Downgrade to Free <ArrowRight size={13} />
                 </Link>
               ) : (
-                <button type="button" disabled={checkoutPlan !== null} onClick={() => void startCheckout(plan.id)} className={`dashboard-plan-cta flex h-12 w-full items-center justify-center gap-2 rounded-full text-[13px] font-semibold transition disabled:opacity-60 ${plan.highlighted ? "dashboard-plan-cta-primary border border-[#11120f] bg-[#11120f] text-white hover:bg-black" : "border border-[#CBD7DC] bg-white text-[#11120f] hover:border-[#11120f] hover:bg-[#11120f] hover:text-white"}`}>
+                <button type="button" disabled={checkoutPlan !== null} onClick={() => void startCheckout(plan.id)} className={`dashboard-plan-cta flex h-10 w-full items-center justify-center gap-2 rounded-lg text-[12px] font-medium transition disabled:opacity-60 ${plan.highlighted ? "dashboard-plan-cta-primary bg-[#428ce5] text-white hover:bg-[#347dce]" : "border border-white/10 bg-white/[0.05] text-white/90 hover:bg-white/[0.1]"}`}>
                   {checkoutPlan === plan.id ? (
                     <><LoaderCircle size={14} className="animate-spin" /> Opening checkout</>
                   ) : (
@@ -1083,9 +1108,9 @@ function UpgradeSettingsPage() {
         ))}
       </div>
 
-      <div className="dashboard-tailored-plan mt-6 flex flex-wrap items-center justify-between gap-4 rounded-[24px] border border-[#E2DFD8] bg-[#FAF9F6] px-6 py-5">
-        <div><p className="text-[16px] font-medium tracking-[-0.01em] text-[#11120f]">Need a tailored plan?</p><p className="mt-1 text-[13px] text-[#657069]">Talk to us about custom seats, security, and support.</p></div>
-        <Link href="/contact" className="dashboard-contact-sales flex h-11 items-center gap-2 rounded-full bg-white px-5 text-[13px] font-semibold text-[#11120f] transition hover:bg-[#EAECF0]">Contact sales <ArrowRight size={14} /></Link>
+      <div className="dashboard-tailored-plan mt-4 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.035] px-5 py-4">
+        <div><p className="text-[14px] font-medium text-white/90">Need a custom plan?</p><p className="mt-1 text-[12px] text-white/60">Talk to us about custom seats, security, and support.</p></div>
+        <div className="flex items-center gap-2"><Link href="/pricing" className="flex h-9 items-center px-3 text-[12px] font-medium text-white/60 hover:text-white/90">Compare details</Link><Link href="/contact" className="dashboard-contact-sales flex h-9 items-center gap-2 rounded-lg border border-white/10 px-3.5 text-[12px] font-medium text-white/90 transition hover:bg-white/[0.06]">Contact sales <ArrowRight size={13} /></Link></div>
       </div>
     </div>
   );
@@ -1256,15 +1281,15 @@ function BillingSettingsPage() {
   }
 
   return (
-    <div className="dashboard-billing-page mx-auto w-full max-w-[1040px] px-7 pb-16 pt-9 text-[#11120f] sm:px-9 lg:px-10">
+    <div className="dashboard-billing-page mx-auto w-full max-w-[1080px] px-7 pb-16 pt-8 text-white/90 sm:px-9 lg:px-10">
       <div className="flex flex-wrap items-start justify-between gap-5">
-        <div><p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Workspace billing</p><h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em]">Billing & subscription</h2><p className="mt-2 text-[14px] text-[#667069]">Manage your plan, payment details, and invoice history.</p></div>
-        <Link href="/dashboard/settings/upgrade" className="flex h-11 items-center gap-2 rounded-full bg-[#11120f] px-5 text-[13px] font-semibold text-white hover:bg-black">Change plan <ArrowRight size={14} /></Link>
+        <div><p className="text-xs font-medium text-violet-300">Workspace billing</p><h2 className="mt-2 text-[32px] font-medium tracking-[-0.04em] text-white/90">Billing</h2><p className="mt-2 text-[13px] text-white/60">Your plan, payment method, and receipts in one place.</p></div>
+        <Link href="/dashboard/settings/upgrade" className="flex h-10 items-center gap-2 rounded-lg bg-[#6d5ce7] px-4 text-[13px] font-medium text-white transition hover:bg-[#7b6bed]">View plans <ArrowRight size={14} /></Link>
       </div>
 
-      <div className="mt-8 flex gap-1 border-b border-[#DDE4E8]" role="tablist" aria-label="Billing sections">
+      <div className="mt-7 inline-flex gap-1 rounded-xl border border-white/10 bg-white/[0.035] p-1" role="tablist" aria-label="Billing sections">
         {([['overview', 'Overview'], ['payment', 'Payment methods'], ['history', 'Billing history']] as const).map(([id, label]) => (
-          <button key={id} type="button" role="tab" aria-selected={tab === id} onClick={() => setTab(id)} className={`relative px-4 pb-3 text-[13px] font-semibold transition ${tab === id ? "text-[#11120f]" : "text-[#7A858B] hover:text-[#11120f]"}`}>{label}{tab === id && <span className="absolute inset-x-2 bottom-0 h-0.5 bg-[#11120f]" />}</button>
+          <button key={id} type="button" role="tab" aria-selected={tab === id} onClick={() => setTab(id)} className={`rounded-lg px-3.5 py-2 text-[12px] font-medium transition ${tab === id ? "bg-white/10 text-white/90" : "text-white/55 hover:bg-white/[0.05] hover:text-white/90"}`}>{label}</button>
         ))}
       </div>
 
@@ -1273,11 +1298,14 @@ function BillingSettingsPage() {
 
       {!loading && tab === "overview" && (
         <div className="mt-7 grid gap-4 md:grid-cols-2">
-          <article className="flex min-h-[220px] flex-col rounded-[24px] border border-[#D8D5CE] bg-[#FAF9F6] p-6">
+          <article className="dashboard-billing-plan-card flex min-h-[190px] flex-col rounded-2xl border border-violet-300/15 bg-gradient-to-br from-violet-400/[0.09] to-white/[0.025] p-6 md:col-span-2">
             <div className="flex items-start justify-between gap-4"><div><p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#6D7D85]">Current plan</p><h3 className="mt-3 text-[28px] font-medium tracking-[-0.04em]">{plan.name}</h3></div><span className="rounded-full bg-white px-3 py-1 text-[10px] font-bold uppercase tracking-[0.08em] text-[#34845c]">{status}</span></div>
             <div className="mt-3 flex items-end gap-1"><span className="text-[32px] font-medium tracking-[-0.05em]">{plan.price}</span>{plan.id !== "free" && <span className="pb-1 text-[12px] text-[#667069]">/ month</span>}</div>
             <p className="mt-3 text-[12px] leading-5 text-[#667069]">{plan.description}</p>
-            <Link href="/dashboard/settings/upgrade" className="mt-auto pt-5 text-[12px] font-semibold underline decoration-black/20 underline-offset-4">View and compare plans</Link>
+            <div className="mt-auto flex flex-wrap items-center gap-2 pt-5">
+              <Link href="/dashboard/settings/upgrade" className="inline-flex h-9 items-center gap-2 rounded-lg bg-[#6d5ce7] px-4 text-[12px] font-medium text-white transition hover:bg-[#7b6bed]">{plan.id === "free" ? "Upgrade plan" : "Change plan"}<ArrowRight size={13} /></Link>
+              {plan.id !== "free" && !cancelling && <button type="button" onClick={() => setCancelOpen(true)} className="h-9 rounded-lg px-3 text-[12px] font-medium text-white/60 transition hover:bg-white/[0.06] hover:text-white/90">Cancel plan</button>}
+            </div>
           </article>
 
           <article className="flex min-h-[220px] flex-col rounded-[24px] border border-[#DDE4E8] bg-white p-6">
@@ -1327,38 +1355,11 @@ function BillingSettingsPage() {
             footer="Crawled pages and uploaded files. New articles are refused once this is full — remove some, or upgrade for more room."
           />
 
-          <button type="button" onClick={() => setTab("payment")} className="group flex items-center gap-4 rounded-2xl border border-[#DDE4E8] p-5 text-left hover:bg-[#FAFBFB]"><span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#EEF3F5]"><CreditCard size={19} /></span><span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">Payment method</span><span className="mt-1 block text-[12px] text-[#667069]">{paymentMethod?.last4 ? `${paymentMethod.brand ?? "Card"} ending in ${paymentMethod.last4}` : "No payment method saved"}</span></span><ArrowRight size={16} className="transition group-hover:translate-x-1" /></button>
-          <button type="button" onClick={() => setTab("history")} className="group flex items-center gap-4 rounded-2xl border border-[#DDE4E8] p-5 text-left hover:bg-[#FAFBFB]"><span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#EEF3F5]"><ReceiptText size={19} /></span><span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">Billing history</span><span className="mt-1 block text-[12px] text-[#667069]">{payments.length ? `${payments.length} payment${payments.length === 1 ? "" : "s"}` : "No payments yet"}</span></span><ArrowRight size={16} className="transition group-hover:translate-x-1" /></button>
+          <button type="button" onClick={() => setTab("payment")} className="group flex items-center gap-4 rounded-2xl border border-[#DDE4E8] bg-white p-5 text-left hover:bg-[#FAFBFB]"><span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#EEF3F5]"><CreditCard size={19} /></span><span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">Payment method</span><span className="mt-1 block text-[12px] text-[#667069]">{paymentMethod?.last4 ? `${paymentMethod.brand ?? "Card"} ending in ${paymentMethod.last4}` : "No payment method saved"}</span></span><ArrowRight size={16} className="transition group-hover:translate-x-1" /></button>
+          <button type="button" onClick={() => setTab("history")} className="group flex items-center gap-4 rounded-2xl border border-[#DDE4E8] bg-white p-5 text-left hover:bg-[#FAFBFB]"><span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#EEF3F5]"><ReceiptText size={19} /></span><span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">Billing history</span><span className="mt-1 block text-[12px] text-[#667069]">{payments.length ? `${payments.length} payment${payments.length === 1 ? "" : "s"}` : "No payments yet"}</span></span><ArrowRight size={16} className="transition group-hover:translate-x-1" /></button>
 
           {cancelNotice && <div role="status" className="md:col-span-2 rounded-2xl border border-[#CBD9D0] bg-[#F5FAF7] px-5 py-4 text-[13px] text-[#33684C]">{cancelNotice}</div>}
 
-          {plan.id !== "free" && !cancelling && (
-            <div className="md:col-span-2 rounded-2xl border border-[#E6E3DC] bg-[#FAF9F6] p-5">
-              {cancelOpen ? (
-                <div>
-                  <p className="text-[14px] font-semibold">Cancel your {plan.name} plan?</p>
-                  <p className="mt-1.5 text-[12px] leading-5 text-[#667069]">
-                    You keep {plan.name} until the end of the period you have already paid for. After that the workspace moves to Free: {pricingPlans[0].resolutions} AI resolutions a month, {pricingPlans[0].seatsIncluded} seats, and purchased seats are released.
-                  </p>
-                  {cancelError && <p role="alert" className="mt-3 text-[12px] text-[#A5414B]">{cancelError}</p>}
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    <button type="button" disabled={cancelBusy} onClick={() => void cancelSubscription()} className="flex h-10 items-center gap-2 rounded-full bg-[#A5414B] px-5 text-[12px] font-semibold text-white transition hover:bg-[#8E3640] disabled:opacity-60">
-                      {cancelBusy && <LoaderCircle size={13} className="animate-spin" />} Yes, cancel at period end
-                    </button>
-                    <button type="button" disabled={cancelBusy} onClick={() => { setCancelOpen(false); setCancelError(null); }} className="h-10 rounded-full border border-[#CBD7DC] bg-white px-5 text-[12px] font-semibold text-[#11120f]">Keep my plan</button>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex flex-wrap items-center justify-between gap-4">
-                  <div>
-                    <p className="text-[14px] font-semibold">Cancel subscription</p>
-                    <p className="mt-1 text-[12px] text-[#667069]">Moves the workspace to Free at the end of the period you have paid for. No refund is taken back.</p>
-                  </div>
-                  <button type="button" onClick={() => setCancelOpen(true)} className="h-10 rounded-full border border-[#D9C2C5] bg-white px-5 text-[12px] font-semibold text-[#A5414B] transition hover:bg-[#FFF7F7]">Cancel subscription</button>
-                </div>
-              )}
-            </div>
-          )}
         </div>
       )}
 
@@ -1391,6 +1392,20 @@ function BillingSettingsPage() {
           ) : (
             <div className="flex flex-col items-center px-5 py-14 text-center"><span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#EEF3F5]"><ReceiptText size={23} /></span><h4 className="mt-4 text-[15px] font-semibold">No billing history yet</h4><p className="mt-2 max-w-sm text-[12px] leading-5 text-[#667069]">Payments and receipts will appear here after your first paid billing cycle.</p></div>
           )}
+        </div>
+      )}
+
+      {plan.id !== "free" && !cancelling && cancelOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget && !cancelBusy) setCancelOpen(false); }}>
+          <div role="dialog" aria-modal="true" aria-labelledby="cancel-plan-title" className="w-full max-w-[440px] rounded-2xl border border-white/10 bg-[#2d2d2d] p-6 text-white/90 shadow-[0_24px_80px_rgba(0,0,0,0.45)]">
+            <p id="cancel-plan-title" className="text-[18px] font-medium">Cancel {plan.name}?</p>
+            <p className="mt-2 text-[13px] leading-6 text-white/60">Your plan stays active until the end of the paid period. Then the workspace moves to Free with {pricingPlans[0].resolutions} AI resolutions and {pricingPlans[0].seatsIncluded} included seats.</p>
+            {cancelError && <p role="alert" className="mt-3 text-[12px] text-red-300">{cancelError}</p>}
+            <div className="mt-6 flex flex-col gap-2 sm:flex-row-reverse">
+              <button type="button" disabled={cancelBusy} onClick={() => void cancelSubscription()} className="flex h-10 flex-1 items-center justify-center gap-2 rounded-lg bg-[#a5414b] px-4 text-[12px] font-medium text-white transition hover:bg-[#b44d58] disabled:opacity-60">{cancelBusy && <LoaderCircle size={13} className="animate-spin" />} Cancel at period end</button>
+              <button type="button" disabled={cancelBusy} onClick={() => { setCancelOpen(false); setCancelError(null); }} className="h-10 flex-1 rounded-lg border border-white/10 px-4 text-[12px] font-medium text-white/80 transition hover:bg-white/[0.06]">Keep my plan</button>
+            </div>
+          </div>
         </div>
       )}
     </div>
@@ -1490,7 +1505,7 @@ function DangerZoneSection() {
 
   return (
     <div className="mx-auto mt-8 w-full max-w-[1120px] px-8 sm:px-10 lg:px-12">
-      <div className="rounded-2xl border border-[#f2c7c7] bg-[#fff9f9] p-6">
+      <div className="dashboard-danger-zone rounded-xl border border-red-400/25 bg-[#262626] p-6">
         <div className="flex items-center gap-2 text-[#8f3d45]">
           <CircleAlert size={16} />
           <h3 className="text-[14px] font-semibold">Danger zone</h3>
@@ -1507,7 +1522,7 @@ function DangerZoneSection() {
               </p>
             </div>
             {isOwner ? (
-              <button type="button" onClick={() => { setOpen("workspace"); setError(null); setConfirmText(""); }} className="flex h-10 shrink-0 items-center gap-2 rounded-full border border-[#e5b3b3] bg-white px-4 text-[12px] font-semibold text-[#A64A53] transition hover:bg-[#fff3f3]">
+              <button type="button" onClick={() => { setOpen("workspace"); setError(null); setConfirmText(""); }} className="dashboard-danger-action flex h-10 shrink-0 items-center gap-2 rounded-md border border-red-400/30 bg-transparent px-4 text-[12px] font-normal text-red-300 transition hover:bg-red-400/10">
                 <Trash2 size={13} /> Delete workspace
               </button>
             ) : (
@@ -1523,7 +1538,7 @@ function DangerZoneSection() {
             <p className="text-[13px] font-medium text-[#17181a]">Delete your account</p>
             <p className="mt-1 max-w-md text-[12px] text-[#8a7373]">Permanently deletes your account and every workspace only you own. Workspaces you share with teammates are left, not destroyed.</p>
           </div>
-          <button type="button" onClick={() => void openAccountDialog()} className="flex h-10 shrink-0 items-center gap-2 rounded-full border border-[#e5b3b3] bg-white px-4 text-[12px] font-semibold text-[#A64A53] transition hover:bg-[#fff3f3]">
+          <button type="button" onClick={() => void openAccountDialog()} className="dashboard-danger-action flex h-10 shrink-0 items-center gap-2 rounded-md border border-red-400/30 bg-transparent px-4 text-[12px] font-normal text-red-300 transition hover:bg-red-400/10">
             <Trash2 size={13} /> Delete account
           </button>
         </div>
@@ -1618,7 +1633,6 @@ function GeneralSettingsPage({ user }: { user: SettingsUser }) {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [dashboardAccent, setDashboardAccent] = useState("#428CE5");
   const [dashboardAppearance, setDashboardAppearance] = useState<DashboardAppearance>("light");
 
   const [twoFaBusy, setTwoFaBusy] = useState(false);
@@ -1642,8 +1656,8 @@ function GeneralSettingsPage({ user }: { user: SettingsUser }) {
 
   useEffect(() => {
     const dashboardTheme = readDashboardTheme();
-    setDashboardAccent(dashboardTheme.accent);
     setDashboardAppearance(dashboardTheme.appearance);
+    if (dashboardTheme.accent !== "#262626") saveDashboardTheme({ accent: "#262626", appearance: dashboardTheme.appearance });
     fetch("/api/account")
       .then((response) => (response.ok ? response.json() : null))
       .then((data: { account?: Account } | null) => {
@@ -1658,10 +1672,9 @@ function GeneralSettingsPage({ user }: { user: SettingsUser }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function updateDashboardTheme(accent: string, appearance: DashboardAppearance) {
-    setDashboardAccent(accent);
+  function updateDashboardAppearance(appearance: DashboardAppearance) {
     setDashboardAppearance(appearance);
-    saveDashboardTheme({ accent, appearance });
+    saveDashboardTheme({ accent: "#262626", appearance });
   }
 
   const initial = (name.trim() || originalName).charAt(0).toUpperCase();
@@ -1872,8 +1885,7 @@ function GeneralSettingsPage({ user }: { user: SettingsUser }) {
         <div className="grid grid-cols-[310px_minmax(0,1fr)] gap-10 max-xl:grid-cols-[270px_minmax(0,1fr)] max-lg:grid-cols-1 max-lg:gap-5">
           <div><h3 className="dashboard-settings-heading text-base font-semibold">Dashboard appearance</h3><p className="dashboard-settings-subdesc mt-1 max-w-[285px] text-[12px] leading-[1.55] text-[#858585]">Personalize the dashboard canvas, navigation, buttons, and active states. These choices do not change your customer-facing chatbot.</p></div>
           <div className="min-w-0">
-            <div className="border-b border-[#e7e7e7] pb-7"><p className="dashboard-settings-heading text-base font-semibold">Theme color</p><p className="dashboard-settings-subdesc mt-1 text-sm text-[#858585]">Choose the dashboard accent color.</p><div className="mt-4 flex flex-wrap gap-3">{["#000000", "#FFFFFF", "#202225", "#428CE5", "#7467E8", "#E6538D", "#A953D6", "#E56812", "#11999D", "#39B487"].map((color) => <button key={color} type="button" aria-label={`Use ${color} dashboard color`} onClick={() => updateDashboardTheme(color, dashboardAppearance)} className={`flex h-9 w-9 items-center justify-center rounded-lg border border-black/10 transition hover:scale-105 ${dashboardAccent === color ? "ring-2 ring-black/60 ring-offset-2" : ""}`} style={{ backgroundColor: color }}>{dashboardAccent === color && <Check size={15} className={color === "#FFFFFF" ? "text-black" : "text-white"} />}</button>)}</div></div>
-            <div className="pt-7"><p className="dashboard-settings-heading text-base font-semibold">Appearance</p><p className="dashboard-settings-subdesc mt-1 text-sm text-[#858585]">Choose light or dark mode, or follow your device preference.</p><div className="mt-4 flex flex-wrap gap-4">{([['light','Light'],['dark','Dark'],['system','System']] as const).map(([value,label]) => <button key={value} type="button" onClick={() => updateDashboardTheme(dashboardAccent, value)} className="text-left"><span className={`block h-[70px] w-[116px] overflow-hidden rounded-lg border-2 p-2 transition ${dashboardAppearance === value ? "border-[var(--dashboard-accent)]" : "border-[#dfe3e6]"} ${value === "dark" ? "bg-[#202327]" : value === "system" ? "bg-gradient-to-r from-[#fafafa] from-50% to-[#202327] to-50%" : "bg-[#fafafa]"}`}><span className={`block h-2 w-8 rounded ${value === "dark" ? "bg-white/35" : "bg-black/20"}`} /><span className={`mt-2 block h-2 w-16 rounded ${value === "dark" ? "bg-white/20" : "bg-black/10"}`} /><span className="mt-2 block h-2 w-10 rounded" style={{ backgroundColor: dashboardAccent }} /></span><span className={`mt-2 block text-[11px] font-normal ${dashboardAppearance === value ? "text-black" : "text-[#686d71]"}`}>{label}</span></button>)}</div></div>
+            <div><p className="dashboard-settings-heading text-base font-semibold">Appearance</p><p className="dashboard-settings-subdesc mt-1 text-sm text-[#858585]">Choose light or dark mode, or follow your device preference.</p><div className="mt-4 flex flex-wrap gap-4">{([['light','Light'],['dark','Dark'],['system','System']] as const).map(([value,label]) => <button key={value} type="button" onClick={() => updateDashboardAppearance(value)} className="text-left"><span className={`block h-[70px] w-[116px] overflow-hidden rounded-lg border-2 p-2 transition ${dashboardAppearance === value ? "border-white/70" : "border-white/10"} ${value === "dark" ? "bg-[#202327]" : value === "system" ? "bg-gradient-to-r from-[#fafafa] from-50% to-[#202327] to-50%" : "bg-[#fafafa]"}`}><span className={`block h-2 w-8 rounded ${value === "dark" ? "bg-white/35" : "bg-black/20"}`} /><span className={`mt-2 block h-2 w-16 rounded ${value === "dark" ? "bg-white/20" : "bg-black/10"}`} /></span><span className={`mt-2 block text-[11px] font-normal ${dashboardAppearance === value ? "text-white/90" : "text-white/55"}`}>{label}</span></button>)}</div></div>
           </div>
         </div>
 
@@ -1885,17 +1897,10 @@ function GeneralSettingsPage({ user }: { user: SettingsUser }) {
             <p className="dashboard-settings-subdesc mt-1 max-w-[285px] text-[12px] leading-[1.55] text-[#858585]">Keep your account secure by enabling 2FA via SMS or using a temporary one-time passcode from an authenticator app.</p>
           </div>
           <div className="divide-y divide-[#e7e7e7]">
-            <div className="flex items-start gap-3 pb-5 opacity-60">
-              <Toggle checked={false} onChange={() => undefined} label="Text Message authentication" />
-              <div className="min-w-0 flex-1">
-                <div className="flex flex-wrap items-center gap-2"><p className="dashboard-settings-heading text-base font-semibold text-[#616161]">Text Message (SMS)</p><span className="rounded-md bg-[#f0edff] px-1.5 py-0.5 text-[10px] font-medium text-[#6246df]">Business</span></div>
-                <p className="dashboard-settings-subdesc mt-1 text-sm leading-4 text-[#858585]">Receive a one-time passcode via SMS each time you log in. Not available yet.</p>
-              </div>
-            </div>
             <div className="py-5">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="dashboard-settings-heading text-base font-semibold text-[#111111]">Authenticator App (TOTP)</p>
+                  <p className="dashboard-settings-heading text-base font-semibold">Authenticator App (TOTP)</p>
                   <p className="dashboard-settings-subdesc mt-1 text-sm leading-5 text-[#858585]">Use an authentication app to generate secure login codes.</p>
                 </div>
                 {twoFactorEnabled ? (
@@ -2077,11 +2082,11 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
   }
 
   return (
-    <div className="mx-auto w-full max-w-[1440px] px-7 pb-20 pt-8 text-[#17181a] sm:px-9 lg:px-10">
+    <div className="dashboard-chatbot-settings-page mx-auto w-full max-w-[1280px] px-7 pb-20 pt-8 text-white/90 sm:px-9 lg:px-10">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">AI teammate</p>
-          <h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em]">Chatbot Interface</h2>
+          <div className="inline-flex items-center gap-2 rounded-full border border-violet-300/15 bg-violet-400/10 px-2.5 py-1 text-[11px] font-medium text-violet-200"><Bot size={12} /> Customer experience</div>
+          <h2 className="mt-3 text-[32px] font-medium tracking-[-0.04em] text-white/90">Chatbot Interface</h2>
         </div>
         {/* Every field here autosaves 700ms after the last edit (see the
             debounced effect above) — there's no Save button, so without this
@@ -2093,16 +2098,16 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
           </span>
         )}
       </div>
-      <p className="mt-2 max-w-xl text-[14px] leading-6 text-[#667069]">
+      <p className="mt-2 max-w-2xl text-[13px] leading-6 text-white/60">
         Give your AI teammate its own identity and behavior for {workspaceName || "this workspace"}. This is who customers meet in every conversation, on every connected site.
       </p>
 
       {loading ? (
-        <div className="mt-7 h-72 animate-pulse rounded-[24px] bg-[#F2F3F3]" />
+        <div className="mt-7 h-72 animate-pulse rounded-[20px] border border-white/10 bg-white/[0.035]" />
       ) : (
         <div className="mt-7">
           <div className="min-w-0">
-            <div className="overflow-hidden bg-transparent">
+            <div className="dashboard-chatbot-section overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035] p-5">
               <div className="px-0 py-2">
                 <h3 className="text-[16px] font-semibold">Identity</h3>
                 <p className="mt-1 text-[12px] text-[#667069]">The name and avatar shown to customers in chat.</p>
@@ -2141,7 +2146,7 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
 
             {error && <p className="mt-4 text-[12px] text-[#c63f4d]">{error}</p>}
 
-            <div className="border-t border-[#E5E9EB] py-7">
+            <div className="dashboard-chatbot-section mt-4 rounded-2xl border border-white/10 bg-white/[0.035] p-5">
               <h3 className="text-[16px] font-semibold">Greeting message</h3>
               <p className="mt-1 max-w-xl text-[12px] leading-5 text-[#667069]">
                 Shown before a visitor starts chatting — each line pops up as its own bubble, one below another, on the launcher and at the top of a new conversation.
@@ -2169,9 +2174,9 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
               </div>
             </div>
 
-            <div className="grid grid-cols-[310px_minmax(0,1fr)] gap-10 border-t border-[#E5E9EB] py-7 max-lg:grid-cols-1 max-lg:gap-4"><div><h3 className="text-[14px] font-medium">Theme color</h3><p className="mt-1 max-w-[285px] text-[12px] leading-5 text-[#858585]">Choose the accent used by the chat launcher, buttons, and active states.</p></div><div className="flex flex-wrap items-center gap-4">{["#202225", "#7467E8", "#1596D6", "#E6538D", "#A953D6", "#5878E8", "#E56812", "#11999D", "#A98E82", "#39B487"].map((color) => <button key={color} type="button" aria-label={`Use ${color} theme`} onClick={() => { setAccent(color); setSaved(false); }} className={`flex h-9 w-9 items-center justify-center rounded-lg transition ${accent === color ? "ring-2 ring-[#596168] ring-offset-3" : "hover:scale-105"}`} style={{ backgroundColor: color }}>{accent === color && <Check size={15} className="text-white" />}</button>)}</div></div>
+            <div className="dashboard-chatbot-section mt-4 grid grid-cols-[260px_minmax(0,1fr)] gap-8 rounded-2xl border border-white/10 bg-white/[0.035] p-5 max-lg:grid-cols-1 max-lg:gap-4"><div><h3 className="text-[14px] font-medium">Theme color</h3><p className="mt-1 max-w-[285px] text-[12px] leading-5 text-white/60">Choose the accent used by the chat launcher, buttons, and active states.</p></div><div className="flex flex-wrap items-center gap-3">{["#202225", "#7467E8", "#1596D6", "#E6538D", "#A953D6", "#5878E8", "#E56812", "#11999D", "#A98E82", "#39B487"].map((color) => <button key={color} type="button" aria-label={`Use ${color} theme`} onClick={() => { setAccent(color); setSaved(false); }} className={`flex h-9 w-9 items-center justify-center rounded-lg transition ${accent === color ? "ring-2 ring-white/80 ring-offset-2 ring-offset-[#2f2f2f]" : "hover:scale-105"}`} style={{ backgroundColor: color }}>{accent === color && <Check size={15} className="text-white" />}</button>)}</div></div>
 
-            <div className="border-t border-[#E5E9EB] py-7">
+            <div className="dashboard-chatbot-section mt-4 rounded-2xl border border-white/10 bg-white/[0.035] p-5">
               <h3 className="text-[16px] font-semibold">Pre-chat form</h3>
               <p className="mt-1 max-w-xl text-[12px] leading-5 text-[#667069]">
                 Choose what visitors are asked before they can start a conversation. Add your own questions, mark any field optional or required, and reorder them — the live chat widget on your site loads this exact form.
@@ -2195,7 +2200,7 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
           role="presentation"
           onMouseDown={(event) => { if (event.target === event.currentTarget) setAvatarPickerOpen(false); }}
         >
-          <div role="dialog" aria-modal="true" aria-label="Change avatar" className="flex h-[80vh] w-[60vw] max-w-none flex-col overflow-hidden rounded-[24px] border border-black/10 bg-white shadow-[0_28px_80px_rgba(15,23,42,0.24)] max-lg:h-[85vh] max-lg:w-[92vw]">
+          <div role="dialog" aria-modal="true" aria-label="Change avatar" className="dashboard-avatar-picker flex h-[80vh] w-[60vw] max-w-none flex-col overflow-hidden rounded-[24px] border border-white/10 bg-[#2d2d2d] text-white/90 shadow-[0_28px_80px_rgba(0,0,0,0.38)] max-lg:h-[85vh] max-lg:w-[92vw]">
             <div className="flex items-start justify-between border-b border-[#E5E9EB] px-7 py-5">
               <div>
                 <h3 className="text-[18px] font-semibold tracking-[-0.02em]">Change avatar</h3>
@@ -2815,85 +2820,120 @@ function PeopleSettingsPage() {
   }
 
   return (
-    <div className="dashboard-people-page mx-auto w-full max-w-[1120px] px-7 pb-14 pt-8 text-[#17181a] sm:px-9 lg:px-10">
-      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[#E5E8EA] pb-7">
+    <div className="dashboard-people-page mx-auto w-full max-w-[1120px] px-7 pb-14 pt-8 text-white sm:px-9 lg:px-10">
+      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-white/10 pb-7">
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Workspace access</p>
-          <h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em]">People</h2>
-          <p className="mt-2 max-w-xl text-[14px] leading-6 text-[#667069]">Invite teammates by email. They&apos;ll get a link to accept and join this workspace.</p>
+          <p className="text-xs font-normal uppercase tracking-[0.16em] text-white/80">Workspace access</p>
+          <h2 className="mt-2 text-3xl font-normal tracking-[-0.03em] text-white">People</h2>
+          <p className="mt-2 max-w-xl text-sm leading-6 text-white/80">Invite teammates by email. They&apos;ll get a link to accept and join this workspace.</p>
         </div>
         {canInvite && (
-          <button type="button" onClick={() => setDialogOpen(true)} className="flex h-9 shrink-0 items-center gap-2 rounded-lg bg-[#202225] px-4 text-[12px] font-semibold text-white transition hover:bg-black">
+          <button type="button" onClick={() => setDialogOpen(true)} className="flex h-9 shrink-0 items-center gap-2 rounded-lg bg-[#428ce5] px-4 text-[12px] font-semibold text-white transition hover:bg-[#347dce]">
             <Plus size={14} /> Invite people
           </button>
         )}
       </div>
 
       {myRole !== null && !canInvite && (
-        <p className="mt-4 rounded-lg bg-[#FFF4E5] px-3 py-2 text-[11.5px] font-medium text-[#93651D]">Only the workspace owner can invite people or manage pending invitations.</p>
+        <p className="mt-4 rounded-lg border border-amber-400/20 bg-amber-400/10 px-3 py-2 text-[11.5px] font-medium text-amber-200">Only the workspace owner can invite people or manage pending invitations.</p>
       )}
 
-      <div className="dashboard-people-table-surface mt-5 bg-white">
+      <div className="dashboard-people-table-surface mt-5 overflow-hidden rounded-xl border border-white/10 bg-white/[0.025]">
         {loadingInvitations ? (
-          <div className="flex items-center justify-center py-16 text-[12px] text-[#687178]"><LoaderCircle size={15} className="mr-2 animate-spin" /> Loading people</div>
+          <div className="flex items-center justify-center py-16 text-[12px] text-white/80"><LoaderCircle size={15} className="mr-2 animate-spin" /> Loading people</div>
         ) : invitations.length === 0 ? (
           <div className="dashboard-people-empty flex flex-col items-center px-6 py-16 text-center">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F0F2F4] text-[#667078]"><Mail size={19} /></span>
-            <h4 className="mt-3 text-[14px] font-semibold">No pending invitations</h4>
+            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#428ce5]/10 text-[#5ca5fa]"><Mail size={19} /></span>
+            <h4 className="mt-3 text-[14px] font-semibold text-white">No pending invitations</h4>
             <p className="mt-1 max-w-sm text-[11px] leading-5 text-[#687178]">Invite teammates to this workspace — they'll show up here until they accept.</p>
-            {canInvite && <button type="button" onClick={() => setDialogOpen(true)} className="mt-4 h-9 rounded-lg border border-[#D8DDE1] px-4 text-[12px] font-semibold transition hover:bg-[#F7F8FA]">Invite your first person</button>}
+            {canInvite && <button type="button" onClick={() => setDialogOpen(true)} className="mt-4 h-9 rounded-lg border border-white/10 bg-white/[0.04] px-4 text-[12px] font-semibold text-white transition hover:bg-white/[0.08]">Invite your first person</button>}
           </div>
         ) : (
-          <div className="overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            <div className="min-w-[720px] pb-2">
-              <div className="dashboard-people-table-header grid grid-cols-[1.6fr_0.8fr_1.1fr_1fr_90px] gap-3 rounded-lg border border-[#DFE3E6] bg-[#F6F7F8] px-4 py-2.5 text-[11px] font-semibold text-[#737D83]"><span>Person</span><span>Status</span><span>Invited by</span><span>Created</span><span /></div>
-              {(() => {
-                const totalPages = Math.max(1, Math.ceil(invitations.length / INVITES_PER_PAGE));
-                const page = Math.min(invitePage, totalPages);
-                const pageInvites = invitations.slice((page - 1) * INVITES_PER_PAGE, page * INVITES_PER_PAGE);
-                return (
-                  <>
-                    {pageInvites.map((invite) => (
-                      <div key={invite.id} className="dashboard-person-row grid grid-cols-[1.6fr_0.8fr_1.1fr_1fr_90px] items-center gap-3 border-b border-[#E8ECEE] px-4 py-3 transition hover:bg-[#FAFBFB]">
-                        <div className="flex min-w-0 items-center gap-3">
-                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#F1F3F4] text-[12px] font-bold text-[#4a5666]">{invite.email.charAt(0).toUpperCase()}</span>
-                          <span className="dashboard-person-email min-w-0 truncate text-[13px] font-semibold text-black">{invite.email}</span>
-                        </div>
-                        <span className={`inline-flex w-fit items-center gap-1.5 rounded-full px-2 py-1 text-[11px] font-semibold ${invite.expired ? "bg-[#FFF1F1] text-[#A64A53]" : "bg-[#FFF4E5] text-[#93651D]"}`}>
-                          <span className={`h-1.5 w-1.5 rounded-full ${invite.expired ? "bg-[#C6555F]" : "bg-[#D89831]"}`} />
-                          {invite.expired ? "Expired" : "Pending"}
+          (() => {
+            const totalPages = Math.max(1, Math.ceil(invitations.length / INVITES_PER_PAGE));
+            const page = Math.min(invitePage, totalPages);
+            const pageInvites = invitations.slice((page - 1) * INVITES_PER_PAGE, page * INVITES_PER_PAGE);
+            const pager = (
+              <div className="flex items-center justify-between border-t border-white/10 px-4 py-3 text-[10px] text-white/80">
+                <span>{invitations.length} {invitations.length === 1 ? "invitation" : "invitations"}</span>
+                {totalPages > 1 ? (
+                  <div className="flex items-center gap-3">
+                    <button type="button" disabled={page <= 1} onClick={() => setInvitePage(page - 1)} className="rounded-md border border-white/10 px-2.5 py-1 font-medium text-white transition hover:bg-white/[0.06] disabled:cursor-not-allowed disabled:opacity-40">Previous</button>
+                    <span>Page {page} of {totalPages}</span>
+                    <button type="button" disabled={page >= totalPages} onClick={() => setInvitePage(page + 1)} className="rounded-md border border-white/10 px-2.5 py-1 font-medium text-white transition hover:bg-white/[0.06] disabled:cursor-not-allowed disabled:opacity-40">Next</button>
+                  </div>
+                ) : (
+                  <span>Page 1 of 1</span>
+                )}
+              </div>
+            );
+            return (
+              <>
+                {/* A 5-column grid has no honest way to fit a phone screen —
+                    below md this becomes a stacked card list instead. */}
+                <div className="md:hidden">
+                  {pageInvites.map((invite) => (
+                    <div key={invite.id} className="dashboard-person-row flex items-center gap-3 border-b border-white/10 px-4 py-3 transition last:border-b-0 hover:bg-white/[0.04]">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#428ce5]/15 text-[12px] font-bold text-[#b8d9ff]">{invite.email.charAt(0).toUpperCase()}</span>
+                      <div className="min-w-0 flex-1">
+                        <span className="dashboard-person-email block truncate text-[13px] font-semibold text-white">{invite.email}</span>
+                        <span className="mt-0.5 flex items-center gap-1.5 text-[11px] text-white/50">
+                          <span className={`inline-flex w-fit items-center gap-1 rounded-full px-1.5 py-0.5 font-semibold ${invite.expired ? "bg-[#FFF1F1] text-[#A64A53]" : "bg-[#FFF4E5] text-[#93651D]"}`}>
+                            <span className={`h-1.5 w-1.5 rounded-full ${invite.expired ? "bg-[#C6555F]" : "bg-[#D89831]"}`} />
+                            {invite.expired ? "Expired" : "Pending"}
+                          </span>
+                          {new Date(invite.createdAt).toLocaleDateString()}
                         </span>
-                        <span className="truncate text-[12px] text-[#5F686D]">{invite.invitedByEmail ?? "—"}</span>
-                        <span className="text-[12px] text-[#5F686D]">{new Date(invite.createdAt).toLocaleDateString()}</span>
-                        {canInvite && (
-                          <button
-                            type="button"
-                            disabled={revoking === invite.id}
-                            onClick={() => void revoke(invite.id)}
-                            className="rounded-md px-2.5 py-1.5 text-[12px] font-medium text-[#A64A53] transition hover:bg-[#FFF1F1] disabled:opacity-50"
-                          >
-                            {revoking === invite.id ? "…" : "Revoke"}
-                          </button>
-                        )}
                       </div>
-                    ))}
-                    <div className="flex items-center justify-between px-1 py-3 text-[10px] text-[#768087]">
-                      <span>{invitations.length} {invitations.length === 1 ? "invitation" : "invitations"}</span>
-                      {totalPages > 1 ? (
-                        <div className="flex items-center gap-3">
-                          <button type="button" disabled={page <= 1} onClick={() => setInvitePage(page - 1)} className="rounded-md border border-[#DDE4E8] px-2.5 py-1 font-medium text-[#3F474C] transition hover:bg-[#F3F4F5] disabled:cursor-not-allowed disabled:opacity-40">Previous</button>
-                          <span>Page {page} of {totalPages}</span>
-                          <button type="button" disabled={page >= totalPages} onClick={() => setInvitePage(page + 1)} className="rounded-md border border-[#DDE4E8] px-2.5 py-1 font-medium text-[#3F474C] transition hover:bg-[#F3F4F5] disabled:cursor-not-allowed disabled:opacity-40">Next</button>
-                        </div>
-                      ) : (
-                        <span>Page 1 of 1</span>
+                      {canInvite && (
+                        <button
+                          type="button"
+                          disabled={revoking === invite.id}
+                          onClick={() => void revoke(invite.id)}
+                          className="shrink-0 rounded-md px-2.5 py-1.5 text-[12px] font-medium text-red-300 transition hover:bg-red-400/10 disabled:opacity-50"
+                        >
+                          {revoking === invite.id ? "…" : "Revoke"}
+                        </button>
                       )}
                     </div>
-                  </>
-                );
-              })()}
-            </div>
-          </div>
+                  ))}
+                  {pager}
+                </div>
+                <div className="hidden md:block">
+                  <div className="overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                    <div className="min-w-[720px]">
+                      <div className="dashboard-people-table-header grid grid-cols-[1.6fr_0.8fr_1.1fr_1fr_90px] gap-3 border-b border-white/10 bg-white/[0.035] px-4 py-3 text-[10px] font-semibold uppercase tracking-[0.08em] text-white/80"><span>Person</span><span>Status</span><span>Invited by</span><span>Created</span><span /></div>
+                      {pageInvites.map((invite) => (
+                        <div key={invite.id} className="dashboard-person-row grid grid-cols-[1.6fr_0.8fr_1.1fr_1fr_90px] items-center gap-3 border-b border-white/10 px-4 py-3 transition last:border-b-0 hover:bg-white/[0.04]">
+                          <div className="flex min-w-0 items-center gap-3">
+                            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#428ce5]/15 text-[12px] font-bold text-[#b8d9ff]">{invite.email.charAt(0).toUpperCase()}</span>
+                            <span className="dashboard-person-email min-w-0 truncate text-[13px] font-semibold text-white">{invite.email}</span>
+                          </div>
+                          <span className={`inline-flex w-fit items-center gap-1.5 rounded-full px-2 py-1 text-[11px] font-semibold ${invite.expired ? "bg-[#FFF1F1] text-[#A64A53]" : "bg-[#FFF4E5] text-[#93651D]"}`}>
+                            <span className={`h-1.5 w-1.5 rounded-full ${invite.expired ? "bg-[#C6555F]" : "bg-[#D89831]"}`} />
+                            {invite.expired ? "Expired" : "Pending"}
+                          </span>
+                          <span className="truncate text-[12px] text-[#5F686D]">{invite.invitedByEmail ?? "—"}</span>
+                          <span className="text-[12px] text-white/80">{new Date(invite.createdAt).toLocaleDateString()}</span>
+                          {canInvite && (
+                            <button
+                              type="button"
+                              disabled={revoking === invite.id}
+                              onClick={() => void revoke(invite.id)}
+                              className="rounded-md px-2.5 py-1.5 text-[12px] font-medium text-red-300 transition hover:bg-red-400/10 disabled:opacity-50"
+                            >
+                              {revoking === invite.id ? "…" : "Revoke"}
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  {pager}
+                </div>
+              </>
+            );
+          })()
         )}
       </div>
 
@@ -2962,7 +3002,7 @@ function TranslationSettingsPage() {
     <div className="mx-auto w-full max-w-[980px] px-7 pb-16 pt-9 text-[#11120f] sm:px-9 lg:px-10">
       <div>
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Workspace</p>
-        <h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em]">Translations</h2>
+        <h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em] text-white/90">Translations</h2>
         <p className="mt-2 max-w-2xl text-[14px] leading-6 text-[#667069]">
           Pick the language your team reads the dashboard in. When a customer writes in a different language, their message gets a &quot;See translation&quot; button in the inbox — nothing is translated automatically or shown to the customer.
         </p>
@@ -3019,37 +3059,65 @@ function SecuritySettingsPage() {
   const [adminInvites, setAdminInvites] = useState(true);
 
   return (
-    <div className="dashboard-security-page mx-auto w-full max-w-[980px] px-7 pb-16 pt-9 text-[#11120f] sm:px-9 lg:px-10">
-      <div className="flex flex-wrap items-start justify-between gap-5">
-        <div><p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Workspace security</p><h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em]">Security & permissions</h2><p className="mt-2 max-w-2xl text-[14px] leading-6 text-[#667069]">Control how people sign in, what members can access, and how your workspace responds to security events.</p></div>
-        <div className="flex items-center gap-2 rounded-full border border-[#CFE3D6] bg-[#F2F8F4] px-4 py-2 text-[12px] font-semibold text-[#34845c]"><ShieldCheck size={15} /> Protected</div>
-      </div>
+    <div className="dashboard-security-page mx-auto w-full max-w-[980px] px-7 pb-16 pt-8 text-white sm:px-9 lg:px-10">
+      <header className="flex flex-wrap items-start justify-between gap-5">
+        <div>
+          <p className="text-xs font-normal uppercase tracking-[0.16em] text-white/80">Workspace security</p>
+          <h2 className="mt-2 text-3xl font-normal tracking-[-0.03em] text-white">Security & permissions</h2>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-white/80">Control how people sign in, what members can access, and how your workspace responds to security events.</p>
+        </div>
+        <div className="flex items-center gap-2 rounded-lg border border-[#428ce5]/25 bg-[#428ce5]/10 px-3 py-2 text-xs font-medium text-[#b8d9ff]"><ShieldCheck size={15} /> Protected</div>
+      </header>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-3">
-        {[{ icon: ShieldCheck, label: "Security status", value: "Good", tone: "text-[#34845c] bg-[#EEF8F2]" }, { icon: UserCog, label: "Default role", value: "Member", tone: "text-[#355f86] bg-[#EEF3F5]" }, { icon: Monitor, label: "Active sessions", value: "1 device", tone: "text-[#6a5a25] bg-[#FAF6E8]" }].map(({ icon: Icon, label, value, tone }) => (
-          <article key={label} className="rounded-2xl border border-[#DDE4E8] bg-white p-5"><span className={`flex h-10 w-10 items-center justify-center rounded-xl ${tone}`}><Icon size={18} /></span><p className="mt-5 text-[11px] font-medium text-[#6D7D85]">{label}</p><p className="mt-1 text-[18px] font-semibold tracking-[-0.02em]">{value}</p></article>
+      <div className="mt-7 grid gap-3 sm:grid-cols-3">
+        {[{ icon: ShieldCheck, label: "Security status", value: "Good" }, { icon: UserCog, label: "Default role", value: "Member" }, { icon: Monitor, label: "Active sessions", value: "1 device" }].map(({ icon: Icon, label, value }) => (
+          <article key={label} className="rounded-xl border border-white/10 bg-white/[0.025] p-4">
+            <span className="flex size-9 items-center justify-center rounded-lg bg-[#428ce5]/10 text-[#5ca5fa]"><Icon size={17} /></span>
+            <p className="mt-4 text-[11px] font-medium text-white/80">{label}</p>
+            <p className="mt-1 text-lg font-semibold tracking-[-0.02em] text-white">{value}</p>
+          </article>
         ))}
       </div>
 
-      <div className="mt-6 overflow-hidden rounded-[24px] border border-[#DDE4E8] bg-white">
-        <div className="border-b border-[#E5E9EB] px-6 py-5"><h3 className="text-[18px] font-medium">Authentication policies</h3><p className="mt-1 text-[12px] text-[#667069]">Set the minimum sign-in requirements for everyone in this workspace.</p></div>
-        <div className="divide-y divide-[#E9ECEE]">
-          <div className="flex items-start gap-4 px-6 py-5"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#EEF3F5]"><KeyRound size={18} /></span><div className="min-w-0 flex-1"><div className="flex flex-wrap items-center gap-2"><p className="text-[14px] font-semibold">Require two-factor authentication</p><span className="rounded-md bg-[#F0EDFF] px-2 py-0.5 text-[10px] font-semibold text-[#6246DF]">Business</span></div><p className="mt-1 text-[12px] leading-5 text-[#667069]">Members must configure an authenticator or SMS code before accessing workspace data.</p></div><Toggle checked={require2fa} onChange={() => setRequire2fa((value) => !value)} label="Require two-factor authentication" /></div>
-          <div className="flex items-start gap-4 px-6 py-5"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#EEF3F5]"><Eye size={18} /></span><div className="min-w-0 flex-1"><p className="text-[14px] font-semibold">New sign-in alerts</p><p className="mt-1 text-[12px] leading-5 text-[#667069]">Notify workspace admins when an account signs in from a new browser or location.</p></div><Toggle checked={loginAlerts} onChange={() => setLoginAlerts((value) => !value)} label="New sign-in alerts" /></div>
-        </div>
-      </div>
+      <SecuritySection title="Authentication policies" description="Set the minimum sign-in requirements for everyone in this workspace.">
+        <SecurityRow icon={KeyRound} title="Require two-factor authentication" description="Members must configure an authenticator or SMS code before accessing workspace data." badge="Business">
+          <Toggle checked={require2fa} onChange={() => setRequire2fa((value) => !value)} label="Require two-factor authentication" />
+        </SecurityRow>
+        <SecurityRow icon={Eye} title="New sign-in alerts" description="Notify workspace admins when an account signs in from a new browser or location.">
+          <Toggle checked={loginAlerts} onChange={() => setLoginAlerts((value) => !value)} label="New sign-in alerts" />
+        </SecurityRow>
+      </SecuritySection>
 
-      <div className="mt-6 overflow-hidden rounded-[24px] border border-[#DDE4E8] bg-white">
-        <div className="border-b border-[#E5E9EB] px-6 py-5"><h3 className="text-[18px] font-medium">Member permissions</h3><p className="mt-1 text-[12px] text-[#667069]">Define safe defaults for members joining your workspace.</p></div>
-        <div className="divide-y divide-[#E9ECEE]">
-          <div className="flex items-center gap-4 px-6 py-5"><div className="min-w-0 flex-1"><p className="text-[14px] font-semibold">Default member role</p><p className="mt-1 text-[12px] text-[#667069]">Applied automatically to newly invited teammates.</p></div><button type="button" className="flex h-10 items-center gap-3 rounded-xl border border-[#CBD7DC] px-4 text-[12px] font-semibold">Member <ArrowRight size={13} /></button></div>
-          <div className="flex items-start gap-4 px-6 py-5"><div className="min-w-0 flex-1"><p className="text-[14px] font-semibold">Only admins can invite members</p><p className="mt-1 text-[12px] leading-5 text-[#667069]">Prevent members from inviting additional people without administrator approval.</p></div><Toggle checked={adminInvites} onChange={() => setAdminInvites((value) => !value)} label="Only admins can invite members" /></div>
-        </div>
-      </div>
+      <SecuritySection title="Member permissions" description="Define safe defaults for members joining your workspace.">
+        <SecurityRow title="Default member role" description="Applied automatically to newly invited teammates.">
+          <button type="button" className="flex h-9 items-center gap-3 rounded-lg border border-white/10 bg-white/[0.04] px-3 text-xs font-medium text-white transition hover:bg-white/[0.08]">Member <ChevronRight size={13} className="text-white/60" /></button>
+        </SecurityRow>
+        <SecurityRow title="Only admins can invite members" description="Prevent members from inviting additional people without administrator approval.">
+          <Toggle checked={adminInvites} onChange={() => setAdminInvites((value) => !value)} label="Only admins can invite members" />
+        </SecurityRow>
+      </SecuritySection>
 
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-[24px] border border-[#E2DFD8] bg-[#FAF9F6] px-6 py-5"><div><p className="text-[15px] font-semibold">Review account-level security</p><p className="mt-1 text-[12px] text-[#667069]">Manage your personal password and two-factor authentication in General settings.</p></div><Link href="/dashboard/settings" className="flex h-11 items-center gap-2 rounded-full bg-white px-5 text-[12px] font-semibold shadow-sm hover:bg-[#EAECF0]">Open personal settings <ArrowRight size={14} /></Link></div>
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-white/10 bg-white/[0.025] px-5 py-4">
+        <div><p className="text-sm font-semibold text-white">Review account-level security</p><p className="mt-1 text-xs text-white/80">Manage your personal password and two-factor authentication in General settings.</p></div>
+        <Link href="/dashboard/settings" className="flex h-9 items-center gap-2 rounded-lg bg-[#428ce5] px-4 text-xs font-medium text-white transition hover:bg-[#347dce]">Open personal settings <ArrowRight size={13} /></Link>
+      </div>
     </div>
   );
+}
+
+function SecuritySection({ title, description, children }: { title: string; description: string; children: React.ReactNode }) {
+  return <section className="mt-5 overflow-hidden rounded-xl border border-white/10 bg-white/[0.025]">
+    <div className="border-b border-white/10 px-5 py-4"><h3 className="text-base font-medium text-white">{title}</h3><p className="mt-1 text-xs text-white/80">{description}</p></div>
+    <div className="divide-y divide-white/10">{children}</div>
+  </section>;
+}
+
+function SecurityRow({ icon: Icon, title, description, badge, children }: { icon?: typeof ShieldCheck; title: string; description: string; badge?: string; children: React.ReactNode }) {
+  return <div className="flex items-start gap-4 px-5 py-4">
+    {Icon && <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-white/[0.05] text-[#5ca5fa]"><Icon size={17} /></span>}
+    <div className="min-w-0 flex-1"><div className="flex flex-wrap items-center gap-2"><p className="text-sm font-semibold text-white">{title}</p>{badge && <span className="rounded-md bg-[#428ce5]/15 px-2 py-0.5 text-[10px] font-medium text-[#b8d9ff]">{badge}</span>}</div><p className="mt-1 text-xs leading-5 text-white/80">{description}</p></div>
+    <div className="shrink-0 pt-0.5">{children}</div>
+  </div>;
 }
 
 type AuditStatus = "assigned" | "solved" | "unresolved";
@@ -3076,25 +3144,50 @@ function AuditLogsSettingsPage({ view = "all" }: { view?: "all" | AuditStatus })
 
   return (
     <div className="mx-auto w-full max-w-[1120px] px-7 pb-16 pt-9 text-[#11120f] sm:px-9 lg:px-10">
-      <div className="flex flex-wrap items-start justify-between gap-5"><div><p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Support operations</p><h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em]">Audit logs</h2><p className="mt-2 max-w-2xl text-[14px] leading-6 text-[#667069]">Track customer problems from first report to assignment and resolution.</p></div><button type="button" className="flex h-11 items-center gap-2 rounded-full border border-[#CBD7DC] bg-white px-5 text-[12px] font-semibold hover:border-[#11120f]"><Download size={15} /> Export logs</button></div>
+      <div className="flex flex-wrap items-start justify-between gap-5"><div><p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Support operations</p><h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em] text-white/90">Audit logs</h2><p className="mt-2 max-w-2xl text-[14px] leading-6 text-[#667069]">Track customer problems from first report to assignment and resolution.</p></div><button type="button" className="flex h-11 items-center gap-2 rounded-full border border-[#CBD7DC] bg-white px-5 text-[12px] font-semibold hover:border-[#11120f]"><Download size={15} /> Export logs</button></div>
 
-      <div className="mt-7 grid grid-cols-3 gap-3">
-        <Link href="/dashboard/settings/audit-logs/assigned" className="flex items-center gap-3 rounded-2xl border border-[#DDE4E8] p-4 text-left hover:bg-[#FAFBFB]"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#EEF3FF] text-[#4268A8]"><UserCheck size={18} /></span><span><span className="block text-[20px] font-semibold">{counts.assigned}</span><span className="text-[11px] text-[#667069]">Assigned</span></span></Link>
-        <Link href="/dashboard/settings/audit-logs/solved" className="flex items-center gap-3 rounded-2xl border border-[#DDE4E8] p-4 text-left hover:bg-[#FAFBFB]"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#EEF8F2] text-[#34845C]"><CheckCircle2 size={18} /></span><span><span className="block text-[20px] font-semibold">{counts.solved}</span><span className="text-[11px] text-[#667069]">Solved</span></span></Link>
-        <Link href="/dashboard/settings/audit-logs/unresolved" className="flex items-center gap-3 rounded-2xl border border-[#DDE4E8] p-4 text-left hover:bg-[#FAFBFB]"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FFF1F1] text-[#B24752]"><CircleAlert size={18} /></span><span><span className="block text-[20px] font-semibold">{counts.unresolved}</span><span className="text-[11px] text-[#667069]">Unresolved</span></span></Link>
+      <div className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <Link href="/dashboard/settings/audit-logs/assigned" className="flex items-center gap-3 rounded-2xl border border-[#DDE4E8] bg-white p-4 text-left hover:bg-[#FAFBFB]"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#EEF3FF] text-[#4268A8]"><UserCheck size={18} /></span><span><span className="block text-[20px] font-semibold">{counts.assigned}</span><span className="text-[11px] text-[#667069]">Assigned</span></span></Link>
+        <Link href="/dashboard/settings/audit-logs/solved" className="flex items-center gap-3 rounded-2xl border border-[#DDE4E8] bg-white p-4 text-left hover:bg-[#FAFBFB]"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#EEF8F2] text-[#34845C]"><CheckCircle2 size={18} /></span><span><span className="block text-[20px] font-semibold">{counts.solved}</span><span className="text-[11px] text-[#667069]">Solved</span></span></Link>
+        <Link href="/dashboard/settings/audit-logs/unresolved" className="flex items-center gap-3 rounded-2xl border border-[#DDE4E8] bg-white p-4 text-left hover:bg-[#FAFBFB]"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#FFF1F1] text-[#B24752]"><CircleAlert size={18} /></span><span><span className="block text-[20px] font-semibold">{counts.unresolved}</span><span className="text-[11px] text-[#667069]">Unresolved</span></span></Link>
       </div>
 
       <div className="mt-6 overflow-hidden rounded-[24px] border border-[#DDE4E8] bg-white">
-        <div className="flex flex-wrap items-center gap-3 border-b border-[#E5E9EB] px-5 py-4">
-          <div className="flex gap-1" role="navigation" aria-label="Audit log views">{([['all', 'All activity'], ['assigned', 'Assigned'], ['solved', 'Solved'], ['unresolved', 'Unresolved']] as const).map(([id, label]) => <Link key={id} href={id === "all" ? "/dashboard/settings/audit-logs" : `/dashboard/settings/audit-logs/${id}`} aria-current={filter === id ? "page" : undefined} className={`rounded-lg px-3 py-2 text-[11px] font-semibold transition ${filter === id ? "bg-[#11120f] text-white" : "text-[#667069] hover:bg-[#F0F2F3] hover:text-black"}`}>{label}</Link>)}</div>
-          <label className="ml-auto flex h-9 min-w-[230px] items-center gap-2 rounded-xl border border-[#D9DEE1] bg-[#FAFBFB] px-3 focus-within:border-[#9AA5AB]"><Search size={15} className="text-[#7B858A]" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search user or problem" className="min-w-0 flex-1 bg-transparent text-[12px] outline-none placeholder:text-[#92999D]" /></label>
+        <div className="flex flex-col gap-3 border-b border-[#E5E9EB] px-5 py-4 sm:flex-row sm:items-center sm:flex-wrap">
+          <div className="flex gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" role="navigation" aria-label="Audit log views">{([['all', 'All activity'], ['assigned', 'Assigned'], ['solved', 'Solved'], ['unresolved', 'Unresolved']] as const).map(([id, label]) => <Link key={id} href={id === "all" ? "/dashboard/settings/audit-logs" : `/dashboard/settings/audit-logs/${id}`} aria-current={filter === id ? "page" : undefined} className={`shrink-0 whitespace-nowrap rounded-lg px-3 py-2 text-[11px] font-semibold transition ${filter === id ? "bg-[#11120f] text-white" : "text-[#667069] hover:bg-[#F0F2F3] hover:text-black"}`}>{label}</Link>)}</div>
+          <label className="flex h-9 w-full items-center gap-2 rounded-xl border border-[#D9DEE1] bg-[#FAFBFB] px-3 focus-within:border-[#9AA5AB] sm:ml-auto sm:w-auto sm:min-w-[230px]"><Search size={15} className="text-[#7B858A]" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search user or problem" className="min-w-0 flex-1 bg-transparent text-[12px] outline-none placeholder:text-[#92999D]" /></label>
         </div>
 
-        <div className="overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <div className="min-w-[850px]">
-            <div className="grid grid-cols-[110px_minmax(170px,0.8fr)_minmax(270px,1.5fr)_110px_130px_90px_40px] gap-3 bg-[#FAFBFB] px-5 py-3 text-[9px] font-bold uppercase tracking-[0.1em] text-[#818B90]"><span>Ticket</span><span>Customer</span><span>Problem</span><span>Status</span><span>Assigned to</span><span>Priority</span><span /></div>
-            {visibleItems.map((item) => <div key={item.id} className="grid grid-cols-[110px_minmax(170px,0.8fr)_minmax(270px,1.5fr)_110px_130px_90px_40px] items-center gap-3 border-t border-[#EDF0F1] px-5 py-4 transition hover:bg-[#FCFCFB]"><div><p className="text-[11px] font-semibold">{item.id}</p><p className="mt-1 text-[10px] text-[#8A9397]">{item.updated}</p></div><div className="min-w-0"><p className="truncate text-[12px] font-semibold">{item.customer}</p><p className="mt-1 truncate text-[10px] text-[#7A858B]">{item.email}</p></div><p className="truncate text-[12px] text-[#3E484D]">{item.problem}</p><span className={`w-fit rounded-full px-2.5 py-1 text-[10px] font-semibold capitalize ${statusStyle[item.status]}`}>{item.status}</span><span className="truncate text-[11px] font-medium text-[#4F5A60]">{item.assignee}</span><span className={`text-[11px] font-semibold ${priorityStyle[item.priority]}`}>{item.priority}</span><button type="button" aria-label={`Actions for ${item.id}`} className="flex h-8 w-8 items-center justify-center rounded-lg text-[#7A858B] hover:bg-[#F0F2F3] hover:text-black"><MoreHorizontal size={17} /></button></div>)}
-            {visibleItems.length === 0 && <div className="flex flex-col items-center px-6 py-14 text-center"><Search size={22} className="text-[#9AA3A7]" /><p className="mt-3 text-[13px] font-semibold">No matching activity</p><p className="mt-1 text-[11px] text-[#7A858B]">Try a different search or status filter.</p></div>}
+        {/* A 7-column grid has no honest way to fit a phone screen — below md
+            this becomes a stacked card list instead. */}
+        <div className="md:hidden">
+          {visibleItems.map((item) => (
+            <div key={item.id} className="flex flex-col gap-2 border-t border-[#EDF0F1] px-4 py-3.5 transition first:border-t-0 hover:bg-[#FCFCFB]">
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="truncate text-[12px] font-semibold">{item.customer}</p>
+                  <p className="mt-0.5 truncate text-[10.5px] text-[#7A858B]">{item.email}</p>
+                </div>
+                <button type="button" aria-label={`Actions for ${item.id}`} className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[#7A858B] hover:bg-[#F0F2F3] hover:text-black"><MoreHorizontal size={17} /></button>
+              </div>
+              <p className="text-[12px] text-[#3E484D]">{item.problem}</p>
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[11px]">
+                <span className={`w-fit rounded-full px-2.5 py-1 text-[10px] font-semibold capitalize ${statusStyle[item.status]}`}>{item.status}</span>
+                <span className={`font-semibold ${priorityStyle[item.priority]}`}>{item.priority} priority</span>
+                <span className="text-[#4F5A60]">{item.assignee}</span>
+                <span className="ml-auto text-[10px] text-[#8A9397]">{item.id} · {item.updated}</span>
+              </div>
+            </div>
+          ))}
+          {visibleItems.length === 0 && <div className="flex flex-col items-center px-6 py-14 text-center"><Search size={22} className="text-[#9AA3A7]" /><p className="mt-3 text-[13px] font-semibold">No matching activity</p><p className="mt-1 text-[11px] text-[#7A858B]">Try a different search or status filter.</p></div>}
+        </div>
+        <div className="hidden md:block">
+          <div className="overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="min-w-[850px]">
+              <div className="grid grid-cols-[110px_minmax(170px,0.8fr)_minmax(270px,1.5fr)_110px_130px_90px_40px] gap-3 bg-[#FAFBFB] px-5 py-3 text-[9px] font-bold uppercase tracking-[0.1em] text-[#818B90]"><span>Ticket</span><span>Customer</span><span>Problem</span><span>Status</span><span>Assigned to</span><span>Priority</span><span /></div>
+              {visibleItems.map((item) => <div key={item.id} className="grid grid-cols-[110px_minmax(170px,0.8fr)_minmax(270px,1.5fr)_110px_130px_90px_40px] items-center gap-3 border-t border-[#EDF0F1] px-5 py-4 transition hover:bg-[#FCFCFB]"><div><p className="text-[11px] font-semibold">{item.id}</p><p className="mt-1 text-[10px] text-[#8A9397]">{item.updated}</p></div><div className="min-w-0"><p className="truncate text-[12px] font-semibold">{item.customer}</p><p className="mt-1 truncate text-[10px] text-[#7A858B]">{item.email}</p></div><p className="truncate text-[12px] text-[#3E484D]">{item.problem}</p><span className={`w-fit rounded-full px-2.5 py-1 text-[10px] font-semibold capitalize ${statusStyle[item.status]}`}>{item.status}</span><span className="truncate text-[11px] font-medium text-[#4F5A60]">{item.assignee}</span><span className={`text-[11px] font-semibold ${priorityStyle[item.priority]}`}>{item.priority}</span><button type="button" aria-label={`Actions for ${item.id}`} className="flex h-8 w-8 items-center justify-center rounded-lg text-[#7A858B] hover:bg-[#F0F2F3] hover:text-black"><MoreHorizontal size={17} /></button></div>)}
+              {visibleItems.length === 0 && <div className="flex flex-col items-center px-6 py-14 text-center"><Search size={22} className="text-[#9AA3A7]" /><p className="mt-3 text-[13px] font-semibold">No matching activity</p><p className="mt-1 text-[11px] text-[#7A858B]">Try a different search or status filter.</p></div>}
+            </div>
           </div>
         </div>
         <div className="flex items-center justify-between border-t border-[#E5E9EB] px-5 py-3 text-[11px] text-[#7A858B]"><span>Showing {visibleItems.length} of {auditItems.length} records</span><span>Updated just now</span></div>
@@ -3227,35 +3320,35 @@ function AvailabilitySettingsPage() {
   const unscheduledCount = members.length - coverage.scheduledCount;
 
   return (
-    <div className="dashboard-availability-page mx-auto w-full max-w-[1120px] px-7 pb-16 pt-9 text-[#11120f] sm:px-9 lg:px-10">
-      <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Support operations</p>
-      <h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em]">Availability</h2>
-      <p className="mt-2 max-w-2xl text-[15px] leading-6 text-[#667069]">
+    <div className="dashboard-availability-page mx-auto w-full max-w-[1120px] px-7 pb-16 pt-8 text-white sm:px-9 lg:px-10">
+      <p className="text-xs font-normal uppercase tracking-[0.16em] text-white/80">Support operations</p>
+      <h2 className="mt-2 text-3xl font-normal tracking-[-0.03em] text-white">Availability</h2>
+      <p className="mt-2 max-w-2xl text-sm leading-6 text-white/80">
         Set the hours you&apos;re reachable in your own timezone. Everyone&apos;s hours are added together below to show
         how much of the week the team actually covers — and where nobody is on.
       </p>
 
       {loading ? (
-        <div className="mt-6 flex min-h-[220px] items-center justify-center text-[13px] text-[#7B858A]">
+        <div className="mt-6 flex min-h-[220px] items-center justify-center text-[13px] text-white/80">
           <LoaderCircle size={15} className="mr-2 animate-spin" /> Loading availability
         </div>
       ) : (
         <>
-          <div className="mt-6 overflow-hidden rounded-[24px] border border-black/20 bg-white">
-            <div className="flex flex-wrap items-center gap-3 border-b border-black/20 px-5 py-4">
-              <Clock3 size={16} className="text-[#55585c]" />
-              <h3 className="text-[14px] font-semibold">Your hours</h3>
-              <span className="ml-auto text-[12px] text-[#7A858B]">{myWeeklyHours.toFixed(myWeeklyHours % 1 ? 1 : 0)}h a week</span>
+          <div className="mt-6 overflow-hidden rounded-xl border border-white/10 bg-white/[0.025]">
+            <div className="flex flex-wrap items-center gap-3 border-b border-white/10 px-5 py-4">
+              <Clock3 size={16} className="text-white/80" />
+              <h3 className="text-[14px] font-semibold text-white">Your hours</h3>
+              <span className="ml-auto text-[12px] text-white/80">{myWeeklyHours.toFixed(myWeeklyHours % 1 ? 1 : 0)}h a week</span>
             </div>
 
-            <div className="flex flex-wrap items-center gap-3 border-b border-black/20 px-5 py-4">
-              <Globe2 size={15} className="text-[#7A858B]" />
-              <label htmlFor="availability-timezone" className="text-[13px] font-medium">Timezone</label>
+            <div className="flex flex-wrap items-center gap-3 border-b border-white/10 px-5 py-4">
+              <Globe2 size={15} className="text-white/80" />
+              <label htmlFor="availability-timezone" className="text-[13px] font-medium text-white">Timezone</label>
               <select
                 id="availability-timezone"
                 value={schedule?.timezone ?? "UTC"}
                 onChange={(event) => { setSchedule((current) => (current ? { ...current, timezone: event.target.value } : current)); setNotice(null); }}
-                className="ml-auto h-9 min-w-[240px] rounded-lg border border-[#D8DDE1] bg-white px-3 text-[13px] outline-none"
+                className="ml-auto h-9 min-w-[240px] rounded-lg border border-white/10 bg-white/[0.05] px-3 text-[13px] text-white outline-none focus:border-[#428ce5]/60"
               >
                 {zones.map((zone) => (
                   <option key={zone} value={zone}>{zone}</option>
@@ -3268,18 +3361,18 @@ function AvailabilitySettingsPage() {
                 const day = schedule?.days[key];
                 if (!day) return null;
                 return (
-                  <div key={key} className="flex flex-wrap items-center gap-3 border-b border-black/20 px-5 py-3 last:border-b-0">
+                  <div key={key} className="flex flex-wrap items-center gap-3 border-b border-white/10 px-5 py-3 last:border-b-0">
                     <button
                       type="button"
                       role="switch"
                       aria-checked={day.enabled}
                       aria-label={`Available on ${DAY_LABELS[key]}`}
                       onClick={() => updateDay(key, { enabled: !day.enabled })}
-                      className={`dashboard-availability-toggle relative h-5 w-9 shrink-0 rounded-full transition ${day.enabled ? "bg-[#32a880]" : "bg-[#CFD5D8]"}`}
+                      className={`dashboard-availability-toggle relative h-5 w-9 shrink-0 rounded-full transition ${day.enabled ? "bg-[#428ce5]" : "bg-white/20"}`}
                     >
                       <span className={`absolute top-0.5 h-4 w-4 rounded-full bg-white transition-all ${day.enabled ? "left-[18px]" : "left-0.5"}`} />
                     </button>
-                    <span className="w-[86px] shrink-0 text-[14px] font-medium">{DAY_LABELS[key]}</span>
+                    <span className="w-[86px] shrink-0 text-[14px] font-medium text-white">{DAY_LABELS[key]}</span>
 
                     {day.enabled ? (
                       <div className="flex flex-wrap items-center gap-2">
@@ -3287,28 +3380,28 @@ function AvailabilitySettingsPage() {
                           type="time"
                           value={day.start}
                           onChange={(event) => updateDay(key, { start: event.target.value })}
-                          className="h-9 rounded-lg border border-[#D8DDE1] bg-white px-2.5 text-[13px] outline-none"
+                          className="h-9 rounded-lg border border-white/10 bg-white/[0.05] px-2.5 text-[13px] text-white outline-none focus:border-[#428ce5]/60"
                         />
-                        <span className="text-[13px] text-[#7A858B]">to</span>
+                        <span className="text-[13px] text-white/80">to</span>
                         <input
                           type="time"
                           value={day.end}
                           onChange={(event) => updateDay(key, { end: event.target.value })}
-                          className="h-9 rounded-lg border border-[#D8DDE1] bg-white px-2.5 text-[13px] outline-none"
+                          className="h-9 rounded-lg border border-white/10 bg-white/[0.05] px-2.5 text-[13px] text-white outline-none focus:border-[#428ce5]/60"
                         />
                       </div>
                     ) : (
-                      <span className="text-[13px] text-[#8A9397]">Unavailable</span>
+                      <span className="text-[13px] text-white/80">Unavailable</span>
                     )}
 
-                    <span className="ml-auto text-[12px] text-[#7A858B]">{describeWindow(day)}</span>
+                    <span className="ml-auto text-[12px] text-white/80">{describeWindow(day)}</span>
                   </div>
                 );
               })}
             </div>
 
-            <div className="flex flex-wrap items-center gap-3 border-t border-black/20 px-5 py-4">
-              <p className="dashboard-settings-subdesc text-[12px] leading-4 text-[#858585]">
+            <div className="flex flex-wrap items-center gap-3 border-t border-white/10 px-5 py-4">
+              <p className="dashboard-settings-subdesc text-[12px] leading-4 text-white/80">
                 An end time earlier than the start means an overnight shift — 20:00 to 05:00 runs into the next morning.
               </p>
               {notice && (
@@ -3318,29 +3411,29 @@ function AvailabilitySettingsPage() {
                 type="button"
                 onClick={() => void save()}
                 disabled={saving}
-                className="ml-auto flex h-9 shrink-0 items-center gap-2 rounded-lg bg-[#202225] px-4 text-[13px] font-semibold text-white transition hover:bg-black disabled:opacity-50"
+                className="ml-auto flex h-9 shrink-0 items-center gap-2 rounded-lg bg-[#428ce5] px-4 text-[13px] font-semibold text-white transition hover:bg-[#347dce] disabled:opacity-50"
               >
                 {saving ? <LoaderCircle size={14} className="animate-spin" /> : <Check size={14} />} Save hours
               </button>
             </div>
           </div>
 
-          <div className="mt-6 overflow-hidden rounded-[24px] border border-black/20 bg-white">
-            <div className="flex flex-wrap items-center gap-3 border-b border-black/20 px-5 py-4">
-              <UsersRound size={16} className="text-[#55585c]" />
-              <h3 className="text-[14px] font-semibold">Team coverage</h3>
-              <span className="ml-auto text-[12px] text-[#7A858B]">Shown in {viewerTimezone}</span>
+          <div className="mt-6 overflow-hidden rounded-xl border border-white/10 bg-white/[0.025]">
+            <div className="flex flex-wrap items-center gap-3 border-b border-white/10 px-5 py-4">
+              <UsersRound size={16} className="text-white/80" />
+              <h3 className="text-[14px] font-semibold text-white">Team coverage</h3>
+              <span className="ml-auto text-[12px] text-white/80">Shown in {viewerTimezone}</span>
             </div>
 
-            <div className="grid gap-px border-b border-black/20 bg-[#E5E8EA] sm:grid-cols-3">
-              <div className="bg-white px-5 py-4">
-                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#7A858B]">Covered</p>
+            <div className="grid gap-px border-b border-white/10 bg-white/10 sm:grid-cols-3">
+              <div className="bg-[#292a2b] px-5 py-4">
+                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/80">Covered</p>
                 <p className="mt-1.5 text-[26px] font-medium tracking-[-0.03em]">
-                  {coveredHours.toFixed(coveredHours % 1 ? 1 : 0)}<span className="text-[14px] text-[#7A858B]"> of 168h</span>
+                  {coveredHours.toFixed(coveredHours % 1 ? 1 : 0)}<span className="text-[14px] text-white/80"> of 168h</span>
                 </p>
               </div>
-              <div className="bg-white px-5 py-4">
-                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#7A858B]">Of the week</p>
+              <div className="bg-[#292a2b] px-5 py-4">
+                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/80">Of the week</p>
                 <p className="mt-1.5 flex items-center gap-2 text-[26px] font-medium tracking-[-0.03em]">
                   {coverage.coveragePercent.toFixed(coverage.coveragePercent % 1 ? 1 : 0)}%
                   {coverage.is24x7 && (
@@ -3348,11 +3441,11 @@ function AvailabilitySettingsPage() {
                   )}
                 </p>
               </div>
-              <div className="bg-white px-5 py-4">
-                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#7A858B]">On duty now</p>
+              <div className="bg-[#292a2b] px-5 py-4">
+                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/80">On duty now</p>
                 <p className="mt-1.5 text-[26px] font-medium tracking-[-0.03em]">
                   {coverage.onDutyNow.length}
-                  <span className="text-[14px] text-[#7A858B]"> scheduled · {coverage.freeNow.length} free</span>
+                  <span className="text-[14px] text-white/80"> scheduled · {coverage.freeNow.length} free</span>
                 </p>
               </div>
             </div>
@@ -3361,13 +3454,13 @@ function AvailabilitySettingsPage() {
               <div className="flex flex-col items-center px-6 py-14 text-center">
                 <CalendarDays size={22} className="text-[#9AA3A7]" />
                 <p className="mt-3 text-[14px] font-semibold">No hours set yet</p>
-                <p className="mt-1 max-w-sm text-[12px] leading-5 text-[#7A858B]">
+                <p className="mt-1 max-w-sm text-[12px] leading-5 text-white/80">
                   Once you and your teammates save working hours, the week below fills in with the times someone is on.
                 </p>
               </div>
             ) : (
               <div className="px-5 py-4">
-                <div className="flex items-center gap-3 pb-1.5 pl-[52px] text-[10.5px] text-[#8A9397]">
+                <div className="flex items-center gap-3 pb-1.5 pl-[52px] text-[10.5px] text-white/80">
                   {["00:00", "06:00", "12:00", "18:00"].map((label) => (
                     <span key={label} className="flex-1">{label}</span>
                   ))}
@@ -3379,12 +3472,12 @@ function AvailabilitySettingsPage() {
                   const dayHours = coverage.hoursByDay[key];
                   return (
                     <div key={key} className="flex items-center gap-3 py-[3px]">
-                      <span className="w-[40px] shrink-0 text-[12px] font-medium text-[#5F686D]">{DAY_SHORT[key]}</span>
+                      <span className="w-[40px] shrink-0 text-[12px] font-medium text-white/80">{DAY_SHORT[key]}</span>
                       <div className="dashboard-availability-track relative h-6 flex-1 overflow-hidden rounded-md bg-[#EFF2F3]">
                         {segments.map((segment, index) => (
                           <span
                             key={index}
-                            className="absolute inset-y-0 bg-[#32a880]"
+                            className="absolute inset-y-0 bg-[#428ce5]"
                             style={{
                               left: `${(segment.start / MINUTES_PER_DAY) * 100}%`,
                               width: `${((segment.end - segment.start) / MINUTES_PER_DAY) * 100}%`,
@@ -3399,7 +3492,7 @@ function AvailabilitySettingsPage() {
                           />
                         )}
                       </div>
-                      <span className="w-[42px] shrink-0 text-right text-[11.5px] text-[#7A858B]">{formatHours(dayHours * 60)}</span>
+                      <span className="w-[42px] shrink-0 text-right text-[11.5px] text-white/80">{formatHours(dayHours * 60)}</span>
                     </div>
                   );
                 })}
@@ -3412,7 +3505,7 @@ function AvailabilitySettingsPage() {
                     <div className="mt-2 flex flex-wrap gap-1.5">
                       {DAY_KEYS.flatMap((key) =>
                         coverage.gapsByDay[key].map((gap, index) => (
-                          <span key={`${key}-${index}`} className="rounded-full bg-[#F1F3F4] px-2.5 py-1 text-[11.5px] text-[#5F686D]">
+                          <span key={`${key}-${index}`} className="rounded-full bg-white/10 px-2.5 py-1 text-[11.5px] text-white/80">
                             {DAY_SHORT[key]} {formatTime(gap.start)}–{gap.end === MINUTES_PER_DAY ? "24:00" : formatTime(gap.end)}
                           </span>
                         )),
@@ -3423,17 +3516,17 @@ function AvailabilitySettingsPage() {
               </div>
             )}
 
-            <div className="border-t border-black/20">
+            <div className="border-t border-white/10">
               {members.map((member) => {
                 const chip = statusChip(member);
                 const onDuty = coverage.onDutyNow.some((entry) => entry.id === member.id);
                 const weeklyHours = member.availability ? ownWeeklyMinutes(member.availability, now) / 60 : 0;
                 return (
-                  <div key={member.id} className="flex flex-wrap items-center gap-3 border-b border-black/20 px-5 py-3.5 last:border-b-0">
-                    <span className={`h-2 w-2 shrink-0 rounded-full ${onDuty ? "bg-[#32a880]" : "bg-[#9aa1a6]"}`} />
+                  <div key={member.id} className="flex flex-wrap items-center gap-3 border-b border-white/10 px-5 py-3.5 last:border-b-0">
+                    <span className={`h-2 w-2 shrink-0 rounded-full ${onDuty ? "bg-[#428ce5]" : "bg-white/30"}`} />
                     <div className="min-w-0 flex-1">
                       <p className="dashboard-presence-name truncate text-[14.5px] font-semibold">{member.name || member.email}</p>
-                      <p className="mt-0.5 truncate text-[11.5px] text-[#8A9397]">
+                      <p className="mt-0.5 truncate text-[11.5px] text-white/80">
                         {member.availability
                           ? `${weeklyHours.toFixed(weeklyHours % 1 ? 1 : 0)}h a week · ${member.availability.timezone}`
                           : "No hours set"}
@@ -3449,7 +3542,7 @@ function AvailabilitySettingsPage() {
             </div>
 
             {unscheduledCount > 0 && (
-              <p className="dashboard-settings-subdesc border-t border-black/20 px-5 py-3 text-[12px] leading-4 text-[#858585]">
+              <p className="dashboard-settings-subdesc border-t border-white/10 px-5 py-3 text-[12px] leading-4 text-white/80">
                 {unscheduledCount} teammate{unscheduledCount === 1 ? "" : "s"} haven&apos;t set hours yet, so they count as covering nothing above.
               </p>
             )}
@@ -3484,7 +3577,7 @@ function PresenceLogSettingsPage() {
   return (
     <div className="mx-auto w-full max-w-[1120px] px-7 pb-16 pt-9 text-[#11120f] sm:px-9 lg:px-10">
       <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Support operations</p>
-      <h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em]">Presence log</h2>
+      <h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em] text-white/90">Presence log</h2>
       <p className="mt-2 max-w-2xl text-[14px] leading-6 text-[#667069]">Every time a teammate comes online or goes offline, driven by their actual connection — not a status they set themselves.</p>
 
       {myRole !== null && !canView ? (
@@ -3648,7 +3741,7 @@ function TagManagerSettingsPage() {
 
   return (
     <div className="mx-auto w-full max-w-[1120px] px-7 pb-14 pt-8 text-[#17181a] sm:px-9 lg:px-10">
-      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[#E5E8EA] pb-7"><div><p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Website data</p><h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em]">Website tags</h2><p className="mt-2 max-w-xl text-[14px] leading-6 text-[#667069]">Install and manage the secure connection between Elpino and your websites.</p></div><button type="button" onClick={() => setDialog("create")} className="flex h-9 shrink-0 items-center gap-2 rounded-lg bg-[#202225] px-4 text-[12px] font-semibold text-white transition hover:bg-black"><Plus size={14} /> New tag</button></div>
+      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[#E5E8EA] pb-7"><div><p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Website data</p><h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em] text-white/90">Website tags</h2><p className="mt-2 max-w-xl text-[14px] leading-6 text-[#667069]">Install and manage the secure connection between Elpino and your websites.</p></div><button type="button" onClick={() => setDialog("create")} className="flex h-9 shrink-0 items-center gap-2 rounded-lg bg-[#202225] px-4 text-[12px] font-semibold text-white transition hover:bg-black"><Plus size={14} /> New tag</button></div>
 
       <div className="dashboard-tag-table-surface mt-5 bg-transparent">
         {tagError && !dialog && <div role="alert" className="mb-4 flex items-center justify-between rounded-lg bg-[#FFF2F2] px-3.5 py-2.5 text-[11px] font-medium text-[#A64A53]"><span>{tagError}</span><button type="button" onClick={() => setTagError(null)} aria-label="Dismiss error"><X size={14} /></button></div>}
@@ -3905,6 +3998,7 @@ function Toggle({ checked, onChange, label }: { checked: boolean; onChange: () =
 export function SettingsClient({ user, page = "General", auditView = "all" }: { user: SettingsUser; page?: string; auditView?: "all" | AuditStatus }) {
   const router = useRouter();
   const currentPage = page;
+  const { open: sidebarOpen, setOpen: setSidebarOpen } = useMobileDrawer();
   const [signingOut, setSigningOut] = useState(false);
   const [previewPanel, setPreviewPanel] = useState<HTMLDivElement | null>(null);
   const showPreviewPanel = currentPage === "Chatbot Interface";
@@ -3920,8 +4014,19 @@ export function SettingsClient({ user, page = "General", auditView = "all" }: { 
   }
 
   return (
-    <div className="flex h-full min-h-0 overflow-hidden bg-transparent text-[#17181a]">
-      <div className="dashboard-secondary-sidebar my-0.5 ml-0.5 flex h-[calc(100%_-_4px)] min-h-0 w-[272px] shrink-0 flex-col overflow-hidden rounded-xl border border-black/20 bg-[#fbfbfb] shadow-[0_1px_2px_rgba(15,23,42,0.04)] max-lg:w-[230px] max-md:hidden">
+    <div id="dashboard-settings-page" className="flex h-full min-h-0 overflow-hidden bg-[#262626] text-white">
+      {/* Kept mounted (not `hidden`) below md so the slide has something to
+          animate — see SpacePanel.tsx for the same trick and why. */}
+      <div
+        className={`fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 md:hidden ${sidebarOpen ? "opacity-100" : "pointer-events-none opacity-0"}`}
+        onClick={() => setSidebarOpen(false)}
+      />
+      <div
+        id="dashboard-settings-sidebar"
+        className={`dashboard-secondary-sidebar fixed inset-y-0 left-0 z-50 flex h-full min-h-0 w-72 shrink-0 flex-col overflow-hidden border-r border-white/10 bg-[#262626] shadow-[8px_0_30px_rgba(0,0,0,0.35)] transition-transform duration-300 ease-in-out md:static md:z-auto md:w-[230px] md:translate-x-0 md:shadow-none lg:w-[272px] ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
         <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-4 pt-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <p className="mb-2 mt-1 px-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#74787c]">Account</p>
           <nav className="space-y-0.5">
@@ -3960,7 +4065,7 @@ export function SettingsClient({ user, page = "General", auditView = "all" }: { 
         </div>
       </div>
 
-      <section className="dashboard-page-surface dashboard-settings-surface relative my-0.5 ml-1 mr-0.5 h-[calc(100%_-_4px)] min-w-0 flex-1 overflow-y-auto rounded-xl border border-black/20 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)] [scrollbar-width:none] max-md:ml-0.5 [&::-webkit-scrollbar]:hidden">
+      <section className="dashboard-page-surface dashboard-settings-surface relative h-full min-w-0 flex-1 overflow-y-auto bg-[#262626] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {currentPage === "General" ? (
           <GeneralSettingsPage user={user} />
         ) : currentPage === "Chatbot Interface" ? (
@@ -3995,7 +4100,7 @@ export function SettingsClient({ user, page = "General", auditView = "all" }: { 
       {showPreviewPanel && (
         <div
           ref={setPreviewPanel}
-          className="dashboard-widget-preview-panel my-0.5 mr-0.5 flex h-[calc(100%_-_4px)] min-h-0 w-[380px] shrink-0 flex-col overflow-hidden rounded-xl border border-black/20 bg-[#fbfbfb] shadow-[0_1px_2px_rgba(15,23,42,0.04)] max-xl:hidden"
+          className="dashboard-widget-preview-panel flex h-full min-h-0 w-[380px] shrink-0 flex-col overflow-hidden border-l border-white/10 bg-[#262626] max-xl:hidden"
         />
       )}
     </div>

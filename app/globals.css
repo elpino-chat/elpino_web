@@ -936,102 +936,6 @@ body {
 .onb-enter-3 { animation-delay: 210ms; }
 .onb-enter-4 { animation-delay: 280ms; }
 
-/* Onboarding shares the light signup surface while keeping its existing
-   multi-step interaction model and component markup intact. */
-.onboarding-light {
-  background: linear-gradient(135deg, #ffffff 0%, #f8faff 48%, #dfe9ff 100%) !important;
-}
-.onboarding-light.onboarding-scene {
-  background-image:
-    radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.98) 0, rgba(255, 255, 255, 0) 38%),
-    radial-gradient(circle at 86% 82%, rgba(20, 71, 255, 0.2) 0, rgba(20, 71, 255, 0) 42%),
-    linear-gradient(135deg, #ffffff 0%, #f3f7ff 48%, #dce7ff 100%) !important;
-  background-attachment: fixed;
-}
-.onboarding-light [class*="bg-black"] {
-  background-color: #ffffff !important;
-}
-.onboarding-light [class*="text-white"] {
-  color: #222733 !important;
-}
-.onboarding-light [class*="text-white/"] {
-  color: #596273 !important;
-}
-.onboarding-light [class*="border-white"] {
-  border-color: rgba(34, 39, 51, 0.18) !important;
-}
-.onboarding-light [class*="bg-white/[0.04]"],
-.onboarding-light [class*="bg-white/5"],
-.onboarding-light [class*="bg-white/10"],
-.onboarding-light [class*="bg-white/[0.06]"] {
-  background-color: #f8f9f9 !important;
-}
-.onboarding-light [class*="text-[#D96420]"],
-.onboarding-light [class*="text-[#C95618]"] {
-  color: #1447ff !important;
-}
-.onboarding-light [class*="bg-emerald-500"] {
-  background-color: #1447ff !important;
-}
-.onboarding-light [class*="text-emerald-400"] {
-  color: #1447ff !important;
-}
-.onboarding-light h1 {
-  color: #30343d !important;
-  font-weight: 400 !important;
-  letter-spacing: -0.045em;
-}
-.onboarding-light [class*="rounded-2xl"][class*="border"] {
-  border-color: #e1e3e7 !important;
-  background-color: #ffffff !important;
-  box-shadow: 0 1px 2px rgba(20, 25, 35, 0.02);
-}
-.onboarding-light [class*="rounded-xl"][class*="border"] {
-  border-color: #e1e3e7 !important;
-}
-
-/* Keep onboarding controls visually consistent with the signup flow. */
-.onboarding-light input[class*="h-[52px]"],
-.onboarding-light select[class*="h-[52px]"],
-.onboarding-light div[class*="h-[52px]"][class*="items-center"] {
-  height: 3.25rem !important;
-  border-radius: 0.5rem !important;
-  border-color: rgba(0, 0, 0, 0.2) !important;
-  background: #f8f9f9 !important;
-  padding-left: 0.75rem !important;
-  padding-right: 0.75rem !important;
-  font-size: 14px !important;
-}
-.onboarding-light input:focus,
-.onboarding-light select:focus,
-.onboarding-light textarea:focus,
-.onboarding-light div[class*="focus-within"]:focus-within {
-  border-color: #1447ff !important;
-  box-shadow: 0 0 0 1px #1447ff;
-}
-.onboarding-light button[class*="h-[52px]"][class*="bg-white"],
-.onboarding-light button[class*="h-[44px]"][class*="bg-white"] {
-  height: 2.5rem !important;
-  border-radius: 0.5rem !important;
-  background: #1242f1 !important;
-  color: #ffffff !important;
-  font-size: 14px !important;
-  font-weight: 400 !important;
-}
-.onboarding-light button[class*="h-[52px]"][class*="bg-white"]:hover,
-.onboarding-light button[class*="h-[44px]"][class*="bg-white"]:hover {
-  background: #0d35cc !important;
-}
-.onboarding-light button[class*="h-[52px]"][class*="bg-white"]:disabled,
-.onboarding-light button[class*="h-[44px]"][class*="bg-white"]:disabled {
-  background: #1242f1 !important;
-  color: #ffffff !important;
-  opacity: 0.48;
-}
-.onboarding-light .onboarding-spinner {
-  border-color: rgba(255, 255, 255, 0.38) !important;
-  border-top-color: #ffffff !important;
-}
 .onboarding-language > div > button {
   border: 1px solid rgba(0, 0, 0, 0.16);
   border-radius: 9999px;
@@ -1040,36 +944,6 @@ body {
 .onboarding-language > div > button:hover {
   border-color: rgba(0, 0, 0, 0.28);
   background: #ffffff;
-}
-.onboarding-light .onboarding-avatar {
-  color: #ffffff !important;
-}
-.onboarding-light .onboarding-primary:not(:disabled) {
-  color: #ffffff !important;
-}
-.onboarding-light .onb-enter > section:not([class*="max-w"]) {
-  display: flex;
-  flex-direction: column;
-}
-.onboarding-light .onb-enter > section > h1 {
-  margin-top: 0 !important;
-  text-align: left;
-  line-height: 1.08 !important;
-}
-.onboarding-light .onb-enter > section > p:first-child {
-  display: none;
-}
-.onboarding-light .onb-enter > section > h1 + p {
-  margin-left: 0;
-  margin-right: 0;
-  text-align: left;
-}
-.onboarding-light .onb-enter > section > button[class*="mt-8"] {
-  align-self: flex-end;
-  width: auto !important;
-  min-width: 126px;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1136,13 +1010,13 @@ body {
 .dashboard-shell,
 .dashboard-shell > div,
 .dashboard-shell main {
-  background-color: #F3F4F0;
+  background-color: #262626;
 }
 
 [data-dashboard-theme="dark"] .dashboard-shell,
 [data-dashboard-theme="dark"] .dashboard-shell > div,
 [data-dashboard-theme="dark"] .dashboard-shell main {
-  background-color: #121416 !important;
+  background-color: #262626 !important;
   color: rgba(255, 255, 255, 0.9);
 }
 
@@ -1268,6 +1142,14 @@ body {
 
 [data-dashboard-theme="dark"] .dashboard-shell .dashboard-primary-sidebar :is(a, button, h1, h2, h3, p, span, svg) {
   color: var(--dashboard-accent-contrast, rgba(255, 255, 255, 0.92)) !important;
+}
+
+/* Keep the main dashboard rail visually stable. Theme colors are accents for
+   controls and previews; they do not recolor dashboard navigation. */
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-primary-sidebar {
+  background-color: #262626 !important;
+  border-color: transparent !important;
+  color: rgba(255, 255, 255, 0.9) !important;
 }
 
 /* The secondary (per-page nav) sidebar goes plain black with fixed white
@@ -2323,57 +2205,21 @@ body:has([data-dashboard-theme="dark"]) .dashboard-assignment-toast-close:hover 
   color: rgba(255, 255, 255, 0.86) !important;
 }
 
-/* Invite-people dialog (InvitePeopleDialog.tsx): authored light by default
-   like every other themed surface — .dashboard-invite-surface is the actual
-   dialog card and is the one that matters; .dashboard-invite-panel is just
-   its gradient-border wrapper. Previously the dialog surface had no class
-   hook at all and was hardcoded dark unconditionally, so it never actually
-   responded to the dashboard theme. */
-[data-dashboard-theme="dark"] .dashboard-shell .dashboard-invite-surface,
-[data-dashboard-theme="dark"] .dashboard-shell .dashboard-invite-header,
-[data-dashboard-theme="dark"] .dashboard-shell .dashboard-invite-footer {
-  background-color: #17191c !important;
-  border-color: rgba(255, 255, 255, 0.16) !important;
-  color: rgba(255, 255, 255, 0.9) !important;
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-people-page :is(
+  [class*="text-[#687178]"],
+  [class*="text-[#5F686D]"],
+  [class*="text-[#768087]"]
+) {
+  color: rgba(255, 255, 255, 0.8) !important;
 }
 
-[data-dashboard-theme="dark"] .dashboard-shell .dashboard-invite-panel {
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.46) !important;
-}
-
-[data-dashboard-theme="dark"] .dashboard-shell .dashboard-invite-label {
-  color: rgba(255, 255, 255, 0.9) !important;
-}
-
-[data-dashboard-theme="dark"] .dashboard-shell .dashboard-invite-close {
-  color: rgba(255, 255, 255, 0.9) !important;
-}
-
-[data-dashboard-theme="dark"] .dashboard-shell .dashboard-invite-close:hover {
-  background-color: rgba(255, 255, 255, 0.08) !important;
-  color: rgba(255, 255, 255, 0.92) !important;
-}
-
-[data-dashboard-theme="dark"] .dashboard-shell .dashboard-invite-input-shell,
-[data-dashboard-theme="dark"] .dashboard-shell .dashboard-invite-result {
-  background-color: #1d2023 !important;
-  border-color: rgba(255, 255, 255, 0.18) !important;
-}
-
-[data-dashboard-theme="dark"] .dashboard-shell .dashboard-invite-input {
-  background-color: transparent !important;
-  color: rgba(255, 255, 255, 0.92) !important;
-}
-
-[data-dashboard-theme="dark"] .dashboard-shell .dashboard-invite-input::placeholder {
-  color: rgba(255, 255, 255, 0.35) !important;
-}
-
-[data-dashboard-theme="dark"] .dashboard-shell .dashboard-invite-chip {
-  background-color: rgba(255, 255, 255, 0.1) !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
-  color: rgba(255, 255, 255, 0.9) !important;
-}
+/* Invite-people dialog (InvitePeopleDialog.tsx) is now unconditionally dark
+   in its own Tailwind classes, matching every other dashboard surface — it
+   used to render light by default and only go dark under
+   [data-dashboard-theme="dark"], which isn't reliably the active state (the
+   rest of the dashboard's background is hardcoded dark regardless of that
+   flag), so the labels/chips/input text ended up dark-on-dark whenever the
+   flag wasn't "dark". No theme-conditional override needed here anymore. */
 
 /* Upgrade page: explicit two-theme surfaces prevent the legacy dashboard
    dark defaults from leaking into light appearance. */
@@ -2627,7 +2473,10 @@ body:has([data-dashboard-theme="dark"]) .dashboard-assignment-toast-close:hover 
   color: rgba(255, 255, 255, 0.6) !important;
 }
 
-[data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page [class*="text-[#c63f4d]"] {
+/* Unconditional, like the rest of this page's dark styling: the Usage page
+   is always dark, so this can't be gated behind the light/dark toggle. */
+.dashboard-shell .dashboard-ai-usage-page [class*="text-[#c63f4d]"],
+body:has(.dashboard-ai-usage-page) .dashboard-add-credits-dialog [class*="text-[#c63f4d]"] {
   color: #ff7a86 !important;
 }
 
@@ -2857,8 +2706,29 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
   opacity: 0.88;
 }
 
+/* Not a flat opacity fade: chat-team-bg/text are near-opposite ends of the
+   theme (near-white text on near-black in dark mode, the reverse in light),
+   so fading both toward each other at once washes the whole button toward
+   mid-gray — in light mode specifically, a light-gray bg and dark text both
+   dilute toward the white dialog behind them, and "Create ticket" while
+   busy became functionally invisible. Explicit colors already used for
+   muted UI elsewhere in this view instead of opacity math against a
+   surface color this rule doesn't know. */
 .dashboard-shell .dashboard-conversation .chat-action-primary:disabled {
-  opacity: 0.4;
+  background-color: var(--chat-divider);
+  color: var(--chat-muted);
+  cursor: not-allowed;
+}
+
+/* The "Create ticket" button in the conversation's right-rail sidebar lives
+   inside an <aside>, so the generic dark-mode "sidebar button text goes
+   white" override (near the top of this file) was forcing near-white text
+   over chat-action-primary's own near-white *background* there — the same
+   white-on-white class of bug already fixed for the filter tabs and the
+   contact card, for the same reason: a broad aside-wide rule reaching an
+   element that manages its own theme-aware color. */
+[data-dashboard-theme="dark"] .dashboard-shell aside .chat-action-primary:not(:disabled) {
+  color: var(--chat-team-text) !important;
 }
 
 /* Availability page. The settings surface only forces a light-on-dark color
@@ -2868,7 +2738,7 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
    teammate names and day labels, so it needs its own treatment rather than
    one more per-hex override. */
 [data-dashboard-theme="dark"] .dashboard-shell .dashboard-availability-page {
-  color: rgba(255, 255, 255, 0.92) !important;
+  color: #ffffff !important;
 }
 
 [data-dashboard-theme="dark"] .dashboard-shell .dashboard-availability-page :is(p, span, li, div) {
@@ -2882,7 +2752,7 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
   [class*="text-[#667069]"],
   [class*="text-[#5F686D]"]
 ) {
-  color: rgba(255, 255, 255, 0.72) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
 }
 
 [data-dashboard-theme="dark"] .dashboard-shell .dashboard-availability-page :is(
@@ -2892,7 +2762,7 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
   [class*="text-[#9AA3A7]"],
   [class*="text-[#55585c]"]
 ) {
-  color: rgba(255, 255, 255, 0.55) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
 }
 
 /* The empty half of a coverage bar. On white it's a pale grey track; on dark
@@ -3010,4 +2880,907 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
 [data-dashboard-theme="dark"] .dashboard-shell .dashboard-setup-index {
   background-color: rgba(255, 255, 255, 0.12) !important;
   color: rgba(255, 255, 255, 0.75) !important;
+}
+
+/* Connected navigation columns, with a quiet charcoal primary rail. */
+.dashboard-shell aside.dashboard-primary-sidebar:not([role="dialog"]) {
+  background: #262626 !important;
+  border-color: #484848 !important;
+  color: rgb(255 255 255 / 0.4) !important;
+  border-radius: 0;
+  box-shadow: none;
+}
+.dashboard-shell aside.dashboard-primary-sidebar:not([role="dialog"]) :is(a, button, span, svg) {
+  color: #fff !important;
+}
+.dashboard-shell aside.dashboard-primary-sidebar:not([role="dialog"]) .dashboard-nav-active {
+  background: transparent !important;
+  border-color: transparent !important;
+}
+.dashboard-shell aside.dashboard-primary-sidebar:not([role="dialog"]) .dashboard-nav-active :is(span, svg) {
+  color: rgb(255 255 255 / 0.9) !important;
+}
+.dashboard-shell aside.dashboard-primary-sidebar:not([role="dialog"]) .sidebar-account {
+  background: #8db8ff !important;
+  color: #172334 !important;
+}
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"])
+  .dashboard-shell
+  aside.dashboard-primary-sidebar:not([role="dialog"])
+  a.sidebar-nav-item:not(.dashboard-nav-active)
+  :is(span, svg) {
+  color: rgb(255 255 255 / 0.6) !important;
+}
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"])
+  .dashboard-shell
+  aside.dashboard-primary-sidebar:not([role="dialog"])
+  a.sidebar-nav-item:not(.dashboard-nav-active):hover
+  :is(span, svg) {
+  color: #fff !important;
+}
+.dashboard-shell .dashboard-secondary-sidebar {
+  margin: 0;
+  height: 100%;
+  background: #262626 !important;
+  border-radius: 0;
+  border-width: 0 1px 0 0;
+  box-shadow: none;
+}
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell :is(.dashboard-secondary-sidebar, .dashboard-space-sidebar) {
+  background: #262626 !important;
+  border-color: #484848 !important;
+}
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-secondary-sidebar {
+  background: #262626 !important;
+  border-color: #484848 !important;
+}
+.dashboard-shell .dashboard-sidebar-actions {
+  border-color: #484848;
+}
+.dashboard-shell .dashboard-sidebar-actions .sidebar-upgrade {
+  background: #efd000 !important;
+  color: #171717 !important;
+}
+
+/* Workspace switcher popover on the charcoal dashboard header. */
+.dashboard-shell .dashboard-workspace-menu {
+  background: #262626 !important;
+  border-color: rgb(255 255 255 / 0.14) !important;
+  color: rgb(255 255 255 / 0.9) !important;
+  box-shadow: 0 18px 42px rgb(0 0 0 / 0.35) !important;
+}
+.dashboard-shell .dashboard-workspace-menu p {
+  color: rgb(255 255 255 / 0.5) !important;
+}
+.dashboard-shell .dashboard-workspace-menu button {
+  color: rgb(255 255 255 / 0.9) !important;
+}
+.dashboard-shell .dashboard-workspace-menu button:hover {
+  background: rgb(255 255 255 / 0.08) !important;
+}
+.dashboard-shell .dashboard-workspace-menu button > span:not([class*="bg-"]) {
+  color: rgb(255 255 255 / 0.9) !important;
+}
+.dashboard-shell .dashboard-workspace-menu [class*="border-black"] {
+  border-color: rgb(255 255 255 / 0.12) !important;
+}
+.dashboard-shell .dashboard-workspace-menu input {
+  background: #1f1f1f !important;
+  border-color: rgb(255 255 255 / 0.16) !important;
+  color: #fff !important;
+}
+.dashboard-shell .dashboard-workspace-menu input::placeholder {
+  color: rgb(255 255 255 / 0.4) !important;
+}
+
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"])
+  .dashboard-shell
+  aside.dashboard-space-sidebar:not([role="dialog"]) {
+  background: #262626 !important;
+  border-color: rgb(255 255 255 / 0.1) !important;
+}
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"])
+  .dashboard-shell
+  aside.dashboard-space-sidebar:not([role="dialog"])
+  :is(a, button, p, span, svg) {
+  color: #fff !important;
+}
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"])
+  .dashboard-shell
+  aside.dashboard-space-sidebar:not([role="dialog"])
+  a[aria-current="page"],
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"])
+  .dashboard-shell
+  aside.dashboard-space-sidebar:not([role="dialog"])
+  a[aria-current="page"]
+  svg {
+  color: rgb(255 255 255 / 0.9) !important;
+}
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"])
+  .dashboard-shell
+  aside.dashboard-space-sidebar:not([role="dialog"])
+  nav
+  :is(a, button):not([aria-current="page"]),
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"])
+  .dashboard-shell
+  aside.dashboard-space-sidebar:not([role="dialog"])
+  nav
+  :is(a, button):not([aria-current="page"])
+  svg {
+  color: rgb(255 255 255 / 0.6) !important;
+}
+
+/* Analytics uses the same canvas and card language as the Space home. */
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-analytics-shell,
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-page-surface.dashboard-visitors-main-surface,
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-analytics-canvas,
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-analytics-sidebar {
+  background: #262626 !important;
+  color: #fff !important;
+}
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-analytics-sidebar {
+  border-color: rgb(255 255 255 / 0.1) !important;
+}
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-analytics-sidebar :is(p, a) {
+  color: rgb(255 255 255 / 0.6) !important;
+}
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-analytics-sidebar a[aria-current="page"] {
+  background: rgb(255 255 255 / 0.1) !important;
+  color: rgb(255 255 255 / 0.9) !important;
+}
+#analytics-report-sidebar p,
+#analytics-report-sidebar a:not([aria-current="page"]) {
+  color: rgb(255 255 255 / 0.6) !important;
+}
+#analytics-report-sidebar a[aria-current="page"] {
+  color: rgb(255 255 255 / 0.9) !important;
+}
+
+#dashboard-global-search .dashboard-header-search {
+  background: rgb(255 255 255 / 0.045) !important;
+  border-color: rgb(255 255 255 / 0.1) !important;
+}
+#dashboard-global-search .dashboard-header-search:focus-within {
+  background: rgb(255 255 255 / 0.07) !important;
+  border-color: rgb(255 255 255 / 0.25) !important;
+}
+#dashboard-global-search .dashboard-header-search :is(input, svg) {
+  color: rgb(255 255 255 / 0.9) !important;
+}
+#dashboard-global-search .dashboard-header-search input::placeholder {
+  color: rgb(255 255 255 / 0.35) !important;
+}
+#dashboard-global-search .dashboard-search-results {
+  background: #292a2b !important;
+  border-color: rgb(255 255 255 / 0.12) !important;
+  color: #fff !important;
+}
+#dashboard-global-search .dashboard-search-results button:hover {
+  background: rgb(255 255 255 / 0.06) !important;
+}
+#dashboard-global-search .dashboard-search-results :is(p, span) {
+  color: rgb(255 255 255 / 0.7) !important;
+}
+
+/* Contacts follows the Space canvas and card hierarchy in every theme. */
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-contacts-shell,
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-page-surface.dashboard-contacts-main-surface,
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contacts-tools {
+  background: #262626 !important;
+  color: #fff !important;
+}
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contacts-tools {
+  border-color: rgb(255 255 255 / 0.1) !important;
+}
+#dashboard-contacts-tools {
+  background: #262626 !important;
+  border-color: rgb(255 255 255 / 0.1) !important;
+}
+#dashboard-contacts-tools .dashboard-contact-tool-card,
+#dashboard-contacts-tools .dashboard-contact-tool-card > div {
+  background: #262626 !important;
+}
+#dashboard-contacts-tools .dashboard-contact-tool-card h3 {
+  color: rgb(255 255 255 / 0.9) !important;
+}
+#dashboard-contacts-tools .dashboard-contact-tool-card p {
+  color: rgb(255 255 255 / 0.6) !important;
+}
+#dashboard-contacts-tools .dashboard-contact-tool-card a {
+  color: rgb(255 255 255 / 0.9) !important;
+}
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contacts-main-surface :is(table, thead),
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contacts-tools [class*="bg-[#292a2b]"],
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contact-drawer {
+  background: #292a2b !important;
+}
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contacts-main-surface :is([class*="text-black"], td),
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contacts-tools :is(h3, p),
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contact-drawer :is(h2, h3, h4, p, span, button, svg) {
+  color: rgb(255 255 255 / 0.9) !important;
+}
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contacts-main-surface :is([class*="border-[#eceeef]"], [class*="border-[#f0f1f2]"], [class*="border-[#DDE4E8]"]),
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contact-drawer [class*="border-[#E3E4DF]"] {
+  border-color: rgb(255 255 255 / 0.1) !important;
+}
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contacts-search {
+  background: rgb(255 255 255 / 0.045) !important;
+  border-color: rgb(255 255 255 / 0.1) !important;
+}
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contacts-search :is(input, svg) {
+  color: rgb(255 255 255 / 0.9) !important;
+}
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contacts-tools a {
+  background: transparent !important;
+  border-color: rgb(255 255 255 / 0.14) !important;
+  color: rgb(255 255 255 / 0.8) !important;
+}
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contacts-tools .dashboard-contact-tool-card,
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contacts-tools .dashboard-contact-tool-card > div {
+  background: #262626 !important;
+  border-color: rgb(255 255 255 / 0.1) !important;
+}
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contact-drawer [class*="bg-[#F0F2F4]"] {
+  background: rgb(255 255 255 / 0.08) !important;
+}
+#dashboard-contacts-page .dashboard-contacts-main-surface :is(h1, p, th, td, input, svg),
+#dashboard-contacts-page .dashboard-contacts-main-surface td > span:not([class*="bg-"]) {
+  color: rgb(255 255 255 / 0.9) !important;
+}
+#dashboard-contacts-page .dashboard-contacts-main-surface thead,
+#dashboard-contacts-page .dashboard-contacts-main-surface table {
+  background: #292a2b !important;
+}
+#dashboard-contacts-page .dashboard-contacts-main-surface tbody tr:hover {
+  background: rgb(255 255 255 / 0.04) !important;
+}
+
+/* Knowledge workspace, aligned with the Space dashboard surfaces. */
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-knowledge-shell,
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-page-surface.dashboard-knowledge-main-surface,
+#dashboard-knowledge-sidebar {
+  background: #262626 !important;
+  color: #fff !important;
+}
+#dashboard-knowledge-sidebar {
+  border-color: rgb(255 255 255 / 0.1) !important;
+}
+#dashboard-knowledge-sidebar :is(p, button, span, svg),
+#dashboard-knowledge-sidebar a:not([aria-current="page"]) {
+  color: rgb(255 255 255 / 0.6) !important;
+}
+#dashboard-knowledge-sidebar a[aria-current="page"] {
+  background: rgb(255 255 255 / 0.1) !important;
+  color: rgb(255 255 255 / 0.9) !important;
+}
+#dashboard-knowledge-page .dashboard-knowledge-main-surface .bg-white,
+#dashboard-knowledge-page .dashboard-knowledge-main-surface [class*="bg-[#f8f9f9]"],
+#dashboard-knowledge-page .dashboard-knowledge-main-surface [class*="bg-[#f5f6f7]"] {
+  background: #292a2b !important;
+}
+#dashboard-knowledge-page .dashboard-knowledge-main-surface :is([class*="border-[#e5e8ea]"], [class*="border-[#eef0f2]"], [class*="border-[#dde3e6]"], [class*="border-[#eceeef]"]) {
+  border-color: rgb(255 255 255 / 0.1) !important;
+}
+#dashboard-knowledge-page .dashboard-knowledge-main-surface :is(h1, h2, h3, h4, p, span, input, button) {
+  color: rgb(255 255 255 / 0.9) !important;
+}
+#dashboard-knowledge-page .dashboard-knowledge-main-surface :is(input, textarea) {
+  background: rgb(255 255 255 / 0.045) !important;
+  border-color: rgb(255 255 255 / 0.1) !important;
+}
+#dashboard-knowledge-page .dashboard-knowledge-main-surface .dashboard-knowledge-add-button,
+#dashboard-knowledge-page .dashboard-knowledge-main-surface .dashboard-knowledge-add-button svg {
+  background: rgb(255 255 255 / 0.9) !important;
+  color: #202020 !important;
+}
+.dashboard-knowledge-add-panel,
+.dashboard-knowledge-add-panel :is(input, textarea, select) {
+  background: #262626 !important;
+  color: rgb(255 255 255 / 0.9) !important;
+}
+.dashboard-knowledge-add-panel :is(h2, label, p, span, button, svg) {
+  color: rgb(255 255 255 / 0.9) !important;
+}
+.dashboard-knowledge-add-panel :is(input, textarea, select) {
+  border-color: rgb(255 255 255 / 0.12) !important;
+}
+.dashboard-shell .knowledge-editor-save,
+.dashboard-shell .knowledge-editor-save:hover,
+.dashboard-shell .knowledge-editor-save:focus-visible {
+  background: rgb(255 255 255 / 0.9) !important;
+  color: #202020 !important;
+}
+.dashboard-shell .knowledge-editor-save :is(span, svg) {
+  color: #202020 !important;
+}
+.dashboard-shell .knowledge-source-add,
+.dashboard-shell .knowledge-source-add:hover,
+.dashboard-shell .knowledge-source-add:focus-visible {
+  background: rgb(255 255 255 / 0.9) !important;
+  color: #202020 !important;
+}
+.dashboard-shell .knowledge-source-add :is(span, svg) {
+  color: #202020 !important;
+}
+#dashboard-knowledge-page .knowledge-url-input {
+  background: rgb(255 255 255 / 0.025) !important;
+}
+#dashboard-knowledge-page .knowledge-url-input:focus-within {
+  background: rgb(255 255 255 / 0.04) !important;
+  border-color: rgb(255 255 255 / 0.25) !important;
+}
+#dashboard-knowledge-page .knowledge-url-input span {
+  color: rgb(255 255 255 / 0.55) !important;
+}
+#dashboard-knowledge-page .knowledge-url-input input {
+  background: transparent !important;
+  border: 0 !important;
+  color: rgb(255 255 255 / 0.9) !important;
+}
+
+/* Settings uses the same fixed charcoal workspace as the rest of dashboard. */
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) #dashboard-settings-page,
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) #dashboard-settings-sidebar,
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) #dashboard-settings-page .dashboard-settings-surface,
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) #dashboard-settings-page .dashboard-widget-preview-panel {
+  background: #262626 !important;
+  color: rgb(255 255 255 / 0.9) !important;
+  border-color: rgb(255 255 255 / 0.1) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+#dashboard-settings-sidebar :is(a, button) {
+  color: rgb(255 255 255 / 0.6) !important;
+  font-weight: 400 !important;
+}
+#dashboard-settings-sidebar :is(a, button) :is(span, svg) {
+  color: inherit !important;
+}
+#dashboard-settings-sidebar a[aria-current="page"] {
+  background: rgb(255 255 255 / 0.1) !important;
+  color: rgb(255 255 255 / 0.9) !important;
+}
+#dashboard-settings-sidebar :is(a, button):hover {
+  background: rgb(255 255 255 / 0.06) !important;
+  color: rgb(255 255 255 / 0.9) !important;
+}
+#dashboard-settings-sidebar > div > p {
+  color: rgb(255 255 255 / 0.4) !important;
+  font-weight: 400 !important;
+}
+#dashboard-settings-page .dashboard-settings-surface > div,
+#dashboard-settings-page .dashboard-settings-surface [class*="bg-white"],
+#dashboard-settings-page .dashboard-settings-surface [class*="bg-[#fbfbfb]"],
+#dashboard-settings-page .dashboard-settings-surface [class*="bg-[#f8f8f7]"],
+#dashboard-settings-page .dashboard-settings-surface [class*="bg-[#FAFBFB]"],
+#dashboard-settings-page .dashboard-settings-surface [class*="bg-[#fafbfb]"] {
+  background-color: #262626 !important;
+}
+#dashboard-settings-page .dashboard-settings-surface :is(h1, h2, h3, h4, h5, label),
+#dashboard-settings-page .dashboard-settings-surface [class*="text-black"],
+#dashboard-settings-page .dashboard-settings-surface [class*="text-[#121315]"],
+#dashboard-settings-page .dashboard-settings-surface [class*="text-[#17181a]"] {
+  color: rgb(255 255 255 / 0.9) !important;
+}
+#dashboard-settings-page .dashboard-settings-surface :is(.dashboard-settings-subdesc, [class*="text-[#858585]"], [class*="text-[#686d71]"]) {
+  color: rgb(255 255 255 / 0.55) !important;
+}
+#dashboard-settings-page .dashboard-settings-surface :is(input, textarea, select) {
+  background: rgb(255 255 255 / 0.035) !important;
+  border-color: rgb(255 255 255 / 0.12) !important;
+  color: rgb(255 255 255 / 0.9) !important;
+}
+#dashboard-settings-page .dashboard-settings-surface :is(input, textarea)::placeholder {
+  color: rgb(255 255 255 / 0.32) !important;
+}
+#dashboard-settings-page .dashboard-settings-surface :is([class*="border-[#e7e7e7]"], [class*="border-[#e4e4e4]"], [class*="border-[#DDE4E8]"], [class*="border-[#dfe3e6]"], [class*="border-black"]) {
+  border-color: rgb(255 255 255 / 0.1) !important;
+}
+#dashboard-settings-page .dashboard-danger-zone {
+  background: #262626 !important;
+  border-color: rgb(248 113 113 / 0.25) !important;
+}
+#dashboard-settings-page .dashboard-danger-zone h3 {
+  color: rgb(252 165 165) !important;
+}
+#dashboard-settings-page .dashboard-danger-zone p[class*="text-[#17181a]"] {
+  color: rgb(255 255 255 / 0.9) !important;
+}
+#dashboard-settings-page .dashboard-danger-zone p[class*="text-[#8a7373]"] {
+  color: rgb(255 255 255 / 0.55) !important;
+}
+#dashboard-settings-page .dashboard-danger-zone .dashboard-danger-action,
+#dashboard-settings-page .dashboard-danger-zone .dashboard-danger-action:hover {
+  background: transparent !important;
+  border-color: rgb(248 113 113 / 0.3) !important;
+  color: rgb(252 165 165) !important;
+}
+#dashboard-settings-page .dashboard-danger-zone .dashboard-danger-action:hover {
+  background: rgb(248 113 113 / 0.1) !important;
+}
+
+/* Inbox is a single charcoal workspace across every appearance. */
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) #dashboard-inbox-page,
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) #dashboard-inbox-page > div,
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) #dashboard-inbox-list {
+  background: #262626 !important;
+  color: rgb(255 255 255 / 0.9) !important;
+  border-color: rgb(255 255 255 / 0.1) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-conversation {
+  --chat-team-bg: rgb(255 255 255 / 0.9);
+  --chat-team-text: #202020;
+  --chat-team-avatar-bg: rgb(255 255 255 / 0.9);
+  --chat-customer-bg: rgb(255 255 255 / 0.045);
+  --chat-customer-text: rgb(255 255 255 / 0.9);
+  --chat-customer-border: rgb(255 255 255 / 0.1);
+  --chat-customer-avatar-bg: #454545;
+  --chat-surface: #262626;
+  --chat-muted: rgb(255 255 255 / 0.5);
+  --chat-divider: rgb(255 255 255 / 0.1);
+  --chat-notice: rgb(255 255 255 / 0.4);
+  --chat-line-text: rgb(255 255 255 / 0.92);
+  --chat-line-muted-text: rgb(255 255 255 / 0.68);
+  background: #262626 !important;
+  color: rgb(255 255 255 / 0.9) !important;
+}
+#dashboard-inbox-list h2 {
+  color: rgb(255 255 255 / 0.9) !important;
+  font-weight: 500 !important;
+}
+#dashboard-inbox-list p,
+#dashboard-inbox-list .dashboard-filter-tab,
+#dashboard-inbox-list .dashboard-chat-row:not(.dashboard-chat-row-active) :is(span, svg) {
+  color: rgb(255 255 255 / 0.55) !important;
+}
+#dashboard-inbox-list .dashboard-search-box,
+#dashboard-inbox-list .dashboard-search-box[class*="bg-white"] {
+  background: rgb(255 255 255 / 0.035) !important;
+  border-color: rgb(255 255 255 / 0.1) !important;
+  color: rgb(255 255 255 / 0.75) !important;
+}
+#dashboard-inbox-list .dashboard-search-box :is(input, span, svg, button) {
+  color: inherit !important;
+}
+#dashboard-inbox-list .dashboard-chat-row {
+  background: transparent !important;
+  border-radius: 8px !important;
+}
+#dashboard-inbox-list .dashboard-chat-row:hover {
+  background: rgb(255 255 255 / 0.055) !important;
+}
+#dashboard-inbox-list .dashboard-chat-row-active {
+  background: rgb(255 255 255 / 0.1) !important;
+}
+#dashboard-inbox-list .dashboard-chat-row-active :is(span, svg) {
+  color: rgb(255 255 255 / 0.9) !important;
+}
+#dashboard-inbox-list .dashboard-filter-tab-active {
+  background: rgb(255 255 255 / 0.1) !important;
+  color: rgb(255 255 255 / 0.9) !important;
+}
+#dashboard-inbox-page .dashboard-conversation :is(input, textarea, select) {
+  color: rgb(255 255 255 / 0.9) !important;
+}
+#dashboard-inbox-list .inbox-view-nav a,
+#dashboard-inbox-page .inbox-view-nav a {
+  color: rgb(255 255 255 / 0.7) !important;
+  font-weight: 400 !important;
+}
+#dashboard-inbox-list .inbox-view-nav a[aria-current="page"],
+#dashboard-inbox-page .inbox-view-nav a[aria-current="page"] {
+  background: transparent !important;
+  border-bottom-color: rgb(255 255 255 / 0.8) !important;
+  color: #ffffff !important;
+}
+#dashboard-inbox-list .inbox-view-nav a:not([aria-current="page"]):hover,
+#dashboard-inbox-page .inbox-view-nav a:not([aria-current="page"]):hover {
+  background: transparent !important;
+  border-bottom-color: rgb(255 255 255 / 0.3) !important;
+  color: rgb(255 255 255 / 0.9) !important;
+}
+#dashboard-inbox-page .inbox-list-summary {
+  display: none;
+}
+#dashboard-chat-interface .dashboard-chat-center,
+#dashboard-chat-interface .dashboard-chat-header,
+#dashboard-customer-details {
+  background: #262626 !important;
+  border-color: rgb(255 255 255 / 0.1) !important;
+}
+#dashboard-chat-interface .chat-line {
+  width: fit-content;
+  max-width: 100%;
+  border: 1px solid rgb(255 255 255 / 0.08);
+  border-radius: 12px;
+  background: rgb(255 255 255 / 0.035);
+  padding: 9px 12px;
+}
+#dashboard-chat-interface .chat-line-team {
+  margin-left: auto;
+  background: rgb(255 255 255 / 0.08);
+  color: rgb(255 255 255 / 0.92);
+}
+#dashboard-chat-interface .dashboard-reply-composer {
+  background: rgb(255 255 255 / 0.025) !important;
+  border-color: rgb(255 255 255 / 0.14) !important;
+}
+#dashboard-chat-interface .dashboard-reply-composer:focus-within {
+  border-color: rgb(255 255 255 / 0.3) !important;
+}
+#dashboard-customer-details .dashboard-contact-card {
+  background: rgb(255 255 255 / 0.035) !important;
+  border: 1px solid rgb(255 255 255 / 0.08);
+}
+#dashboard-customer-details .dashboard-detail-section > button {
+  color: rgb(255 255 255 / 0.85) !important;
+  font-weight: 500 !important;
+}
+#dashboard-customer-details .dashboard-detail-section > button:hover {
+  background: rgb(255 255 255 / 0.04) !important;
+}
+#dashboard-customer-details .dashboard-detail-section > div {
+  color: rgb(255 255 255 / 0.75) !important;
+}
+#dashboard-customer-details a {
+  color: rgb(255 255 255 / 0.85) !important;
+}
+#dashboard-chat-interface :is(h1, h2, h3, h4, p, label, span, button, a, svg),
+#dashboard-customer-details :is(h1, h2, h3, h4, p, label, span, button, a, svg) {
+  color: rgb(255 255 255 / 0.9) !important;
+}
+#dashboard-chat-interface [class*="text-[var(--chat-muted)]"],
+#dashboard-customer-details [class*="text-[var(--chat-muted)]"] {
+  color: rgb(255 255 255 / 0.5) !important;
+}
+#dashboard-chat-interface .chat-line-customer {
+  color: rgb(255 255 255 / 0.68) !important;
+}
+#dashboard-chat-interface .chat-line-team {
+  color: rgb(255 255 255 / 0.92) !important;
+}
+#dashboard-chat-interface .chat-action-primary,
+#dashboard-chat-interface .chat-action-primary :is(span, svg),
+#dashboard-customer-details .chat-action-primary,
+#dashboard-customer-details .chat-action-primary :is(span, svg) {
+  background: rgb(255 255 255 / 0.9) !important;
+  color: #202020 !important;
+}
+#dashboard-chat-interface .chat-action-primary:disabled,
+#dashboard-customer-details .chat-action-primary:disabled {
+  background: rgb(255 255 255 / 0.1) !important;
+  color: rgb(255 255 255 / 0.4) !important;
+}
+#dashboard-chat-interface .chat-action-primary:disabled :is(span, svg),
+#dashboard-customer-details .chat-action-primary:disabled :is(span, svg) {
+  color: rgb(255 255 255 / 0.4) !important;
+}
+#dashboard-chat-interface .chat-avatar-team {
+  color: #202020 !important;
+}
+#dashboard-setup-badge .dashboard-setup-panel,
+#dashboard-setup-badge .dashboard-setup-panel-inner,
+#dashboard-setup-badge .dashboard-setup-panel-header,
+#dashboard-setup-badge .dashboard-setup-trigger {
+  background-color: #262626 !important;
+  border-color: rgb(255 255 255 / 0.1) !important;
+  color: rgb(255 255 255 / 0.9) !important;
+}
+#dashboard-setup-badge .dashboard-setup-step {
+  color: rgb(255 255 255 / 0.85) !important;
+}
+#dashboard-setup-badge .dashboard-setup-step:hover {
+  background: rgb(255 255 255 / 0.04) !important;
+}
+#dashboard-ai-assist,
+#dashboard-ai-assist :is(.dashboard-ai-list, .dashboard-ai-assist-main, .dashboard-ai-header, .dashboard-ai-composer, .dashboard-ai-details),
+#dashboard-ai-assist [class*="bg-white"],
+#dashboard-ai-assist [class*="bg-[#f7f8f9]"] {
+  background: #262626 !important;
+  border-color: rgb(255 255 255 / 0.1) !important;
+  color: rgb(255 255 255 / 0.9) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+#dashboard-ai-assist :is(h1, h2, h3, h4, p, span, button, a, svg, input) {
+  color: rgb(255 255 255 / 0.9) !important;
+}
+#dashboard-ai-assist :is([class*="text-[#7b858a]"], [class*="text-[#74808c]"], [class*="text-[#8a929c]"], [class*="text-[#89929c]"], [class*="text-[#969ea7]"], [class*="text-[#9aa2ac]"]) {
+  color: rgb(255 255 255 / 0.5) !important;
+}
+#dashboard-ai-assist .dashboard-search-box,
+#dashboard-ai-assist .dashboard-contact-card {
+  background: rgb(255 255 255 / 0.035) !important;
+  border-color: rgb(255 255 255 / 0.1) !important;
+}
+#dashboard-ai-assist .dashboard-chat-row {
+  background: transparent !important;
+}
+#dashboard-ai-assist .dashboard-chat-row:hover {
+  background: rgb(255 255 255 / 0.05) !important;
+}
+#dashboard-ai-assist .dashboard-chat-row-active {
+  background: rgb(255 255 255 / 0.1) !important;
+}
+#dashboard-ai-assist .chat-line {
+  border: 1px solid rgb(255 255 255 / 0.08);
+  border-radius: 12px;
+  background: rgb(255 255 255 / 0.035);
+  padding: 9px 12px;
+}
+#dashboard-ai-assist .chat-line-team {
+  margin-left: auto;
+  background: rgb(255 255 255 / 0.08);
+}
+#dashboard-ai-assist .chat-action-primary,
+#dashboard-ai-assist .chat-action-primary :is(span, svg) {
+  background: rgb(255 255 255 / 0.9) !important;
+  color: #202020 !important;
+}
+#dashboard-ai-assist :is(input, textarea) {
+  background: transparent !important;
+  color: rgb(255 255 255 / 0.9) !important;
+}
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-visitors-main-surface .bg-white,
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-visitors-main-surface [class*="bg-[#F3F4F0]"] {
+  background: #292a2b !important;
+}
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-visitors-main-surface :is([class*="border-[#E3E4DF]"], [class*="border-[#DDE4E8]"], [class*="border-[#EEF0F2]"], [class*="border-[#E5E9EB]"]) {
+  border-color: rgb(255 255 255 / 0.1) !important;
+}
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-visitors-main-surface :is([class*="text-black"], [class*="text-[#17181a]"], [class*="text-[#2b2923]"], [class*="text-[#3c4245]"]) {
+  color: rgb(255 255 255 / 0.9) !important;
+}
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-visitors-main-surface :is([class*="text-[#555e64]"], [class*="text-[#667069]"], [class*="text-[#687178]"], [class*="text-[#8A929C]"]) {
+  color: rgb(255 255 255 / 0.5) !important;
+}
+
+/* AI usage follows the dashboard's permanent graphite theme. */
+.dashboard-shell .dashboard-ai-usage-page,
+.dashboard-shell .dashboard-settings-surface:has(.dashboard-ai-usage-page) {
+  background: #262626 !important;
+  color: rgb(255 255 255 / 0.9) !important;
+}
+.dashboard-shell .dashboard-ai-usage-page :is(article, section[class*="bg-white"], .dashboard-ai-credit-card) {
+  background: rgb(255 255 255 / 0.035) !important;
+  border-color: rgb(255 255 255 / 0.1) !important;
+  box-shadow: none !important;
+}
+.dashboard-shell .dashboard-ai-usage-page :is([class*="text-[#17191b]"], [class*="text-[#11120f]"], [class*="text-[#17233A]"], [class*="text-[#33383c]"]) {
+  color: rgb(255 255 255 / 0.9) !important;
+}
+.dashboard-shell .dashboard-ai-usage-page :is([class*="text-[#707980]"], [class*="text-[#6D7D85]"], [class*="text-[#69737a]"], [class*="text-[#8a9298]"], [class*="text-[#8A9299]"], [class*="text-[#8b9398]"], [class*="text-[#92999e]"], [class*="text-[#939a9e]"], [class*="text-[#5f686d]"], [class*="text-[#667069]"], [class*="text-[#737c82]"], [class*="text-[#7B858A]"], [class*="text-[#7a8389]"], [class*="text-[#7b848a]"], [class*="text-[#a5acb0]"]) {
+  color: rgb(255 255 255 / 0.6) !important;
+}
+.dashboard-shell .dashboard-ai-usage-page :is(input, select, [role="dialog"], [class*="bg-white"]) {
+  background-color: #2d2d2d !important;
+  border-color: rgb(255 255 255 / 0.12) !important;
+  color: rgb(255 255 255 / 0.9) !important;
+}
+.dashboard-shell .dashboard-ai-usage-page input {
+  color-scheme: dark;
+}
+.dashboard-shell .dashboard-ai-usage-page :is([class*="bg-[#f0f2f3]"], [class*="bg-[#f4f5f6]"], [class*="bg-[#eef0f1]"]) {
+  background-color: rgb(255 255 255 / 0.07) !important;
+}
+.dashboard-shell .dashboard-ai-usage-page :is([class*="border-[#"], [class*="border-black"]) {
+  border-color: rgb(255 255 255 / 0.1) !important;
+}
+/* :not(:disabled) — a disabled button still matches :hover (nothing here
+   sets pointer-events:none), so without this exclusion a disabled button's
+   own readable text color would get overwritten white the moment the mouse
+   sits over it. */
+.dashboard-shell .dashboard-ai-usage-page button:not(:disabled):hover {
+  color: rgb(255 255 255 / 0.95) !important;
+}
+/* Same recurring bug as the scope-menu/credits-dialog fixes above, one level
+   up: any plain light hover background left over from the component's own
+   light-theme classes, on a page whose text this file already forces white
+   unconditionally. Covers the "Reporting period" day-range pills and
+   anything else in this direct DOM subtree using these hover classes. */
+.dashboard-shell .dashboard-ai-usage-page [class*="hover:bg-[#f7f8f8]"]:hover,
+.dashboard-shell .dashboard-ai-usage-page [class*="hover:bg-[#f1f3f4]"]:hover {
+  background-color: rgb(255 255 255 / 0.08) !important;
+}
+.dashboard-shell .dashboard-ai-usage-page .dashboard-ai-usage-toolbar {
+  background: rgb(38 38 38 / 0.94) !important;
+}
+body:has(.dashboard-ai-usage-page) :is(.dashboard-ai-scope-menu, .dashboard-add-credits-dialog) {
+  background: #2d2d2d !important;
+  border-color: rgb(255 255 255 / 0.12) !important;
+  color: rgb(255 255 255 / 0.9) !important;
+}
+/* The Usage page is dark regardless of the dashboard's light/dark setting
+   (see the unconditional rule above), but its hover/selected background was
+   only ever restyled under the `[data-dashboard-theme="dark"]` gate below —
+   so on the light theme, this popover's text (forced white by the rule
+   above) hovered into the button's own light `hover:bg-[#f7f8f8]`/
+   `bg-[#f0f2f3]` classes and went invisible. */
+body:has(.dashboard-ai-usage-page) .dashboard-ai-scope-menu button:hover,
+body:has(.dashboard-ai-usage-page) .dashboard-ai-scope-menu button[class*="bg-[#f0f2f3]"] {
+  background-color: rgb(255 255 255 / 0.08) !important;
+}
+body:has(.dashboard-ai-usage-page) .dashboard-ai-scope-menu button,
+body:has(.dashboard-ai-usage-page) .dashboard-ai-scope-menu svg {
+  color: rgb(255 255 255 / 0.86) !important;
+}
+/* Same bug, the "Add AI credits" dialog: its preset-amount pills and close
+   button carry their own light hover classes (hover:bg-[#F7F8FA]/[#F0F2F3]),
+   never overridden, so their text — forced white by the rule above — went
+   invisible on hover. */
+body:has(.dashboard-ai-usage-page) .dashboard-add-credits-dialog [class*="hover:bg-[#F7F8FA]"]:hover,
+body:has(.dashboard-ai-usage-page) .dashboard-add-credits-dialog [class*="hover:bg-[#F0F2F3]"]:hover {
+  background-color: rgb(255 255 255 / 0.08) !important;
+}
+
+/* Chatbot settings share the graphite dashboard surface; the live preview is
+   rendered outside this scope so it continues to mirror the embedded widget. */
+.dashboard-shell .dashboard-chatbot-settings-page,
+.dashboard-shell .dashboard-settings-surface:has(.dashboard-chatbot-settings-page) {
+  background: #262626 !important;
+  color: rgb(255 255 255 / 0.9) !important;
+}
+.dashboard-shell .dashboard-chatbot-settings-page .dashboard-chatbot-section {
+  background: rgb(255 255 255 / 0.035) !important;
+  border-color: rgb(255 255 255 / 0.1) !important;
+}
+.dashboard-shell .dashboard-chatbot-settings-page :is(input, textarea, select) {
+  background: #2d2d2d !important;
+  border-color: rgb(255 255 255 / 0.12) !important;
+  color: rgb(255 255 255 / 0.9) !important;
+  color-scheme: dark;
+}
+.dashboard-shell .dashboard-chatbot-settings-page :is(input, textarea)::placeholder {
+  color: rgb(255 255 255 / 0.35) !important;
+}
+.dashboard-shell .dashboard-chatbot-settings-page :is([class*="text-[#17181a]"], [class*="text-[#17233A]"], [class*="text-black"]) {
+  color: rgb(255 255 255 / 0.9) !important;
+}
+.dashboard-shell .dashboard-chatbot-settings-page :is([class*="text-[#667069]"], [class*="text-[#6D7D85]"], [class*="text-[#858585]"], [class*="text-[#666]"], [class*="text-[#8a9298]"], [class*="text-[#8b8d90]"]) {
+  color: rgb(255 255 255 / 0.6) !important;
+}
+.dashboard-shell .dashboard-chatbot-settings-page :is([class*="bg-[#f1f1f1]"], [class*="bg-[#F2F3F3]"], [class*="bg-[#F7F8F8]"], [class*="bg-white"]) {
+  background-color: rgb(255 255 255 / 0.07) !important;
+}
+.dashboard-shell .dashboard-chatbot-settings-page :is([class*="border-[#DDE4E8]"], [class*="border-[#E5E9EB]"], [class*="border-[#eceeef]"], [class*="border-[#c7cdd1]"]) {
+  border-color: rgb(255 255 255 / 0.1) !important;
+}
+.dashboard-shell .dashboard-chatbot-settings-page button:hover {
+  color: rgb(255 255 255 / 0.95) !important;
+}
+.dashboard-shell .dashboard-chatbot-settings-page .dashboard-greeting-add-button {
+  color: rgb(255 255 255 / 0.65) !important;
+}
+body:has(.dashboard-chatbot-settings-page) .dashboard-avatar-picker {
+  background: #2d2d2d !important;
+  border-color: rgb(255 255 255 / 0.12) !important;
+  color: rgb(255 255 255 / 0.9) !important;
+}
+body:has(.dashboard-chatbot-settings-page) .dashboard-avatar-picker :is(input, button) {
+  color: inherit;
+}
+body:has(.dashboard-chatbot-settings-page) .dashboard-avatar-picker :is([class*="border-[#"], [class*="border-black"]) {
+  border-color: rgb(255 255 255 / 0.12) !important;
+}
+body:has(.dashboard-chatbot-settings-page) .dashboard-avatar-picker :is([class*="text-[#667069]"], [class*="text-[#8a9298]"]) {
+  color: rgb(255 255 255 / 0.6) !important;
+}
+body:has(.dashboard-chatbot-settings-page) .dashboard-avatar-picker :is([class*="hover:bg-[#F0F2F3]"]:hover, [class*="hover:bg-[#f7f8f8]"]:hover) {
+  background: rgb(255 255 255 / 0.07) !important;
+}
+
+/* Simple, action-first billing UI. */
+.dashboard-shell .dashboard-billing-page,
+.dashboard-shell .dashboard-settings-surface:has(.dashboard-billing-page) {
+  background: #262626 !important;
+  color: rgb(255 255 255 / 0.9) !important;
+}
+.dashboard-shell .dashboard-billing-page article:not(.dashboard-billing-plan-card),
+.dashboard-shell .dashboard-billing-page > div[class*="bg-white"],
+.dashboard-shell .dashboard-billing-page button[class*="border-[#DDE4E8]"] {
+  background: rgb(255 255 255 / 0.035) !important;
+  border-color: rgb(255 255 255 / 0.1) !important;
+  box-shadow: none !important;
+}
+.dashboard-shell .dashboard-billing-page :is([class*="text-[#11120f]"], [class*="text-black"]) {
+  color: rgb(255 255 255 / 0.9) !important;
+}
+.dashboard-shell .dashboard-billing-page :is([class*="text-[#667069]"], [class*="text-[#6D7D85]"], [class*="text-[#7A858B]"], [class*="text-[#9AA2A6]"]) {
+  color: rgb(255 255 255 / 0.58) !important;
+}
+.dashboard-shell .dashboard-billing-page :is([class*="bg-[#EEF3F5]"], [class*="bg-[#FAF9F6]"], [class*="bg-[#F2F3F3]"], [class*="bg-white"]) {
+  background-color: rgb(255 255 255 / 0.065) !important;
+}
+.dashboard-shell .dashboard-billing-page :is([class*="border-[#DDE4E8]"], [class*="border-[#D8D5CE]"], [class*="border-[#E5E9EB]"], [class*="border-[#EDF0F1]"], [class*="border-[#CBD7DC]"]) {
+  border-color: rgb(255 255 255 / 0.1) !important;
+}
+.dashboard-shell .dashboard-billing-page article [class*="bg-[#11120f]"] {
+  background: #6d5ce7 !important;
+}
+.dashboard-shell .dashboard-billing-page button:hover {
+  color: rgb(255 255 255 / 0.92) !important;
+}
+.dashboard-shell .dashboard-billing-page .dashboard-billing-plan-card {
+  border-color: rgb(167 139 250 / 0.22) !important;
+}
+
+/* Upgrade page stays consistent regardless of the retired theme preference. */
+.dashboard-shell .dashboard-upgrade-page,
+.dashboard-shell .dashboard-settings-surface:has(.dashboard-upgrade-page) {
+  background: #262626 !important;
+  color: rgb(255 255 255 / 0.9) !important;
+}
+.dashboard-shell .dashboard-upgrade-page .dashboard-plan-card {
+  background: rgb(255 255 255 / 0.035) !important;
+  border-color: rgb(255 255 255 / 0.1) !important;
+  box-shadow: none !important;
+}
+.dashboard-shell .dashboard-upgrade-page .dashboard-plan-highlighted {
+  background: rgb(66 140 229 / 0.07) !important;
+  border-color: rgb(66 140 229 / 0.35) !important;
+}
+.dashboard-shell .dashboard-upgrade-page :is(h2, h3, .dashboard-plan-price > span:first-child) {
+  color: rgb(255 255 255 / 0.9) !important;
+}
+.dashboard-shell .dashboard-upgrade-page :is(p, li, .dashboard-plan-price > span:last-child) {
+  color: rgb(255 255 255 / 0.65) !important;
+}
+.dashboard-shell .dashboard-upgrade-page .dashboard-plan-card li svg {
+  color: #5ca5fa !important;
+}
+.dashboard-shell .dashboard-upgrade-page .dashboard-plan-badge {
+  background: rgb(66 140 229 / 0.15) !important;
+  color: #b8d9ff !important;
+}
+.dashboard-shell .dashboard-upgrade-page .dashboard-plan-current-badge {
+  background: rgb(66 140 229 / 0.15) !important;
+  color: #91c4ff !important;
+}
+.dashboard-shell .dashboard-upgrade-page .dashboard-pricing-pill,
+.dashboard-shell .dashboard-upgrade-page .dashboard-tailored-plan {
+  background: rgb(255 255 255 / 0.035) !important;
+  border-color: rgb(255 255 255 / 0.1) !important;
+}
+.dashboard-shell .dashboard-settings-surface .dashboard-upgrade-page .dashboard-pricing-option-active {
+  background-color: #428ce5 !important;
+  color: #ffffff !important;
+}
+.dashboard-shell .dashboard-settings-surface .dashboard-upgrade-page .dashboard-pricing-option-active :is(span, svg) {
+  color: #ffffff !important;
+}
+.dashboard-shell .dashboard-upgrade-page .dashboard-plan-cta {
+  background: rgb(255 255 255 / 0.05) !important;
+  border-color: rgb(255 255 255 / 0.1) !important;
+  color: rgb(255 255 255 / 0.9) !important;
+}
+.dashboard-shell .dashboard-upgrade-page .dashboard-plan-cta:hover {
+  background: rgb(255 255 255 / 0.1) !important;
+}
+.dashboard-shell .dashboard-upgrade-page .dashboard-plan-cta-primary {
+  background: #428ce5 !important;
+  border-color: #428ce5 !important;
+  color: #ffffff !important;
+}
+.dashboard-shell .dashboard-upgrade-page .dashboard-plan-cta-primary:hover {
+  background: #347dce !important;
+  border-color: #347dce !important;
+}
+.dashboard-shell .dashboard-upgrade-page .dashboard-contact-sales {
+  background: transparent !important;
+  border-color: rgb(255 255 255 / 0.1) !important;
+  color: rgb(255 255 255 / 0.9) !important;
+}
+
+/* Keep upgrade action labels and icons readable. Generic settings-theme
+   selectors also target nested spans and SVGs, so the button color alone is
+   not sufficient here. */
+.dashboard-shell .dashboard-settings-surface .dashboard-upgrade-page :is(button, a).dashboard-plan-cta,
+.dashboard-shell .dashboard-settings-surface .dashboard-upgrade-page :is(button, a).dashboard-plan-cta :is(span, svg) {
+  color: #ffffff !important;
+}
+.dashboard-shell .dashboard-settings-surface .dashboard-upgrade-page .dashboard-contact-sales,
+.dashboard-shell .dashboard-settings-surface .dashboard-upgrade-page .dashboard-contact-sales :is(span, svg) {
+  color: rgb(255 255 255 / 0.9) !important;
 }

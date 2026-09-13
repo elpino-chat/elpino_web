@@ -34,6 +34,11 @@ export async function deleteGateway<T>(path: string): Promise<{ ok: boolean; sta
   };
 }
 
+/** Raw passthrough for endpoints that answer with bytes rather than JSON (connector logos). */
+export async function fetchGatewayRaw(path: string): Promise<Response> {
+  return fetch(`${gatewayUrl}${path}`, { cache: "no-store" });
+}
+
 export async function patchGateway<T>(path: string, body: unknown): Promise<{ ok: boolean; status: number; payload: T }> {
   const res = await fetch(`${gatewayUrl}${path}`, {
     method: "PATCH",

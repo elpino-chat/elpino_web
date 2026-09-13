@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useMobileDrawer } from "@/app/components/dashboard/mobile-drawer-context";
 import {
   Activity,
   Bookmark,
@@ -262,10 +263,15 @@ export function VisitorsClient({ view }: { view: VisitorView }) {
   const compareLabel = compareOptions.find((option) => option.value === compareMode)?.label ?? "Previous period";
 
   return (
-    <div className="flex h-full min-h-0 overflow-hidden bg-white text-[#17181a]">
+    <div className="dashboard-analytics-shell flex h-full min-h-0 overflow-hidden bg-[#262626] text-white">
       <VisitorSidebar view={view} />
-      <main className="dashboard-page-surface dashboard-visitors-main-surface m-0.5 ml-1 flex min-h-0 flex-1 flex-col overflow-y-auto rounded-xl border border-black/20 bg-white [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <div className="mx-auto w-full max-w-[1320px] rounded-2xl border border-[#E3E4DF] bg-[#F3F4F0] px-8 pb-16 pt-7 sm:px-10 lg:px-12">
+      <main className="dashboard-page-surface dashboard-visitors-main-surface flex min-h-0 flex-1 flex-col overflow-y-auto bg-[#262626] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="dashboard-analytics-canvas mx-auto w-full max-w-[1320px] px-6 pb-16 pt-7 sm:px-10 lg:px-12">
+          <div className="mb-7">
+            <p className="text-xs font-normal uppercase tracking-[0.16em] text-white/40">Reports</p>
+            <h1 className="mt-2 text-3xl font-normal tracking-[-0.03em] text-white/95">{titles[view][0]}</h1>
+            <p className="mt-2 text-sm text-white/45">{titles[view][1]}</p>
+          </div>
           <div className="flex flex-wrap items-center justify-between gap-2.5">
             <div className="flex flex-wrap items-center gap-2">
               <Popover open={rangeOpen} onOpenChange={setRangeOpen}>
@@ -413,24 +419,38 @@ export function VisitorsClient({ view }: { view: VisitorView }) {
 }
 
 function VisitorSidebar({ view }: { view: VisitorView }) {
+  const { open, setOpen } = useMobileDrawer();
   return (
-    <div className="dashboard-secondary-sidebar my-0.5 ml-0.5 flex h-[calc(100%_-_4px)] min-h-0 w-[272px] shrink-0 flex-col overflow-hidden rounded-xl border border-black/20 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)] max-lg:w-[230px] max-md:hidden">
-      <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-4 pt-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <p className="mb-2 mt-1 px-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#74787c]">Reports</p>
-        <nav className="space-y-0.5">
-          {views.map(({ id, label }) => (
-            <Link
-              key={id}
-              href={id === "overview" ? "/dashboard/visitors" : `/dashboard/visitors/${id}`}
-              aria-current={view === id ? "page" : undefined}
-              className={`flex h-9 items-center gap-3 rounded-md px-2.5 text-[13px] text-black transition ${view === id ? "dashboard-secondary-nav-active bg-[#eeeeee] font-medium" : "hover:bg-[#f0f0f0]"}`}
-            >
-              {label}
-            </Link>
-          ))}
-        </nav>
+    <>
+      {/* Kept mounted (not `hidden`) below md so the slide has something to
+          animate — see SpacePanel.tsx for the same trick and why. */}
+      <div
+        className={`fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 md:hidden ${open ? "opacity-100" : "pointer-events-none opacity-0"}`}
+        onClick={() => setOpen(false)}
+      />
+      <div
+        id="analytics-report-sidebar"
+        className={`dashboard-secondary-sidebar dashboard-analytics-sidebar fixed inset-y-0 left-0 z-50 flex h-full w-64 shrink-0 flex-col overflow-hidden border-r border-white/10 bg-[#262626] shadow-[8px_0_30px_rgba(0,0,0,0.35)] transition-transform duration-300 ease-in-out md:static md:z-auto md:w-[240px] md:translate-x-0 md:shadow-none lg:w-[240px] ${
+          open ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-4 pt-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <p className="mb-2 mt-1 px-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#74787c]">Reports</p>
+          <nav className="space-y-0.5">
+            {views.map(({ id, label }) => (
+              <Link
+                key={id}
+                href={id === "overview" ? "/dashboard/visitors" : `/dashboard/visitors/${id}`}
+                aria-current={view === id ? "page" : undefined}
+                className={`flex h-10 items-center gap-3 rounded-lg px-3 text-[13px] font-normal transition ${view === id ? "dashboard-secondary-nav-active bg-white/10 text-white/90" : "text-white/60 hover:bg-white/[0.06] hover:text-white"}`}
+              >
+                {label}
+              </Link>
+            ))}
+          </nav>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
@@ -467,7 +487,7 @@ function SiteList({ sites, selectedId, onSelect }: { sites: SiteTag[]; selectedI
 
 function StatCard({ label, value }: { label: string; value: string }) {
   return (
-    <article className="rounded-2xl border border-[#DDE4E8] bg-white p-5">
+    <article className="rounded-xl border border-[#DDE4E8] bg-white p-5">
       <p className="text-[13.5px] font-medium text-[#3c4245]">{label}</p>
       <p className="mt-4 text-[30px] font-bold tracking-[-0.02em] text-black">{value}</p>
     </article>
@@ -523,7 +543,7 @@ function Overview({
       </div>
 
       <div className="mt-4 grid gap-4 xl:grid-cols-[1.65fr_0.95fr]">
-        <section className="overflow-hidden rounded-[24px] border border-[#DDE4E8] bg-white">
+        <section className="overflow-hidden rounded-xl border border-[#DDE4E8] bg-white">
           <div className="border-b border-[#E5E9EB] px-6 py-5">
             <h3 className="text-[16px] font-semibold">Visitor trend</h3>
             <p className="mt-1 text-[12px] text-[#667069]">Sessions over the selected time range.</p>
@@ -548,7 +568,7 @@ function Overview({
           </div>
         </section>
 
-        <section className="overflow-hidden rounded-[24px] border border-[#DDE4E8] bg-white">
+        <section className="overflow-hidden rounded-xl border border-[#DDE4E8] bg-white">
           <div className="border-b border-[#E5E9EB] px-6 py-5">
             <div className="flex items-center justify-between">
               <h3 className="text-[13px] font-semibold uppercase tracking-[0.06em] text-[#6D7D85]">Last 30 minutes</h3>
@@ -594,7 +614,7 @@ function Overview({
 
 function Insight({ title, columns, rows }: { title: string; columns: [string, string]; rows: [string, string][] }) {
   return (
-    <section className="min-h-[220px] rounded-[24px] border border-[#DDE4E8] bg-white p-6">
+    <section className="min-h-[220px] rounded-xl border border-[#DDE4E8] bg-white p-6">
       <h4 className="text-[13.5px] font-semibold">{title}</h4>
       <div className="mt-5 flex justify-between border-b border-[#EEF0F2] pb-2 text-[9.5px] font-bold uppercase tracking-[0.08em] text-[#8A929C]">
         <span>{columns[0]}</span><span>{columns[1]}</span>
@@ -679,7 +699,7 @@ function ReportView({
     Boolean(summary && (summary.totalPageviews > 0 || summary.totalSessions > 0));
 
   return (
-    <div className="mt-7 overflow-hidden rounded-[24px] border border-[#DDE4E8] bg-white">
+    <div className="mt-7 overflow-hidden rounded-xl border border-[#DDE4E8] bg-white">
       <div className="border-b border-[#E5E9EB] px-6 py-5">
         <h3 className="text-[16px] font-semibold">{titles[view][0]}</h3>
         <p className="mt-1 text-[12px] text-[#667069]">{site ? site.domain : "All connected websites"}</p>
@@ -731,7 +751,7 @@ function ReportView({
 
 function EmptyConnect() {
   return (
-    <div className="mt-7 flex min-h-[420px] flex-col items-center justify-center rounded-[24px] border border-[#DDE4E8] bg-white text-center">
+    <div className="mt-7 flex min-h-[420px] flex-col items-center justify-center rounded-xl border border-[#DDE4E8] bg-white text-center">
       <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F0F2F4] text-[#667078]"><Globe2 size={20} /></span>
       <p className="mt-3 text-[14px] font-semibold">Connect a website to view analytics</p>
       <p className="mt-1 max-w-sm text-[11.5px] leading-5 text-[#687178]">Add a site tag and install the snippet — visitor data will start appearing here automatically.</p>

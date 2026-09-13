@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { CheckCheck, ChevronDown, Filter, Globe2, MessageSquarePlus, Search } from "lucide-react";
 
 type PanelUser = { email: string; name?: string };
@@ -53,7 +53,9 @@ function formatTime(iso: string) {
 
 export default function HomePanel({ user: _user }: { user: PanelUser }) {
   const pathname = usePathname();
-  const showPanel = pathname === "/dashboard";
+  const searchParams = useSearchParams();
+  const showPanel = pathname === "/dashboard/inbox" && searchParams.get("view") !== "ai";
+  const openedConversationId = searchParams.get("conversation");
 
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<(typeof filters)[number]["value"]>("all");
@@ -128,6 +130,28 @@ export default function HomePanel({ user: _user }: { user: PanelUser }) {
 
   const unreadCount = useMemo(() => assigned.filter((conversation) => !!conversation.unread).length, [assigned]);
 
+  // AI Assist's own unread count, so its tab can carry a badge the same way
+  // the Inbox icon in the primary sidebar does — computed locally since this
+  // view already has the full conversation list.
+  const aiUnreadCount = useMemo(
+    () => conversations.filter((conversation) => !conversation.assignedUserId && !!conversation.unread).length,
+    [conversations],
+  );
+
+  // When nothing is actually unread, fall back to "how many are still open"
+  // — the same thing the sidebar's Inbox badge counts — so the tab isn't
+  // silent about conversations that still need attention.
+  const teamOpenCount = useMemo(
+    () => assigned.filter((conversation) => conversation.status !== "resolved").length,
+    [assigned],
+  );
+  const aiOpenCount = useMemo(
+    () => conversations.filter((conversation) => !conversation.assignedUserId && conversation.status !== "resolved").length,
+    [conversations],
+  );
+  const teamBadgeCount = unreadCount > 0 ? unreadCount : teamOpenCount;
+  const aiBadgeCount = aiUnreadCount > 0 ? aiUnreadCount : aiOpenCount;
+
   // How many of this teammate's assigned conversations came from each site
   // — shown next to its name in the picker so "All domains" vs. one
   // specific domain is a real number, not a guess.
@@ -150,22 +174,32 @@ export default function HomePanel({ user: _user }: { user: PanelUser }) {
   if (!showPanel) return null;
 
   return (
-    <aside className="dashboard-secondary-sidebar my-0.5 hidden h-[calc(100%_-_4px)] w-[304px] shrink-0 flex-col overflow-hidden rounded-xl border border-black/20 bg-white lg:flex">
+    <aside
+      id="dashboard-inbox-list"
+      className={`dashboard-secondary-sidebar h-full w-full shrink-0 flex-col overflow-hidden border-r border-white/10 bg-[#262626] lg:static lg:flex lg:w-[304px] ${
+        openedConversationId ? "hidden" : "flex"
+      }`}
+    >
+      <nav className="inbox-view-nav flex items-center gap-5 px-3" aria-label="Inbox views">
+        <Link href="/dashboard/inbox" aria-current="page" className="flex w-fit items-center gap-1.5 border-b-2 border-white/80 px-0 py-2 text-[13.5px] font-normal text-white">
+          Team Inbox
+          {teamBadgeCount > 0 && (
+            <span className="flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-[#27895d] px-1 text-[9px] font-bold text-white">
+              {teamBadgeCount > 99 ? "99+" : teamBadgeCount}
+            </span>
+          )}
+        </Link>
+        <Link href="/dashboard/inbox?view=ai" className="flex w-fit items-center gap-1.5 border-b-2 border-transparent px-0 py-2 text-[13.5px] font-normal text-white/70 hover:border-white/30 hover:text-white/90">
+          AI Assist
+          {aiBadgeCount > 0 && (
+            <span className="flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-[#27895d] px-1 text-[9px] font-bold text-white">
+              {aiBadgeCount > 99 ? "99+" : aiBadgeCount}
+            </span>
+          )}
+        </Link>
+      </nav>
       <div className="border-b border-[#e4e7ea] px-3 pb-3 pt-3">
-        <div className="flex items-start justify-between gap-2">
-          <div>
-            <h2 className="text-[18px] font-semibold tracking-[-0.02em] text-[#14171b]">Chats</h2>
-            <p className="mt-0.5 text-[13px] text-[#8a929c]">
-              {loading
-                ? "Loading…"
-                // Workspace name used to always sit here, which reads like a
-                // domain when it isn't one (it's the company, not a site).
-                // Now that there's an actual domain picker below, this shows
-                // the filtered count, and names the domain only when one is
-                // genuinely selected — the one case that label is true.
-                : `${visibleConversations.length} customer conversation${visibleConversations.length === 1 ? "" : "s"}${selectedSite ? ` · ${selectedSite.domain}` : ""}`}
-            </p>
-          </div>
+        <div className="inbox-list-summary flex items-start justify-end gap-2">
           {unreadCount > 0 && (
             <button
               type="button"
@@ -252,11 +286,11 @@ export default function HomePanel({ user: _user }: { user: PanelUser }) {
 
       <div className="min-h-0 flex-1 overflow-y-auto p-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {visibleConversations.map((conversation) => {
-          const active = conversation.id === activeId;
+          const active = conversation.id === (openedConversationId ?? activeId);
           return (
             <Link
               key={conversation.id}
-              href={`/dashboard?conversation=${conversation.id}`}
+              href={`/dashboard/inbox?conversation=${conversation.id}`}
               onClick={() => setActiveId(conversation.id)}
               className={`dashboard-chat-row group mb-1 flex items-start gap-3 rounded-xl px-2.5 py-3 transition-colors ${active ? "dashboard-chat-row-active" : ""}`}
             >

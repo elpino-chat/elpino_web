@@ -1116,37 +1116,25 @@ const PHONE_COUNTRIES = [
   { code: "NZ", name: "New Zealand", dial: "+64", flag: "🇳🇿" },
 ] as const;
 
-// ── Step metadata (drives the progress stepper + eyebrows) ──────────────────
-const STEP_META = [
-  { eyebrow: "About you" },
-  { eyebrow: "Welcome" },
-  { eyebrow: "How you found us" },
-  { eyebrow: "Your website" },
-] as const;
+const TOTAL_STEPS = 5;
+const CRAWL_LIMIT_OPTIONS = [10, 25, 50] as const;
 
-// ── Progress stepper: segmented bar + counter + back affordance ──────────────
-function ProgressHeader({ step, onBack }: { step: number; onBack: () => void }) {
-  const total = STEP_META.length;
-  return (
-    <div className="sticky top-0 z-20 mb-16 w-full bg-white pt-11">
-      {step > 1 && (
-        <button
-          type="button"
-          onClick={onBack}
-          className="mb-4 flex cursor-pointer items-center gap-1.5 text-sm font-normal text-black/50 transition hover:text-black"
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <path d="m15 18-6-6 6-6" />
-          </svg>
-          Back
-        </button>
-      )}
-      <div className="h-1 w-full overflow-hidden rounded-full bg-[#e5e6e9]">
-        <div className="h-full rounded-full bg-[#1447ff] transition-all duration-500" style={{ width: `${(step / total) * 100}%` }} />
-      </div>
-    </div>
-  );
-}
+type PagePriority = "high" | "medium" | "low";
+type CrawlPage = {
+  url: string;
+  title: string;
+  priority: PagePriority;
+  selected: boolean;
+  state: "pending" | "saving" | "saved" | "failed";
+  error?: string;
+};
+
+const PRIORITY_ORDER: Record<PagePriority, number> = { high: 0, medium: 1, low: 2 };
+const PRIORITY_BADGE: Record<PagePriority, string> = {
+  high: "bg-emerald-50 text-emerald-700 ring-emerald-600/20",
+  medium: "bg-amber-50 text-amber-700 ring-amber-600/20",
+  low: "bg-black/[0.04] text-black/55 ring-black/10",
+};
 
 function SearchIcon() {
   return (
@@ -1279,7 +1267,7 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
   const [languageOpen, setLanguageOpen] = useState(false);
   const [avatarOpen, setAvatarOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
-  const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
+  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1);
   const [profileName, setProfileName] = useState("");
   const [websiteUrl, setWebsiteUrl] = useState("");
   const [siteDescription, setSiteDescription] = useState("");
@@ -1296,8 +1284,17 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
   const [hearAboutUsLoading, setHearAboutUsLoading] = useState(false);
   const [hearAboutUsError, setHearAboutUsError] = useState<string | null>(null);
   const [widgetKey, setWidgetKey] = useState<string | null>(null);
+  const [siteId, setSiteId] = useState<string | null>(null);
+  const [siteVerified, setSiteVerified] = useState(false);
+  const [verifying, setVerifying] = useState(false);
+  const [verifyMessage, setVerifyMessage] = useState<string | null>(null);
   const [widgetKeyError, setWidgetKeyError] = useState<string | null>(null);
   const [snippetCopied, setSnippetCopied] = useState(false);
+  const [crawlLimit, setCrawlLimit] = useState<number>(CRAWL_LIMIT_OPTIONS[0]);
+  const [scannedLimit, setScannedLimit] = useState(0);
+  const [crawlPages, setCrawlPages] = useState<CrawlPage[]>([]);
+  const [crawlStatus, setCrawlStatus] = useState<"idle" | "discovering" | "ready" | "saving" | "done">("idle");
+  const [crawlError, setCrawlError] = useState<string | null>(null);
   const [activeConnector, setActiveConnector] = useState<ConnectorItem | null>(null);
   const [setupError, setSetupError] = useState<string | null>(null);
   const [setupSubmitting, setSetupSubmitting] = useState(false);
@@ -1331,7 +1328,7 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
   useEffect(() => {
     fetch("/api/onboarding/status")
       .then((r) => r.json())
-      .then((data: { onboarding?: OnboardingState; name?: string; phone?: string; email?: string }) => {
+      .then((data: { onboarding?: OnboardingState; name?: string; phone?: string; email?: string; organizationName?: string; websiteUrl?: string }) => {
         const onboarding = data.onboarding ?? {};
         if (onboarding.completedAt) {
           router.replace("/dashboard");
@@ -1342,8 +1339,15 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
         // have a real name; email signups carry a placeholder derived from the
         // address, which we leave blank so the principal types their own.
         const placeholder = data.email?.split("@")[0];
-        if (data.name && data.name !== placeholder) {
-          setProfileName((current) => current || data.name || "");
+        const nameFallback = data.name && data.name !== placeholder ? data.name : "";
+        if (data.organizationName || nameFallback) {
+          setProfileName((current) => current || data.organizationName || nameFallback);
+        }
+        // websiteUrl was already saved in step 1 on a previous visit — restore
+        // it so a page refresh on step 4/5 doesn't lose the site the rest of
+        // this flow (verification, crawling) needs.
+        if (data.websiteUrl) {
+          setWebsiteUrl((current) => current || data.websiteUrl || "");
         }
         if (data.phone) {
           const match = [...PHONE_COUNTRIES]
@@ -1401,7 +1405,7 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
     : visibleConnectors;
 
   function goBack() {
-    setStep((s) => (s > 1 ? ((s - 1) as 1 | 2 | 3 | 4) : s));
+    setStep((s) => (s > 1 ? ((s - 1) as 1 | 2 | 3 | 4 | 5) : s));
   }
 
   function isConnected(provider: string) {
@@ -1508,20 +1512,21 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
   // same /api/workspace/sites endpoint Tag Manager itself uses means this
   // is the same row, visible in the same place, with a working snippet.
   useEffect(() => {
-    if (step !== 4 || widgetKey || widgetKeyError) return;
+    if (step < 4 || widgetKey || widgetKeyError) return;
     const hostname = (() => {
       try { return new URL(normalizeWebsiteUrl(websiteUrl) ?? websiteUrl).hostname.toLowerCase().replace(/^www\./, ""); }
       catch { return null; }
     })();
+    type SiteRow = { id: string; publicKey: string; domain: string; status?: string };
 
-    async function ensureSite() {
+    async function ensureSite(): Promise<SiteRow> {
       const existing = await fetch("/api/workspace/sites")
         .then((r) => (r.ok ? r.json() : null))
-        .then((data: { sites?: { publicKey: string; domain: string }[] } | null) => data?.sites ?? [])
-        .catch(() => []);
+        .then((data: { sites?: SiteRow[] } | null) => data?.sites ?? [])
+        .catch(() => [] as SiteRow[]);
       const match = hostname ? existing.find((site) => site.domain === hostname) : undefined;
-      if (match) return match.publicKey;
-      if (existing.length > 0) return existing[0].publicKey; // resuming onboarding after a site was already made
+      if (match) return match;
+      if (existing.length > 0) return existing[0]; // resuming onboarding after a site was already made
 
       const created = await fetch("/api/workspace/sites", {
         method: "POST",
@@ -1532,15 +1537,121 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
           allowLocalhost: false,
           permissions: { support: true, visitors: true, analytics: true },
         }),
-      }).then((r) => r.json().catch(() => ({}))) as { site?: { publicKey: string }; message?: string };
+      }).then((r) => r.json().catch(() => ({}))) as { site?: SiteRow; message?: string };
       if (!created.site) throw new Error(created.message ?? "Could not create a site tag");
-      return created.site.publicKey;
+      return created.site;
     }
 
     ensureSite()
-      .then((publicKey) => setWidgetKey(publicKey))
+      .then((site) => {
+        setWidgetKey(site.publicKey);
+        setSiteId(site.id);
+        setSiteVerified(site.status === "verified");
+      })
       .catch((err: unknown) => setWidgetKeyError(err instanceof Error ? err.message : "Could not create a site tag"));
   }, [step, widgetKey, widgetKeyError, websiteUrl, profileName]);
+
+  const siteHostname = (() => {
+    try { return new URL(normalizeWebsiteUrl(websiteUrl) ?? websiteUrl).hostname; }
+    catch { return "your site"; }
+  })();
+
+  // The tag marks its site verified the first time it loads on the site's own
+  // domain, so checking is just re-reading that site's status.
+  async function verifyInstall() {
+    if (!widgetKey) return;
+    setVerifying(true);
+    setVerifyMessage(null);
+    try {
+      const data = (await fetch("/api/workspace/sites").then((r) => r.json())) as { sites?: { publicKey: string; status?: string }[] };
+      if (data.sites?.find((site) => site.publicKey === widgetKey)?.status === "verified") {
+        setSiteVerified(true);
+      } else {
+        setVerifyMessage(`We haven't seen the tag on ${siteHostname} yet. Publish the snippet, open your site in a browser, then check again.`);
+      }
+    } catch {
+      setVerifyMessage("We couldn't check right now. Please try again.");
+    } finally {
+      setVerifying(false);
+    }
+  }
+
+  async function discoverPages(limit: number) {
+    const startUrl = normalizeWebsiteUrl(websiteUrl);
+    if (!startUrl) {
+      setCrawlError("Add your website URL in step 1 first.");
+      return;
+    }
+    setCrawlStatus("discovering");
+    setCrawlError(null);
+    try {
+      const [discovered, alreadySaved] = await Promise.all([
+        fetch("/api/workspace/knowledge/discover", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ url: startUrl, limit }),
+        }).then(async (res) => {
+          const data = (await res.json().catch(() => ({}))) as { pages?: { url: string; title: string; priority: PagePriority }[]; message?: string };
+          if (!res.ok || !data.pages) throw new Error(data.message ?? "We couldn't scan your website. Please try again.");
+          return data.pages;
+        }),
+        fetch("/api/workspace/knowledge")
+          .then((res) => (res.ok ? res.json() : { items: [] }))
+          .then((data: { items?: { sourceUrl: string | null }[] }) => new Set((data.items ?? []).flatMap((item) => (item.sourceUrl ? [item.sourceUrl] : []))))
+          .catch(() => new Set<string>()),
+      ]);
+      setCrawlPages((current) => {
+        const known = new Map(current.map((page) => [page.url, page]));
+        const merged: CrawlPage[] = discovered.map((page) => known.get(page.url) ?? {
+          url: page.url,
+          title: page.title,
+          priority: page.priority,
+          selected: page.priority !== "low" && !alreadySaved.has(page.url),
+          state: alreadySaved.has(page.url) ? "saved" : "pending",
+        });
+        const mergedUrls = new Set(merged.map((page) => page.url));
+        return [...merged, ...current.filter((page) => !mergedUrls.has(page.url))]
+          .sort((a, b) => PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority]);
+      });
+      setScannedLimit(limit);
+      setCrawlStatus("ready");
+    } catch (err) {
+      setCrawlError(err instanceof Error ? err.message : "We couldn't scan your website. Please try again.");
+      setCrawlStatus(crawlPages.length ? "ready" : "idle");
+    }
+  }
+
+  function togglePage(url: string) {
+    setCrawlPages((pages) => pages.map((page) => (page.url === url ? { ...page, selected: !page.selected } : page)));
+  }
+
+  async function savePages() {
+    const queue = crawlPages.filter((page) => page.selected && page.state !== "saved");
+    if (queue.length === 0) return;
+    setCrawlStatus("saving");
+    const patch = (url: string, next: Partial<CrawlPage>) =>
+      setCrawlPages((pages) => pages.map((page) => (page.url === url ? { ...page, ...next } : page)));
+    for (let i = 0; i < queue.length; i += 3) {
+      await Promise.all(
+        queue.slice(i, i + 3).map(async (page) => {
+          patch(page.url, { state: "saving", error: undefined });
+          try {
+            const res = await fetch("/api/workspace/knowledge/url", {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify({ url: page.url, siteId: siteId ?? undefined }),
+            });
+            const data = (await res.json().catch(() => ({}))) as { message?: string };
+            if (!res.ok) throw new Error(data.message ?? "Could not save this page");
+            patch(page.url, { state: "saved" });
+          } catch (err) {
+            patch(page.url, { state: "failed", error: err instanceof Error ? err.message : "Could not save this page" });
+          }
+        }),
+      );
+    }
+    setCrawlStatus("done");
+  }
 
   async function unlinkConnector(provider: string) {
     await fetch(`/api/connectors/${provider}`, { method: "DELETE" });
@@ -1686,26 +1797,26 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
     }
   }
 
+  const primaryButtonClass =
+    "mx-auto mt-10 flex h-14 w-full max-w-[320px] cursor-pointer items-center justify-center gap-2 rounded-full bg-[#2563eb] text-[16px] font-medium text-white transition hover:bg-[#1d4ed8] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#2563eb]/25 active:scale-[0.99] disabled:cursor-not-allowed disabled:bg-black/[0.06] disabled:text-black/35";
+  const inputClass =
+    "h-14 w-full rounded-xl border bg-white px-5 text-[16px] text-[#1f2328] outline-none transition placeholder:text-black/35 hover:border-black/25 focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/10";
+  const chipClass = (selected: boolean) =>
+    `flex cursor-pointer items-center gap-2 whitespace-nowrap rounded-xl border px-5 py-3 text-[15px] transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#2563eb]/20 ${
+      selected
+        ? "border-[#2563eb] bg-[#2563eb]/[0.06] text-[#1d4ed8] ring-1 ring-[#2563eb]"
+        : "border-black/15 bg-white text-[#1f2328] hover:border-black/30"
+    }`;
+  const spinner = <span className="size-4 animate-spin rounded-full border-2 border-black/15 border-t-black/50" />;
+
   return (
-    <main
-      className="onboarding-light onboarding-scene relative flex min-h-screen items-start justify-center bg-white px-6 pb-10 pt-16 text-[#222733]"
-    >
-      {/* Floating brand mark — matches the login page */}
-      <Link
-        href="/"
-        className="fixed left-5 top-5 z-30 flex h-9 items-center sm:left-8 sm:top-7"
-        aria-label="elpino home"
-      >
-        <Image
-          src="/elpino.png"
-          alt="elpino"
-          width={906}
-          height={275}
-          className="h-8 w-auto object-contain brightness-0"
-          priority
-        />
-      </Link>
-      <div className="fixed right-6 top-5 z-30 flex items-center gap-3 sm:right-10 sm:top-7">
+    <main className="relative flex min-h-screen flex-col bg-white text-[#1f2328]">
+      <header className="sticky top-0 z-30 bg-white">
+        <div className="flex h-16 items-center justify-between px-5 sm:px-10">
+          <Link href="/" aria-label="elpino home" className="inline-flex rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb]/30">
+            <Image src="/elpino.png" alt="elpino" width={906} height={275} priority className="h-auto w-[104px]" />
+          </Link>
+          <div className="flex items-center gap-3">
         <div className="onboarding-language">
           <LanguageSwitcher language={language} onChange={setStoredLanguage} light open={languageOpen} onOpenChange={(open) => { setLanguageOpen(open); if (open) setAvatarOpen(false); }} />
         </div>
@@ -1735,30 +1846,31 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
         </div>
       </div>
 
-      <div className="flex min-h-[calc(100vh-106px)] w-full max-w-xl flex-col rounded-none bg-white px-8 pb-10 shadow-[0_24px_80px_rgba(76,88,140,0.14)] sm:px-12">
-        <ProgressHeader step={step} onBack={goBack} />
+        </div>
+        <div className="h-1 w-full bg-black/[0.06]">
+          <div className="h-full bg-[#2563eb] transition-[width] duration-500" style={{ width: `${(step / TOTAL_STEPS) * 100}%` }} />
+        </div>
+      </header>
 
-        <div
-          key={step}
-          className="onb-enter mx-auto flex w-full flex-1 flex-col max-w-[880px]"
-        >
-        {/* Step 1 — about you (name + optional phone) */}
+      <div className="flex flex-1 flex-col items-center px-6 pb-36 pt-[clamp(3rem,10vh,6rem)]">
+        <div key={step} className="onb-enter w-full max-w-[760px] text-center">
         {step === 1 && (
           <section>
-            <h1 className="text-4xl font-normal leading-[1.12] tracking-[-0.035em] text-white text-balance">
+            <h1 className="text-balance text-[clamp(2rem,4.2vw,3rem)] font-normal leading-[1.1] tracking-[-0.03em]">
               Let&rsquo;s set up your organization
             </h1>
-            <p className="mt-3 text-[15px] leading-6 text-black/55">
+            <p className="mt-3 text-[16px] text-black/55">
               Share a few details so Elpino can personalize support for your business.
             </p>
-            <div className="mx-auto mt-8 w-full max-w-[760px] space-y-5">
+            <div className="mx-auto mt-10 w-full max-w-[560px] space-y-5 text-left">
               <div>
-                <label className="mb-2 block text-[15px] font-normal text-[#252932]">Organization name</label>
-                <input value={profileName} onChange={(e) => setProfileName(e.target.value)} placeholder="Enter your organization name" autoFocus className="h-[52px] w-full rounded-lg border border-black/20 bg-white px-4 text-[16px] font-normal text-[#222733] outline-none transition placeholder:text-black/35 focus:border-[#1447ff]" />
+                <label htmlFor="onb-org" className="mb-2 block text-[14px] font-medium">Organization name</label>
+                <input id="onb-org" value={profileName} onChange={(e) => setProfileName(e.target.value)} placeholder="E.g. Acme Inc." autoFocus className={`${inputClass} border-black/15`} />
               </div>
               <div>
-                <label className="mb-2 block text-[15px] font-normal text-[#252932]">Website URL</label>
+                <label htmlFor="onb-url" className="mb-2 block text-[14px] font-medium">Website URL</label>
                 <input
+                  id="onb-url"
                   value={websiteUrl}
                   onChange={(e) => {
                     setWebsiteUrl(e.target.value);
@@ -1768,44 +1880,23 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
                   type="url"
                   inputMode="url"
                   autoComplete="url"
-                  className={`h-[52px] w-full rounded-lg border bg-white px-4 text-[16px] font-normal text-[#222733] outline-none transition placeholder:text-black/35 focus:border-[#1447ff] ${
-                    profileError ? "border-red-400" : "border-black/20"
-                  }`}
+                  className={`${inputClass} ${profileError ? "border-red-400" : "border-black/15"}`}
                 />
-                {profileError && (
-                  <p className="mt-2 text-sm text-red-600">{profileError}</p>
-                )}
+                {profileError && <p className="mt-2 text-sm text-red-600">{profileError}</p>}
               </div>
             </div>
-            <div className="hidden">
-              {["Online store", "Portfolio", "Offering services", "Blog", "Landing page", "Non-profit organization", "Tech company", "Restaurant", "Promoting an event"].map((option) => (
-                <button key={option} type="button" onClick={() => setSiteType(option)} className={`rounded-lg border px-3.5 py-2 text-[15px] font-normal transition ${siteType === option ? "border-[#1447ff] bg-[#eef3ff] text-[#1447ff]" : "border-black/15 bg-white text-[#20232a] hover:border-black/35"}`}>
-                  {option}
-                </button>
-              ))}
-            </div>
-            <div className="flex items-center justify-end pt-12">
-              <div className="flex items-center gap-5">
-                <button type="button" disabled={!profileName.trim() || !websiteUrl.trim() || profileLoading} onClick={() => void submitProfile()} className="onboarding-primary inline-flex h-10 min-w-32 items-center justify-center rounded-lg bg-[#1242f1] px-6 text-[15px] font-normal text-white transition hover:bg-[#0d35cc] disabled:bg-[#ececef] disabled:text-black/30">{profileLoading ? <><span className="onboarding-spinner mr-2 size-4 animate-spin rounded-full border-2" />Saving...</> : "Continue"}</button>
-              </div>
-            </div>
+            <button type="button" disabled={!profileName.trim() || !websiteUrl.trim() || profileLoading} onClick={() => void submitProfile()} className={primaryButtonClass}>
+              {profileLoading ? <>{spinner}Saving…</> : "Continue"}
+            </button>
           </section>
         )}
 
-        {/* Step 2 — source */}
         {step === 2 && (
           <section>
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#D96420]">
-              {STEP_META[1].eyebrow}
-            </p>
-            <h1 className="mt-3 text-4xl font-semibold leading-[1.12] tracking-[-0.02em] text-white text-balance">
+            <h1 className="text-balance text-[clamp(2rem,4.2vw,3rem)] font-normal leading-[1.1] tracking-[-0.03em]">
               What does your organization help customers with?
             </h1>
-            <p className="mt-3 max-w-md text-[15px] leading-6 text-white/50">
-              Tell Elpino what you offer so it can support your customers more accurately.
-            </p>
-            <input value={siteDescription} onChange={(e) => setSiteDescription(e.target.value)} placeholder="Describe your products, services, and the customers you serve" className="mt-7 h-[52px] w-full rounded-lg border border-black/20 bg-white px-4 text-[16px] font-normal text-[#222733] outline-none transition placeholder:text-black/35 focus:border-[#1447ff]" />
-            <div className="mt-6 flex flex-wrap gap-3">
+            <div className="mx-auto mt-10 flex max-w-[680px] flex-wrap justify-center gap-3">
               {[
                 { label: "SaaS", icon: Layers },
                 { label: "Online store", icon: ShoppingBag },
@@ -1815,58 +1906,31 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
                 { label: "Healthcare", icon: Stethoscope },
                 { label: "Financial services", icon: Landmark },
                 { label: "Other", icon: Sparkles },
-              ].map(({ label: option, icon: OptionIcon }) => {
-                const selected = siteType === option;
-                return (
-                  <button
-                    key={option}
-                    type="button"
-                    onClick={() => setSiteType(option)}
-                    className={`flex cursor-pointer items-center justify-between gap-2 rounded-full border px-4 py-2 text-left text-base font-normal whitespace-nowrap transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1447ff]/30 ${
-                      selected
-                        ? "border-[#1447ff] bg-[#eef3ff] text-[#1447ff]"
-                        : "border-black/15 bg-white text-[#20232a] hover:border-black/35"
-                    }`}
-                  >
-                    <span className="flex items-center gap-2">
-                      <OptionIcon className="size-4 shrink-0" />
-                      {option}
-                    </span>
-                    {selected && <CheckIcon className="text-[#1447ff]" />}
-                  </button>
-                );
-              })}
+              ].map(({ label: option, icon: OptionIcon }) => (
+                <button key={option} type="button" onClick={() => setSiteType(option)} aria-pressed={siteType === option} className={chipClass(siteType === option)}>
+                  <OptionIcon className="size-4 shrink-0" />
+                  {option}
+                </button>
+              ))}
             </div>
-            {businessError && (
-              <p className="mt-4 text-sm text-red-600">{businessError}</p>
-            )}
-            <button
-              type="button"
-              disabled={!siteDescription.trim() || !siteType || businessLoading}
-              onClick={() => void submitBusiness()}
-              className="mt-8 inline-flex h-[52px] w-full cursor-pointer items-center justify-center rounded-full bg-white text-base font-normal text-black transition hover:bg-white/90 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {businessLoading ? (
-                <><span className="onboarding-spinner mr-2 size-4 animate-spin rounded-full border-2" />Saving...</>
-              ) : "Continue"}
+            <div className="mx-auto mt-10 w-full max-w-[680px] text-left">
+              <label htmlFor="onb-desc" className="mb-2 block text-[14px] font-medium">Describe what you offer</label>
+              <input id="onb-desc" value={siteDescription} onChange={(e) => setSiteDescription(e.target.value)} placeholder="E.g. Project management software for small agencies" className={`${inputClass} border-black/15`} />
+            </div>
+            {businessError && <p className="mt-4 text-sm text-red-600">{businessError}</p>}
+            <button type="button" disabled={!siteDescription.trim() || !siteType || businessLoading} onClick={() => void submitBusiness()} className={primaryButtonClass}>
+              {businessLoading ? <>{spinner}Saving…</> : "Continue"}
             </button>
           </section>
         )}
 
-        {/* Step 3 — how they heard about us */}
         {step === 3 && (
           <section>
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#D96420]">
-              {STEP_META[2].eyebrow}
-            </p>
-            <h1 className="mt-3 text-4xl font-semibold leading-[1.12] tracking-[-0.02em] text-white text-balance">
+            <h1 className="text-balance text-[clamp(2rem,4.2vw,3rem)] font-normal leading-[1.1] tracking-[-0.03em]">
               Where did you hear about us?
             </h1>
-            <p className="mt-3 max-w-md text-[15px] leading-6 text-white/50">
-              This helps us understand how people find Elpino.
-            </p>
-
-            <div className="mt-7 flex flex-wrap gap-3">
+            <p className="mt-3 text-[16px] text-black/55">This helps us understand how people find Elpino.</p>
+            <div className="mx-auto mt-10 flex max-w-[640px] flex-wrap justify-center gap-3">
               {[
                 { value: "google", label: "Google search" },
                 { value: "twitter", label: "Twitter / X" },
@@ -1874,67 +1938,38 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
                 { value: "friend", label: "Friend or colleague" },
                 { value: "blog", label: "Blog or podcast" },
                 { value: "other", label: "Other" },
-              ].map(({ value, label }) => {
-                const selected = hearAboutUs === value;
-                return (
-                  <button
-                    key={value}
-                    type="button"
-                    onClick={() => setHearAboutUs(value)}
-                    className={`flex cursor-pointer items-center gap-2 rounded-full border px-4 py-2 text-left text-base font-normal whitespace-nowrap transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1447ff]/30 ${
-                      selected
-                        ? "border-[#1447ff] bg-[#eef3ff] text-[#1447ff]"
-                        : "border-black/15 bg-white text-[#20232a] hover:border-black/35"
-                    }`}
-                  >
-                    {label}
-                    {selected && <CheckIcon className="text-[#1447ff]" />}
-                  </button>
-                );
-              })}
+              ].map(({ value, label }) => (
+                <button key={value} type="button" onClick={() => setHearAboutUs(value)} aria-pressed={hearAboutUs === value} className={chipClass(hearAboutUs === value)}>
+                  {label}
+                </button>
+              ))}
             </div>
-
-            {hearAboutUsError && (
-              <p className="mt-4 text-sm text-red-600">{hearAboutUsError}</p>
-            )}
-            <button
-              type="button"
-              disabled={!hearAboutUs || hearAboutUsLoading}
-              onClick={() => void submitHearAboutUs()}
-              className="mt-8 inline-flex h-[52px] w-full cursor-pointer items-center justify-center rounded-full bg-white text-base font-normal text-black transition hover:bg-white/90 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {hearAboutUsLoading ? (
-                <><span className="onboarding-spinner mr-2 size-4 animate-spin rounded-full border-2" />Saving...</>
-              ) : "Continue"}
+            {hearAboutUsError && <p className="mt-4 text-sm text-red-600">{hearAboutUsError}</p>}
+            <button type="button" disabled={!hearAboutUs || hearAboutUsLoading} onClick={() => void submitHearAboutUs()} className={primaryButtonClass}>
+              {hearAboutUsLoading ? <>{spinner}Saving…</> : "Continue"}
             </button>
           </section>
         )}
 
-        {/* Step 4 — website widget snippet */}
         {step === 4 && (
           <section>
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#D96420]">
-              {STEP_META[3].eyebrow}
-            </p>
-            <h1 className="mt-3 text-4xl font-semibold leading-[1.12] tracking-[-0.02em] text-white text-balance">
-              Add Riz to your website
+            <h1 className="text-balance text-[clamp(2rem,4.2vw,3rem)] font-normal leading-[1.1] tracking-[-0.03em]">
+              Add Elpino to your website
             </h1>
-            <p className="mt-3 max-w-md text-[15px] leading-6 text-white/50">
-              Paste this snippet on your site to embed the chat widget.
-            </p>
+            <p className="mt-3 text-[16px] text-black/55">Install the tag on {siteHostname}, then verify it&rsquo;s live.</p>
 
-            <div className="mt-7 rounded-2xl border border-white/30 bg-white p-4">
+            <div className="mx-auto mt-10 w-full max-w-[640px] rounded-2xl border border-black/10 bg-[#fafafa] p-5 text-left">
               <div className="flex items-start gap-3">
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-full border border-white/30 bg-white">
-                  <Code2 className="size-5 text-white" />
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-black/10 bg-white">
+                  <Code2 className="size-5 text-[#2563eb]" />
                 </span>
-                <span className="mt-2.5 block text-sm leading-6 text-white/50">
-                  Add it inside <code className="rounded bg-white/10 px-1 py-0.5 text-xs">&lt;head&gt;</code> or right
-                  before <code className="rounded bg-white/10 px-1 py-0.5 text-xs">&lt;/body&gt;</code> — it loads
+                <span className="mt-1 block text-sm leading-6 text-black/55">
+                  Add it inside <code className="rounded bg-black/[0.06] px-1 py-0.5 text-xs">&lt;head&gt;</code> or right
+                  before <code className="rounded bg-black/[0.06] px-1 py-0.5 text-xs">&lt;/body&gt;</code> — it loads
                   asynchronously, so either works.
                 </span>
               </div>
-              <div className="mt-4 border-t border-white/10 pt-4">
+              <div className="mt-4">
                 <div className="relative overflow-hidden rounded-xl border border-black/10 bg-[#1e1e2e] shadow-inner">
                   <div className="flex items-center gap-1.5 border-b border-[#313244] px-3 py-2">
                     <span className="size-2.5 rounded-full bg-[#ff5f56]" />
@@ -1982,36 +2017,171 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
                     {snippetCopied ? <Check className="size-4" /> : <Copy className="size-4" />}
                   </button>
                 </div>
-                <p className="mt-2 text-xs text-white/40">
-                  Paste this before the closing <code className="text-white/60">&lt;/body&gt;</code> tag on {(() => { try { return new URL(normalizeWebsiteUrl(websiteUrl) ?? websiteUrl).hostname; } catch { return "your site"; } })()}. Manage or add more sites later from Settings → Tag Manager.
+                <p className="mt-3 text-xs leading-5 text-black/45">
+                  Paste this before the closing <code className="text-black/65">&lt;/body&gt;</code> tag on {siteHostname}. Manage or add more sites later from Settings → Tag Manager.
                 </p>
                 {widgetKeyError && (
-                  <p className="mt-2 flex items-center gap-2 text-xs text-[#f38ba8]">
+                  <p className="mt-2 flex items-center gap-2 text-xs text-red-600">
                     {widgetKeyError}
-                    <button type="button" onClick={() => setWidgetKeyError(null)} className="underline hover:text-white">Retry</button>
+                    <button type="button" onClick={() => setWidgetKeyError(null)} className="underline hover:text-red-800">Retry</button>
                   </p>
                 )}
               </div>
             </div>
 
-            {skipError && (
-              <p className="mt-4 text-sm text-red-600">{skipError}</p>
+            <div className="mx-auto mt-6 max-w-[640px]" aria-live="polite">
+              {siteVerified ? (
+                <p className="flex items-center justify-center gap-2 text-[15px] text-emerald-700">
+                  <Check className="size-4" />
+                  Verified — Elpino is live on {siteHostname}
+                </p>
+              ) : verifyMessage ? (
+                <p className="text-[14px] leading-6 text-amber-700">{verifyMessage}</p>
+              ) : null}
+            </div>
+
+            {siteVerified ? (
+              <button type="button" onClick={() => setStep(5)} className={primaryButtonClass}>
+                Continue
+              </button>
+            ) : (
+              <>
+                <button type="button" disabled={!widgetKey || verifying} onClick={() => void verifyInstall()} className={primaryButtonClass}>
+                  {verifying ? <>{spinner}Checking…</> : "Verify installation"}
+                </button>
+                <button type="button" onClick={() => setStep(5)} className="mx-auto mt-4 block cursor-pointer text-[14px] text-black/50 underline-offset-4 transition hover:text-black hover:underline">
+                  Skip for now
+                </button>
+              </>
             )}
-            <button
-              type="button"
-              disabled={skipLoading}
-              onClick={() => void skipTelegram()}
-              className="mt-8 inline-flex h-[52px] w-full cursor-pointer items-center justify-center rounded-full bg-white text-base font-normal text-black transition hover:bg-white/90 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {skipLoading ? (
-                <><span className="onboarding-spinner mr-2 size-4 animate-spin rounded-full border-2" />Saving...</>
-              ) : "Continue to dashboard"}
-            </button>
           </section>
         )}
-        </div>
 
+        {step === 5 && (() => {
+          const pendingCount = crawlPages.filter((page) => page.selected && page.state !== "saved").length;
+          const savedCount = crawlPages.filter((page) => page.state === "saved").length;
+          const busy = crawlStatus === "discovering" || crawlStatus === "saving";
+          return (
+            <section>
+              <h1 className="text-balance text-[clamp(2rem,4.2vw,3rem)] font-normal leading-[1.1] tracking-[-0.03em]">
+                Teach Elpino about your business
+              </h1>
+              <p className="mt-3 text-[16px] text-black/55">
+                We&rsquo;ll scan {siteHostname} from the homepage outward, then save the pages you choose to your knowledge base.
+              </p>
+
+              <div className="mx-auto mt-8 flex flex-wrap items-center justify-center gap-2">
+                <span className="mr-1 text-[14px] text-black/55">Pages to scan</span>
+                {CRAWL_LIMIT_OPTIONS.map((limit) => (
+                  <button
+                    key={limit}
+                    type="button"
+                    disabled={busy}
+                    onClick={() => setCrawlLimit(limit)}
+                    aria-pressed={crawlLimit === limit}
+                    className={`${chipClass(crawlLimit === limit)} disabled:cursor-not-allowed disabled:opacity-50`}
+                  >
+                    {limit}
+                  </button>
+                ))}
+              </div>
+
+              {crawlError && <p className="mt-6 text-sm text-red-600">{crawlError}</p>}
+
+              {crawlStatus === "discovering" && (
+                <p className="mt-8 flex items-center justify-center gap-2 text-[15px] text-black/55">
+                  {spinner}Scanning {siteHostname}… this can take a minute.
+                </p>
+              )}
+
+              {crawlPages.length > 0 && (
+                <div className="mx-auto mt-8 w-full max-w-[680px] overflow-hidden rounded-2xl border border-black/10 bg-white text-left">
+                  <div className="flex items-center justify-between gap-3 border-b border-black/[0.06] bg-[#fafafa] px-4 py-3">
+                    <p className="text-[13px] text-black/55">
+                      {pendingCount + savedCount} of {crawlPages.length} pages selected
+                    </p>
+                    {crawlStatus === "ready" && crawlLimit > scannedLimit && (
+                      <button type="button" onClick={() => void discoverPages(crawlLimit)} className="cursor-pointer text-[13px] font-medium text-[#2563eb] hover:underline">
+                        Scan up to {crawlLimit} pages
+                      </button>
+                    )}
+                  </div>
+                  <ul className="max-h-[420px] divide-y divide-black/[0.06] overflow-y-auto">
+                    {crawlPages.map((page) => (
+                      <li key={page.url} className="flex items-center gap-3 px-4 py-3">
+                        <input
+                          type="checkbox"
+                          checked={page.selected || page.state === "saved"}
+                          disabled={page.state === "saved" || page.state === "saving" || crawlStatus === "saving"}
+                          onChange={() => togglePage(page.url)}
+                          aria-label={`Include ${page.title}`}
+                          className="size-4 shrink-0 cursor-pointer accent-[#2563eb] disabled:cursor-default"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-[14px] font-medium text-[#1f2328]">{page.title}</p>
+                          <p className="truncate text-[12px] text-black/45">{new URL(page.url).pathname}</p>
+                          {page.error && <p className="mt-0.5 text-[12px] text-red-600">{page.error}</p>}
+                        </div>
+                        <span className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium capitalize ring-1 ring-inset ${PRIORITY_BADGE[page.priority]}`}>
+                          {page.priority}
+                        </span>
+                        <span className="flex w-5 shrink-0 justify-center">
+                          {page.state === "saving" && spinner}
+                          {page.state === "saved" && <Check className="size-4 text-emerald-600" aria-label="Saved" />}
+                          {page.state === "failed" && <span className="text-[14px] font-semibold text-red-600" aria-label="Failed">!</span>}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {crawlStatus === "idle" && (
+                <button type="button" onClick={() => void discoverPages(crawlLimit)} className={primaryButtonClass}>
+                  Scan website
+                </button>
+              )}
+              {(crawlStatus === "ready" || crawlStatus === "saving") && (
+                <button type="button" disabled={busy || pendingCount === 0} onClick={() => void savePages()} className={primaryButtonClass}>
+                  {crawlStatus === "saving" ? <>{spinner}Saving pages…</> : `Save ${pendingCount} page${pendingCount === 1 ? "" : "s"} to knowledge`}
+                </button>
+              )}
+              {crawlStatus === "done" && (
+                <p className="mt-6 text-[15px] text-emerald-700">
+                  {savedCount} page{savedCount === 1 ? "" : "s"} saved. You can add more anytime from Knowledge.
+                </p>
+              )}
+
+              {skipError && <p className="mt-4 text-sm text-red-600">{skipError}</p>}
+              {crawlStatus === "done" ? (
+                <button type="button" disabled={skipLoading} onClick={() => void skipTelegram()} className={primaryButtonClass}>
+                  {skipLoading ? <>{spinner}Saving…</> : "Go to dashboard"}
+                </button>
+              ) : (
+                <button type="button" disabled={skipLoading || busy} onClick={() => void skipTelegram()} className="mx-auto mt-4 block cursor-pointer text-[14px] text-black/50 underline-offset-4 transition hover:text-black hover:underline disabled:cursor-not-allowed disabled:opacity-50">
+                  Skip for now
+                </button>
+              )}
+            </section>
+          );
+        })()}
+        </div>
       </div>
+
+      <footer className="fixed inset-x-0 bottom-0 z-20 flex items-center gap-4 bg-white/90 px-5 py-5 backdrop-blur sm:px-10">
+        <div className="w-20 shrink-0">
+          {step > 1 && (
+            <button type="button" onClick={goBack} className="flex cursor-pointer items-center gap-1.5 text-[15px] text-black/60 transition hover:text-black">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M19 12H5m6-6-6 6 6 6" /></svg>
+              Back
+            </button>
+          )}
+        </div>
+        <p className="flex-1 text-center text-[12px] leading-5 text-black/40">
+          We collect this information to personalize your experience. You&rsquo;re signing up as {session.email}.
+        </p>
+        <div className="hidden w-20 shrink-0 sm:block" />
+      </footer>
     </main>
   );
 }

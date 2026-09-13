@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { CheckCheck, Filter, Globe, LoaderCircle, MapPin, MessageCircle, MessageSquarePlus, MonitorSmartphone, Search, Send, Sparkles } from "lucide-react";
+import { ArrowLeft, CheckCheck, Filter, Globe, LoaderCircle, MapPin, MessageCircle, MessageSquarePlus, MonitorSmartphone, Search, Send, Sparkles } from "lucide-react";
 import MessageMarkdown from "@/app/components/MessageMarkdown";
 import TypingDots from "@/app/components/TypingDots";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import {
   DEFAULT_BOT_AVATAR,
   formatDevice,
@@ -160,6 +161,25 @@ export default function AiAssistPage() {
 
   const unreadCount = useMemo(() => aiHandled.filter((conversation) => !!conversation.unread).length, [aiHandled]);
 
+  // Team Inbox's own unread count, so its tab can carry a badge the same way
+  // the Inbox icon in the primary sidebar does — computed locally since this
+  // view already has the full conversation list.
+  const teamUnreadCount = useMemo(
+    () => conversations.filter((conversation) => !!conversation.assignedUserId && !!conversation.unread).length,
+    [conversations],
+  );
+
+  // When nothing is actually unread, fall back to "how many are still open"
+  // — the same thing the sidebar's Inbox badge counts — so the tab isn't
+  // silent about conversations that still need attention.
+  const aiOpenCount = useMemo(() => aiHandled.filter((conversation) => conversation.status !== "resolved").length, [aiHandled]);
+  const teamOpenCount = useMemo(
+    () => conversations.filter((conversation) => !!conversation.assignedUserId && conversation.status !== "resolved").length,
+    [conversations],
+  );
+  const aiBadgeCount = unreadCount > 0 ? unreadCount : aiOpenCount;
+  const teamBadgeCount = teamUnreadCount > 0 ? teamUnreadCount : teamOpenCount;
+
   async function markAllRead() {
     await fetch("/api/workspace/conversations/mark-all-read", { method: "POST" }).catch(() => undefined);
     void loadConversations();
@@ -243,7 +263,7 @@ export default function AiAssistPage() {
       // The server has already posted "<name> joined the chat", so the
       // customer's widget and the Inbox transcript both show the handover the
       // moment this lands.
-      router.push(`/dashboard?conversation=${encodeURIComponent(selectedId)}`);
+      router.push(`/dashboard/inbox?conversation=${encodeURIComponent(selectedId)}`);
     } finally {
       setJoining(false);
     }
@@ -268,10 +288,32 @@ export default function AiAssistPage() {
   }
 
   return (
-    <div className="flex h-full min-h-0 overflow-hidden bg-white text-[#17181a]">
-      <aside className="dashboard-secondary-sidebar my-0.5 ml-0.5 flex h-[calc(100%_-_4px)] w-[304px] shrink-0 flex-col overflow-hidden rounded-xl border border-black/20 bg-white max-lg:w-[260px] max-md:hidden">
+    <div id="dashboard-ai-assist" className="flex h-full min-h-0 overflow-hidden bg-[#262626] text-white">
+      <aside
+        className={`dashboard-ai-list dashboard-secondary-sidebar h-full w-full shrink-0 flex-col overflow-hidden border-r border-white/10 bg-[#262626] md:static md:flex md:w-[260px] lg:w-[304px] ${
+          selectedId ? "hidden" : "flex"
+        } md:flex`}
+      >
+        <nav className="inbox-view-nav flex items-center gap-5 px-3" aria-label="Inbox views">
+          <Link href="/dashboard/inbox" className="flex w-fit items-center gap-1.5 border-b-2 border-transparent px-0 py-2 text-[13.5px] font-normal text-white/70 hover:border-white/30 hover:text-white/90">
+            Team Inbox
+            {teamBadgeCount > 0 && (
+              <span className="flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-[#27895d] px-1 text-[9px] font-bold text-white">
+                {teamBadgeCount > 99 ? "99+" : teamBadgeCount}
+              </span>
+            )}
+          </Link>
+          <Link href="/dashboard/inbox?view=ai" aria-current="page" className="flex w-fit items-center gap-1.5 border-b-2 border-white/80 px-0 py-2 text-[13.5px] font-normal text-white">
+            AI Assist
+            {aiBadgeCount > 0 && (
+              <span className="flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-[#27895d] px-1 text-[9px] font-bold text-white">
+                {aiBadgeCount > 99 ? "99+" : aiBadgeCount}
+              </span>
+            )}
+          </Link>
+        </nav>
         <div className="px-3 pt-3">
-          <div className="flex items-start justify-between gap-2">
+          <div className="inbox-list-summary flex items-start justify-between gap-2">
             <div>
               <h2 className="text-[24px] font-semibold tracking-[-0.02em]">Chats</h2>
               <p className="mt-0.5 text-[13px] text-[#8a929c]">
@@ -371,7 +413,7 @@ export default function AiAssistPage() {
         </div>
       </aside>
 
-      <main className="dashboard-page-surface dashboard-ai-assist-main dashboard-conversation relative m-0.5 ml-1 flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-black/20 bg-white">
+      <main className={`dashboard-page-surface dashboard-ai-assist-main dashboard-conversation relative min-h-0 flex-1 flex-col overflow-hidden bg-[#262626] md:flex ${selected ? "flex" : "hidden"}`}>
         {!selected ? (
           <div className="flex flex-1 flex-col items-center justify-center px-8 text-center">
             <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--chat-customer-bg)] text-[var(--chat-line-text)]"><Sparkles size={24} /></span>
@@ -385,7 +427,17 @@ export default function AiAssistPage() {
           </div>
         ) : (
           <>
-            <header className="flex h-[58px] shrink-0 items-center border-b border-[#e3e6e9] px-4">
+            <header className="dashboard-ai-header flex h-16 shrink-0 items-center border-b border-white/10 px-5">
+              {/* Only reachable on mobile, where the list and the open chat
+                  trade places instead of sitting side by side. */}
+              <button
+                type="button"
+                onClick={() => { setSelectedId(null); setJustJoined(null); }}
+                aria-label="Back to conversations"
+                className="-ml-1.5 mr-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[var(--chat-muted)] transition hover:bg-[var(--chat-customer-bg)] md:hidden"
+              >
+                <ArrowLeft size={18} />
+              </button>
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white" style={{ backgroundColor: colorForId(selected.id) }}>
                 {selected.initials}
               </span>
@@ -495,7 +547,7 @@ export default function AiAssistPage() {
               </div>
             </div>
 
-            <div className="shrink-0 border-t border-[#e3e6e9] p-4">
+            <div className="dashboard-ai-composer shrink-0 border-t border-white/10 p-4">
               {joined ? (
                 <div className="mx-auto flex max-w-2xl items-center gap-2 rounded-2xl border border-[var(--chat-divider)] px-3 py-2 focus-within:border-[var(--chat-line-text)]">
                   <input
@@ -527,7 +579,7 @@ export default function AiAssistPage() {
       </main>
 
       {selected && (
-        <aside className="hidden w-[280px] shrink-0 flex-col bg-white xl:flex">
+        <aside className="dashboard-ai-details hidden w-[310px] shrink-0 flex-col border-l border-white/10 bg-[#262626] xl:flex">
           <div className="border-b border-[#e2e5e8] p-5">
             <div className="flex items-center gap-3">
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-[13px] font-bold text-white" style={{ backgroundColor: colorForId(selected.id) }}>

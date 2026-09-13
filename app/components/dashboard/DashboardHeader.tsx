@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { connectPresenceSocket } from "@/lib/presence-socket";
 import { primeOnFirstInteraction, playAssignmentChime } from "@/lib/notification-sound";
@@ -11,6 +10,7 @@ import { toast } from "sonner";
 import { InvitePeopleDialog } from "./InvitePeopleDialog";
 import { NotificationsBell } from "./NotificationsBell";
 import { AssignmentToast } from "./AssignmentToast";
+import { useMobileDrawer } from "./mobile-drawer-context";
 
 const NOTIFICATIONS_MUTED_KEY = "elpino-notifications-muted";
 import {
@@ -22,8 +22,10 @@ import {
   ChevronRight,
   CircleHelp,
   Clock3,
+  Gauge,
   Inbox,
   LogOut,
+  Menu,
   Palette,
   Pin,
   Plus,
@@ -40,8 +42,39 @@ type HeaderUser = { email: string; name?: string };
 type SearchConversation = { id: string; name: string; preview: string; initials: string };
 type SearchPerson = { id: string; email: string };
 
+// Space's panel and the Visitors report nav (VisitorSidebar in
+// _visitors-client.tsx) are real drawers hidden below md, and the Contacts
+// tools panel is one hidden below lg — none has any other way to reach it,
+// so the hamburger opens whichever one the current route has, at that
+// route's own breakpoint. The Team Inbox and AI Assist conversation lists
+// went a different way (see HomePanel.tsx / ai-assist/page.tsx): on mobile
+// they're the full-screen view by default, swapped for the open
+// conversation on selection, WhatsApp-style — so they need no hamburger at
+// all, on any route.
+const SPACE_ROUTES = ["/dashboard", "/dashboard/notifications", "/dashboard/issues"];
+const VISITORS_ROUTE_PREFIX = "/dashboard/visitors";
+const CONTACTS_ROUTE = "/dashboard/contacts";
+// The editor routes (/knowledge/new, /knowledge/page/[id]) render their own
+// full-page editor with no sidebar at all, so they're deliberately excluded
+// — only the three routes KnowledgeClient itself handles have one.
+const KNOWLEDGE_ROUTES = ["/dashboard/knowledge", "/dashboard/knowledge/articles", "/dashboard/knowledge/sources"];
+const SETTINGS_ROUTE_PREFIX = "/dashboard/settings";
+
 export default function DashboardHeader({ user }: { user: HeaderUser }) {
   const router = useRouter();
+  const pathname = usePathname();
+  const { toggle: toggleDrawer } = useMobileDrawer();
+  const isSpaceRoute = SPACE_ROUTES.includes(pathname);
+  const isVisitorsRoute = pathname === VISITORS_ROUTE_PREFIX || pathname.startsWith(`${VISITORS_ROUTE_PREFIX}/`);
+  const isContactsRoute = pathname === CONTACTS_ROUTE;
+  const isKnowledgeRoute = KNOWLEDGE_ROUTES.includes(pathname);
+  const isSettingsRoute = pathname === SETTINGS_ROUTE_PREFIX || pathname.startsWith(`${SETTINGS_ROUTE_PREFIX}/`);
+  // Live notifications (unread activity, escalations, secure requests) plus
+  // unresolved issues — both drop on their own as things get read/resolved,
+  // so this stays accurate without a separate "seen it" flag to maintain.
+  const [spaceBadgeCount, setSpaceBadgeCount] = useState(0);
+  const hamburgerBreakpoint =
+    isSpaceRoute || isVisitorsRoute || isKnowledgeRoute || isSettingsRoute ? "md:hidden" : isContactsRoute ? "lg:hidden" : null;
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [selected, setSelected] = useState<Organization | null>(null);
   const [open, setOpen] = useState(false);
@@ -86,6 +119,25 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
       // Private browsing / storage disabled — badge just stays unmuted.
     }
   }, []);
+
+  const refreshSpaceBadge = useCallback(() => {
+    Promise.all([
+      fetch("/api/notifications", { cache: "no-store" }).then((response) => (response.ok ? response.json() : { entries: [] })),
+      fetch("/api/workspace/tickets", { cache: "no-store" }).then((response) => (response.ok ? response.json() : { tickets: [] })),
+    ])
+      .then(([notificationData, ticketData]: [{ entries?: unknown[] }, { tickets?: { resolved?: boolean }[] }]) => {
+        const unresolvedIssues = (ticketData.tickets ?? []).filter((ticket) => !ticket.resolved).length;
+        setSpaceBadgeCount((notificationData.entries?.length ?? 0) + unresolvedIssues);
+      })
+      .catch(() => setSpaceBadgeCount(0));
+  }, []);
+
+  // Refetched on arrival (not just on a poll) — reused hooks straight into
+  // the notification socket connected below, the same live signal the
+  // assignment toast already reacts to.
+  useEffect(() => {
+    refreshSpaceBadge();
+  }, [refreshSpaceBadge, pathname]);
 
   function toggleNotificationsMuted() {
     setNotificationsMuted((current) => {
@@ -139,7 +191,11 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
       }
     });
     socket.on("notification", (payload: { userId?: string; notification?: { conversationId?: string; title?: string; detail?: string } }) => {
-      if (payload.userId !== accountId || notificationsMutedRef.current) return;
+      if (payload.userId !== accountId) return;
+      // Badge reflects real state regardless of whether the chime/toast is
+      // muted — muting silences the alert, not the count.
+      refreshSpaceBadge();
+      if (notificationsMutedRef.current) return;
       const notification = payload.notification;
       if (!notification?.conversationId || !notification.title) return;
       playAssignmentChime();
@@ -156,7 +212,7 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
     return () => {
       socket.disconnect();
     };
-  }, [accountId]);
+  }, [accountId, refreshSpaceBadge]);
 
   async function updateStatus(next: "online" | "away" | "brb") {
     setStatusSaving(true);
@@ -222,7 +278,7 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
   function goToConversation(id: string) {
     setSearchOpen(false);
     setSearchQuery("");
-    router.push(`/dashboard?conversation=${id}`);
+    router.push(`/dashboard/inbox?conversation=${id}`);
   }
 
   function goToPeople() {
@@ -316,9 +372,21 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
 
   return (
     <header className="relative z-50 mx-2 my-0.5 flex h-12 shrink-0 items-center rounded-xl bg-transparent px-2.5 text-[#354052]">
-      <Link href="/dashboard" aria-label="Elpino dashboard" className="mr-2 flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-black bg-black shadow-sm transition hover:bg-[#202020]">
-        <Image src="/elpino_slack.png" alt="Elpino" width={36} height={36} className="h-full w-full object-cover" priority />
-      </Link>
+      {hamburgerBreakpoint && (
+        <button
+          type="button"
+          onClick={toggleDrawer}
+          aria-label={spaceBadgeCount > 0 ? `Open menu — ${spaceBadgeCount} new` : "Open menu"}
+          className={`relative mr-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-white/80 transition hover:bg-white/[0.07] ${hamburgerBreakpoint}`}
+        >
+          <Menu size={19} />
+          {isSpaceRoute && spaceBadgeCount > 0 && (
+            <span className="absolute right-0.5 top-0.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full border-2 border-[#262626] bg-[#e2574c] px-0.5 text-[7.5px] font-bold text-white">
+              {spaceBadgeCount > 99 ? "99+" : spaceBadgeCount}
+            </span>
+          )}
+        </button>
+      )}
       <div ref={switcherRef} className="relative">
         <button
           type="button"
@@ -326,8 +394,8 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
           className="dashboard-workspace-switcher flex h-10 items-center gap-2 rounded-md border border-transparent bg-transparent px-2.5 transition-colors hover:bg-black/5"
           aria-expanded={open}
         >
-          <span className="max-w-52 truncate text-[15px] font-normal text-black/90">{workspaceName}&apos;s Workspace</span>
-          <ChevronDown size={15} className={`text-black/90 transition-transform ${open ? "rotate-180" : ""}`} />
+          <span className="max-w-[110px] truncate text-[15px] font-normal text-white sm:max-w-52">{workspaceName}&apos;s Workspace</span>
+          <ChevronDown size={15} className={`text-white/70 transition-transform ${open ? "rotate-180" : ""}`} />
         </button>
 
         {open && (
@@ -388,16 +456,16 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
         )}
       </div>
 
-      <div ref={searchRef} className="relative mx-4 hidden min-w-0 max-w-2xl flex-1 md:block">
-        <div className="dashboard-header-search flex h-10 items-center gap-2.5 rounded-lg border border-black/20 bg-white px-3.5 transition focus-within:border-black/30 focus-within:shadow-sm">
-          <Search size={15} className="shrink-0 text-black/90" />
+      <div id="dashboard-global-search" ref={searchRef} className="relative mx-4 hidden min-w-0 max-w-2xl flex-1 md:block">
+        <div className="dashboard-header-search flex h-9 items-center gap-2.5 rounded-lg border border-white/10 bg-white/[0.045] px-3.5 transition focus-within:border-white/25 focus-within:bg-white/[0.07]">
+          <Search size={15} className="shrink-0 text-white/45" />
           <input
             value={searchQuery}
             onChange={(event) => setSearchQuery(event.target.value)}
             onFocus={() => { setSearchOpen(true); loadSearchData(); }}
             placeholder="Search people, chats, workspaces…"
             aria-label="Search"
-            className="min-w-0 flex-1 bg-transparent text-[14px] font-normal text-black/90 outline-none placeholder:text-[#929ba5]"
+            className="min-w-0 flex-1 bg-transparent text-[14px] font-normal text-white/90 outline-none placeholder:text-white/35"
           />
         </div>
 
@@ -449,7 +517,26 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
         )}
       </div>
 
-      <div className="ml-auto flex items-center gap-1">
+      <div className="ml-auto flex shrink-0 items-center gap-1.5">
+        {/* Secondary actions — dropped below sm rather than shrunk further,
+            since an icon with no label and no room to breathe reads as
+            clutter next to Upgrade and the account avatar. Both stay
+            reachable on mobile from the account menu below. */}
+        <button type="button" onClick={() => setInviteOpen(true)} className="hidden h-9 items-center gap-2 rounded-lg border border-white/10 px-3 text-[13px] font-normal text-white/90 transition hover:bg-white/[0.07] hover:text-white sm:flex">
+          <UserPlus size={16} strokeWidth={1.7} />
+          <span className="hidden lg:inline">Invite team</span>
+        </button>
+        <Link href="/dashboard/settings/ai-usage" className="hidden h-9 items-center gap-2 rounded-lg border border-white/10 px-3 text-[13px] font-normal text-white/90 transition hover:bg-white/[0.07] hover:text-white sm:flex">
+          <Gauge size={16} strokeWidth={1.7} />
+          <span className="hidden lg:inline">Usage</span>
+        </Link>
+        <Link href="/pricing#plans" className="flex h-9 items-center gap-2 rounded-lg border border-violet-300/20 bg-gradient-to-r from-[#6d5ce7] to-[#8b5cf6] px-2.5 text-[13px] font-normal text-white/90 shadow-[0_4px_16px_rgba(109,92,231,0.22)] transition hover:from-[#7868ed] hover:to-[#9568fa] hover:text-white sm:px-3">
+          <Rocket size={16} strokeWidth={1.7} />
+          <span className="hidden lg:inline">Upgrade</span>
+        </Link>
+      </div>
+
+      <div className="hidden">
         <Link
           href="/pricing"
           className="group mr-1 h-9 rounded-md bg-gradient-to-r from-[#ff8a3d] via-[#e45ca4] to-[#4d8dff] p-[1.5px] transition hover:-translate-y-px"
@@ -474,21 +561,22 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
           <span className="hidden xl:inline">Help</span>
         </Link>
         <NotificationsBell open={notificationsOpen} onOpenChange={setNotificationsOpen} muted={notificationsMuted} />
-        <div ref={accountRef} className="relative ml-2">
+      </div>
+        <div ref={accountRef} className="relative ml-1.5">
           <button
             type="button"
             aria-label="Account menu"
             aria-expanded={accountOpen}
             onClick={() => setAccountOpen((value) => !value)}
-            className="flex items-center gap-1 rounded-lg p-1 transition-colors hover:bg-[#f0f3f6]"
+            className="flex items-center gap-1 rounded-lg p-1 transition-colors hover:bg-white/[0.07]"
           >
             <span className="relative flex h-8 w-8 items-center justify-center rounded-full">
-              <span className={`dashboard-account-avatar flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border border-[#d7dce2] text-sm font-normal ${avatarUrl ? "bg-[#f3f5f7]" : ""}`}>
+              <span className={`dashboard-account-avatar flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border border-white/15 text-sm font-normal text-white/90 ${avatarUrl ? "bg-white/10" : "bg-[#6d5ce7]"}`}>
                 {avatarUrl ? <img src={avatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
               </span>
-              <span className={`absolute -bottom-0.5 -right-0.5 z-10 h-3 w-3 rounded-full border-2 border-white ${displayStatus.dot}`} />
+              <span className={`absolute -bottom-0.5 -right-0.5 z-10 h-3 w-3 rounded-full border-2 border-[#262626] ${displayStatus.dot}`} />
             </span>
-            <ChevronDown size={13} className={`text-[#777a80] transition-transform ${accountOpen ? "rotate-180" : ""}`} />
+            <ChevronDown size={13} className={`text-white/60 transition-transform ${accountOpen ? "rotate-180" : ""}`} />
           </button>
 
           {accountOpen && (
@@ -565,6 +653,34 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
                   Notifications
                 </button>
 
+                {/* Same actions the header itself carries from sm up — below
+                    that width they live here instead of as extra header
+                    buttons, so nothing is lost, just relocated. */}
+                <div className="sm:hidden">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAccountOpen(false);
+                      setInviteOpen(true);
+                    }}
+                    className="flex h-9 w-full items-center gap-3 rounded-lg px-3 text-left text-sm hover:bg-[#f1f2f3]"
+                  >
+                    <UserPlus size={17} className="text-[#686d73]" />
+                    Invite team
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAccountOpen(false);
+                      router.push("/dashboard/settings/ai-usage");
+                    }}
+                    className="flex h-9 w-full items-center gap-3 rounded-lg px-3 text-left text-sm hover:bg-[#f1f2f3]"
+                  >
+                    <Gauge size={17} className="text-[#686d73]" />
+                    Usage
+                  </button>
+                </div>
+
                 {[
                   { Icon: Settings, label: "Settings", href: "/dashboard/settings" },
                   { Icon: Palette, label: "Themes", href: "/dashboard#themes" },
@@ -622,7 +738,6 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
             </div>
           )}
         </div>
-      </div>
       <InvitePeopleDialog open={inviteOpen} onClose={() => setInviteOpen(false)} />
     </header>
   );
