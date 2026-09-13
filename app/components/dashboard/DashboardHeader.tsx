@@ -190,6 +190,13 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
         setPresenceStatus(payload.status);
       }
     });
+    // Pushed whenever a conversation is assigned to, resolved for, or left
+    // by this account — see ConversationsService.pushBusyStatus on the
+    // backend. Replaces the one-time fetch on mount as the live source.
+    socket.on("busy:update", (payload: { userId?: string; busy?: boolean }) => {
+      if (payload.userId !== accountId) return;
+      setBusy(Boolean(payload.busy));
+    });
     socket.on("notification", (payload: { userId?: string; notification?: { conversationId?: string; title?: string; detail?: string } }) => {
       if (payload.userId !== accountId) return;
       // Badge reflects real state regardless of whether the chime/toast is
