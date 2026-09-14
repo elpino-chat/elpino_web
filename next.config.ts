@@ -96,6 +96,11 @@ const nextConfig: NextConfig = {
     // Analytics IDs (public, non-secret). Empty string = that script never loads.
     NEXT_PUBLIC_GA_MEASUREMENT_ID: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "",
     NEXT_PUBLIC_CLARITY_PROJECT_ID: process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID ?? "",
+    NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN:
+      process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN ??
+      "phc_DoFLAZjbWRsMXeS7jTFG6WJMdXyMuHirDQwrjXXF8PFw",
+    NEXT_PUBLIC_POSTHOG_HOST:
+      process.env.NEXT_PUBLIC_POSTHOG_HOST ?? "https://us.i.posthog.com",
   },
   images: {
     qualities: [75, 100],
