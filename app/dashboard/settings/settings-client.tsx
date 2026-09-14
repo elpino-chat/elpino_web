@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import QRCode from "qrcode";
 import { useRouter } from "next/navigation";
+import posthog from "posthog-js";
 import Link from "next/link";
 import {
   ANNUAL_SAVING_PERCENT,
@@ -4073,6 +4074,7 @@ export function SettingsClient({ user, page = "General", auditView = "all" }: { 
     try {
       await fetch("/api/auth/logout", { method: "POST" });
     } finally {
+      posthog.reset();
       router.push("/login");
       router.refresh();
     }

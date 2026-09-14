@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import posthog from "posthog-js";
 import { Check, CheckCircle2, ChevronRight, CreditCard, ExternalLink, KeyRound, ListTodo, LoaderCircle, MessageSquareText, Search, ShieldCheck, Sparkles, Unplug, X } from "lucide-react";
 import { RazorpayIcon, StripeIcon, TrelloIcon } from "@/app/components/ConnectorIcons";
 
@@ -127,6 +128,7 @@ export default function ConnectPage() {
     setDisconnecting(provider);
     const response = await fetch(`/api/workspace/integrations/${encodeURIComponent(provider)}`, { method: "DELETE" }).catch(() => null);
     if (!response?.ok) setBanner({ kind: "error", text: "We couldn’t disconnect that tool. Try again." });
+    else posthog.capture("integration_disconnected", { provider });
     await loadIntegrations();
     setDisconnecting(null);
   }
@@ -185,12 +187,12 @@ export default function ConnectPage() {
           })}</div>}
         </section>
       </div>
-      {openProvider && <ApiKeyDialog provider={openProvider} onClose={() => setOpenProvider(null)} onConnected={() => { setOpenProvider(null); setBanner({ kind: "success", text: "Connection saved and ready to use." }); void loadIntegrations(); }} />}
+      {openProvider && <ApiKeyDialog provider={openProvider} onClose={() => setOpenProvider(null)} onConnected={(provider) => { posthog.capture("integration_connected", { provider }); setOpenProvider(null); setBanner({ kind: "success", text: "Connection saved and ready to use." }); void loadIntegrations(); }} />}
     </main>
   );
 }
 
-function ApiKeyDialog({ provider, onClose, onConnected }: { provider: ApiKeyProvider; onClose: () => void; onConnected: () => void }) {
+function ApiKeyDialog({ provider, onClose, onConnected }: { provider: ApiKeyProvider; onClose: () => void; onConnected: (provider: ApiKeyProvider) => void }) {
   const fields = API_KEY_FIELDS[provider];
   const [values, setValues] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
@@ -203,7 +205,7 @@ function ApiKeyDialog({ provider, onClose, onConnected }: { provider: ApiKeyProv
     if (!canSubmit || saving) return;
     setSaving(true); setError(null);
     const response = await fetch("/api/workspace/integrations/apikey", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ provider, credentials: values }) }).catch(() => null);
-    if (response?.ok) onConnected(); else { const data = response ? await response.json().catch(() => ({})) as { message?: string } : {}; setError(data.message ?? "Could not save these credentials."); setSaving(false); }
+    if (response?.ok) onConnected(provider); else { const data = response ? await response.json().catch(() => ({})) as { message?: string } : {}; setError(data.message ?? "Could not save these credentials."); setSaving(false); }
   }
   return <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-[2px]" onMouseDown={(event) => { if (event.target === event.currentTarget && !saving) onClose(); }}>
     <aside role="dialog" aria-modal="true" aria-labelledby="connect-dialog-title" className="w-full max-w-[480px] overflow-hidden rounded-2xl border border-white/10 bg-[#292a2b] text-white shadow-[0_24px_70px_rgba(0,0,0,0.5)]">

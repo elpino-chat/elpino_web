@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import posthog from "posthog-js";
 import {
   ArrowLeft,
   ArrowRight,
@@ -308,7 +309,10 @@ function DashboardContent({ name }: { name: string }) {
         body: JSON.stringify({ body }),
       });
       const data = (await response.json()) as { message?: Message };
-      if (data.message) setMessages((current) => [...current, data.message as Message]);
+      if (data.message) {
+        posthog.capture("conversation_reply_sent");
+        setMessages((current) => [...current, data.message as Message]);
+      }
     } finally {
       setSending(false);
     }
@@ -415,6 +419,7 @@ function DashboardContent({ name }: { name: string }) {
         setTicketError(data.message ?? "Could not join this conversation.");
         return;
       }
+      posthog.capture("conversation_claimed");
       setConversation((current) => (current ? { ...current, assignedUserId: myAccountId, handledBy: "human" } : current));
     } finally {
       setJoining(false);
@@ -439,6 +444,7 @@ function DashboardContent({ name }: { name: string }) {
         setTicketError(data.message ?? "Could not resolve this conversation.");
         return;
       }
+      posthog.capture("conversation_resolved");
       setConversation((current) => (current ? { ...current, status: "resolved" } : current));
     } finally {
       setResolving(false);
@@ -596,6 +602,9 @@ function DashboardContent({ name }: { name: string }) {
       });
       const data = (await response.json()) as { ticket?: CreatedTicket; message?: string };
       if (!response.ok || !data.ticket) throw new Error(data.message ?? "Could not create the ticket.");
+      posthog.capture("conversation_ticket_created", {
+        provider: data.ticket.provider,
+      });
       setTicket(data.ticket);
       setTicketDialogOpen(false);
     } catch (issue) {

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Outfit, Instrument_Serif, Geist_Mono, Rethink_Sans, Inter_Tight, Geist, Noto_Serif, JetBrains_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { AppShell } from "./components/AppShell";
@@ -142,6 +143,12 @@ export default async function RootLayout({
         <AppShell session={session}>{children}</AppShell>
         <Toaster position="top-center" />
         <Analytics />
+        {/* Elpino's own chat widget, dogfooding the product on elpino.chat itself. */}
+        <Script
+          src="https://cdn.elpino.chat/tag.js"
+          data-site-key="rz_site_a9ea653bc866c86f5e88c7af4c832b"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );

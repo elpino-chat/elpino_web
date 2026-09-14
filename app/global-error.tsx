@@ -1,11 +1,23 @@
 "use client";
 
+import { useEffect } from "react";
+import posthog from "posthog-js";
+
 export default function GlobalError({
+  error,
   unstable_retry,
 }: {
   error: Error & { digest?: string };
   unstable_retry: () => void;
 }) {
+  useEffect(() => {
+    if (
+      process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN &&
+      process.env.NEXT_PUBLIC_POSTHOG_HOST
+    ) {
+      posthog.captureException(error);
+    }
+  }, [error]);
   return (
     <html lang="en">
       <body className="m-0 flex min-h-screen items-center justify-center bg-white px-6 text-slate-950">

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import posthog from "posthog-js";
 
 type Session = { email: string; name?: string; userId: string };
 
@@ -51,6 +52,7 @@ export function UserMenu({ session }: { session: Session }) {
     try {
       await fetch("/api/auth/logout", { method: "POST" });
     } finally {
+      posthog.reset();
       router.push("/login");
       router.refresh();
     }

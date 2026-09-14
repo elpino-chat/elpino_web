@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
+import posthog from "posthog-js";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { connectPresenceSocket } from "@/lib/presence-socket";
 import { primeOnFirstInteraction, playAssignmentChime } from "@/lib/notification-sound";
@@ -357,6 +358,7 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
     try {
       await fetch("/api/auth/logout", { method: "POST" });
     } finally {
+      posthog.reset();
       router.push("/login");
       router.refresh();
     }

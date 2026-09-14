@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Check, LoaderCircle, Mail, Plus, X } from "lucide-react";
 import { openRazorpayCheckout } from "@/lib/razorpay-checkout";
+import posthog from "posthog-js";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -174,6 +175,12 @@ export function InvitePeopleDialog({
       if (!response.ok) {
         setError(data.message ?? "Could not send invitations");
         return;
+      }
+      const invitedCount = data.invited?.length ?? 0;
+      if (invitedCount > 0) {
+        posthog.capture("team_invitations_sent", {
+          invitation_count: invitedCount,
+        });
       }
       setResult({ invited: data.invited ?? [], skipped: data.skipped ?? [] });
       setChips([]);

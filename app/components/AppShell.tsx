@@ -1,6 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
 import { usePathname } from "next/navigation";
+import posthog from "posthog-js";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { CookieNotice } from "./CookieNotice";
@@ -20,6 +22,15 @@ export function AppShell({
   const isMinimalHeaderAuthPage = pathname === "/login" || pathname === "/signup";
   const isAppPage = pathname === "/onboarding" || pathname.startsWith("/dashboard");
   const isEmbeddedWidget = pathname.startsWith("/widget");
+
+  useEffect(() => {
+    if (!session) return;
+
+    posthog.identify(session.userId, {
+      email: session.email,
+      name: session.name,
+    });
+  }, [session?.userId, session?.email, session?.name]);
 
   if (isEmbeddedWidget) {
     // The widget is a small fixed-size iframe box — nothing inside it

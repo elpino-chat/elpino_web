@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import posthog from "posthog-js";
 import { ArrowDownUp, ArrowLeft, Check, ChevronDown, FileText, Folder, Globe2, Link2, ListChecks, LoaderCircle, RefreshCw, Search, Sparkles, Trash2, Upload, X } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useMobileDrawer } from "@/app/components/dashboard/mobile-drawer-context";
@@ -80,7 +81,7 @@ export function KnowledgeClient({ view }: { view: KnowledgeView }) {
     if (!title.trim() || !content.trim() || saving) return;
     setSaving(true); setError(null);
     const response = await fetch("/api/workspace/knowledge", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ title: title.trim(), content: content.trim(), siteId: siteId || undefined }) });
-    if (response.ok) { setEditorOpen(false); resetEditor(); load(); }
+    if (response.ok) { posthog.capture("knowledge_item_created", { source_type: "text" }); setEditorOpen(false); resetEditor(); load(); }
     else { const data = await response.json().catch(() => ({})) as { message?: string }; setError(data.message ?? "Article could not be saved."); }
     setSaving(false);
   }
@@ -114,14 +115,17 @@ export function KnowledgeClient({ view }: { view: KnowledgeView }) {
     if (!pendingFile || saving) return;
     setSaving(true); setError(null);
     const response = await fetch("/api/workspace/knowledge/file", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ fileName: pendingFile.name, fileBase64: pendingFile.base64, siteId: siteId || undefined, title: title.trim() || undefined }) });
-    if (response.ok) { setEditorOpen(false); resetEditor(); load(); }
+    if (response.ok) { posthog.capture("knowledge_item_created", { source_type: "file" }); setEditorOpen(false); resetEditor(); load(); }
     else { const data = await response.json().catch(() => ({})) as { message?: string }; setError(data.message ?? "That file could not be processed."); }
     setSaving(false);
   }
 
   async function removeArticle(id: string) {
     const response = await fetch(`/api/workspace/knowledge/${encodeURIComponent(id)}`, { method: "DELETE" });
-    if (response.ok) setItems((current) => current.filter((item) => item.id !== id));
+    if (response.ok) {
+      posthog.capture("knowledge_item_deleted");
+      setItems((current) => current.filter((item) => item.id !== id));
+    }
   }
 
   async function confirmDelete() {
@@ -628,7 +632,7 @@ function Sources({ sites, items, defaultSiteId, onReload }: { sites: Site[]; ite
     setAdding(true); setAddError(null);
     const fullUrl = `${baseUrl}${urlInput.trim().replace(/^\/+/, "")}`;
     const response = await fetch("/api/workspace/knowledge/url", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ url: fullUrl, siteId: activeSiteId }) });
-    if (response.ok) { setUrlInput(""); onReload(); }
+    if (response.ok) { posthog.capture("knowledge_item_created", { source_type: "url" }); setUrlInput(""); onReload(); }
     else { const data = await response.json().catch(() => ({})) as { message?: string }; setAddError(data.message ?? "That page could not be crawled."); }
     setAdding(false);
   }

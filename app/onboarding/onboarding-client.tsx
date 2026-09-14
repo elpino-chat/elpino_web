@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import posthog from "posthog-js";
 import {
   Briefcase,
   Check,
@@ -1312,6 +1313,7 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
     try {
       await fetch("/api/auth/logout", { method: "POST" });
     } finally {
+      posthog.reset();
       router.push("/login");
       router.refresh();
     }
@@ -1651,6 +1653,9 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
       );
     }
     setCrawlStatus("done");
+    posthog.capture("onboarding_knowledge_sources_saved", {
+      source_count: queue.length,
+    });
   }
 
   async function unlinkConnector(provider: string) {
@@ -1729,6 +1734,7 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
         const err = (await res.json().catch(() => null)) as { message?: string } | null;
         throw new Error(err?.message ?? "save_failed");
       }
+      posthog.capture("onboarding_profile_completed");
       setStep(2);
     } catch (err) {
       setProfileError(
