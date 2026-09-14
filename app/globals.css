@@ -3238,7 +3238,10 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
 #dashboard-settings-page .dashboard-settings-surface [class*="bg-[#FAFBFB]"],
 #dashboard-settings-page .dashboard-settings-surface [class*="bg-[#fafbfb]"],
 #dashboard-settings-page .dashboard-settings-surface [class*="bg-[#FAF9F6]"],
-#dashboard-settings-page .dashboard-settings-surface [class*="bg-[#faf9f6]"] {
+#dashboard-settings-page .dashboard-settings-surface [class*="bg-[#faf9f6]"],
+#dashboard-settings-page .dashboard-settings-surface [class*="bg-[#f7f8fa]"],
+#dashboard-settings-page .dashboard-settings-surface [class*="bg-[#F5F9FE]"],
+#dashboard-settings-page .dashboard-settings-surface [class*="bg-[#f5f9fe]"] {
   background-color: #262626 !important;
 }
 #dashboard-settings-page .dashboard-settings-surface :is(h1, h2, h3, h4, h5, label),

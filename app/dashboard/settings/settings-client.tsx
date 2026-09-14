@@ -3121,30 +3121,97 @@ function SecurityRow({ icon: Icon, title, description, badge, children }: { icon
 }
 
 type AuditStatus = "assigned" | "solved" | "unresolved";
-type AuditItem = { id: string; customer: string; email: string; problem: string; status: AuditStatus; assignee: string; priority: "High" | "Medium" | "Low"; updated: string };
+type AuditItem = { id: string; conversationId: string; customer: string; email: string; problem: string; status: AuditStatus; assignee: string; updatedAt: string };
+type AuditConversation = { id: string; name: string; email?: string | null; topic?: string | null; preview: string; time: string; status: string; assignedUserId?: string | null; handledBy?: string; escalationReason?: string | null; aiName?: string };
 
-const auditItems: AuditItem[] = [
-  { id: "SUP-1048", customer: "Maya Chen", email: "maya@northstar.co", problem: "Unable to connect the shared Gmail inbox", status: "unresolved", assignee: "Unassigned", priority: "High", updated: "8 min ago" },
-  { id: "SUP-1047", customer: "Daniel Brooks", email: "daniel@sprout.io", problem: "AI reply used outdated refund information", status: "assigned", assignee: "Aadarsh", priority: "High", updated: "24 min ago" },
-  { id: "SUP-1046", customer: "Sara Patel", email: "sara@wovenlabs.com", problem: "Conversation tags are not syncing", status: "assigned", assignee: "Nina", priority: "Medium", updated: "1 hr ago" },
-  { id: "SUP-1045", customer: "Jon Bell", email: "jon@rivet.app", problem: "Customer widget does not load on mobile", status: "solved", assignee: "Aadarsh", priority: "Medium", updated: "2 hrs ago" },
-  { id: "SUP-1044", customer: "Elena Rossi", email: "elena@atlas.it", problem: "Needs help importing knowledge-base articles", status: "solved", assignee: "Elpino AI", priority: "Low", updated: "Yesterday" },
-  { id: "SUP-1043", customer: "Noah Williams", email: "noah@frame.dev", problem: "Incoming messages are assigned twice", status: "unresolved", assignee: "Unassigned", priority: "High", updated: "Yesterday" },
-];
+function auditRelativeTime(iso: string) {
+  const minutes = Math.max(0, Math.round((Date.now() - new Date(iso).getTime()) / 60000));
+  if (minutes < 1) return "Just now";
+  if (minutes < 60) return `${minutes} min ago`;
+  const hours = Math.round(minutes / 60);
+  if (hours < 24) return `${hours} hr${hours === 1 ? "" : "s"} ago`;
+  const days = Math.round(hours / 24);
+  return days === 1 ? "Yesterday" : `${days} days ago`;
+}
+
+// Real records: every conversation handed to the team or resolved. Threads the
+// AI is still handling are not audit entries yet.
+function toAuditItems(conversations: AuditConversation[], names: Map<string, string>): AuditItem[] {
+  return conversations
+    .filter((conversation) => conversation.status === "resolved" || conversation.handledBy === "human")
+    .map((conversation) => ({
+      id: `#${conversation.id.slice(0, 8)}`,
+      conversationId: conversation.id,
+      customer: conversation.name,
+      email: conversation.email ?? "",
+      problem: conversation.escalationReason || conversation.topic || conversation.preview || "No details recorded",
+      status: conversation.status === "resolved" ? "solved" : conversation.assignedUserId ? "assigned" : "unresolved",
+      assignee: conversation.assignedUserId
+        ? names.get(conversation.assignedUserId) ?? "Teammate"
+        : conversation.handledBy === "human" ? "Unassigned" : conversation.aiName || "AI agent",
+      updatedAt: conversation.time,
+    }));
+}
+
+function auditCsvCell(value: string) {
+  return /[",\n]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value;
+}
 
 function AuditLogsSettingsPage({ view = "all" }: { view?: "all" | AuditStatus }) {
   const filter = view;
   const [query, setQuery] = useState("");
+  const [auditItems, setAuditItems] = useState<AuditItem[]>([]);
+  const [loadState, setLoadState] = useState<"loading" | "ready" | "error">("loading");
+  const [loadedAt, setLoadedAt] = useState<Date | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const conversationsResponse = await fetch("/api/workspace/conversations");
+        if (!conversationsResponse.ok) throw new Error("Could not load conversations");
+        const conversationData = (await conversationsResponse.json()) as { conversations?: AuditConversation[] };
+        // Names are a nicety: a failed team lookup still shows every record.
+        const teamData = (await fetch("/api/account/availability/team").then((response) => (response.ok ? response.json() : {})).catch(() => ({}))) as { members?: { id: string; name: string | null; email: string }[] };
+        if (cancelled) return;
+        const names = new Map((teamData.members ?? []).map((member) => [member.id, member.name || member.email]));
+        setAuditItems(toAuditItems(conversationData.conversations ?? [], names));
+        setLoadedAt(new Date());
+        setLoadState("ready");
+      } catch {
+        if (!cancelled) setLoadState("error");
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
   const normalizedQuery = query.trim().toLowerCase();
   const visibleItems = auditItems.filter((item) => (filter === "all" || item.status === filter) && (!normalizedQuery || `${item.id} ${item.customer} ${item.email} ${item.problem} ${item.assignee}`.toLowerCase().includes(normalizedQuery)));
   const counts = { assigned: auditItems.filter((item) => item.status === "assigned").length, solved: auditItems.filter((item) => item.status === "solved").length, unresolved: auditItems.filter((item) => item.status === "unresolved").length };
 
   const statusStyle: Record<AuditStatus, string> = { assigned: "bg-[#EEF3FF] text-[#4268A8]", solved: "bg-[#EEF8F2] text-[#34845C]", unresolved: "bg-[#FFF1F1] text-[#B24752]" };
-  const priorityStyle = { High: "text-[#B24752]", Medium: "text-[#A16B22]", Low: "text-[#69757C]" };
+
+  const exportCsv = () => {
+    const rows = [["Conversation", "Customer", "Email", "Problem", "Status", "Assigned to", "Updated"], ...visibleItems.map((item) => [item.conversationId, item.customer, item.email, item.problem, item.status, item.assignee, item.updatedAt])];
+    const url = URL.createObjectURL(new Blob([rows.map((row) => row.map(auditCsvCell).join(",")).join("\n")], { type: "text/csv" }));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `audit-logs-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const emptyState = loadState === "loading"
+    ? { title: "Loading records…", detail: "Fetching conversations handed to the team or resolved." }
+    : loadState === "error"
+      ? { title: "Could not load audit records", detail: "Refresh the page to try again." }
+      : auditItems.length === 0
+        ? { title: "No records yet", detail: "Conversations appear here once they are handed to the team or resolved." }
+        : { title: "No matching activity", detail: "Try a different search or status filter." };
 
   return (
     <div className="mx-auto w-full max-w-[1120px] px-7 pb-16 pt-9 text-[#11120f] sm:px-9 lg:px-10">
-      <div className="flex flex-wrap items-start justify-between gap-5"><div><p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Support operations</p><h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em] text-white/90">Audit logs</h2><p className="mt-2 max-w-2xl text-[14px] leading-6 text-[#667069]">Track customer problems from first report to assignment and resolution.</p></div><button type="button" className="flex h-11 items-center gap-2 rounded-full border border-[#CBD7DC] bg-white px-5 text-[12px] font-semibold hover:border-[#11120f]"><Download size={15} /> Export logs</button></div>
+      <div className="flex flex-wrap items-start justify-between gap-5"><div><p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Support operations</p><h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em] text-white/90">Audit logs</h2><p className="mt-2 max-w-2xl text-[14px] leading-6 text-[#667069]">Every conversation handed to your team or resolved, from first report to assignment and resolution.</p></div><button type="button" onClick={exportCsv} disabled={visibleItems.length === 0} className="flex h-11 items-center gap-2 rounded-full border border-[#CBD7DC] bg-white px-5 text-[12px] font-semibold hover:border-[#11120f] disabled:cursor-not-allowed disabled:opacity-50"><Download size={15} /> Export logs</button></div>
 
       <div className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-3">
         <Link href="/dashboard/settings/audit-logs/assigned" className="flex items-center gap-3 rounded-2xl border border-[#DDE4E8] bg-white p-4 text-left hover:bg-[#FAFBFB]"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#EEF3FF] text-[#4268A8]"><UserCheck size={18} /></span><span><span className="block text-[20px] font-semibold">{counts.assigned}</span><span className="text-[11px] text-[#667069]">Assigned</span></span></Link>
@@ -3168,29 +3235,27 @@ function AuditLogsSettingsPage({ view = "all" }: { view?: "all" | AuditStatus })
                   <p className="truncate text-[12px] font-semibold">{item.customer}</p>
                   <p className="mt-0.5 truncate text-[10.5px] text-[#7A858B]">{item.email}</p>
                 </div>
-                <button type="button" aria-label={`Actions for ${item.id}`} className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[#7A858B] hover:bg-[#F0F2F3] hover:text-black"><MoreHorizontal size={17} /></button>
               </div>
               <p className="text-[12px] text-[#3E484D]">{item.problem}</p>
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[11px]">
                 <span className={`w-fit rounded-full px-2.5 py-1 text-[10px] font-semibold capitalize ${statusStyle[item.status]}`}>{item.status}</span>
-                <span className={`font-semibold ${priorityStyle[item.priority]}`}>{item.priority} priority</span>
                 <span className="text-[#4F5A60]">{item.assignee}</span>
-                <span className="ml-auto text-[10px] text-[#8A9397]">{item.id} · {item.updated}</span>
+                <span className="ml-auto text-[10px] text-[#8A9397]">{item.id} · {auditRelativeTime(item.updatedAt)}</span>
               </div>
             </div>
           ))}
-          {visibleItems.length === 0 && <div className="flex flex-col items-center px-6 py-14 text-center"><Search size={22} className="text-[#9AA3A7]" /><p className="mt-3 text-[13px] font-semibold">No matching activity</p><p className="mt-1 text-[11px] text-[#7A858B]">Try a different search or status filter.</p></div>}
+          {visibleItems.length === 0 && <div className="flex flex-col items-center px-6 py-14 text-center"><Search size={22} className="text-[#9AA3A7]" /><p className="mt-3 text-[13px] font-semibold">{emptyState.title}</p><p className="mt-1 text-[11px] text-[#7A858B]">{emptyState.detail}</p></div>}
         </div>
         <div className="hidden md:block">
           <div className="overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            <div className="min-w-[850px]">
-              <div className="grid grid-cols-[110px_minmax(170px,0.8fr)_minmax(270px,1.5fr)_110px_130px_90px_40px] gap-3 bg-[#FAFBFB] px-5 py-3 text-[9px] font-bold uppercase tracking-[0.1em] text-[#818B90]"><span>Ticket</span><span>Customer</span><span>Problem</span><span>Status</span><span>Assigned to</span><span>Priority</span><span /></div>
-              {visibleItems.map((item) => <div key={item.id} className="grid grid-cols-[110px_minmax(170px,0.8fr)_minmax(270px,1.5fr)_110px_130px_90px_40px] items-center gap-3 border-t border-[#EDF0F1] px-5 py-4 transition hover:bg-[#FCFCFB]"><div><p className="text-[11px] font-semibold">{item.id}</p><p className="mt-1 text-[10px] text-[#8A9397]">{item.updated}</p></div><div className="min-w-0"><p className="truncate text-[12px] font-semibold">{item.customer}</p><p className="mt-1 truncate text-[10px] text-[#7A858B]">{item.email}</p></div><p className="truncate text-[12px] text-[#3E484D]">{item.problem}</p><span className={`w-fit rounded-full px-2.5 py-1 text-[10px] font-semibold capitalize ${statusStyle[item.status]}`}>{item.status}</span><span className="truncate text-[11px] font-medium text-[#4F5A60]">{item.assignee}</span><span className={`text-[11px] font-semibold ${priorityStyle[item.priority]}`}>{item.priority}</span><button type="button" aria-label={`Actions for ${item.id}`} className="flex h-8 w-8 items-center justify-center rounded-lg text-[#7A858B] hover:bg-[#F0F2F3] hover:text-black"><MoreHorizontal size={17} /></button></div>)}
-              {visibleItems.length === 0 && <div className="flex flex-col items-center px-6 py-14 text-center"><Search size={22} className="text-[#9AA3A7]" /><p className="mt-3 text-[13px] font-semibold">No matching activity</p><p className="mt-1 text-[11px] text-[#7A858B]">Try a different search or status filter.</p></div>}
+            <div className="min-w-[760px]">
+              <div className="grid grid-cols-[110px_minmax(170px,0.8fr)_minmax(270px,1.5fr)_110px_150px] gap-3 bg-[#FAFBFB] px-5 py-3 text-[9px] font-bold uppercase tracking-[0.1em] text-[#818B90]"><span>Ticket</span><span>Customer</span><span>Problem</span><span>Status</span><span>Assigned to</span></div>
+              {visibleItems.map((item) => <div key={item.id} className="grid grid-cols-[110px_minmax(170px,0.8fr)_minmax(270px,1.5fr)_110px_150px] items-center gap-3 border-t border-[#EDF0F1] px-5 py-4 transition hover:bg-[#FCFCFB]"><div><p className="text-[11px] font-semibold">{item.id}</p><p className="mt-1 text-[10px] text-[#8A9397]">{auditRelativeTime(item.updatedAt)}</p></div><div className="min-w-0"><p className="truncate text-[12px] font-semibold">{item.customer}</p><p className="mt-1 truncate text-[10px] text-[#7A858B]">{item.email}</p></div><p className="truncate text-[12px] text-[#3E484D]">{item.problem}</p><span className={`w-fit rounded-full px-2.5 py-1 text-[10px] font-semibold capitalize ${statusStyle[item.status]}`}>{item.status}</span><span className="truncate text-[11px] font-medium text-[#4F5A60]">{item.assignee}</span></div>)}
+              {visibleItems.length === 0 && <div className="flex flex-col items-center px-6 py-14 text-center"><Search size={22} className="text-[#9AA3A7]" /><p className="mt-3 text-[13px] font-semibold">{emptyState.title}</p><p className="mt-1 text-[11px] text-[#7A858B]">{emptyState.detail}</p></div>}
             </div>
           </div>
         </div>
-        <div className="flex items-center justify-between border-t border-[#E5E9EB] px-5 py-3 text-[11px] text-[#7A858B]"><span>Showing {visibleItems.length} of {auditItems.length} records</span><span>Updated just now</span></div>
+        <div className="flex items-center justify-between border-t border-[#E5E9EB] px-5 py-3 text-[11px] text-[#7A858B]"><span>Showing {visibleItems.length} of {auditItems.length} records</span><span>{loadedAt ? `Updated ${loadedAt.toLocaleTimeString()}` : ""}</span></div>
       </div>
     </div>
   );

@@ -14,7 +14,7 @@ export default function PrivacyPage() {
   return (
     <LegalPage
       title="Privacy Policy"
-      updated="July 18, 2026"
+      updated="September 13, 2026"
       intro={
         <p>
           This policy explains what data Elpino collects, why we collect it, how it&apos;s
@@ -95,12 +95,41 @@ export default function PrivacyPage() {
                 To answer, summarize, and draft replies, relevant snippets of your content (for
                 example the message a customer just sent, or the knowledge base article that
                 answers it) are sent to third-party large-language-model providers over encrypted
-                connections. These requests are made under agreements that prohibit the provider
-                from using your data to train their models.
+                connections. Each provider processes that content under its own API terms.
               </p>
               <p>
                 We route different tasks to different providers for quality and cost; no provider
-                receives more than the specific content needed for the task at hand.
+                receives more than the specific content needed for the task at hand. Your
+                customers&apos; email addresses and phone numbers are not included in what the AI
+                agent sends to a model. The providers we may use are:
+              </p>
+              <ul>
+                <li>
+                  <strong>DeepSeek</strong> — the default model for AI replies. DeepSeek processes and
+                  stores data in the People&apos;s Republic of China, and its published privacy policy
+                  does not expressly exclude content submitted through its API from being used to
+                  improve its models.
+                </li>
+                <li>
+                  <strong>xAI</strong> (United States) — a backup when DeepSeek is unavailable, and the
+                  model used for any conversation that has involved private account data such as a
+                  payment lookup.
+                </li>
+                <li>
+                  <strong>OpenAI</strong> (United States) — conversation memory, teammate summaries, and
+                  translation.
+                </li>
+                <li>
+                  <strong>Nomic</strong> (United States) — search embeddings for your knowledge base and
+                  conversation history.
+                </li>
+              </ul>
+              <p>
+                Once a conversation has involved private account data, every later AI request for
+                that conversation, including memory and summaries, is sent only to the private-data
+                provider above, never to DeepSeek. If your organization requires AI processing to
+                stay in a particular region, contact{" "}
+                <a href="mailto:hello@elpino.chat">hello@elpino.chat</a> before enabling the AI agent.
               </p>
               <p>
                 Raw, aggregated, anonymized, and derived data is not used to develop, improve, or
