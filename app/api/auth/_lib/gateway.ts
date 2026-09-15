@@ -1,6 +1,6 @@
 const gatewayUrl =
   process.env.NEXT_PUBLIC_GATEWAY_URL ||
-  (process.env.NODE_ENV === "development" ? "http://localhost:4000" : "https://api.elpino.chat");
+  (process.env.NODE_ENV === "development" ? "http://127.0.0.1:4000" : "https://api.elpino.chat");
 
 export function gatewayHeaders(hasBody: boolean) {
   const headers: Record<string, string> = {};

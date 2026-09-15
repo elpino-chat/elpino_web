@@ -6,7 +6,7 @@ import { useRouter, usePathname } from "next/navigation";
 import posthog from "posthog-js";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { connectPresenceSocket } from "@/lib/presence-socket";
-import { primeOnFirstInteraction, playAssignmentChime } from "@/lib/notification-sound";
+import { clearUnseenMessages, countUnseenMessage, playAssignmentChime, playMessageChimeOnce, primeOnFirstInteraction } from "@/lib/notification-sound";
 import { toast } from "sonner";
 import { InvitePeopleDialog } from "./InvitePeopleDialog";
 import { NotificationsBell } from "./NotificationsBell";
@@ -172,6 +172,10 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
   // lib/notification-sound.ts for why this has to wait for a real click.
   useEffect(() => {
     primeOnFirstInteraction();
+    // The "(3) New messages" title has done its job once the tab is looked at.
+    const onVisible = () => { if (!document.hidden) clearUnseenMessages(); };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => document.removeEventListener("visibilitychange", onVisible);
   }, []);
 
   // Keeps presence real: the gateway marks this account online for as long
@@ -216,6 +220,22 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
         ),
         { position: "bottom-right", duration: 45_000 },
       );
+    });
+    // A customer wrote in a conversation this account is responsible for —
+    // see WidgetService.postMessage. A sound and a tab-title count, never a
+    // toast: a busy inbox would bury the screen in them.
+    socket.on("message:new", (payload: { userIds?: string[]; message?: { conversationId?: string; messageId?: string } }) => {
+      const message = payload.message;
+      if (!message?.conversationId || !message.messageId) return;
+      if (payload.userIds && !payload.userIds.includes(accountId)) return;
+      // Already reading that exact thread in this tab: nothing to announce.
+      const viewing = document.visibilityState === "visible"
+        && window.location.pathname === "/dashboard/inbox"
+        && new URLSearchParams(window.location.search).get("conversation") === message.conversationId;
+      if (viewing) return;
+      if (document.hidden) countUnseenMessage();
+      if (notificationsMutedRef.current) return;
+      void playMessageChimeOnce(message.messageId);
     });
     return () => {
       socket.disconnect();

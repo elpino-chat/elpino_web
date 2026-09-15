@@ -5,8 +5,11 @@ import { useEffect, useMemo, useState } from "react";
 import posthog from "posthog-js";
 import { Check, CheckCircle2, ChevronRight, CreditCard, ExternalLink, KeyRound, ListTodo, LoaderCircle, MessageSquareText, Search, ShieldCheck, Sparkles, Unplug, X } from "lucide-react";
 import { RazorpayIcon, StripeIcon, TrelloIcon } from "@/app/components/ConnectorIcons";
+import { McpServers } from "./McpServers";
 
-type Integration = { provider: string; authType: string; status: string; connectedAt: string; metadata?: { workspaceGid?: string; workspaceName?: string } | null };
+// metadata is provider-specific: Asana's workspace name, or an MCP server's
+// name, URL and tool approvals (see McpServers).
+type Integration = { provider: string; authType: string; status: string; connectedAt: string; metadata?: ({ workspaceGid?: string; workspaceName?: string } & Record<string, unknown>) | null };
 type ApiKeyProvider = "stripe" | "razorpay" | "trello" | "cashfree" | "paystack";
 type Category = "All tools" | "Ticketing" | "Payments";
 
@@ -148,7 +151,7 @@ export default function ConnectPage() {
           <div>
             <p className="text-xs font-normal uppercase tracking-[0.16em] text-white/40">Integrations</p>
             <h1 className="mt-2 text-3xl font-normal tracking-[-0.03em] text-white/95">Connect</h1>
-            <p className="mt-2 max-w-xl text-sm text-white/45">Connect tools for ticket follow-up and payment context.</p>
+            <p className="mt-2 max-w-xl text-sm text-white/45">Connect tools for ticket follow-up, payment context and your own MCP servers.</p>
           </div>
           <Link href="/dashboard/connect/prechat-form" className="flex h-10 items-center gap-3 rounded-lg border border-white/10 bg-white/[0.04] px-3.5 text-left transition hover:bg-white/[0.07]">
             <MessageSquareText size={16} className="text-white/55" />
@@ -186,6 +189,8 @@ export default function ConnectPage() {
             </article>;
           })}</div>}
         </section>
+
+        <McpServers integrations={integrations} loading={loading} disconnecting={disconnecting} onDisconnect={(provider) => void disconnect(provider)} onChanged={loadIntegrations} notify={setBanner} />
       </div>
       {openProvider && <ApiKeyDialog provider={openProvider} onClose={() => setOpenProvider(null)} onConnected={(provider) => { posthog.capture("integration_connected", { provider }); setOpenProvider(null); setBanner({ kind: "success", text: "Connection saved and ready to use." }); void loadIntegrations(); }} />}
     </main>

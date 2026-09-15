@@ -17,7 +17,7 @@ export async function OPTIONS() {
 }
 
 export async function POST(request: Request) {
-  const body = (await request.json().catch(() => ({}))) as { key?: string; hostname?: string; visitorToken?: string; name?: string };
+  const body = (await request.json().catch(() => ({}))) as { key?: string; hostname?: string; visitorToken?: string; name?: string; identityToken?: unknown };
   if (!body.key?.trim() || !body.hostname?.trim()) {
     return Response.json({ allowed: false, message: "key and hostname are required" }, { status: 400, headers: corsHeaders() });
   }
@@ -27,6 +27,9 @@ export async function POST(request: Request) {
     hostname: body.hostname.trim(),
     visitorToken: body.visitorToken?.trim(),
     name: body.name,
+    // Signed identity from the host page (ElpinoTag.identify), verified by
+    // workspace-service. Passed through untouched and never logged.
+    identityToken: typeof body.identityToken === "string" && body.identityToken.length <= 4096 ? body.identityToken : undefined,
     // Where this visitor is reaching us from. Captured here rather than
     // joined from analytics: the widget and the analytics tag keep separate
     // ids, so there is nothing dependable to join on.
