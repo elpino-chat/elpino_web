@@ -4078,6 +4078,7 @@ export function SettingsClient({ user, page = "General", auditView = "all" }: { 
       await fetch("/api/auth/logout", { method: "POST" });
     } finally {
       posthog.reset();
+      window.ElpinoTag?.logout?.();
       router.push("/login");
       router.refresh();
     }

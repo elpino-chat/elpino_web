@@ -379,6 +379,7 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
       await fetch("/api/auth/logout", { method: "POST" });
     } finally {
       posthog.reset();
+      window.ElpinoTag?.logout?.();
       router.push("/login");
       router.refresh();
     }

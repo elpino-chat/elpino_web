@@ -259,11 +259,30 @@ export function AuthFlow({ initialMode }: { initialMode: "login" | "signup" }) {
     return next || (requestedPlan ? `/dashboard?plan=${requestedPlan}` : sanitizeReturnPath(data?.next) || "/dashboard");
   }
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = async () => {
+    if (loading) return;
     const next = sanitizeReturnPath(params.get("next"));
     const returnTo = next || (requestedPlan ? `/dashboard?plan=${requestedPlan}` : "/dashboard");
     setLoading("google");
-    window.location.href = `/api/auth/google?return_to=${encodeURIComponent(returnTo)}`;
+    try {
+      const { signInWithGooglePopup } = await import("@/lib/firebase-client");
+      const idToken = await signInWithGooglePopup();
+      const res = await fetch("/api/auth/firebase-google", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ idToken, returnTo }),
+      });
+      const data = (await res.json().catch(() => ({}))) as { destination?: string; error?: string };
+      if (!res.ok || !data.destination) throw new Error(data.error || "Google sign-in failed");
+      window.location.href = data.destination;
+    } catch (error) {
+      setLoading(null);
+      // A closed popup or cancelled consent screen is a normal exit, not a
+      // failure worth alarming someone with a toast.
+      const code = (error as { code?: string })?.code;
+      if (code === "auth/popup-closed-by-user" || code === "auth/cancelled-popup-request") return;
+      toast.error(error instanceof Error && error.message ? error.message : "Couldn't sign in with Google. Please try again.");
+    }
   };
 
   const handleEmailLogin = async (event: FormEvent<HTMLFormElement>) => {

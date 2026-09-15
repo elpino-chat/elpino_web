@@ -53,6 +53,7 @@ export function UserMenu({ session }: { session: Session }) {
       await fetch("/api/auth/logout", { method: "POST" });
     } finally {
       posthog.reset();
+      window.ElpinoTag?.logout?.();
       router.push("/login");
       router.refresh();
     }

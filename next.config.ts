@@ -11,9 +11,6 @@ const isProductionBuild = process.env.NODE_ENV === "production";
 const productionFrontend = {
   siteUrl: "https://elpino.chat",
   gatewayUrl: "https://api.elpino.chat",
-  googleClientId:
-    "927489744703-ipmeciigf234kkceflkatb0o6pg55tlu.apps.googleusercontent.com",
-  googleCallbackUrl: "https://elpino.chat/api/auth/google/callback",
   linkedInClientId: "86doutttnd7s6s",
   linkedInCallbackUrl:
     "https://elpino.chat/api/auth/oauth/linkedin/callback",
@@ -44,7 +41,7 @@ const nextConfig: NextConfig = {
   // Fallbacks for deploys where env vars aren't configured. Real env vars
   // always take precedence. WARNING: this includes secrets baked into a
   // private repo at the owner's request. If the repo ever goes public,
-  // rotate AUTH_*, RESEND_API_KEY, and TELEGRAM_BOT_TOKEN. AUTH_* values
+  // rotate AUTH_*, RESEND_API_KEY, TELEGRAM_BOT_TOKEN and ELPINO_WIDGET_IDENTITY_SECRET. AUTH_* values
   // must match the gateway env on the production VM.
   env: {
     NEXT_PUBLIC_SITE_URL:
@@ -64,15 +61,26 @@ const nextConfig: NextConfig = {
       "8094927949:AAHaYrvy7bpMNUAFHhTvhPd0Jj8i-HUiq_4",
     RESEND_FROM: process.env.RESEND_FROM ?? "Elpino <noreply@elpino.chat>",
     TELEGRAM_BOT_USERNAME: process.env.TELEGRAM_BOT_USERNAME ?? "tryelpinobot",
-    GOOGLE_CLIENT_ID:
-      isProductionBuild
-        ? productionFrontend.googleClientId
-        : process.env.GOOGLE_CLIENT_ID ?? productionFrontend.googleClientId,
-    GOOGLE_LOGIN_REDIRECT_URI:
-      isProductionBuild
-        ? productionFrontend.googleCallbackUrl
-        : process.env.GOOGLE_LOGIN_REDIRECT_URI ??
-          "http://localhost:3000/api/auth/google/callback",
+    // Signs the chat widget identity token for logged-in visitors on
+    // elpino.chat (app/api/widget-identity). Must equal the identity secret of
+    // Elpino own workspace: rotating it there means updating it here.
+    ELPINO_WIDGET_IDENTITY_SECRET:
+      process.env.ELPINO_WIDGET_IDENTITY_SECRET ?? "elid_A8bprFkI-T-bTitrd_xnFFkv8xUs42hEkzO4i6kNUew",
+    // Google sign-in now runs through Firebase (see lib/firebase-client.ts):
+    // the popup completes entirely client-side, so this is public web config,
+    // not a secret, and the same project serves both dev and prod for now.
+    NEXT_PUBLIC_FIREBASE_API_KEY:
+      process.env.NEXT_PUBLIC_FIREBASE_API_KEY ?? "AIzaSyB04rlClS7Rgn1XJsSkOimJxKO7bREkJDQ",
+    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN:
+      process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN ?? "elpinoo.firebaseapp.com",
+    NEXT_PUBLIC_FIREBASE_PROJECT_ID:
+      process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID ?? "elpinoo",
+    NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET:
+      process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET ?? "elpinoo.firebasestorage.app",
+    NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID:
+      process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID ?? "864091659433",
+    NEXT_PUBLIC_FIREBASE_APP_ID:
+      process.env.NEXT_PUBLIC_FIREBASE_APP_ID ?? "1:864091659433:web:c7e9b4ddc6815b85fb5db8",
     LINKEDIN_CLIENT_ID: isProductionBuild
       ? productionFrontend.linkedInClientId
       : process.env.LINKEDIN_CLIENT_ID ?? productionFrontend.linkedInClientId,

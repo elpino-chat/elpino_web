@@ -1314,6 +1314,7 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
       await fetch("/api/auth/logout", { method: "POST" });
     } finally {
       posthog.reset();
+      window.ElpinoTag?.logout?.();
       router.push("/login");
       router.refresh();
     }

@@ -19,6 +19,7 @@
     "@sentry/browser": "^10.63.0",
     "@sentry/node": "^10.63.0",
     "@xyflow/react": "^12.11.2",
+    "firebase": "^11.2.0",
     "archiver": "^8.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
