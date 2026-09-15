@@ -2,7 +2,7 @@
 
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { ChevronDown, ChevronLeft, CircleHelp, File as FileIcon, Home, LayoutGrid, Mic, MessageCircle, MessageSquarePlus, Paperclip, Search, Send, Smile, Square, Volume2, VolumeX, X } from "lucide-react";
+import { ArrowUp, ChevronDown, ChevronLeft, CircleHelp, File as FileIcon, Home, LayoutGrid, Mic, MessageCircle, MessageSquarePlus, Paperclip, Search, Smile, Square, Volume2, VolumeX, X } from "lucide-react";
 import MessageMarkdown from "@/app/components/MessageMarkdown";
 import TypingDots from "@/app/components/TypingDots";
 import { playMessageChime, primeOnFirstInteraction } from "@/lib/notification-sound";
@@ -47,13 +47,30 @@ const DEFAULT_PRECHAT_FIELDS: PreChatField[] = [
 ];
 
 const ACCENT = "#428ce5";
-const PRECHAT_BANNER = "#18181b";
-const BG = "#18181b";
-const BUBBLE = "#2a2a2e";
-const BORDER = "#2c2c30";
-const MUTED = "rgba(255,255,255,.55)";
-const ICON_MUTED = "rgba(255,255,255,.85)";
+// Ink: the widget's primary text/icon color on its light surface. A few
+// interactive accents (the pre-chat radio dot) key off ACCENT instead so
+// they read as "selected", not just "text".
+const INK = "#18181b";
+const BG = "#f6f7f8";
+const SURFACE = "#ffffff";
+// Neutral chip background — the customer's own reply bubble uses ACCENT
+// instead; this is for everything else that needs a soft fill (attachment
+// preview, disabled composer state, the typing indicator).
+const BUBBLE = "#eef1f4";
+const BORDER = "#e4e6ea";
+const MUTED = "rgba(24,24,27,.55)";
+const ICON_MUTED = "rgba(24,24,27,.62)";
 const POLL_MS = 2000;
+// Same http->ws origin swap as app/tag.js/route.ts's gatewayWsOrigin() — kept
+// separate since that one runs server-side and this runs in the browser.
+// Missing the NODE_ENV fallback here meant local dev pointed this socket at
+// production (wss://api.elpino.chat) instead of the local gateway, so it
+// silently never connected and the widget fell back to poll-only — no
+// word-by-word reveal, even though the feature worked once deployed.
+const GATEWAY_WS_ORIGIN = (
+  process.env.NEXT_PUBLIC_GATEWAY_URL || (process.env.NODE_ENV === "development" ? "http://localhost:4000" : "https://api.elpino.chat")
+).replace(/^http/, "ws");
+const REVEAL_MS_PER_WORD = 45;
 const TEAM_POLL_MS = 15000;
 const START_TIMEOUT_MS = 12000;
 const TYPING_PING_MS = 2000;
@@ -252,6 +269,43 @@ function WidgetContent() {
     window.parent.postMessage({ type: "elpino:unread", count }, "*");
   }
 
+  // Word-by-word reveal for a message pushed live over /rt/widget: the text
+  // itself was already generated and safety-reviewed before it ever reached
+  // the widget, so this is purely a client-side typing effect, not a token
+  // stream from the model. See the WebSocket effect below for where it's
+  // triggered, and revealMap for how the render picks it up.
+  const [revealMap, setRevealMap] = useState<Record<string, string>>({});
+  const revealTimersRef = useRef<Map<string, number>>(new Map());
+  function revealWordByWord(id: string, full: string) {
+    const existing = revealTimersRef.current.get(id);
+    if (existing) window.clearTimeout(existing);
+    const words = full.split(/(\s+)/);
+    let shown = 0;
+    setRevealMap((prev) => ({ ...prev, [id]: "" }));
+    const step = () => {
+      shown++;
+      const partial = words.slice(0, shown).join("");
+      setRevealMap((prev) => (prev[id] === undefined ? prev : { ...prev, [id]: partial }));
+      if (shown < words.length) {
+        revealTimersRef.current.set(id, window.setTimeout(step, REVEAL_MS_PER_WORD));
+      } else {
+        revealTimersRef.current.delete(id);
+        setRevealMap((prev) => {
+          if (prev[id] === undefined) return prev;
+          const next = { ...prev };
+          delete next[id];
+          return next;
+        });
+      }
+    };
+    step();
+  }
+  useEffect(() => {
+    return () => {
+      for (const timer of revealTimersRef.current.values()) window.clearTimeout(timer);
+    };
+  }, []);
+
   const identityReadyRef = useRef(false);
   const rejectedIdentityRef = useRef<string | null>(null);
   const [identityReady, setIdentityReady] = useState(false);
@@ -434,14 +488,12 @@ function WidgetContent() {
         if (data.identified) clearVisitorToken(key);
         else if (data.visitorToken) writeVisitorToken(key, data.visitorToken);
 
-        // Gate the pre-chat form on the visitor's profile, not the
-        // conversation — once this browser's visitor has a saved email, they
-        // never see the form again, no matter how many new conversations
-        // they start afterward.
-        // A signed-in visitor is already known, whether or not their
-        // identity carried an email.
-        const knowsVisitor = Boolean(data.customerEmail) || data.identified === true;
-        setPreChatNeeded(!knowsVisitor);
+        // The blocking pre-chat form is retired in favor of a conversational
+        // ask — the AI requests name/email in its own greeting (see
+        // widget.service.ts identity()'s needsContact line) instead of
+        // gating the whole widget behind a form. preChatNeeded stays wired
+        // up (PreChatFieldInput, submitPreChat) for a workspace that still
+        // wants it, but nothing here flips it on anymore.
         if (data.visitorToken) setVisitorToken(data.visitorToken);
 
         // startFresh (the greeting-popup's "new chat" flow) deliberately
@@ -636,6 +688,58 @@ function WidgetContent() {
     return () => { cancelled = true; window.clearInterval(interval); };
   }, [conversationId, visitorToken, tab, chatView, key, hostname, discardSession]);
 
+  // Live push for the instant a reply is approved and saved — see
+  // apps/gateway/src/realtime/realtime.service.ts's /rt/widget channel. The
+  // poll above still runs alongside this as the reliability fallback (socket
+  // drop, gateway restart, etc.), so a message is never lost, only possibly
+  // duplicated — seenMessageIdsRef dedupes either way.
+  useEffect(() => {
+    if (!conversationId || !visitorToken || tab !== "chat" || chatView !== "thread") return;
+    let closed = false;
+    let socket: WebSocket | null = null;
+    let reconnectDelay = 1000;
+    let reconnectTimer: number | null = null;
+    const epoch = sessionEpochRef.current;
+
+    function connect() {
+      if (closed) return;
+      const params = new URLSearchParams({ key, hostname, visitorToken, conversationId });
+      socket = new WebSocket(`${GATEWAY_WS_ORIGIN}/rt/widget?${params.toString()}`);
+      socket.onopen = () => { reconnectDelay = 1000; };
+      socket.onmessage = (event) => {
+        if (closed || epoch !== sessionEpochRef.current) return;
+        let data: { type?: string; message?: WidgetMessage };
+        try {
+          data = JSON.parse(event.data as string);
+        } catch {
+          return;
+        }
+        if (data.type !== "message" || !data.message || data.message.id === undefined) return;
+        const message = data.message;
+        if (seenMessageIdsRef.current.has(message.id)) return;
+        seenMessageIdsRef.current.add(message.id);
+        const isReply = message.senderType === "agent" || message.senderType === "ai";
+        setMessages((prev) => (prev.some((existing) => existing.id === message.id) ? prev : [...prev, message]));
+        if (isReply) {
+          revealWordByWord(message.id, message.body);
+          announceReplies(1);
+        }
+      };
+      socket.onclose = (event) => {
+        if (closed || event.code >= 4000) return;
+        reconnectTimer = window.setTimeout(connect, reconnectDelay);
+        reconnectDelay = Math.min(reconnectDelay * 2, 30000);
+      };
+      socket.onerror = () => socket?.close();
+    }
+    connect();
+    return () => {
+      closed = true;
+      if (reconnectTimer) window.clearTimeout(reconnectTimer);
+      socket?.close();
+    };
+  }, [conversationId, visitorToken, tab, chatView, key, hostname]);
+
   const lastTypingPingRef = useRef(0);
   function notifyTyping() {
     const now = Date.now();
@@ -651,7 +755,7 @@ function WidgetContent() {
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
-  }, [messages, tab, chatView, agentTyping]);
+  }, [messages, tab, chatView, agentTyping, revealMap]);
 
   async function sendPayload(body: string, attachment: Attachment | null) {
     if (sending || !visitorToken || (!body && !attachment)) return;
@@ -802,15 +906,15 @@ function WidgetContent() {
   const showTabBar = !(tab === "chat" && chatView === "thread");
 
   if (loading) {
-    return <div className="flex h-full items-center justify-center text-[12px] text-white/50" style={{ backgroundColor: BG }}>Loading…</div>;
+    return <div className="flex h-full items-center justify-center text-[12px]" style={{ backgroundColor: BG, color: MUTED }}>Loading…</div>;
   }
   if (denied) {
-    return <div className="flex h-full items-center justify-center px-6 text-center text-[12px] text-white/50" style={{ backgroundColor: BG }}>This chat isn&apos;t available on this site.</div>;
+    return <div className="flex h-full items-center justify-center px-6 text-center text-[12px]" style={{ backgroundColor: BG, color: MUTED }}>This chat isn&apos;t available on this site.</div>;
   }
   if (loadFailed) {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-3 px-6 text-center" style={{ backgroundColor: BG }}>
-        <p className="text-[12px] text-white/50">Couldn&apos;t load chat. Check your connection and try again.</p>
+        <p className="text-[12px]" style={{ color: MUTED }}>Couldn&apos;t load chat. Check your connection and try again.</p>
         <button
           type="button"
           onClick={() => { setLoadFailed(false); setRetryCount((count) => count + 1); }}
@@ -826,14 +930,14 @@ function WidgetContent() {
   if (preChatNeeded) {
     const canSubmit = preChatCanSubmit() && !preChatSubmitting;
     return (
-      <div className="flex h-full flex-col text-white" style={{ backgroundColor: PRECHAT_BANNER }}>
-        <div className="shrink-0 px-5 pb-7 pt-5">
-          <button type="button" aria-label="Back to home" onClick={() => { setPreChatNeeded(false); setTab("home"); }} className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-white/10">
+      <div className="flex h-full flex-col" style={{ backgroundColor: BG, color: INK }}>
+        <div className="shrink-0 px-5 pb-6 pt-5">
+          <button type="button" aria-label="Back to home" onClick={() => { setPreChatNeeded(false); setTab("home"); }} className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-black/5">
             <ChevronLeft size={20} />
           </button>
           <p className="mt-3 text-[17px] font-semibold leading-6">Please share a few details here so {botName} can connect you with the right person.</p>
         </div>
-        <div className="min-h-0 flex-1 overflow-y-auto rounded-t-[28px] bg-white px-5 pb-6 pt-6 text-[#1c1c1e]">
+        <div className="min-h-0 flex-1 overflow-y-auto rounded-t-[28px] px-5 pb-6 pt-6 shadow-[0_-1px_0_rgba(16,24,40,.04)]" style={{ backgroundColor: SURFACE, color: "#1c1c1e" }}>
           <form className="space-y-3.5" onSubmit={(event) => { event.preventDefault(); void submitPreChat(); }}>
             {preChatFields.map((field) => (
               <PreChatFieldInput
@@ -861,12 +965,12 @@ function WidgetContent() {
   }
 
   return (
-    <div className="flex h-full flex-col text-white" style={{ backgroundColor: BG }}>
+    <div className="flex h-full flex-col" style={{ backgroundColor: BG, color: INK }}>
       <div className="min-h-0 flex-1 overflow-hidden">
         {tab === "home" ? (
           <div className="flex h-full flex-col">
             <div className="px-5 pb-5 pt-7">
-              <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full text-[16px] font-bold" style={{ backgroundColor: ACCENT }}>
+              <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full text-[16px] font-bold text-white" style={{ backgroundColor: ACCENT }}>
                 {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
               </span>
               <h1 className="mt-4 text-[19px] font-semibold leading-6">{greetingLines[0]}</h1>
@@ -888,7 +992,7 @@ function WidgetContent() {
                         </span>
                       ))}
                       {badgeCount > 0 && (
-                        <span className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white ring-2" style={{ backgroundColor: "#3a3a3f", ["--tw-ring-color" as string]: BG }}>
+                        <span className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ring-2" style={{ backgroundColor: BUBBLE, color: INK, ["--tw-ring-color" as string]: BG }}>
                           +{badgeCount}
                         </span>
                       )}
@@ -902,12 +1006,12 @@ function WidgetContent() {
               <button
                 type="button"
                 onClick={startNewChat}
-                className="flex w-full items-center gap-3 rounded-xl border p-3.5 text-left transition hover:border-white/20"
-                style={{ backgroundColor: BUBBLE, borderColor: BORDER }}
+                className="flex w-full items-center gap-3 rounded-xl border p-3.5 text-left shadow-sm transition hover:border-[#c7cbd1]"
+                style={{ backgroundColor: SURFACE, borderColor: BORDER }}
               >
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white" style={{ backgroundColor: ACCENT }}><MessageSquarePlus size={16} /></span>
                 <span className="min-w-0 flex-1">
-                  <span className="block text-[13px] font-semibold text-white">Start a new conversation</span>
+                  <span className="block text-[13px] font-semibold">Start a new conversation</span>
                   <span className="block text-[11px]" style={{ color: MUTED }}>We typically reply in a few minutes</span>
                 </span>
               </button>
@@ -916,12 +1020,12 @@ function WidgetContent() {
                 <button
                   type="button"
                   onClick={() => openThread(conversationId)}
-                  className="flex w-full items-center gap-3 rounded-xl border p-3.5 text-left transition hover:border-white/20"
-                  style={{ backgroundColor: BUBBLE, borderColor: BORDER }}
+                  className="flex w-full items-center gap-3 rounded-xl border p-3.5 text-left shadow-sm transition hover:border-[#c7cbd1]"
+                  style={{ backgroundColor: SURFACE, borderColor: BORDER }}
                 >
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white" style={{ backgroundColor: "#3a3a3f" }}><MessageCircle size={16} /></span>
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: BUBBLE, color: INK }}><MessageCircle size={16} /></span>
                   <span className="min-w-0 flex-1">
-                    <span className="block text-[13px] font-semibold text-white">Continue the conversation</span>
+                    <span className="block text-[13px] font-semibold">Continue the conversation</span>
                     <span className="block truncate text-[11px]" style={{ color: MUTED }}>{messages[messages.length - 1]?.body || "Pick up where you left off"}</span>
                   </span>
                 </button>
@@ -936,7 +1040,7 @@ function WidgetContent() {
           <div className="flex h-full flex-col">
             <div className="relative flex items-center justify-center border-b px-4 py-4" style={{ borderColor: BORDER }}>
               <p className="text-[15px] font-semibold">Messages</p>
-              <button type="button" aria-label="Close" onClick={closeWidget} className="absolute right-3 flex h-7 w-7 items-center justify-center rounded-full hover:bg-white/10">
+              <button type="button" aria-label="Close" onClick={closeWidget} className="absolute right-3 flex h-7 w-7 items-center justify-center rounded-full hover:bg-black/5">
                 <X size={16} />
               </button>
             </div>
@@ -951,7 +1055,7 @@ function WidgetContent() {
                     key={conversation.id}
                     type="button"
                     onClick={() => openThread(conversation.id)}
-                    className="flex w-full items-start gap-3 border-b px-4 py-3.5 text-left transition hover:bg-white/5"
+                    className="flex w-full items-start gap-3 border-b px-4 py-3.5 text-left transition hover:bg-black/[0.03]"
                     style={{ borderColor: BORDER }}
                   >
                     <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl text-white" style={{ backgroundColor: ACCENT }}>
@@ -959,7 +1063,7 @@ function WidgetContent() {
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="flex items-center justify-between gap-2">
-                        <span className="truncate text-[13px] font-semibold text-white">{botName}</span>
+                        <span className="truncate text-[13px] font-semibold">{botName}</span>
                         <span className="shrink-0 text-[10.5px]" style={{ color: MUTED }}>{formatTime(conversation.time)}</span>
                       </span>
                       <span className="mt-0.5 block truncate text-[12px] leading-4" style={{ color: MUTED }}>{conversation.preview || "New conversation"}</span>
@@ -972,26 +1076,27 @@ function WidgetContent() {
               <button
                 type="button"
                 onClick={startNewChat}
-                className="flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-[12.5px] font-semibold text-[#18181b] shadow-lg transition hover:bg-white/90"
+                className="flex items-center gap-2 rounded-full border px-4 py-2.5 text-[12.5px] font-semibold shadow-sm transition hover:bg-black/[0.02]"
+                style={{ backgroundColor: SURFACE, borderColor: BORDER, color: INK }}
               >
                 Ask a question
-                <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#18181b] text-white"><CircleHelp size={11} /></span>
+                <span className="flex h-4 w-4 items-center justify-center rounded-full text-white" style={{ backgroundColor: INK }}><CircleHelp size={11} /></span>
               </button>
             </div>
           </div>
         ) : (
           <div className="flex h-full flex-col">
-            <div className="flex items-center gap-2.5 border-b px-3 py-3" style={{ borderColor: BORDER }}>
-              <button type="button" aria-label="Back to chats" onClick={openChatList} className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full hover:bg-white/10"><ChevronLeft size={17} /></button>
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full text-[12px] font-bold" style={{ backgroundColor: ACCENT }}>
-                {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-[13px] font-semibold">{botName}</p>
-                <p className="truncate text-[10.5px]" style={{ color: MUTED }}>The team can also help</p>
+            <div className="flex items-center gap-1.5 border-b px-2.5 py-2.5" style={{ borderColor: BORDER, backgroundColor: BG }}>
+              <button type="button" aria-label="Back to chats" onClick={openChatList} className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full hover:bg-black/5"><ChevronLeft size={17} /></button>
+              <div className="flex min-w-0 flex-1 items-center gap-2 rounded-full py-1 pl-1 pr-3 shadow-sm" style={{ backgroundColor: SURFACE }}>
+                <span className="relative flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full text-[11px] font-bold text-white" style={{ backgroundColor: ACCENT }}>
+                  {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
+                  <span className="absolute -bottom-px -right-px h-2 w-2 rounded-full ring-2" style={{ backgroundColor: "#3ecf6a", ["--tw-ring-color" as string]: SURFACE }} />
+                </span>
+                <p className="truncate text-[12.5px] font-semibold">{botName}</p>
               </div>
-              <button type="button" aria-label={soundOn ? "Mute sound for new replies" : "Turn on sound for new replies"} aria-pressed={!soundOn} title={soundOn ? "Sound on for new replies" : "Sound off"} onClick={toggleSound} className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full hover:bg-white/10">{soundOn ? <Volume2 size={15} /> : <VolumeX size={15} />}</button>
-              <button type="button" aria-label="Close" onClick={closeWidget} className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full hover:bg-white/10"><X size={16} /></button>
+              <button type="button" aria-label={soundOn ? "Mute sound for new replies" : "Turn on sound for new replies"} aria-pressed={!soundOn} title={soundOn ? "Sound on for new replies" : "Sound off"} onClick={toggleSound} className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full hover:bg-black/5">{soundOn ? <Volume2 size={15} /> : <VolumeX size={15} />}</button>
+              <button type="button" aria-label="Close" onClick={closeWidget} className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full hover:bg-black/5"><X size={16} /></button>
             </div>
             <div ref={scrollRef} className="min-h-0 flex-1 space-y-3 overflow-y-auto p-4">
               {messages.length === 0 && !conversationId && (
@@ -1000,15 +1105,22 @@ function WidgetContent() {
                 // conversation (see sendPayload), so a look-and-leave visit
                 // never touches the database.
                 greetingLines.map((line, index) => (
-                  <div key={index} className="w-fit max-w-[90%] rounded-md border border-black/40 bg-white px-3.5 py-3 text-[13px] leading-5 text-[#18181b]">
-                    {line}
+                  <div key={index} className="flex items-start gap-2">
+                    {index === 0 && (
+                      <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full text-[10px] font-bold text-white" style={{ backgroundColor: ACCENT }}>
+                        {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
+                      </span>
+                    )}
+                    <div className={`w-fit max-w-[90%] text-[13.5px] leading-6 ${index > 0 ? "ml-8" : ""}`} style={{ color: INK }}>
+                      {line}
+                    </div>
                   </div>
                 ))
               )}
               {messages.length === 0 && conversationId && (
                 <div className="flex min-h-[120px] items-center justify-center text-[11.5px]" style={{ color: MUTED }}>Loading conversation…</div>
               )}
-              {messages.map((message) => {
+              {messages.map((message, index) => {
                 // A teammate joining or leaving the chat. Centered and quiet:
                 // it is a thing that happened to the conversation, not a
                 // message from anyone, so it must not read as one.
@@ -1025,51 +1137,86 @@ function WidgetContent() {
                 const fromVisitor = message.senderType === "customer";
                 const hasImage = message.attachmentUrl && (message.attachmentType === "image" || message.attachmentType === "gif");
                 const hasFile = message.attachmentUrl && message.attachmentType === "file";
-                return (
-                  <div key={message.id} className={fromVisitor ? "flex justify-end" : ""}>
-                    <div className="w-fit max-w-[85%] space-y-1.5">
-                      {hasImage && (
-                        <img src={message.attachmentUrl!} alt={message.attachmentName ?? ""} className="max-h-52 w-auto rounded-2xl object-cover" />
-                      )}
-                      {hasFile && (
-                        <a
-                          href={message.attachmentUrl!}
-                          download={message.attachmentName ?? "file"}
-                          className="flex items-center gap-2.5 rounded-2xl px-3.5 py-2.5 text-[12.5px] font-medium"
-                          style={fromVisitor ? { backgroundColor: ACCENT, color: "#fff" } : { backgroundColor: BUBBLE, color: "#fff" }}
-                        >
-                          <FileIcon size={15} className="shrink-0" />
-                          <span className="min-w-0 truncate">{message.attachmentName ?? "Attachment"}</span>
-                        </a>
-                      )}
-                      {message.body && (
-                        <div
-                          className="rounded-2xl px-3.5 py-2.5 text-[13px] leading-5"
-                          style={fromVisitor ? { backgroundColor: ACCENT, color: "#fff" } : { backgroundColor: BUBBLE, color: "#fff" }}
-                        >
-                          <MessageMarkdown text={message.body} />
+                // Who's actually talking: the AI, or — once a teammate has
+                // taken over — that teammate by name. Shown once per run of
+                // consecutive messages from the same sender, not on every
+                // line, so a human mid-conversation doesn't read as the AI.
+                const previous = messages[index - 1];
+                const continuesSameSender = previous?.senderType === message.senderType && previous?.senderId === message.senderId;
+                const senderName = message.senderType === "ai" ? botName : team.find((member) => member.id === message.senderId)?.name?.trim() || "Support team";
+                const displayBody = revealMap[message.id] ?? message.body;
+
+                const bubble = (
+                  <div className="w-fit max-w-[85%] space-y-1.5">
+                    {hasImage && (
+                      <img src={message.attachmentUrl!} alt={message.attachmentName ?? ""} className="max-h-52 w-auto rounded-2xl object-cover" />
+                    )}
+                    {hasFile && (
+                      <a
+                        href={message.attachmentUrl!}
+                        download={message.attachmentName ?? "file"}
+                        className="flex items-center gap-2.5 rounded-2xl px-3.5 py-2.5 text-[12.5px] font-medium"
+                        style={fromVisitor ? { backgroundColor: ACCENT, color: "#fff" } : { backgroundColor: BUBBLE, color: INK }}
+                      >
+                        <FileIcon size={15} className="shrink-0" />
+                        <span className="min-w-0 truncate">{message.attachmentName ?? "Attachment"}</span>
+                      </a>
+                    )}
+                    {message.body && (
+                      fromVisitor ? (
+                        <div className="rounded-2xl px-3.5 py-2.5 text-[13px] leading-5" style={{ backgroundColor: ACCENT, color: "#fff" }}>
+                          <MessageMarkdown text={displayBody} />
                         </div>
-                      )}
+                      ) : (
+                        <div className="px-0.5 text-[13.5px] leading-6" style={{ color: INK }}>
+                          <MessageMarkdown text={displayBody} />
+                        </div>
+                      )
+                    )}
+                  </div>
+                );
+
+                if (fromVisitor) {
+                  return <div key={message.id} className="flex justify-end">{bubble}</div>;
+                }
+                return (
+                  <div key={message.id} className="flex flex-col gap-1">
+                    {!continuesSameSender && (
+                      <p className="pl-8 text-[10.5px]" style={{ color: MUTED }}>
+                        <span className="font-semibold" style={{ color: INK }}>{senderName}</span>
+                        {" · "}{formatTime(message.createdAt)}
+                      </p>
+                    )}
+                    <div className="flex items-start gap-2">
+                      <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full text-[10px] font-bold text-white" style={{ backgroundColor: ACCENT }}>
+                        {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
+                      </span>
+                      {bubble}
                     </div>
                   </div>
                 );
               })}
               {agentTyping && (
-                <div className="flex items-center rounded-2xl px-3.5 py-3" style={{ backgroundColor: BUBBLE, width: "fit-content" }}>
-                  <TypingDots color="rgba(255,255,255,.7)" />
+                <div className="flex items-center gap-2">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full text-[10px] font-bold text-white" style={{ backgroundColor: ACCENT }}>
+                    {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
+                  </span>
+                  <div className="flex items-center rounded-2xl px-3.5 py-3" style={{ backgroundColor: BUBBLE, width: "fit-content" }}>
+                    <TypingDots color="rgba(24,24,27,.45)" />
+                  </div>
                 </div>
               )}
             </div>
             <div className="relative p-3">
               {activePanel === "emoji" && (
-                <div className="absolute bottom-full left-3 right-3 mb-2 rounded-2xl border p-2.5 shadow-2xl" style={{ borderColor: BORDER, backgroundColor: "#1f1f22" }}>
+                <div className="absolute bottom-full left-3 right-3 mb-2 rounded-2xl border p-2.5 shadow-xl" style={{ borderColor: BORDER, backgroundColor: SURFACE }}>
                   <div className="mb-1 flex items-center justify-between px-0.5">
                     <p className="text-[10.5px] font-semibold" style={{ color: MUTED }}>Emoji</p>
-                    <button type="button" onClick={() => setActivePanel(null)} className="rounded-full p-1 hover:bg-white/10"><X size={13} /></button>
+                    <button type="button" onClick={() => setActivePanel(null)} className="rounded-full p-1 hover:bg-black/5"><X size={13} /></button>
                   </div>
                   <div className="grid grid-cols-8 gap-0.5">
                     {EMOJI.map((emoji) => (
-                      <button key={emoji} type="button" onClick={() => insertEmoji(emoji)} className="rounded-lg p-1.5 text-[17px] leading-none hover:bg-white/10">
+                      <button key={emoji} type="button" onClick={() => insertEmoji(emoji)} className="rounded-lg p-1.5 text-[17px] leading-none hover:bg-black/5">
                         {emoji}
                       </button>
                     ))}
@@ -1077,7 +1224,7 @@ function WidgetContent() {
                 </div>
               )}
               {activePanel === "gif" && (
-                <div className="absolute bottom-full left-3 right-3 mb-2 flex max-h-72 flex-col rounded-2xl border p-2.5 shadow-2xl" style={{ borderColor: BORDER, backgroundColor: "#1f1f22" }}>
+                <div className="absolute bottom-full left-3 right-3 mb-2 flex max-h-72 flex-col rounded-2xl border p-2.5 shadow-xl" style={{ borderColor: BORDER, backgroundColor: SURFACE }}>
                   <div className="mb-2 flex items-center gap-2">
                     <div className="flex flex-1 items-center gap-1.5 rounded-full px-3 py-1.5" style={{ backgroundColor: BUBBLE }}>
                       <Search size={12} style={{ color: MUTED }} />
@@ -1086,10 +1233,11 @@ function WidgetContent() {
                         onChange={(event) => setGifQuery(event.target.value)}
                         onKeyDown={(event) => { if (event.key === "Enter") void searchGifs(gifQuery); }}
                         placeholder="Search GIFs…"
-                        className="min-w-0 flex-1 bg-transparent text-[12px] text-white outline-none placeholder:text-white/40"
+                        className="min-w-0 flex-1 bg-transparent text-[12px] outline-none placeholder:text-[#9aa0a6]"
+                        style={{ color: INK }}
                       />
                     </div>
-                    <button type="button" onClick={() => setActivePanel(null)} className="rounded-full p-1 hover:bg-white/10"><X size={13} /></button>
+                    <button type="button" onClick={() => setActivePanel(null)} className="rounded-full p-1 hover:bg-black/5"><X size={13} /></button>
                   </div>
                   <div className="min-h-0 flex-1 overflow-y-auto">
                     {gifLoading ? (
@@ -1110,36 +1258,37 @@ function WidgetContent() {
               )}
 
               {pendingAttachment && (
-                <div className="mb-2 flex items-center gap-2 rounded-xl border px-2.5 py-2" style={{ borderColor: BORDER, backgroundColor: "#1f1f22" }}>
+                <div className="mb-2 flex items-center gap-2 rounded-xl border px-2.5 py-2" style={{ borderColor: BORDER, backgroundColor: SURFACE }}>
                   {pendingAttachment.type === "image" ? (
                     <img src={pendingAttachment.url} alt="" className="h-9 w-9 rounded-lg object-cover" />
                   ) : (
-                    <span className="flex h-9 w-9 items-center justify-center rounded-lg" style={{ backgroundColor: BUBBLE }}><FileIcon size={15} /></span>
+                    <span className="flex h-9 w-9 items-center justify-center rounded-lg" style={{ backgroundColor: BUBBLE, color: INK }}><FileIcon size={15} /></span>
                   )}
                   <span className="min-w-0 flex-1 truncate text-[11.5px]" style={{ color: MUTED }}>{pendingAttachment.name ?? "Attachment"}</span>
-                  <button type="button" onClick={() => setPendingAttachment(null)} className="rounded-full p-1 hover:bg-white/10"><X size={13} /></button>
+                  <button type="button" onClick={() => setPendingAttachment(null)} className="rounded-full p-1 hover:bg-black/5"><X size={13} /></button>
                 </div>
               )}
               {attachError && <p className="mb-2 px-1 text-[11px] text-[#e5626a]">{attachError}</p>}
 
-              <div className="rounded-xl border" style={{ borderColor: BORDER, backgroundColor: "#1f1f22" }}>
+              <div className="rounded-[26px] border shadow-sm" style={{ borderColor: BORDER, backgroundColor: SURFACE }}>
                 <textarea
                   value={draft}
                   onChange={(event) => { setDraft(event.target.value); notifyTyping(); }}
                   onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); void sendMessage(); } }}
                   placeholder="Write a message…"
                   rows={1}
-                  className="h-[42px] w-full resize-none bg-transparent px-3.5 pb-1 pt-2.5 text-[13px] text-white outline-none placeholder:text-white/60"
+                  className="h-[42px] w-full resize-none bg-transparent px-4 pb-1 pt-2.5 text-[13px] outline-none placeholder:text-[#9aa0a6]"
+                  style={{ color: INK }}
                 />
                 <div className="flex h-10 items-center gap-0.5 px-1.5 pb-1">
                   <input ref={fileInputRef} type="file" hidden onChange={handleFileSelect} />
-                  <button type="button" aria-label="Attach file" onClick={() => fileInputRef.current?.click()} className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-white/10" style={{ color: ICON_MUTED }}>
+                  <button type="button" aria-label="Attach file" onClick={() => fileInputRef.current?.click()} className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-black/5" style={{ color: ICON_MUTED }}>
                     <Paperclip size={15} />
                   </button>
-                  <button type="button" aria-label="Send a GIF" onClick={() => togglePanel("gif")} className="flex h-7 w-9 items-center justify-center rounded-full text-[9.5px] font-bold hover:bg-white/10" style={{ color: activePanel === "gif" ? ACCENT : ICON_MUTED }}>
+                  <button type="button" aria-label="Send a GIF" onClick={() => togglePanel("gif")} className="flex h-7 w-9 items-center justify-center rounded-full text-[9.5px] font-bold hover:bg-black/5" style={{ color: activePanel === "gif" ? ACCENT : ICON_MUTED }}>
                     GIF
                   </button>
-                  <button type="button" aria-label="Emoji" onClick={() => togglePanel("emoji")} className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-white/10" style={{ color: activePanel === "emoji" ? ACCENT : ICON_MUTED }}>
+                  <button type="button" aria-label="Emoji" onClick={() => togglePanel("emoji")} className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-black/5" style={{ color: activePanel === "emoji" ? ACCENT : ICON_MUTED }}>
                     <Smile size={15} />
                   </button>
                   {micSupported && (
@@ -1147,7 +1296,7 @@ function WidgetContent() {
                       type="button"
                       aria-label={listening ? "Stop recording" : "Voice input"}
                       onClick={toggleMic}
-                      className="ml-auto flex h-7 w-7 items-center justify-center rounded-full hover:bg-white/10"
+                      className="ml-auto flex h-7 w-7 items-center justify-center rounded-full hover:bg-black/5"
                       style={{ color: listening ? "#e5626a" : ICON_MUTED }}
                     >
                       {listening ? <Square size={13} /> : <Mic size={15} />}
@@ -1158,10 +1307,10 @@ function WidgetContent() {
                     onClick={() => void sendMessage()}
                     disabled={(!draft.trim() && !pendingAttachment) || sending}
                     aria-label="Send"
-                    className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-white transition disabled:opacity-40 ${micSupported ? "ml-1" : "ml-auto"}`}
-                    style={{ backgroundColor: draft.trim() || pendingAttachment ? ACCENT : "rgba(255,255,255,.12)" }}
+                    className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition disabled:opacity-100 ${micSupported ? "ml-1" : "ml-auto"}`}
+                    style={{ backgroundColor: draft.trim() || pendingAttachment ? ACCENT : BUBBLE, color: draft.trim() || pendingAttachment ? "#fff" : ICON_MUTED }}
                   >
-                    <Send size={13} />
+                    <ArrowUp size={15} />
                   </button>
                 </div>
               </div>
@@ -1171,11 +1320,11 @@ function WidgetContent() {
       </div>
 
       {showTabBar && (
-        <div className="flex shrink-0 items-center border-t" style={{ borderColor: BORDER }}>
-          <button type="button" onClick={() => setTab("home")} className="flex flex-1 flex-col items-center gap-1 py-2.5 text-[10px] font-medium" style={{ color: tab === "home" ? "#fff" : MUTED }}>
+        <div className="flex shrink-0 items-center border-t" style={{ borderColor: BORDER, backgroundColor: SURFACE }}>
+          <button type="button" onClick={() => setTab("home")} className="flex flex-1 flex-col items-center gap-1 py-2.5 text-[10px] font-medium" style={{ color: tab === "home" ? INK : MUTED }}>
             <Home size={18} strokeWidth={tab === "home" ? 2.4 : 2} /> Home
           </button>
-          <button type="button" onClick={openChatList} className="flex flex-1 flex-col items-center gap-1 py-2.5 text-[10px] font-medium" style={{ color: tab === "chat" ? "#fff" : MUTED }}>
+          <button type="button" onClick={openChatList} className="flex flex-1 flex-col items-center gap-1 py-2.5 text-[10px] font-medium" style={{ color: tab === "chat" ? INK : MUTED }}>
             <MessageCircle size={18} strokeWidth={tab === "chat" ? 2.4 : 2} /> Messages
           </button>
           <button type="button" disabled className="flex flex-1 flex-col items-center gap-1 py-2.5 text-[10px] font-medium opacity-50" style={{ color: MUTED }}>
@@ -1184,7 +1333,7 @@ function WidgetContent() {
         </div>
       )}
       {showBranding && (
-        <a href="https://elpino.chat" target="_blank" rel="noreferrer" className="block shrink-0 border-t py-1.5 text-center text-[9.5px] font-medium transition hover:text-white/70" style={{ borderColor: BORDER, color: MUTED }}>
+        <a href="https://elpino.chat" target="_blank" rel="noreferrer" className="block shrink-0 border-t py-1.5 text-center text-[9.5px] font-medium transition hover:text-[#18181b]" style={{ borderColor: BORDER, color: MUTED, backgroundColor: SURFACE }}>
           Powered by Elpino
         </a>
       )}
@@ -1286,9 +1435,9 @@ function PreChatFieldInput({
             <label key={option} className="flex cursor-pointer items-center gap-2.5 rounded-lg px-1 py-2 hover:bg-[#f7f8f9]">
               <span
                 className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2"
-                style={{ borderColor: value === option ? PRECHAT_BANNER : "#c7cbd1" }}
+                style={{ borderColor: value === option ? ACCENT : "#c7cbd1" }}
               >
-                {value === option && <span className="h-2 w-2 rounded-full" style={{ backgroundColor: PRECHAT_BANNER }} />}
+                {value === option && <span className="h-2 w-2 rounded-full" style={{ backgroundColor: ACCENT }} />}
               </span>
               <input type="radio" name={field.id} value={option} checked={value === option} onChange={() => onChange(option)} className="sr-only" />
               <span className="text-[13px]">{option}</span>
@@ -1353,7 +1502,7 @@ function PreChatFieldInput({
 
 export default function WidgetPage() {
   return (
-    <Suspense fallback={<div className="flex h-full items-center justify-center text-[12px] text-white/50" style={{ backgroundColor: BG }}>Loading…</div>}>
+    <Suspense fallback={<div className="flex h-full items-center justify-center text-[12px]" style={{ backgroundColor: BG, color: MUTED }}>Loading…</div>}>
       <WidgetContent />
     </Suspense>
   );
