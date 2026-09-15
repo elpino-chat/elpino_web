@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 function gatewayWsOrigin() {
   const httpUrl =
     process.env.NEXT_PUBLIC_GATEWAY_URL ||
-    (process.env.NODE_ENV === "development" ? "http://localhost:4000" : "https://api.elpino.chat");
+    (process.env.NODE_ENV === "development" ? "http://127.0.0.1:4000" : "https://api.elpino.chat");
   return httpUrl.replace(/^http/, "ws");
 }
 
@@ -62,10 +62,56 @@ export function GET(request: Request) {
     var key = current && current.dataset.siteKey;
     if (!key) return;
 
+    // Signed identity for a logged-in visitor, minted by the site's own
+    // server with its Elpino identity secret. Preferred: set
+    // window.ElpinoSettings = { getIdentityToken: async () => token } before
+    // this script loads; the widget calls it whenever it needs a fresh
+    // single-use token. A token rendered into the page as
+    // ElpinoSettings.identityToken signs in once: when that session ends the
+    // visitor carries on anonymously until the page provides a new token.
+    // ElpinoTag.identify({ token }) after login, ElpinoTag.logout() on
+    // sign-out. Tokens only reach the chat iframe by postMessage, never in a URL.
+    var settings = window.ElpinoSettings || {};
+    var identityToken = typeof settings.identityToken === 'string' && settings.identityToken ? settings.identityToken : null;
+    var postToWidget = function () {};
+    var identityGeneration = 0;
+    var signedOut = false;
+
+    function refreshIdentity() {
+      if (signedOut || typeof settings.getIdentityToken !== 'function') {
+        postToWidget({ type: 'elpino:identity', token: identityToken });
+        return;
+      }
+      var generation = ++identityGeneration;
+      Promise.resolve().then(function () { return settings.getIdentityToken(); }).then(function (token) {
+        if (generation !== identityGeneration) return;
+        identityToken = typeof token === 'string' ? token : null;
+        postToWidget({ type: 'elpino:identity', token: identityToken });
+      }).catch(function () {
+        if (generation !== identityGeneration) return;
+        identityToken = null;
+        postToWidget({ type: 'elpino:logout' });
+      });
+    }
+
+    function identify(options) {
+      signedOut = false;
+      identityGeneration += 1;
+      identityToken = options && typeof options.token === 'string' && options.token ? options.token : null;
+      postToWidget({ type: 'elpino:identity', token: identityToken });
+    }
+
+    function logout() {
+      signedOut = true;
+      identityGeneration += 1;
+      identityToken = null;
+      postToWidget({ type: 'elpino:logout' });
+    }
+
     fetch(TAG_ORIGIN + '/api/widget/config?key=' + encodeURIComponent(key) + '&hostname=' + encodeURIComponent(location.hostname))
       .then(function (response) { if (!response.ok) throw new Error('Tag is not allowed on this domain'); return response.json(); })
       .then(function (payload) {
-        window.ElpinoTag = { key: key, config: payload.config };
+        window.ElpinoTag = { key: key, config: payload.config, identify: identify, logout: logout };
         window.dispatchEvent(new CustomEvent('elpino:ready', { detail: payload.config }));
         mount(payload.config || {});
         track();
@@ -185,6 +231,37 @@ export function GET(request: Request) {
       badge.textContent = '1';
       document.body.appendChild(badge);
 
+      // Replies that arrived while the panel was closed or this tab was in
+      // the background: counted on the launcher badge and, while the tab is
+      // hidden, in the page title. The chat iframe reports them.
+      var unread = 0;
+      var titleBeforeUnread = null;
+      function showUnread() {
+        badge.textContent = unread > 9 ? '9+' : String(unread);
+        badge.style.display = unread && !open ? 'block' : 'none';
+        if (unread && document.hidden) {
+          if (titleBeforeUnread === null) titleBeforeUnread = document.title;
+          document.title = '(' + unread + ') New message' + (unread === 1 ? '' : 's') + ' · ' + titleBeforeUnread;
+        }
+      }
+      function restoreTitle() {
+        if (titleBeforeUnread === null) return;
+        document.title = titleBeforeUnread;
+        titleBeforeUnread = null;
+      }
+      function clearUnread() {
+        unread = 0;
+        restoreTitle();
+        if (!greeting) badge.style.display = 'none';
+      }
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) return;
+        // Back on the tab: the title has done its job. The badge stays until
+        // the panel is actually opened.
+        restoreTitle();
+        if (open) clearUnread();
+      });
+
       if (wasOpen()) {
         // Carried over from the previous page — drop straight back into the
         // conversation. No greeting bubble: they're already talking to us.
@@ -219,8 +296,27 @@ export function GET(request: Request) {
         greeting = null;
       }
 
+      // Only the chat iframe, and only at its own origin, ever receives the
+      // identity token.
+      postToWidget = function (message) {
+        if (iframe && iframe.contentWindow) iframe.contentWindow.postMessage(message, ORIGIN);
+      };
+
       window.addEventListener('message', function (event) {
-        if (event.data && event.data.type === 'elpino:close' && open) setOpen(false);
+        if (!event.data || !iframe || event.source !== iframe.contentWindow || event.origin !== ORIGIN) return;
+        if (event.data.type === 'elpino:close' && open) setOpen(false);
+        // The iframe needs to know whether anyone can see it before it
+        // decides a reply deserves a sound.
+        if (event.data.type === 'elpino:widget-ready') postToWidget({ type: 'elpino:panel', open: open });
+        if (event.data.type === 'elpino:unread' && typeof event.data.count === 'number' && event.data.count > 0) {
+          unread += Math.min(Math.floor(event.data.count), 50);
+          showUnread();
+        }
+        // The iframe asks once it has loaded; answer with whatever identity
+        // the page has given so far, which may be none.
+        if (event.data.type === 'elpino:widget-ready' || event.data.type === 'elpino:identity-refresh') {
+          refreshIdentity();
+        }
       });
 
       // Opening the panel pushes a history entry, so the browser's back
@@ -246,9 +342,11 @@ export function GET(request: Request) {
       function setOpen(next, startNew) {
         if (next === open) return;
         open = next;
+        postToWidget({ type: 'elpino:panel', open: open });
         button.innerHTML = open ? closeIcon(22) : launcherIcon();
         if (open) {
           dismissGreeting();
+          clearUnread();
           badge.style.display = 'none';
           if (!iframe) {
             iframe = document.createElement('iframe');

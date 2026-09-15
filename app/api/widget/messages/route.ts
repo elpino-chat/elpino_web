@@ -5,27 +5,15 @@ type MessagesResult = { messages?: WidgetMessage[]; message?: WidgetMessage; gre
 type Attachment = { url: string; type: string; name?: string };
 
 function corsHeaders() {
-  return { "access-control-allow-origin": "*", "access-control-allow-methods": "GET, POST, OPTIONS", "access-control-allow-headers": "content-type", "cache-control": "no-store" };
+  return { "access-control-allow-origin": "*", "access-control-allow-methods": "POST, OPTIONS", "access-control-allow-headers": "content-type", "cache-control": "no-store" };
 }
 
 export async function OPTIONS() {
   return new Response(null, { headers: corsHeaders() });
 }
 
-export async function GET(request: Request) {
-  const url = new URL(request.url);
-  const key = url.searchParams.get("key")?.trim();
-  const hostname = url.searchParams.get("hostname")?.trim();
-  const visitorToken = url.searchParams.get("visitorToken")?.trim();
-  const conversationId = url.searchParams.get("conversationId")?.trim();
-  if (!key || !hostname || !visitorToken || !conversationId) {
-    return Response.json({ error: "key, hostname, visitorToken and conversationId are required" }, { status: 400, headers: corsHeaders() });
-  }
-
-  const params = new URLSearchParams({ publicKey: key, hostname, visitorToken, conversationId });
-  const result = await callGateway<MessagesResult>(`/api/workspace/widget/messages?${params.toString()}`);
-  return Response.json(result, { status: result.error ? 404 : 200, headers: corsHeaders() });
-}
+// Reading a thread is POST /api/widget/messages/read: a session token in a
+// query string ends up in access logs, proxies and browser history.
 
 export async function POST(request: Request) {
   const body = (await request.json().catch(() => ({}))) as {
