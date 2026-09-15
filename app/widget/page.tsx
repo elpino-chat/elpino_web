@@ -284,7 +284,9 @@ function WidgetContent() {
     setRevealMap((prev) => ({ ...prev, [id]: "" }));
     const step = () => {
       shown++;
-      const partial = words.slice(0, shown).join("");
+      let partial = words.slice(0, shown).join("");
+      // Close a half-revealed **bold** so it renders bold mid-reveal instead of flashing raw asterisks.
+      if ((partial.match(/\*\*/g)?.length ?? 0) % 2 === 1) partial += "**";
       setRevealMap((prev) => (prev[id] === undefined ? prev : { ...prev, [id]: partial }));
       if (shown < words.length) {
         revealTimersRef.current.set(id, window.setTimeout(step, REVEAL_MS_PER_WORD));
