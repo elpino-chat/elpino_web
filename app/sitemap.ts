@@ -42,6 +42,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     page("/changelog", 0.6, "weekly"),
     page("/trust", 0.7, "monthly"),
     page("/security-guide", 0.6, "monthly"),
+    page("/docs/identity-verification", 0.5, "monthly"),
     page("/security-policy", 0.5, "monthly"),
     page("/faq", 0.6, "monthly"),
     page("/contact", 0.6, "monthly"),

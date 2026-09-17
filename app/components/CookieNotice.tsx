@@ -38,14 +38,14 @@ export function CookieNotice() {
 
   return (
     <div
-      className="fixed bottom-5 right-5 z-50 w-[calc(100vw-2.5rem)] max-w-sm rounded-xl border border-slate-200 bg-white p-5 text-left shadow-[0_24px_80px_-35px_rgba(15,23,42,0.45)]"
+      className="fixed inset-x-0 bottom-0 z-50 w-full bg-white p-5 text-left shadow-[0_-8px_30px_-15px_rgba(15,23,42,0.25)] sm:p-6"
       role="dialog"
       aria-label="Cookie preferences"
     >
-      <div className="space-y-4">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-8">
         <div>
-          <h2 className="text-base font-normal text-slate-950">Cookies</h2>
-          <p className="mt-2 text-sm leading-6 text-slate-600">
+          <h2 className="text-lg font-normal text-slate-950">Cookies</h2>
+          <p className="mt-2 text-base leading-7 text-slate-600">
             We use one essential cookie to keep you signed in, plus optional analytics (Google
             Analytics, Microsoft Clarity) to improve Elpino — those only run if you accept. See our{" "}
             <Link href="/privacy" className="text-slate-900 underline underline-offset-2">
@@ -55,18 +55,18 @@ export function CookieNotice() {
           </p>
         </div>
 
-        <div className="flex flex-col gap-2 sm:flex-row">
+        <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
           <button
             type="button"
             onClick={() => dismiss("rejected")}
-            className="inline-flex h-10 flex-1 items-center justify-center rounded-md border border-slate-300 bg-white px-4 text-sm font-normal text-slate-950 transition hover:bg-slate-50"
+            className="inline-flex h-11 items-center justify-center border border-slate-300 px-4 text-base font-normal text-slate-950 transition hover:bg-slate-100 sm:px-5"
           >
             Reject all
           </button>
           <button
             type="button"
             onClick={() => dismiss("accepted")}
-            className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-slate-950 px-4 text-sm font-normal text-white transition hover:bg-slate-800"
+            className="inline-flex h-11 items-center justify-center bg-slate-950 px-4 text-base font-normal text-white transition hover:bg-slate-800 sm:px-5"
           >
             Accept all
           </button>

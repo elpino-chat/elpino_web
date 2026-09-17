@@ -15,6 +15,7 @@ const SETTINGS_SECTIONS: Record<string, string> = {
   "presence-log": "Presence Log",
   trash: "Trash",
   tags: "Tag Manager",
+  identity: "Identity Verification",
   translations: "Translations",
 };
 

@@ -116,7 +116,10 @@ export function GET(request: Request) {
         mount(payload.config || {});
         track();
       })
-      .catch(function (error) { console.warn('[Elpino]', error.message); });
+      .catch(function (error) {
+        console.warn('[Elpino]', error.message);
+        window.dispatchEvent(new CustomEvent('elpino:error', { detail: { message: error.message } }));
+      });
 
     // A live WebSocket connection to the gateway, held open for the life of
     // the tab — visitorId is a long-lived id in localStorage (same visitor
@@ -181,15 +184,28 @@ export function GET(request: Request) {
       return Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
     }
 
+    // The two states the iframe's CSS ever takes: the normal bottom-right
+    // panel, and full-screen when the visitor picks "Maximize" from the
+    // widget's own header menu. Only the loader can touch this — the iframe
+    // is a different origin and can't resize itself, only ask via postMessage.
+    var PANEL_STYLE = 'position:fixed;bottom:88px;right:20px;width:420px;max-width:calc(100vw - 16px);height:640px;max-height:calc(100vh - 104px);border:none;border-radius:26px;box-shadow:0 18px 48px rgba(15,23,42,0.24);z-index:2147483000;background:#f7f7f8;';
+    var FULLSCREEN_STYLE = 'position:fixed;inset:0;width:100%;height:100%;max-width:100%;max-height:100%;border:none;border-radius:0;box-shadow:none;z-index:2147483000;background:#f7f7f8;';
+
     function mount(config) {
       var open = false;
       var iframe = null;
+      var maximized = false;
       // Per-tab, not per-visitor: sessionStorage means a chat left open
       // follows the visitor across page navigations on this tab, but a new
-      // tab starts closed. The conversation itself is restored separately
-      // and server-side (visitorToken -> /api/widget/start), so this only
-      // remembers whether the panel was showing, not what was said.
+      // tab starts closed. What was said lives server-side
+      // (visitorToken -> /api/widget/start); these two only remember whether
+      // the panel was showing and where in it the visitor was.
       var OPEN_KEY = 'elpino_open_' + key;
+      // Which screen and thread the panel was on, so the next page reopens
+      // in the same conversation instead of on Home. Kept here, on the
+      // site's own origin, because the iframe's storage is third-party and
+      // browsers increasingly partition or block it.
+      var VIEW_KEY = 'elpino_view_' + key;
       // Tracks whether we own the top history entry, so closing the panel
       // can clean it up and back-navigation can be told apart from a
       // visitor clicking the close button.
@@ -209,6 +225,27 @@ export function GET(request: Request) {
       function wasOpen() {
         try { return sessionStorage.getItem(OPEN_KEY) === '1'; }
         catch (error) { return false; }
+      }
+
+      // Only a known shape is stored or read back, so nothing arbitrary a
+      // page script wrote under this key ends up in the iframe URL.
+      function validView(view) {
+        if (!view || typeof view !== 'object') return null;
+        var tab = view.tab === 'chat' || view.tab === 'home' || view.tab === 'help' ? view.tab : null;
+        var chatView = view.chatView === 'list' ? 'list' : view.chatView === 'thread' ? 'thread' : null;
+        var conversationId = typeof view.conversationId === 'string' && /^[0-9a-f-]{36}$/i.test(view.conversationId) ? view.conversationId : '';
+        return tab && chatView ? { tab: tab, chatView: chatView, conversationId: conversationId } : null;
+      }
+
+      function rememberView(view) {
+        var valid = validView(view);
+        if (!valid) return;
+        try { sessionStorage.setItem(VIEW_KEY, JSON.stringify(valid)); } catch (error) { /* just won't carry over */ }
+      }
+
+      function savedView() {
+        try { return validView(JSON.parse(sessionStorage.getItem(VIEW_KEY) || 'null')); }
+        catch (error) { return null; }
       }
       var greetingLines = Array.isArray(config.greetingLines) && config.greetingLines.length > 0
         ? config.greetingLines
@@ -305,9 +342,16 @@ export function GET(request: Request) {
       window.addEventListener('message', function (event) {
         if (!event.data || !iframe || event.source !== iframe.contentWindow || event.origin !== ORIGIN) return;
         if (event.data.type === 'elpino:close' && open) setOpen(false);
+        // The iframe asked to fill the screen or shrink back — it can't
+        // resize itself since the loader owns the iframe's own CSS.
+        if (event.data.type === 'elpino:maximize' && iframe) {
+          maximized = Boolean(event.data.maximized);
+          iframe.style.cssText = maximized ? FULLSCREEN_STYLE : PANEL_STYLE;
+        }
         // The iframe needs to know whether anyone can see it before it
         // decides a reply deserves a sound.
         if (event.data.type === 'elpino:widget-ready') postToWidget({ type: 'elpino:panel', open: open });
+        if (event.data.type === 'elpino:view') rememberView(event.data);
         if (event.data.type === 'elpino:unread' && typeof event.data.count === 'number' && event.data.count > 0) {
           unread += Math.min(Math.floor(event.data.count), 50);
           showUnread();
@@ -320,19 +364,25 @@ export function GET(request: Request) {
       });
 
       // Opening the panel pushes a history entry, so the browser's back
-      // button closes the chat instead of navigating the visitor off the
-      // page mid-conversation. A second back then leaves as normal. This is
-      // what other widgets do that feels like a "do you really want to
-      // leave?" step — it isn't beforeunload, which browsers no longer let
-      // anyone customise anyway.
+      // button doesn't navigate the visitor off the page mid-conversation.
+      // What happens with that back press is the widget's own call — an
+      // active conversation gets a "leave the chat?" confirmation, an empty
+      // one just closes — so this only re-arms the marker (for a second
+      // press, or a "Stay" answer) and hands off to the iframe rather than
+      // closing outright itself. See elpino:back-pressed in the widget page.
       window.addEventListener('popstate', function () {
         if (ignoreNextPop) { ignoreNextPop = false; return; }
         if (!open) return;
-        // Our own entry just got popped — the panel goes away, the page
-        // stays put. pushedHistory is cleared first so closing doesn't try
-        // to pop a second time.
         pushedHistory = false;
-        setOpen(false);
+        try {
+          history.pushState({ elpinoWidget: true }, '');
+          pushedHistory = true;
+        } catch (error) {
+          // Can't re-arm (sandboxed context) — fall back to just closing.
+          setOpen(false);
+          return;
+        }
+        postToWidget({ type: 'elpino:back-pressed' });
       });
 
       function toggle(startNew) {
@@ -351,9 +401,13 @@ export function GET(request: Request) {
           if (!iframe) {
             iframe = document.createElement('iframe');
             iframe.title = 'Chat';
-            iframe.src = ORIGIN + '/widget?key=' + encodeURIComponent(key) + '&host=' + encodeURIComponent(location.hostname) + (startNew ? '&new=1' : '');
+            // A deliberate "new chat" starts fresh; otherwise pick up where
+            // the visitor was on the previous page.
+            var view = startNew ? null : savedView();
+            iframe.src = ORIGIN + '/widget?key=' + encodeURIComponent(key) + '&host=' + encodeURIComponent(location.hostname) + (startNew ? '&new=1' : '')
+              + (view ? '&tab=' + view.tab + '&view=' + view.chatView + (view.conversationId ? '&conversation=' + view.conversationId : '') : '');
             iframe.setAttribute('allow', 'microphone');
-            iframe.style.cssText = 'position:fixed;bottom:88px;right:20px;width:360px;max-width:calc(100vw - 32px);height:560px;max-height:calc(100vh - 120px);border:none;border-radius:16px;box-shadow:0 16px 48px rgba(15,23,42,0.22);z-index:2147483000;background:#fff;';
+            iframe.style.cssText = PANEL_STYLE;
             document.body.appendChild(iframe);
           }
           iframe.style.display = 'block';
@@ -368,14 +422,25 @@ export function GET(request: Request) {
             }
           }
         } else {
-          if (iframe) iframe.style.display = 'none';
+          if (iframe) {
+            // Closing always resets to the normal panel size — reopening
+            // fullscreen because of where you left it would be surprising.
+            if (maximized) { maximized = false; iframe.style.cssText = PANEL_STYLE; }
+            iframe.style.display = 'none';
+          }
           rememberOpen(false);
-          if (pushedHistory) {
-            // Closed by the button rather than by back — pop our own entry
-            // so we don't leave junk in the visitor's history.
+          // Only pop history if our marker is still the top entry. If the
+          // host page navigated (an SPA route change, say) while the panel
+          // was open, our entry is buried under a real one — calling
+          // history.back() then would send the visitor's page back instead
+          // of just discarding our own placeholder, which is the bug this
+          // guards against.
+          if (pushedHistory && history.state && history.state.elpinoWidget === true) {
             pushedHistory = false;
             ignoreNextPop = true;
             try { history.back(); } catch (error) { ignoreNextPop = false; }
+          } else {
+            pushedHistory = false;
           }
         }
       }

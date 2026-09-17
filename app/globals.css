@@ -842,6 +842,42 @@ body {
   background: var(--text-muted);
 }
 
+/* ─── Home hero background wave (two layers drifting at different
+   speeds/opacity for a subtle parallax feel) ─── */
+@keyframes elpino-wave-drift {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.elpino-hero-wave {
+  animation: elpino-wave-drift 26s linear infinite;
+}
+.elpino-hero-wave-back {
+  animation-duration: 40s;
+  animation-direction: reverse;
+}
+
+/* ─── Home hero badge: the gradient border flows along the ring instead of
+   sitting still. Repeats the same three colors so the loop point (100% →
+   0%) is seamless. ─── */
+@keyframes elpino-gradient-flow {
+  to { background-position: 300% 0; }
+}
+
+.elpino-gradient-border {
+  background-image: linear-gradient(90deg, #fc7b33, #7060bd, #547fff, #fc7b33, #7060bd, #547fff);
+  background-size: 300% 100%;
+  animation: elpino-gradient-flow 6s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .elpino-gradient-border { animation: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .elpino-hero-wave { animation: none; }
+}
+
 /* ─── Dialog Animations ─── */
 @keyframes dialog-backdrop-in {
   from { opacity: 0; }
@@ -936,6 +972,29 @@ body {
 .onb-enter-3 { animation-delay: 210ms; }
 .onb-enter-4 { animation-delay: 280ms; }
 
+/* ─── Home hero entry (same fade-up, staggered across badge → headline →
+   subhead → form → footnote as the page first loads) ─── */
+.elpino-hero-enter   { animation: onb-fade-up 640ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+.elpino-hero-enter-1 { animation-delay: 60ms; }
+.elpino-hero-enter-2 { animation-delay: 160ms; }
+.elpino-hero-enter-3 { animation-delay: 260ms; }
+.elpino-hero-enter-4 { animation-delay: 360ms; }
+.elpino-hero-enter-5 { animation-delay: 440ms; }
+.elpino-hero-enter-6 { animation-delay: 500ms; }
+
+/* ─── Hero widget: Elpino's reply, floating out past the widget's own edge
+   instead of sitting flush inside it — a single settle-in, no idle drift. ─── */
+@keyframes elpino-widget-msg-send-left {
+  from { opacity: 0; transform: translate(-10px, -16px) scale(0.85); }
+  to   { opacity: 1; transform: translate(0, 0) scale(1); }
+}
+.elpino-widget-msg-reply {
+  animation: elpino-widget-msg-send-left 640ms 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .elpino-widget-msg-reply { animation: none; }
+}
+
 .onboarding-language > div > button {
   border: 1px solid rgba(0, 0, 0, 0.16);
   border-radius: 9999px;
@@ -947,7 +1006,8 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .onb-enter { animation: none; }
+  .onb-enter,
+  .elpino-hero-enter { animation: none; }
   .elpino-flow-step,
   .elpino-flow-progress,
   .elpino-hero-card {

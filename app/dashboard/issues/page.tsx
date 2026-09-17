@@ -3,7 +3,15 @@
 import { useEffect, useState } from "react";
 import { Check, ExternalLink, Ticket } from "lucide-react";
 
-type Issue = { id: string; title: string; provider: string; url?: string | null; conversationId: string; createdAt: string; resolved?: boolean };
+type Issue = { id: string; title: string; provider: string; url?: string | null; conversationId: string; createdAt: string; resolved?: boolean; source?: string; reason?: string | null };
+
+// Where a ticket lives and who raised it. "elpino" means no project tool was
+// connected, so the ticket exists on this page only.
+function issueLabel(issue: Issue) {
+  const where = issue.provider === "elpino" ? "Not sent to a project tool" : `${issue.provider[0]?.toUpperCase() ?? ""}${issue.provider.slice(1)} ticket`;
+  const who = issue.source === "close_review" ? "Flagged by AI review" : issue.source === "escalation" ? "Filed at AI handoff" : null;
+  return [who, where, issue.resolved ? "resolved" : null].filter(Boolean).join(" · ");
+}
 
 export default function IssuesPage() {
   const [issues, setIssues] = useState<Issue[]>([]);
@@ -46,7 +54,10 @@ export default function IssuesPage() {
                 <Ticket size={18} className="shrink-0 text-white/40" />
                 <span className="min-w-0 flex-1">
                   <span className={`block truncate text-sm ${issue.resolved ? "text-white/45 line-through" : "text-white/85"}`}>{issue.title}</span>
-                  <span className="mt-1 block text-xs capitalize text-white/40">{issue.provider} ticket{issue.resolved ? " · resolved" : ""}</span>
+                  <span className="mt-1 block text-xs text-white/40">{issueLabel(issue)}</span>
+                  {issue.source === "close_review" && issue.reason && (
+                    <span className="mt-1 block truncate text-xs text-white/55" title={issue.reason}>{issue.reason}</span>
+                  )}
                 </span>
                 {issue.url && <ExternalLink size={15} className="shrink-0 text-white/30" />}
               </a>

@@ -169,7 +169,7 @@ function MegaNav({ groups, light = false }: { groups: DropdownGroup[]; light?: b
         <button
           key={group.label}
           type="button"
-          className={`${index === 0 ? '' : 'elpino-nav-item'} inline-flex h-11 items-center gap-1.5 px-3 text-[15px] font-normal transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 ${light ? 'text-[#181e15] hover:text-black focus-visible:outline-black/30' : 'text-white/90 hover:text-white focus-visible:outline-white/35'}`}
+          className={`${index === 0 ? '' : 'elpino-nav-item'} inline-flex h-9 items-center gap-1.5 px-3 text-[14px] font-normal transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 ${light ? 'text-[#181e15] hover:text-black focus-visible:outline-black/30' : 'text-white/90 hover:text-white focus-visible:outline-white/35'}`}
           aria-haspopup="menu"
           aria-expanded={openIndex === index}
           onMouseEnter={() => open(index)}
@@ -185,7 +185,7 @@ function MegaNav({ groups, light = false }: { groups: DropdownGroup[]; light?: b
         className={`fixed inset-x-0 z-40 border-b transition-opacity duration-150 ${light ? 'border-black/10 bg-white' : 'border-white/10 bg-black'} ${
           activeGroup ? 'visible translate-y-0 opacity-100' : 'invisible -translate-y-1 opacity-0'
         }`}
-        style={{ top: 'var(--elpino-header-h, 76px)' }}
+        style={{ top: 'var(--elpino-header-h, 64px)' }}
         role="menu"
         onMouseEnter={() => openIndex !== null && open(openIndex)}
         onMouseLeave={scheduleClose}
@@ -260,8 +260,8 @@ export function Header({
   pricingPage = false,
 }: {
   session: Session | null;
-  /** "minimal" strips the announcement bar, nav links, and right-side actions down to just the logo, and drops sticky positioning. */
-  variant?: 'full' | 'minimal' | 'light';
+  /** "minimal" strips the announcement bar, nav links, and right-side actions down to just the logo, and drops sticky positioning. "home" is the same dark colors as "full" but tinted #262626 instead of black, and skips the "full"-only bottom announcement bar. */
+  variant?: 'full' | 'minimal' | 'light' | 'home';
   showOffer?: boolean;
   pricingPage?: boolean;
 }) {
@@ -300,9 +300,16 @@ export function Header({
     return () => observer.disconnect();
   }, [showOffer, scrolled]);
 
+  // Solid near-black, not the page's #262626 — the header stays a flush,
+  // edge-to-edge bar (not floating/inset) but a shade darker than the hero
+  // behind it so it reads as its own distinct bar rather than blending in.
   const headerClassName = `w-full transition-shadow duration-200 ${light ? 'bg-white' : 'bg-black'} ${scrolled ? 'shadow-[0_1px_0_rgba(0,0,0,0.08)]' : ''}`;
-  const pricingClassName = `hidden h-11 items-center rounded-full px-3 text-[15px] font-normal transition lg:inline-flex ${light ? 'text-[#181e15] hover:text-black' : 'text-white/90 hover:text-white'}`;
-  const loginClassName = `hidden h-12 items-center rounded-md border px-7 text-[15px] font-normal transition lg:inline-flex ${light ? 'border-[#181e15]/25 text-[#181e15] hover:bg-black/[0.04]' : 'border-white/30 text-white hover:bg-white/10'}`;
+  const pricingClassName = `hidden h-9 items-center rounded-full px-3 text-[14px] font-normal transition lg:inline-flex ${light ? 'text-[#181e15] hover:text-black' : 'text-white/90 hover:text-white'}`;
+  // Plain text on dark (no border box) — a bordered "Log in" pill reads as a
+  // second CTA competing with the primary button; unbordered text next to a
+  // solid pill is the pairing the reference uses.
+  const loginClassName = `hidden h-10 items-center text-[14px] font-normal transition lg:inline-flex ${light ? 'rounded-md border border-[#181e15]/25 px-5 text-[#181e15] hover:bg-black/[0.04]' : 'px-2 text-white/85 hover:text-white'}`;
+  const contactSalesClassName = `hidden h-10 items-center text-[14px] font-normal transition lg:inline-flex ${light ? 'px-2 text-[#181e15]/80 hover:text-[#181e15]' : 'px-2 text-white/85 hover:text-white'}`;
   const mobileLineClassName = light ? 'bg-[#11120f]' : 'bg-[var(--elpino-text)]';
 
   if (variant === 'minimal') {
@@ -313,8 +320,9 @@ export function Header({
             className="flex h-[72px] w-full items-center px-5 sm:px-8 lg:px-22"
             aria-label="Main navigation"
           >
-            <Link className="group/logo flex w-fit shrink-0 items-center transition-opacity hover:opacity-90" href="/">
-              <Image alt="Elpino" src="/elpino.png" width={906} height={275} priority className="h-9 w-auto object-contain" />
+            <Link className="group/logo flex w-fit shrink-0 items-center gap-2 transition-opacity hover:opacity-90" href="/">
+              <Image alt="" src="/icon.png" width={96} height={96} priority className="h-9 w-9 rounded-lg object-contain" />
+              <span className="text-[15px] font-semibold tracking-[-0.01em] text-[#11120f]">elpino</span>
             </Link>
           </nav>
         </header>
@@ -325,7 +333,7 @@ export function Header({
   return (
     <div ref={headerRef} className={`fixed inset-x-0 top-0 z-50 w-full ${light ? 'text-[#11120f]' : 'text-[var(--elpino-text)]'}`}>
       {showOffer && !scrolled && <UpgradeBanner marketing pricingPage={pricingPage} />}
-      {!light && !scrolled && <div className='w-full border-b border-white/10 bg-black'>
+      {variant === 'full' && !scrolled && <div className='w-full border-b border-white/10 bg-black'>
         <div className="mx-auto flex min-h-11 w-full max-w-[88rem] items-center justify-center overflow-hidden px-4 py-2 sm:px-8">
           <a
             className={`elpino-announcement group grid min-w-0 flex-1 grid-cols-[auto_minmax(0,auto)_minmax(24px,1fr)_auto] items-center gap-3 text-[13px] font-normal sm:gap-5 sm:text-sm ${light ? 'text-[#26332d]' : 'text-white/90'}`}
@@ -354,11 +362,12 @@ export function Header({
 
       <header className={headerClassName}>
       <nav
-        className={`grid w-full grid-cols-[auto_1fr_auto] items-center gap-6 px-5 transition-[height] duration-200 sm:px-8 lg:px-22 ${scrolled ? 'h-16' : 'h-[76px]'} ${light ? '' : 'border-b border-white/10'}`}
+        className="grid h-16 w-full grid-cols-[auto_1fr_auto] items-center gap-6 px-5 transition-[height] duration-200 sm:px-8 lg:px-22"
         aria-label="Main navigation"
       >
-        <Link className="group/logo flex w-fit shrink-0 items-center transition-opacity hover:opacity-90" href="/">
-          <Image alt="Elpino" src="/elpino.png" width={906} height={275} priority className="h-8 w-auto object-contain sm:h-9" />
+        <Link className="group/logo flex w-fit shrink-0 items-center gap-2 transition-opacity hover:opacity-90" href="/">
+          <Image alt="" src="/icon.png" width={96} height={96} priority className="h-8 w-8 rounded-lg object-contain" />
+          <span className={`text-[15px] font-semibold tracking-[-0.01em] ${light ? 'text-[#11120f]' : 'text-white'}`}>elpino</span>
         </Link>
 
         <div className="hidden items-center justify-start gap-2 pl-4 lg:flex" aria-label="Navigation groups">
@@ -371,10 +380,14 @@ export function Header({
         {/* Actions and the mobile toggle share one grid cell — as separate
             children they would each claim a column and break the centring. */}
         <div className="flex items-center justify-end">
-        <div className="hidden shrink-0 items-center gap-3 lg:flex">
+        <div className="hidden shrink-0 items-center gap-2 lg:flex">
+          <LanguageSwitcher language={language} onChange={setStoredLanguage} light={light} open={languageOpen} onOpenChange={setLanguageOpen} />
+          <Link className={contactSalesClassName} href="/contact">
+            Contact sales
+          </Link>
           {session ? (
             <Link
-              className={`inline-flex h-12 items-center justify-center rounded-md px-7 text-[15px] font-normal transition-colors ${light ? 'bg-[#181e15] text-white hover:bg-black' : 'bg-white text-black hover:bg-white/90'}`}
+              className={`inline-flex h-10 items-center justify-center rounded-md px-5 text-[14px] font-normal transition-colors ${light ? 'bg-[#181e15] text-white hover:bg-black' : 'bg-white text-black hover:bg-white/90'}`}
               href="/dashboard"
             >
               {t('nav.goToDashboard', 'Go to dashboard')}
@@ -385,7 +398,7 @@ export function Header({
                 {t('nav.login', 'Log In')}
               </Link>
               <Link
-                className={`inline-flex h-12 items-center justify-center rounded-md px-7 text-[15px] font-normal transition-colors ${light ? 'bg-[#181e15] text-white hover:bg-black' : 'bg-white text-black hover:bg-white/90'}`}
+                className={`inline-flex h-10 items-center justify-center rounded-md px-5 text-[14px] font-normal transition-colors ${light ? 'bg-[#181e15] text-white hover:bg-black' : 'bg-white text-black hover:bg-white/90'}`}
                 href="/signup"
               >
                 {t('nav.getStarted', 'Start for free')}

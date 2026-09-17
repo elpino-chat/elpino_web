@@ -58,6 +58,10 @@ type ConversationSummary = {
   escalationReason?: string | null;
   escalationSummary?: string | null;
   assignedUserId?: string | null;
+  /** The visitor left (Leave Chat, or 24 hours quiet) and can't see this thread any more. */
+  visitorLeft?: boolean;
+  /** A reply can still reach them by email: they have a verified address. */
+  canEmailVisitor?: boolean;
   location?: VisitorLocation;
   /** The bot's name and face as configured for the widget this thread came through. */
   aiName?: string;
@@ -153,6 +157,8 @@ function DashboardContent({ name }: { name: string }) {
   // "Undo" next to the result can put it back without the agent retyping.
   const [preTranslateDraft, setPreTranslateDraft] = useState<string | null>(null);
   const [translateError, setTranslateError] = useState<string | null>(null);
+  // Why the last reply didn't send. The draft is put back so nothing typed is lost.
+  const [sendError, setSendError] = useState<string | null>(null);
   // A resolved conversation hides the reply composer by default — there's
   // nothing left to do until someone reopens it — but sending a message is
   // already how reopening works server-side (see resolveConversation's own
@@ -302,17 +308,26 @@ function DashboardContent({ name }: { name: string }) {
     setSending(true);
     setDraft("");
     setPreTranslateDraft(null);
+    setSendError(null);
     try {
       const response = await fetch(`/api/workspace/conversations/${encodeURIComponent(conversationId)}/messages`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ body }),
       });
-      const data = (await response.json()) as { message?: Message };
-      if (data.message) {
+      // On failure the route answers { message: "<reason>" } — a string, not a
+      // Message — so check the status before treating it as a sent reply.
+      const data = (await response.json().catch(() => ({}))) as { message?: Message | string };
+      if (response.ok && data.message && typeof data.message !== "string") {
         posthog.capture("conversation_reply_sent");
         setMessages((current) => [...current, data.message as Message]);
+      } else {
+        setDraft(body);
+        setSendError(typeof data.message === "string" ? data.message : "Could not send this reply.");
       }
+    } catch {
+      setDraft(body);
+      setSendError("Could not send this reply.");
     } finally {
       setSending(false);
     }
@@ -390,10 +405,12 @@ function DashboardContent({ name }: { name: string }) {
           attachment: { url, type: file.type.startsWith("image/") ? "image" : "file", name: file.name },
         }),
       });
-      const data = (await response.json()) as { message?: Message; message_?: string };
-      if (data.message) {
+      const data = (await response.json().catch(() => ({}))) as { message?: Message | string };
+      if (response.ok && data.message && typeof data.message !== "string") {
         setMessages((current) => [...current, data.message as Message]);
         setDraft("");
+      } else {
+        setTicketError(typeof data.message === "string" ? data.message : "Could not attach that file.");
       }
     } catch (issue) {
       setTicketError(issue instanceof Error ? issue.message : "Could not attach that file.");
@@ -683,7 +700,10 @@ function DashboardContent({ name }: { name: string }) {
   const isMine = !!myAccountId && conversation?.assignedUserId === myAccountId;
   const assignedElsewhere = !!conversation?.assignedUserId && conversation.assignedUserId !== myAccountId;
   const isResolved = conversation?.status === "resolved";
-  const showComposer = !isResolved || wantsToReplyAfterResolve;
+  const visitorLeft = Boolean(conversation?.visitorLeft);
+  // A visitor who left with no verified email can't receive a reply at all,
+  // so there's no composer to offer.
+  const showComposer = !isResolved || (wantsToReplyAfterResolve && (!visitorLeft || Boolean(conversation?.canEmailVisitor)));
   const place = formatPlace(conversation?.location);
   const device = formatDevice(conversation?.location?.userAgent);
   const ip = conversation?.location?.ip ?? null;
@@ -1169,15 +1189,22 @@ function DashboardContent({ name }: { name: string }) {
             {!showComposer ? (
               <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[var(--chat-divider)] bg-[var(--chat-customer-bg)] px-4 py-3.5">
                 <span className="flex items-center gap-2 text-[13px] text-[var(--chat-muted)]">
-                  <CheckCircle2 size={15} className="shrink-0 text-[#35b92c]" /> This conversation is resolved.
+                  <CheckCircle2 size={15} className="shrink-0 text-[#35b92c]" />
+                  {!visitorLeft
+                    ? "This conversation is resolved."
+                    : conversation?.canEmailVisitor
+                      ? "The visitor left this chat. A reply can only reach them by email."
+                      : "The visitor left this chat and has no verified email, so a reply can't reach them."}
                 </span>
-                <button
-                  type="button"
-                  onClick={() => setWantsToReplyAfterResolve(true)}
-                  className="flex h-8 items-center gap-1.5 rounded-lg border border-[var(--chat-divider)] px-3 text-[12.5px] font-semibold hover:bg-[var(--chat-surface)]"
-                >
-                  Reply anyway
-                </button>
+                {(!visitorLeft || conversation?.canEmailVisitor) && (
+                  <button
+                    type="button"
+                    onClick={() => setWantsToReplyAfterResolve(true)}
+                    className="flex h-8 items-center gap-1.5 rounded-lg border border-[var(--chat-divider)] px-3 text-[12.5px] font-semibold hover:bg-[var(--chat-surface)]"
+                  >
+                    {visitorLeft ? "Reply by email" : "Reply anyway"}
+                  </button>
+                )}
               </div>
             ) : (
             <>
@@ -1290,6 +1317,15 @@ function DashboardContent({ name }: { name: string }) {
                     {translateError}
                     <button type="button" onClick={() => setTranslateError(null)} className="underline hover:no-underline">Dismiss</button>
                   </span>
+                )}
+                {sendError && (
+                  <span className="flex items-center gap-1.5 text-[11px] font-medium text-[#c0554f]">
+                    {sendError}
+                    <button type="button" onClick={() => setSendError(null)} className="underline hover:no-underline">Dismiss</button>
+                  </span>
+                )}
+                {visitorLeft && !sendError && (
+                  <span className="text-[11px] font-medium text-[var(--chat-muted)]">The visitor left. This reply will be emailed to them.</span>
                 )}
                 <span className="ml-auto" />
                 <button

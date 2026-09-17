@@ -10,7 +10,7 @@ import { useMobileDrawer } from "@/app/components/dashboard/mobile-drawer-contex
 
 export type KnowledgeView = "overview" | "articles" | "sources";
 type SourceType = "text" | "url" | "sitemap" | "file";
-type KnowledgeItem = { id: string; title: string; content: string; siteId: string | null; createdAt: string; chunkCount: number; sourceType: SourceType; sourceUrl: string | null };
+type KnowledgeItem = { id: string; title: string; content: string; siteId: string | null; createdAt: string; chunkCount: number; sourceType: SourceType; sourceUrl: string | null; visibleToVisitors?: boolean };
 type Site = { id: string; name: string; domain: string; verifiedAt?: string | null };
 type AddTab = "text" | "file";
 
@@ -120,6 +120,18 @@ export function KnowledgeClient({ view }: { view: KnowledgeView }) {
     setSaving(false);
   }
 
+  // "Help tab" switch: whether visitors can find and read this page in the
+  // widget. Optimistic, and put back if the save fails.
+  async function setArticleVisibility(item: KnowledgeItem, visible: boolean) {
+    setItems((current) => current.map((row) => (row.id === item.id ? { ...row, visibleToVisitors: visible } : row)));
+    const response = await fetch(`/api/workspace/knowledge/${encodeURIComponent(item.id)}/visibility`, {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ visible }),
+    }).catch(() => null);
+    if (!response?.ok) setItems((current) => current.map((row) => (row.id === item.id ? { ...row, visibleToVisitors: !visible } : row)));
+  }
+
   async function removeArticle(id: string) {
     const response = await fetch(`/api/workspace/knowledge/${encodeURIComponent(id)}`, { method: "DELETE" });
     if (response.ok) {
@@ -161,7 +173,7 @@ export function KnowledgeClient({ view }: { view: KnowledgeView }) {
         </div>
         {view !== "sources" && <Toolbar loading={loading} />}
         {error && <p className="mt-4 rounded-lg bg-[#fff1f1] px-3 py-2 text-[11px] font-medium text-[#a64a53]">{error}</p>}
-        {loading ? <div className="flex min-h-[420px] items-center justify-center text-[12px] text-white/45"><LoaderCircle size={15} className="mr-2 animate-spin" /> Loading knowledge</div> : view === "overview" ? <Overview items={scopedItems} sites={sites} onNew={() => openEditor()} /> : view === "articles" ? <PagesTable items={filtered} sites={sites} query={query} setQuery={setQuery} onDelete={setConfirmDeleteItem} onNew={() => openEditor()} onOpen={openEditor} /> : <Sources sites={sites} items={items} defaultSiteId={selectedSiteId} onReload={load} />}
+        {loading ? <div className="flex min-h-[420px] items-center justify-center text-[12px] text-white/45"><LoaderCircle size={15} className="mr-2 animate-spin" /> Loading knowledge</div> : view === "overview" ? <Overview items={scopedItems} sites={sites} onNew={() => openEditor()} /> : view === "articles" ? <PagesTable items={filtered} sites={sites} query={query} setQuery={setQuery} onDelete={setConfirmDeleteItem} onNew={() => openEditor()} onOpen={openEditor} onToggleVisible={(item, visible) => void setArticleVisibility(item, visible)} /> : <Sources sites={sites} items={items} defaultSiteId={selectedSiteId} onReload={load} />}
       </div>
     </main>
     {editorOpen && (
@@ -558,7 +570,28 @@ function Overview({ items, sites, onNew }: { items: KnowledgeItem[]; sites: Site
   );
 }
 
-function PagesTable({ items, sites, query, setQuery, onDelete, onNew, onOpen }: { items: KnowledgeItem[]; sites: Site[]; query: string; setQuery: (value: string) => void; onDelete: (item: KnowledgeItem) => void; onNew: () => void; onOpen: (item: KnowledgeItem) => void }) {
+// Shown / Hidden in the widget's Help tab. A button, not a checkbox: the row
+// itself opens the editor, so this stops the click from reaching it.
+function HelpTabToggle({ item, onToggle }: { item: KnowledgeItem; onToggle: (item: KnowledgeItem, visible: boolean) => void }) {
+  const visible = Boolean(item.visibleToVisitors);
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={visible}
+      title={visible ? "Visitors can read this in the widget's Help tab" : "Only the AI uses this page"}
+      onClick={(event) => { event.stopPropagation(); onToggle(item, !visible); }}
+      className="flex items-center gap-2 text-[12px] text-white/60 hover:text-white/85"
+    >
+      <span className={`relative h-4 w-7 shrink-0 rounded-full transition ${visible ? "bg-[#35b92c]" : "bg-white/15"}`}>
+        <span className={`absolute top-0.5 h-3 w-3 rounded-full bg-white transition-all ${visible ? "left-3.5" : "left-0.5"}`} />
+      </span>
+      {visible ? "Shown" : "Hidden"}
+    </button>
+  );
+}
+
+function PagesTable({ items, sites, query, setQuery, onDelete, onNew, onOpen, onToggleVisible }: { items: KnowledgeItem[]; sites: Site[]; query: string; setQuery: (value: string) => void; onDelete: (item: KnowledgeItem) => void; onNew: () => void; onOpen: (item: KnowledgeItem) => void; onToggleVisible: (item: KnowledgeItem, visible: boolean) => void }) {
   const sortedItems = [...items].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   return (
     <div className="mt-5">
@@ -577,6 +610,7 @@ function PagesTable({ items, sites, query, setQuery, onDelete, onNew, onOpen }: 
               <div className="min-w-0 flex-1">
                 <p className="truncate text-[13px] font-medium text-white/90">{item.title}</p>
                 <p className="mt-0.5 truncate text-[11px] text-white/40">{sites.find((site) => site.id === item.siteId)?.domain ?? "All websites"} · {new Date(item.createdAt).toLocaleDateString()}</p>
+                <div className="mt-2"><HelpTabToggle item={item} onToggle={onToggleVisible} /></div>
               </div>
               <button type="button" aria-label={`Delete ${item.title}`} onClick={(event) => { event.stopPropagation(); onDelete(item); }} className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-white/40 hover:bg-white/10 hover:text-red-300"><Trash2 size={14} /></button>
             </div>
@@ -584,7 +618,7 @@ function PagesTable({ items, sites, query, setQuery, onDelete, onNew, onOpen }: 
         </div>
         <div className="hidden md:block">
           <div className="grid grid-cols-[minmax(0,1.4fr)_110px_minmax(130px,.7fr)_120px_42px] px-5 py-3 text-[12px] font-normal text-white/45">
-            <span>Name</span><span>Creator</span><span>Attached to</span><span>Last modified</span><span />
+            <span>Name</span><span title="Whether visitors can read this in the widget's Help tab">Help tab</span><span>Attached to</span><span>Last modified</span><span />
           </div>
           {sortedItems.length ? sortedItems.map((item) => (
             <div key={item.id} role="button" tabIndex={0} onClick={(event) => { if (!(event.target as HTMLElement).closest("button")) onOpen(item); }} onKeyDown={(event) => { if (event.key === "Enter") onOpen(item); }} className="grid cursor-pointer grid-cols-[minmax(0,1.4fr)_110px_minmax(130px,.7fr)_120px_42px] items-center border-t border-white/10 px-5 py-4 transition hover:bg-white/[0.025]">
@@ -592,7 +626,7 @@ function PagesTable({ items, sites, query, setQuery, onDelete, onNew, onOpen }: 
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-white/10 bg-white/[0.04] text-white/50"><FileText size={15} /></span>
                 <div className="min-w-0"><p className="truncate text-[13px] font-medium text-white/90">{item.title}</p><p className="mt-0.5 truncate text-[10.5px] text-white/35">{item.content}</p></div>
               </div>
-              <span className="text-[12px] text-white/60">You</span>
+              <HelpTabToggle item={item} onToggle={onToggleVisible} />
               <span className="truncate text-[12px] text-white/60">{sites.find((site) => site.id === item.siteId)?.domain ?? "All websites"}</span>
               <span className="text-[12px] text-white/45">{new Date(item.createdAt).toLocaleDateString()}</span>
               <button type="button" aria-label={`Delete ${item.title}`} onClick={(event) => { event.stopPropagation(); onDelete(item); }} className="flex h-8 w-8 items-center justify-center rounded-md text-white/40 hover:bg-white/10 hover:text-red-300"><Trash2 size={14} /></button>

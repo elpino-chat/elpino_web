@@ -18,9 +18,10 @@ import { readDashboardTheme, saveDashboardTheme, type DashboardAppearance } from
 import { InvitePeopleDialog } from "@/app/components/dashboard/InvitePeopleDialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { PreChatFormEditor, type PreChatField } from "@/app/dashboard/components/prechat-form-editor";
+import { ContactCollectionSwitch } from "@/app/dashboard/components/contact-collection-switch";
 import { useMobileDrawer } from "@/app/components/dashboard/mobile-drawer-context";
 import { SUPPORTED_LANGUAGES } from "@/app/dashboard/settings/languages";
-import { IdentityVerificationCard } from "@/app/dashboard/settings/IdentityVerificationCard";
+import { IdentityVerificationSettingsPage } from "@/app/dashboard/settings/IdentityVerificationSettings";
 import {
   computeCoverage,
   defaultAvailability,
@@ -161,6 +162,7 @@ const workspaceItems = [
 
 const featureItems = [
   { label: "Tag Manager", slug: "tags", icon: Tag },
+  { label: "Identity Verification", slug: "identity", icon: UserCheck },
   { label: "Translations", slug: "translations", icon: Languages },
 ];
 
@@ -1993,6 +1995,7 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [previewFields, setPreviewFields] = useState<PreChatField[]>([]);
+  const [contactCollection, setContactCollection] = useState<"chat" | "off">("chat");
   const [avatarPickerOpen, setAvatarPickerOpen] = useState(false);
   const [avatarTab, setAvatarTab] = useState<"stock" | "upload">("stock");
   const [stockIconIds, setStockIconIds] = useState<string[]>([]);
@@ -2179,13 +2182,21 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
             <div className="dashboard-chatbot-section mt-4 grid grid-cols-[260px_minmax(0,1fr)] gap-8 rounded-2xl border border-white/10 bg-white/[0.035] p-5 max-lg:grid-cols-1 max-lg:gap-4"><div><h3 className="text-[14px] font-medium">Theme color</h3><p className="mt-1 max-w-[285px] text-[12px] leading-5 text-white/60">Choose the accent used by the chat launcher, buttons, and active states.</p></div><div className="flex flex-wrap items-center gap-3">{["#202225", "#7467E8", "#1596D6", "#E6538D", "#A953D6", "#5878E8", "#E56812", "#11999D", "#A98E82", "#39B487"].map((color) => <button key={color} type="button" aria-label={`Use ${color} theme`} onClick={() => { setAccent(color); setSaved(false); }} className={`flex h-9 w-9 items-center justify-center rounded-lg transition ${accent === color ? "ring-2 ring-white/80 ring-offset-2 ring-offset-[#2f2f2f]" : "hover:scale-105"}`} style={{ backgroundColor: color }}>{accent === color && <Check size={15} className="text-white" />}</button>)}</div></div>
 
             <div className="dashboard-chatbot-section mt-4 rounded-2xl border border-white/10 bg-white/[0.035] p-5">
-              <h3 className="text-[16px] font-semibold">Pre-chat form</h3>
+              <h3 className="text-[16px] font-semibold">Collect contact details</h3>
               <p className="mt-1 max-w-xl text-[12px] leading-5 text-[#667069]">
-                Choose what visitors are asked before they can start a conversation. Add your own questions, mark any field optional or required, and reorder them — the live chat widget on your site loads this exact form.
+                Whether the chat widget asks visitors for their email and phone, so your team can follow up if they leave.
               </p>
-              <div className="mt-5">
-                <PreChatFormEditor onFieldsChange={setPreviewFields} />
+              <div className="mt-4">
+                <ContactCollectionSwitch onChange={setContactCollection} />
               </div>
+              {contactCollection === "chat" && (
+                <div className="mt-5">
+                  <p className="mb-3 text-[12px] leading-5 text-[#667069]">
+                    Contact fields. The popup always asks for an email, and asks for a phone number only when a phone field is included here.
+                  </p>
+                  <PreChatFormEditor onFieldsChange={setPreviewFields} />
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -3929,7 +3940,7 @@ function TagManagerSettingsPage() {
                 {[
                   { key: "chat" as const, icon: MessageSquarePlus, tone: "bg-[#EAF1FF] text-[#2878ce]", title: "Live chat widget", description: "Show the Elpino chat bubble so visitors can talk to your AI teammate." },
                   { key: "visitors" as const, icon: Eye, tone: "bg-[#EAF8F0] text-[#238753]", title: "Visitor analytics", description: "See who's on your site right now and where they came from." },
-                  { key: "identify" as const, icon: UserCheck, tone: "bg-[#F3EEFF] text-[#6246DF]", title: "Customer identification", description: "Auto-fill name and email for signed-in visitors on this site." },
+                  { key: "identify" as const, icon: UserCheck, tone: "bg-[#F3EEFF] text-[#6246DF]", title: "Customer identification", description: "Recognise signed-in visitors on this site. Needs identity verification set up in Settings." },
                 ].map(({ key, icon: Icon, tone, title, description }, index) => (
                   <div key={key} className={`flex items-start gap-3.5 bg-white px-4 py-4 ${index ? "border-t border-[#EEF0F2]" : ""}`}>
                     <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${tone}`}><Icon size={16} /></span>
@@ -3954,7 +3965,11 @@ function TagManagerSettingsPage() {
         </div>
       )}
 
-      <IdentityVerificationCard />
+      <Link href="/dashboard/settings/identity" className="mt-8 flex items-center gap-3 rounded-xl border border-[#e7e8ea] p-4 transition hover:bg-black/[0.03]">
+        <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#F3EEFF] text-[#6246DF]"><UserCheck size={16} /></span>
+        <span className="min-w-0 flex-1"><span className="block text-[13px] font-semibold">Verify signed-in customers</span><span className="mt-0.5 block text-[12px] leading-5 text-[#687178]">Let the AI safely look up a logged-in customer&apos;s own payments and records.</span></span>
+        <span className="text-[12px] font-medium text-[#428ce5]">Set up</span>
+      </Link>
 
       {(dialog === "install" || dialog === "permissions") && selectedTag && <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/35 p-4 backdrop-blur-[2px]" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setDialog(null); }}><div role="dialog" aria-modal="true" className="dashboard-tag-install-panel w-full max-w-[580px] overflow-hidden rounded-[24px] border border-black/10 shadow-[0_28px_80px_rgba(15,23,42,0.24)]"><div className="dashboard-tag-install-header flex items-start justify-between border-b border-[#E5E9EB] px-6 py-5"><div><h3 className="text-[19px] font-semibold tracking-[-0.02em]">{dialog === "install" ? `Install ${selectedTag.name}` : `Permissions for ${selectedTag.name}`}</h3><p className="dashboard-tag-table-text mt-1 text-[12px] text-white/80">{dialog === "install" ? "Add the public snippet before the closing head tag." : "Choose what this site tag is allowed to collect."}</p></div><button type="button" onClick={() => setDialog(null)} className="dashboard-tag-install-close flex h-9 w-9 items-center justify-center rounded-lg"><X size={17} /></button></div>
         {dialog === "install" && <div className="p-6"><div className="rounded-2xl bg-[#11120f] p-4 text-white"><div className="mb-3 flex items-center justify-between"><span className="text-[10px] font-bold uppercase tracking-[0.12em] text-white/50">Install snippet</span><button type="button" onClick={async () => { await navigator.clipboard.writeText(snippet); setCopied(true); }} className="flex items-center gap-1.5 text-[10px] font-semibold text-white/75 hover:text-white"><Copy size={13} /> {copied ? "Copied" : "Copy"}</button></div><code className="block break-all text-[11px] leading-5 text-[#D8E2E7]">{snippet}</code></div><div className="dashboard-tag-steps mt-4 rounded-xl border border-[#E2DFD8] bg-[rgba(255,255,255,0.05)] p-4"><p className="text-[12px] font-semibold">Installation steps</p><ol className="mt-2 space-y-2 text-[11px] leading-5 text-[#667069]"><li>1. Copy the snippet above.</li><li>2. Paste it into every page before <code>&lt;/head&gt;</code>.</li><li>3. Publish your website, then verify the tag.</li></ol></div><div className="dashboard-tag-csp mt-4 rounded-xl border border-[#E2DFD8] bg-[#FAFBFB] p-4"><p className="text-[12px] font-semibold text-[#17181a]">Have a Content-Security-Policy?</p><p className="mt-1 text-[11px] leading-5 text-[#667069]">Add these to your existing policy — a strict CSP is enforced by your site, so this is the one thing we can’t fix from our side. Without it the tag loads but the chat bubble silently never appears.</p><div className="mt-3 rounded-lg bg-[#11120f] p-3"><div className="mb-2 flex items-center justify-between"><span className="text-[10px] font-bold uppercase tracking-[0.12em] text-white/50">Add to script-src / connect-src / frame-src</span><button type="button" onClick={async () => { await navigator.clipboard.writeText(cspSnippet); setCspCopied(true); setTimeout(() => setCspCopied(false), 2000); }} className="flex items-center gap-1.5 text-[10px] font-semibold text-white/75 hover:text-white"><Copy size={12} /> {cspCopied ? "Copied" : "Copy"}</button></div><pre className="whitespace-pre-wrap break-all text-[11px] leading-5 text-[#D8E2E7]">{cspSnippet}</pre></div></div>{verificationMessage && <p className={`mt-4 text-[11px] font-medium ${selectedTag.status === "verified" ? "text-[#257A4D]" : "text-[#A66A2C]"}`}>{verificationMessage}</p>}<div className="mt-5 flex items-center justify-between gap-4"><span className="text-[11px] text-[#667069]">{selectedTag.allowLocalhost ? `Allowed on ${selectedTag.domain} and localhost.` : `Restricted to ${selectedTag.domain}.`}</span><button type="button" disabled={verifying} onClick={async () => { setVerifying(true); setVerificationMessage(null); const response = await fetch("/api/workspace/sites", { cache: "no-store" }); const result = await response.json() as { sites?: SiteTag[] }; const refreshed = result.sites?.find((item) => item.id === selectedTag.id); if (refreshed) { setSelectedTag(refreshed); setTags(result.sites ?? []); setVerificationMessage(refreshed.status === "verified" ? "Tag connected successfully." : "No visit detected yet. Open the installed website, then try again."); } else setVerificationMessage("Could not find this tag."); setVerifying(false); }} className="flex h-10 shrink-0 items-center gap-2 rounded-full bg-[#11120f] px-5 text-[12px] font-semibold text-white disabled:opacity-60">{verifying ? <><LoaderCircle size={14} className="animate-spin" /> Verifying</> : <><CheckCircle2 size={14} /> Verify tag</>}</button></div></div>}
@@ -4161,6 +4176,8 @@ export function SettingsClient({ user, page = "General", auditView = "all" }: { 
           <PresenceLogSettingsPage />
         ) : currentPage === "Tag Manager" ? (
           <TagManagerSettingsPage />
+        ) : currentPage === "Identity Verification" ? (
+          <IdentityVerificationSettingsPage />
         ) : currentPage === "Translations" ? (
           <TranslationSettingsPage />
         ) : (

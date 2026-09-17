@@ -2,9 +2,10 @@
 
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { ArrowUp, ChevronDown, ChevronLeft, CircleHelp, File as FileIcon, Home, LayoutGrid, Mic, MessageCircle, MessageSquarePlus, Paperclip, Search, Smile, Square, Volume2, VolumeX, X } from "lucide-react";
+import { ArrowUp, ChevronDown, ChevronLeft, ChevronRight, CircleHelp, ExternalLink, File as FileIcon, Home, LayoutGrid, Maximize2, MessageCircle, MessageSquarePlus, Minimize2, MoreHorizontal, Plus, Search, Smile, ThumbsDown, ThumbsUp, Volume2, VolumeX, X } from "lucide-react";
 import MessageMarkdown from "@/app/components/MessageMarkdown";
 import TypingDots from "@/app/components/TypingDots";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { playMessageChime, primeOnFirstInteraction } from "@/lib/notification-sound";
 
 type Attachment = { url: string; type: "image" | "file" | "gif"; name?: string };
@@ -18,7 +19,13 @@ type WidgetMessage = {
   attachmentName?: string | null;
   createdAt: string;
 };
-type StartResult = { allowed: boolean; visitorToken?: string; conversationId?: string; botName?: string; botAvatarUrl?: string | null; greetingLines?: string[]; removeBranding?: boolean; topic?: string | null; customerEmail?: string | null; identified?: boolean; identityError?: string; messages?: WidgetMessage[]; error?: string };
+/** An article in the Help tab. `id` identifies the whole article, not one stored chunk of it. */
+type HelpArticle = { id: string; title: string; snippet: string; sourceUrl: string | null };
+type HelpArticleBody = { id: string; title: string; content: string; sourceUrl: string | null };
+type MessageGroup =
+  | { kind: "system"; message: WidgetMessage }
+  | { kind: "thread"; fromVisitor: boolean; messages: WidgetMessage[] };
+type StartResult = { allowed: boolean; visitorToken?: string; conversationId?: string; botName?: string; botAvatarUrl?: string | null; greetingLines?: string[]; removeBranding?: boolean; topic?: string | null; customerEmail?: string | null; customerPhone?: string | null; contactCollection?: "chat" | "off"; identified?: boolean; identityError?: string; messages?: WidgetMessage[]; error?: string };
 type ConversationSummary = { id: string; status: string; topic?: string | null; preview: string; time: string };
 type ChatView = "list" | "thread";
 type GifResult = { id: string; url: string; preview: string };
@@ -51,7 +58,7 @@ const ACCENT = "#428ce5";
 // interactive accents (the pre-chat radio dot) key off ACCENT instead so
 // they read as "selected", not just "text".
 const INK = "#18181b";
-const BG = "#f6f7f8";
+const BG = "#f7f7f8";
 const SURFACE = "#ffffff";
 // Neutral chip background — the customer's own reply bubble uses ACCENT
 // instead; this is for everything else that needs a soft fill (attachment
@@ -149,9 +156,15 @@ function WidgetContent() {
   const key = searchParams.get("key")?.trim() ?? "";
   const hostname = searchParams.get("host")?.trim() ?? "";
   const startFresh = searchParams.get("new") === "1";
+  // Where the visitor was on the previous page, handed over by the loader
+  // (see VIEW_KEY in tag.js), so moving around the site doesn't drop them
+  // back on Home.
+  const restoredTab = searchParams.get("tab") === "chat" ? "chat" : searchParams.get("tab") === "help" ? "help" : null;
+  const restoredChatView = searchParams.get("view") === "list" ? "list" : "thread";
+  const restoredConversationRef = useRef(startFresh ? null : searchParams.get("conversation"));
 
-  const [tab, setTab] = useState<"home" | "chat">(startFresh ? "chat" : "home");
-  const [chatView, setChatView] = useState<ChatView>("thread");
+  const [tab, setTab] = useState<"home" | "chat" | "help">(startFresh ? "chat" : restoredTab ?? "home");
+  const [chatView, setChatView] = useState<ChatView>(restoredTab === "chat" ? restoredChatView : "thread");
   const [loading, setLoading] = useState(true);
   const [denied, setDenied] = useState(false);
   const [loadFailed, setLoadFailed] = useState(false);
@@ -163,6 +176,14 @@ function WidgetContent() {
   // shows it rather than silently white-labelling a Free workspace.
   const [showBranding, setShowBranding] = useState(true);
   const [visitorToken, setVisitorToken] = useState("");
+  // What we already have on file for this visitor — backs the "in case we
+  // lose you" contact popup (see requestContact below): no point asking
+  // again for whichever of these is already filled.
+  const [customerEmail, setCustomerEmail] = useState<string | null>(null);
+  const [customerPhone, setCustomerPhone] = useState<string | null>(null);
+  // The workspace's "Collect contact details" setting. Starts at "off" so the
+  // popup can't flash before the setting has loaded.
+  const [contactCollection, setContactCollection] = useState<"chat" | "off">("off");
   const [conversationId, setConversationId] = useState("");
   const [messages, setMessages] = useState<WidgetMessage[]>([]);
   const [draft, setDraft] = useState("");
@@ -242,6 +263,11 @@ function WidgetContent() {
   // panelOpenRef comes from the loader; the iframe cannot tell on its own
   // whether it is hidden behind a closed launcher.
   const panelOpenRef = useRef(true);
+  // Fixed once, at mount — the client-side greeting has no real createdAt
+  // (nothing is saved yet), but it needs a stable one anyway: using "now" on
+  // every render would tick forward while the visitor just sits looking at
+  // it, and re-picking it after a re-render would jump around.
+  const greetingTimeRef = useRef(new Date().toISOString());
   const seenMessageIdsRef = useRef<Set<string>>(new Set());
   const seenConversationRef = useRef("");
   const [soundOn, setSoundOn] = useState(true);
@@ -262,6 +288,178 @@ function WidgetContent() {
     setSoundOn(next);
     try { window.localStorage.setItem(soundKey(key), next ? "on" : "off"); } catch { /* remembered for this session only */ }
   }
+  // The iframe itself can't resize its own dimensions — the loader (tag.js)
+  // owns the fixed positioning and size. This just tells it to swap between
+  // the normal panel and a fullscreen one; see the elpino:maximize handler
+  // there for the actual CSS swap.
+  const [isMaximized, setIsMaximized] = useState(false);
+  function toggleMaximize() {
+    const next = !isMaximized;
+    setIsMaximized(next);
+    window.parent.postMessage({ type: "elpino:maximize", maximized: next }, "*");
+  }
+
+  // "Did we help you?" — shown by the X button, the in-thread back arrow,
+  // and the browser/phone Back button (see the elpino:back-pressed handler
+  // below) whenever there's an actual conversation to leave. One screen, not
+  // a confirm-then-rate sequence: picking a thumb is optional, "Leave Chat"
+  // resolves the conversation and submits whatever rating (if any) was
+  // picked in a single step.
+  const [leaveOpen, setLeaveOpen] = useState(false);
+  const [ratingChoice, setRatingChoice] = useState<1 | -1 | null>(null);
+  const [leaving, setLeaving] = useState(false);
+
+  // Where "leaving" actually lands. The X button and the browser/phone back
+  // button close the whole panel; the in-thread "Back to chats" arrow
+  // doesn't close anything, it just returns to the list — but it's
+  // abandoning the same active conversation, so it deserves the same
+  // question. A ref since it's only read once the flow finishes, never
+  // rendered.
+  const leaveTargetRef = useRef<"close" | "list">("close");
+  function requestLeave(target: "close" | "list" = "close") {
+    if (leaveOpen) return;
+    const hasActiveConversation = tab === "chat" && chatView === "thread" && Boolean(conversationId) && messages.some((m) => m.senderType !== "system");
+    if (hasActiveConversation) {
+      leaveTargetRef.current = target;
+      setLeaveOpen(true);
+    } else if (target === "list") {
+      openChatList();
+    } else {
+      closeWidget();
+    }
+  }
+  function goBack() {
+    setLeaveOpen(false);
+    setRatingChoice(null);
+  }
+  async function leaveChat() {
+    setLeaving(true);
+    // Best-effort: the visitor is leaving either way, so a failed request
+    // (offline, a dropped connection) must not block the close/navigate
+    // that follows.
+    try {
+      await fetch("/api/widget/resolve", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ key, hostname, visitorToken, conversationId }),
+      });
+      if (ratingChoice) {
+        await fetch("/api/widget/rate", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ key, hostname, visitorToken, conversationId, rating: ratingChoice }),
+        });
+      }
+    } catch { /* the conversation just stays open/unrated on the team's side */ }
+    // Reset first: closing hides the iframe rather than unmounting it, and
+    // "list" doesn't hide anything at all — either way this screen has to
+    // be told to go away itself, or it just sits there on top of whatever
+    // comes next (the chat list, or the same stale screen on reopen).
+    setLeaving(false);
+    setLeaveOpen(false);
+    setRatingChoice(null);
+    // The conversation is over for this visitor: forget it here too, so the
+    // thread, Home's "Continue the conversation" card and the list entry
+    // can't lead back into it. The server hides it from the list as well.
+    const left = conversationId;
+    setConversationId("");
+    setMessages([]);
+    setRecent((items) => items.filter((item) => item.id !== left));
+    if (leaveTargetRef.current === "list") openChatList();
+    else closeWidget();
+  }
+  // The panel always reopens fresh on the next visit — carrying a stale
+  // "leave chat?" prompt across sessions would be confusing.
+  useEffect(() => {
+    if (leaveOpen) { setLeaveOpen(false); setRatingChoice(null); }
+    setContactPromptDone(false);
+    setContactOpen(false);
+    setContactStep("email");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [conversationId]);
+
+  // The "in case we lose you" popup — a small card above the composer,
+  // not a blocking screen. Shown once, right after the AI's first real
+  // reply to the visitor (not the opening greeting, which is also
+  // senderType "ai" but nobody has said anything yet) — so it reads as
+  // "let's make sure we can reach you" rather than interrupting before
+  // the conversation has even started.
+  const [contactPromptDone, setContactPromptDone] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
+  const [contactStep, setContactStep] = useState<"email" | "phone">("email");
+  const [contactEmailInput, setContactEmailInput] = useState("");
+  const [contactPhoneInput, setContactPhoneInput] = useState("");
+  const [contactSubmitting, setContactSubmitting] = useState(false);
+  // The pre-chat form is the existing place an admin already asks for a
+  // phone number — reused here rather than adding a second setting for
+  // the same thing.
+  const phoneCaptureEnabled = preChatFields.some((field) => field.type === "phone");
+
+  useEffect(() => {
+    if (contactCollection !== "chat" || contactPromptDone || contactOpen || customerEmail || leaveOpen) return;
+    if (tab !== "chat" || chatView !== "thread") return;
+    const firstCustomerIndex = messages.findIndex((m) => m.senderType === "customer");
+    if (firstCustomerIndex === -1) return;
+    const hasReplyAfter = messages.slice(firstCustomerIndex + 1).some((m) => m.senderType === "ai");
+    if (!hasReplyAfter) return;
+    setContactOpen(true);
+    setContactPromptDone(true);
+  }, [messages, contactCollection, contactPromptDone, contactOpen, customerEmail, leaveOpen, tab, chatView]);
+
+  function dismissContact() {
+    setContactOpen(false);
+  }
+  async function submitContactEmail() {
+    const email = contactEmailInput.trim();
+    if (!email || contactSubmitting) return;
+    setContactSubmitting(true);
+    try {
+      await fetch("/api/widget/contact", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ key, hostname, visitorToken, email }),
+      });
+      setCustomerEmail(email);
+    } catch { /* not fatal — the visitor just wasn't captured this time */ }
+    setContactSubmitting(false);
+    // Slides right-to-left into the phone step only when the workspace
+    // actually asks for one and doesn't already have it.
+    if (phoneCaptureEnabled && !customerPhone) setContactStep("phone");
+    else setContactOpen(false);
+  }
+  async function submitContactPhone() {
+    const phone = contactPhoneInput.trim();
+    if (!phone) { setContactOpen(false); return; }
+    setContactSubmitting(true);
+    try {
+      await fetch("/api/widget/contact", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ key, hostname, visitorToken, phone }),
+      });
+      setCustomerPhone(phone);
+    } catch { /* not fatal */ }
+    setContactSubmitting(false);
+    setContactOpen(false);
+  }
+
+  // The browser/phone Back button is caught by the loader (tag.js), on the
+  // host page — the iframe can't see that navigation on its own, so the
+  // loader re-arms its history marker and tells us instead of closing
+  // outright. Re-subscribed on every dependency requestLeave reads, so it
+  // always acts on the current conversation rather than a stale one.
+  useEffect(() => {
+    function onBackPressed(event: MessageEvent) {
+      if (event.source !== window.parent || !event.data || typeof event.data !== "object") return;
+      try { if (new URL(event.origin).hostname !== hostname) return; } catch { return; }
+      if ((event.data as { type?: unknown }).type !== "elpino:back-pressed") return;
+      requestLeave();
+    }
+    window.addEventListener("message", onBackPressed);
+    return () => window.removeEventListener("message", onBackPressed);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hostname, tab, chatView, conversationId, messages, leaveOpen]);
+
   function announceReplies(count: number) {
     if (panelOpenRef.current && !document.hidden) return;
     if (soundOnRef.current) playMessageChime();
@@ -339,7 +537,12 @@ function WidgetContent() {
           setRetryCount((count) => count + 1);
         }
       } else if (data.type === "elpino:panel") {
-        panelOpenRef.current = Boolean((data as { open?: unknown }).open);
+        const isOpen = Boolean((data as { open?: unknown }).open);
+        panelOpenRef.current = isOpen;
+        // Closing always restores the normal size on the loader's side
+        // (see tag.js) — mirror that here so reopening doesn't show
+        // "Restore size" for a panel that's already back to normal.
+        if (!isOpen) setIsMaximized(false);
       } else if (data.type === "elpino:logout") {
         // Forget this browser's session entirely, so the next person on it
         // cannot resume the signed-out user's conversations.
@@ -475,6 +678,9 @@ function WidgetContent() {
         setBotName(data.botName || "Elpino Support");
         setBotAvatarUrl(data.botAvatarUrl ?? null);
         setShowBranding(!data.removeBranding);
+        setCustomerEmail(data.customerEmail ?? null);
+        setCustomerPhone(data.customerPhone ?? null);
+        setContactCollection(data.contactCollection === "off" ? "off" : "chat");
         if (Array.isArray(data.greetingLines) && data.greetingLines.length > 0) setGreetingLines(data.greetingLines);
         activeVisitorRef.current = data.visitorToken ?? "";
         // A different person than before (after an expiry that kept the
@@ -503,10 +709,23 @@ function WidgetContent() {
         // actually sends a message, so this just means "show an empty
         // thread" rather than requiring an extra API call.
         if (!startFresh) {
-          // Cleared as well as set: a restart after login, logout or a user
-          // switch must not keep showing the previous person's thread.
-          setConversationId(data.conversationId ?? "");
-          setMessages(data.messages ?? []);
+          // The thread open on the previous page, if it isn't the one the
+          // server resumed (an older thread opened from the list, say). Used
+          // once: a restart after login, logout or a user switch resumes
+          // whatever the server says, never a previous person's thread. The
+          // poll below loads its messages, and drops it if it has ended or
+          // isn't this visitor's.
+          const restored = restoredConversationRef.current;
+          restoredConversationRef.current = null;
+          if (restored && restored !== data.conversationId) {
+            setConversationId(restored);
+            setMessages([]);
+          } else {
+            // Cleared as well as set: a restart after login, logout or a user
+            // switch must not keep showing the previous person's thread.
+            setConversationId(data.conversationId ?? "");
+            setMessages(data.messages ?? []);
+          }
         }
       })
       .catch(() => { if ((!controller.signal.aborted || timedOut) && epoch === sessionEpochRef.current) setLoadFailed(true); })
@@ -584,6 +803,78 @@ function WidgetContent() {
     loadRecent();
   }
 
+  // Tell the loader where the visitor is, so the next page on the site opens
+  // here too (see VIEW_KEY in tag.js). Held back until the session has
+  // loaded: before that, the empty starting conversation would overwrite the
+  // one being carried over.
+  useEffect(() => {
+    if (loading) return;
+    window.parent.postMessage({ type: "elpino:view", tab, chatView, conversationId }, "*");
+  }, [loading, tab, chatView, conversationId]);
+
+  // Carried over onto the chat list: it needs loading, which normally
+  // happens when the visitor taps into it.
+  const restoreListRef = useRef(restoredTab === "chat" && restoredChatView === "list");
+
+  // ---- Help tab: articles the workspace marked visible to visitors, scoped
+  // to this site. Listed once when the tab is first opened; searched as the
+  // visitor types, debounced so each keystroke isn't a request.
+  const [helpArticles, setHelpArticles] = useState<HelpArticle[] | null>(null);
+  const [helpQuery, setHelpQuery] = useState("");
+  const [helpResults, setHelpResults] = useState<HelpArticle[] | null>(null);
+  const [helpSearching, setHelpSearching] = useState(false);
+  const [openArticle, setOpenArticle] = useState<HelpArticleBody | null>(null);
+  const [articleLoading, setArticleLoading] = useState(false);
+
+  useEffect(() => {
+    if (tab !== "help" || helpArticles !== null || !key || !hostname) return;
+    const params = new URLSearchParams({ key, hostname });
+    fetch(`/api/widget/help/articles?${params.toString()}`)
+      .then((response) => response.json())
+      .then((data: { articles?: HelpArticle[] }) => setHelpArticles(data.articles ?? []))
+      .catch(() => setHelpArticles([]));
+  }, [tab, helpArticles, key, hostname]);
+
+  useEffect(() => {
+    const query = helpQuery.trim();
+    if (query.length < 2) { setHelpResults(null); setHelpSearching(false); return; }
+    setHelpSearching(true);
+    let cancelled = false;
+    const timer = window.setTimeout(() => {
+      const params = new URLSearchParams({ key, hostname, q: query });
+      fetch(`/api/widget/help/search?${params.toString()}`)
+        .then((response) => response.json())
+        .then((data: { articles?: HelpArticle[] }) => { if (!cancelled) setHelpResults(data.articles ?? []); })
+        .catch(() => { if (!cancelled) setHelpResults([]); })
+        .finally(() => { if (!cancelled) setHelpSearching(false); });
+    }, 300);
+    return () => { cancelled = true; window.clearTimeout(timer); };
+  }, [helpQuery, key, hostname]);
+
+  function openHelpArticle(id: string) {
+    setArticleLoading(true);
+    const params = new URLSearchParams({ key, hostname, id });
+    fetch(`/api/widget/help/article?${params.toString()}`)
+      .then((response) => response.json())
+      .then((data: { article?: HelpArticleBody }) => setOpenArticle(data.article ?? null))
+      .catch(() => setOpenArticle(null))
+      .finally(() => setArticleLoading(false));
+  }
+
+  // "Still need help?" — a fresh chat that starts from the article they
+  // just read, so they don't have to explain what they were looking at.
+  function askAboutArticle(article: HelpArticleBody) {
+    setOpenArticle(null);
+    startNewChat();
+    setDraft(`About "${article.title}": `);
+  }
+  useEffect(() => {
+    if (!restoreListRef.current || loading || !visitorToken) return;
+    restoreListRef.current = false;
+    loadRecent();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, visitorToken]);
+
   function openThread(id: string) {
     setConversationId(id);
     setChatView("thread");
@@ -657,8 +948,26 @@ function WidgetContent() {
     const poll = () => {
       fetch("/api/widget/messages/read", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ key, hostname, visitorToken, conversationId }) })
         .then((response) => response.json())
-        .then((data: { messages?: WidgetMessage[]; agentTyping?: boolean; error?: string }) => {
+        .then((data: { messages?: WidgetMessage[]; agentTyping?: boolean; error?: string; ended?: boolean }) => {
           if (cancelled || epoch !== sessionEpochRef.current) return;
+          // Left with Leave Chat (in another tab, say): drop the thread and go
+          // back to the list rather than treating it as a broken session.
+          if (data.ended) {
+            setConversationId("");
+            setMessages([]);
+            openChatList();
+            return;
+          }
+          // Not this visitor's thread (a carried-over thread from before they
+          // signed out, say). A signed-in session handles this below by
+          // refreshing; an anonymous one would otherwise sit on an empty
+          // thread forever.
+          if (data.error && !activeVisitorRef.current.startsWith("ws_")) {
+            setConversationId("");
+            setMessages([]);
+            openChatList();
+            return;
+          }
           if (data.error && activeVisitorRef.current.startsWith("ws_")) {
             identityTokenRef.current = null;
             discardSession({ keepDraft: true });
@@ -723,6 +1032,10 @@ function WidgetContent() {
         const isReply = message.senderType === "agent" || message.senderType === "ai";
         setMessages((prev) => (prev.some((existing) => existing.id === message.id) ? prev : [...prev, message]));
         if (isReply) {
+          // The reply is the definitive end of "typing" — don't wait for the
+          // next poll (up to POLL_MS later) to clear it, or the dots sit
+          // there under a reply that's already on screen.
+          setAgentTyping(false);
           revealWordByWord(message.id, message.body);
           announceReplies(1);
         }
@@ -755,12 +1068,30 @@ function WidgetContent() {
     }).catch(() => undefined);
   }
 
+  // Stick-to-bottom, not force-to-bottom: a poll or a live-pushed reply
+  // shouldn't yank someone back down while they're reading older messages.
+  // Only follows new content when they were already at the bottom.
+  const stickToBottomRef = useRef(true);
+  function handleThreadScroll() {
+    const el = scrollRef.current;
+    if (!el) return;
+    stickToBottomRef.current = el.scrollHeight - el.scrollTop - el.clientHeight < 80;
+  }
   useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
+    // Opening a thread (new conversation, switching back to it, or the
+    // panel reopening) always starts at the bottom regardless of where a
+    // previous scroll position left off.
+    stickToBottomRef.current = true;
+  }, [conversationId, chatView]);
+  useEffect(() => {
+    if (stickToBottomRef.current) scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
   }, [messages, tab, chatView, agentTyping, revealMap]);
 
   async function sendPayload(body: string, attachment: Attachment | null) {
     if (sending || !visitorToken || (!body && !attachment)) return;
+    // Sending a message is the visitor's own action — it should always
+    // carry the view down to it, even if they'd scrolled up to read back.
+    stickToBottomRef.current = true;
     setSending(true);
     const epoch = sessionEpochRef.current;
     try {
@@ -896,6 +1227,27 @@ function WidgetContent() {
   }
 
   const initial = useMemo(() => (botName.trim() || "R").charAt(0).toUpperCase(), [botName]);
+  // Consecutive messages from the same sender are one item in the thread
+  // list, not one each — otherwise every bubble, even ones seconds apart
+  // from the same reply, gets the full inter-group gap meant to separate
+  // one sender/exchange from the next.
+  const messageGroups = useMemo(() => {
+    const groups: MessageGroup[] = [];
+    for (const message of messages) {
+      if (message.senderType === "system") {
+        groups.push({ kind: "system", message });
+        continue;
+      }
+      const last = groups[groups.length - 1];
+      const lastMessage = last?.kind === "thread" ? last.messages[last.messages.length - 1] : null;
+      if (last?.kind === "thread" && lastMessage?.senderType === message.senderType && lastMessage?.senderId === message.senderId) {
+        last.messages.push(message);
+      } else {
+        groups.push({ kind: "thread", fromVisitor: message.senderType === "customer", messages: [message] });
+      }
+    }
+    return groups;
+  }, [messages]);
   // A small real team still reads as "just us" — pad the apparent headcount
   // to a random total strictly between 5 and 12 (i.e. 6-11), stable for the
   // life of this mount so it doesn't visibly change while someone's looking
@@ -967,7 +1319,7 @@ function WidgetContent() {
   }
 
   return (
-    <div className="flex h-full flex-col" style={{ backgroundColor: BG, color: INK }}>
+    <div className="relative flex h-full flex-col" style={{ backgroundColor: BG, color: INK }}>
       <div className="min-h-0 flex-1 overflow-hidden">
         {tab === "home" ? (
           <div className="flex h-full flex-col">
@@ -1038,11 +1390,97 @@ function WidgetContent() {
               </button>
             </div>
           </div>
+        ) : tab === "help" ? (
+          <div className="flex h-full flex-col">
+            {openArticle || articleLoading ? (
+              <>
+                <div className="flex shrink-0 items-center gap-2 border-b px-3 py-3" style={{ borderColor: BORDER }}>
+                  <button type="button" aria-label="Back to help" onClick={() => { setOpenArticle(null); setArticleLoading(false); }} className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full hover:bg-black/5">
+                    <ChevronLeft size={19} />
+                  </button>
+                  <p className="min-w-0 flex-1 truncate text-[14px] font-semibold">{openArticle?.title ?? "Help"}</p>
+                </div>
+                <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
+                  {articleLoading || !openArticle ? (
+                    <p className="text-[12px]" style={{ color: MUTED }}>Loading…</p>
+                  ) : (
+                    <>
+                      <h2 className="text-[17px] font-semibold leading-6">{openArticle.title}</h2>
+                      <div className="mt-3 whitespace-pre-line break-words text-[13.5px] leading-6" style={{ color: INK }}>{openArticle.content}</div>
+                      {openArticle.sourceUrl && /^https?:\/\//i.test(openArticle.sourceUrl) && (
+                        <a href={openArticle.sourceUrl} target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center gap-1.5 text-[12.5px] font-semibold" style={{ color: ACCENT }}>
+                          View original page <ExternalLink size={13} />
+                        </a>
+                      )}
+                    </>
+                  )}
+                </div>
+                {openArticle && !articleLoading && (
+                  <div className="shrink-0 border-t px-4 py-3" style={{ borderColor: BORDER, backgroundColor: SURFACE }}>
+                    <p className="text-[12px]" style={{ color: MUTED }}>Still need help?</p>
+                    <button type="button" onClick={() => askAboutArticle(openArticle)} className="mt-2 w-full rounded-full py-2.5 text-[13px] font-semibold text-white" style={{ backgroundColor: ACCENT }}>
+                      Ask {botName}
+                    </button>
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <div className="relative flex shrink-0 items-center justify-center border-b px-4 py-4" style={{ borderColor: BORDER }}>
+                  <p className="text-[15px] font-semibold">Help</p>
+                  <button type="button" aria-label="Close" onClick={() => requestLeave()} className="absolute right-3 flex h-7 w-7 items-center justify-center rounded-full hover:bg-black/5">
+                    <X size={16} />
+                  </button>
+                </div>
+                <div className="shrink-0 px-4 pt-3">
+                  <div className="flex items-center gap-2 rounded-full px-3.5 py-2.5" style={{ backgroundColor: BUBBLE }}>
+                    <Search size={14} style={{ color: MUTED }} />
+                    <input
+                      value={helpQuery}
+                      onChange={(event) => setHelpQuery(event.target.value)}
+                      placeholder="Search for help"
+                      maxLength={100}
+                      className="min-w-0 flex-1 bg-transparent text-[13px] outline-none placeholder:text-[#9aa0a6]"
+                      style={{ color: INK }}
+                    />
+                  </div>
+                </div>
+                <div className="min-h-0 flex-1 overflow-y-auto px-2 py-2">
+                  {(() => {
+                    const searching = helpQuery.trim().length >= 2;
+                    const shown = searching ? helpResults : helpArticles;
+                    if (shown === null || (searching && helpSearching)) {
+                      return <p className="px-3 py-6 text-[11.5px]" style={{ color: MUTED }}>Loading…</p>;
+                    }
+                    if (shown.length === 0) {
+                      return (
+                        <div className="px-3 py-6">
+                          <p className="text-[12px]" style={{ color: MUTED }}>{searching ? "No articles match that." : "No help articles yet."}</p>
+                          <button type="button" onClick={() => { startNewChat(); if (searching) setDraft(helpQuery.trim()); }} className="mt-3 rounded-full px-4 py-2 text-[12.5px] font-semibold text-white" style={{ backgroundColor: ACCENT }}>
+                            Ask {botName} instead
+                          </button>
+                        </div>
+                      );
+                    }
+                    return shown.map((article) => (
+                      <button key={article.id} type="button" onClick={() => openHelpArticle(article.id)} className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition hover:bg-black/[0.035]">
+                        <span className="min-w-0 flex-1">
+                          <span className="block truncate text-[13px] font-semibold">{article.title}</span>
+                          <span className="mt-0.5 line-clamp-2 block text-[11.5px] leading-4" style={{ color: MUTED }}>{article.snippet}</span>
+                        </span>
+                        <ChevronRight size={15} className="shrink-0" style={{ color: MUTED }} />
+                      </button>
+                    ));
+                  })()}
+                </div>
+              </>
+            )}
+          </div>
         ) : chatView === "list" ? (
           <div className="flex h-full flex-col">
             <div className="relative flex items-center justify-center border-b px-4 py-4" style={{ borderColor: BORDER }}>
               <p className="text-[15px] font-semibold">Messages</p>
-              <button type="button" aria-label="Close" onClick={closeWidget} className="absolute right-3 flex h-7 w-7 items-center justify-center rounded-full hover:bg-black/5">
+              <button type="button" aria-label="Close" onClick={() => requestLeave()} className="absolute right-3 flex h-7 w-7 items-center justify-center rounded-full hover:bg-black/5">
                 <X size={16} />
               </button>
             </div>
@@ -1088,45 +1526,77 @@ function WidgetContent() {
           </div>
         ) : (
           <div className="flex h-full flex-col">
-            <div className="flex items-center gap-1.5 border-b px-2.5 py-2.5" style={{ borderColor: BORDER, backgroundColor: BG }}>
-              <button type="button" aria-label="Back to chats" onClick={openChatList} className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full hover:bg-black/5"><ChevronLeft size={17} /></button>
-              <div className="flex min-w-0 flex-1 items-center gap-2 rounded-full py-1 pl-1 pr-3 shadow-sm" style={{ backgroundColor: SURFACE }}>
-                <span className="relative flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full text-[11px] font-bold text-white" style={{ backgroundColor: ACCENT }}>
+            <div className="relative flex h-[82px] shrink-0 items-start justify-between px-3 pt-3" style={{ backgroundColor: BG }}>
+              <button type="button" aria-label="Back to chats" onClick={() => requestLeave("list")} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-black/[0.07] transition hover:bg-black/[0.12]"><ChevronLeft size={19} /></button>
+              <div className="absolute left-1/2 top-2 flex max-w-[220px] -translate-x-1/2 items-center gap-3 rounded-[28px] bg-white pr-6 py-2.5 shadow-[0_8px_26px_rgba(20,20,25,.18)]">
+                <span className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full text-[12px] font-bold text-white" style={{ backgroundColor: ACCENT }}>
                   {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
-                  <span className="absolute -bottom-px -right-px h-2 w-2 rounded-full ring-2" style={{ backgroundColor: "#3ecf6a", ["--tw-ring-color" as string]: SURFACE }} />
+                  <span className="absolute right-0 top-0 h-2.5 w-2.5 rounded-full ring-2" style={{ backgroundColor: "#32a071", ["--tw-ring-color" as string]: SURFACE }} />
                 </span>
-                <p className="truncate text-[12.5px] font-semibold">{botName}</p>
+                <span className="min-w-0 truncate text-[14px] font-bold leading-5">{botName}</span>
               </div>
-              <button type="button" aria-label={soundOn ? "Mute sound for new replies" : "Turn on sound for new replies"} aria-pressed={!soundOn} title={soundOn ? "Sound on for new replies" : "Sound off"} onClick={toggleSound} className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full hover:bg-black/5">{soundOn ? <Volume2 size={15} /> : <VolumeX size={15} />}</button>
-              <button type="button" aria-label="Close" onClick={closeWidget} className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full hover:bg-black/5"><X size={16} /></button>
+              <div className="ml-auto flex gap-2">
+                <Popover>
+                  <PopoverTrigger aria-label="More options" className="flex h-9 w-9 items-center justify-center rounded-full bg-black/[0.07] transition hover:bg-black/[0.12]">
+                    <MoreHorizontal size={20} />
+                  </PopoverTrigger>
+                  <PopoverContent align="end" sideOffset={6} className="w-52 p-1.5">
+                    <button type="button" onClick={toggleSound} className="flex h-9 w-full items-center gap-2.5 rounded-lg px-2.5 text-left text-[13px] font-medium hover:bg-black/[0.045]">
+                      {soundOn ? <VolumeX size={16} /> : <Volume2 size={16} />}
+                      {soundOn ? "Mute notifications" : "Unmute notifications"}
+                    </button>
+                    <button type="button" onClick={toggleMaximize} className="flex h-9 w-full items-center gap-2.5 rounded-lg px-2.5 text-left text-[13px] font-medium hover:bg-black/[0.045]">
+                      {isMaximized ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+                      {isMaximized ? "Restore size" : "Maximize"}
+                    </button>
+                  </PopoverContent>
+                </Popover>
+                <button type="button" aria-label="Close" onClick={() => requestLeave()} className="flex h-9 w-9 items-center justify-center rounded-full bg-black/[0.07] transition hover:bg-black/[0.12]"><X size={22} /></button>
+              </div>
             </div>
-            <div ref={scrollRef} className="min-h-0 flex-1 space-y-3 overflow-y-auto p-4">
+            <div ref={scrollRef} onScroll={handleThreadScroll} className="min-h-0 flex-1 space-y-5 overflow-y-auto px-6 pb-5 pt-4">
               {messages.length === 0 && !conversationId && (
                 // Nothing is saved yet — this greeting is purely client-side
                 // until the visitor's first reply actually creates the
                 // conversation (see sendPayload), so a look-and-leave visit
                 // never touches the database.
-                greetingLines.map((line, index) => (
-                  <div key={index} className="flex items-start gap-2">
-                    {index === 0 && (
-                      <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full text-[10px] font-bold text-white" style={{ backgroundColor: ACCENT }}>
-                        {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
-                      </span>
-                    )}
-                    <div className={`w-fit max-w-[90%] text-[13.5px] leading-6 ${index > 0 ? "ml-8" : ""}`} style={{ color: INK }}>
-                      {line}
+                // A single group, one child of the space-y-5 thread — the
+                // 20px gap there is for spacing between message groups, not
+                // between these lines of the same greeting. Grouped tight
+                // together here the way consecutive same-sender messages
+                // are further down.
+                <div className="space-y-1">
+                  {/* Matches the header a real message group shows (see
+                      below) — otherwise the greeting visibly gains a name
+                      and timestamp the moment it becomes a real saved
+                      message, instead of looking the same throughout. */}
+                  <p className="pl-8 text-[10.5px]" style={{ color: MUTED }}>
+                    <span className="font-semibold" style={{ color: INK }}>{botName}</span>
+                    {" · "}{formatTime(greetingTimeRef.current)}
+                  </p>
+                  {greetingLines.map((line, index) => (
+                    <div key={index} className="flex items-start gap-2">
+                      {index === 0 && (
+                        <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full text-[10px] font-bold text-white" style={{ backgroundColor: ACCENT }}>
+                          {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
+                        </span>
+                      )}
+                      <div className={`w-fit max-w-[90%] text-[14px] leading-6 ${index > 0 ? "ml-8" : ""}`} style={{ color: INK }}>
+                        {line}
+                      </div>
                     </div>
-                  </div>
-                ))
+                  ))}
+                </div>
               )}
               {messages.length === 0 && conversationId && (
                 <div className="flex min-h-[120px] items-center justify-center text-[11.5px]" style={{ color: MUTED }}>Loading conversation…</div>
               )}
-              {messages.map((message, index) => {
+              {messageGroups.map((group) => {
                 // A teammate joining or leaving the chat. Centered and quiet:
                 // it is a thing that happened to the conversation, not a
                 // message from anyone, so it must not read as one.
-                if (message.senderType === "system") {
+                if (group.kind === "system") {
+                  const message = group.message;
                   return (
                     <div key={message.id} className="flex items-center gap-2 py-0.5">
                       <span className="h-px flex-1" style={{ backgroundColor: BORDER }} />
@@ -1136,65 +1606,82 @@ function WidgetContent() {
                   );
                 }
 
-                const fromVisitor = message.senderType === "customer";
-                const hasImage = message.attachmentUrl && (message.attachmentType === "image" || message.attachmentType === "gif");
-                const hasFile = message.attachmentUrl && message.attachmentType === "file";
-                // Who's actually talking: the AI, or — once a teammate has
-                // taken over — that teammate by name. Shown once per run of
-                // consecutive messages from the same sender, not on every
-                // line, so a human mid-conversation doesn't read as the AI.
-                const previous = messages[index - 1];
-                const continuesSameSender = previous?.senderType === message.senderType && previous?.senderId === message.senderId;
-                const senderName = message.senderType === "ai" ? botName : team.find((member) => member.id === message.senderId)?.name?.trim() || "Support team";
-                const displayBody = revealMap[message.id] ?? message.body;
+                // One run of consecutive messages from the same sender is a
+                // single item in the thread's own space-y-5 list, so that
+                // 20px gap only ever falls *between* runs — a sender switch,
+                // a visitor reply, a pause long enough to be a new group.
+                // Bubbles within the run share a tight gap-1 instead.
+                const { fromVisitor, messages: groupMessages } = group;
+                const first = groupMessages[0];
+                const senderName = first.senderType === "ai" ? botName : team.find((member) => member.id === first.senderId)?.name?.trim() || "Support team";
 
-                const bubble = (
-                  <div className="w-fit max-w-[85%] space-y-1.5">
-                    {hasImage && (
-                      <img src={message.attachmentUrl!} alt={message.attachmentName ?? ""} className="max-h-52 w-auto rounded-2xl object-cover" />
-                    )}
-                    {hasFile && (
-                      <a
-                        href={message.attachmentUrl!}
-                        download={message.attachmentName ?? "file"}
-                        className="flex items-center gap-2.5 rounded-2xl px-3.5 py-2.5 text-[12.5px] font-medium"
-                        style={fromVisitor ? { backgroundColor: ACCENT, color: "#fff" } : { backgroundColor: BUBBLE, color: INK }}
-                      >
-                        <FileIcon size={15} className="shrink-0" />
-                        <span className="min-w-0 truncate">{message.attachmentName ?? "Attachment"}</span>
-                      </a>
-                    )}
-                    {message.body && (
-                      fromVisitor ? (
-                        <div className="rounded-2xl px-3.5 py-2.5 text-[13px] leading-5" style={{ backgroundColor: ACCENT, color: "#fff" }}>
-                          <MessageMarkdown text={displayBody} />
-                        </div>
-                      ) : (
-                        <div className="px-0.5 text-[13.5px] leading-6" style={{ color: INK }}>
-                          <MessageMarkdown text={displayBody} />
-                        </div>
-                      )
-                    )}
-                  </div>
-                );
-
-                if (fromVisitor) {
-                  return <div key={message.id} className="flex justify-end">{bubble}</div>;
-                }
                 return (
-                  <div key={message.id} className="flex flex-col gap-1">
-                    {!continuesSameSender && (
+                  <div key={first.id} className="flex flex-col gap-1">
+                    {/* Who's actually talking: the AI, or — once a teammate
+                        has taken over — that teammate by name. Shown once
+                        per run, not on every line, so a human mid-conversation
+                        doesn't read as the AI. */}
+                    {!fromVisitor && (
                       <p className="pl-8 text-[10.5px]" style={{ color: MUTED }}>
                         <span className="font-semibold" style={{ color: INK }}>{senderName}</span>
-                        {" · "}{formatTime(message.createdAt)}
+                        {" · "}{formatTime(first.createdAt)}
                       </p>
                     )}
-                    <div className="flex items-start gap-2">
-                      <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full text-[10px] font-bold text-white" style={{ backgroundColor: ACCENT }}>
-                        {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
-                      </span>
-                      {bubble}
-                    </div>
+                    {groupMessages.map((message, messageIndex) => {
+                      const hasImage = message.attachmentUrl && (message.attachmentType === "image" || message.attachmentType === "gif");
+                      const hasFile = message.attachmentUrl && message.attachmentType === "file";
+                      const displayBody = revealMap[message.id] ?? message.body;
+
+                      const bubble = (
+                        <div className="w-fit max-w-[85%] space-y-1">
+                          {hasImage && (
+                            <img src={message.attachmentUrl!} alt={message.attachmentName ?? ""} className="max-h-52 w-auto rounded-2xl object-cover" />
+                          )}
+                          {hasFile && (
+                            <a
+                              href={message.attachmentUrl!}
+                              download={message.attachmentName ?? "file"}
+                              className="flex items-center gap-2.5 rounded-2xl px-3.5 py-2.5 text-[12.5px] font-medium"
+                              style={fromVisitor ? { backgroundColor: ACCENT, color: "#fff" } : { backgroundColor: BUBBLE, color: INK }}
+                            >
+                              <FileIcon size={15} className="shrink-0" />
+                              <span className="min-w-0 truncate">{message.attachmentName ?? "Attachment"}</span>
+                            </a>
+                          )}
+                          {message.body && (
+                            fromVisitor ? (
+                              <div className="rounded-2xl px-3.5 py-2.5 text-[13px] leading-5" style={{ backgroundColor: ACCENT, color: "#fff" }}>
+                                <MessageMarkdown text={displayBody} />
+                              </div>
+                            ) : (
+                              <div className="px-0.5 text-[13.5px] leading-6" style={{ color: INK }}>
+                                <MessageMarkdown text={displayBody} />
+                              </div>
+                            )
+                          )}
+                        </div>
+                      );
+
+                      if (fromVisitor) {
+                        return <div key={message.id} className="flex justify-end">{bubble}</div>;
+                      }
+                      return (
+                        <div key={message.id} className="flex items-start gap-2">
+                          {messageIndex === 0 ? (
+                            <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full text-[10px] font-bold text-white" style={{ backgroundColor: ACCENT }}>
+                              {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
+                            </span>
+                          ) : (
+                            // Same sender as the message above — the avatar
+                            // already introduced them, so later lines in the
+                            // run just line up under the first bubble instead
+                            // of repeating it.
+                            <span className="w-6 shrink-0" />
+                          )}
+                          {bubble}
+                        </div>
+                      );
+                    })}
                   </div>
                 );
               })}
@@ -1209,7 +1696,65 @@ function WidgetContent() {
                 </div>
               )}
             </div>
-            <div className="relative p-3">
+            <div className="relative px-5 pb-3 pt-2">
+              {contactOpen && (
+                <div className="absolute bottom-full left-3 right-3 mb-2 overflow-hidden rounded-2xl border shadow-xl" style={{ borderColor: BORDER, backgroundColor: SURFACE }}>
+                  <div className="flex transition-transform duration-300 ease-out" style={{ transform: contactStep === "phone" ? "translateX(-100%)" : "translateX(0%)" }}>
+                    <div className="w-full shrink-0 p-3">
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="text-[12.5px] font-semibold leading-5">In case we get disconnected, what&apos;s your email?</p>
+                        <button type="button" onClick={dismissContact} aria-label="Dismiss" className="shrink-0 rounded-full p-1 hover:bg-black/5"><X size={13} /></button>
+                      </div>
+                      <div className="mt-2 flex gap-1.5">
+                        <input
+                          type="email"
+                          value={contactEmailInput}
+                          onChange={(event) => setContactEmailInput(event.target.value)}
+                          onKeyDown={(event) => { if (event.key === "Enter") void submitContactEmail(); }}
+                          placeholder="you@example.com"
+                          className="h-9 min-w-0 flex-1 rounded-full border px-3 text-[12.5px] outline-none"
+                          style={{ borderColor: BORDER, backgroundColor: BG, color: INK }}
+                        />
+                        <button
+                          type="button"
+                          disabled={!contactEmailInput.trim() || contactSubmitting}
+                          onClick={() => void submitContactEmail()}
+                          className="shrink-0 rounded-full px-4 text-[12.5px] font-semibold text-white disabled:opacity-50"
+                          style={{ backgroundColor: ACCENT }}
+                        >
+                          {contactSubmitting ? "…" : "Submit"}
+                        </button>
+                      </div>
+                    </div>
+                    <div className="w-full shrink-0 p-3">
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="text-[12.5px] font-semibold leading-5">And a phone number, just in case?</p>
+                        <button type="button" onClick={dismissContact} aria-label="Dismiss" className="shrink-0 rounded-full p-1 hover:bg-black/5"><X size={13} /></button>
+                      </div>
+                      <div className="mt-2 flex gap-1.5">
+                        <input
+                          type="tel"
+                          value={contactPhoneInput}
+                          onChange={(event) => setContactPhoneInput(event.target.value)}
+                          onKeyDown={(event) => { if (event.key === "Enter") void submitContactPhone(); }}
+                          placeholder="+1 555 123 4567"
+                          className="h-9 min-w-0 flex-1 rounded-full border px-3 text-[12.5px] outline-none"
+                          style={{ borderColor: BORDER, backgroundColor: BG, color: INK }}
+                        />
+                        <button
+                          type="button"
+                          disabled={contactSubmitting}
+                          onClick={() => void submitContactPhone()}
+                          className="shrink-0 rounded-full px-4 text-[12.5px] font-semibold text-white disabled:opacity-50"
+                          style={{ backgroundColor: ACCENT }}
+                        >
+                          {contactSubmitting ? "…" : contactPhoneInput.trim() ? "Submit" : "Skip"}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
               {activePanel === "emoji" && (
                 <div className="absolute bottom-full left-3 right-3 mb-2 rounded-2xl border p-2.5 shadow-xl" style={{ borderColor: BORDER, backgroundColor: SURFACE }}>
                   <div className="mb-1 flex items-center justify-between px-0.5">
@@ -1272,47 +1817,33 @@ function WidgetContent() {
               )}
               {attachError && <p className="mb-2 px-1 text-[11px] text-[#e5626a]">{attachError}</p>}
 
-              <div className="rounded-[26px] border shadow-sm" style={{ borderColor: BORDER, backgroundColor: SURFACE }}>
+              <div className="flex h-[54px] items-center rounded-[28px] border px-1.5 shadow-[0_3px_12px_rgba(15,23,42,.10)]" style={{ borderColor: BORDER, backgroundColor: SURFACE }}>
+                <input ref={fileInputRef} type="file" hidden onChange={handleFileSelect} />
+                <button type="button" aria-label="Attach file" onClick={() => fileInputRef.current?.click()} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-black/[0.055] transition hover:bg-black/10" style={{ color: INK }}>
+                  <Plus size={24} strokeWidth={1.8} />
+                </button>
                 <textarea
                   value={draft}
                   onChange={(event) => { setDraft(event.target.value); notifyTyping(); }}
                   onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); void sendMessage(); } }}
                   placeholder="Write a message…"
                   rows={1}
-                  className="h-[42px] w-full resize-none bg-transparent px-4 pb-1 pt-2.5 text-[13px] outline-none placeholder:text-[#9aa0a6]"
+                  className="h-[42px] min-w-0 flex-1 resize-none bg-transparent px-3 py-[11px] text-[14px] leading-5 outline-none placeholder:text-[#777b82]"
                   style={{ color: INK }}
                 />
-                <div className="flex h-10 items-center gap-0.5 px-1.5 pb-1">
-                  <input ref={fileInputRef} type="file" hidden onChange={handleFileSelect} />
-                  <button type="button" aria-label="Attach file" onClick={() => fileInputRef.current?.click()} className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-black/5" style={{ color: ICON_MUTED }}>
-                    <Paperclip size={15} />
+                <div className="flex shrink-0 items-center gap-1">
+                  <button type="button" aria-label="Emoji" onClick={() => togglePanel("emoji")} className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-black/5" style={{ color: activePanel === "emoji" ? ACCENT : INK }}>
+                    <Smile size={22} strokeWidth={1.8} />
                   </button>
-                  <button type="button" aria-label="Send a GIF" onClick={() => togglePanel("gif")} className="flex h-7 w-9 items-center justify-center rounded-full text-[9.5px] font-bold hover:bg-black/5" style={{ color: activePanel === "gif" ? ACCENT : ICON_MUTED }}>
-                    GIF
-                  </button>
-                  <button type="button" aria-label="Emoji" onClick={() => togglePanel("emoji")} className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-black/5" style={{ color: activePanel === "emoji" ? ACCENT : ICON_MUTED }}>
-                    <Smile size={15} />
-                  </button>
-                  {micSupported && (
-                    <button
-                      type="button"
-                      aria-label={listening ? "Stop recording" : "Voice input"}
-                      onClick={toggleMic}
-                      className="ml-auto flex h-7 w-7 items-center justify-center rounded-full hover:bg-black/5"
-                      style={{ color: listening ? "#e5626a" : ICON_MUTED }}
-                    >
-                      {listening ? <Square size={13} /> : <Mic size={15} />}
-                    </button>
-                  )}
                   <button
                     type="button"
                     onClick={() => void sendMessage()}
                     disabled={(!draft.trim() && !pendingAttachment) || sending}
                     aria-label="Send"
-                    className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition disabled:opacity-100 ${micSupported ? "ml-1" : "ml-auto"}`}
-                    style={{ backgroundColor: draft.trim() || pendingAttachment ? ACCENT : BUBBLE, color: draft.trim() || pendingAttachment ? "#fff" : ICON_MUTED }}
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition disabled:opacity-100"
+                    style={{ backgroundColor: draft.trim() || pendingAttachment ? ACCENT : "#eceef0", color: draft.trim() || pendingAttachment ? "#fff" : "#b5b8bd" }}
                   >
-                    <ArrowUp size={15} />
+                    <ArrowUp size={21} strokeWidth={2.2} />
                   </button>
                 </div>
               </div>
@@ -1329,15 +1860,60 @@ function WidgetContent() {
           <button type="button" onClick={openChatList} className="flex flex-1 flex-col items-center gap-1 py-2.5 text-[10px] font-medium" style={{ color: tab === "chat" ? INK : MUTED }}>
             <MessageCircle size={18} strokeWidth={tab === "chat" ? 2.4 : 2} /> Messages
           </button>
-          <button type="button" disabled className="flex flex-1 flex-col items-center gap-1 py-2.5 text-[10px] font-medium opacity-50" style={{ color: MUTED }}>
-            <CircleHelp size={18} /> Help
+          <button type="button" onClick={() => setTab("help")} className="flex flex-1 flex-col items-center gap-1 py-2.5 text-[10px] font-medium" style={{ color: tab === "help" ? INK : MUTED }}>
+            <CircleHelp size={18} strokeWidth={tab === "help" ? 2.4 : 2} /> Help
           </button>
         </div>
       )}
       {showBranding && (
-        <a href="https://elpino.chat" target="_blank" rel="noreferrer" className="block shrink-0 border-t py-1.5 text-center text-[9.5px] font-medium transition hover:text-[#18181b]" style={{ borderColor: BORDER, color: MUTED, backgroundColor: SURFACE }}>
+        <a href="https://elpino.chat" target="_blank" rel="noreferrer" className="block shrink-0 py-2 text-center text-[10px] font-medium transition hover:text-[#18181b]" style={{ color: MUTED, backgroundColor: BG }}>
           Powered by Elpino
         </a>
+      )}
+      {leaveOpen && (
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-8 text-center" style={{ backgroundColor: SURFACE, color: INK }}>
+          <p className="text-[19px] font-bold leading-6">Did we help you?</p>
+          <p className="mt-1.5 text-[13px] leading-5" style={{ color: MUTED }}>Your feedback matters</p>
+          <div className="mt-6 flex justify-center gap-4">
+            <button
+              type="button"
+              onClick={() => setRatingChoice(1)}
+              aria-label="Good"
+              aria-pressed={ratingChoice === 1}
+              className="flex h-14 w-14 items-center justify-center rounded-full transition"
+              style={{ backgroundColor: ratingChoice === 1 ? ACCENT : BUBBLE }}
+            >
+              <ThumbsUp size={22} color={ratingChoice === 1 ? "#fff" : INK} />
+            </button>
+            <button
+              type="button"
+              onClick={() => setRatingChoice(-1)}
+              aria-label="Not good"
+              aria-pressed={ratingChoice === -1}
+              className="flex h-14 w-14 items-center justify-center rounded-full transition"
+              style={{ backgroundColor: ratingChoice === -1 ? ACCENT : BUBBLE }}
+            >
+              <ThumbsDown size={22} color={ratingChoice === -1 ? "#fff" : INK} />
+            </button>
+          </div>
+          <div className="mt-8 flex w-full items-center gap-3">
+            <button type="button" onClick={goBack} className="flex-1 text-[14px] font-bold" style={{ color: ACCENT }}>
+              Go Back
+            </button>
+            <button
+              type="button"
+              disabled={leaving}
+              onClick={() => void leaveChat()}
+              className="flex-[1.4] rounded-full py-3 text-[14px] font-bold text-white disabled:opacity-60"
+              style={{ backgroundColor: ACCENT }}
+            >
+              {leaving ? "Leaving…" : "Leave Chat"}
+            </button>
+          </div>
+          <p className="mt-4 text-[11.5px] leading-4" style={{ color: MUTED }}>
+            Leaving the chat will end this session. If you need to chat with us again, we&apos;ll have a record of your chat history.
+          </p>
+        </div>
       )}
     </div>
   );

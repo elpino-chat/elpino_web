@@ -43,12 +43,15 @@ export function LanguageSwitcher({
   light,
   open,
   onOpenChange,
+  compact = false,
 }: {
   language: string;
   onChange: (code: string) => void;
   light: boolean;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  /** Icon-only, no name label at any width — for tight spaces like the desktop header's action row. */
+  compact?: boolean;
 }) {
   const current = LANGUAGES.find((l) => l.code === language) ?? LANGUAGES.find((l) => l.code === "en")!;
 
@@ -57,6 +60,7 @@ export function LanguageSwitcher({
       <button
         type="button"
         onClick={() => onOpenChange(!open)}
+        aria-label={compact ? `Language: ${current.name}` : undefined}
         className={`flex h-10 items-center gap-2 rounded-full px-3 text-sm font-medium transition ${
           light
             ? "text-[#26332d] hover:bg-[#f0f4ef]"
@@ -64,7 +68,7 @@ export function LanguageSwitcher({
         }`}
       >
         <FlagImage countryCode={current.countryCode} alt={current.code} />
-        <span className="hidden sm:inline">{current.name}</span>
+        <span className={compact ? "hidden" : "hidden sm:inline"}>{current.name}</span>
       </button>
       {open && (
         <>

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useReducedMotion } from "framer-motion";
 import { ArrowLeft, ArrowRight, BookOpen, Check, FileText, Sparkles, Users } from "lucide-react";
 
@@ -37,11 +38,36 @@ export function FeatureCarousel() {
     const el = track.current;
     if (el) el.scrollBy({ left: direction * ((el.firstElementChild?.getBoundingClientRect().width ?? 350) + 15), behavior: reduced ? 'instant' : 'smooth' });
   };
-  return <section aria-labelledby="feature-carousel-title" className="relative overflow-hidden bg-black pb-32 pt-16 font-[family-name:var(--font-rethink-sans)] text-white sm:pb-44 sm:pt-24">
+  return <section aria-labelledby="feature-carousel-title" className="relative overflow-hidden bg-[#f7f5f2] pb-0 pt-16 font-[family-name:var(--font-rethink-sans)] text-[#11120f] sm:pt-24">
     <div className="mb-10 px-5 sm:mb-[76px] sm:px-8 lg:px-[4.2vw]">
-      <h2 id="feature-carousel-title" className="max-w-[760px] text-[clamp(2rem,3.3vw,4rem)] font-semibold uppercase leading-[0.97] tracking-[-0.055em]">Be there. Be helpful.<br />Be the answer.</h2>
+      <h2 id="feature-carousel-title" className="max-w-[760px] text-[clamp(2rem,3.3vw,4rem)] font-semibold capitalize leading-[0.97] tracking-[-0.055em]">Be there. Be helpful.<br />Be the answer.</h2>
+      <p className="mt-5 max-w-[52ch] text-base leading-7 text-black/60 sm:text-lg">
+        Every conversation gets the same knowledge, the same policy, and a teammate the moment it&apos;s needed —
+        wherever your customer reached out from.
+      </p>
+      <div className="mt-7 flex flex-wrap items-center gap-5">
+        <Link
+          href="/signup"
+          className="inline-flex h-11 items-center justify-center rounded-full border border-black px-6 text-[17px] font-semibold text-black transition duration-200 hover:bg-black hover:text-white active:translate-y-px"
+        >
+          Sign up
+        </Link>
+        <Link
+          href="/features"
+          className="group inline-flex items-center gap-1.5 text-sm font-medium text-black/70 transition hover:text-black"
+        >
+          Learn more
+          <ArrowRight size={15} aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-0.5" />
+        </Link>
+      </div>
     </div>
-    <div className="flex items-center justify-between gap-5 px-5 sm:px-8 lg:px-[4.2vw]">
+    <div id="home-feature-track" ref={track} tabIndex={0} aria-label="Elpino feature cards" className="flex snap-x snap-mandatory gap-[15px] overflow-x-auto px-5 pb-2 [scrollbar-width:none] sm:px-8 lg:scroll-pl-[4.2vw] lg:px-[4.2vw] [&::-webkit-scrollbar]:hidden">
+      {features.map((feature, index) => <article key={feature.label} className="relative flex min-h-[500px] w-[87vw] shrink-0 snap-start flex-col overflow-hidden rounded-[6px] border-3 border-black/10 bg-white text-[#171e16] sm:min-h-[550px] sm:w-[47vw] lg:min-h-[580px] lg:w-[28.4vw] min-[1700px]:min-h-[625px]">
+        <div className="relative p-6 sm:p-[30px]"><p className="text-xs font-medium min-[1700px]:text-base">{feature.label}</p><h3 className="mt-4 whitespace-pre-line text-[clamp(1.45rem,1.7vw,2.15rem)] font-semibold leading-[1.1] tracking-[-0.035em]">{feature.title}</h3><p className="mt-5 max-w-[40ch] text-sm leading-6 text-[#596157]">{feature.description}</p></div>
+        <div className="relative mt-auto px-6 pt-8 sm:px-[30px]"><Preview index={index} /></div>
+      </article>)}
+    </div>
+    <div className="mt-10 flex items-center justify-between gap-5 px-5 sm:mt-[76px] sm:px-8 lg:px-[4.2vw]">
       <Image
         src="/desk_avatar1.png"
         alt=""
@@ -53,15 +79,9 @@ export function FeatureCarousel() {
         className="pointer-events-none h-auto w-48 select-none sm:w-64 lg:w-80"
       />
       <div className="flex shrink-0 gap-3 sm:gap-5">
-        <button type="button" onClick={() => scroll(-1)} disabled={edges.start} aria-label="Previous features" aria-controls="home-feature-track" className="flex size-11 items-center justify-center rounded-full border border-white transition hover:bg-white hover:text-black focus-visible:outline-2 focus-visible:outline-offset-4 disabled:cursor-default disabled:border-white/30 disabled:text-white/30 disabled:hover:bg-transparent sm:size-[62px] min-[1700px]:size-[76px]"><ArrowLeft size={23} /></button>
-        <button type="button" onClick={() => scroll(1)} disabled={edges.end} aria-label="Next features" aria-controls="home-feature-track" className="flex size-11 items-center justify-center rounded-full border border-white transition hover:bg-white hover:text-black focus-visible:outline-2 focus-visible:outline-offset-4 disabled:cursor-default disabled:border-white/30 disabled:text-white/30 disabled:hover:bg-transparent sm:size-[62px] min-[1700px]:size-[76px]"><ArrowRight size={23} /></button>
+        <button type="button" onClick={() => scroll(-1)} disabled={edges.start} aria-label="Previous features" aria-controls="home-feature-track" className="flex size-11 items-center justify-center rounded-full border border-black/20 transition hover:bg-black hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 disabled:cursor-default disabled:border-black/10 disabled:text-black/25 disabled:hover:bg-transparent sm:size-[62px] min-[1700px]:size-[76px]"><ArrowLeft size={23} /></button>
+        <button type="button" onClick={() => scroll(1)} disabled={edges.end} aria-label="Next features" aria-controls="home-feature-track" className="flex size-11 items-center justify-center rounded-full border border-black/20 transition hover:bg-black hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 disabled:cursor-default disabled:border-black/10 disabled:text-black/25 disabled:hover:bg-transparent sm:size-[62px] min-[1700px]:size-[76px]"><ArrowRight size={23} /></button>
       </div>
-    </div>
-    <div id="home-feature-track" ref={track} tabIndex={0} aria-label="Elpino feature cards" className="flex snap-x snap-mandatory gap-[15px] overflow-x-auto px-5 pb-2 [scrollbar-width:none] sm:px-8 lg:scroll-pl-[4.2vw] lg:px-[4.2vw] [&::-webkit-scrollbar]:hidden">
-      {features.map((feature, index) => <article key={feature.label} className="relative flex min-h-[500px] w-[87vw] shrink-0 snap-start flex-col overflow-hidden rounded-[6px] border-3 border-white bg-white text-[#171e16] sm:min-h-[550px] sm:w-[47vw] lg:min-h-[580px] lg:w-[28.4vw] min-[1700px]:min-h-[625px]">
-        <div className="relative p-6 sm:p-[30px]"><p className="text-xs font-medium min-[1700px]:text-base">{feature.label}</p><h3 className="mt-4 whitespace-pre-line text-[clamp(1.45rem,1.7vw,2.15rem)] font-semibold leading-[1.1] tracking-[-0.035em]">{feature.title}</h3><p className="mt-5 max-w-[40ch] text-sm leading-6 text-[#596157]">{feature.description}</p></div>
-        <div className="relative mt-auto px-6 pt-8 sm:px-[30px]"><Preview index={index} /></div>
-      </article>)}
     </div>
   </section>;
 }

@@ -12,15 +12,15 @@ export function Hero() {
         <div className="grid grid-cols-1 items-center gap-12 py-16 md:py-24 lg:grid-cols-12 lg:gap-8">
           {/* Copy */}
           <div className="lg:col-span-6">
-            <span className="inline-block border-2 border-[#D9BEF4] px-3 py-1 text-[12px] font-black uppercase tracking-[0.2em] text-[#D9BEF4]">
+            <span className="inline-block text-left border-2 border-[#D9BEF4] px-3 py-1 text-[12px] font-black uppercase tracking-[0.2em] text-[#D9BEF4]">
               Approval-first automation
             </span>
-            <h1 className="mt-7 text-balance text-5xl font-medium leading-[1.05] tracking-tight text-black sm:text-6xl lg:text-[64px]">
+            <h1 className="mt-7 text-balance text-left text-5xl font-medium leading-[1.05] tracking-tight text-black sm:text-6xl lg:text-[64px]">
               Your day, handled.
               <br />
               Nothing sent without your <span className="text-[#D9BEF4]">yes</span>.
             </h1>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-slate-600">
+            <p className="mt-6 max-w-xl text-left text-lg leading-relaxed text-slate-600">
               Riz watches your inbox, calendar, and revenue, then puts drafted decisions in
               Telegram. You approve in seconds, from your phone.
             </p>
