@@ -3833,3 +3833,53 @@ body:has(.dashboard-chatbot-settings-page) .dashboard-avatar-picker :is([class*=
 .dashboard-shell .dashboard-settings-surface .dashboard-upgrade-page .dashboard-contact-sales :is(span, svg) {
   color: rgb(255 255 255 / 0.9) !important;
 }
+/* About hero: preserve the component's editorial details on its dark surface. */
+.about-hero > div > div:first-child > div:first-child p {
+  color: rgb(255 255 255 / 0.62);
+}
+
+.about-hero > div > div:first-child > div:first-child a:not(:first-of-type) {
+  color: rgb(255 255 255 / 0.72);
+  text-decoration-color: rgb(255 255 255 / 0.28);
+}
+
+.about-hero > div > div:last-child {
+  border-color: rgb(255 255 255 / 0.15);
+  color: rgb(255 255 255 / 0.58);
+}
+
+.about-hero > div > div:first-child {
+  display: flex;
+  flex-direction: column;
+}
+
+.about-hero > div > div:first-child > div:first-child {
+  display: flex;
+  max-width: 64rem;
+  flex-direction: column;
+  align-items: center;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.about-hero h1 span {
+  color: #d9bef4;
+}
+
+.about-hero > div > div:first-child > div:first-child p {
+  margin-inline: auto;
+}
+
+.about-hero > div > div:first-child > div:first-child > div {
+  justify-content: center;
+}
+
+.about-hero > div > div:first-child > div:nth-child(2) {
+  width: 100%;
+  max-width: 36rem;
+  margin-top: 3.5rem;
+}
+
+.about-hero > div > div:last-child p {
+  justify-content: center;
+}

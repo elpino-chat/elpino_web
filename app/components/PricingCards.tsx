@@ -70,8 +70,7 @@ export const plans: Plan[] = [
     overageUsdCents: null,
     aiCreditGrantUsdCents: 100,
     features: [
-      '50 AI resolutions/month',
-      '$1 AI credit included every month',
+      'Up to 50 AI resolutions/month',
       '2 seats included',
       'Seat packs from $0.60/seat',
       '20 MB knowledge base',
@@ -94,8 +93,7 @@ export const plans: Plan[] = [
     overageUsdCents: 10,
     aiCreditGrantUsdCents: 500,
     features: [
-      '250 AI resolutions/month',
-      '$5 AI credit included every month',
+      'Up to 250 AI resolutions/month',
       '5 seats included',
       'Seat packs from $0.60/seat',
       '200 MB knowledge base',
@@ -119,8 +117,7 @@ export const plans: Plan[] = [
     aiCreditGrantUsdCents: 4000,
     highlighted: true,
     features: [
-      '2,000 AI resolutions/month',
-      '$40 AI credit included every month',
+      'Up to 2,000 AI resolutions/month',
       '15 seats included',
       'Seat packs from $0.60/seat',
       '1 GB knowledge base',
@@ -144,8 +141,7 @@ export const plans: Plan[] = [
     overageUsdCents: 4,
     aiCreditGrantUsdCents: 24000,
     features: [
-      '12,000 AI resolutions/month',
-      '$240 AI credit included every month',
+      'Up to 12,000 AI resolutions/month',
       '40 seats included',
       'Seat packs from $0.60/seat',
       '5 GB knowledge base',

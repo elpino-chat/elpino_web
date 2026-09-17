@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { HomeHero } from "./components/home/HomeHero";
-import { FeatureCarousel } from "./components/home/FeatureCarousel";
+import FeatureCarousel from "./components/home/FeatureCarousel";
 import { ClosingCta } from "./components/home/ClosingCta";
 import { AfterClosingSections } from "./components/home/AfterClosingSections";
 

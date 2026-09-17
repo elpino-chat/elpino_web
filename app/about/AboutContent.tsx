@@ -9,7 +9,7 @@ import FAQSection from './FAQSection';
 
 const wrap = 'mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-20';
 const title = 'text-[clamp(2.3rem,4.1vw,4.2rem)] font-normal leading-[1.05] tracking-[-0.05em]';
-const pill = 'inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-[#171b17] px-6 text-sm font-medium text-white transition hover:bg-[#394036] focus-visible:outline-2 focus-visible:outline-offset-4';
+const pill = 'inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-[#d9bef4] px-6 text-sm font-medium text-black transition hover:bg-[#e5d2f7] focus-visible:outline-2 focus-visible:outline-offset-4';
 
 function Reveal({ children, className = '', delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
   const reduced = useReducedMotion();
@@ -17,10 +17,10 @@ function Reveal({ children, className = '', delay = 0 }: { children: ReactNode; 
 }
 
 function Hero() {
-  return <section className="relative overflow-hidden bg-[#f8f7f3] pb-10 pt-14 sm:pt-20"><div className={wrap}>
+  return <section className="about-hero relative overflow-hidden bg-black pb-12 pt-20 text-white sm:pt-28"><div className={wrap}>
     <div className="grid items-center gap-12 lg:grid-cols-[1.25fr_1fr] lg:gap-10">
       <Reveal><h1 className="text-[clamp(3.4rem,6.7vw,6.8rem)] font-normal leading-[0.94] tracking-[-0.065em]">A little more help.<br /><span className="font-[family-name:var(--font-instrument-serif)] text-[1.09em] italic text-[#8c6aac]">A lot more human.</span></h1><p className="mt-8 max-w-[39ch] text-base leading-7 text-[#6d7167] sm:text-lg sm:leading-8">We’re building Elpino for the people on both sides of a support conversation. The ones asking for help. And the ones trying to give it.</p><div className="mt-8 flex flex-wrap items-center gap-6"><Link href="#our-story" className={pill}>A little about us <ArrowDown size={16} /></Link><Link href="/features" className="inline-flex items-center gap-2 text-sm underline decoration-black/25 underline-offset-8">Meet the product <ArrowUpRight size={15} /></Link></div></Reveal>
-      <Reveal delay={0.15} className="relative mx-auto w-full max-w-[460px] pb-8 pt-5"><div aria-hidden="true" className="absolute inset-x-5 bottom-8 top-10 rounded-t-[220px] rounded-b-3xl bg-[#e8e1f2]" /><div aria-hidden="true" className="absolute inset-x-9 bottom-12 top-14 rounded-t-[220px] rounded-b-2xl border border-white/70" />
+      <Reveal delay={0.15} className="relative mx-auto w-full max-w-[460px] pb-8 pt-5"><div aria-hidden="true" className="absolute inset-x-5 bottom-8 top-10 rounded-t-[220px] rounded-b-3xl bg-[#d9bef4]" /><div aria-hidden="true" className="absolute inset-x-9 bottom-12 top-14 rounded-t-[220px] rounded-b-2xl border border-white/30" />
         <div className="relative ml-2 mr-10 -rotate-3 rounded-2xl border border-[#e1d9e9] bg-white p-5 shadow-[0_14px_35px_-24px_#4f3b65]"><span className="flex items-center gap-2 text-[10px] text-[#8b7a98]"><MessageCircle size={12} /> On the other side of the screen</span><p className="mt-3 text-xl tracking-tight">“Could someone help me with this?”</p></div>
         <div className="relative ml-auto mr-1 mt-5 w-fit rotate-3 rounded-2xl bg-[#171b17] px-6 py-4 text-white shadow-lg"><span className="mr-2 text-[#c7a3ed]">✦</span> That’s where we come in.</div>
         <Image src="/desk_avatar1.png" alt="Elpino’s friendly sloth mascot at a desk" width={600} height={377} priority sizes="(min-width: 1024px) 420px, (min-width: 640px) 460px, 90vw" className="relative mt-3 h-auto w-full" />

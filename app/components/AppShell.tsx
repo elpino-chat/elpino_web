@@ -51,13 +51,13 @@ export function AppShell({
 
   return (
     <>
-      <Header session={session} variant="light" showOffer={['/pricing', '/features', '/faq', '/trust', '/contact'].includes(pathname)} pricingPage={pathname === '/pricing'} />
+      <Header session={session} variant="light" showOffer={['/features', '/faq', '/trust', '/contact'].includes(pathname)} />
       {/* Header is fixed (see Header.tsx) so it no longer reserves this
           space itself — pad it back in here, using the height Header measures
           into --elpino-header-h so this stays correct if the offer bar is
           dismissed or the header's own height otherwise changes. */}
       <main className="flex flex-1 flex-col" style={{ paddingTop: 'var(--elpino-header-h, 64px)' }}>{children}</main>
-      <Footer />
+      <Footer editorial={pathname === '/pricing' || pathname === '/about'} />
       <CookieNotice />
     </>
   );
