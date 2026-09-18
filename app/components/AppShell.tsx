@@ -22,6 +22,7 @@ export function AppShell({
   const isMinimalHeaderAuthPage = pathname === "/login" || pathname === "/signup";
   const isAppPage = pathname === "/onboarding" || pathname.startsWith("/dashboard");
   const isEmbeddedWidget = pathname.startsWith("/widget");
+  const isDocsLandingPage = pathname === "/docs";
 
   useEffect(() => {
     if (!session) return;
@@ -47,6 +48,16 @@ export function AppShell({
 
   if (isMinimalHeaderAuthPage) {
     return <main className="flex min-h-screen flex-col">{children}</main>;
+  }
+
+  if (isDocsLandingPage) {
+    return (
+      <>
+        <main className="flex flex-1 flex-col">{children}</main>
+        <Footer />
+        <CookieNotice />
+      </>
+    );
   }
 
   return (

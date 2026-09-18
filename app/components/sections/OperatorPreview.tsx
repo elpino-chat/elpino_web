@@ -275,7 +275,7 @@ export function OperatorPreview() {
                 <div className="flex h-12 items-center gap-2.5 px-3.5 border-b border-white/[0.05]">
                   <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[#3784ff] text-[11px] font-bold text-white">J</span>
                   <div className="min-w-0">
-                    <p className="truncate text-[13px] font-semibold text-white leading-none">Jagdeep</p>
+                    <p className="truncate text-[13px] font-semibold text-white leading-none">Support team</p>
                     <p className="mt-0.5 text-[10px] text-white/25 leading-none">elpino workspace</p>
                   </div>
                 </div>
@@ -310,7 +310,7 @@ export function OperatorPreview() {
 
                 {/* Footer */}
                 <div className="border-t border-white/[0.05] px-3 py-3">
-                  <p className="truncate text-[11px] text-white/25">jagdeep@elpino.chat</p>
+                  <p className="truncate text-[11px] text-white/25">support@elpino.chat</p>
                 </div>
               </aside>
 
