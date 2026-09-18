@@ -30,8 +30,8 @@ export function LegalToc({ sections }: { sections: Pick<LegalSection, "id" | "ti
 
   return (
     <nav aria-label="Table of contents" className="sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto pr-3">
-      <p className="font-geist-mono text-[10px] uppercase tracking-[0.2em] text-[#68766e]">Contents</p>
-      <ol className="mt-6 border-l border-[#0d0d0d]/15">
+      <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-[#6a7a61]">Contents</p>
+      <ol className="mt-5 border-l border-[#cfd9c8]">
         {sections.map((section, index) => {
           const isActive = activeId === section.id;
           return (
@@ -42,11 +42,11 @@ export function LegalToc({ sections }: { sections: Pick<LegalSection, "id" | "ti
                 onClick={() => setActiveId(section.id)}
                 className={`group -ml-px grid grid-cols-[2rem_1fr] border-l py-2.5 pl-4 text-[13px] leading-5 transition-all duration-200 ${
                   isActive
-                    ? "border-[#ff584a] bg-[#ff584a]/[0.06] font-medium text-[#0d0d0d]"
-                    : "border-transparent text-[#666] hover:border-[#ff584a]/55 hover:text-[#0d0d0d]"
+                    ? "border-[#849d6d] bg-[#e9eee3] font-medium text-[#20251d]"
+                    : "border-transparent text-[#687467] hover:border-[#a1b192] hover:text-[#20251d]"
                 }`}
               >
-                <span className={`font-geist-mono text-[10px] transition-colors ${isActive ? "text-[#ff584a]" : "text-[#999] group-hover:text-[#ff584a]"}`}>
+                <span className={`text-[10px] font-medium transition-colors ${isActive ? "text-[#718964]" : "text-[#98a58f] group-hover:text-[#718964]"}`}>
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 <span>{section.title}</span>
