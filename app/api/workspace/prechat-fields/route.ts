@@ -54,7 +54,7 @@ export async function GET() {
   );
 
   const fields = result.company?.preChatFields;
-  return Response.json({ fields: Array.isArray(fields) && fields.length > 0 ? fields : DEFAULT_PRECHAT_FIELDS });
+  return Response.json({ fields: Array.isArray(fields) ? fields : DEFAULT_PRECHAT_FIELDS });
 }
 
 export async function PATCH(request: Request) {

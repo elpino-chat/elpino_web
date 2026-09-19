@@ -9,17 +9,19 @@ export async function OPTIONS() {
 }
 
 export async function POST(request: Request) {
-  const body = (await request.json().catch(() => ({}))) as { key?: string; hostname?: string; visitorToken?: string; email?: string; phone?: string };
+  const body = (await request.json().catch(() => ({}))) as { key?: string; hostname?: string; visitorToken?: string; name?: string; email?: string; phone?: string };
+  const name = body.name?.trim();
   const email = body.email?.trim();
   const phone = body.phone?.trim();
-  if (!body.key?.trim() || !body.hostname?.trim() || !body.visitorToken?.trim() || (!email && !phone)) {
-    return Response.json({ error: "key, hostname, visitorToken and email or phone are required" }, { status: 400, headers: corsHeaders() });
+  if (!body.key?.trim() || !body.hostname?.trim() || !body.visitorToken?.trim() || (!name && !email && !phone)) {
+    return Response.json({ error: "key, hostname, visitorToken and a contact detail are required" }, { status: 400, headers: corsHeaders() });
   }
 
   const result = await callGateway<{ ok?: boolean; error?: string }>("/api/workspace/widget/contact", {
     publicKey: body.key.trim(),
     hostname: body.hostname.trim(),
     visitorToken: body.visitorToken.trim(),
+    name,
     email,
     phone,
   });

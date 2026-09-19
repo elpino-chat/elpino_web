@@ -25,17 +25,10 @@ declare global {
 //     outside an iframe), the site-wide script would inject a second,
 //     real launcher on top of the very iframe content it's meant to be
 //     embedded inside — a widget on top of a widget.
-// Auth pages (login/signup/onboarding/etc.) are excluded too: a focused
-// sign-up flow is not where a chat bubble popping up helps.
+// Every other route, including auth and onboarding pages, can show it.
 const EXCLUDED_PREFIXES = [
   "/dashboard",
   "/widget",
-  "/login",
-  "/signup",
-  "/forgot-password",
-  "/reset-password",
-  "/invite",
-  "/onboarding",
 ];
 
 // Lets the widget recognise a logged-in visitor so the AI can look up their

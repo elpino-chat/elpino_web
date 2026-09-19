@@ -25,7 +25,7 @@ type HelpArticleBody = { id: string; title: string; content: string; sourceUrl: 
 type MessageGroup =
   | { kind: "system"; message: WidgetMessage }
   | { kind: "thread"; fromVisitor: boolean; messages: WidgetMessage[] };
-type StartResult = { allowed: boolean; visitorToken?: string; conversationId?: string; botName?: string; botAvatarUrl?: string | null; greetingLines?: string[]; removeBranding?: boolean; topic?: string | null; customerEmail?: string | null; customerPhone?: string | null; contactCollection?: "chat" | "off"; identified?: boolean; identityError?: string; messages?: WidgetMessage[]; error?: string };
+type StartResult = { allowed: boolean; visitorToken?: string; conversationId?: string; botName?: string; botAvatarUrl?: string | null; greetingLines?: string[]; removeBranding?: boolean; topic?: string | null; customerName?: string | null; customerEmail?: string | null; customerPhone?: string | null; contactCollection?: "chat" | "off"; identified?: boolean; identityError?: string; messages?: WidgetMessage[]; error?: string };
 type ConversationSummary = { id: string; status: string; topic?: string | null; preview: string; time: string };
 type ChatView = "list" | "thread";
 type GifResult = { id: string; url: string; preview: string };
@@ -39,19 +39,6 @@ type PreChatField = {
   placeholder?: string;
   multiple?: boolean;
 };
-
-const DEFAULT_PRECHAT_FIELDS: PreChatField[] = [
-  { id: "name", label: "Name", type: "text", required: true },
-  { id: "email", label: "Email", type: "email", required: true },
-  { id: "phone", label: "Phone", type: "phone", required: true },
-  {
-    id: "topic",
-    label: "What are you looking for today?",
-    type: "select",
-    required: true,
-    options: ["General question", "Billing", "Technical support", "Cloud migration", "I want a quote"],
-  },
-];
 
 const ACCENT = "#428ce5";
 // Ink: the widget's primary text/icon color on its light surface. A few
@@ -179,6 +166,7 @@ function WidgetContent() {
   // What we already have on file for this visitor — backs the "in case we
   // lose you" contact popup (see requestContact below): no point asking
   // again for whichever of these is already filled.
+  const [customerName, setCustomerName] = useState<string | null>(null);
   const [customerEmail, setCustomerEmail] = useState<string | null>(null);
   const [customerPhone, setCustomerPhone] = useState<string | null>(null);
   // The workspace's "Collect contact details" setting. Starts at "off" so the
@@ -203,7 +191,7 @@ function WidgetContent() {
   const [micSupported, setMicSupported] = useState(true);
   const [preChatNeeded, setPreChatNeeded] = useState(false);
   const [preChatSubmitting, setPreChatSubmitting] = useState(false);
-  const [preChatFields, setPreChatFields] = useState<PreChatField[]>(DEFAULT_PRECHAT_FIELDS);
+  const [preChatFields, setPreChatFields] = useState<PreChatField[]>([]);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [formCountry, setFormCountry] = useState(0);
   const pendingTopicRef = useRef<string | null>(null);
@@ -386,25 +374,30 @@ function WidgetContent() {
   // the conversation has even started.
   const [contactPromptDone, setContactPromptDone] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
-  const [contactStep, setContactStep] = useState<"email" | "phone">("email");
+  const [contactStep, setContactStep] = useState<"email" | "name-phone">("email");
+  const [contactNameInput, setContactNameInput] = useState("");
   const [contactEmailInput, setContactEmailInput] = useState("");
   const [contactPhoneInput, setContactPhoneInput] = useState("");
   const [contactSubmitting, setContactSubmitting] = useState(false);
   // The pre-chat form is the existing place an admin already asks for a
   // phone number — reused here rather than adding a second setting for
   // the same thing.
-  const phoneCaptureEnabled = preChatFields.some((field) => field.type === "phone");
+  const namePhoneCaptureEnabled = preChatFields.some((field) => field.id === "name" || field.type === "phone");
+  const hasCustomerName = Boolean(customerName && customerName !== "Website visitor");
 
   useEffect(() => {
-    if (contactCollection !== "chat" || contactPromptDone || contactOpen || customerEmail || leaveOpen) return;
+    const needsEmail = contactCollection === "chat" && !customerEmail;
+    const needsNamePhone = namePhoneCaptureEnabled && (!hasCustomerName || !customerPhone);
+    if ((!needsEmail && !needsNamePhone) || contactPromptDone || contactOpen || leaveOpen) return;
     if (tab !== "chat" || chatView !== "thread") return;
     const firstCustomerIndex = messages.findIndex((m) => m.senderType === "customer");
     if (firstCustomerIndex === -1) return;
     const hasReplyAfter = messages.slice(firstCustomerIndex + 1).some((m) => m.senderType === "ai");
     if (!hasReplyAfter) return;
+    setContactStep(needsEmail ? "email" : "name-phone");
     setContactOpen(true);
     setContactPromptDone(true);
-  }, [messages, contactCollection, contactPromptDone, contactOpen, customerEmail, leaveOpen, tab, chatView]);
+  }, [messages, contactCollection, contactPromptDone, contactOpen, customerEmail, customerPhone, hasCustomerName, namePhoneCaptureEnabled, leaveOpen, tab, chatView]);
 
   function dismissContact() {
     setContactOpen(false);
@@ -424,19 +417,21 @@ function WidgetContent() {
     setContactSubmitting(false);
     // Slides right-to-left into the phone step only when the workspace
     // actually asks for one and doesn't already have it.
-    if (phoneCaptureEnabled && !customerPhone) setContactStep("phone");
+    if (namePhoneCaptureEnabled && (!hasCustomerName || !customerPhone)) setContactStep("name-phone");
     else setContactOpen(false);
   }
-  async function submitContactPhone() {
+  async function submitContactNamePhone() {
+    const name = contactNameInput.trim();
     const phone = contactPhoneInput.trim();
-    if (!phone) { setContactOpen(false); return; }
+    if (!name || !phone || contactSubmitting) return;
     setContactSubmitting(true);
     try {
       await fetch("/api/widget/contact", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ key, hostname, visitorToken, phone }),
+        body: JSON.stringify({ key, hostname, visitorToken, name, phone }),
       });
+      setCustomerName(name);
       setCustomerPhone(phone);
     } catch { /* not fatal */ }
     setContactSubmitting(false);
@@ -678,6 +673,7 @@ function WidgetContent() {
         setBotName(data.botName || "Elpino Support");
         setBotAvatarUrl(data.botAvatarUrl ?? null);
         setShowBranding(!data.removeBranding);
+        setCustomerName(data.customerName ?? null);
         setCustomerEmail(data.customerEmail ?? null);
         setCustomerPhone(data.customerPhone ?? null);
         setContactCollection(data.contactCollection === "off" ? "off" : "chat");
@@ -746,7 +742,7 @@ function WidgetContent() {
     fetch(`/api/widget/prechat-fields?${params.toString()}`)
       .then((response) => response.json())
       .then((data: { allowed?: boolean; fields?: PreChatField[] }) => {
-        if (data.allowed && Array.isArray(data.fields) && data.fields.length > 0) setPreChatFields(data.fields);
+        if (data.allowed && Array.isArray(data.fields)) setPreChatFields(data.fields);
       })
       .catch(() => undefined);
   }, [key, hostname]);
@@ -1699,7 +1695,7 @@ function WidgetContent() {
             <div className="relative px-5 pb-3 pt-2">
               {contactOpen && (
                 <div className="absolute bottom-full left-3 right-3 mb-2 overflow-hidden rounded-2xl border shadow-xl" style={{ borderColor: BORDER, backgroundColor: SURFACE }}>
-                  <div className="flex transition-transform duration-300 ease-out" style={{ transform: contactStep === "phone" ? "translateX(-100%)" : "translateX(0%)" }}>
+                  <div className="flex transition-transform duration-300 ease-out" style={{ transform: contactStep === "name-phone" ? "translateX(-100%)" : "translateX(0%)" }}>
                     <div className="w-full shrink-0 p-3">
                       <div className="flex items-start justify-between gap-2">
                         <p className="text-[12.5px] font-semibold leading-5">In case we get disconnected, what&apos;s your email?</p>
@@ -1728,27 +1724,37 @@ function WidgetContent() {
                     </div>
                     <div className="w-full shrink-0 p-3">
                       <div className="flex items-start justify-between gap-2">
-                        <p className="text-[12.5px] font-semibold leading-5">And a phone number, just in case?</p>
+                        <p className="text-[12.5px] font-semibold leading-5">What&apos;s your name and phone number?</p>
                         <button type="button" onClick={dismissContact} aria-label="Dismiss" className="shrink-0 rounded-full p-1 hover:bg-black/5"><X size={13} /></button>
                       </div>
-                      <div className="mt-2 flex gap-1.5">
+                      <div className="mt-2 grid grid-cols-2 gap-1.5">
+                        <input
+                          type="text"
+                          value={contactNameInput}
+                          onChange={(event) => setContactNameInput(event.target.value)}
+                          placeholder="Your name"
+                          className="h-9 min-w-0 rounded-full border px-3 text-[12.5px] outline-none"
+                          style={{ borderColor: BORDER, backgroundColor: BG, color: INK }}
+                        />
                         <input
                           type="tel"
                           value={contactPhoneInput}
                           onChange={(event) => setContactPhoneInput(event.target.value)}
-                          onKeyDown={(event) => { if (event.key === "Enter") void submitContactPhone(); }}
+                          onKeyDown={(event) => { if (event.key === "Enter") void submitContactNamePhone(); }}
                           placeholder="+1 555 123 4567"
-                          className="h-9 min-w-0 flex-1 rounded-full border px-3 text-[12.5px] outline-none"
+                          className="h-9 min-w-0 rounded-full border px-3 text-[12.5px] outline-none"
                           style={{ borderColor: BORDER, backgroundColor: BG, color: INK }}
                         />
+                      </div>
+                      <div className="mt-2 flex justify-end">
                         <button
                           type="button"
-                          disabled={contactSubmitting}
-                          onClick={() => void submitContactPhone()}
+                          disabled={!contactNameInput.trim() || !contactPhoneInput.trim() || contactSubmitting}
+                          onClick={() => void submitContactNamePhone()}
                           className="shrink-0 rounded-full px-4 text-[12.5px] font-semibold text-white disabled:opacity-50"
                           style={{ backgroundColor: ACCENT }}
                         >
-                          {contactSubmitting ? "…" : contactPhoneInput.trim() ? "Submit" : "Skip"}
+                          {contactSubmitting ? "…" : "Submit"}
                         </button>
                       </div>
                     </div>
