@@ -5,7 +5,7 @@ const columns = [
   { title: "Product", links: [{ label: "Features", href: "/features" }, { label: "Pricing", href: "/pricing" }, { label: "Log in", href: "/login" }, { label: "Get started", href: "/signup" }] },
   { title: "Platform", links: [{ label: "AI chatbot", href: "/features" }, { label: "Chat widget", href: "/features" }, { label: "Human handoff", href: "/features" }, { label: "Shared inbox", href: "/features" }, { label: "Integrations", href: "/integrations" }] },
   { title: "Company", links: [{ label: "About us", href: "/about" }, { label: "Careers", href: "/careers" }, { label: "Contact", href: "/contact" }] },
-  { title: "Resources", links: [{ label: "Community", href: "/community" }, { label: "Security guide", href: "/security-guide" }, { label: "Identity verification", href: "/docs/identity-verification" }, { label: "Changelog", href: "/changelog" }, { label: "Brand kit", href: "/brand-kit" }] },
+  { title: "Resources", links: [{ label: "Documentation", href: "/docs" }, { label: "Community", href: "/community" }, { label: "Security guide", href: "/security-guide" }, { label: "Identity verification", href: "/docs/identity-verification" }, { label: "Changelog", href: "/changelog" }, { label: "Brand kit", href: "/brand-kit" }] },
 ];
 
 export function Footer({ editorial = false }: { editorial?: boolean }) {

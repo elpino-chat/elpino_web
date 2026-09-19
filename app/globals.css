@@ -5,6 +5,13 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@keyframes sloth-wave {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(22deg); }
+  50% { transform: rotate(-12deg); }
+  75% { transform: rotate(20deg); }
+}
+
 /* Brand Design Tokens */
 :root {
   --brand-black: #000000;

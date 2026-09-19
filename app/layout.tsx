@@ -85,7 +85,7 @@ export const metadata: Metadata = {
     "support ticket automation",
     "AI live chat",
   ],
-  authors: [{ name: "Jagdeep Singh", url: SITE_URL }],
+  authors: [{ name: "Elpino", url: SITE_URL }],
   creator: "Elpino",
   publisher: "Elpino",
   robots: {

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { LayoutGrid, Tag, Rocket, Users, TrendingUp, ShieldCheck, HelpCircle, Plug, Newspaper, History, Users2, type LucideIcon } from 'lucide-react';
+import { LayoutGrid, Tag, Rocket, Users, TrendingUp, ShieldCheck, HelpCircle, Plug, Newspaper, History, Users2, BookOpen, type LucideIcon } from 'lucide-react';
 import { useTranslation } from '@/app/hooks/useTranslation';
 import { useStoredLanguage, setStoredLanguage } from '@/app/hooks/useStoredLanguage';
 import { LanguageSwitcher } from '@/app/components/LanguageSwitcher';
@@ -85,6 +85,12 @@ const navGroups: DropdownGroup[] = [
       href: '/blog',
     },
     items: [
+      {
+        label: 'Docs',
+        description: 'Set up Elpino, install the widget, and configure your workspace.',
+        href: '/docs',
+        icon: BookOpen,
+      },
       {
         label: 'Trust',
         description: 'See how Elpino keeps your data — and your customers\' — safe.',

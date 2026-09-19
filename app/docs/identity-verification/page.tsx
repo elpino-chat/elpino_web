@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CodeBlock, ServerSnippetTabs } from "@/app/components/identity/CodeBlock";
 import { IDENTITY_ERRORS, PAGE_SNIPPET, SPA_SNIPPET } from "@/lib/identity-snippets";
+import { OpenInAi } from "@/app/components/docs/OpenInAi";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://elpino.chat";
 
@@ -46,7 +47,7 @@ export default function IdentityVerificationGuidePage() {
     <div className="flex flex-1 flex-col bg-white" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif' }}>
       <section className="border-b border-slate-200 px-4 pb-16 pt-20 sm:px-10 md:px-14">
         <div className="mx-auto max-w-3xl">
-          <p className="mb-4 text-sm text-slate-500">Docs · Chat widget</p>
+          <div className="mb-4 flex items-center justify-between gap-4"><p className="text-sm text-slate-500">Docs · Chat widget</p><OpenInAi pageTitle="Elpino identity verification" pageUrl={`${SITE_URL}/docs/identity-verification`} /></div>
           <h1 className="mb-6 text-4xl leading-tight text-black md:text-5xl" style={{ fontWeight: 500, letterSpacing: "-0.01em" }}>
             Identity verification
           </h1>

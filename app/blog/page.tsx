@@ -36,7 +36,7 @@ const blogListSchema = {
     description: post.excerpt,
     datePublished: post.date,
     url: `${SITE_URL}/blog/${post.slug}`,
-    author: { "@type": "Person", name: post.authorName },
+    author: { "@type": "Organization", name: "Elpino", url: SITE_URL },
   })),
 };
 
