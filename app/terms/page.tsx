@@ -15,6 +15,7 @@ export default function TermsPage() {
     <LegalPage
       title="Terms of Service"
       updated="July 3, 2026"
+      illustrationSrc="/images/terms-sloth.png"
       intro={
         <p>
           These Terms of Service (&ldquo;Terms&rdquo;) govern your access to and use of Elpino — the

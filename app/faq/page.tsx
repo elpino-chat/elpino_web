@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { Eyebrow } from "../components/product/Eyebrow";
-import { HeroGlow } from "../components/product/HeroGlow";
+import Image from "next/image";
 import { FaqClient } from "./faq-client";
 import { categories } from "./faq-categories";
 
@@ -33,22 +32,25 @@ const faqSchema = {
 
 export default function FaqPage() {
   return (
-    <main className="bg-white text-black">
+    <main className="overflow-hidden bg-[#fafaf7] font-[family-name:var(--font-rethink-sans)] text-[#20251d]">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
-      <section className="relative overflow-hidden border-b border-black/10 bg-white">
-        <HeroGlow />
-        <div className="relative mx-auto flex max-w-4xl flex-col items-center px-6 pb-16 pt-28 text-center md:px-10">
-          <Eyebrow>FAQ</Eyebrow>
-          <h1 className="max-w-2xl text-4xl font-normal leading-[1.08] tracking-tight text-[#233D4D] [text-wrap:balance] md:text-5xl">
-            Answers on setup, <span className="text-[#D9BEF4]">billing, and control</span>
-          </h1>
-          <p className="mt-6 max-w-xl text-sm leading-6 text-gray-600 md:text-base">
+      <section className="relative overflow-hidden border-b border-[#758269]/20 bg-[#e9eee3] px-6 pt-14 md:px-10 md:pt-20">
+        <div aria-hidden="true" className="absolute inset-0 opacity-40 [background-image:radial-gradient(#9dac8c_1px,transparent_1px)] [background-size:24px_24px]" />
+        <div className="relative mx-auto grid max-w-6xl items-center gap-3 lg:grid-cols-[1fr_0.6fr]">
+          <div className="pb-14 md:pb-20">
+            <p className="inline-flex items-center gap-2 rounded-full border border-[#758269]/35 bg-white/55 px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.14em] text-[#5d6d50]"><span className="h-1.5 w-1.5 rounded-full bg-[#849d6d]" />Help center</p>
+            <h1 className="mt-7 max-w-3xl text-5xl font-medium leading-[0.93] tracking-[-0.065em] sm:text-6xl">
+              Answers, without the <span className="font-[family-name:var(--font-instrument-serif)] italic font-normal text-[#667b55]">runaround.</span>
+            </h1>
+            <p className="mt-6 max-w-xl text-sm leading-6 text-[#596353] md:text-base">
             Everything you&apos;d ask before putting an AI in front of your customers —{" "}
             {categories.reduce((n, c) => n + c.items.length, 0)} questions, straight answers.
-          </p>
+            </p>
+          </div>
+          <div className="relative mx-auto w-full max-w-[300px] self-end"><Image src="/images/help-center-sloth.png" alt="Elpino's helpful sloth guide reading a handbook" width={1024} height={1536} priority sizes="(min-width: 1024px) 26vw, 0px" className="hidden h-auto w-full lg:block" /></div>
         </div>
       </section>
 

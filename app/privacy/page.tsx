@@ -15,6 +15,7 @@ export default function PrivacyPage() {
     <LegalPage
       title="Privacy Policy"
       updated="September 13, 2026"
+      illustrationSrc="/images/privacy-sloth.png"
       intro={
         <p>
           This policy explains what data Elpino collects, why we collect it, how it&apos;s
