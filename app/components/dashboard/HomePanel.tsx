@@ -189,7 +189,7 @@ export default function HomePanel({ user: _user }: { user: PanelUser }) {
             </span>
           )}
         </Link>
-        <Link href="/dashboard/inbox?view=ai" className="flex w-fit items-center gap-1.5 border-b-2 border-transparent px-0 py-2 text-[13.5px] font-normal text-white/70 hover:border-white/30 hover:text-white/90">
+        <Link href="/dashboard/inbox?view=ai" className="flex w-fit items-center gap-1.5 px-0 py-2 text-[13.5px] font-normal text-white/70 hover:text-white/90">
           AI Assist
           {aiBadgeCount > 0 && (
             <span className="flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-[#27895d] px-1 text-[9px] font-bold text-white">
