@@ -2111,7 +2111,7 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
       ) : (
         <div className="mt-7">
           <div className="min-w-0">
-            <div className="dashboard-chatbot-section overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035] p-5">
+            <div data-tour="widget-identity" className="dashboard-chatbot-section overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035] p-5">
               <div className="px-0 py-2">
                 <h3 className="text-[16px] font-semibold">Identity</h3>
                 <p className="mt-1 text-[12px] text-[#667069]">The name and avatar shown to customers in chat.</p>
@@ -2150,7 +2150,7 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
 
             {error && <p className="mt-4 text-[12px] text-[#c63f4d]">{error}</p>}
 
-            <div className="dashboard-chatbot-section mt-4 rounded-2xl border border-white/10 bg-white/[0.035] p-5">
+            <div data-tour="widget-greeting" className="dashboard-chatbot-section mt-4 rounded-2xl border border-white/10 bg-white/[0.035] p-5">
               <h3 className="text-[16px] font-semibold">Greeting message</h3>
               <p className="mt-1 max-w-xl text-[12px] leading-5 text-[#667069]">
                 Shown before a visitor starts chatting — each line pops up as its own bubble, one below another, on the launcher and at the top of a new conversation.
@@ -4179,6 +4179,7 @@ export function SettingsClient({ user, page = "General", auditView = "all" }: { 
       {showPreviewPanel && (
         <div
           ref={setPreviewPanel}
+          data-tour="widget-preview"
           className="dashboard-widget-preview-panel flex h-full min-h-0 w-[380px] shrink-0 flex-col overflow-hidden border-l border-white/10 bg-[#262626] max-xl:hidden"
         />
       )}

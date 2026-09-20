@@ -6,13 +6,11 @@ import { ArrowRight, ArrowUpRight, Check, Users, MessageSquare } from 'lucide-re
 import { PricingPlanCards } from './PricingPlanCards';
 import { FairBillingSection } from './PricingCalculator';
 import { ANNUAL_SAVING_PERCENT, SEAT_BUNDLES, SEAT_BUNDLE_SUMMARY, plans, getPlanPrice } from '../components/PricingCards';
-import { categories as faqCategories } from '../faq/faq-categories';
+import { PricingFaqSection } from '../components/PricingFaqSection';
 
 // Reuse the billing answers from the /faq source of truth rather than keeping a
 // second copy here — the pricing page shows only that category, and links out
 // for the rest.
-const billingFaqs = faqCategories.find((category) => category.name === 'Billing & plans')?.items ?? [];
-
 type FeatureRow = {
   label: string;
   description: string;
@@ -133,7 +131,6 @@ function CheckIcon({ className = 'text-[#11120f]' }: { className?: string }) {
 export function PricingClient() {
   const [billing, setBilling] = useState<'monthly' | 'yearly'>('yearly');
   const [expanded, setExpanded] = useState(false);
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
   const categories = expanded ? comparisonCategories : comparisonCategories.slice(0, 2);
   return (
     <div className='bg-white text-[#191E19]'>
@@ -223,29 +220,7 @@ export function PricingClient() {
           </div>
         </div>
       </section>
-      <section aria-labelledby='faq-title' className='px-5 py-12 sm:px-8 lg:px-20'>
-        <div className='grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16'>
-          <div className='lg:sticky lg:top-24 lg:self-start'>
-            <p className='font-mono text-xs uppercase tracking-[0.12em] text-[#7060BD]'>FAQ</p>
-            <h2 id='faq-title' className='mt-4 text-3xl font-medium tracking-[-0.04em] sm:text-4xl'>Pricing questions</h2>
-            <p className='mt-4 max-w-md text-sm leading-7 text-[#72767D]'>The billing details people ask about most. Setup, the AI, integrations and security are covered on the full FAQ.</p>
-            <Link href='/faq' className='mt-6 inline-flex items-center gap-2 text-sm font-semibold underline-offset-4 hover:underline'>Read the full FAQ <ArrowUpRight size={16} aria-hidden='true' /></Link>
-          </div>
-          <dl className='border-t border-black/10'>
-            {billingFaqs.map((item, index) => (
-              <div key={item.q} className='border-b border-black/10'>
-                <dt>
-                  <button type='button' aria-expanded={openFaq === index} onClick={() => setOpenFaq(openFaq === index ? null : index)} className='flex w-full items-center justify-between gap-6 py-5 text-left transition focus-visible:outline-2 focus-visible:outline-offset-2'>
-                    <span className='text-base leading-7'>{item.q}</span>
-                    <span aria-hidden='true' className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-lg transition duration-300 ${openFaq === index ? 'rotate-45 border-transparent bg-[#191E19] text-white' : 'border-black/15 bg-white'}`}>+</span>
-                  </button>
-                </dt>
-                {openFaq === index && <dd className='pb-6 pr-4 text-sm leading-7 text-[#72767D] sm:pr-12'>{item.a}</dd>}
-              </div>
-            ))}
-          </dl>
-        </div>
-      </section>
+      <PricingFaqSection />
       <section aria-labelledby='enterprise-title' className='bg-[#f4f1f6] px-5 pb-24 pt-12 sm:px-8 lg:px-20'>
         <div className='mx-auto grid max-w-[1500px] overflow-hidden rounded-[32px] bg-black text-white lg:grid-cols-[1.55fr_0.85fr]'>
           <div className='relative isolate overflow-hidden p-8 sm:p-12 lg:p-16'>

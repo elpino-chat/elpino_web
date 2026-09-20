@@ -1003,13 +1003,11 @@ body {
 }
 
 .onboarding-language > div > button {
-  border: 1px solid rgba(0, 0, 0, 0.16);
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.76);
+  background: transparent;
 }
 .onboarding-language > div > button:hover {
-  border-color: rgba(0, 0, 0, 0.28);
-  background: #ffffff;
+  background: rgba(0, 0, 0, 0.04);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -13,13 +13,16 @@ import {
   GraduationCap,
   Landmark,
   Layers,
+  Mic2,
   Sparkles,
   ShoppingBag,
   Stethoscope,
   Store,
+  Users,
 } from "lucide-react";
 import { LanguageSwitcher } from "@/app/components/LanguageSwitcher";
 import { setStoredLanguage, useStoredLanguage } from "@/app/hooks/useStoredLanguage";
+import { PAGE_SNIPPET } from "@/lib/identity-snippets";
 import { ConnectorLogo } from "../components/ConnectorLogo";
 import {
   AirtableIcon,
@@ -1284,13 +1287,19 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
   const [hearAboutUs, setHearAboutUs] = useState("");
   const [hearAboutUsLoading, setHearAboutUsLoading] = useState(false);
   const [hearAboutUsError, setHearAboutUsError] = useState<string | null>(null);
+  const [companySize, setCompanySize] = useState("");
   const [widgetKey, setWidgetKey] = useState<string | null>(null);
   const [siteId, setSiteId] = useState<string | null>(null);
   const [siteVerified, setSiteVerified] = useState(false);
+  const [verifiedInCurrentSession, setVerifiedInCurrentSession] = useState(false);
   const [verifying, setVerifying] = useState(false);
   const [verifyMessage, setVerifyMessage] = useState<string | null>(null);
   const [widgetKeyError, setWidgetKeyError] = useState<string | null>(null);
   const [snippetCopied, setSnippetCopied] = useState(false);
+  const [developerEmail, setDeveloperEmail] = useState("");
+  const [developerSending, setDeveloperSending] = useState(false);
+  const [developerSendStatus, setDeveloperSendStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const developerEmailRef = useRef<HTMLInputElement>(null);
   const [crawlLimit, setCrawlLimit] = useState<number>(CRAWL_LIMIT_OPTIONS[0]);
   const [scannedLimit, setScannedLimit] = useState(0);
   const [crawlPages, setCrawlPages] = useState<CrawlPage[]>([]);
@@ -1569,10 +1578,13 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
       const data = (await fetch("/api/workspace/sites").then((r) => r.json())) as { sites?: { publicKey: string; status?: string }[] };
       if (data.sites?.find((site) => site.publicKey === widgetKey)?.status === "verified") {
         setSiteVerified(true);
+        setVerifiedInCurrentSession(true);
       } else {
+        setVerifiedInCurrentSession(false);
         setVerifyMessage(`We haven't seen the tag on ${siteHostname} yet. Publish the snippet, open your site in a browser, then check again.`);
       }
     } catch {
+      setVerifiedInCurrentSession(false);
       setVerifyMessage("We couldn't check right now. Please try again.");
     } finally {
       setVerifying(false);
@@ -1804,42 +1816,85 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
     }
   }
 
+  async function submitCompanySize() {
+    if (!companySize || skipLoading) return;
+    setSkipError(null);
+    setSkipLoading(true);
+    try {
+      const res = await fetch("/api/onboarding/progress", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ companySize }),
+      });
+      if (!res.ok) throw new Error("save_failed");
+      setStep(5);
+    } catch {
+      setSkipError("Something went wrong finishing setup. Please try again.");
+    } finally {
+      setSkipLoading(false);
+    }
+  }
+
+  async function finishOnboarding(destination = "/dashboard") {
+    if (skipLoading) return;
+    setSkipError(null);
+    setSkipLoading(true);
+    try {
+      const res = await fetch("/api/onboarding/progress", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ completedAt: new Date().toISOString() }),
+      });
+      if (!res.ok) throw new Error("save_failed");
+      router.push(destination);
+    } catch {
+      setSkipError("Something went wrong finishing setup. Please try again.");
+    } finally {
+      setSkipLoading(false);
+    }
+  }
+
   const primaryButtonClass =
-    "mx-auto mt-10 flex h-14 w-full max-w-[320px] cursor-pointer items-center justify-center gap-2 rounded-full bg-[#2563eb] text-[16px] font-medium text-white transition hover:bg-[#1d4ed8] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#2563eb]/25 active:scale-[0.99] disabled:cursor-not-allowed disabled:bg-black/[0.06] disabled:text-black/35";
+    "mt-8 flex h-14 w-fit min-w-[118px] cursor-pointer items-center justify-center gap-2 rounded-[10px] bg-[#18191b] px-6 text-[16px] font-semibold text-white transition hover:bg-black focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black/15 active:scale-[0.99] disabled:cursor-not-allowed disabled:bg-[#d5d5d8] disabled:text-white";
   const inputClass =
-    "h-14 w-full rounded-xl border bg-white px-5 text-[16px] text-[#1f2328] outline-none transition placeholder:text-black/35 hover:border-black/25 focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/10";
+    "h-[68px] w-full rounded-[11px] border-2 bg-white px-5 text-[15px] text-[#111214] outline-none transition placeholder:text-[15px] placeholder:text-[#9a9da3] hover:border-black focus:border-black focus:ring-4 focus:ring-black/[0.06]";
   const chipClass = (selected: boolean) =>
-    `flex cursor-pointer items-center gap-2 whitespace-nowrap rounded-xl border px-5 py-3 text-[15px] transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#2563eb]/20 ${
+    `flex min-h-12 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-[10px] border px-6 py-2.5 text-[14px] transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black/10 ${
       selected
-        ? "border-[#2563eb] bg-[#2563eb]/[0.06] text-[#1d4ed8] ring-1 ring-[#2563eb]"
-        : "border-black/15 bg-white text-[#1f2328] hover:border-black/30"
+        ? "border-black bg-black/[0.04] text-[#111214]"
+        : "border-black/10 bg-white text-[#111214] hover:border-black/30 hover:bg-black/[0.02]"
     }`;
   const spinner = <span className="size-4 animate-spin rounded-full border-2 border-black/15 border-t-black/50" />;
 
   return (
-    <main className="relative flex min-h-screen flex-col bg-white text-[#1f2328]">
-      <header className="sticky top-0 z-30 bg-white">
-        <div className="flex h-16 items-center justify-between px-5 sm:px-10">
-          <Link href="/" aria-label="elpino home" className="inline-flex rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb]/30">
-            <Image src="/elpino.png" alt="elpino" width={906} height={275} priority className="h-auto w-[104px]" />
-          </Link>
-          <div className="flex items-center gap-3">
-        <div className="onboarding-language">
+    <main className="relative flex min-h-screen flex-col bg-[#fffefe] font-[family-name:var(--font-rethink-sans)] text-[#111214]">
+      <header className="relative z-30 bg-white/90 backdrop-blur-xl">
+        <div className="mx-auto flex h-[76px] max-w-[1440px] items-center justify-between px-6 sm:px-10 lg:px-14">
+          <div className="flex min-w-0 items-center gap-4">
+            <Link href="/" aria-label="Elpino home" className="inline-flex shrink-0 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20">
+              <Image src="/icon.png" alt="" width={96} height={96} priority className="h-8 w-8 rounded-lg object-contain" />
+              <span className="ml-2 text-[15px] font-semibold tracking-[-0.01em] text-[#11120f]">elpino</span>
+            </Link>
+          </div>
+          <div className="flex items-center gap-2 sm:gap-3">
+        <div className="onboarding-language px-1">
           <LanguageSwitcher language={language} onChange={setStoredLanguage} light open={languageOpen} onOpenChange={(open) => { setLanguageOpen(open); if (open) setAvatarOpen(false); }} />
         </div>
+        <span aria-hidden="true" className="hidden h-7 w-px bg-black/10 sm:block" />
         <div className="relative">
-          <button type="button" onClick={() => { setAvatarOpen((open) => !open); setLanguageOpen(false); }} aria-label="Open account menu" aria-expanded={avatarOpen} className="flex items-center gap-1.5 rounded-full outline-none ring-offset-2 transition hover:scale-[1.03] focus-visible:ring-2 focus-visible:ring-[#7c3aed]">
+          <button type="button" onClick={() => { setAvatarOpen((open) => !open); setLanguageOpen(false); }} aria-label="Open account menu" aria-expanded={avatarOpen} className="flex items-center gap-2 rounded-full border border-transparent py-1 pl-1 pr-2 outline-none ring-offset-2 transition hover:border-black/10 hover:bg-[#fafafa] focus-visible:ring-2 focus-visible:ring-black/20 sm:gap-3 sm:pr-3">
             {session.image ? (
-              <Image src={session.image} alt={session.name || "User"} width={42} height={42} className="size-[42px] rounded-full object-cover ring-2 ring-white shadow-[0_5px_18px_rgba(20,71,255,0.25)]" />
+              <Image src={session.image} alt={session.name || "User"} width={38} height={38} className="size-[38px] rounded-full object-cover ring-1 ring-black/10" />
             ) : (
-              <span className="onboarding-avatar flex size-[42px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#7dd3fc_0%,#3b82f6_46%,#1237a8_100%)] text-sm font-medium text-white ring-2 ring-white shadow-[0_6px_20px_rgba(18,66,241,0.28)]">{userInitials}</span>
+              <span className="onboarding-avatar flex size-[38px] items-center justify-center rounded-full bg-[#202124] text-xs font-semibold text-white ring-1 ring-black/10">{userInitials}</span>
             )}
+            <span className="hidden max-w-36 text-left sm:block"><span className="block truncate text-[13px] font-semibold leading-4 text-[#202124]">{session.name || session.email.split("@")[0]}</span><span className="block truncate text-[11px] leading-4 text-black/45">Account</span></span>
             <svg className={`size-4 text-[#596273] transition-transform ${avatarOpen ? "rotate-180" : ""}`} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="m6 8 4 4 4-4" strokeLinecap="round" strokeLinejoin="round" /></svg>
           </button>
           {avatarOpen && (
             <>
               <button type="button" aria-label="Close account menu" onClick={() => setAvatarOpen(false)} className="fixed inset-0 z-40 cursor-default" />
-              <div className="absolute right-0 top-full z-50 mt-3 w-64 overflow-hidden rounded-xl border border-black/10 bg-white p-2 shadow-[0_18px_50px_rgba(35,45,80,0.18)]">
+              <div className="absolute right-0 top-full z-50 mt-3 w-64 overflow-hidden rounded-2xl border border-black/10 bg-white p-2 shadow-[0_22px_60px_rgba(20,20,20,0.14)]">
                 <div className="border-b border-black/[0.07] px-3 py-3">
                   <p className="truncate text-sm font-normal text-[#20242d]">{session.name || session.email.split("@")[0]}</p>
                   <p className="mt-0.5 truncate text-xs text-black/50">{session.email}</p>
@@ -1854,28 +1909,31 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
       </div>
 
         </div>
-        <div className="h-1 w-full bg-black/[0.06]">
-          <div className="h-full bg-[#2563eb] transition-[width] duration-500" style={{ width: `${(step / TOTAL_STEPS) * 100}%` }} />
-        </div>
       </header>
 
-      <div className="flex flex-1 flex-col items-center px-6 pb-36 pt-[clamp(3rem,10vh,6rem)]">
-        <div key={step} className="onb-enter w-full max-w-[760px] text-center">
+      <div className="flex flex-1 flex-col items-center px-6 pb-28 pt-[clamp(2.5rem,8vh,6rem)]">
+        <div key={step} className={`onb-enter w-full text-left ${step === 5 ? "max-w-[1080px]" : "max-w-[660px]"}`}>
+        <div className="mb-7" aria-label={`Step ${step} of ${TOTAL_STEPS}`}>
+          <p className="mb-2 text-[16px] text-[#676b72]">{step}/{TOTAL_STEPS}</p>
+          <div className="flex gap-1.5">
+            {Array.from({ length: TOTAL_STEPS }, (_, index) => <span key={index} className={`h-[5px] max-w-28 flex-1 rounded-full transition-colors ${index < step ? "bg-[#202124]" : "bg-[#e1e2e4]"}`} />)}
+          </div>
+        </div>
         {step === 1 && (
           <section>
-            <h1 className="text-balance text-[clamp(2rem,4.2vw,3rem)] font-normal leading-[1.1] tracking-[-0.03em]">
+            <h1 className="text-balance text-[clamp(1.9rem,3.2vw,2.35rem)] font-normal leading-[1.12] tracking-[-0.03em]">
               Let&rsquo;s set up your organization
             </h1>
             <p className="mt-3 text-[16px] text-black/55">
               Share a few details so Elpino can personalize support for your business.
             </p>
-            <div className="mx-auto mt-10 w-full max-w-[560px] space-y-5 text-left">
+            <div className="mt-9 w-full space-y-5 text-left">
               <div>
-                <label htmlFor="onb-org" className="mb-2 block text-[14px] font-medium">Organization name</label>
+                <label htmlFor="onb-org" className="mb-2 block text-[14px] font-normal">Organization name</label>
                 <input id="onb-org" value={profileName} onChange={(e) => setProfileName(e.target.value)} placeholder="E.g. Acme Inc." autoFocus className={`${inputClass} border-black/15`} />
               </div>
               <div>
-                <label htmlFor="onb-url" className="mb-2 block text-[14px] font-medium">Website URL</label>
+                <label htmlFor="onb-url" className="mb-2 block text-[14px] font-normal">Website URL</label>
                 <input
                   id="onb-url"
                   value={websiteUrl}
@@ -1900,10 +1958,10 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
 
         {step === 2 && (
           <section>
-            <h1 className="text-balance text-[clamp(2rem,4.2vw,3rem)] font-normal leading-[1.1] tracking-[-0.03em]">
+            <h1 className="text-balance text-[15px] font-normal leading-6">
               What does your organization help customers with?
             </h1>
-            <div className="mx-auto mt-10 flex max-w-[680px] flex-wrap justify-center gap-3">
+            <div className="mt-3 flex flex-wrap justify-start gap-3">
               {[
                 { label: "SaaS", icon: Layers },
                 { label: "Online store", icon: ShoppingBag },
@@ -1920,8 +1978,8 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
                 </button>
               ))}
             </div>
-            <div className="mx-auto mt-10 w-full max-w-[680px] text-left">
-              <label htmlFor="onb-desc" className="mb-2 block text-[14px] font-medium">Describe what you offer</label>
+            <div className="mt-9 w-full text-left">
+              <label htmlFor="onb-desc" className="mb-2 block text-[15px] font-normal">Describe what you offer</label>
               <input id="onb-desc" value={siteDescription} onChange={(e) => setSiteDescription(e.target.value)} placeholder="E.g. Project management software for small agencies" className={`${inputClass} border-black/15`} />
             </div>
             {businessError && <p className="mt-4 text-sm text-red-600">{businessError}</p>}
@@ -1933,20 +1991,25 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
 
         {step === 3 && (
           <section>
-            <h1 className="text-balance text-[clamp(2rem,4.2vw,3rem)] font-normal leading-[1.1] tracking-[-0.03em]">
+            <h1 className="text-balance text-[clamp(1.9rem,3.2vw,2.35rem)] font-normal leading-[1.12] tracking-[-0.03em]">
               Where did you hear about us?
             </h1>
             <p className="mt-3 text-[16px] text-black/55">This helps us understand how people find Elpino.</p>
-            <div className="mx-auto mt-10 flex max-w-[640px] flex-wrap justify-center gap-3">
+            <div className="mt-9 flex flex-wrap justify-start gap-3">
               {[
-                { value: "google", label: "Google search" },
-                { value: "twitter", label: "Twitter / X" },
-                { value: "linkedin", label: "LinkedIn" },
-                { value: "friend", label: "Friend or colleague" },
-                { value: "blog", label: "Blog or podcast" },
-                { value: "other", label: "Other" },
-              ].map(({ value, label }) => (
+                { value: "google", label: "Google search", domain: "google.com" },
+                { value: "twitter", label: "Twitter / X", domain: "x.com" },
+                { value: "linkedin", label: "LinkedIn", domain: "linkedin.com" },
+                { value: "friend", label: "Friend or colleague", icon: Users },
+                { value: "blog", label: "Blog or podcast", icon: Mic2 },
+                { value: "other", label: "Other", icon: Sparkles },
+              ].map(({ value, label, domain, icon: SourceIcon }) => (
                 <button key={value} type="button" onClick={() => setHearAboutUs(value)} aria-pressed={hearAboutUs === value} className={chipClass(hearAboutUs === value)}>
+                  {domain ? (
+                    <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-white p-1">
+                      <img src={`https://cdn.brandfetch.io/${domain}?c=1bxec69tls8qaj83i3hc2bbf373tgfgTpns`} alt="" className="size-full object-contain" />
+                    </span>
+                  ) : SourceIcon ? <SourceIcon className="size-4 shrink-0" aria-hidden="true" /> : null}
                   {label}
                 </button>
               ))}
@@ -1958,14 +2021,14 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
           </section>
         )}
 
-        {step === 4 && (
+        {false && (
           <section>
-            <h1 className="text-balance text-[clamp(2rem,4.2vw,3rem)] font-normal leading-[1.1] tracking-[-0.03em]">
+            <h1 className="text-balance text-[clamp(1.9rem,3.2vw,2.35rem)] font-normal leading-[1.12] tracking-[-0.03em]">
               Add Elpino to your website
             </h1>
             <p className="mt-3 text-[16px] text-black/55">Install the tag on {siteHostname}, then verify it&rsquo;s live.</p>
 
-            <div className="mx-auto mt-10 w-full max-w-[640px] rounded-2xl border border-black/10 bg-[#fafafa] p-5 text-left">
+            <div className="mt-9 w-full rounded-[12px] border-2 border-black/15 bg-[#fafafa] p-5 text-left">
               <div className="flex items-start gap-3">
                 <span className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-black/10 bg-white">
                   <Code2 className="size-5 text-[#2563eb]" />
@@ -2064,13 +2127,110 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
           </section>
         )}
 
-        {step === 5 && (() => {
+        {step === 4 && (
+          <section>
+            <h1 className="text-balance text-[clamp(1.9rem,3.2vw,2.35rem)] font-normal leading-[1.12] tracking-[-0.03em]">
+              How big is your company?
+            </h1>
+            <p className="mt-3 text-[15px] text-black/55">We&apos;ll tailor Elpino to the size of your support team.</p>
+            <div className="mt-6 flex flex-wrap justify-start gap-3">
+              {["Just me", "2–5", "6–10", "11–25", "26–50", "51–100", "101–500", "500+"].map((option) => (
+                <button key={option} type="button" onClick={() => setCompanySize(option)} aria-pressed={companySize === option} className={chipClass(companySize === option)}>
+                  {option}
+                </button>
+              ))}
+            </div>
+            {skipError && <p className="mt-4 text-sm text-red-600">{skipError}</p>}
+            <button type="button" disabled={!companySize || skipLoading} onClick={() => void submitCompanySize()} className={primaryButtonClass}>
+              {skipLoading ? <>{spinner}Saving…</> : "Continue"}
+            </button>
+          </section>
+        )}
+
+        {step === 5 && (
+          <section className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-14">
+            <div className="min-w-0">
+            <h1 className="text-balance text-[clamp(1.9rem,3.2vw,2.35rem)] font-normal leading-[1.12] tracking-[-0.03em]">
+              Add Elpino to your website
+            </h1>
+            <p className="mt-3 max-w-xl text-[15px] leading-6 text-black/55">Complete the widget first. Identity verification is optional and is useful when signed-in customers ask about private account data.</p>
+            <div className="mt-7 space-y-3">
+              <details open className="group rounded-xl border border-black/10 bg-white">
+                <summary className="flex cursor-pointer list-none items-center gap-3 px-5 py-4 [&::-webkit-details-marker]:hidden"><span className="flex size-7 items-center justify-center rounded-full bg-black text-xs text-white">1</span><span className="flex-1 text-[15px] font-normal">Paste the widget code and verify</span><span className="text-lg text-black/35 transition group-open:rotate-45">+</span></summary>
+                <div className="border-t border-black/[0.07] px-5 pb-5 pt-4">
+                  <p className="text-sm leading-6 text-black/55">Place this before the closing <code className="rounded bg-black/[0.05] px-1">&lt;/head&gt;</code> tag on {siteHostname}.</p>
+                  <div className="relative mt-3 overflow-hidden rounded-lg bg-[#17181a]">
+                    <pre className="overflow-x-auto p-4 pr-12 text-xs leading-5 text-white/85"><code>{`<script async src="https://cdn.elpino.chat/tag.js" data-site-key="${widgetKey ?? "YOUR_SITE_KEY"}"></script>`}</code></pre>
+                    <button type="button" disabled={!widgetKey} onClick={() => { if (!widgetKey) return; void navigator.clipboard.writeText(`<script async src="https://cdn.elpino.chat/tag.js" data-site-key="${widgetKey}"></script>`).then(() => { setSnippetCopied(true); setTimeout(() => setSnippetCopied(false), 2000); }); }} className="absolute right-2 top-2 rounded-md bg-white/10 px-2 py-1 text-[11px] text-white transition hover:bg-white/20 disabled:opacity-40">{snippetCopied ? "Copied" : "Copy"}</button>
+                  </div>
+                  <div className="mt-4 flex flex-wrap items-center gap-3">
+                    <button type="button" disabled={!widgetKey || verifying} onClick={() => void verifyInstall()} className="inline-flex h-10 items-center rounded-lg bg-black px-4 text-sm text-white transition hover:bg-black/80 disabled:opacity-40">{verifying ? "Checking…" : "Verify installation"}</button>
+                  </div>
+                  {verifiedInCurrentSession && <p className="mt-3 text-sm text-emerald-700">Verified — Elpino is live on {siteHostname}.</p>}
+                  {verifyMessage && !verifiedInCurrentSession && <p className="mt-3 text-sm text-amber-700">{verifyMessage}</p>}
+                </div>
+              </details>
+
+              <details className="group rounded-xl border border-black/10 bg-white">
+                <summary className="flex cursor-pointer list-none items-center gap-3 px-5 py-4 [&::-webkit-details-marker]:hidden"><span className="flex size-7 items-center justify-center rounded-full border border-black/15 text-xs">2</span><span className="flex-1 text-[15px] font-normal">Identify signed-in customers <span className="text-black/40">(optional)</span></span><span className="text-lg text-black/35 transition group-open:rotate-45">+</span></summary>
+                <div className="border-t border-black/[0.07] px-5 pb-5 pt-4">
+                  <p className="text-sm leading-6 text-black/55">Your server signs a short-lived token; the browser receives only that token, never the identity secret. Add this before the Elpino tag.</p>
+                  <pre className="mt-3 max-h-56 overflow-auto rounded-lg bg-[#17181a] p-4 text-xs leading-5 text-white/85"><code>{PAGE_SNIPPET}</code></pre>
+                  <Link href="/docs/identity-verification" target="_blank" className="mt-3 inline-flex text-sm text-black/55 underline underline-offset-4 hover:text-black">Read the complete identity guide</Link>
+                </div>
+              </details>
+            </div>
+            {skipError && <p className="mt-4 text-sm text-red-600">{skipError}</p>}
+            <div className="mt-6 flex items-center gap-5"><button type="button" disabled={skipLoading} onClick={() => void finishOnboarding()} className="inline-flex h-11 items-center rounded-lg bg-black px-5 text-sm text-white transition hover:bg-black/80 disabled:opacity-50">{skipLoading ? "Finishing setup…" : siteVerified ? "Go to dashboard" : "Continue"}</button><button type="button" disabled={skipLoading} onClick={() => void finishOnboarding()} className="text-[14px] text-black/50 underline-offset-4 transition hover:text-black hover:underline disabled:opacity-50">Skip for now</button></div>
+            </div>
+
+            <aside className="lg:sticky lg:top-8">
+              <div className="rounded-2xl bg-[#f5f5f2] p-5 sm:p-6">
+                <p className="text-[15px] font-normal text-black">Send to a developer</p>
+                <p className="mt-1.5 text-[13px] leading-5 text-black/50">Add one or more developer emails. We&rsquo;ll prepare the installation instructions and widget code for you.</p>
+                <form className="mt-5 space-y-4" onSubmit={async (event) => {
+                  event.preventDefault();
+                  if (!widgetKey || developerSending) return;
+                  const emails = developerEmail.split(",").map((email) => email.trim()).filter(Boolean);
+                  setDeveloperSending(true);
+                  setDeveloperSendStatus(null);
+                  try {
+                    const response = await fetch("/api/onboarding/send-widget-instructions", {
+                      method: "POST",
+                      headers: { "content-type": "application/json" },
+                      body: JSON.stringify({ emails, siteKey: widgetKey }),
+                    });
+                    const result = await response.json().catch(() => ({})) as { message?: string; sent?: number };
+                    if (!response.ok) throw new Error(result.message || "Could not send the instructions.");
+                    setDeveloperSendStatus({ type: "success", message: `Instructions sent to ${result.sent ?? emails.length} developer${(result.sent ?? emails.length) === 1 ? "" : "s"}.` });
+                    setDeveloperEmail("");
+                  } catch (error) {
+                    setDeveloperSendStatus({ type: "error", message: error instanceof Error ? error.message : "Could not send the instructions." });
+                  } finally {
+                    setDeveloperSending(false);
+                  }
+                }}>
+                  <div>
+                    <label htmlFor="developer-email" className="mb-1.5 block text-[12px] text-black/55">Developer emails</label>
+                    <input ref={developerEmailRef} id="developer-email" type="email" multiple required disabled={developerSending} value={developerEmail} onChange={(event) => { setDeveloperEmail(event.target.value); setDeveloperSendStatus(null); }} placeholder="dev@company.com, team@company.com" className="h-11 w-full rounded-lg bg-white px-3.5 text-[13px] outline-none ring-1 ring-black/10 transition placeholder:text-black/30 focus:ring-black/35 disabled:opacity-60" />
+                    <p className="mt-1.5 text-[11px] leading-4 text-black/40">Separate multiple addresses with commas.</p>
+                  </div>
+                  <button type="submit" disabled={!widgetKey || developerSending} className="flex h-11 w-full items-center justify-center rounded-lg bg-black px-4 text-[13px] text-white transition hover:bg-black/80 disabled:cursor-not-allowed disabled:opacity-50">{developerSending ? "Sending…" : "Send instructions"}</button>
+                </form>
+                {developerSendStatus && <p role="status" className={`mt-3 text-[12px] leading-5 ${developerSendStatus.type === "success" ? "text-emerald-700" : "text-red-600"}`}>{developerSendStatus.message}</p>}
+                <p className="mt-3 text-[11px] leading-4 text-black/40">Elpino sends the instructions directly and copies every address you enter.</p>
+              </div>
+            </aside>
+          </section>
+        )}
+
+        {false && (() => {
           const pendingCount = crawlPages.filter((page) => page.selected && page.state !== "saved").length;
           const savedCount = crawlPages.filter((page) => page.state === "saved").length;
           const busy = crawlStatus === "discovering" || crawlStatus === "saving";
           return (
             <section>
-              <h1 className="text-balance text-[clamp(2rem,4.2vw,3rem)] font-normal leading-[1.1] tracking-[-0.03em]">
+              <h1 className="text-balance text-[clamp(1.9rem,3.2vw,2.35rem)] font-normal leading-[1.12] tracking-[-0.03em]">
                 Teach Elpino about your business
               </h1>
               <p className="mt-3 text-[16px] text-black/55">
@@ -2175,7 +2335,7 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
         </div>
       </div>
 
-      <footer className="fixed inset-x-0 bottom-0 z-20 flex items-center gap-4 bg-white/90 px-5 py-5 backdrop-blur sm:px-10">
+      <footer className="relative z-20 mt-auto flex items-center gap-4 bg-transparent px-6 py-6 sm:px-10">
         <div className="w-20 shrink-0">
           {step > 1 && (
             <button type="button" onClick={goBack} className="flex cursor-pointer items-center gap-1.5 text-[15px] text-black/60 transition hover:text-black">

@@ -22,7 +22,7 @@ export function AppShell({
   const isMinimalHeaderAuthPage = pathname === "/login" || pathname === "/signup";
   const isAppPage = pathname === "/onboarding" || pathname.startsWith("/dashboard");
   const isEmbeddedWidget = pathname.startsWith("/widget");
-  const isDocsLandingPage = pathname === "/docs";
+  const isDocsPage = pathname === "/docs" || pathname.startsWith("/docs/");
 
   useEffect(() => {
     if (!session) return;
@@ -50,7 +50,7 @@ export function AppShell({
     return <main className="flex min-h-screen flex-col">{children}</main>;
   }
 
-  if (isDocsLandingPage) {
+  if (isDocsPage) {
     return (
       <>
         <main className="flex flex-1 flex-col">{children}</main>
@@ -62,7 +62,7 @@ export function AppShell({
 
   return (
     <>
-      <Header session={session} variant="light" showOffer={['/features', '/faq', '/trust', '/contact'].includes(pathname)} />
+      <Header session={session} variant="light" />
       {/* Header is fixed (see Header.tsx) so it no longer reserves this
           space itself — pad it back in here, using the height Header measures
           into --elpino-header-h so this stays correct if the offer bar is

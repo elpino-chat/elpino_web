@@ -17,7 +17,7 @@ export const IDENTITY_GUIDE_HREF = "/docs/identity-verification";
 
 const HOW_IT_WORKS = [
   { title: "Your server signs", body: "When a logged-in user loads your site, your backend signs a short-lived token with the identity secret." },
-  { title: "Your page hands it over", body: "The Elpino tag asks your page for the token and passes it to the chat. The secret never reaches the browser." },
+  { title: "Call $elpino", body: "Pass the signed token to $elpino. The SDK sends it to Elpino and starts the verified session. No endpoint URL is needed." },
   { title: "Elpino verifies", body: "The chat shows as verified, and the AI can look up that customer's own payments and records, and no one else's." },
 ];
 
@@ -55,15 +55,15 @@ export function IdentityVerificationSettingsPage() {
 
       <IdentitySecretCard />
 
-      <section className="mt-8 space-y-5">
+      <section data-tour="identity-setup" className="mt-8 space-y-5">
         <div>
           <p className="text-[13px] font-semibold">1. Sign a token on your server</p>
-          <p className="mt-1 mb-3 text-[12px] leading-5 text-[#687178]">Add an endpoint that returns a fresh token for the logged-in user. Store the secret as <code className="font-mono">ELPINO_IDENTITY_SECRET</code>.</p>
+          <p className="mt-1 mb-3 text-[12px] leading-5 text-[#687178]">Generate a token in your existing login handler or authenticated page and include it in the response. Store the secret as <code className="font-mono">ELPINO_IDENTITY_SECRET</code>. No separate endpoint is required.</p>
           <ServerSnippetTabs />
         </div>
         <div>
           <p className="text-[13px] font-semibold">2. Pass it to the widget</p>
-          <p className="mt-1 mb-3 text-[12px] leading-5 text-[#687178]">Add this before your Elpino tag. Logged-out visitors get <code className="font-mono">null</code> and chat as guests.</p>
+          <p className="mt-1 mb-3 text-[12px] leading-5 text-[#687178]">The existing Elpino tag includes the SDK. Pass your server-generated token before or after the tag loads; Elpino handles verification and the chat session. Skip this call for guests.</p>
           <CodeBlock title="HTML" code={PAGE_SNIPPET} />
         </div>
         <div>
@@ -71,6 +71,9 @@ export function IdentityVerificationSettingsPage() {
           <p className="mt-1 mb-3 text-[12px] leading-5 text-[#687178]">If login happens without a page reload, tell the widget.</p>
           <CodeBlock title="JavaScript" code={SPA_SNIPPET} />
         </div>
+        <p className="text-[12px] leading-5 text-[#687178]">
+          Tokens must be exchanged within five minutes and work once. The verified session then lasts up to eight hours, with a 30-minute idle limit. Pass a fresh token on the next authenticated page load or login. For long-lived pages, see the guide&apos;s optional renewal setup.{" "}
+        </p>
         <p className="text-[12px] leading-5 text-[#687178]">
           Not working? Open your browser console and look for <code className="font-mono">[Elpino] Identity token was not accepted</code>. The guide lists what each reason means.{" "}
           <Link href={`${IDENTITY_GUIDE_HREF}#troubleshooting`} target="_blank" className="font-medium text-[#428ce5] hover:underline">Troubleshooting</Link>
@@ -129,7 +132,7 @@ function IdentitySecretCard() {
   const masked = state?.secret ? `${state.secret.slice(0, 9)}${"•".repeat(24)}` : "";
 
   return (
-    <section className="mt-8 rounded-xl border border-[#e7e8ea] p-5">
+    <section data-tour="identity-secret" className="mt-8 rounded-xl border border-[#e7e8ea] p-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex items-start gap-3">
           <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#428ce5]/10 text-[#428ce5]"><ShieldCheck size={17} /></span>

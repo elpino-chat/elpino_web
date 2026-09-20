@@ -174,6 +174,7 @@ function WidgetContent() {
   const [contactCollection, setContactCollection] = useState<"chat" | "off">("off");
   const [conversationId, setConversationId] = useState("");
   const [messages, setMessages] = useState<WidgetMessage[]>([]);
+  const [replyPreview, setReplyPreview] = useState<WidgetMessage | null>(null);
   const [draft, setDraft] = useState("");
   const [agentTyping, setAgentTyping] = useState(false);
   const [sending, setSending] = useState(false);
@@ -455,8 +456,9 @@ function WidgetContent() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hostname, tab, chatView, conversationId, messages, leaveOpen]);
 
-  function announceReplies(count: number) {
+  function announceReplies(count: number, latestReply?: WidgetMessage) {
     if (panelOpenRef.current && !document.hidden) return;
+    if (latestReply) setReplyPreview(latestReply);
     if (soundOnRef.current) playMessageChime();
     // A count only, never message content: the host page is a different site.
     window.parent.postMessage({ type: "elpino:unread", count }, "*");
@@ -534,6 +536,7 @@ function WidgetContent() {
       } else if (data.type === "elpino:panel") {
         const isOpen = Boolean((data as { open?: unknown }).open);
         panelOpenRef.current = isOpen;
+        if (isOpen) setReplyPreview(null);
         // Closing always restores the normal size on the loader's side
         // (see tag.js) — mirror that here so reopening doesn't show
         // "Restore size" for a panel that's already back to normal.
@@ -983,7 +986,7 @@ function WidgetContent() {
               seenConversationRef.current = conversationId;
             }
             for (const message of data.messages) seenMessageIdsRef.current.add(message.id);
-            if (replies.length) announceReplies(replies.length);
+            if (replies.length) announceReplies(replies.length, replies[replies.length - 1]);
             setMessages(data.messages);
           }
           setAgentTyping(!!data.agentTyping);
@@ -1033,7 +1036,7 @@ function WidgetContent() {
           // there under a reply that's already on screen.
           setAgentTyping(false);
           revealWordByWord(message.id, message.body);
-          announceReplies(1);
+          announceReplies(1, message);
         }
       };
       socket.onclose = (event) => {
@@ -1273,6 +1276,46 @@ function WidgetContent() {
         >
           Retry
         </button>
+      </div>
+    );
+  }
+
+  if (replyPreview && !panelOpenRef.current) {
+    return (
+      <div className="h-full bg-transparent p-1">
+        <div
+          className="group relative flex h-full cursor-pointer items-start gap-3 overflow-hidden rounded-[16px] border bg-white px-4 py-3.5 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+          style={{ borderColor: BORDER, color: INK }}
+          role="button"
+          tabIndex={0}
+          aria-label="Open new support reply"
+          onClick={() => window.parent.postMessage({ type: "elpino:open" }, "*")}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") window.parent.postMessage({ type: "elpino:open" }, "*");
+          }}
+        >
+          <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full text-[12px] font-bold text-white" style={{ backgroundColor: ACCENT }}>
+            {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
+          </span>
+          <div className="min-w-0 flex-1 pr-7">
+            <p className="text-[12px] font-semibold leading-5">{botName}</p>
+            <p className="line-clamp-3 text-[13px] leading-[18px]" style={{ color: "rgba(24,24,27,.76)" }}>
+              {replyPreview.body || "Sent you a new reply"}
+            </p>
+          </div>
+          <button
+            type="button"
+            aria-label="Dismiss reply preview"
+            className="absolute right-2.5 top-2.5 flex h-7 w-7 items-center justify-center rounded-full text-black/40 transition hover:bg-black/5 hover:text-black/70"
+            onClick={(event) => {
+              event.stopPropagation();
+              setReplyPreview(null);
+              window.parent.postMessage({ type: "elpino:preview-dismiss" }, "*");
+            }}
+          >
+            <X size={15} />
+          </button>
+        </div>
       </div>
     );
   }

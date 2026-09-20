@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight, Inbox, Sparkles, Ticket } from "lucide-react";
+import { ArrowRight, Code2, Inbox, Sparkles, Ticket } from "lucide-react";
 import { requireSession } from "@/app/api/onboarding/_lib/require-user";
 import { selectedWorkspace } from "@/app/api/_lib/workspace";
 import { callGateway } from "@/app/api/auth/_lib/gateway";
@@ -22,6 +22,7 @@ type Conversation = {
 type Contact = { id: string };
 type IssueTicket = { id: string; title: string; provider: string };
 type TeamMember = { id: string; name: string };
+type SiteTag = { id: string; status?: string };
 
 // Never renders the customer's actual message — only what happened to the
 // conversation — so the dashboard's activity feed can't leak chat content to
@@ -60,6 +61,7 @@ export default async function DashboardPage() {
   let contacts: Contact[] = [];
   let issues: IssueTicket[] = [];
   let members: TeamMember[] = [];
+  let sites: SiteTag[] = [];
 
   if (workspace) {
     // Lazily creates the workspace-service Company row, same as the Inbox's
@@ -68,16 +70,18 @@ export default async function DashboardPage() {
     // the gateway being unreachable must degrade to empty state, not a 500.
     await callGateway("/api/workspace/companies", { organizationId: workspace.id, name: workspace.name }).catch(() => null);
 
-    const [conversationsResult, contactsResult, ticketsResult, availabilityResult] = await Promise.all([
+    const [conversationsResult, contactsResult, ticketsResult, availabilityResult, sitesResult] = await Promise.all([
       callGateway<{ conversations?: Conversation[] }>(`/api/workspace/conversations?companyId=${encodeURIComponent(workspace.id)}`).catch(() => null),
       callGateway<{ customers?: Contact[] }>(`/api/workspace/customers?companyId=${encodeURIComponent(workspace.id)}`).catch(() => null),
       callGateway<{ tickets?: IssueTicket[] }>("/api/workspace/agent/tickets", { companyId: workspace.id, limit: 3 }).catch(() => null),
       callGateway<{ id: string; name: string }[]>(`/api/workspace/conversations/availability?companyId=${encodeURIComponent(workspace.id)}`).catch(() => null),
+      callGateway<{ sites?: SiteTag[] }>(`/api/workspace/sites?companyId=${encodeURIComponent(workspace.id)}`).catch(() => null),
     ]);
     conversations = conversationsResult?.conversations ?? [];
     contacts = contactsResult?.customers ?? [];
     issues = ticketsResult?.tickets ?? [];
     members = Array.isArray(availabilityResult) ? availabilityResult : [];
+    sites = sitesResult?.sites ?? [];
   }
 
   const memberNameById = new Map(members.map((member) => [member.id, member.name]));
@@ -91,6 +95,16 @@ export default async function DashboardPage() {
       <div className="mx-auto max-w-[1200px]">
         <p className="text-sm font-normal text-white/70">{date}</p>
         <h1 className="mt-2 text-3xl font-normal tracking-[-0.03em] sm:text-4xl">{greeting}, {firstName}</h1>
+
+        {!sites.some((site) => site.status === "verified") && (
+          <article className="mt-7 flex flex-col gap-5 rounded-xl border border-white/10 bg-white/[0.035] p-5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-start gap-3.5">
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-white/[0.07] text-[#8db8ff]"><Code2 size={18} /></span>
+              <div><h2 className="text-sm font-normal text-white/90">Install the Elpino chat widget</h2><p className="mt-1 max-w-xl text-xs leading-5 text-white/45">Add the site tag when you&apos;re ready to start customer conversations. Your onboarding progress is already saved.</p></div>
+            </div>
+            <Link href="/dashboard/settings/tags" className="inline-flex h-9 shrink-0 items-center justify-center gap-1.5 rounded-lg bg-white px-4 text-xs font-medium text-black transition hover:bg-white/85">Install widget <ArrowRight size={13} /></Link>
+          </article>
+        )}
 
         <div className="mt-7 grid gap-4 xl:grid-cols-2">
           <article id="activity" className="min-h-[300px] scroll-mt-4 rounded-xl border border-white/10 bg-[#262626] p-6">
@@ -115,7 +129,7 @@ export default async function DashboardPage() {
             </p>
           </article>
 
-          <article className="min-h-[300px] rounded-xl border border-white/10 bg-[#262626] p-6">
+          <article data-tour="issues" className="min-h-[300px] rounded-xl border border-white/10 bg-[#262626] p-6">
             <div className="flex items-center justify-between">
               <h2 className="flex items-center gap-2.5 text-xl font-normal"><Ticket size={21} className="text-[#7dd3a8]" /> Issues</h2>
               <Link href="/dashboard/issues" className="flex items-center gap-1.5 text-xs text-white/50 hover:text-white">View issues <ArrowRight size={14} /></Link>
@@ -138,7 +152,7 @@ export default async function DashboardPage() {
           </article>
         </div>
 
-        <article className="mt-4 rounded-xl border border-white/10 bg-[#262626] p-6">
+        <article data-tour="recent-activity" className="mt-4 rounded-xl border border-white/10 bg-[#262626] p-6">
           <h2 className="flex items-center gap-2.5 text-xl font-normal"><Sparkles size={20} className="text-[#e2b64a]" /> Recent activity</h2>
           {recentConversations.length > 0 ? (
             <div className="mt-5 divide-y divide-white/[0.07]">

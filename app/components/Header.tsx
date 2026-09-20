@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { LayoutGrid, Tag, Rocket, Users, TrendingUp, ShieldCheck, HelpCircle, Plug, Newspaper, History, Users2, BookOpen, type LucideIcon } from 'lucide-react';
 import { useTranslation } from '@/app/hooks/useTranslation';
 import { useStoredLanguage, setStoredLanguage } from '@/app/hooks/useStoredLanguage';
 import { LanguageSwitcher } from '@/app/components/LanguageSwitcher';
@@ -11,117 +10,121 @@ import UpgradeBanner from './dashboard/UpgradeBanner';
 
 type Session = { email: string; name?: string; userId: string };
 
-type DropdownItem = {
+type NavItem = {
   label: string;
-  description: string;
   href: string;
-  icon: LucideIcon;
+};
+
+type NavSection = {
+  title: string;
+  items: NavItem[];
 };
 
 type DropdownGroup = {
   label: string;
-  /** The left panel's single highlight card — distinct content from `items`
-      (not a repeat of the first couple of list entries), so the two halves
-      of the mega menu never show the same thing twice. */
-  featured: { image: string; title: string; description: string; href: string };
-  items: DropdownItem[];
+  leftSections: NavSection[];
+  rightSection: NavSection;
 };
 
 const navGroups: DropdownGroup[] = [
   {
-    // "AI operator", "Email triage", and "Approvals" used to live here as
-    // sub-items — they described a different product and now redirect (see
-    // next.config.ts). Not replaced with equivalents: there is no per-feature
-    // page yet for the AI agent, the widget, or human handoff individually —
-    // /features covers all of it in one place until those exist.
-    label: 'Product',
-    featured: {
-      image: '/images/heros/elpino-dawn-hero.webp',
-      title: 'See Elpino in action',
-      description: 'Watch the AI answer, escalate, and hand off — live in the chat widget.',
-      href: '/features',
-    },
-    items: [
+    label: 'Platform',
+    leftSections: [
       {
-        label: 'Features',
-        description: 'Explore all the ways Elpino can help your team.',
-        href: '/features',
-        icon: LayoutGrid,
+        title: 'Explore all products',
+        items: [
+          { label: 'Elpino helpdesk', href: '/product/helpdesk' },
+          { label: 'Fin AI Agent', href: '/product/ai-agent' },
+        ],
       },
       {
-        label: 'Integrations',
-        description: 'Connect Stripe, Razorpay, and Trello to your workspace.',
-        href: '/integrations',
-        icon: Plug,
-      },
-      {
-        label: 'Pricing',
-        description: 'Plans, seats, and resolutions explained.',
-        href: '/pricing',
-        icon: Tag,
+        title: 'Platform',
+        items: [
+          { label: 'Channels', href: '/product/channels' },
+          { label: 'Integrations', href: '/integrations' },
+          { label: 'Safety & security', href: '/security-guide' },
+        ],
       },
     ],
+    rightSection: {
+      title: 'Intercom capabilities',
+      items: [
+        { label: 'Inbox', href: '/product/inbox' },
+        { label: 'Tickets', href: '/product/tickets' },
+        { label: 'Help Center', href: '/product/help-center' },
+        { label: 'Reporting', href: '/product/reporting' },
+        { label: 'Outbound', href: '/product/outbound' },
+        { label: 'Knowledge Hub', href: '/product/knowledge-hub' },
+        { label: 'Copilot', href: '/product/copilot' },
+      ],
+    },
   },
   {
     label: 'Solutions',
-    featured: {
-      image: '/images/heros/elpino-dawn-hero.webp',
-      title: 'Built for how you work',
-      description: 'From solo founders to full support teams — pick the shape that fits.',
-      href: '/solutions/founders',
-    },
-    items: [
-      { label: 'For founders', description: 'Support your customers as your business grows.', href: '/solutions/founders', icon: Rocket },
-      { label: 'For busy teams', description: 'Keep everyday customer conversations moving.', href: '/solutions/busy-operators', icon: Users },
-      { label: 'For revenue teams', description: 'Bring customer conversations into one workspace.', href: '/solutions/revenue-teams', icon: TrendingUp },
+    leftSections: [
+      {
+        title: 'By team size',
+        items: [
+          { label: 'For Founders', href: '/solutions/founders' },
+          { label: 'For Busy Teams', href: '/solutions/busy-operators' },
+          { label: 'For Revenue Teams', href: '/solutions/revenue-teams' },
+        ],
+      },
+      {
+        title: 'By industry',
+        items: [
+          { label: 'SaaS & Software', href: '/solutions/revenue-teams' },
+          { label: 'E-Commerce', href: '/solutions/busy-operators' },
+          { label: 'Agencies & Services', href: '/solutions/founders' },
+        ],
+      },
     ],
+    rightSection: {
+      title: 'Solution capabilities',
+      items: [
+        { label: 'Self-Service', href: '/features' },
+        { label: 'Omnichannel Triage', href: '/solutions/busy-operators' },
+        { label: 'Order Lookups', href: '/integrations' },
+        { label: 'Human Escalations', href: '/features' },
+        { label: 'Workflows', href: '/features' },
+        { label: 'Visitor Intelligence', href: '/features' },
+        { label: 'Teammate Handoff', href: '/solutions/founders' },
+      ],
+    },
   },
   {
-    label: 'Learn',
-    featured: {
-      image: '/images/heros/elpino-dawn-hero.webp',
-      title: 'Fresh from the blog',
-      description: 'Guides on AI support, human handoff, and getting set up.',
-      href: '/blog',
-    },
-    items: [
+    label: 'Resources',
+    leftSections: [
       {
-        label: 'Docs',
-        description: 'Set up Elpino, install the widget, and configure your workspace.',
-        href: '/docs',
-        icon: BookOpen,
+        title: 'Learning & Guides',
+        items: [
+          { label: 'Documentation', href: '/docs' },
+          { label: 'Help & FAQ', href: '/faq' },
+          { label: 'API & Webhooks', href: '/docs' },
+        ],
       },
       {
-        label: 'Trust',
-        description: 'See how Elpino keeps your data — and your customers\' — safe.',
-        href: '/trust',
-        icon: ShieldCheck,
-      },
-      {
-        label: 'FAQ',
-        description: 'Answers on setup, billing, and controls.',
-        href: '/faq',
-        icon: HelpCircle,
-      },
-      {
-        label: 'Blog',
-        description: 'Notes on support, AI, and building Elpino.',
-        href: '/blog',
-        icon: Newspaper,
-      },
-      {
-        label: 'Changelog',
-        description: 'What shipped, and when.',
-        href: '/changelog',
-        icon: History,
-      },
-      {
-        label: 'Community',
-        description: 'Connect with other Elpino teams.',
-        href: '/community',
-        icon: Users2,
+        title: 'Trust & Legal',
+        items: [
+          { label: 'Trust Center', href: '/trust' },
+          { label: 'Privacy Policy', href: '/privacy' },
+          { label: 'Terms of Service', href: '/terms' },
+          { label: 'Safety & security', href: '/security-guide' },
+        ],
       },
     ],
+    rightSection: {
+      title: 'Community & Company',
+      items: [
+        { label: 'Blog', href: '/blog' },
+        { label: 'Changelog', href: '/changelog' },
+        { label: 'Community Hub', href: '/community' },
+        { label: 'Brand Kit', href: '/brand-kit' },
+        { label: 'About Us', href: '/about' },
+        { label: 'Careers', href: '/careers' },
+        { label: 'Contact Sales', href: '/contact' },
+      ],
+    },
   },
 ];
 
@@ -143,14 +146,7 @@ function Chevron({ className = '' }: { className?: string }) {
   );
 }
 
-// A ClickUp-style mega menu: one full-width panel shared by every top-level
-// item, rather than each item owning its own small popover. State is lifted
-// here (not per-button) so moving the pointer straight across from "Product"
-// to "Solutions" swaps the panel's content in place instead of closing and
-// reopening it. The close is debounced with a short timer — not CSS
-// group-hover — because the panel is visually detached below a gap (it sits
-// under the whole header, not directly under its trigger), so a plain
-// mouseleave on the trigger would fire before the pointer reaches the panel.
+// Clean 2-column Intercom-style popover dropdown
 function MegaNav({ groups, light = false }: { groups: DropdownGroup[]; light?: boolean }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -162,7 +158,7 @@ function MegaNav({ groups, light = false }: { groups: DropdownGroup[]; light?: b
 
   function scheduleClose() {
     clearTimeout(closeTimer.current);
-    closeTimer.current = setTimeout(() => setOpenIndex(null), 150);
+    closeTimer.current = setTimeout(() => setOpenIndex(null), 180);
   }
 
   useEffect(() => () => clearTimeout(closeTimer.current), []);
@@ -170,92 +166,103 @@ function MegaNav({ groups, light = false }: { groups: DropdownGroup[]; light?: b
   const activeGroup = openIndex !== null ? groups[openIndex] : null;
 
   return (
-    <>
-      {groups.map((group, index) => (
-        <button
-          key={group.label}
-          type="button"
-          className={`${index === 0 ? '' : 'elpino-nav-item'} inline-flex h-9 items-center gap-1.5 px-3 text-[14px] font-normal transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 ${light ? 'text-[#181e15] hover:text-black focus-visible:outline-black/30' : 'text-white/90 hover:text-white focus-visible:outline-white/35'}`}
-          aria-haspopup="menu"
-          aria-expanded={openIndex === index}
-          onMouseEnter={() => open(index)}
-          onFocus={() => open(index)}
-          onMouseLeave={scheduleClose}
-        >
-          {group.label}
-          <Chevron className={`transition-transform duration-200 ${openIndex === index ? 'rotate-180' : ''}`} />
-        </button>
-      ))}
+    <div className="relative">
+      {/* Top Nav Trigger Buttons */}
+      <div className="flex items-center gap-1">
+        {groups.map((group, index) => {
+          const isOpen = openIndex === index;
+          return (
+            <button
+              key={group.label}
+              type="button"
+              className={`inline-flex h-9 items-center gap-1.5 px-3 text-[14px] font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 ${isOpen
+                  ? light
+                    ? 'text-black'
+                    : 'text-white'
+                  : light
+                    ? 'text-[#181e15]/80 hover:text-black focus-visible:outline-black/30'
+                    : 'text-white/80 hover:text-white focus-visible:outline-white/35'
+                }`}
+              aria-haspopup="menu"
+              aria-expanded={isOpen}
+              onMouseEnter={() => open(index)}
+              onFocus={() => open(index)}
+              onMouseLeave={scheduleClose}
+            >
+              {group.label}
+              <Chevron className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+            </button>
+          );
+        })}
+      </div>
 
+      {/* Floating 2-Column Intercom Style Dropdown Card */}
       <div
-        className={`fixed inset-x-0 z-40 border-b transition-opacity duration-150 ${light ? 'border-black/10 bg-white' : 'border-white/10 bg-black'} ${
-          activeGroup ? 'visible translate-y-0 opacity-100' : 'invisible -translate-y-1 opacity-0'
-        }`}
-        style={{ top: 'var(--elpino-header-h, 64px)' }}
+        className={`absolute left-0 top-[calc(100%+8px)] z-50 transition-all duration-200 ease-out ${activeGroup
+            ? 'visible translate-y-0 opacity-100'
+            : 'pointer-events-none invisible -translate-y-2 opacity-0'
+          }`}
         role="menu"
         onMouseEnter={() => openIndex !== null && open(openIndex)}
         onMouseLeave={scheduleClose}
       >
         {activeGroup && (
-          <div className="mx-auto flex w-full flex-col gap-12 px-5 py-10 sm:px-8 lg:flex-row lg:px-22">
-            {/* Left: one featured highlight, distinct from the list on the right */}
-            <div className="lg:w-[380px] lg:shrink-0">
-              <Link
-                href={activeGroup.featured.href}
-                className="group/featured block"
-                role="menuitem"
-                onClick={() => setOpenIndex(null)}
-              >
-                <span className={`block overflow-hidden rounded-xl border ${light ? 'border-black/10' : 'border-white/10'}`}>
-                  <Image
-                    src={activeGroup.featured.image}
-                    alt=""
-                    width={760}
-                    height={570}
-                    className="aspect-[4/3] w-full object-cover transition-transform duration-300 group-hover/featured:scale-[1.03]"
-                  />
-                </span>
-                <span className={`mt-4 block text-base font-medium ${light ? 'text-[#11120f]' : 'text-white/90'}`}>
-                  {activeGroup.featured.title}
-                </span>
-                <span className={`mt-1 block text-sm leading-5 ${light ? 'text-[#667069]' : 'text-[var(--elpino-text-muted)]'}`}>
-                  {activeGroup.featured.description}
-                </span>
-              </Link>
-            </div>
+          <div
+            className={`w-[600px] max-w-[90vw] overflow-hidden rounded-xl border p-8 shadow-[0_20px_50px_rgba(0,0,0,0.15)] transition-colors ${light
+                ? 'border-[#e5e7eb] bg-white text-[#11120f]'
+                : 'border-white/10 bg-white text-[#11120f] shadow-2xl'
+              }`}
+          >
+            {/* 2-Column Grid divided by subtle vertical line */}
+            <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-[1.1fr_1fr]">
+              {/* Left Column: 2 Stacked Sections */}
+              <div className="space-y-7 border-r border-[#e5e7eb] pr-8">
+                {activeGroup.leftSections.map((section) => (
+                  <div key={section.title}>
+                    <h4 className="text-[17px] font-semibold tracking-tight text-[#11120f]">
+                      {section.title}
+                    </h4>
+                    <div className="mt-3.5 space-y-3 border-l border-black/25 pl-3.5">
+                      {section.items.map((item) => (
+                        <Link
+                          key={item.label}
+                          href={item.href}
+                          onClick={() => setOpenIndex(null)}
+                          className="block text-[15px] font-normal text-[#11120f] underline underline-offset-4 decoration-black/30 transition-colors hover:decoration-black"
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
 
-            {/* Right: the full list, icon + title + description */}
-            <div className="flex-1">
-              <p className={`font-mono text-xs uppercase tracking-[0.18em] ${light ? 'text-black/40' : 'text-white/40'}`}>
-                Explore all {activeGroup.label.toLowerCase()}
-              </p>
-              <div className="mt-6 grid grid-cols-1 gap-x-10 gap-y-7 sm:grid-cols-2">
-                {activeGroup.items.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <Link
-                      key={item.label}
-                      href={item.href}
-                      className="group/item flex items-start gap-4 rounded-xl"
-                      role="menuitem"
-                      onClick={() => setOpenIndex(null)}
-                    >
-                      <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border transition-colors ${light ? 'border-black/10 bg-[#FAFAFA] group-hover/item:border-black/20' : 'border-white/10 bg-white/[0.04] group-hover/item:border-white/20'}`}>
-                        <Icon size={19} aria-hidden="true" />
-                      </span>
-                      <span>
-                        <span className={`block text-base font-normal ${light ? 'text-[#11120f]' : 'text-white/90'}`}>{item.label}</span>
-                        <span className={`mt-1 block text-sm leading-5 ${light ? 'text-[#667069]' : 'text-[var(--elpino-text-muted)]'}`}>{item.description}</span>
-                      </span>
-                    </Link>
-                  );
-                })}
+              {/* Right Column: Intercom capabilities list */}
+              <div className="pl-1">
+                <div>
+                  <h4 className="text-[17px] font-semibold tracking-tight text-[#11120f]">
+                    {activeGroup.rightSection.title}
+                  </h4>
+                  <div className="mt-3.5 space-y-3 border-l border-black/25 pl-3.5">
+                    {activeGroup.rightSection.items.map((item) => (
+                      <Link
+                        key={item.label}
+                        href={item.href}
+                        onClick={() => setOpenIndex(null)}
+                        className="block text-[15px] font-normal text-[#11120f] underline underline-offset-4 decoration-black/30 transition-colors hover:decoration-black"
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 }
 
@@ -277,16 +284,7 @@ export function Header({
   const { t } = useTranslation(language as any);
   const light = variant === 'light';
 
-  // The header stays fixed (out of page flow) purely so its height can
-  // change live — e.g. when the offer bar is dismissed — without a layout
-  // jump; it's solid, not an overlay. `headerRef` reports the bar's real
-  // rendered height (nav + the optional offer bar) into --elpino-header-h,
-  // which AppShell's <main> uses as top padding so content never sits
-  // underneath it.
   const headerRef = useRef<HTMLDivElement>(null);
-  // Past a small scroll threshold the offer bar collapses away and the nav
-  // itself tightens up, so the header reads as a slim, compact bar instead
-  // of the taller two-row layout it starts as at the top of the page.
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -299,23 +297,28 @@ export function Header({
   useEffect(() => {
     const el = headerRef.current;
     if (!el || typeof ResizeObserver === 'undefined') return;
-    const setVar = () => document.documentElement.style.setProperty('--elpino-header-h', `${el.offsetHeight}px`);
+    const setVar = () =>
+      document.documentElement.style.setProperty('--elpino-header-h', `${el.offsetHeight}px`);
     setVar();
     const observer = new ResizeObserver(setVar);
     observer.observe(el);
     return () => observer.disconnect();
   }, [showOffer, scrolled]);
 
-  // Solid near-black, not the page's #262626 — the header stays a flush,
-  // edge-to-edge bar (not floating/inset) but a shade darker than the hero
-  // behind it so it reads as its own distinct bar rather than blending in.
-  const headerClassName = `w-full transition-shadow duration-200 ${light ? 'bg-white' : 'bg-black'} ${scrolled ? 'shadow-[0_1px_0_rgba(0,0,0,0.08)]' : ''}`;
-  const pricingClassName = `hidden h-9 items-center rounded-full px-3 text-[14px] font-normal transition lg:inline-flex ${light ? 'text-[#181e15] hover:text-black' : 'text-white/90 hover:text-white'}`;
-  // Plain text on dark (no border box) — a bordered "Log in" pill reads as a
-  // second CTA competing with the primary button; unbordered text next to a
-  // solid pill is the pairing the reference uses.
-  const loginClassName = `hidden h-10 items-center text-[14px] font-normal transition lg:inline-flex ${light ? 'rounded-md border border-[#181e15]/25 px-5 text-[#181e15] hover:bg-black/[0.04]' : 'px-2 text-white/85 hover:text-white'}`;
-  const contactSalesClassName = `hidden h-10 items-center text-[14px] font-normal transition lg:inline-flex ${light ? 'px-2 text-[#181e15]/80 hover:text-[#181e15]' : 'px-2 text-white/85 hover:text-white'}`;
+  const headerClassName = `w-full transition-shadow duration-200 ${light ? 'bg-white' : 'bg-black'
+    } ${scrolled ? 'shadow-[0_1px_0_rgba(0,0,0,0.08)]' : ''}`;
+
+  const navLinkClassName = `hidden h-9 items-center px-3 text-[14px] font-medium transition lg:inline-flex ${light ? 'text-[#181e15]/80 hover:text-black' : 'text-white/80 hover:text-white'
+    }`;
+
+  const loginClassName = `hidden h-9 items-center text-[14px] font-medium transition lg:inline-flex ${light ? 'text-[#181e15]/80 hover:text-black' : 'text-white/80 hover:text-white'
+    }`;
+
+  const signUpPillClassName = `inline-flex h-9 items-center justify-center rounded-full px-4 text-[14px] font-medium transition-all duration-150 ${light
+      ? 'bg-black text-white hover:bg-black/85 shadow-xs'
+      : 'bg-white text-black hover:bg-white/90 shadow-xs'
+    }`;
+
   const mobileLineClassName = light ? 'bg-[#11120f]' : 'bg-[var(--elpino-text)]';
 
   if (variant === 'minimal') {
@@ -326,9 +329,21 @@ export function Header({
             className="flex h-[72px] w-full items-center px-5 sm:px-8 lg:px-22"
             aria-label="Main navigation"
           >
-            <Link className="group/logo flex w-fit shrink-0 items-center gap-2 transition-opacity hover:opacity-90" href="/">
-              <Image alt="" src="/icon.png" width={96} height={96} priority className="h-9 w-9 rounded-lg object-contain" />
-              <span className="text-[15px] font-semibold tracking-[-0.01em] text-[#11120f]">elpino</span>
+            <Link
+              className="group/logo flex w-fit shrink-0 items-center gap-2 transition-opacity hover:opacity-90"
+              href="/"
+            >
+              <Image
+                alt=""
+                src="/icon.png"
+                width={96}
+                height={96}
+                priority
+                className="h-9 w-9 rounded-lg object-contain"
+              />
+              <span className="text-[15px] font-semibold tracking-[-0.01em] text-[#11120f]">
+                elpino
+              </span>
             </Link>
           </nav>
         </header>
@@ -337,173 +352,271 @@ export function Header({
   }
 
   return (
-    <div ref={headerRef} className={`fixed inset-x-0 top-0 z-50 w-full ${light ? 'text-[#11120f]' : 'text-[var(--elpino-text)]'}`}>
+    <div
+      ref={headerRef}
+      className={`fixed inset-x-0 top-0 z-50 w-full ${light ? 'text-[#11120f]' : 'text-[var(--elpino-text)]'
+        }`}
+    >
       {showOffer && !scrolled && <UpgradeBanner marketing pricingPage={pricingPage} />}
-      {variant === 'full' && !scrolled && <div className='w-full border-b border-white/10 bg-black'>
-        <div className="mx-auto flex min-h-11 w-full max-w-[88rem] items-center justify-center overflow-hidden px-4 py-2 sm:px-8">
-          <a
-            className={`elpino-announcement group grid min-w-0 flex-1 grid-cols-[auto_minmax(0,auto)_minmax(24px,1fr)_auto] items-center gap-3 text-[13px] font-normal sm:gap-5 sm:text-sm ${light ? 'text-[#26332d]' : 'text-white/90'}`}
-            href="/pricing"
-          >
-            <span className="elpino-announcement-badge relative inline-flex shrink-0 items-center gap-2 overflow-hidden bg-[var(--elpino-ai)] px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-white shadow-[0_8px_24px_-14px_rgba(35,61,77,0.7)]">
-              <span className="relative h-1.5 w-1.5">
-                <span className="absolute inset-0 rounded-full bg-[var(--elpino-accent)]/40 motion-safe:animate-ping" />
-                <span className="absolute inset-0 rounded-full bg-[var(--elpino-accent)]" />
-              </span>
-              New
-            </span>
-            <span className={`truncate transition-colors duration-200 ${light ? 'group-hover:text-black' : 'group-hover:text-white'}`}>
-              Pay for resolutions, not seats — see the new pricing
-            </span>
-            <span aria-hidden="true" className="elpino-pixel-rail h-[3px] min-w-0" />
-            <span
-              aria-hidden="true"
-              className={`inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition-[transform,border-color,background-color] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:translate-x-1 group-active:scale-[0.96] ${light ? 'border-black/20 text-black group-hover:border-black/50 group-hover:bg-black/5' : 'border-white/20 text-white group-hover:border-white/55 group-hover:bg-white/10'}`}
-            >
-              ↗
-            </span>
-          </a>
-        </div>
-      </div>}
-
-      <header className={headerClassName}>
-      <nav
-        className="grid h-16 w-full grid-cols-[auto_1fr_auto] items-center gap-6 px-5 transition-[height] duration-200 sm:px-8 lg:px-22"
-        aria-label="Main navigation"
-      >
-        <Link className="group/logo flex w-fit shrink-0 items-center gap-2 transition-opacity hover:opacity-90" href="/">
-          <Image alt="" src="/icon.png" width={96} height={96} priority className="h-8 w-8 rounded-lg object-contain" />
-          <span className={`text-[15px] font-semibold tracking-[-0.01em] ${light ? 'text-[#11120f]' : 'text-white'}`}>elpino</span>
-        </Link>
-
-        <div className="hidden items-center justify-start gap-2 pl-4 lg:flex" aria-label="Navigation groups">
-          <MegaNav groups={navGroups} light={light} />
-          <Link className={`${pricingClassName} elpino-nav-item`} href="/pricing">
-            {t('nav.pricing', 'Pricing')}
-          </Link>
-        </div>
-
-        {/* Actions and the mobile toggle share one grid cell — as separate
-            children they would each claim a column and break the centring. */}
-        <div className="flex items-center justify-end">
-        <div className="hidden shrink-0 items-center gap-2 lg:flex">
-          <LanguageSwitcher language={language} onChange={setStoredLanguage} light={light} open={languageOpen} onOpenChange={setLanguageOpen} />
-          <Link className={contactSalesClassName} href="/contact">
-            Contact sales
-          </Link>
-          {session ? (
-            <Link
-              className={`inline-flex h-10 items-center justify-center rounded-md px-5 text-[14px] font-normal transition-colors ${light ? 'bg-[#181e15] text-white hover:bg-black' : 'bg-white text-black hover:bg-white/90'}`}
-              href="/dashboard"
-            >
-              {t('nav.goToDashboard', 'Go to dashboard')}
-            </Link>
-          ) : (
-            <>
-              <Link className={loginClassName} href="/login">
-                {t('nav.login', 'Log In')}
-              </Link>
-              <Link
-                className={`inline-flex h-10 items-center justify-center rounded-md px-5 text-[14px] font-normal transition-colors ${light ? 'bg-[#181e15] text-white hover:bg-black' : 'bg-white text-black hover:bg-white/90'}`}
-                href="/signup"
-              >
-                {t('nav.getStarted', 'Start for free')}
-              </Link>
-            </>
-          )}
-        </div>
-
-        <button
-          onClick={() => setIsMobileMenuOpen((open) => !open)}
-          className={`relative z-50 flex h-10 w-10 items-center justify-center rounded-full transition lg:hidden ${light ? 'hover:bg-black/5' : 'hover:bg-white/10'}`}
-          aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
-          aria-expanded={isMobileMenuOpen}
-        >
-          <div className="flex h-5 w-5 flex-col justify-center">
-            <span
-              className={`mb-1 block h-0.5 w-5 transition-transform duration-300 ${mobileLineClassName}`}
-              style={{
-                transform: isMobileMenuOpen ? 'rotate(45deg) translate(4px, 4px)' : 'none',
-              }}
-            />
-            <span
-              className={`mb-1 block h-0.5 w-5 transition-opacity duration-300 ${mobileLineClassName}`}
-              style={{ opacity: isMobileMenuOpen ? 0 : 1 }}
-            />
-            <span
-              className={`block h-0.5 w-5 transition-transform duration-300 ${mobileLineClassName}`}
-              style={{
-                transform: isMobileMenuOpen ? 'rotate(-45deg) translate(5px, -5px)' : 'none',
-              }}
-            />
-          </div>
-        </button>
-        </div>
-      </nav>
-
-      {isMobileMenuOpen && (
-        <div className={`absolute inset-x-0 top-full z-40 max-h-[70dvh] overflow-y-auto border-t px-5 py-5 shadow-[0_28px_90px_-35px_rgba(0,0,0,0.55)] lg:hidden ${light ? 'border-[#d8ddd6] bg-white' : 'border-white/10 bg-black'}`}>
-          <nav className="flex flex-col gap-2" aria-label="Mobile navigation">
-            {navGroups.map((group) => (
-              <div key={group.label} className={`border-b pb-3 ${light ? 'border-black/10' : 'border-white/10'}`}>
-                <div className={`mb-2 text-[13px] font-semibold uppercase tracking-[0.12em] ${light ? 'text-black/40' : 'text-white/35'}`}>
-                  {group.label}
-                </div>
-                {group.items.map((item) => (
-                  <Link
-                    key={item.label}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    href={item.href}
-                    className={`block rounded-xl px-2 py-2.5 transition ${light ? 'hover:bg-black/[0.04]' : 'hover:bg-white/[0.06]'}`}
-                  >
-                    <span className={`block text-base font-normal ${light ? 'text-[#11120f]' : 'text-white/90'}`}>{item.label}</span>
-                    <span className={`mt-0.5 block text-[13px] leading-5 ${light ? 'text-[#667069]' : 'text-[var(--elpino-text-muted)]'}`}>
-                      {item.description}
-                    </span>
-                  </Link>
-                ))}
-              </div>
-            ))}
-            <Link
-              onClick={() => setIsMobileMenuOpen(false)}
+      {variant === 'full' && !scrolled && (
+        <div className="w-full border-b border-white/10 bg-black">
+          <div className="mx-auto flex min-h-11 w-full max-w-[88rem] items-center justify-center overflow-hidden px-4 py-2 sm:px-8">
+            <a
+              className={`elpino-announcement group grid min-w-0 flex-1 grid-cols-[auto_minmax(0,auto)_minmax(24px,1fr)_auto] items-center gap-3 text-[13px] font-normal sm:gap-5 sm:text-sm ${light ? 'text-[#26332d]' : 'text-white/90'
+                }`}
               href="/pricing"
-              className={`rounded-xl px-2 py-3 text-base font-normal ${light ? 'text-[#11120f]' : 'text-white/90'}`}
             >
-              {t('nav.pricing', 'Pricing')}
-            </Link>
-            {session ? (
-              <Link
-                onClick={() => setIsMobileMenuOpen(false)}
-                href="/dashboard"
-                className={`mt-2 flex h-12 items-center justify-center rounded-full border text-base font-normal transition active:scale-[0.98] ${light ? 'border-black bg-black text-white hover:bg-[#2a2c27]' : 'border-white/20 bg-transparent text-white/90 hover:border-white/40 hover:bg-white/[0.07] hover:text-white'}`}
+              <span className="elpino-announcement-badge relative inline-flex shrink-0 items-center gap-2 overflow-hidden bg-[var(--elpino-ai)] px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-white shadow-[0_8px_24px_-14px_rgba(35,61,77,0.7)]">
+                <span className="relative h-1.5 w-1.5">
+                  <span className="absolute inset-0 rounded-full bg-[var(--elpino-accent)]/40 motion-safe:animate-ping" />
+                  <span className="absolute inset-0 rounded-full bg-[var(--elpino-accent)]" />
+                </span>
+                New
+              </span>
+              <span
+                className={`truncate transition-colors duration-200 ${light ? 'group-hover:text-black' : 'group-hover:text-white'
+                  }`}
               >
-                {t('nav.goToDashboard', 'Go to dashboard')}
-              </Link>
-            ) : (
-              <>
-                <Link
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  href="/login"
-                className={`rounded-xl px-2 py-3 text-base font-normal ${light ? 'text-[#11120f]' : 'text-white/90'}`}
-                >
-                  {t('nav.login', 'Log in')}
-                </Link>
-                <Link
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`mt-2 flex h-12 items-center justify-center rounded-full border text-base font-normal transition active:scale-[0.98] ${light ? 'border-black bg-black text-white hover:bg-[#2a2c27]' : 'border-white/20 bg-transparent text-white/90 hover:border-white/40 hover:bg-white/[0.07] hover:text-white'}`}
-                  href="/signup"
-                >
-                  {t('nav.getStarted', 'Get started')}
-                </Link>
-              </>
-            )}
-            <div className={`mt-4 border-t pt-4 ${light ? 'border-black/10' : 'border-white/10'}`}>
-              <LanguageSwitcher language={language} onChange={setStoredLanguage} light={light} open={languageOpen} onOpenChange={setLanguageOpen} />
-            </div>
-          </nav>
+                Pay for resolutions, not seats — see the new pricing
+              </span>
+              <span aria-hidden="true" className="elpino-pixel-rail h-[3px] min-w-0" />
+              <span
+                aria-hidden="true"
+                className={`inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition-[transform,border-color,background-color] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:translate-x-1 group-active:scale-[0.96] ${light
+                    ? 'border-black/20 text-black group-hover:border-black/50 group-hover:bg-black/5'
+                    : 'border-white/20 text-white group-hover:border-white/55 group-hover:bg-white/10'
+                  }`}
+              >
+                ↗
+              </span>
+            </a>
+          </div>
         </div>
       )}
-    </header>
+
+      <header className={headerClassName}>
+        <nav
+          className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-5 transition-[height] duration-200 sm:px-8 lg:px-10"
+          aria-label="Main navigation"
+        >
+          {/* Logo & Navigation Links */}
+          <div className="flex items-center gap-8">
+            <Link
+              className="group/logo flex w-fit shrink-0 items-center gap-2 transition-opacity hover:opacity-90"
+              href="/"
+            >
+              <Image
+                alt=""
+                src="/icon.png"
+                width={96}
+                height={96}
+                priority
+                className="h-8 w-8 rounded-lg object-contain"
+              />
+              <span
+                className={`text-[16px] font-semibold tracking-[-0.02em] ${light ? 'text-[#11120f]' : 'text-white'
+                  }`}
+              >
+                elpino
+              </span>
+            </Link>
+
+            {/* Desktop Navigation with Floating Intercom-style Popovers */}
+            <div
+              className="hidden items-center gap-1 lg:flex"
+              aria-label="Navigation groups"
+            >
+              <MegaNav groups={navGroups} light={light} />
+              <Link className={navLinkClassName} href="/pricing">
+                {t('nav.pricing', 'Pricing')}
+              </Link>
+            </div>
+          </div>
+
+          {/* Right-Side Actions */}
+          <div className="flex items-center gap-4">
+            <div className="hidden shrink-0 items-center gap-4 lg:flex">
+              <LanguageSwitcher
+                language={language}
+                onChange={setStoredLanguage}
+                light={light}
+                open={languageOpen}
+                onOpenChange={setLanguageOpen}
+              />
+              {session ? (
+                <Link
+                  className={signUpPillClassName}
+                  href="/dashboard"
+                >
+                  {t('nav.goToDashboard', 'Dashboard')}
+                </Link>
+              ) : (
+                <>
+                  <Link className={loginClassName} href="/login">
+                    {t('nav.login', 'Log in')}
+                  </Link>
+                  <Link
+                    className={signUpPillClassName}
+                    href="/signup"
+                  >
+                    {t('nav.getStarted', 'Sign up')}
+                  </Link>
+                </>
+              )}
+            </div>
+
+            {/* Mobile Menu Toggle Button */}
+            <button
+              onClick={() => setIsMobileMenuOpen((open) => !open)}
+              className={`relative z-50 flex h-10 w-10 items-center justify-center rounded-full transition lg:hidden ${light ? 'hover:bg-black/5' : 'hover:bg-white/10'
+                }`}
+              aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={isMobileMenuOpen}
+            >
+              <div className="flex h-5 w-5 flex-col justify-center">
+                <span
+                  className={`mb-1 block h-0.5 w-5 transition-transform duration-300 ${mobileLineClassName}`}
+                  style={{
+                    transform: isMobileMenuOpen
+                      ? 'rotate(45deg) translate(4px, 4px)'
+                      : 'none',
+                  }}
+                />
+                <span
+                  className={`mb-1 block h-0.5 w-5 transition-opacity duration-300 ${mobileLineClassName}`}
+                  style={{ opacity: isMobileMenuOpen ? 0 : 1 }}
+                />
+                <span
+                  className={`block h-0.5 w-5 transition-transform duration-300 ${mobileLineClassName}`}
+                  style={{
+                    transform: isMobileMenuOpen
+                      ? 'rotate(-45deg) translate(5px, -5px)'
+                      : 'none',
+                  }}
+                />
+              </div>
+            </button>
+          </div>
+        </nav>
+
+        {/* Mobile Navigation Drawer */}
+        {isMobileMenuOpen && (
+          <div
+            className={`absolute inset-x-0 top-full z-40 max-h-[75dvh] overflow-y-auto border-t px-6 py-6 shadow-2xl lg:hidden ${light ? 'border-[#d8ddd6] bg-white' : 'border-white/10 bg-black'
+              }`}
+          >
+            <nav className="flex flex-col gap-5" aria-label="Mobile navigation">
+              {navGroups.map((group) => (
+                <div
+                  key={group.label}
+                  className={`border-b pb-5 ${light ? 'border-black/10' : 'border-white/10'
+                    }`}
+                >
+                  <div
+                    className={`mb-3 text-[12px] font-semibold uppercase tracking-[0.14em] ${light ? 'text-black/45' : 'text-white/40'
+                      }`}
+                  >
+                    {group.label}
+                  </div>
+                  <div className="space-y-4">
+                    {group.leftSections.map((sec) => (
+                      <div key={sec.title}>
+                        <p className="text-xs font-semibold text-white/50">{sec.title}</p>
+                        <div className="mt-1.5 space-y-2 border-l border-white/20 pl-3">
+                          {sec.items.map((item) => (
+                            <Link
+                              key={item.label}
+                              onClick={() => setIsMobileMenuOpen(false)}
+                              href={item.href}
+                              className="block text-[14px] text-white/90 underline underline-offset-4 decoration-white/30 hover:text-white"
+                            >
+                              {item.label}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                    <div>
+                      <p className="text-xs font-semibold text-white/50">{group.rightSection.title}</p>
+                      <div className="mt-1.5 space-y-2 border-l border-white/20 pl-3">
+                        {group.rightSection.items.map((item) => (
+                          <Link
+                            key={item.label}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            href={item.href}
+                            className="block text-[14px] text-white/90 underline underline-offset-4 decoration-white/30 hover:text-white"
+                          >
+                            {item.label}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              <div className="flex flex-col gap-2 pt-1">
+                <Link
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  href="/pricing"
+                  className={`text-[15px] font-medium ${light ? 'text-[#181e15]' : 'text-white/90'
+                    }`}
+                >
+                  {t('nav.pricing', 'Pricing')}
+                </Link>
+              </div>
+
+              {session ? (
+                <Link
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  href="/dashboard"
+                  className={`mt-3 flex h-11 items-center justify-center rounded-full text-sm font-medium transition ${light
+                      ? 'bg-black text-white'
+                      : 'bg-white text-black'
+                    }`}
+                >
+                  {t('nav.goToDashboard', 'Go to dashboard')}
+                </Link>
+              ) : (
+                <div className="mt-3 flex flex-col gap-2.5">
+                  <Link
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    href="/login"
+                    className={`flex h-11 items-center justify-center rounded-full border text-sm font-medium transition ${light
+                        ? 'border-black/20 text-black'
+                        : 'border-white/20 text-white'
+                      }`}
+                  >
+                    {t('nav.login', 'Log in')}
+                  </Link>
+                  <Link
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    href="/signup"
+                    className={`flex h-11 items-center justify-center rounded-full text-sm font-medium transition ${light
+                        ? 'bg-black text-white'
+                        : 'bg-white text-black'
+                      }`}
+                  >
+                    {t('nav.getStarted', 'Sign up')}
+                  </Link>
+                </div>
+              )}
+
+              <div
+                className={`mt-4 border-t pt-4 ${light ? 'border-black/10' : 'border-white/10'
+                  }`}
+              >
+                <LanguageSwitcher
+                  language={language}
+                  onChange={setStoredLanguage}
+                  light={light}
+                  open={languageOpen}
+                  onOpenChange={setLanguageOpen}
+                />
+              </div>
+            </nav>
+          </div>
+        )}
+      </header>
     </div>
   );
 }

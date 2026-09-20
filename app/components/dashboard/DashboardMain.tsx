@@ -19,6 +19,7 @@ export default function DashboardMain({ children }: { children: React.ReactNode 
 
   return (
     <main
+      data-tour="page"
       className={`min-h-0 min-w-0 flex-1 overflow-y-auto pb-[calc(56px+env(safe-area-inset-bottom))] md:pb-0 ${
         mobileHidden ? "hidden lg:block" : "block"
       }`}

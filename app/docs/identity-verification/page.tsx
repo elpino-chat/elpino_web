@@ -1,22 +1,11 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { CodeBlock, ServerSnippetTabs } from "@/app/components/identity/CodeBlock";
-import { IDENTITY_ERRORS, PAGE_SNIPPET, SPA_SNIPPET } from "@/lib/identity-snippets";
-import { OpenInAi } from "@/app/components/docs/OpenInAi";
+import { AUTO_REFRESH_SNIPPET, IDENTITY_ERRORS, PAGE_SNIPPET, SPA_SNIPPET } from "@/lib/identity-snippets";
+import { DocsShell } from "../_components/DocsShell";
+import { docsMetadata } from "../_lib/docs";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://elpino.chat";
-
-export const metadata: Metadata = {
-  title: "Identity Verification",
-  description: "Verify the identity of logged-in customers chatting with you, so the AI can safely look up their own orders, payments and records.",
-  alternates: { canonical: `${SITE_URL}/docs/identity-verification` },
-  openGraph: {
-    title: "Identity Verification",
-    description: "Verify logged-in customers in the Elpino chat widget.",
-    url: `${SITE_URL}/docs/identity-verification`,
-    type: "article",
-  },
-};
+const description = "Verify the identity of logged-in customers chatting with you, so the AI can safely look up their own orders, payments, and records.";
+export const metadata = docsMetadata("/docs/identity-verification", "Identity verification", description);
 
 const CLAIMS: Array<{ name: string; required: boolean; description: string }> = [
   { name: "sub", required: true, description: "Your stable account ID for this user. Required even when an email is present." },
@@ -44,20 +33,8 @@ const code = "rounded bg-slate-100 px-1 py-0.5 font-mono text-[0.9em] text-slate
 
 export default function IdentityVerificationGuidePage() {
   return (
-    <div className="flex flex-1 flex-col bg-white" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif' }}>
-      <section className="border-b border-slate-200 px-4 pb-16 pt-20 sm:px-10 md:px-14">
-        <div className="mx-auto max-w-3xl">
-          <div className="mb-4 flex items-center justify-between gap-4"><p className="text-sm text-slate-500">Docs · Chat widget</p><OpenInAi pageTitle="Elpino identity verification" pageUrl={`${SITE_URL}/docs/identity-verification`} /></div>
-          <h1 className="mb-6 text-4xl leading-tight text-black md:text-5xl" style={{ fontWeight: 500, letterSpacing: "-0.01em" }}>
-            Identity verification
-          </h1>
-          <p className="max-w-2xl text-lg leading-relaxed text-slate-700">
-            Tell the chat widget who your logged-in user is, in a way nobody can fake. Verified customers can ask about their own orders, payments and account, and the AI only ever looks up that person&apos;s data.
-          </p>
-        </div>
-      </section>
-
-      <div className="px-4 py-16 sm:px-10 md:px-14">
+    <DocsShell current="/docs/identity-verification" title="Identity verification" description={description}>
+      <div className="py-14">
         <div className="mx-auto max-w-3xl space-y-16">
           <Section id="why" title="Why you need it">
             <p>
@@ -71,7 +48,7 @@ export default function IdentityVerificationGuidePage() {
           <Section id="how-it-works" title="How it works">
             <ol className="list-decimal space-y-3 pl-5">
               <li><strong className="text-slate-900">Your server signs.</strong> When a logged-in user loads your site, your backend creates a short-lived token (a JWT) signed with your workspace&apos;s identity secret.</li>
-              <li><strong className="text-slate-900">Your page hands it over.</strong> The Elpino tag asks your page for that token and passes it to the chat. The secret itself never leaves your server.</li>
+              <li><strong className="text-slate-900">Call $elpino.</strong> Pass the signed token to the SDK included in your chat tag. It sends the token to Elpino and starts the verified session. No endpoint URL is required; the secret stays on your server.</li>
               <li><strong className="text-slate-900">Elpino verifies.</strong> We check the signature, expiry and claims. If they&apos;re valid, the visitor becomes a verified customer for that chat session.</li>
             </ol>
             <p>
@@ -87,13 +64,13 @@ export default function IdentityVerificationGuidePage() {
 
             <h3 className="pt-4 text-lg text-black" style={{ fontWeight: 500 }}>2. Sign a token on your server</h3>
             <p>
-              Add an endpoint, such as <code className={code}>POST /api/chat-identity</code>, that returns a new token for the currently logged-in user. Take the user from your authenticated session, never from request parameters. Return <code className={code}>401</code> when nobody is logged in, and send <code className={code}>Cache-Control: no-store</code>.
+              Generate a fresh token in your existing login handler or authenticated page and include it as <code className={code}>elpinoToken</code> in the response. Take the user from your authenticated session, never from request parameters. Do not cache responses containing tokens. You do not need a separate identity endpoint.
             </p>
             <ServerSnippetTabs />
 
             <h3 className="pt-4 text-lg text-black" style={{ fontWeight: 500 }}>3. Pass the token to the widget</h3>
             <p>
-              Add this script before your Elpino tag. The widget calls <code className={code}>getIdentityToken</code> whenever it needs a fresh token: when the chat opens, before a session reaches its limit, and after one ends.
+              Call this with the signed token from your server&apos;s page data or login response. Your existing Elpino tag includes the <code className={code}>$elpino</code> SDK, so no browser package or custom module is needed. Calls made before the tag loads are queued. Elpino exchanges the token immediately, even while chat is closed. Skip identify for guests. Use your framework&apos;s safe page-data serialization when rendering the token into HTML.
             </p>
             <CodeBlock title="HTML" code={PAGE_SNIPPET} />
 
@@ -102,8 +79,15 @@ export default function IdentityVerificationGuidePage() {
             <CodeBlock title="JavaScript" code={SPA_SNIPPET} />
           </Section>
 
+          <Section id="renewal" title="Optional: automatic renewal">
+            <p>A token works once and must be exchanged within five minutes. The resulting chat session lasts up to eight hours, with a 30-minute idle limit. Token expiry does not end an active chat session. Generate a new token on each authenticated page load or login.</p>
+            <p>For pages that stay open longer, the SDK emits <code className={code}>elpino:identity-required</code> when it needs a fresh token. Your app can supply one with the same identify call. Without a fresh token, an expired session continues as a guest.</p>
+            <p>If you prefer the SDK to fetch fresh tokens automatically, optionally configure a same-origin endpoint. It must authenticate the user, return a new <code className={code}>{"{ token }"}</code> on each POST, return HTTP 401 for guests, and set <code className={code}>Cache-Control: no-store</code>. Apply your app&apos;s normal request protections. Redirects are refused.</p>
+            <CodeBlock title="Optional JavaScript" code={AUTO_REFRESH_SNIPPET} />
+          </Section>
+
           <Section id="claims" title="Token claims">
-            <p>Sign with HS256. Any other algorithm is refused.</p>
+            <p>The Node.js helper handles these claims for you. These details are only needed when implementing a signer in another language. Sign with HS256. Any other algorithm is refused.</p>
             <div className="overflow-x-auto rounded-lg border border-slate-200">
               <table className="w-full min-w-[520px] text-left text-sm">
                 <thead className="bg-slate-50 text-slate-900">
@@ -150,6 +134,6 @@ export default function IdentityVerificationGuidePage() {
           </Section>
         </div>
       </div>
-    </div>
+    </DocsShell>
   );
 }

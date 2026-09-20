@@ -18,6 +18,7 @@ export async function POST(request: Request) {
     businessDescription?: string;
     businessType?: string;
     hearAboutUs?: string;
+    companySize?: string;
   };
   const patch: {
     source?: string;
@@ -27,6 +28,7 @@ export async function POST(request: Request) {
     businessDescription?: string;
     businessType?: string;
     hearAboutUs?: string;
+    companySize?: string;
   } = {};
   if (typeof body.source === "string") patch.source = body.source;
   if (typeof body.googleConnected === "boolean") patch.googleConnected = body.googleConnected;
@@ -35,6 +37,7 @@ export async function POST(request: Request) {
   if (typeof body.businessDescription === "string") patch.businessDescription = body.businessDescription.trim();
   if (typeof body.businessType === "string") patch.businessType = body.businessType.trim();
   if (typeof body.hearAboutUs === "string") patch.hearAboutUs = body.hearAboutUs.trim();
+  if (typeof body.companySize === "string") patch.companySize = body.companySize.trim();
 
   const result = await callGateway<{ ok?: boolean; error?: string }>(
     "/api/auth/onboarding/progress",
