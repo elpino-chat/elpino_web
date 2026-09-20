@@ -413,6 +413,12 @@ export function Header({
           )}
         </div>
 
+        {/* Keep language selection one tap away on small screens too. Before
+            this, it was only reachable after opening the navigation drawer. */}
+        <div className="mr-1 lg:hidden">
+          <LanguageSwitcher language={language} onChange={setStoredLanguage} light={light} open={languageOpen} onOpenChange={setLanguageOpen} compact />
+        </div>
+
         <button
           onClick={() => setIsMobileMenuOpen((open) => !open)}
           className={`relative z-50 flex h-10 w-10 items-center justify-center rounded-full transition lg:hidden ${light ? 'hover:bg-black/5' : 'hover:bg-white/10'}`}
@@ -497,9 +503,6 @@ export function Header({
                 </Link>
               </>
             )}
-            <div className={`mt-4 border-t pt-4 ${light ? 'border-black/10' : 'border-white/10'}`}>
-              <LanguageSwitcher language={language} onChange={setStoredLanguage} light={light} open={languageOpen} onOpenChange={setLanguageOpen} />
-            </div>
           </nav>
         </div>
       )}

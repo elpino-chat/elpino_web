@@ -6,6 +6,7 @@ import posthog from "posthog-js";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { CookieNotice } from "./CookieNotice";
+import { useStoredLanguage } from "../hooks/useStoredLanguage";
 
 type Session = { email: string; name?: string; userId: string };
 
@@ -23,6 +24,13 @@ export function AppShell({
   const isAppPage = pathname === "/onboarding" || pathname.startsWith("/dashboard");
   const isEmbeddedWidget = pathname.startsWith("/widget");
   const isDocsLandingPage = pathname === "/docs";
+  const language = useStoredLanguage();
+
+  // Keep the document language in sync with the site-wide picker. This helps
+  // screen readers choose the right voice and makes locale-aware UI reliable.
+  useEffect(() => {
+    document.documentElement.lang = language;
+  }, [language]);
 
   useEffect(() => {
     if (!session) return;
