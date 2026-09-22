@@ -7,7 +7,6 @@ export const primaryNavItems = [
   { icon: "visitors", label: "Analytics", href: "/dashboard/visitors" },
   { icon: "contacts", label: "Contacts", href: "/dashboard/contacts" },
   { icon: "knowledge", label: "Knowledge", href: "/dashboard/knowledge" },
-  { icon: "integrations", label: "Connect", href: "/dashboard/connect" },
   { icon: "settings", label: "Settings", href: "/dashboard/settings" },
 ] as const;
 
@@ -56,11 +55,6 @@ export function NavGlyph({ name, size = 22 }: { name: NavIcon; size?: number }) 
         <>
           <path d="M6 3.5h8l4 4V20a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 5 20V5a1.5 1.5 0 0 1 1-1.5Z" />
           <path d="M14 3.5V8h4M8.5 12h6M8.5 16h4" />
-        </>
-      )}
-      {name === "integrations" && (
-        <>
-          {[6, 12, 18].flatMap((x) => [6, 12, 18].map((y) => <circle key={`${x}-${y}`} cx={x} cy={y} r="1" fill="currentColor" stroke="none" />))}
         </>
       )}
       {name === "settings" && (

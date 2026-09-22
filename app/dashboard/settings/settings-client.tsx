@@ -78,6 +78,7 @@ import {
   Paperclip,
   Pencil,
   Plus,
+  Puzzle,
   Radio,
   RefreshCw,
   ReceiptText,
@@ -163,6 +164,7 @@ const featureItems = [
   { label: "Tag Manager", slug: "tags", icon: Tag },
   { label: "Identity Verification", slug: "identity", icon: UserCheck },
   { label: "Translations", slug: "translations", icon: Languages },
+  { label: "Plugins", slug: "plugins", icon: Puzzle },
 ];
 
 const pageDetails: Record<string, { description: string; action?: string; sections: Array<{ title: string; description: string; value?: string }> }> = {
@@ -173,6 +175,7 @@ const pageDetails: Record<string, { description: string; action?: string; sectio
   "Audit Logs": { description: "Review important workspace activity and security events.", action: "Export logs", sections: [{ title: "Recent activity", description: "Profile and workspace events from the last 30 days.", value: "Up to date" }, { title: "Data retention", description: "Audit events are retained according to your plan.", value: "30 days" }] },
   Trash: { description: "Review and restore recently deleted workspace content.", sections: [{ title: "Trash is empty", description: "Deleted conversations, templates, and automations will appear here.", value: "0 items" }] },
   "Tag Manager": { description: "Create and organize labels used throughout your workspace.", action: "Create tag", sections: [{ title: "Workspace tags", description: "Group, filter, and route conversations with shared labels.", value: "0 tags" }] },
+  Plugins: { description: "Extend your workspace with add-ons built on top of Elpino.", sections: [{ title: "Installed plugins", description: "Add-ons connected to this workspace.", value: "0 installed" }] },
 };
 
 function FeatureSettingsPage({ title }: { title: string }) {
