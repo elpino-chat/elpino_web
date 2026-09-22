@@ -5,7 +5,6 @@ import { CareersWhoWeAre } from "./components/CareersWhoWeAre";
 import { CareersCeoVideo } from "./components/CareersCeoVideo";
 import { CareersValues } from "./components/CareersValues";
 import { CareersAmbitionBento } from "./components/CareersAmbitionBento";
-import { CareersLeaders } from "./components/CareersLeaders";
 import { CareersBenefits } from "./components/CareersBenefits";
 import { CareersOffices } from "./components/CareersOffices";
 import { CareersJobBoard } from "./components/CareersJobBoard";
@@ -64,9 +63,6 @@ export default function CareersPage() {
 
       {/* 06. The Ambition That Sets Us Apart (Bento Grid) */}
       <CareersAmbitionBento />
-
-      {/* 07. Work With Industry Leaders Rewriting The Rules */}
-      <CareersLeaders />
 
       {/* 08. Benefits to Support Your Best Work */}
       <CareersBenefits />
