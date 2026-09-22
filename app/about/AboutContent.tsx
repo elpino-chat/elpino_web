@@ -9,6 +9,13 @@ import { PricingFaqSection } from "../components/PricingFaqSection";
 
 const wrap = "mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-20";
 
+const slothRoles = [
+  { title: "The Listener", task: "Understands every customer question", description: "Turns the knowledge your team already has into a clear, useful first answer.", image: "/images/contact-support-sloth.png", tone: "bg-[#ff6547]" },
+  { title: "The Sorter", task: "Keeps the inbox moving", description: "Finds the signal in the queue, so the right conversations get the right attention.", image: "/images/help-center-sloth.png", tone: "bg-[#1687ef]" },
+  { title: "The Protector", task: "Knows when to bring in a person", description: "Handles routine work with care and hands over the moments that need human judgment.", image: "/images/trust-sloth.png", tone: "bg-[#8d65b5]" },
+  { title: "The Grower", task: "Learns what helps customers most", description: "Surfaces the gaps, patterns, and questions that make your support better over time.", image: "/images/revenue-sloth.png", tone: "bg-[#18c983]" },
+];
+
 function Reveal({ children, className = "" }: { children: ReactNode; className?: string }) {
   const reduced = useReducedMotion();
   return <motion.div initial={false} whileInView={reduced ? undefined : { opacity: [0.35, 1], y: [24, 0] }} viewport={{ once: true, amount: 0.16 }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }} className={className}>{children}</motion.div>;
@@ -38,13 +45,20 @@ function ConversationIllustration() {
 export function AboutContent() {
   return (
     <main className="overflow-hidden bg-black font-[family-name:var(--font-rethink-sans)] text-white">
-      <section className="border-b border-white/10 py-24 sm:py-32">
+      <section className="border-b border-white/10 py-16 sm:py-24">
         <div className={wrap}>
-          <Reveal className="mx-auto max-w-4xl text-center">
-            <p className="text-xs font-medium uppercase tracking-[0.16em]">About us</p>
-            <h1 className="mt-7 text-[clamp(3.1rem,6.2vw,6.3rem)] font-normal leading-[0.93] tracking-[-0.06em]">We’re in business<br />to make help feel<br /><span className="bg-gradient-to-r from-[#ff6547] via-[#8f58df] to-[#1687ef] bg-clip-text text-transparent">more human.</span></h1>
-            <p className="mx-auto mt-8 max-w-2xl text-lg leading-8 text-white/60">Elpino gives customers useful answers from the knowledge you already have, then keeps your team close for the moments that need a person.</p>
-          </Reveal>
+          <div className="grid items-center gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16">
+            <Reveal>
+              <p className="text-xs font-medium uppercase tracking-[0.16em] text-[#d9bef4]">About Elpino</p>
+              <h1 className="mt-7 text-[clamp(3.3rem,6.1vw,6.5rem)] font-normal leading-[0.9] tracking-[-0.065em]">Customer support,<br /><span className="bg-gradient-to-r from-[#ff6547] via-[#d9bef4] to-[#18c983] bg-clip-text text-transparent">made more human.</span></h1>
+              <p className="mt-8 max-w-xl text-lg leading-8 text-white/60">Elpino gives customers useful answers from the knowledge you already have, then keeps your team close for the moments that need a person.</p>
+              <Link href="/signup" className="group mt-9 inline-flex items-center gap-3 rounded-full bg-white px-7 py-4 text-sm font-medium text-black transition hover:bg-[#d9bef4]">Meet Elpino <ArrowRight size={17} className="transition-transform group-hover:translate-x-1" /></Link>
+            </Reveal>
+            <Reveal className="relative">
+              <div aria-hidden="true" className="absolute inset-8 rounded-full bg-[#8d65b5]/25 blur-3xl" />
+              <Image src="/images/about-sloth-crew.png" alt="Four Elpino sloths working together to support customers" width={1774} height={887} priority sizes="(min-width: 1024px) 54vw, 100vw" className="relative h-auto w-full" />
+            </Reveal>
+          </div>
         </div>
       </section>
 
@@ -64,6 +78,28 @@ export function AboutContent() {
                 <p>On the other side is a team handling familiar questions, scattered information, and more conversations than time. Elpino exists to make that moment easier for everyone.</p>
               </div>
             </Reveal>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-y border-white/10 bg-[#111] py-24 sm:py-32">
+        <div className={wrap}>
+          <Reveal className="grid gap-7 border-b border-white/10 pb-12 lg:grid-cols-[0.7fr_1.3fr] lg:items-end">
+            <div><p className="text-xs font-medium uppercase tracking-[0.16em] text-[#18c983]">Our roles</p><h2 className="mt-5 text-4xl font-normal tracking-[-0.05em] sm:text-6xl">A crew built for the work.</h2></div>
+            <p className="max-w-xl text-lg leading-8 text-white/60">There are no employee headshots here. Instead, meet the jobs Elpino is designed to do—steadily, thoughtfully, and with a human team always in the loop.</p>
+          </Reveal>
+          <div className="mt-10 grid gap-x-5 gap-y-12 sm:grid-cols-2">
+            {slothRoles.map((role) => <Reveal key={role.title}>
+              <article className="group border-t border-white/15 pt-4">
+                <div className={`relative h-72 overflow-hidden rounded-[28px] ${role.tone}`}>
+                  <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/20 to-transparent" />
+                  <Image src={role.image} alt={`${role.title} sloth`} width={1145} height={1374} sizes="(min-width: 640px) 45vw, 100vw" className="absolute bottom-[-10%] left-1/2 h-[112%] w-auto max-w-none -translate-x-1/2 object-contain transition duration-500 group-hover:-translate-y-2" />
+                </div>
+                <p className="mt-5 text-xs font-medium uppercase tracking-[0.14em] text-white/45">{role.task}</p>
+                <h3 className="mt-2 text-3xl font-normal tracking-[-0.045em]">{role.title}</h3>
+                <p className="mt-3 max-w-md text-base leading-7 text-white/60">{role.description}</p>
+              </article>
+            </Reveal>)}
           </div>
         </div>
       </section>

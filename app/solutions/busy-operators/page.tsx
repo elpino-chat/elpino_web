@@ -1,235 +1,48 @@
 import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://elpino.chat";
 
 export const metadata: Metadata = {
-  title: "For Busy Operators",
-  description: "Turn scattered tasks into one approval flow.",
-  alternates: { canonical: `${SITE_URL}/solutions/busy-operators` },
-  openGraph: {
-    title: "For Busy Operators",
-    description: "Turn scattered tasks into one approval flow.",
-    url: `${SITE_URL}/solutions/busy-operators`,
-    type: "website",
-  },
+  title: "For Busy Teams",
+  description: "Keep customer conversations moving with AI answers, a shared inbox, and human handoff.",
+  alternates: { canonical: `${SITE_URL}/solutions/busy` },
+  openGraph: { title: "For Busy Teams | Elpino", description: "Keep customer conversations moving with Elpino.", url: `${SITE_URL}/solutions/busy`, type: "website" },
 };
 
-const queue = [
-  { source: "Gmail", task: "Reply to vendor about contract renewal", priority: "High" },
-  { source: "Calendar", task: "Confirm reschedule for Thursday's sync", priority: "Medium" },
-  { source: "Stripe", task: "Follow up on failed payment retry", priority: "High" },
-  { source: "Telegram", task: "Route customer escalation to support lead", priority: "Medium" },
+const benefits = [
+  ["The first answer is already there", "Elpino answers straightforward questions from your knowledge base before the queue becomes your team’s problem."],
+  ["One inbox. A little less chaos.", "Every conversation, AI answer, and teammate reply lives in the same calm place."],
+  ["Hand off without the backstory", "When a person is needed, they get the customer’s question and context instead of a blank slate."],
 ];
 
-const priorityColor: Record<string, string> = {
-  High: "#EF4444",
-  Medium: "#D9BEF4",
-  Low: "#9CA3AF",
-};
-
-const stages = [
-  { step: "01", title: "Connect your accounts", detail: "Gmail and Calendar link in under a minute. Connect Stripe, Razorpay, or a database when you want it watching revenue too." },
-  { step: "02", title: "Riz reads, triages, and drafts", detail: "Every inbound message and meeting gets weighed against what you actually care about, quietly, in the background." },
-  { step: "03", title: "You approve from Telegram", detail: "Drafts and decisions land as a Telegram message you can approve, edit, or reject. Nothing sends without you." },
-];
-
-const stats = [
-  { value: "1 queue", label: "Instead of five apps" },
-  { value: "100%", label: "Approval required" },
-  { value: "24/7", label: "Tasks triaged" },
-  { value: "1 tap", label: "To decide" },
-];
-
-const questions = [
-  { q: "Does it replace my task manager?", a: "Not necessarily — Riz surfaces decisions that come from your inbox, calendar, and revenue tools. You can still use a separate task manager for planned work." },
-  { q: "Can multiple people use the same queue?", a: "Each connected account has its own approval queue. Team-wide routing is on the roadmap." },
-  { q: "What if I fall behind on approvals?", a: "Nothing expires. Pending items simply wait in the queue until you have time to work through them." },
-];
-
-const comparison = [
-  { without: "Switch between five different apps to figure out what needs attention today.", with: "One queue, ranked by priority, pulled from every connected source." },
-  { without: "Miss a task because it was buried in a tool you didn't check that day.", with: "Everything routes into the same place, whether it started in Gmail, Calendar, or Stripe." },
-  { without: "Decide what's urgent by gut feeling, scrolling through unread counts.", with: "Riz ranks by priority automatically, based on deadlines and context." },
-  { without: "Approve or reject from a dashboard you have to remember to open.", with: "Decide from Telegram, wherever you already are." },
-];
-
-const sources = [
-  { name: "Gmail", detail: "Replies, follow-ups, and threads that need a decision." },
-  { name: "Google Calendar", detail: "Conflicts, reschedules, and meeting confirmations." },
-  { name: "Stripe / Razorpay", detail: "Failed payments and renewal follow-ups." },
-  { name: "Telegram", detail: "Team routing and escalations that need your call." },
+const flow = [
+  ["01", "A customer needs help", "They ask directly in your website chat—right when they need an answer."],
+  ["02", "Elpino keeps it moving", "The AI finds useful information from your knowledge and responds in seconds."],
+  ["03", "Your team steps in", "Questions that need judgment land in the shared inbox with the story intact."],
 ];
 
 export default function BusyOperatorsPage() {
   return (
-    <main>
-      <section className="pt-32 pb-16 px-10 text-center relative border-b-2 border-black/10 overflow-hidden bg-white">
-        <div
-          className="absolute inset-0 pointer-events-none -z-10 opacity-[0.05]"
-          style={{ backgroundImage: "radial-gradient(rgb(0, 0, 0) 1px, transparent 1px)", backgroundSize: "40px 40px" }}
-        ></div>
-        <div className="max-w-4xl mx-auto">
-          <span className="inline-block px-4 py-1.5 border-2 border-black bg-black text-white text-[11px] font-semibold uppercase tracking-[0.3em] mb-8">
-            Elpino / For Busy Operators
-          </span>
-          <h1 className="text-4xl md:text-5xl font-semibold tracking-tight leading-tight mb-8">
-            Turn scattered tasks into <br /><span className="text-[#D9BEF4]">one approval flow</span>
-          </h1>
-          <p className="text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            You don't need another tab. You need one place to say yes or no. Riz turns everything running across your tools into a single decision stream.
-          </p>
+    <div className="overflow-hidden bg-white font-[family-name:var(--font-rethink-sans)] text-[#17181c]">
+      <section className="relative overflow-hidden bg-[#111216] px-5 pb-20 pt-28 text-white sm:px-8 md:pb-28 md:pt-36 lg:px-16">
+        <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(circle_at_12%_84%,rgba(66,140,229,0.45),transparent_30rem),radial-gradient(circle_at_87%_18%,rgba(112,96,189,0.78),transparent_28rem)]" />
+        <div className="relative mx-auto grid max-w-[1400px] gap-12 lg:grid-cols-[minmax(0,0.98fr)_minmax(400px,0.8fr)] lg:items-center lg:gap-16">
+          <div className="max-w-3xl"><p className="flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#d9bef4]"><span className="h-px w-8 bg-[#d9bef4]" />Elpino for busy teams</p><h1 className="mt-7 text-balance text-5xl font-normal leading-[0.96] tracking-[-0.065em] sm:text-6xl md:text-7xl">The queue keeps moving.<br /><span className="text-[#d9bef4]">So can your team.</span></h1><p className="mt-7 max-w-2xl text-lg leading-8 text-white/65 sm:text-xl">Give customers an immediate, helpful first response. Keep the human moments close for the conversations that really need your team.</p><div className="mt-9 flex flex-wrap gap-3"><Link href="/signup" className="inline-flex h-12 items-center justify-center rounded-md bg-[#fe9238] px-6 text-sm font-semibold text-black transition hover:bg-white">Start free →</Link><Link href="/features" className="inline-flex h-12 items-center justify-center rounded-md border border-white/25 bg-white/5 px-6 text-sm font-medium transition hover:border-white hover:bg-white hover:text-black">Explore the workspace</Link></div><p className="mt-5 text-xs text-white/45">50 AI resolutions a month, free. No card required.</p></div>
+          <div className="relative mx-auto w-full max-w-[560px]"><div aria-hidden="true" className="absolute -inset-6 rounded-[2rem] bg-[radial-gradient(circle,#fc7b33_0%,transparent_65%)] opacity-40 blur-2xl" /><Image src="/images/busy-teams-sloth.png" alt="" width={1024} height={1536} className="pointer-events-none absolute -right-20 -top-32 z-10 h-auto w-40 rotate-6 drop-shadow-2xl sm:w-48" /><div className="relative overflow-hidden rounded-xl border border-[#428ce5] bg-[#edf7ff] p-3 text-[#17181c] shadow-[0_30px_80px_rgba(0,0,0,0.45)] sm:p-5"><div className="overflow-hidden rounded-lg border border-black/10 bg-white"><div className="flex items-center justify-between border-b border-black/10 px-5 py-4 text-xs"><span className="font-medium">Shared inbox</span><span className="text-[#527b97]">3 conversations</span></div><div className="space-y-1 p-3">{[["Maya Johnson", "How do I invite my teammates?", "Answered by AI"], ["Alex Lee", "Can someone help with my order?", "With your team"], ["Sam Kim", "I need help getting started.", "Open conversation"]].map(([name, question, status], index) => <div key={name} className={`flex items-center gap-3 rounded-lg p-3 ${index === 1 ? "bg-[#eee5fa]" : "hover:bg-black/[0.03]"}`}><span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#dbe6ee] text-[10px]">{name.split(" ").map(part => part[0]).join("")}</span><span className="min-w-0 flex-1"><strong className="block text-xs">{name}</strong><span className="mt-1 block truncate text-[10px] text-[#6d756c]">{question}</span></span><span className={`text-[9px] ${index === 1 ? "text-[#70558d]" : "text-[#55776b]"}`}>{status}</span></div>)}</div></div><div className="mt-4 rounded-lg bg-[#17181c] px-4 py-3 text-xs text-white">Helpful answers. Human support when it matters.</div></div></div>
         </div>
       </section>
 
-      {/* Queue visual */}
-      <section className="px-10 md:px-14 py-24 border-b-2 border-black/10 bg-[#fcfcfc]">
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-10">
-            <span className="text-[#D9BEF4] text-[13px] font-semibold uppercase tracking-[0.4em] mb-4 block">One queue, every source</span>
-            <h2 className="text-2xl md:text-3xl font-semibold">What's waiting for you right now</h2>
-          </div>
-          <div className="border-2 border-black bg-white shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] divide-y divide-black/10">
-            {queue.map((item) => (
-              <div key={item.task} className="flex items-center justify-between gap-4 px-6 py-4">
-                <div className="min-w-0">
-                  <span className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 block mb-1">{item.source}</span>
-                  <p className="text-sm font-semibold truncate">{item.task}</p>
-                </div>
-                <span
-                  className="shrink-0 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest text-white"
-                  style={{ backgroundColor: priorityColor[item.priority] }}
-                >
-                  {item.priority}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <section className="border-b border-black/10 bg-[#428ce5] px-5 py-7 text-white sm:px-8 lg:px-16"><div className="mx-auto flex max-w-[1400px] flex-wrap items-center justify-between gap-x-10 gap-y-4 text-sm"><span className="font-medium">Fewer repeat questions.</span><span className="text-white/70">More helpful customer moments.</span><span className="text-white/70">A team that stays in sync.</span></div></section>
 
-      {/* Stats */}
-      <section className="px-10 md:px-14 py-16 border-b-2 border-black/10 bg-black text-white">
-        <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          {stats.map((stat) => (
-            <div key={stat.label}>
-              <span className="block text-3xl font-semibold text-[#D9BEF4] mb-2">{stat.value}</span>
-              <span className="block text-[12px] font-semibold uppercase tracking-widest text-white/60">{stat.label}</span>
-            </div>
-          ))}
-        </div>
-      </section>
+      <section className="px-5 py-20 sm:px-8 md:py-28 lg:px-16"><div className="mx-auto max-w-[1400px]"><div className="grid gap-8 md:grid-cols-[0.8fr_1.2fr] md:items-end"><div><p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#7060bd]">Your team, amplified</p><h2 className="mt-4 text-4xl font-normal leading-[1.03] tracking-[-0.055em] sm:text-5xl">More helping.<br />Less chasing.</h2></div><p className="max-w-xl text-base leading-7 text-black/60">Your team does its best work when it is not buried under the same questions. Elpino gives each conversation the right first move.</p></div><div className="mt-12 grid gap-5 md:grid-cols-3">{benefits.map(([title, text], index) => <article key={title} className="flex min-h-[280px] flex-col rounded-xl border border-black/10 bg-[#fbfbfa] p-7"><span className="flex size-9 items-center justify-center rounded-lg bg-[#eee5fa] text-sm text-[#7060bd]">0{index + 1}</span><h3 className="mt-9 text-2xl font-medium tracking-[-0.04em]">{title}</h3><p className="mt-4 text-sm leading-7 text-black/55">{text}</p></article>)}</div></div></section>
 
-      {/* Flow */}
-      <section className="px-10 md:px-14 py-24 border-b-2 border-black/10 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <span className="text-[#D9BEF4] text-[13px] font-semibold uppercase tracking-[0.4em] mb-4 block">The flow</span>
-            <h2 className="text-2xl md:text-4xl font-semibold">From connected to handled</h2>
-          </div>
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-6">
-            {stages.map((stage) => (
-              <div key={stage.step} className="flex flex-col gap-5">
-                <span className="text-4xl font-semibold leading-none tracking-tighter text-black/10 md:text-5xl">{stage.step}</span>
-                <div>
-                  <h3 className="text-lg font-semibold mb-2">{stage.title}</h3>
-                  <p className="text-sm text-gray-500 leading-relaxed">{stage.detail}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <section className="bg-[#fff1e3] px-5 py-20 sm:px-8 md:py-28 lg:px-16"><div className="mx-auto max-w-[1400px]"><p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#956840]">How the handoff feels</p><div className="mt-4 flex flex-col justify-between gap-6 md:flex-row md:items-end"><h2 className="max-w-2xl text-4xl font-normal leading-[1.03] tracking-[-0.055em] sm:text-5xl">No dropped threads.<br />No starting over.</h2><p className="max-w-sm text-sm leading-7 text-[#76634f]">The AI handles the repeatable parts. Your people are ready when nuance, care, or judgment is required.</p></div><div className="mt-14 grid gap-5 md:grid-cols-3">{flow.map(([number, title, text]) => <article key={number} className="rounded-xl border border-[#dfc7b1] bg-white/65 p-7"><span className="text-sm font-medium text-[#b56e36]">{number}</span><div className="my-8 h-px bg-[#dfc7b1]" /><h3 className="text-2xl font-medium tracking-[-0.04em]">{title}</h3><p className="mt-4 text-sm leading-7 text-[#76634f]">{text}</p></article>)}</div></div></section>
 
-      {/* Sources feeding the queue */}
-      <section className="px-10 md:px-14 py-24 border-b-2 border-black/10 bg-[#fcfcfc]">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <span className="text-[#D9BEF4] text-[13px] font-semibold uppercase tracking-[0.4em] mb-4 block">Where tasks come from</span>
-            <h2 className="text-2xl md:text-4xl font-semibold">Every source, one queue</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {sources.map((source) => (
-              <div key={source.name} className="p-6 border-2 border-black bg-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
-                <h3 className="text-base font-semibold mb-3">{source.name}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">{source.detail}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <section className="bg-[#111216] px-5 py-20 text-white sm:px-8 md:py-28 lg:px-16"><div className="mx-auto grid max-w-[1400px] gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-center"><div><p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#d9bef4]">Your knowledge, ready to help</p><h2 className="mt-5 text-4xl font-normal leading-[1.03] tracking-[-0.055em] sm:text-5xl">Give AI a helpful place to start.</h2><p className="mt-6 max-w-lg text-base leading-7 text-white/65">Bring together your website pages, help articles, and documents. Elpino searches this knowledge before it responds to a customer.</p><Link href="/features#knowledge-base" className="mt-8 inline-flex h-12 items-center rounded-md border border-white/25 px-6 text-sm font-medium transition hover:bg-white hover:text-black">Explore the knowledge base ↗</Link></div><div className="rounded-xl border border-[#428ce5] bg-[#edf7ff] p-3 text-[#17181c] sm:p-5"><div className="rounded-lg bg-white p-5 sm:p-7"><div className="flex items-center justify-between border-b border-black/10 pb-4 text-xs"><span className="font-medium">Knowledge library</span><span className="text-[#527b97]">4 sources ready</span></div>{["Getting started guide", "Billing and plans", "Team setup", "Product FAQs"].map((item, index) => <div key={item} className="flex items-center gap-3 border-b border-black/5 py-4"><span className="flex size-7 items-center justify-center rounded-lg bg-[#eee5fa] text-xs text-[#765a99]">⌁</span><span className="flex-1 text-sm">{item}</span><span className="text-[10px] text-[#377755]">{index === 3 ? "Updated" : "Ready"} ✓</span></div>)}<p className="mt-5 text-xs leading-6 text-[#628099]">Your team’s knowledge, ready for the next customer question.</p></div></div></div></section>
 
-      {/* Before / after */}
-      <section className="px-10 md:px-14 py-24 border-b-2 border-black/10 bg-white">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-16">
-            <span className="text-[#D9BEF4] text-[13px] font-semibold uppercase tracking-[0.4em] mb-4 block">Before and after</span>
-            <h2 className="text-2xl md:text-4xl font-semibold">What changes with one queue</h2>
-          </div>
-          <div className="border-2 border-black bg-[#fcfcfc] shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] divide-y-2 divide-black">
-            {comparison.map((row) => (
-              <div key={row.without} className="grid grid-cols-1 md:grid-cols-2 divide-y-2 md:divide-y-0 md:divide-x-2 divide-black">
-                <div className="p-6">
-                  <span className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-2 block">Without Riz</span>
-                  <p className="text-sm text-gray-500 leading-relaxed">{row.without}</p>
-                </div>
-                <div className="p-6 bg-[#D9BEF4]/5">
-                  <span className="text-[11px] font-semibold uppercase tracking-widest text-[#D9BEF4] mb-2 block">With Riz</span>
-                  <p className="text-sm text-gray-700 leading-relaxed">{row.with}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Trust */}
-      <section className="px-10 md:px-14 py-24 border-b-2 border-black/10 bg-[#fcfcfc]">
-        <div className="max-w-4xl mx-auto text-center">
-          <span className="text-[#D9BEF4] text-[13px] font-semibold uppercase tracking-[0.4em] mb-4 block">Why it's safe to hand off</span>
-          <h2 className="text-2xl md:text-4xl font-semibold mb-8">Every decision stays yours</h2>
-          <p className="text-lg text-gray-500 leading-relaxed mb-10 max-w-2xl mx-auto">
-            Riz surfaces and drafts. Nothing executes until you tap approve. Your queue is a proposal list, not an action log.
-          </p>
-          <a href="/trust" className="text-[#D9BEF4] font-semibold hover:text-black transition-colors">
-            See how trust works →
-          </a>
-        </div>
-      </section>
-
-      {/* Testimonial */}
-      <section className="px-10 md:px-14 py-24 border-b-2 border-black/10 bg-white">
-        <div className="max-w-3xl mx-auto text-center">
-          <p className="text-xl md:text-2xl font-medium leading-relaxed mb-6">
-            "I used to juggle five different tools to keep ops running. Now it's one queue, and I clear it during coffee."
-          </p>
-          <span className="text-[12px] font-semibold uppercase tracking-widest text-gray-400">— Early access operator</span>
-        </div>
-      </section>
-
-      {/* Mini FAQ */}
-      <section className="px-10 md:px-14 py-24 border-b-2 border-black/10 bg-[#fcfcfc]">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-semibold mb-10 text-center">Common questions</h2>
-          <div className="space-y-6">
-            {questions.map((item) => (
-              <div key={item.q} className="border-2 border-black p-6 bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                <h3 className="text-base font-semibold mb-2">{item.q}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">{item.a}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="px-10 md:px-14 py-24 bg-white text-center">
-        <h2 className="text-2xl md:text-3xl font-semibold mb-6">Turn the noise into one flow</h2>
-        <a
-          href="/signup"
-          className="inline-flex items-center gap-2 border-2 border-black bg-[#D9BEF4] px-8 py-4 text-white font-semibold shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
-        >
-          Start free
-        </a>
-      </section>
-    </main>
+      <section className="bg-[#428ce5] px-5 py-20 text-white sm:px-8 md:py-28 lg:px-16"><div className="mx-auto flex max-w-[1400px] flex-col items-start justify-between gap-10 lg:flex-row lg:items-end"><div className="max-w-3xl"><p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#d9bef4]">Make the queue feel lighter</p><h2 className="mt-5 text-balance text-4xl font-normal leading-[1.02] tracking-[-0.055em] sm:text-5xl md:text-6xl">Every customer gets a helpful next step.</h2><p className="mt-5 max-w-xl text-base leading-7 text-white/65">Start with the answers you already have. Bring your team in exactly when it matters.</p></div><div className="flex flex-wrap gap-3"><Link href="/signup" className="inline-flex h-12 items-center justify-center rounded-md bg-[#fe9238] px-6 text-sm font-semibold text-black transition hover:bg-white">Start free →</Link><Link href="/contact" className="inline-flex h-12 items-center justify-center rounded-md border border-white/30 px-6 text-sm font-medium transition hover:bg-white hover:text-black">Talk to us</Link></div></div></section>
+    </div>
   );
 }

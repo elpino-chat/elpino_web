@@ -30,12 +30,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     page("", 1.0, "weekly"),
     page("/features", 0.9, "weekly"),
     page("/pricing", 0.9, "monthly"),
-    // /agent, /product/*, and /solutions/* described the previous
+    // /agent, /product/*, and the legacy /solutions/* pages described the previous
     // "operator" product and now redirect (see next.config.ts) — a
     // redirecting URL has no business in the sitemap, which is a list of
     // canonical destinations to crawl and index, not a list of routes that
     // merely resolve.
     page("/integrations", 0.8, "weekly"),
+    page("/solutions/revenue", 0.8, "monthly"),
+    page("/solutions/busy", 0.8, "monthly"),
+    page("/solutions/founders-team", 0.8, "monthly"),
     page("/about", 0.7, "monthly"),
     page("/blog", 0.8, "weekly"),
     page("/careers", 0.7, "weekly"),

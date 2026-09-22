@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArrowLeft, ArrowRight, Briefcase, Check, Clock, HeartPulse, Laptop, MapPin, Rocket } from "lucide-react";
 import { getRole, roles } from "../roles";
 import { ApplicationForm } from "./ApplicationForm";
+import { Reveal } from "@/app/components/Reveal";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://elpino.chat";
 
@@ -32,29 +35,34 @@ export async function generateMetadata({
   };
 }
 
-const BackIcon = () => (
-  <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-    <path d="M7.82843 10.9999H20V12.9999H7.82843L13.1924 18.3638L11.7782 19.778L4 11.9999L11.7782 4.22168L13.1924 5.63589L7.82843 10.9999Z"></path>
-  </svg>
-);
+const perks = [
+  { icon: Laptop, title: "Remote setup", body: "$4,000 home-office stipend, plus $1,000 annually for refreshes." },
+  { icon: HeartPulse, title: "Health & flow", body: "Premium health, dental, and vision globally. Unlimited PTO, 3-week minimum." },
+  { icon: Rocket, title: "Growth budget", body: "$5,000 a year for books, conferences, or courses." },
+];
 
-const CategoryIcon = () => (
-  <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-    <path d="M7 5V2C7 1.44772 7.44772 1 8 1H16C16.5523 1 17 1.44772 17 2V5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V6C2 5.44772 2.44772 5 3 5H7ZM4 16V19H20V16H4ZM4 14H20V7H4V14ZM9 3V5H15V3H9ZM11 11H13V13H11V11Z"></path>
-  </svg>
-);
+const hiringSteps = [
+  { number: "01", title: "Deep dive", description: "A 45-minute conversation with a founder about your journey and why you build." },
+  { number: "02", title: "Take-home task", description: "A real-world problem designed to take 4-6 hours. No trick questions." },
+  { number: "03", title: "Pairing session", description: "Review your task with the team. We care how you think, not just the syntax." },
+  { number: "04", title: "The offer", description: "We move fast — expect a decision within 48 hours of your final round." },
+];
 
-const RemoteIcon = () => (
-  <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12 20.8995L16.9497 15.9497C19.6834 13.2161 19.6834 8.78392 16.9497 6.05025C14.2161 3.31658 9.78392 3.31658 7.05025 6.05025C4.31658 8.78392 4.31658 13.2161 7.05025 15.9497L12 20.8995ZM12 23.7279L5.63604 17.364C2.12132 13.8492 2.12132 8.15076 5.63604 4.63604C9.15076 1.12132 14.8492 1.12132 18.364 4.63604C21.8787 8.15076 21.8787 13.8492 18.364 17.364L12 23.7279ZM12 13C13.1046 13 14 12.1046 14 11C14 9.89543 13.1046 9 12 9C10.8954 9 10 9.89543 10 11C10 12.1046 10.8954 13 12 13ZM12 15C9.79086 15 8 13.2091 8 11C8 8.79086 9.79086 7 12 7C14.2091 7 16 8.79086 16 11C16 13.2091 14.2091 15 12 15Z"></path>
-  </svg>
-);
+function Eyebrow({ children }: { children: React.ReactNode }) {
+  return <p className="mb-4 text-xs font-bold uppercase tracking-[0.15em] text-[#6c48a0]">{children}</p>;
+}
 
-const ClockIcon = () => (
-  <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM13 12H17V14H11V7H13V12Z"></path>
-  </svg>
-);
+function Section({ eyebrow, title, children }: { eyebrow: string; title: string; children: React.ReactNode }) {
+  return (
+    <Reveal>
+      <section>
+        <Eyebrow>{eyebrow}</Eyebrow>
+        <h2 className="text-2xl font-medium tracking-[-0.04em] sm:text-3xl">{title}</h2>
+        <div className="mt-6">{children}</div>
+      </section>
+    </Reveal>
+  );
+}
 
 export default async function CareerRolePage({
   params,
@@ -96,166 +104,172 @@ export default async function CareerRolePage({
   };
 
   return (
-    <main className="max-w-[88rem] mx-auto px-10 pt-32 pb-40">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jobPostingSchema) }}
-      />
-      <Link
-        className="inline-flex items-center gap-2 text-[12px] font-semibold uppercase tracking-widest text-gray-400 hover:text-[#D9BEF4] mb-12 transition-colors"
-        href="/careers"
-      >
-        <BackIcon />
-        Back to careers
-      </Link>
+    <main className="overflow-hidden bg-[#f6f4ef] font-[family-name:var(--font-rethink-sans)] text-[#233d4d]">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jobPostingSchema) }} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_520px] gap-20">
-        <div>
-          <div className="mb-12">
-            <div className="flex gap-4 text-[12px] font-semibold uppercase tracking-[0.2em] text-[#D9BEF4] mb-4">
-              <span className="flex items-center gap-1">
-                <CategoryIcon />
-                {role.category}
-              </span>
-              <span className="flex items-center gap-1">
-                <RemoteIcon />
-                Remote
-              </span>
-              <span className="flex items-center gap-1">
-                <ClockIcon />
-                {role.employmentType}
-              </span>
-            </div>
-            <h1 className="text-4xl md:text-6xl font-semibold uppercase tracking-normal leading-tight mb-8">{role.title}</h1>
-            <p className="text-xl font-semibold text-[#D9BEF4] leading-tight mb-12">{role.tagline}</p>
+      <section className="relative overflow-hidden bg-[#233d4d] px-5 pt-28 pb-16 text-white sm:px-8 sm:pt-36 sm:pb-24">
+        <div aria-hidden="true" className="absolute -left-28 bottom-0 size-96 rounded-full bg-[#18c983]/20 blur-3xl" />
+        <div aria-hidden="true" className="absolute -right-24 -top-16 size-[32rem] rounded-full bg-[#8d65b5]/40 blur-3xl" />
+        <div aria-hidden="true" className="absolute inset-0 opacity-30 [background-image:radial-gradient(rgba(255,255,255,0.3)_1px,transparent_1px)] [background-size:26px_26px]" />
+        <div className="relative mx-auto max-w-[1440px]">
+          <Link href="/careers" className="group inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.15em] text-white/55 transition hover:text-[#d9bef4]">
+            <ArrowLeft size={15} className="transition-transform group-hover:-translate-x-1" />
+            Back to careers
+          </Link>
+          <div className="mt-10 grid items-center gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
+            <Reveal>
+              <div>
+                <div className="flex flex-wrap gap-2.5">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/5 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.13em] text-white/75"><Briefcase size={13} />{role.category}</span>
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/5 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.13em] text-white/75"><MapPin size={13} />{role.location}</span>
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/5 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.13em] text-white/75"><Clock size={13} />{role.employmentType}</span>
+                </div>
+                <h1 className="mt-7 max-w-3xl text-[clamp(2.8rem,5.5vw,5.5rem)] font-medium leading-[0.92] tracking-[-0.065em]">{role.title}</h1>
+                <p className="mt-6 max-w-xl text-lg leading-8 text-white/65">{role.tagline}</p>
+                <a href="#apply" className="group mt-9 inline-flex min-h-13 items-center gap-3 rounded-full bg-white px-7 text-sm font-semibold text-[#233d4d] transition hover:bg-[#d9bef4]">
+                  Apply for this role <ArrowRight size={17} className="transition-transform group-hover:translate-x-1" />
+                </a>
+              </div>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <div className="relative mx-auto w-full max-w-[300px] sm:max-w-[340px]">
+                <div aria-hidden="true" className="absolute inset-8 rounded-full bg-[#d9bef4]/25 blur-3xl" />
+                <Image src={role.sloth.src} alt={role.sloth.alt} width={role.sloth.width} height={role.sloth.height} priority sizes="(min-width: 1024px) 30vw, 80vw" className="relative h-auto w-full drop-shadow-[0_35px_45px_rgba(0,0,0,0.35)]" />
+              </div>
+            </Reveal>
           </div>
+        </div>
+      </section>
 
-          <div className="space-y-16">
-            <section>
-              <h3 className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-6">Overview</h3>
-              <p className="text-lg text-gray-500 leading-relaxed">{role.overview}</p>
-            </section>
+      <section className="px-5 py-16 sm:px-8 sm:py-24">
+        <div className="mx-auto grid max-w-[1440px] gap-14 lg:grid-cols-[1fr_400px] lg:gap-20">
+          <div className="min-w-0 max-w-3xl space-y-16 sm:space-y-20">
+            <Section eyebrow="Overview" title="The role.">
+              <p className="text-lg leading-8 text-[#53616b]">{role.overview}</p>
+            </Section>
 
-            <section>
-              <h3 className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-6">What you'll do</h3>
-              <ul className="space-y-6">
+            <Section eyebrow="What you'll do" title="Your craft.">
+              <ul className="space-y-4">
                 {role.responsibilities.map((item) => (
-                  <li key={item} className="flex gap-4 items-start">
-                    <div className="w-2 h-2 mt-2 bg-[#D9BEF4] shrink-0"></div>
-                    <span className="text-base font-medium leading-relaxed">{item}</span>
+                  <li key={item} className="flex items-start gap-3.5">
+                    <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-[#e7ddf3]"><Check size={13} className="text-[#7651b0]" strokeWidth={3} /></span>
+                    <span className="text-base leading-7 text-[#3c4a52]">{item}</span>
                   </li>
                 ))}
               </ul>
-            </section>
+            </Section>
 
-            <section>
-              <h3 className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-6">Requirements</h3>
-              <ul className="space-y-6">
+            <Section eyebrow="Requirements" title="What we're looking for.">
+              <ul className="space-y-4">
                 {role.requirements.map((item) => (
-                  <li key={item} className="flex gap-4 items-start">
-                    <div className="w-2 h-2 mt-2 bg-black shrink-0"></div>
-                    <span className="text-base text-gray-500 leading-relaxed">{item}</span>
+                  <li key={item} className="flex items-start gap-3.5">
+                    <span className="mt-[11px] size-2 shrink-0 rounded-full bg-[#233d4d]" />
+                    <span className="text-base leading-7 text-[#3c4a52]">{item}</span>
                   </li>
                 ))}
               </ul>
-            </section>
+            </Section>
 
-            <section>
-              <h3 className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-6">Nice to have</h3>
-              <ul className="space-y-6">
+            <Section eyebrow="Nice to have" title="Bonus points.">
+              <ul className="space-y-4">
                 {role.niceToHaves.map((item) => (
-                  <li key={item} className="flex gap-4 items-start">
-                    <div className="w-2 h-2 mt-2 border-2 border-black shrink-0"></div>
-                    <span className="text-base text-gray-500 leading-relaxed">{item}</span>
+                  <li key={item} className="flex items-start gap-3.5">
+                    <span className="mt-[9px] size-2 shrink-0 rounded-full border-2 border-[#7651b0]/60" />
+                    <span className="text-base leading-7 text-[#53616b]">{item}</span>
                   </li>
                 ))}
               </ul>
-            </section>
+            </Section>
 
-            <section>
-              <h3 className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-6">Your first 90 days</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Section eyebrow="Your first 90 days" title="How you'll ramp.">
+              <div className="grid gap-4 sm:grid-cols-3">
                 {role.ninetyDayPlan.map((milestone) => (
-                  <div key={milestone.period} className="border-2 border-black p-6 bg-[#fcfcfc] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                    <span className="text-[11px] font-semibold uppercase tracking-widest text-[#D9BEF4] mb-3 block">{milestone.period}</span>
-                    <p className="text-sm text-gray-600 leading-relaxed">{milestone.goal}</p>
-                  </div>
+                  <article key={milestone.period} className="rounded-[1.5rem] border border-[#233d4d]/12 bg-white p-6 sm:p-7">
+                    <span className="inline-flex rounded-full bg-[#e7ddf3] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.13em] text-[#5c416f]">{milestone.period}</span>
+                    <p className="mt-4 text-sm leading-6 text-[#53616b]">{milestone.goal}</p>
+                  </article>
                 ))}
               </div>
-            </section>
+            </Section>
 
-            <section>
-              <h3 className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-6">What you'll get</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border-2 border-black divide-y-2 md:divide-y-0 md:divide-x-2 divide-black">
-                <div className="p-8">
-                  <h4 className="text-base font-semibold uppercase mb-3">Remote setup</h4>
-                  <p className="text-sm text-gray-500 leading-relaxed">$4,000 home-office stipend, plus $1,000 annually for refreshes.</p>
-                </div>
-                <div className="p-8 bg-[#D9BEF4]/5">
-                  <h4 className="text-base font-semibold uppercase mb-3">Health & flow</h4>
-                  <p className="text-sm text-gray-500 leading-relaxed">Premium health, dental, and vision globally. Unlimited PTO, 3-week minimum.</p>
-                </div>
-                <div className="p-8">
-                  <h4 className="text-base font-semibold uppercase mb-3">Growth budget</h4>
-                  <p className="text-sm text-gray-500 leading-relaxed">$5,000 a year for books, conferences, or courses.</p>
-                </div>
+            <Section eyebrow="What you'll get" title="Support for your best work.">
+              <div className="grid gap-4 sm:grid-cols-3">
+                {perks.map(({ icon: Icon, title, body }) => (
+                  <article key={title} className="rounded-[1.5rem] border border-[#233d4d]/12 bg-white p-6 sm:p-7">
+                    <span className="flex size-11 items-center justify-center rounded-2xl bg-[#f1eefa] text-[#7651b0]"><Icon size={19} strokeWidth={1.8} /></span>
+                    <h3 className="mt-5 text-lg font-medium tracking-[-0.03em]">{title}</h3>
+                    <p className="mt-2 text-sm leading-6 text-[#53616b]">{body}</p>
+                  </article>
+                ))}
               </div>
-            </section>
+            </Section>
 
-            <section>
-              <h3 className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-6">Our hiring process</h3>
-              <div className="space-y-4">
-                {[
-                  { number: "01", title: "Deep dive", description: "A 45-minute conversation with a founder about your journey and why you build." },
-                  { number: "02", title: "Take-home task", description: "A real-world problem designed to take 4-6 hours. No trick questions." },
-                  { number: "03", title: "Pairing session", description: "Review your task with the team. We care how you think, not just the syntax." },
-                  { number: "04", title: "The offer", description: "We move fast — expect a decision within 48 hours of your final round." },
-                ].map((step) => (
-                  <div key={step.number} className="flex gap-6 items-start border-b border-black/10 pb-4">
-                    <span className="text-lg font-semibold text-[#D9BEF4] shrink-0 w-8">{step.number}</span>
+            <Section eyebrow="Our hiring process" title="Four steps, no maze.">
+              <ol className="divide-y divide-[#233d4d]/10">
+                {hiringSteps.map((step) => (
+                  <li key={step.number} className="flex items-start gap-5 py-5 first:pt-0 last:pb-0">
+                    <span className="shrink-0 font-geist-mono text-sm font-semibold text-[#7651b0]">{step.number}</span>
                     <div>
-                      <h4 className="text-base font-semibold uppercase mb-1">{step.title}</h4>
-                      <p className="text-sm text-gray-500 leading-relaxed">{step.description}</p>
+                      <h3 className="text-base font-semibold tracking-[-0.02em]">{step.title}</h3>
+                      <p className="mt-1 text-sm leading-6 text-[#53616b]">{step.description}</p>
                     </div>
-                  </div>
+                  </li>
                 ))}
-              </div>
-            </section>
+              </ol>
+            </Section>
 
-            <section className="border-4 border-black p-10 bg-black text-white shadow-[12px_12px_0px_0px_rgba(217,190,244,1)]">
-              <p className="text-xl font-medium leading-relaxed mb-4">
-                "We hire builders, not order-takers. You own your features from architectural design to production monitoring."
+            <Reveal>
+              <blockquote className="rounded-[2rem] bg-[#233d4d] p-8 text-white sm:p-10">
+                <p className="font-[family-name:var(--font-instrument-serif)] text-2xl italic leading-snug text-[#d9bef4] sm:text-3xl">
+                  “We hire builders, not order-takers. You own your features from architectural design to production monitoring.”
+                </p>
+                <footer className="mt-5 text-[11px] font-bold uppercase tracking-[0.15em] text-white/40">— The Elpino team</footer>
+              </blockquote>
+            </Reveal>
+          </div>
+
+          <div id="apply" className="h-fit scroll-mt-28 lg:sticky lg:top-[calc(var(--elpino-header-h,64px)+2rem)]">
+            <Reveal delay={0.1}>
+              <ApplicationForm roleTitle={role.title} />
+              <p className="mt-6 text-center text-xs text-[#71808a]">
+                By applying, you agree to our{" "}
+                <Link href="/privacy" className="font-semibold text-[#233d4d] underline underline-offset-4 transition hover:text-[#7651b0]">Candidate Privacy Policy</Link>.
               </p>
-              <span className="text-[11px] font-semibold uppercase tracking-widest text-white/40">— The Elpino team</span>
-            </section>
+            </Reveal>
           </div>
         </div>
-
-        <div className="lg:sticky lg:top-32 h-fit">
-          <ApplicationForm roleTitle={role.title} />
-          <p className="mt-8 text-[11px] text-center font-medium text-gray-400 uppercase tracking-widest">
-            By applying, you agree to our <span className="underline cursor-pointer">Candidate Privacy Policy</span>.
-          </p>
-        </div>
-      </div>
+      </section>
 
       {otherRoles.length > 0 && (
-        <div className="mt-32 pt-20 border-t-2 border-black/10">
-          <h3 className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-8">Other open roles</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {otherRoles.map((other) => (
-              <Link
-                key={other.slug}
-                href={`/careers/${other.slug}`}
-                className="border-2 border-black p-8 bg-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[10px_10px_0px_0px_rgba(217,190,244,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
-              >
-                <span className="text-[11px] font-semibold uppercase tracking-widest text-[#D9BEF4] mb-3 block">{other.category}</span>
-                <h4 className="text-lg font-semibold uppercase mb-2">{other.title}</h4>
-                <p className="text-sm text-gray-500 leading-relaxed">{other.tagline}</p>
-              </Link>
-            ))}
+        <section className="border-t border-[#233d4d]/10 bg-white px-5 py-16 sm:px-8 sm:py-24">
+          <div className="mx-auto max-w-[1440px]">
+            <Reveal>
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <Eyebrow>Other open roles</Eyebrow>
+                  <h2 className="text-3xl font-medium tracking-[-0.05em] sm:text-4xl">Find your place.</h2>
+                </div>
+                <Link href="/careers" className="group inline-flex items-center gap-2 text-sm font-semibold text-[#233d4d]">
+                  All roles <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
+                </Link>
+              </div>
+            </Reveal>
+            <div className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {otherRoles.map((other, index) => (
+                <Reveal key={other.slug} delay={Math.min(index * 0.06, 0.24)}>
+                  <Link href={`/careers/${other.slug}`} className="group flex h-full flex-col justify-between rounded-[1.5rem] border border-[#233d4d]/12 bg-[#fbfaf7] p-7 transition duration-300 hover:-translate-y-1 hover:border-[#7651b0]/40 hover:bg-white hover:shadow-[0_30px_60px_-42px_rgba(23,24,28,0.55)] sm:p-8">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-[0.11em] text-[#6c48a0]">{other.category} · {other.location}</p>
+                      <h3 className="mt-3 text-xl font-medium tracking-[-0.03em]">{other.title}</h3>
+                      <p className="mt-2 text-sm leading-6 text-[#5d6872]">{other.tagline}</p>
+                    </div>
+                    <span className="mt-6 inline-flex size-10 items-center justify-center rounded-full border border-[#233d4d]/20 transition group-hover:bg-[#233d4d] group-hover:text-white"><ArrowRight size={16} /></span>
+                  </Link>
+                </Reveal>
+              ))}
+            </div>
           </div>
-        </div>
+        </section>
       )}
     </main>
   );

@@ -1,113 +1,353 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, BookOpen, Building2, Clock3, Compass, Search, Sparkles, Wrench, X } from "lucide-react";
-import { BlogPost } from "./data";
+import Link from "next/link";
+import { motion, useReducedMotion } from "framer-motion";
+import { ArrowDown, ArrowRight, Search, X } from "lucide-react";
 import { BlogCover } from "../components/BlogCover";
 import { useStoredLanguage } from "../hooks/useStoredLanguage";
-import { blogCopy } from "./i18n";
+import type { BlogPost } from "./data";
 
-const categoryMeta = {
-  Company: { icon: Building2, eyebrow: "Behind Elpino", description: "How we think about AI support, trust, focus, and the company we are building.", background: "bg-[#e7ddf3]", accent: "text-[#7651b0]" },
-  Product: { icon: Wrench, eyebrow: "Product thinking", description: "A closer look at the systems, safeguards, and product decisions behind Elpino.", background: "bg-[#dceee8]", accent: "text-[#28745a]" },
-  Guides: { icon: BookOpen, eyebrow: "Practical guides", description: "Step-by-step ideas for connecting tools, reducing busywork, and running support well.", background: "bg-[#fff1e3]", accent: "text-[#a96027]" },
-} as const;
+const categories = ["All", "Company", "Product", "Guides"] as const;
+type Category = (typeof categories)[number];
 
-const categories = Object.keys(categoryMeta) as Array<keyof typeof categoryMeta>;
+const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
-function prettyDate(date: string, language: string) {
+function dateLabel(date: string, language: string) {
   return new Intl.DateTimeFormat(language, { month: "short", day: "numeric", year: "numeric" }).format(new Date(`${date}T00:00:00`));
+}
+
+function Rise({ children, delay = 0, className }: { children: React.ReactNode; delay?: number; className?: string }) {
+  const reduce = useReducedMotion();
+  return (
+    <motion.div
+      className={className}
+      initial={reduce ? false : { opacity: 0, y: 26 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.6, delay, ease: EASE }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function Meta({ post, language }: { post: BlogPost; language: string }) {
+  return (
+    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#5d6872]">
+      <span className="text-[#6c48a0]">{post.category}</span>
+      <span aria-hidden="true">•</span>
+      <span>{dateLabel(post.date, language)}</span>
+      <span aria-hidden="true">•</span>
+      <span>{post.readTime}</span>
+    </div>
+  );
+}
+
+function StoryLink({ post, language, delay = 0, tall = false }: { post: BlogPost; language: string; delay?: number; tall?: boolean }) {
+  return (
+    <Rise delay={delay}>
+      <Link href={`/blog/${post.slug}`} className="group block min-w-0">
+        <div className="overflow-hidden rounded-2xl bg-[#11120f] shadow-[0_20px_45px_-38px_rgba(23,24,28,0.7)]">
+          <BlogCover
+            category={post.category}
+            title={post.title}
+            slug={post.slug}
+            aspectRatio="card"
+            className={`${tall ? "h-[240px] sm:h-[280px]" : "h-[210px] sm:h-[240px]"} min-h-0 border-0 transition duration-500 group-hover:scale-[1.03]`}
+          />
+        </div>
+        <div className="pt-5">
+          <Meta post={post} language={language} />
+          <h3 className="mt-3 text-[clamp(1.3rem,2vw,1.8rem)] font-medium leading-[1.05] tracking-[-0.045em] text-[#233d4d] transition group-hover:text-[#6c48a0]">
+            {post.title}
+          </h3>
+          <p className="mt-3 line-clamp-2 max-w-xl text-sm leading-6 text-[#5d6872]">{post.excerpt}</p>
+          <p className="mt-4 text-sm text-[#7b858c]">By {post.authorName}</p>
+        </div>
+      </Link>
+    </Rise>
+  );
+}
+
+function FeaturedStory({ post, language }: { post: BlogPost; language: string }) {
+  const reduce = useReducedMotion();
+  return (
+    <motion.div
+      initial={reduce ? false : { opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, delay: 0.15, ease: EASE }}
+    >
+      <Link href={`/blog/${post.slug}`} className="group grid items-center gap-8 lg:grid-cols-[1.1fr_1fr] lg:gap-12">
+        <div className="overflow-hidden rounded-[24px] bg-[#11120f] shadow-[0_35px_80px_-50px_rgba(23,24,28,0.75)]">
+          <BlogCover
+            category={post.category}
+            title={post.title}
+            slug={post.slug}
+            aspectRatio="hero"
+            className="h-[280px] min-h-0 border-0 transition duration-500 group-hover:scale-[1.03] sm:h-[380px] lg:h-[440px]"
+          />
+        </div>
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            <span className="rounded-full bg-[#e7ddf3] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#5c416f]">Featured</span>
+            <Meta post={post} language={language} />
+          </div>
+          <h2 className="mt-5 text-[clamp(2rem,3.6vw,3.4rem)] font-medium leading-[0.98] tracking-[-0.055em] text-[#233d4d] transition group-hover:text-[#6c48a0]">
+            {post.title}
+          </h2>
+          <p className="mt-5 max-w-xl text-base leading-7 text-[#53616b]">{post.excerpt}</p>
+          <p className="mt-5 text-sm text-[#7b858c]">
+            By {post.authorName} · {post.authorRole}
+          </p>
+          <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#233d4d]">
+            Read the story <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+          </span>
+        </div>
+      </Link>
+    </motion.div>
+  );
+}
+
+function NewsletterStrip() {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [message, setMessage] = useState("");
+
+  async function submit(event: React.FormEvent) {
+    event.preventDefault();
+    if (status === "sending") return;
+    setStatus("sending");
+    setMessage("");
+    try {
+      const response = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await response.json().catch(() => null);
+      if (response.ok && data?.ok) {
+        setStatus("success");
+        setEmail("");
+      } else {
+        setStatus("error");
+        setMessage(data?.error === "invalid_email" ? "That email looks off — mind double-checking it?" : "That didn't send. Try again in a moment.");
+      }
+    } catch {
+      setStatus("error");
+      setMessage("That didn't send. Try again in a moment.");
+    }
+  }
+
+  return (
+    <Rise className="mt-20">
+      <div className="relative overflow-hidden rounded-[28px] bg-[#233d4d] p-8 text-white sm:p-12">
+        <div aria-hidden="true" className="absolute inset-0 opacity-[0.35] [background-image:radial-gradient(rgba(255,255,255,0.35)_1px,transparent_1px)] [background-size:20px_20px]" />
+        <div aria-hidden="true" className="absolute -left-24 -top-24 size-72 rounded-full bg-[#7651b0]/40 blur-3xl" />
+        <div className="relative grid gap-8 lg:grid-cols-[1.1fr_1fr] lg:items-center">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#d9bef4]">The newsletter</p>
+            <h2 className="mt-4 text-3xl font-medium tracking-[-0.05em] sm:text-4xl">
+              Calm support ops, <span className="font-[family-name:var(--font-instrument-serif)] font-normal italic text-[#d9bef4]">in your inbox.</span>
+            </h2>
+            <p className="mt-4 max-w-md text-sm leading-6 text-white/65">
+              One short letter on calmer support operations and thoughtful automation. No noise, unsubscribe anytime.
+            </p>
+          </div>
+          <form onSubmit={submit} className="w-full">
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <label htmlFor="blog-newsletter-email" className="sr-only">
+                Email address
+              </label>
+              <input
+                id="blog-newsletter-email"
+                type="email"
+                required
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="you@company.com"
+                className="h-12 min-w-0 flex-1 rounded-full border border-white/25 bg-white/10 px-5 text-sm text-white outline-none transition placeholder:text-white/40 focus:border-[#d9bef4] focus:ring-4 focus:ring-[#d9bef4]/20"
+              />
+              <button
+                type="submit"
+                disabled={status === "sending"}
+                className="inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-[#d9bef4] px-7 text-sm font-semibold text-[#231c29] transition hover:bg-white disabled:opacity-60"
+              >
+                {status === "sending" ? "Sending…" : "Subscribe"}
+              </button>
+            </div>
+            <p aria-live="polite" className={`mt-3 min-h-5 text-sm ${status === "error" ? "text-[#ffb9b9]" : "text-[#d9bef4]"}`}>
+              {status === "success" ? "You're on the list — the next letter lands soon." : status === "error" ? message : ""}
+            </p>
+          </form>
+        </div>
+      </div>
+    </Rise>
+  );
 }
 
 export function BlogClient({ posts }: { posts: BlogPost[] }) {
   const language = useStoredLanguage();
-  const copy = blogCopy(language);
   const [query, setQuery] = useState("");
-  const [activeCategory, setActiveCategory] = useState<"All" | keyof typeof categoryMeta>("All");
+  const [activeCategory, setActiveCategory] = useState<Category>("All");
   const sortedPosts = useMemo(() => [...posts].sort((a, b) => b.date.localeCompare(a.date)), [posts]);
-  const filteredPosts = useMemo(() => {
-    const terms = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
-    return sortedPosts.filter((post) => {
-      if (activeCategory !== "All" && post.category !== activeCategory) return false;
-      if (!terms.length) return true;
-      const haystack = `${post.title} ${post.excerpt} ${post.category} ${post.authorName}`.toLowerCase();
-      return terms.every((term) => haystack.includes(term));
-    });
+  const visiblePosts = useMemo(() => {
+    const words = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
+    return sortedPosts.filter((post) => (activeCategory === "All" || post.category === activeCategory) && words.every((word) => `${post.title} ${post.excerpt} ${post.category}`.toLowerCase().includes(word)));
   }, [activeCategory, query, sortedPosts]);
+  const isBrowsing = !query && activeCategory === "All";
   const featured = sortedPosts[0];
+  const secondary = sortedPosts.slice(1, 3);
+  const rest = sortedPosts.slice(3);
 
   return (
-    <div className="flex flex-1 flex-col overflow-hidden bg-[#f6f4ef] font-[family-name:var(--font-rethink-sans)] text-[#192016]">
-      <section className="relative overflow-hidden bg-[#11120f] px-5 pb-20 pt-20 text-white sm:px-8 sm:pb-24 sm:pt-24">
-        <div aria-hidden="true" className="absolute -right-28 -top-36 size-[480px] rounded-full bg-[#bf91ff]/35 blur-[100px]" />
-        <div aria-hidden="true" className="absolute -bottom-40 left-[15%] size-[420px] rounded-full bg-[#fe9238]/25 blur-[110px]" />
-        <Image src="/images/blog/learning-sloth.png" alt="A friendly sloth hanging from a branch and reading" width={1145} height={1374} priority sizes="(min-width: 1280px) 310px, (min-width: 768px) 230px, 0px" className="pointer-events-none absolute -right-5 -top-4 hidden h-auto w-[230px] drop-shadow-[0_25px_35px_rgba(0,0,0,0.28)] md:block xl:right-8 xl:w-[310px]" />
-        <div className="relative mx-auto max-w-7xl text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.07] px-4 py-2 text-xs font-medium text-[#d9bef4]"><Sparkles size={13} />{copy.label}</span>
-          <h1 className="mx-auto mt-7 max-w-4xl whitespace-pre-line text-[clamp(2.8rem,7vw,6.5rem)] font-medium leading-[0.95] tracking-[-0.065em]">{copy.heading}</h1>
-          <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-white/60 sm:text-lg">{copy.intro}</p>
-          <div className="relative mx-auto mt-10 max-w-2xl text-left">
-            <Search size={19} className="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-[#777d78]" />
-            <input value={query} onChange={(event) => setQuery(event.target.value)} type="search" aria-label={copy.searchLabel} placeholder={copy.search} className="h-15 w-full rounded-2xl border border-white/10 bg-white pl-13 pr-12 text-[15px] text-[#192016] shadow-[0_20px_60px_rgba(0,0,0,0.28)] outline-none placeholder:text-[#8a908a] focus:border-[#bf91ff] focus:ring-4 focus:ring-[#bf91ff]/15" />
-            {query && <button type="button" onClick={() => setQuery("")} aria-label={copy.clear} className="absolute right-4 top-1/2 flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-[#eeece6] text-[#656b65] hover:bg-[#e3dfd6]"><X size={14} /></button>}
+    <div className="flex flex-1 flex-col bg-[#f6f4ef] font-[family-name:var(--font-rethink-sans)] text-[#233d4d]">
+      <section className="relative px-5 pt-12 sm:px-8 sm:pt-16">
+        <div className="mx-auto max-w-[1440px]">
+          <div className="relative border-b border-[#233d4d]/20 pb-8">
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: EASE }}
+              className="md:pr-56 lg:pr-80"
+            >
+              <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#6c48a0]">Notes from Elpino</p>
+              <h1 className="mt-3 text-[clamp(3.75rem,10vw,9.5rem)] font-medium leading-[0.8] tracking-[-0.09em]">
+                Shortcut<span className="text-[#7651b0]">.</span>
+              </h1>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.12, ease: EASE }}
+              className="mt-6 flex max-w-md flex-col items-start gap-4"
+            >
+              <p className="text-base leading-7 text-[#53616b]">
+                A field guide to <span className="font-[family-name:var(--font-instrument-serif)] text-lg italic text-[#667b55]">calmer support</span>, thoughtful automation, and the people building them.
+              </p>
+              <a href="#subscribe" className="inline-flex items-center gap-2 text-sm font-semibold text-[#6c48a0] transition hover:text-[#5c416f]">
+                Get new stories by email <ArrowDown size={15} className="transition-transform hover:translate-y-0.5" />
+              </a>
+            </motion.div>
+            <Image
+              src="/images/blog/learning-sloth.png"
+              alt=""
+              width={1145}
+              height={1374}
+              priority
+              className="pointer-events-none absolute bottom-0 right-0 hidden w-48 select-none rotate-2 drop-shadow-[0_18px_25px_rgba(23,24,28,0.22)] md:block lg:w-72"
+            />
           </div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.25 }}
+            className="flex flex-col gap-5 py-5 lg:flex-row lg:items-center lg:justify-between"
+          >
+            <nav aria-label="Blog categories" className="flex flex-wrap gap-x-5 gap-y-2">
+              {categories.map((category) => (
+                <button key={category} type="button" onClick={() => setActiveCategory(category)} className="relative pb-1 text-sm font-semibold transition">
+                  <span className={activeCategory === category ? "text-[#233d4d]" : "text-[#71808a] transition hover:text-[#233d4d]"}>
+                    {category === "All" ? "Latest" : category}
+                  </span>
+                  {activeCategory === category && (
+                    <motion.span layoutId="blog-nav-underline" className="absolute inset-x-0 -bottom-0.5 h-0.5 rounded-full bg-[#6c48a0]" transition={{ duration: 0.35, ease: EASE }} />
+                  )}
+                </button>
+              ))}
+            </nav>
+            <label className="relative block w-full lg:w-72">
+              <Search size={16} className="pointer-events-none absolute left-0 top-1/2 -translate-y-1/2 text-[#71808a]" />
+              <input
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                type="search"
+                aria-label="Search articles"
+                placeholder="Search articles"
+                className="h-9 w-full border-b border-[#233d4d]/35 bg-transparent pl-7 pr-7 text-sm outline-none placeholder:text-[#71808a] focus:border-[#7651b0]"
+              />
+              {query && (
+                <button type="button" onClick={() => setQuery("")} aria-label="Clear search" className="absolute right-0 top-1/2 -translate-y-1/2 text-[#71808a] hover:text-[#233d4d]">
+                  <X size={15} />
+                </button>
+              )}
+            </label>
+          </motion.div>
         </div>
       </section>
 
-      <div className="mx-auto w-full max-w-7xl px-5 py-14 sm:px-8 sm:py-18">
-        {!query && activeCategory === "All" && <>
-          <section aria-labelledby="explore-topics">
-            <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div><p className="text-xs font-bold uppercase tracking-[0.11em] text-[#7651b0]">{copy.topics}</p><h2 id="explore-topics" className="mt-3 text-3xl font-semibold tracking-[-0.045em] sm:text-4xl">{copy.begin}</h2></div><p className="max-w-sm text-sm leading-6 text-[#667069]">{copy.browse}</p></div>
-            <div className="mt-8 grid gap-5 lg:grid-cols-3">
-              {categories.map((category) => {
-                const meta = categoryMeta[category];
-                const categoryPosts = sortedPosts.filter((post) => post.category === category);
-                return <article key={category} className={`flex min-h-[390px] flex-col rounded-[26px] border border-black/10 p-6 sm:p-7 ${meta.background}`}>
-                  <div className="flex items-start justify-between"><span className="flex size-11 items-center justify-center rounded-2xl bg-white/75"><meta.icon size={20} /></span><span className="rounded-full border border-black/10 bg-white/45 px-3 py-1 text-[10px] font-semibold">{categoryPosts.length} {copy.articles}</span></div>
-                  <p className={`mt-8 text-[11px] font-bold uppercase tracking-[0.11em] ${meta.accent}`}>{meta.eyebrow}</p><h3 className="mt-2 text-3xl font-semibold tracking-[-0.04em]">{category}</h3><p className="mt-3 text-sm leading-6 text-[#5e675f]">{meta.description}</p>
-                  <ul className="mt-7 divide-y divide-black/10 border-t border-black/10">{categoryPosts.slice(0, 3).map((post) => <li key={post.slug}><Link href={`/blog/${post.slug}`} className="group flex items-center gap-3 py-3.5 text-sm font-medium leading-5"><span className="line-clamp-2 flex-1">{post.title}</span><ArrowRight size={14} className="shrink-0 transition group-hover:translate-x-1" /></Link></li>)}</ul>
-                  <button type="button" onClick={() => setActiveCategory(category)} className="mt-auto inline-flex items-center gap-2 pt-6 text-sm font-semibold underline decoration-black/30 underline-offset-4">{copy.viewAll.replace("{category}", category.toLowerCase())} <ArrowRight size={14} /></button>
-                </article>;
-              })}
-            </div>
-          </section>
-
-          <section className="mt-18 grid overflow-hidden rounded-[28px] bg-[#192016] text-white lg:grid-cols-[1.15fr_0.85fr]">
-            <div className="p-7 sm:p-10"><p className="text-xs font-bold uppercase tracking-[0.11em] text-[#d9bef4]">{copy.featured}</p><h2 className="mt-4 max-w-xl text-3xl font-medium leading-tight tracking-[-0.045em] sm:text-4xl">{featured.title}</h2><p className="mt-4 max-w-xl text-sm leading-7 text-white/60">{featured.excerpt}</p><div className="mt-7 flex flex-wrap items-center gap-3 text-xs text-white/50"><span className="rounded-full bg-white/10 px-3 py-1.5 text-white/80">{featured.category}</span><span>{featured.readTime}</span><span>·</span><span>{prettyDate(featured.date, language)}</span></div><Link href={`/blog/${featured.slug}`} className="mt-8 inline-flex h-11 items-center gap-2 rounded-full bg-[#bf91ff] px-5 text-sm font-semibold text-black transition hover:bg-[#cfaeff]">{copy.read} <ArrowRight size={15} /></Link></div>
-            <div className="min-h-[300px] border-t border-white/10 lg:border-l lg:border-t-0"><BlogCover category={featured.category} title={featured.title} slug={featured.slug} aspectRatio="hero" className="h-full min-h-[300px] border-0" /></div>
-          </section>
-
-          <div className="mt-22 space-y-20">
-            {categories.map((category, categoryIndex) => {
-              const meta = categoryMeta[category];
-              const categoryPosts = sortedPosts.filter((post) => post.category === category);
-              const lead = categoryPosts[0];
-              const remaining = categoryPosts.slice(1);
-              return <section key={category} aria-labelledby={`section-${category.toLowerCase()}`} className="scroll-mt-28">
-                <div className="flex flex-col justify-between gap-4 border-b border-black/10 pb-6 sm:flex-row sm:items-end"><div className="flex items-start gap-4"><span className={`flex size-12 shrink-0 items-center justify-center rounded-2xl ${meta.background}`}><meta.icon size={21} /></span><div><p className={`text-[11px] font-bold uppercase tracking-[0.11em] ${meta.accent}`}>{meta.eyebrow}</p><h2 id={`section-${category.toLowerCase()}`} className="mt-1 text-3xl font-semibold tracking-[-0.045em] sm:text-4xl">{category}</h2></div></div><div className="sm:text-right"><p className="max-w-md text-sm leading-6 text-[#667069]">{meta.description}</p><span className="mt-1 block text-[11px] font-semibold text-[#929891]">{categoryPosts.length} articles</span></div></div>
-                <div className={`mt-7 grid gap-6 lg:grid-cols-[1.08fr_0.92fr] ${categoryIndex % 2 === 1 ? "lg:[&>*:first-child]:order-2" : ""}`}>
-                  <Link href={`/blog/${lead.slug}`} className={`group overflow-hidden rounded-[26px] border border-black/10 ${meta.background}`}><div className="overflow-hidden"><BlogCover category={lead.category} title={lead.title} slug={lead.slug} aspectRatio="hero" className="h-[280px] min-h-0 border-0 transition duration-300 group-hover:scale-[1.025] sm:h-[340px]" /></div><div className="p-6 sm:p-8"><div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.09em]"><span className={meta.accent}>Start here</span><span className="text-black/25">·</span><span className="text-[#747b74]">{lead.readTime}</span></div><h3 className="mt-3 text-2xl font-semibold leading-tight tracking-[-0.035em] sm:text-3xl">{lead.title}</h3><p className="mt-3 line-clamp-3 text-sm leading-7 text-[#5f685f]">{lead.excerpt}</p><span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold">Read article <ArrowRight size={14} className="transition group-hover:translate-x-1" /></span></div></Link>
-                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">{remaining.map((post, index) => <Link key={post.slug} href={`/blog/${post.slug}`} className="group grid min-h-[150px] grid-cols-[96px_minmax(0,1fr)] overflow-hidden rounded-2xl border border-black/10 bg-white transition hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(25,32,22,0.08)] sm:grid-cols-1 lg:grid-cols-[120px_minmax(0,1fr)]"><div className="overflow-hidden"><BlogCover category={post.category} title={post.title} slug={post.slug} aspectRatio="card" className="h-full min-h-[150px] border-0 transition duration-300 group-hover:scale-[1.03] sm:h-28 sm:min-h-0 lg:h-full lg:min-h-[150px]" /></div><div className="flex min-w-0 flex-col justify-center p-4"><div className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-[0.08em] text-[#858b85]"><span>0{index + 2}</span><span>·</span><span>{post.readTime.replace(" read", "")}</span></div><h3 className="mt-2 line-clamp-3 text-base font-semibold leading-snug tracking-[-0.02em] transition group-hover:text-[#7651b0]">{post.title}</h3><span className="mt-3 inline-flex items-center gap-1 text-[11px] font-semibold text-[#7651b0]">Read <ArrowRight size={11} /></span></div></Link>)}</div>
+      <main className="mx-auto w-full max-w-[1440px] px-5 pb-20 pt-4 sm:px-8 sm:pb-24 sm:pt-6">
+        {isBrowsing ? (
+          <>
+            {featured && (
+              <section aria-label="Featured story" className="border-b border-[#233d4d]/20 pb-14 sm:pb-16">
+                <FeaturedStory post={featured} language={language} />
+              </section>
+            )}
+            {secondary.length > 0 && (
+              <section aria-label="More featured stories" className="grid gap-x-6 gap-y-12 border-b border-[#233d4d]/20 py-14 sm:py-16 md:grid-cols-2">
+                {secondary.map((post, index) => (
+                  <StoryLink key={post.slug} post={post} language={language} delay={index * 0.08} tall />
+                ))}
+              </section>
+            )}
+            {rest.length > 0 && (
+              <section className="pt-14 sm:pt-16">
+                <div className="flex items-end justify-between border-b border-[#233d4d]/20 pb-5">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#6c48a0]">The latest</p>
+                    <h2 className="mt-2 text-4xl font-medium tracking-[-0.055em] sm:text-5xl">Keep exploring</h2>
+                  </div>
+                  <span className="hidden text-sm text-[#71808a] sm:block">
+                    {rest.length} more {rest.length === 1 ? "story" : "stories"}
+                  </span>
                 </div>
-              </section>;
-            })}
-          </div>
-        </>}
+                <div className="grid gap-x-6 gap-y-12 pt-10 md:grid-cols-2 xl:grid-cols-3">
+                  {rest.map((post, index) => (
+                    <StoryLink key={post.slug} post={post} language={language} delay={Math.min(index * 0.06, 0.3)} />
+                  ))}
+                </div>
+              </section>
+            )}
+          </>
+        ) : (
+          <section aria-live="polite" className="pt-10 sm:pt-14">
+            <div className="flex items-end justify-between border-b border-[#233d4d]/20 pb-5">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#6c48a0]">{query ? "Search results" : activeCategory}</p>
+                <h2 className="mt-2 text-4xl font-medium tracking-[-0.055em] sm:text-5xl">
+                  {visiblePosts.length} {visiblePosts.length === 1 ? "story" : "stories"}
+                </h2>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setQuery("");
+                  setActiveCategory("All");
+                }}
+                className="text-sm font-semibold underline underline-offset-4"
+              >
+                Reset filters
+              </button>
+            </div>
+            {visiblePosts.length ? (
+              <div className="grid gap-x-6 gap-y-12 pt-10 md:grid-cols-2 xl:grid-cols-3">
+                {visiblePosts.map((post, index) => (
+                  <StoryLink key={post.slug} post={post} language={language} delay={Math.min(index * 0.06, 0.3)} />
+                ))}
+              </div>
+            ) : (
+              <div className="py-24 text-center">
+                <p className="text-2xl font-medium tracking-[-0.04em]">No stories found.</p>
+                <p className="mt-2 text-sm text-[#5d6872]">Try another phrase or browse all articles.</p>
+              </div>
+            )}
+          </section>
+        )}
 
-        {(query || activeCategory !== "All") && <section aria-labelledby="recent-posts">
-          <div className="flex flex-col justify-between gap-5 border-b border-black/10 pb-6 sm:flex-row sm:items-end">
-            <div><p className="text-xs font-bold uppercase tracking-[0.11em] text-[#7651b0]">{query ? "Search results" : activeCategory === "All" ? "Latest from Elpino" : `${activeCategory} articles`}</p><h2 id="recent-posts" className="mt-3 text-3xl font-semibold tracking-[-0.045em] sm:text-4xl">{query ? `${filteredPosts.length} ${filteredPosts.length === 1 ? "article" : "articles"} found` : activeCategory === "All" ? "Recently published" : categoryMeta[activeCategory].eyebrow}</h2></div>
-            <div className="flex flex-wrap gap-2">{(["All", ...categories] as const).map((category) => <button key={category} type="button" onClick={() => setActiveCategory(category)} className={`rounded-full px-4 py-2 text-xs font-semibold transition ${activeCategory === category ? "bg-[#192016] text-white" : "border border-black/10 bg-white text-[#626a63] hover:border-[#bf91ff]"}`}>{category}</button>)}</div>
-          </div>
-          {filteredPosts.length ? <div className="divide-y divide-black/10">{filteredPosts.map((post, index) => <Link key={post.slug} href={`/blog/${post.slug}`} className="group grid gap-5 py-7 sm:grid-cols-[150px_minmax(0,1fr)_auto] sm:items-center">
-            <div className="overflow-hidden rounded-2xl border border-black/10"><BlogCover category={post.category} title={post.title} slug={post.slug} aspectRatio="card" className="h-28 min-h-0 border-0 transition duration-300 group-hover:scale-[1.03]" /></div>
-            <div className="min-w-0"><div className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.09em]"><span className={categoryMeta[post.category as keyof typeof categoryMeta]?.accent ?? "text-[#7651b0]"}>{post.category}</span><span className="text-[#a0a59f]">·</span><span className="text-[#858b85]">{prettyDate(post.date, language)}</span>{index < 3 && activeCategory === "All" && !query ? <span className="rounded-full bg-[#e7ddf3] px-2 py-0.5 text-[#7651b0]">New</span> : null}</div><h3 className="mt-2 text-xl font-semibold leading-tight tracking-[-0.025em] transition group-hover:text-[#7651b0] sm:text-2xl">{post.title}</h3><p className="mt-2 line-clamp-2 text-sm leading-6 text-[#667069]">{post.excerpt}</p></div>
-            <div className="flex items-center justify-between gap-5 sm:flex-col sm:items-end"><span className="inline-flex items-center gap-1.5 whitespace-nowrap text-xs text-[#7a817a]"><Clock3 size={13} />{post.readTime.replace(" read", "")}</span><span className="flex size-9 items-center justify-center rounded-full border border-black/10 bg-white transition group-hover:border-[#192016] group-hover:bg-[#192016] group-hover:text-white"><ArrowRight size={15} /></span></div>
-          </Link>)}</div> : <div className="flex flex-col items-center py-20 text-center"><span className="flex size-14 items-center justify-center rounded-full bg-[#e7ddf3] text-[#7651b0]"><Compass size={23} /></span><h3 className="mt-5 text-xl font-semibold">No articles found</h3><p className="mt-2 max-w-sm text-sm leading-6 text-[#667069]">Try another topic or a broader search phrase.</p><button type="button" onClick={() => { setQuery(""); setActiveCategory("All"); }} className="mt-5 rounded-full bg-[#192016] px-5 py-2.5 text-sm font-semibold text-white">Show all articles</button></div>}
-        </section>}
-      </div>
+        <NewsletterStrip />
+      </main>
     </div>
   );
 }

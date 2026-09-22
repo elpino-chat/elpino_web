@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { ChevronDown, CircleAlert, CircleCheck, ShieldCheck } from "lucide-react";
 import { useTranslation } from "@/app/hooks/useTranslation";
 import { useStoredLanguage } from "@/app/hooks/useStoredLanguage";
 
@@ -13,9 +15,12 @@ const SendIcon = () => (
 const inputClass =
   "w-full rounded-xl border border-[#0d0d0d]/15 bg-[#f8f8f6] px-4 py-4 text-[15px] text-[#0d0d0d] outline-none transition placeholder:text-black/30 hover:border-[#0d0d0d]/30 focus:border-[#8c64b4] focus:bg-white focus:ring-2 focus:ring-[#d9bef4]/40";
 
+const labelClass = "text-xs font-semibold uppercase tracking-[0.1em] text-[#6b6b6b]";
+
 export function ContactForm() {
   const language = useStoredLanguage();
   const { t } = useTranslation(language as any);
+  const reduce = useReducedMotion();
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -34,35 +39,63 @@ export function ContactForm() {
 
   if (status === "success") {
     return (
-      <div className="flex min-h-[540px] flex-col items-center justify-center rounded-[2rem] bg-white p-10 text-center">
-        <span className="mb-6 flex h-12 w-12 items-center justify-center rounded-full bg-[#d9bef4] text-xl text-black">✓</span>
+      <motion.div
+        initial={reduce ? false : { opacity: 0, scale: 0.97 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+        className="flex min-h-[540px] flex-col items-center justify-center rounded-[2rem] border border-black/10 bg-white p-10 text-center shadow-[0_24px_70px_-45px_rgba(0,0,0,0.35)]"
+      >
+        <motion.span
+          initial={reduce ? false : { scale: 0.5, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.4, delay: 0.1, type: "spring", bounce: 0.4 }}
+          className="mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-[#d9bef4] text-black"
+        >
+          <CircleCheck size={28} strokeWidth={1.8} />
+        </motion.span>
         <h3 className="mb-4 text-4xl font-normal tracking-[-0.04em] text-[#0d0d0d]">{t("contact.form.successTitle", "Message sent")}</h3>
-        <p className="mb-6 leading-6 text-black/60">{t("contact.form.successBody", "Thanks for reaching out. We'll get back to you shortly.")}</p>
+        <p className="mb-6 max-w-sm leading-6 text-black/60">{t("contact.form.successBody", "Thanks for reaching out. We'll get back to you shortly.")}</p>
         <button onClick={() => setStatus("idle")} className="text-sm text-black/60 underline underline-offset-4 transition hover:text-black">{t("contact.form.sendAnother", "Send another message")}</button>
-      </div>
+      </motion.div>
     );
   }
 
   return (
-    <div className="rounded-[2rem] bg-white p-6 shadow-[0_24px_70px_-45px_rgba(0,0,0,0.35)] md:p-10">
-      <div className="mb-8 flex items-end justify-between border-b border-[#0d0d0d]/12 pb-6">
+    <div className="rounded-[2rem] border border-black/10 bg-white p-6 shadow-[0_24px_70px_-45px_rgba(0,0,0,0.35)] md:p-10">
+      <div className="mb-8 flex items-end justify-between gap-4 border-b border-[#0d0d0d]/10 pb-6">
         <div>
           <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#8c64b4]">{t("contact.form.yourMessage", "Your message")}</span>
           <h3 className="mt-2 text-4xl font-normal tracking-[-0.045em] text-[#0d0d0d]">{t("contact.form.howCanWeHelp", "How can we help?")}</h3>
         </div>
-        <span className="hidden text-xs text-black/40 sm:block">{t("contact.form.requiredNote", "All fields marked * are required")}</span>
+        <span className="hidden shrink-0 text-xs text-black/40 sm:block">{t("contact.form.requiredNote", "All fields marked * are required")}</span>
       </div>
       <form className="space-y-6" onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          <div className="flex flex-col gap-2"><label className="text-xs uppercase tracking-[0.1em] text-gray-500">{t("contact.form.fullName", "Full name *")}</label><input required name="name" type="text" className={inputClass} placeholder={t("contact.form.fullNamePlaceholder", "Jane Doe")} /></div>
-          <div className="flex flex-col gap-2"><label className="text-xs uppercase tracking-[0.1em] text-gray-500">{t("contact.form.workEmail", "Work email *")}</label><input required name="email" type="email" className={inputClass} placeholder={t("contact.form.workEmailPlaceholder", "jane@company.com")} /></div>
+          <div className="flex flex-col gap-2"><label className={labelClass} htmlFor="contact-name">{t("contact.form.fullName", "Full name *")}</label><input required name="name" id="contact-name" type="text" autoComplete="name" className={inputClass} placeholder={t("contact.form.fullNamePlaceholder", "Jane Doe")} /></div>
+          <div className="flex flex-col gap-2"><label className={labelClass} htmlFor="contact-email">{t("contact.form.workEmail", "Work email *")}</label><input required name="email" id="contact-email" type="email" autoComplete="email" className={inputClass} placeholder={t("contact.form.workEmailPlaceholder", "jane@company.com")} /></div>
         </div>
-        <div className="flex flex-col gap-2"><label className="text-xs uppercase tracking-[0.1em] text-gray-500">{t("contact.form.company", "Company")}</label><input name="company" type="text" className={inputClass} placeholder={t("contact.form.companyPlaceholder", "Acme Corp")} /></div>
-        <div className="flex flex-col gap-2"><label className="text-xs uppercase tracking-[0.1em] text-gray-500">{t("contact.form.inquiryType", "Inquiry type *")}</label><select required name="inquiryType" defaultValue="Sales & Enterprise" className={`${inputClass} appearance-none`}><option>{t("contact.form.inquirySales", "Sales & Enterprise")}</option><option>{t("contact.form.inquiryTechnical", "Technical Support")}</option><option>{t("contact.form.inquiryPartnerships", "Partnerships")}</option><option>{t("contact.form.inquiryOther", "Other")}</option></select></div>
-        <div className="flex flex-col gap-2"><label className="text-xs uppercase tracking-[0.1em] text-gray-500">{t("contact.form.message", "Message *")}</label><textarea required name="message" rows={5} className={`${inputClass} resize-none`} placeholder={t("contact.form.messagePlaceholder", "How can we help you?")} /></div>
-        {status === "error" && <p className="text-xs text-red-600">{t("contact.form.error", "Something went wrong. Please try again.")}</p>}
+        <div className="flex flex-col gap-2"><label className={labelClass} htmlFor="contact-company">{t("contact.form.company", "Company")}</label><input name="company" id="contact-company" type="text" autoComplete="organization" className={inputClass} placeholder={t("contact.form.companyPlaceholder", "Acme Corp")} /></div>
+        <div className="flex flex-col gap-2">
+          <label className={labelClass} htmlFor="contact-inquiry">{t("contact.form.inquiryType", "Inquiry type *")}</label>
+          <div className="relative">
+            <select required name="inquiryType" id="contact-inquiry" defaultValue="Sales & Enterprise" className={`${inputClass} appearance-none pr-11`}>
+              <option>{t("contact.form.inquirySales", "Sales & Enterprise")}</option>
+              <option>{t("contact.form.inquiryTechnical", "Technical Support")}</option>
+              <option>{t("contact.form.inquiryPartnerships", "Partnerships")}</option>
+              <option>{t("contact.form.inquiryOther", "Other")}</option>
+            </select>
+            <ChevronDown size={16} aria-hidden="true" className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-black/40" />
+          </div>
+        </div>
+        <div className="flex flex-col gap-2"><label className={labelClass} htmlFor="contact-message">{t("contact.form.message", "Message *")}</label><textarea required name="message" id="contact-message" rows={5} className={`${inputClass} resize-none`} placeholder={t("contact.form.messagePlaceholder", "How can we help you?")} /></div>
+        {status === "error" && (
+          <p className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"><CircleAlert size={16} className="shrink-0" />{t("contact.form.error", "Something went wrong. Please try again.")}</p>
+        )}
         <button type="submit" disabled={status === "submitting"} className="flex w-full items-center justify-center gap-2.5 rounded-full bg-[#0d0d0d] py-4 text-sm font-semibold text-white transition duration-200 hover:-translate-y-0.5 hover:bg-[#d9bef4] hover:text-black disabled:pointer-events-none disabled:opacity-60">{status === "submitting" ? t("contact.form.sending", "Sending...") : t("contact.form.send", "Send message")}<SendIcon /></button>
-        <p className="text-center text-xs text-gray-500">{t("contact.form.agreeText", "By sending this, you agree to our")} <a href="/privacy" className="text-[#11120f] underline underline-offset-4">{t("contact.form.privacy", "Privacy Policy")}</a>.</p>
+        <div className="flex flex-col items-center gap-3 border-t border-black/5 pt-5 text-center">
+          <p className="inline-flex items-center gap-1.5 text-xs text-black/45"><ShieldCheck size={14} className="text-[#8c64b4]" />Sent securely — never used for training</p>
+          <p className="text-xs text-gray-500">{t("contact.form.agreeText", "By sending this, you agree to our")} <a href="/privacy" className="text-[#11120f] underline underline-offset-4">{t("contact.form.privacy", "Privacy Policy")}</a>.</p>
+        </div>
       </form>
     </div>
   );

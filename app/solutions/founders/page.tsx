@@ -1,219 +1,48 @@
 import type { Metadata } from "next";
-import { Eyebrow } from "../../components/product/Eyebrow";
-import { FaqAccordion } from "../../components/product/FaqAccordion";
-import { HeroGlow } from "../../components/product/HeroGlow";
-import { ProductCta } from "../../components/product/ProductCta";
-import { Testimonial } from "../../components/product/Testimonial";
+import Image from "next/image";
+import Link from "next/link";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://elpino.chat";
 
 export const metadata: Metadata = {
   title: "For Founders",
-  description: "Keep investor, customer, and ops work from slipping through the cracks.",
-  alternates: { canonical: `${SITE_URL}/solutions/founders` },
-  openGraph: {
-    title: "For Founders",
-    description: "Keep investor, customer, and ops work from slipping through the cracks.",
-    url: `${SITE_URL}/solutions/founders`,
-    type: "website",
-  },
+  description: "Give every customer a helpful answer while you keep building.",
+  alternates: { canonical: `${SITE_URL}/solutions/founders-team` },
+  openGraph: { title: "For Founders | Elpino", description: "Give every customer a helpful answer while you keep building.", url: `${SITE_URL}/solutions/founders-team`, type: "website" },
 };
 
-const stats = [
-  { value: "15+ hrs", label: "Reclaimed weekly" },
-  { value: "100%", label: "Approval required" },
-  { value: "< 1 min", label: "To connect Gmail" },
-  { value: "0", label: "Dropped commitments" },
+const benefits = [
+  ["Be there, even when you’re deep in work", "Elpino can answer the questions your help center already covers, without waiting for you to open another tab."],
+  ["Keep the important conversations close", "When a customer needs you, their context and question arrive together in one shared inbox."],
+  ["Build trust as you grow", "A helpful answer today is often the reason a customer stays, upgrades, or recommends you tomorrow."],
 ];
 
-const painPoints = [
-  { title: "Investor threads go cold", description: "A term sheet reply sits unanswered for two days because it got buried under forty other emails." },
-  { title: "Calendar conflicts sneak in", description: "You accept a call, then realize it overlaps with a board prep block you'd already set aside." },
-  { title: "Revenue signals arrive late", description: "A failed payment or a churn signal shows up in a spreadsheet review a week after it happened." },
-];
-
-const moments = [
-  { time: "7:40 AM", title: "Before you open your laptop", detail: "Riz already triaged overnight email. Three newsletters archived, one investor reply flagged, a Telegram message waiting with a suggested response." },
-  { time: "11:15 AM", title: "A meeting request lands mid-focus", detail: "It checks your calendar, sees the conflict, and asks in Telegram whether to reschedule, so you can stay in flow instead of context-switching." },
-  { time: "9:05 PM", title: "The day closes with one message, not twelve tabs", detail: "Revenue movement from Stripe, a renewal risk that needs a nudge, and tomorrow's first meeting prepped and ready, all in one brief." },
-];
-
-const questions = [
-  { q: "Will Riz reply to investors on its own?", a: "Never without your approval. It drafts a reply and waits for you to review, edit, or send it yourself." },
-  { q: "Can it handle fundraising-specific context?", a: "Yes. Riz tracks your ARR, churn, and key metrics from connected sources so drafts and prep packets have real numbers, not placeholders." },
-  { q: "What if I only want it watching my inbox?", a: "That's fine. Connect Gmail and Calendar alone, revenue monitoring and other integrations are entirely optional." },
-];
-
-const comparison = [
-  { without: "Reread a whole investor thread to remember where things stand before replying.", with: "Riz surfaces a one-line summary and a drafted reply, ready in seconds." },
-  { without: "Discover a double-booked board call the morning it happens.", with: "Conflicts are flagged the moment the invite lands, not after you've already accepted." },
-  { without: "Chase your own memory for what you promised a customer three weeks ago.", with: "Every commitment is tracked automatically and resurfaced before it's overdue." },
-  { without: "Piece together your runway from three different tabs before a board update.", with: "ARR, churn, and burn are already summarized and ready to drop into the deck." },
-];
-
-const stages = [
-  { title: "Fundraising", detail: "Investor threads triaged by urgency, term sheet replies drafted with your real metrics attached." },
-  { title: "Customer ops", detail: "Support escalations and renewal risk surfaced before they become churn." },
-  { title: "Day-to-day", detail: "Calendar conflicts caught early, commitments tracked, inbox reduced to what needs you." },
+const rhythm = [
+  ["Morning", "See what needs a human", "Elpino has already handled the routine questions and kept the conversations that need judgment ready for you."],
+  ["During the day", "Stay in product mode", "Customers get helpful first answers while you keep shipping, selling, and solving the hard problems."],
+  ["When you check in", "Pick up with context", "Open one workspace to see every conversation, source, and handoff—not a pile of disconnected messages."],
 ];
 
 export default function FoundersPage() {
   return (
-    <main className="bg-white text-black">
-      <section className="relative overflow-hidden border-b border-black/10 bg-white">
-        <HeroGlow />
-        <div className="relative mx-auto flex max-w-4xl flex-col items-center px-6 pb-16 pt-28 text-center md:px-10">
-          <Eyebrow>Elpino / For founders</Eyebrow>
-          <h1 className="max-w-2xl text-4xl font-normal leading-[1.08] tracking-tight text-[#233D4D] [text-wrap:balance] md:text-5xl">
-            Keep investor, customer, <span className="text-[#D9BEF4]">and ops work from slipping</span>
-          </h1>
-          <p className="mt-6 max-w-xl text-sm leading-6 text-gray-600 md:text-base">
-            Founders wear a hundred hats. Riz runs quietly in the background so nothing important gets lost between
-            them.
-          </p>
+    <div className="overflow-hidden bg-white font-[family-name:var(--font-rethink-sans)] text-[#17181c]">
+      <section className="relative overflow-hidden bg-[#fff1e3] px-5 pb-20 pt-28 text-[#17181c] sm:px-8 md:pb-28 md:pt-36 lg:px-16">
+        <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(100deg,rgba(255,241,227,0.98)_22%,rgba(255,241,227,0.68)_100%),url('/images/heros/elpino-dawn-hero.webp')] bg-cover bg-center" />
+        <div className="relative mx-auto grid max-w-[1400px] gap-12 lg:grid-cols-[minmax(0,0.98fr)_minmax(400px,0.8fr)] lg:items-center lg:gap-16">
+          <div className="max-w-3xl"><p className="flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#956840]"><span className="h-px w-8 bg-[#956840]" />Elpino for founders</p><h1 className="mt-7 text-balance text-5xl font-normal leading-[0.96] tracking-[-0.065em] sm:text-6xl md:text-7xl">Build the company.<br /><span className="text-[#956840]">Keep the conversation.</span></h1><p className="mt-7 max-w-2xl text-lg leading-8 text-black/60 sm:text-xl">Elpino gives every customer a helpful first answer, so you can keep your focus without making people wait for yours.</p><div className="mt-9 flex flex-wrap gap-3"><Link href="/signup" className="inline-flex h-12 items-center justify-center rounded-full bg-[#17181c] px-6 text-sm font-medium text-white transition hover:bg-[#fe9238] hover:text-black">Start free →</Link><Link href="/features" className="inline-flex h-12 items-center justify-center rounded-full border border-black/20 bg-white/55 px-6 text-sm font-medium transition hover:bg-white">See how it works</Link></div><p className="mt-5 text-xs text-black/45">No card required. Start with 50 free AI resolutions each month.</p></div>
+          <div className="relative mx-auto w-full max-w-[560px]"><div aria-hidden="true" className="absolute -inset-6 rounded-[2rem] bg-[radial-gradient(circle,#fc7b33_0%,transparent_65%)] opacity-40 blur-2xl" /><Image src="/images/founders-sloth.png" alt="" width={1145} height={1374} className="pointer-events-none absolute -right-20 -top-28 z-10 h-auto w-44 -rotate-6 drop-shadow-2xl sm:w-52" /><div className="relative overflow-hidden rounded-xl border border-[#428ce5] bg-[#edf7ff] p-3 text-[#17181c] shadow-[0_30px_80px_rgba(0,0,0,0.45)] sm:p-5"><div className="rounded-lg border border-black/10 bg-white p-5 sm:p-7"><div className="flex items-center justify-between border-b border-black/10 pb-4 text-xs"><span className="font-medium">Customer conversation</span><span className="rounded-full bg-[#e8f4eb] px-2.5 py-1 text-[10px] text-[#37744f]">AI answered</span></div><div className="mt-6 max-w-[84%] rounded-2xl rounded-tl-sm bg-[#f1f2ef] px-4 py-3 text-sm leading-6">Is there a way to invite the rest of my team?</div><div className="my-4 flex items-center gap-2 text-[10px] text-[#806698]"><span className="flex size-5 items-center justify-center rounded-full bg-[#eee5fa]">✦</span>Elpino checked: Team setup guide</div><div className="ml-auto max-w-[88%] rounded-2xl rounded-br-sm bg-[#eee5fa] px-4 py-3 text-sm leading-6">Absolutely. Go to Settings → Team, then select Invite teammate to send an invitation.</div><div className="mt-5 rounded-lg border border-[#d6e3f1] bg-[#f5faff] px-3 py-2 text-right text-[10px] text-[#527b97]">A helpful answer, while you keep building.</div></div></div></div>
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="border-t border-black/10 bg-[#fcfcfc] px-6 py-14 md:px-10 lg:px-14">
-        <div className="mx-auto grid max-w-5xl grid-cols-2 gap-8 text-center md:grid-cols-4">
-          {stats.map((stat) => (
-            <div key={stat.label}>
-              <span className="mb-2 block text-3xl font-normal text-[#233D4D]">{stat.value}</span>
-              <span className="block text-xs uppercase tracking-[0.1em] text-gray-500">{stat.label}</span>
-            </div>
-          ))}
-        </div>
-      </section>
+      <section className="border-b border-black/10 bg-[#428ce5] px-5 py-7 text-white sm:px-8 lg:px-16"><div className="mx-auto flex max-w-[1400px] flex-wrap items-center justify-between gap-x-10 gap-y-4 text-sm"><span className="font-medium">Customers feel heard.</span><span className="text-white/70">You keep your focus.</span><span className="text-white/70">Growth does not mean more waiting.</span></div></section>
 
-      {/* Pain points */}
-      <section className="border-t border-black/10 bg-white px-6 py-20 md:px-10 lg:px-14">
-        <div className="mx-auto max-w-[88rem]">
-          <div className="mb-14 text-center">
-            <Eyebrow>The problem</Eyebrow>
-            <h2 className="text-3xl font-normal leading-tight tracking-tight text-[#233D4D] [text-wrap:balance] md:text-4xl">
-              Where founders lose time and trust
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-            {painPoints.map((point) => (
-              <div key={point.title} className="rounded-2xl bg-[#f7f7f6] p-8">
-                <h3 className="mb-3 text-lg font-normal text-[#233D4D]">{point.title}</h3>
-                <p className="text-sm leading-6 text-gray-600">{point.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <section className="px-5 py-20 sm:px-8 md:py-28 lg:px-16"><div className="mx-auto max-w-[1400px]"><div className="grid gap-8 md:grid-cols-[0.8fr_1.2fr] md:items-end"><div><p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#7060bd]">A small team can feel present</p><h2 className="mt-4 text-4xl font-normal leading-[1.03] tracking-[-0.055em] sm:text-5xl">Make every customer feel like someone is home.</h2></div><p className="max-w-xl text-base leading-7 text-black/60">You cannot be in every conversation all day. But your product knowledge can be, and your team can be right there when the conversation gets important.</p></div><div className="mt-12 grid gap-5 md:grid-cols-3">{benefits.map(([title, text], index) => <article key={title} className="flex min-h-[280px] flex-col rounded-xl border border-black/10 bg-[#fbfbfa] p-7"><span className="flex size-9 items-center justify-center rounded-lg bg-[#eee5fa] text-sm text-[#7060bd]">0{index + 1}</span><h3 className="mt-9 text-2xl font-medium tracking-[-0.04em]">{title}</h3><p className="mt-4 text-sm leading-7 text-black/55">{text}</p></article>)}</div></div></section>
 
-      {/* Day in the life */}
-      <section className="border-t border-black/10 bg-[#fcfcfc] px-6 py-20 md:px-10 lg:px-14">
-        <div className="mx-auto max-w-5xl">
-          <Eyebrow>A day with Riz</Eyebrow>
-          <h2 className="max-w-xl text-3xl font-normal leading-tight tracking-tight text-[#233D4D] [text-wrap:balance] md:text-4xl">
-            Running quietly in the background
-          </h2>
+      <section className="bg-[#fff1e3] px-5 py-20 sm:px-8 md:py-28 lg:px-16"><div className="mx-auto max-w-[1400px]"><p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#956840]">A lighter customer-support day</p><div className="mt-4 flex flex-col justify-between gap-6 md:flex-row md:items-end"><h2 className="max-w-2xl text-4xl font-normal leading-[1.03] tracking-[-0.055em] sm:text-5xl">A customer experience<br />that keeps pace with you.</h2><p className="max-w-sm text-sm leading-7 text-[#76634f]">The routine stays moving in the background. You get the space to make the decisions only you can make.</p></div><div className="mt-14 grid gap-5 md:grid-cols-3">{rhythm.map(([time, title, text]) => <article key={time} className="rounded-xl border border-[#dfc7b1] bg-white/65 p-7"><span className="text-sm font-medium text-[#b56e36]">{time}</span><div className="my-8 h-px bg-[#dfc7b1]" /><h3 className="text-2xl font-medium tracking-[-0.04em]">{title}</h3><p className="mt-4 text-sm leading-7 text-[#76634f]">{text}</p></article>)}</div></div></section>
 
-          <div className="mt-14 space-y-10">
-            {moments.map((moment) => (
-              <div key={moment.time} className="flex flex-col gap-3 border-l-2 border-black/10 pl-8 md:flex-row md:gap-8">
-                <span className="shrink-0 font-mono text-xs uppercase tracking-[0.2em] text-[#D9BEF4] md:w-24">
-                  {moment.time}
-                </span>
-                <div>
-                  <h3 className="text-lg font-normal text-[#233D4D]">{moment.title}</h3>
-                  <p className="mt-2 max-w-xl text-sm leading-6 text-gray-600">{moment.detail}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <section className="bg-[#111216] px-5 py-20 text-white sm:px-8 md:py-28 lg:px-16"><div className="mx-auto grid max-w-[1400px] gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-center"><div><p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#d9bef4]">Start with what you already know</p><h2 className="mt-5 text-4xl font-normal leading-[1.03] tracking-[-0.055em] sm:text-5xl">Your product knowledge can do more than sit in a folder.</h2><p className="mt-6 max-w-lg text-base leading-7 text-white/65">Bring your help articles, website pages, and documents into one knowledge base. Elpino can search it before it answers the next customer question.</p><Link href="/features#knowledge-base" className="mt-8 inline-flex h-12 items-center rounded-md border border-white/25 px-6 text-sm font-medium transition hover:bg-white hover:text-black">Explore the knowledge base ↗</Link></div><div className="rounded-xl border border-[#428ce5] bg-[#edf7ff] p-3 text-[#17181c] sm:p-5"><div className="rounded-lg bg-white p-5 sm:p-7"><div className="flex items-center justify-between border-b border-black/10 pb-4 text-xs"><span className="font-medium">Your knowledge library</span><span className="text-[#527b97]">Ready to answer</span></div>{["Getting started", "Pricing & billing", "Team setup", "Product FAQs"].map((item, index) => <div key={item} className="flex items-center gap-3 border-b border-black/5 py-4"><span className="flex size-7 items-center justify-center rounded-lg bg-[#eee5fa] text-xs text-[#765a99]">⌁</span><span className="flex-1 text-sm">{item}</span><span className="text-[10px] text-[#377755]">{index === 1 ? "Connected" : "Ready"} ✓</span></div>)}<p className="mt-5 text-xs leading-6 text-[#628099]">A little more useful than another browser tab.</p></div></div></div></section>
 
-      {/* Before / after */}
-      <section className="border-t border-black/10 bg-white px-6 py-20 md:px-10 lg:px-14">
-        <div className="mx-auto max-w-5xl">
-          <div className="mb-14 text-center">
-            <Eyebrow>Before and after</Eyebrow>
-            <h2 className="text-3xl font-normal leading-tight tracking-tight text-[#233D4D] [text-wrap:balance] md:text-4xl">
-              What changes once Riz is running
-            </h2>
-          </div>
-          <div className="divide-y divide-black/[0.06] overflow-hidden rounded-2xl bg-[#fcfcfc] shadow-[0_30px_80px_-60px_rgba(32,21,28,0.4)]">
-            {comparison.map((row) => (
-              <div key={row.without} className="grid grid-cols-1 divide-y divide-black/[0.06] md:grid-cols-2 md:divide-x md:divide-y-0">
-                <div className="p-6">
-                  <span className="mb-2 block text-xs uppercase tracking-[0.1em] text-gray-400">Without Riz</span>
-                  <p className="text-sm leading-6 text-gray-600">{row.without}</p>
-                </div>
-                <div className="bg-[#fff7f3] p-6">
-                  <span className="mb-2 block text-xs uppercase tracking-[0.1em] text-[#D9BEF4]">With Riz</span>
-                  <p className="text-sm leading-6 text-[#233D4D]">{row.with}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Coverage */}
-      <section className="border-t border-black/10 bg-[#fcfcfc] px-6 py-20 md:px-10 lg:px-14">
-        <div className="mx-auto max-w-[88rem]">
-          <div className="mb-14 text-center">
-            <Eyebrow>Coverage</Eyebrow>
-            <h2 className="text-3xl font-normal leading-tight tracking-tight text-[#233D4D] [text-wrap:balance] md:text-4xl">
-              From fundraising to day-to-day ops
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-            {stages.map((stage) => (
-              <div key={stage.title} className="rounded-2xl bg-white p-8 shadow-[0_20px_60px_-48px_rgba(32,21,28,0.4)]">
-                <h3 className="mb-3 text-lg font-normal text-[#233D4D]">{stage.title}</h3>
-                <p className="text-sm leading-6 text-gray-600">{stage.detail}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Trust */}
-      <section className="relative overflow-hidden bg-[#233D4D] px-6 py-20 text-center md:px-10 lg:px-14">
-        <div
-          className="pointer-events-none absolute inset-0 opacity-[0.06]"
-          style={{ backgroundImage: "radial-gradient(#fff 1px, transparent 1px)", backgroundSize: "28px 28px" }}
-          aria-hidden="true"
-        />
-        <div className="relative mx-auto max-w-2xl">
-          <Eyebrow light>Why founders trust it</Eyebrow>
-          <h2 className="text-3xl font-normal leading-tight tracking-tight text-white [text-wrap:balance] md:text-4xl">
-            Your inbox stays yours
-          </h2>
-          <p className="mt-6 text-sm leading-6 text-white/50 md:text-base">
-            OAuth tokens are encrypted at rest. Every draft waits for your review. Riz never sends anything to an
-            investor, customer, or teammate without you saying go.
-          </p>
-          <a href="/trust" className="mt-6 inline-block text-sm text-white/70 underline underline-offset-4 transition hover:text-white">
-            See how trust works &rarr;
-          </a>
-        </div>
-      </section>
-
-      <Testimonial
-        quote="I raised my seed round while running three other fires. Riz was the only reason I didn't drop a single investor thread."
-        author="Early access founder"
-      />
-
-      {/* FAQ */}
-      <section className="border-t border-black/10 bg-[#fcfcfc] px-6 py-20 md:px-10 lg:px-14">
-        <div className="mx-auto max-w-3xl">
-          <h2 className="mb-10 text-center text-3xl font-normal leading-tight tracking-tight text-[#233D4D] md:text-4xl">
-            Common questions
-          </h2>
-          <FaqAccordion items={questions} />
-        </div>
-      </section>
-
-      <ProductCta title="Reclaim your day" />
-    </main>
+      <section className="bg-[#428ce5] px-5 py-20 text-white sm:px-8 md:py-28 lg:px-16"><div className="mx-auto flex max-w-[1400px] flex-col items-start justify-between gap-10 lg:flex-row lg:items-end"><div className="max-w-3xl"><p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#d9bef4]">Give your customers a good first answer</p><h2 className="mt-5 text-balance text-4xl font-normal leading-[1.02] tracking-[-0.055em] sm:text-5xl md:text-6xl">Keep building. We’ll help keep the conversation moving.</h2><p className="mt-5 max-w-xl text-base leading-7 text-white/65">Start with the knowledge you have, then bring your team in as the company grows.</p></div><div className="flex flex-wrap gap-3"><Link href="/signup" className="inline-flex h-12 items-center justify-center rounded-md bg-[#fe9238] px-6 text-sm font-semibold text-black transition hover:bg-white">Start free →</Link><Link href="/contact" className="inline-flex h-12 items-center justify-center rounded-md border border-white/30 px-6 text-sm font-medium transition hover:bg-white hover:text-black">Talk to us</Link></div></div></section>
+    </div>
   );
 }
