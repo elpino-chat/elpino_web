@@ -28,10 +28,10 @@ export function HomeHero() {
 
       <div className="mx-auto flex w-full max-w-7xl flex-col items-center px-5 pb-6 pt-8 text-center sm:px-8 sm:pt-12 lg:pt-16">
         <h1 className="elpino-hero-enter elpino-hero-enter-1 w-full text-[63px] font-normal leading-none tracking-[-0.02em] text-black sm:text-[75px]">
-          The highest performing AI Agent for every customer conversation
+          AI support that actually answers, backed by a team when it can&apos;t
         </h1>
         <p className="elpino-hero-enter elpino-hero-enter-2 mt-6 w-full max-w-4xl text-center text-lg font-light not-italic leading-7 text-black/65 sm:text-xl">
-          Elpino customers average a 76% resolution rate, across 12,000+ businesses including
+          One shared inbox, a knowledge base your AI actually reads from, and a clean handoff to your team the moment a conversation needs a human.
         </p>
 
         {/* Both funnel into the real signup flow (AuthFlow), which already

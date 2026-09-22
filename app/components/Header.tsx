@@ -33,7 +33,7 @@ const navGroups: DropdownGroup[] = [
         title: 'Get started',
         items: [
           { label: 'Elpino helpdesk', href: '/product/helpdesk' },
-          { label: 'Fin AI Agent', href: '/product/ai-agent' },
+          { label: 'Elpino AI Agent', href: '/product/ai-agent' },
         ],
       },
       {
@@ -388,7 +388,7 @@ export function Header({
               />
             </Link>
 
-            {/* Desktop Navigation with Floating Intercom-style Popovers */}
+            {/* Desktop Navigation with floating mega-nav popovers */}
             <div
               className="hidden items-center gap-1 lg:flex"
               aria-label="Navigation groups"

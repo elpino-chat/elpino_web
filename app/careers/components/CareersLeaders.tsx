@@ -16,12 +16,12 @@ type Leader = {
 
 const leaders: Leader[] = [
   {
-    id: "jagdeep-singh",
-    name: "Jagdeep Singh",
-    role: "Chief Strategy Officer & Co-founder",
+    id: "unknown",
+    name: "Unknown",
+    role: "CEO & Co-founder",
     image: "/images/founders-sloth.png",
-    bio: "Jagdeep oversees Elpino's research, product direction, and commercial strategy. Previously leading product at enterprise software companies, he founded Elpino to eliminate chaotic support queues and replace them with high-conviction, autonomous customer intelligence.",
-    quote: "We don't build software to manage chaos. We build software to end it.",
+    bio: "Oversees Elpino's research, product direction, and commercial strategy. Previously led product at enterprise software companies, and founded Elpino to eliminate chaotic support queues and replace them with high-conviction, autonomous customer intelligence.",
+    quote: "We believe in the work, not the position.",
     links: [
       { label: "LinkedIn", href: "https://linkedin.com", icon: "linkedin" },
       { label: "X (Twitter)", href: "https://x.com", icon: "twitter" },

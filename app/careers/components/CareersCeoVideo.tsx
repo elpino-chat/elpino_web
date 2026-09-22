@@ -56,15 +56,15 @@ export function CareersCeoVideo() {
               </div>
             </div>
 
-            {/* Bottom Quote Overlay matching fin.ai */}
+            {/* Bottom quote overlay */}
             <div className="absolute inset-x-0 bottom-0 p-6 sm:p-10">
               <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
                 <div className="max-w-2xl">
                   <p className="font-serif text-2xl font-normal leading-snug tracking-tight text-white sm:text-3xl lg:text-4xl">
-                    &ldquo;For the truly ambitious, there are few better places to be.&rdquo;
+                    &ldquo;We believe in the work, not the position.&rdquo;
                   </p>
                   <p className="mt-2 text-sm text-white/70">
-                    Jagdeep Singh — CEO and Co-founder of Elpino
+                    Unknown — CEO and Co-founder of Elpino
                   </p>
                 </div>
                 <button
@@ -92,7 +92,7 @@ export function CareersCeoVideo() {
             <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
               <div className="flex items-center gap-2">
                 <span className="size-2 rounded-full bg-[#ff5600]" />
-                <span className="text-sm font-medium">Founder Conversation · Jagdeep Singh</span>
+                <span className="text-sm font-medium">Founder Conversation · Unknown</span>
               </div>
               <button
                 type="button"

@@ -175,7 +175,7 @@ function WidgetContent() {
   const [botAvatarUrl, setBotAvatarUrl] = useState<string | null>(null);
   const [greetingLines, setGreetingLines] = useState<string[]>(["Hi there 👋", "How can I help you today?"]);
   // First name of an identified visitor (ElpinoTag.identify()/getIdentityToken
-  // on the host page), so the greeting can say "Hi Jagdeep" instead of the
+  // on the host page), so the greeting can say "Hi Alex" instead of the
   // generic "Hi there" — null for an anonymous visitor, or one the site
   // identified without a real name on file yet ("Website visitor").
   const [greetingName, setGreetingName] = useState<string | null>(null);
