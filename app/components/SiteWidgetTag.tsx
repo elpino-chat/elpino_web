@@ -31,6 +31,11 @@ const EXCLUDED_PREFIXES = [
   "/widget",
 ];
 
+// Same origin as tag.js/route.ts's own dev/prod split: in local dev, load the
+// tag from this app itself (/tag.js) so dogfooding actually exercises
+// whatever's running locally instead of production's cdn.elpino.chat.
+const TAG_SRC = process.env.NODE_ENV === "development" ? "/tag.js" : "https://cdn.elpino.chat/tag.js";
+
 // Lets the widget recognise a logged-in visitor so the AI can look up their
 // account without asking who they are. tag.js reads ElpinoSettings once when
 // it loads and calls getIdentityToken whenever the chat asks, so this has to
@@ -56,7 +61,7 @@ export function SiteWidgetTag() {
 
   return (
     <Script
-      src="https://cdn.elpino.chat/tag.js"
+      src={TAG_SRC}
       data-site-key="rz_site_a9ea653bc866c86f5e88c7af4c832b"
       strategy="afterInteractive"
     />

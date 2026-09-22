@@ -22,16 +22,15 @@ type NavSection = {
 
 type DropdownGroup = {
   label: string;
-  leftSections: NavSection[];
-  rightSection: NavSection;
+  sections: NavSection[];
 };
 
 const navGroups: DropdownGroup[] = [
   {
-    label: 'Platform',
-    leftSections: [
+    label: 'Product',
+    sections: [
       {
-        title: 'Explore all products',
+        title: 'Get started',
         items: [
           { label: 'Elpino helpdesk', href: '/product/helpdesk' },
           { label: 'Fin AI Agent', href: '/product/ai-agent' },
@@ -45,23 +44,28 @@ const navGroups: DropdownGroup[] = [
           { label: 'Safety & security', href: '/security-guide' },
         ],
       },
+      {
+        title: 'Capabilities',
+        items: [
+          { label: 'Inbox', href: '/product/inbox' },
+          { label: 'Tickets', href: '/product/tickets' },
+          { label: 'Help Center', href: '/product/help-center' },
+          { label: 'Reporting', href: '/product/reporting' },
+        ],
+      },
+      {
+        title: 'More tools',
+        items: [
+          { label: 'Outbound', href: '/product/outbound' },
+          { label: 'Knowledge Hub', href: '/product/knowledge-hub' },
+          { label: 'Copilot', href: '/product/copilot' },
+        ],
+      },
     ],
-    rightSection: {
-      title: 'Intercom capabilities',
-      items: [
-        { label: 'Inbox', href: '/product/inbox' },
-        { label: 'Tickets', href: '/product/tickets' },
-        { label: 'Help Center', href: '/product/help-center' },
-        { label: 'Reporting', href: '/product/reporting' },
-        { label: 'Outbound', href: '/product/outbound' },
-        { label: 'Knowledge Hub', href: '/product/knowledge-hub' },
-        { label: 'Copilot', href: '/product/copilot' },
-      ],
-    },
   },
   {
     label: 'Solutions',
-    leftSections: [
+    sections: [
       {
         title: 'By team size',
         items: [
@@ -78,23 +82,28 @@ const navGroups: DropdownGroup[] = [
           { label: 'Agencies & Services', href: '/solutions/founders' },
         ],
       },
+      {
+        title: 'Capabilities',
+        items: [
+          { label: 'Self-Service', href: '/features' },
+          { label: 'Omnichannel Triage', href: '/solutions/busy-operators' },
+          { label: 'Order Lookups', href: '/integrations' },
+        ],
+      },
+      {
+        title: 'Human & Intel',
+        items: [
+          { label: 'Human Escalations', href: '/features' },
+          { label: 'Workflows', href: '/features' },
+          { label: 'Visitor Intelligence', href: '/features' },
+          { label: 'Teammate Handoff', href: '/solutions/founders' },
+        ],
+      },
     ],
-    rightSection: {
-      title: 'Solution capabilities',
-      items: [
-        { label: 'Self-Service', href: '/features' },
-        { label: 'Omnichannel Triage', href: '/solutions/busy-operators' },
-        { label: 'Order Lookups', href: '/integrations' },
-        { label: 'Human Escalations', href: '/features' },
-        { label: 'Workflows', href: '/features' },
-        { label: 'Visitor Intelligence', href: '/features' },
-        { label: 'Teammate Handoff', href: '/solutions/founders' },
-      ],
-    },
   },
   {
     label: 'Resources',
-    leftSections: [
+    sections: [
       {
         title: 'Learning & Guides',
         items: [
@@ -112,19 +121,24 @@ const navGroups: DropdownGroup[] = [
           { label: 'Safety & security', href: '/security-guide' },
         ],
       },
+      {
+        title: 'Community',
+        items: [
+          { label: 'Blog', href: '/blog' },
+          { label: 'Changelog', href: '/changelog' },
+          { label: 'Community Hub', href: '/community' },
+        ],
+      },
+      {
+        title: 'Company',
+        items: [
+          { label: 'Brand Kit', href: '/brand-kit' },
+          { label: 'About Us', href: '/about' },
+          { label: 'Careers', href: '/careers' },
+          { label: 'Contact Sales', href: '/contact' },
+        ],
+      },
     ],
-    rightSection: {
-      title: 'Community & Company',
-      items: [
-        { label: 'Blog', href: '/blog' },
-        { label: 'Changelog', href: '/changelog' },
-        { label: 'Community Hub', href: '/community' },
-        { label: 'Brand Kit', href: '/brand-kit' },
-        { label: 'About Us', href: '/about' },
-        { label: 'Careers', href: '/careers' },
-        { label: 'Contact Sales', href: '/contact' },
-      ],
-    },
   },
 ];
 
@@ -146,7 +160,7 @@ function Chevron({ className = '' }: { className?: string }) {
   );
 }
 
-// Clean 2-column Intercom-style popover dropdown
+// Clean 4-column dropdown
 function MegaNav({ groups, light = false }: { groups: DropdownGroup[]; light?: boolean }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -175,12 +189,12 @@ function MegaNav({ groups, light = false }: { groups: DropdownGroup[]; light?: b
             <button
               key={group.label}
               type="button"
-              className={`inline-flex h-9 items-center gap-1.5 px-3 text-[14px] font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 ${isOpen
+              className={`inline-flex h-9 items-center gap-1.5 px-3 text-sm font-normal transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 ${isOpen
                   ? light
                     ? 'text-black'
                     : 'text-white'
                   : light
-                    ? 'text-[#181e15]/80 hover:text-black focus-visible:outline-black/30'
+                    ? 'text-black hover:text-black focus-visible:outline-black/30'
                     : 'text-white/80 hover:text-white focus-visible:outline-white/35'
                 }`}
               aria-haspopup="menu"
@@ -196,7 +210,10 @@ function MegaNav({ groups, light = false }: { groups: DropdownGroup[]; light?: b
         })}
       </div>
 
-      {/* Floating 2-Column Intercom Style Dropdown Card */}
+      {/* Floating 4-Column Dropdown Card. Anchored to the nav group's own
+          left edge, not centered on it — the nav sits near the left of the
+          header right after the logo, so centering an 850px panel under its
+          midpoint pushed the whole left half of the panel off-screen. */}
       <div
         className={`absolute left-0 top-[calc(100%+8px)] z-50 transition-all duration-200 ease-out ${activeGroup
             ? 'visible translate-y-0 opacity-100'
@@ -208,56 +225,32 @@ function MegaNav({ groups, light = false }: { groups: DropdownGroup[]; light?: b
       >
         {activeGroup && (
           <div
-            className={`w-[600px] max-w-[90vw] overflow-hidden rounded-xl border p-8 shadow-[0_20px_50px_rgba(0,0,0,0.15)] transition-colors ${light
+            className={`w-[850px] max-w-[95vw] overflow-hidden rounded-xl border px-10 py-10 shadow-[0_20px_50px_rgba(0,0,0,0.15)] transition-colors ${light
                 ? 'border-[#e5e7eb] bg-white text-[#11120f]'
                 : 'border-white/10 bg-white text-[#11120f] shadow-2xl'
               }`}
           >
-            {/* 2-Column Grid divided by subtle vertical line */}
-            <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-[1.1fr_1fr]">
-              {/* Left Column: 2 Stacked Sections */}
-              <div className="space-y-7 border-r border-[#e5e7eb] pr-8">
-                {activeGroup.leftSections.map((section) => (
-                  <div key={section.title}>
-                    <h4 className="text-[17px] font-semibold tracking-tight text-[#11120f]">
-                      {section.title}
-                    </h4>
-                    <div className="mt-3.5 space-y-3 border-l border-black/25 pl-3.5">
-                      {section.items.map((item) => (
-                        <Link
-                          key={item.label}
-                          href={item.href}
-                          onClick={() => setOpenIndex(null)}
-                          className="block text-[15px] font-normal text-[#11120f] underline underline-offset-4 decoration-black/30 transition-colors hover:decoration-black"
-                        >
-                          {item.label}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Right Column: Intercom capabilities list */}
-              <div className="pl-1">
-                <div>
-                  <h4 className="text-[17px] font-semibold tracking-tight text-[#11120f]">
-                    {activeGroup.rightSection.title}
+            {/* 4-Column Grid */}
+            <div className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-4">
+              {activeGroup.sections.map((section) => (
+                <div key={section.title} className="flex flex-col">
+                  <h4 className="mb-4 text-sm font-normal tracking-tight text-[#11120f]">
+                    {section.title}
                   </h4>
-                  <div className="mt-3.5 space-y-3 border-l border-black/25 pl-3.5">
-                    {activeGroup.rightSection.items.map((item) => (
+                  <div className="flex flex-col gap-3">
+                    {section.items.map((item) => (
                       <Link
                         key={item.label}
                         href={item.href}
                         onClick={() => setOpenIndex(null)}
-                        className="block text-[15px] font-normal text-[#11120f] underline underline-offset-4 decoration-black/30 transition-colors hover:decoration-black"
+                        className="text-sm font-normal text-slate-700 transition-colors hover:text-black"
                       >
                         {item.label}
                       </Link>
                     ))}
                   </div>
                 </div>
-              </div>
+              ))}
             </div>
           </div>
         )}
@@ -308,13 +301,15 @@ export function Header({
   const headerClassName = `w-full transition-shadow duration-200 ${light ? 'bg-white' : 'bg-black'
     } ${scrolled ? 'shadow-[0_1px_0_rgba(0,0,0,0.08)]' : ''}`;
 
-  const navLinkClassName = `hidden h-9 items-center px-3 text-[14px] font-medium transition lg:inline-flex ${light ? 'text-[#181e15]/80 hover:text-black' : 'text-white/80 hover:text-white'
+  const navLinkClassName = `hidden h-9 items-center px-3 text-sm font-normal transition lg:inline-flex ${light ? 'text-black hover:text-black/70' : 'text-white/80 hover:text-white'
     }`;
 
-  const loginClassName = `hidden h-9 items-center text-[14px] font-medium transition lg:inline-flex ${light ? 'text-[#181e15]/80 hover:text-black' : 'text-white/80 hover:text-white'
+  const loginClassName = `hidden h-[36px] items-center justify-center rounded-lg border-2 px-4 text-sm font-normal transition-all duration-150 lg:inline-flex ${light 
+      ? 'border-black bg-transparent text-black hover:bg-black/5' 
+      : 'border-white bg-transparent text-white hover:bg-white/10'
     }`;
 
-  const signUpPillClassName = `inline-flex h-9 items-center justify-center rounded-full px-4 text-[14px] font-medium transition-all duration-150 ${light
+  const signUpPillClassName = `inline-flex h-[36px] items-center justify-center rounded-lg px-4 text-sm font-normal transition-all duration-150 ${light
       ? 'bg-black text-white hover:bg-black/85 shadow-xs'
       : 'bg-white text-black hover:bg-white/90 shadow-xs'
     }`;
@@ -357,68 +352,40 @@ export function Header({
       className={`fixed inset-x-0 top-0 z-50 w-full ${light ? 'text-[#11120f]' : 'text-[var(--elpino-text)]'
         }`}
     >
-      {showOffer && !scrolled && <UpgradeBanner marketing pricingPage={pricingPage} />}
-      {variant === 'full' && !scrolled && (
-        <div className="w-full border-b border-white/10 bg-black">
-          <div className="mx-auto flex min-h-11 w-full max-w-[88rem] items-center justify-center overflow-hidden px-4 py-2 sm:px-8">
-            <a
-              className={`elpino-announcement group grid min-w-0 flex-1 grid-cols-[auto_minmax(0,auto)_minmax(24px,1fr)_auto] items-center gap-3 text-[13px] font-normal sm:gap-5 sm:text-sm ${light ? 'text-[#26332d]' : 'text-white/90'
-                }`}
-              href="/pricing"
-            >
-              <span className="elpino-announcement-badge relative inline-flex shrink-0 items-center gap-2 overflow-hidden bg-[var(--elpino-ai)] px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-white shadow-[0_8px_24px_-14px_rgba(35,61,77,0.7)]">
-                <span className="relative h-1.5 w-1.5">
-                  <span className="absolute inset-0 rounded-full bg-[var(--elpino-accent)]/40 motion-safe:animate-ping" />
-                  <span className="absolute inset-0 rounded-full bg-[var(--elpino-accent)]" />
-                </span>
-                New
-              </span>
-              <span
-                className={`truncate transition-colors duration-200 ${light ? 'group-hover:text-black' : 'group-hover:text-white'
-                  }`}
-              >
-                Pay for resolutions, not seats — see the new pricing
-              </span>
-              <span aria-hidden="true" className="elpino-pixel-rail h-[3px] min-w-0" />
-              <span
-                aria-hidden="true"
-                className={`inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition-[transform,border-color,background-color] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:translate-x-1 group-active:scale-[0.96] ${light
-                    ? 'border-black/20 text-black group-hover:border-black/50 group-hover:bg-black/5'
-                    : 'border-white/20 text-white group-hover:border-white/55 group-hover:bg-white/10'
-                  }`}
-              >
-                ↗
-              </span>
-            </a>
+      {!scrolled && (
+        <Link 
+          href="/blog/meet-elpino"
+          className="group flex h-10 w-full items-center justify-center gap-3 border-b border-white/10 bg-black px-4 text-sm text-white transition-colors hover:bg-black/90"
+        >
+          <div className="flex items-center rounded-sm bg-white px-1.5 py-0.5 text-xs font-semibold uppercase tracking-widest text-black">
+            New
           </div>
-        </div>
+          <span className="font-medium">Meet Elpino</span>
+          <span className="hidden opacity-75 sm:inline">— Your super support team.</span>
+          <span className="opacity-75 transition-transform group-hover:translate-x-0.5">Read announcement →</span>
+        </Link>
       )}
+      
 
       <header className={headerClassName}>
         <nav
-          className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-5 transition-[height] duration-200 sm:px-8 lg:px-10"
+          className="flex h-16 w-full items-center justify-between px-10 transition-[height] duration-200"
           aria-label="Main navigation"
         >
           {/* Logo & Navigation Links */}
           <div className="flex items-center gap-8">
             <Link
-              className="group/logo flex w-fit shrink-0 items-center gap-2 transition-opacity hover:opacity-90"
+              className="group/logo flex w-fit shrink-0 items-center transition-opacity hover:opacity-90"
               href="/"
             >
               <Image
-                alt=""
-                src="/icon.png"
-                width={96}
-                height={96}
+                alt="Elpino"
+                src="/logo-full.png"
+                width={200}
+                height={60}
                 priority
-                className="h-8 w-8 rounded-lg object-contain"
+                className={`h-7 w-auto object-contain transition-all ${light ? '' : 'brightness-0 invert'}`}
               />
-              <span
-                className={`text-[16px] font-semibold tracking-[-0.02em] ${light ? 'text-[#11120f]' : 'text-white'
-                  }`}
-              >
-                elpino
-              </span>
             </Link>
 
             {/* Desktop Navigation with Floating Intercom-style Popovers */}
@@ -434,15 +401,8 @@ export function Header({
           </div>
 
           {/* Right-Side Actions */}
-          <div className="flex items-center gap-4">
-            <div className="hidden shrink-0 items-center gap-4 lg:flex">
-              <LanguageSwitcher
-                language={language}
-                onChange={setStoredLanguage}
-                light={light}
-                open={languageOpen}
-                onOpenChange={setLanguageOpen}
-              />
+          <div className="flex items-center gap-1">
+            <div className="hidden shrink-0 items-center gap-1 lg:flex">
               {session ? (
                 <Link
                   className={signUpPillClassName}
@@ -452,15 +412,20 @@ export function Header({
                 </Link>
               ) : (
                 <>
+                  <Link className={`hidden h-9 items-center px-3 text-sm font-normal transition lg:inline-flex ${light ? 'text-black hover:text-black/70' : 'text-white hover:text-white/70'}`} href="/contact">
+                    Contact sales
+                  </Link>
                   <Link className={loginClassName} href="/login">
-                    {t('nav.login', 'Log in')}
+                    Log in
                   </Link>
-                  <Link
-                    className={signUpPillClassName}
-                    href="/signup"
-                  >
-                    {t('nav.getStarted', 'Sign up')}
-                  </Link>
+                  <div className="ml-2">
+                    <Link
+                      className={signUpPillClassName}
+                      href="/signup"
+                    >
+                      Start free trial
+                    </Link>
+                  </div>
                 </>
               )}
             </div>
@@ -519,7 +484,7 @@ export function Header({
                     {group.label}
                   </div>
                   <div className="space-y-4">
-                    {group.leftSections.map((sec) => (
+                    {group.sections.map((sec) => (
                       <div key={sec.title}>
                         <p className="text-xs font-semibold text-white/50">{sec.title}</p>
                         <div className="mt-1.5 space-y-2 border-l border-white/20 pl-3">
@@ -536,21 +501,6 @@ export function Header({
                         </div>
                       </div>
                     ))}
-                    <div>
-                      <p className="text-xs font-semibold text-white/50">{group.rightSection.title}</p>
-                      <div className="mt-1.5 space-y-2 border-l border-white/20 pl-3">
-                        {group.rightSection.items.map((item) => (
-                          <Link
-                            key={item.label}
-                            onClick={() => setIsMobileMenuOpen(false)}
-                            href={item.href}
-                            className="block text-[14px] text-white/90 underline underline-offset-4 decoration-white/30 hover:text-white"
-                          >
-                            {item.label}
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
                   </div>
                 </div>
               ))}

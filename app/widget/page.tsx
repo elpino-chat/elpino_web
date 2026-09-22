@@ -2,7 +2,7 @@
 
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { ArrowUp, ChevronDown, ChevronLeft, ChevronRight, CircleHelp, ExternalLink, File as FileIcon, Home, LayoutGrid, Maximize2, MessageCircle, MessageSquarePlus, Minimize2, MoreHorizontal, Plus, Search, Smile, ThumbsDown, ThumbsUp, Volume2, VolumeX, X } from "lucide-react";
+import { ArrowUp, ChevronDown, ChevronLeft, ChevronRight, CircleHelp, ExternalLink, File as FileIcon, LayoutGrid, Maximize2, MessageCircle, MessageSquarePlus, Minimize2, MoreHorizontal, Plus, Search, Smile, ThumbsDown, ThumbsUp, Volume2, VolumeX, X } from "lucide-react";
 import MessageMarkdown from "@/app/components/MessageMarkdown";
 import TypingDots from "@/app/components/TypingDots";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -27,7 +27,16 @@ type MessageGroup =
   | { kind: "thread"; fromVisitor: boolean; messages: WidgetMessage[] };
 type StartResult = { allowed: boolean; visitorToken?: string; conversationId?: string; botName?: string; botAvatarUrl?: string | null; greetingLines?: string[]; removeBranding?: boolean; topic?: string | null; customerName?: string | null; customerEmail?: string | null; customerPhone?: string | null; contactCollection?: "chat" | "off"; identified?: boolean; identityError?: string; messages?: WidgetMessage[]; error?: string };
 type ConversationSummary = { id: string; status: string; topic?: string | null; preview: string; time: string };
-type ChatView = "list" | "thread";
+// "home" is the greeting/start screen — no separate top-level tab for it (see
+// `tab` below), just the Chat tab's own default view when there's nothing to
+// resume. Matches Crisp/Intercom: land in an existing conversation, or greet.
+type ChatView = "home" | "list" | "thread";
+type ContactField = "email" | "name" | "phone";
+const CONTACT_PROMPTS: Record<ContactField, { label: string; placeholder: string; type: string }> = {
+  email: { label: "Your email", placeholder: "you@example.com", type: "email" },
+  name: { label: "Your name", placeholder: "Your name", type: "text" },
+  phone: { label: "Your phone (optional)", placeholder: "+1 555 123 4567", type: "tel" },
+};
 type GifResult = { id: string; url: string; preview: string };
 type TeamMember = { id: string; name: string | null; avatarUrl: string | null; online: boolean };
 type PreChatField = {
@@ -150,8 +159,14 @@ function WidgetContent() {
   const restoredChatView = searchParams.get("view") === "list" ? "list" : "thread";
   const restoredConversationRef = useRef(startFresh ? null : searchParams.get("conversation"));
 
-  const [tab, setTab] = useState<"home" | "chat" | "help">(startFresh ? "chat" : restoredTab ?? "home");
-  const [chatView, setChatView] = useState<ChatView>(restoredTab === "chat" ? restoredChatView : "thread");
+  const [tab, setTab] = useState<"chat" | "help">(restoredTab ?? "chat");
+  // No restored view to go on: land straight in the thread, same as
+  // startFresh — a brand-new visitor sees the greeting rendered as the
+  // thread's first bubble (see "messages.length === 0 && !conversationId"
+  // below), not a separate card screen. Crisp/Intercom don't have a distinct
+  // Home either. Nothing sets chatView to "home" anymore, but the ChatView
+  // value and its render branch are left in place rather than torn out.
+  const [chatView, setChatView] = useState<ChatView>(startFresh ? "thread" : restoredTab === "chat" ? restoredChatView : "thread");
   const [loading, setLoading] = useState(true);
   const [denied, setDenied] = useState(false);
   const [loadFailed, setLoadFailed] = useState(false);
@@ -159,23 +174,29 @@ function WidgetContent() {
   const [botName, setBotName] = useState("Elpino Support");
   const [botAvatarUrl, setBotAvatarUrl] = useState<string | null>(null);
   const [greetingLines, setGreetingLines] = useState<string[]>(["Hi there 👋", "How can I help you today?"]);
+  // First name of an identified visitor (ElpinoTag.identify()/getIdentityToken
+  // on the host page), so the greeting can say "Hi Jagdeep" instead of the
+  // generic "Hi there" — null for an anonymous visitor, or one the site
+  // identified without a real name on file yet ("Website visitor").
+  const [greetingName, setGreetingName] = useState<string | null>(null);
   // Paid plans drop the badge. Starts true so a slow or failed config load
   // shows it rather than silently white-labelling a Free workspace.
   const [showBranding, setShowBranding] = useState(true);
   const [visitorToken, setVisitorToken] = useState("");
-  // What we already have on file for this visitor — backs the "in case we
-  // lose you" contact popup (see requestContact below): no point asking
-  // again for whichever of these is already filled.
-  const [customerName, setCustomerName] = useState<string | null>(null);
-  const [customerEmail, setCustomerEmail] = useState<string | null>(null);
-  const [customerPhone, setCustomerPhone] = useState<string | null>(null);
-  // The workspace's "Collect contact details" setting. Starts at "off" so the
-  // popup can't flash before the setting has loaded.
-  const [contactCollection, setContactCollection] = useState<"chat" | "off">("off");
   const [conversationId, setConversationId] = useState("");
   const [messages, setMessages] = useState<WidgetMessage[]>([]);
   const [replyPreview, setReplyPreview] = useState<WidgetMessage | null>(null);
   const [draft, setDraft] = useState("");
+  // Step-by-step contact form that takes over the message box when the AI
+  // asks for an email "in case we get disconnected". The server decides when
+  // (contactAsk on the message poll); this only walks the missing fields.
+  const [contactFields, setContactFields] = useState<ContactField[] | null>(null);
+  const [contactStep, setContactStep] = useState(0);
+  const [contactValue, setContactValue] = useState("");
+  const [contactError, setContactError] = useState("");
+  const [contactSaving, setContactSaving] = useState(false);
+  const [contactDoneFor, setContactDoneFor] = useState("");
+  const [contactThanks, setContactThanks] = useState(false);
   const [agentTyping, setAgentTyping] = useState(false);
   const [sending, setSending] = useState(false);
   const [recent, setRecent] = useState<ConversationSummary[]>([]);
@@ -215,14 +236,24 @@ function WidgetContent() {
   // keepDraft: the session merely lapsed and the same person is about to be
   // signed back in, so what they were typing survives. Logout and account
   // switches clear everything.
-  const discardSession = useCallback((options: { keepDraft?: boolean } = {}) => {
+  // keepVisitorToken: a fresh identity token arrived that *might* verify to
+  // someone new, but hasn't been checked yet — don't throw away this
+  // browser's anonymous history on a guess. The start() response that
+  // follows already does the right thing once it actually knows: it clears
+  // the stored token itself if the visitor turns out to be identified, and
+  // otherwise leaves it alone. Without this, a host page that mints a new
+  // (structurally different, even if equally unverified) token on every
+  // fetch — e.g. our own dashboard session backing elpino.chat's widget
+  // tag — wipes the anonymous visitor's saved token, and with it every past
+  // conversation, on essentially every identity refresh.
+  const discardSession = useCallback((options: { keepDraft?: boolean; keepVisitorToken?: boolean } = {}) => {
     const oldToken = activeVisitorRef.current;
     activeVisitorRef.current = "";
     sessionEpochRef.current += 1;
     if (oldToken.startsWith("ws_")) {
       void fetch("/api/widget/logout", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ key, hostname, visitorToken: oldToken }), keepalive: true }).catch(() => undefined);
     }
-    clearVisitorToken(key);
+    if (!options.keepVisitorToken) clearVisitorToken(key);
     setVisitorToken("");
     setConversationId("");
     setMessages([]);
@@ -252,11 +283,6 @@ function WidgetContent() {
   // panelOpenRef comes from the loader; the iframe cannot tell on its own
   // whether it is hidden behind a closed launcher.
   const panelOpenRef = useRef(true);
-  // Fixed once, at mount — the client-side greeting has no real createdAt
-  // (nothing is saved yet), but it needs a stable one anyway: using "now" on
-  // every render would tick forward while the visitor just sits looking at
-  // it, and re-picking it after a re-render would jump around.
-  const greetingTimeRef = useRef(new Date().toISOString());
   const seenMessageIdsRef = useRef<Set<string>>(new Set());
   const seenConversationRef = useRef("");
   const [soundOn, setSoundOn] = useState(true);
@@ -361,83 +387,8 @@ function WidgetContent() {
   // "leave chat?" prompt across sessions would be confusing.
   useEffect(() => {
     if (leaveOpen) { setLeaveOpen(false); setRatingChoice(null); }
-    setContactPromptDone(false);
-    setContactOpen(false);
-    setContactStep("email");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conversationId]);
-
-  // The "in case we lose you" popup — a small card above the composer,
-  // not a blocking screen. Shown once, right after the AI's first real
-  // reply to the visitor (not the opening greeting, which is also
-  // senderType "ai" but nobody has said anything yet) — so it reads as
-  // "let's make sure we can reach you" rather than interrupting before
-  // the conversation has even started.
-  const [contactPromptDone, setContactPromptDone] = useState(false);
-  const [contactOpen, setContactOpen] = useState(false);
-  const [contactStep, setContactStep] = useState<"email" | "name-phone">("email");
-  const [contactNameInput, setContactNameInput] = useState("");
-  const [contactEmailInput, setContactEmailInput] = useState("");
-  const [contactPhoneInput, setContactPhoneInput] = useState("");
-  const [contactSubmitting, setContactSubmitting] = useState(false);
-  // The pre-chat form is the existing place an admin already asks for a
-  // phone number — reused here rather than adding a second setting for
-  // the same thing.
-  const namePhoneCaptureEnabled = preChatFields.some((field) => field.id === "name" || field.type === "phone");
-  const hasCustomerName = Boolean(customerName && customerName !== "Website visitor");
-
-  useEffect(() => {
-    const needsEmail = contactCollection === "chat" && !customerEmail;
-    const needsNamePhone = namePhoneCaptureEnabled && (!hasCustomerName || !customerPhone);
-    if ((!needsEmail && !needsNamePhone) || contactPromptDone || contactOpen || leaveOpen) return;
-    if (tab !== "chat" || chatView !== "thread") return;
-    const firstCustomerIndex = messages.findIndex((m) => m.senderType === "customer");
-    if (firstCustomerIndex === -1) return;
-    const hasReplyAfter = messages.slice(firstCustomerIndex + 1).some((m) => m.senderType === "ai");
-    if (!hasReplyAfter) return;
-    setContactStep(needsEmail ? "email" : "name-phone");
-    setContactOpen(true);
-    setContactPromptDone(true);
-  }, [messages, contactCollection, contactPromptDone, contactOpen, customerEmail, customerPhone, hasCustomerName, namePhoneCaptureEnabled, leaveOpen, tab, chatView]);
-
-  function dismissContact() {
-    setContactOpen(false);
-  }
-  async function submitContactEmail() {
-    const email = contactEmailInput.trim();
-    if (!email || contactSubmitting) return;
-    setContactSubmitting(true);
-    try {
-      await fetch("/api/widget/contact", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ key, hostname, visitorToken, email }),
-      });
-      setCustomerEmail(email);
-    } catch { /* not fatal — the visitor just wasn't captured this time */ }
-    setContactSubmitting(false);
-    // Slides right-to-left into the phone step only when the workspace
-    // actually asks for one and doesn't already have it.
-    if (namePhoneCaptureEnabled && (!hasCustomerName || !customerPhone)) setContactStep("name-phone");
-    else setContactOpen(false);
-  }
-  async function submitContactNamePhone() {
-    const name = contactNameInput.trim();
-    const phone = contactPhoneInput.trim();
-    if (!name || !phone || contactSubmitting) return;
-    setContactSubmitting(true);
-    try {
-      await fetch("/api/widget/contact", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ key, hostname, visitorToken, name, phone }),
-      });
-      setCustomerName(name);
-      setCustomerPhone(phone);
-    } catch { /* not fatal */ }
-    setContactSubmitting(false);
-    setContactOpen(false);
-  }
 
   // The browser/phone Back button is caught by the loader (tag.js), on the
   // host page — the iframe can't see that navigation on its own, so the
@@ -526,11 +477,16 @@ function WidgetContent() {
           silentRefreshRef.current = false;
           void refreshSilently(token);
         } else if (restart) {
-          // Logged in, logged out or switched user after the chat started.
-          // The draft is kept here and cleared once the new session reports a
-          // different account (see accountRefRef in the start effect).
+          // Logged in, logged out or switched user after the chat started —
+          // or just a fresh token for the same not-yet-verified visitor; the
+          // start() call below is what actually finds out which. The draft
+          // is kept here and cleared once the new session reports a
+          // different account (see accountRefRef in the start effect); the
+          // anonymous visitor token is kept for the same reason — the start
+          // effect already clears it itself if this token turns out to
+          // verify to someone.
           silentRefreshRef.current = false;
-          discardSession({ keepDraft: true });
+          discardSession({ keepDraft: true, keepVisitorToken: true });
           setRetryCount((count) => count + 1);
         }
       } else if (data.type === "elpino:panel") {
@@ -676,10 +632,8 @@ function WidgetContent() {
         setBotName(data.botName || "Elpino Support");
         setBotAvatarUrl(data.botAvatarUrl ?? null);
         setShowBranding(!data.removeBranding);
-        setCustomerName(data.customerName ?? null);
-        setCustomerEmail(data.customerEmail ?? null);
-        setCustomerPhone(data.customerPhone ?? null);
-        setContactCollection(data.contactCollection === "off" ? "off" : "chat");
+        const realName = data.identified && data.customerName && data.customerName !== "Website visitor" ? data.customerName.trim().split(/\s+/)[0] : null;
+        setGreetingName(realName || null);
         if (Array.isArray(data.greetingLines) && data.greetingLines.length > 0) setGreetingLines(data.greetingLines);
         activeVisitorRef.current = data.visitorToken ?? "";
         // A different person than before (after an expiry that kept the
@@ -947,7 +901,7 @@ function WidgetContent() {
     const poll = () => {
       fetch("/api/widget/messages/read", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ key, hostname, visitorToken, conversationId }) })
         .then((response) => response.json())
-        .then((data: { messages?: WidgetMessage[]; agentTyping?: boolean; error?: string; ended?: boolean }) => {
+        .then((data: { messages?: WidgetMessage[]; agentTyping?: boolean; error?: string; ended?: boolean; contactAsk?: { fields?: ContactField[] } | null }) => {
           if (cancelled || epoch !== sessionEpochRef.current) return;
           // Left with Leave Chat (in another tab, say): drop the thread and go
           // back to the list rather than treating it as a broken session.
@@ -990,6 +944,9 @@ function WidgetContent() {
             setMessages(data.messages);
           }
           setAgentTyping(!!data.agentTyping);
+          const fields = data.contactAsk?.fields?.filter((field): field is ContactField => field in CONTACT_PROMPTS) ?? [];
+          // Keep a form already in progress; only a fresh ask starts at step 0.
+          setContactFields((current) => (fields.length ? current ?? fields : current));
         })
         .catch(() => undefined);
     };
@@ -1139,6 +1096,72 @@ function WidgetContent() {
     }
   }
 
+  const contactActive = Boolean(contactFields?.length) && contactDoneFor !== conversationId && Boolean(conversationId);
+  const contactField = contactActive ? contactFields![contactStep] : undefined;
+
+  useEffect(() => {
+    setContactFields(null);
+    setContactStep(0);
+    setContactValue("");
+    setContactError("");
+    setContactThanks(false);
+  }, [conversationId]);
+
+  useEffect(() => {
+    if (!contactThanks) return;
+    const timer = window.setTimeout(() => setContactThanks(false), 5000);
+    return () => window.clearTimeout(timer);
+  }, [contactThanks]);
+
+  function finishContact(saved: boolean) {
+    setContactDoneFor(conversationId);
+    setContactFields(null);
+    setContactStep(0);
+    setContactValue("");
+    setContactError("");
+    setContactThanks(saved);
+  }
+
+  function nextContactStep(saved: boolean) {
+    const fields = contactFields ?? [];
+    setContactValue("");
+    setContactError("");
+    if (contactStep + 1 >= fields.length) finishContact(saved);
+    else setContactStep(contactStep + 1);
+  }
+
+  async function submitContactStep() {
+    if (!contactField || contactSaving) return;
+    const value = contactValue.trim();
+    if (!value) return;
+    if (contactField === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) { setContactError("That doesn't look like an email address."); return; }
+    if (contactField === "phone") {
+      const digits = value.replace(/\D/g, "").length;
+      if (digits < 10 || digits > 15) { setContactError("Enter a phone number with country code."); return; }
+    }
+    setContactSaving(true);
+    try {
+      const response = await fetch("/api/widget/contact", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ key, hostname, visitorToken, [contactField]: value }),
+      });
+      const data = (await response.json().catch(() => ({}))) as { error?: string };
+      if (!response.ok || data.error) { setContactError("Couldn't save that — try again or skip."); return; }
+      nextContactStep(true);
+    } catch {
+      setContactError("Couldn't save that — try again or skip.");
+    } finally {
+      setContactSaving(false);
+    }
+  }
+
+  // Skipping the email means they'd rather not share contact details at all.
+  function skipContactStep() {
+    if (contactField === "email") finishContact(false);
+    else nextContactStep(contactStep > 0);
+  }
+
   async function sendMessage() {
     const body = draft.trim();
     const attachment = pendingAttachment;
@@ -1226,6 +1249,13 @@ function WidgetContent() {
   }
 
   const initial = useMemo(() => (botName.trim() || "R").charAt(0).toUpperCase(), [botName]);
+  // The opening line is assumed to be the salutation ("Hi there 👋") —
+  // swapped for the identified visitor's first name, rest of the workspace's
+  // own greeting copy left untouched.
+  const displayGreetingLines = useMemo(
+    () => (greetingName ? [`Hi ${greetingName} 👋`, ...greetingLines.slice(1)] : greetingLines),
+    [greetingLines, greetingName],
+  );
   // Consecutive messages from the same sender are one item in the thread
   // list, not one each — otherwise every bubble, even ones seconds apart
   // from the same reply, gets the full inter-group gap meant to separate
@@ -1253,10 +1283,6 @@ function WidgetContent() {
   // at it. Real teams already at or above that size just show their true
   // count instead of a padded one.
   const paddedTeamTotal = useMemo(() => Math.floor(Math.random() * 6) + 6, []);
-  // The Home/Chat tab bar only makes sense as a top-level switcher — once
-  // you're inside an actual conversation it just eats vertical space, so it
-  // only renders for the two "browsing" screens (Home, Recent list).
-  const showTabBar = !(tab === "chat" && chatView === "thread");
 
   if (loading) {
     return <div className="flex h-full items-center justify-center text-[12px]" style={{ backgroundColor: BG, color: MUTED }}>Loading…</div>;
@@ -1325,7 +1351,7 @@ function WidgetContent() {
     return (
       <div className="flex h-full flex-col" style={{ backgroundColor: BG, color: INK }}>
         <div className="shrink-0 px-5 pb-6 pt-5">
-          <button type="button" aria-label="Back to home" onClick={() => { setPreChatNeeded(false); setTab("home"); }} className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-black/5">
+          <button type="button" aria-label="Back to home" onClick={() => { setPreChatNeeded(false); setTab("chat"); setChatView("thread"); }} className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-black/5">
             <ChevronLeft size={20} />
           </button>
           <p className="mt-3 text-[17px] font-semibold leading-6">Please share a few details here so {botName} can connect you with the right person.</p>
@@ -1360,7 +1386,7 @@ function WidgetContent() {
   return (
     <div className="relative flex h-full flex-col" style={{ backgroundColor: BG, color: INK }}>
       <div className="min-h-0 flex-1 overflow-hidden">
-        {tab === "home" ? (
+        {tab === "chat" && chatView === "home" ? (
           <div className="flex h-full flex-col">
             <div className="px-5 pb-5 pt-7">
               <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full text-[16px] font-bold text-white" style={{ backgroundColor: ACCENT }}>
@@ -1527,7 +1553,10 @@ function WidgetContent() {
               {recentLoading ? (
                 <p className="px-4 py-6 text-[11.5px]" style={{ color: MUTED }}>Loading…</p>
               ) : recent.length === 0 ? (
-                <p className="px-4 py-6 text-[11.5px]" style={{ color: MUTED }}>No past conversations yet.</p>
+                <div className="flex flex-col items-center px-4 py-10 text-center">
+                  <p className="text-[13px] font-semibold" style={{ color: INK }}>No messages</p>
+                  <p className="mt-1 text-[11.5px]" style={{ color: MUTED }}>Messages from the team will be shown here</p>
+                </div>
               ) : (
                 recent.map((conversation) => (
                   <button
@@ -1555,24 +1584,23 @@ function WidgetContent() {
               <button
                 type="button"
                 onClick={startNewChat}
-                className="flex items-center gap-2 rounded-full border px-4 py-2.5 text-[12.5px] font-semibold shadow-sm transition hover:bg-black/[0.02]"
-                style={{ backgroundColor: SURFACE, borderColor: BORDER, color: INK }}
+                className="flex items-center gap-2 rounded-full border px-4 py-2.5 text-[12.5px] font-semibold shadow-sm transition hover:opacity-90"
+                style={{ backgroundColor: INK, borderColor: INK, color: SURFACE }}
               >
                 Ask a question
-                <span className="flex h-4 w-4 items-center justify-center rounded-full text-white" style={{ backgroundColor: INK }}><CircleHelp size={11} /></span>
+                <span className="flex h-4 w-4 items-center justify-center rounded-full" style={{ backgroundColor: SURFACE, color: INK }}><CircleHelp size={11} /></span>
               </button>
             </div>
           </div>
         ) : (
           <div className="flex h-full flex-col">
             <div className="relative flex h-[82px] shrink-0 items-start justify-between px-3 pt-3" style={{ backgroundColor: BG }}>
-              <button type="button" aria-label="Back to chats" onClick={() => requestLeave("list")} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-black/[0.07] transition hover:bg-black/[0.12]"><ChevronLeft size={19} /></button>
-              <div className="absolute left-1/2 top-2 flex max-w-[220px] -translate-x-1/2 items-center gap-3 rounded-[28px] bg-white pr-6 py-2.5 shadow-[0_8px_26px_rgba(20,20,25,.18)]">
-                <span className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full text-[12px] font-bold text-white" style={{ backgroundColor: ACCENT }}>
-                  {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
-                  <span className="absolute right-0 top-0 h-2.5 w-2.5 rounded-full ring-2" style={{ backgroundColor: "#32a071", ["--tw-ring-color" as string]: SURFACE }} />
-                </span>
-                <span className="min-w-0 truncate text-[14px] font-bold leading-5">{botName}</span>
+              <div className="flex items-center gap-2">
+                <button type="button" aria-label="Back to chats" onClick={() => requestLeave("list")} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-black/[0.07] transition hover:bg-black/[0.12]"><ChevronLeft size={19} /></button>
+                <div className="relative flex max-w-[220px] flex-col items-start gap-0.5 rounded-[28px] py-2.5">
+                  <h2 className="min-w-0 truncate text-[14px] font-bold leading-5" style={{ color: INK }}>{botName}</h2>
+                  <p className="min-w-0 text-[11.5px] leading-4" style={{ color: MUTED }}>AI Assistant</p>
+                </div>
               </div>
               <div className="ml-auto flex gap-2">
                 <Popover>
@@ -1590,7 +1618,6 @@ function WidgetContent() {
                     </button>
                   </PopoverContent>
                 </Popover>
-                <button type="button" aria-label="Close" onClick={() => requestLeave()} className="flex h-9 w-9 items-center justify-center rounded-full bg-black/[0.07] transition hover:bg-black/[0.12]"><X size={22} /></button>
               </div>
             </div>
             <div ref={scrollRef} onScroll={handleThreadScroll} className="min-h-0 flex-1 space-y-5 overflow-y-auto px-6 pb-5 pt-4">
@@ -1605,18 +1632,10 @@ function WidgetContent() {
                 // together here the way consecutive same-sender messages
                 // are further down.
                 <div className="space-y-1">
-                  {/* Matches the header a real message group shows (see
-                      below) — otherwise the greeting visibly gains a name
-                      and timestamp the moment it becomes a real saved
-                      message, instead of looking the same throughout. */}
-                  <p className="pl-8 text-[10.5px]" style={{ color: MUTED }}>
-                    <span className="font-semibold" style={{ color: INK }}>{botName}</span>
-                    {" · "}{formatTime(greetingTimeRef.current)}
-                  </p>
-                  {greetingLines.map((line, index) => (
+                  {displayGreetingLines.map((line, index) => (
                     <div key={index} className="flex items-start gap-2">
                       {index === 0 && (
-                        <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full text-[10px] font-bold text-white" style={{ backgroundColor: ACCENT }}>
+                        <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full text-[10px] font-bold text-white" style={{ backgroundColor: botAvatarUrl ? undefined : ACCENT }}>
                           {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
                         </span>
                       )}
@@ -1652,20 +1671,9 @@ function WidgetContent() {
                 // Bubbles within the run share a tight gap-1 instead.
                 const { fromVisitor, messages: groupMessages } = group;
                 const first = groupMessages[0];
-                const senderName = first.senderType === "ai" ? botName : team.find((member) => member.id === first.senderId)?.name?.trim() || "Support team";
 
                 return (
                   <div key={first.id} className="flex flex-col gap-1">
-                    {/* Who's actually talking: the AI, or — once a teammate
-                        has taken over — that teammate by name. Shown once
-                        per run, not on every line, so a human mid-conversation
-                        doesn't read as the AI. */}
-                    {!fromVisitor && (
-                      <p className="pl-8 text-[10.5px]" style={{ color: MUTED }}>
-                        <span className="font-semibold" style={{ color: INK }}>{senderName}</span>
-                        {" · "}{formatTime(first.createdAt)}
-                      </p>
-                    )}
                     {groupMessages.map((message, messageIndex) => {
                       const hasImage = message.attachmentUrl && (message.attachmentType === "image" || message.attachmentType === "gif");
                       const hasFile = message.attachmentUrl && message.attachmentType === "file";
@@ -1707,7 +1715,7 @@ function WidgetContent() {
                       return (
                         <div key={message.id} className="flex items-start gap-2">
                           {messageIndex === 0 ? (
-                            <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full text-[10px] font-bold text-white" style={{ backgroundColor: ACCENT }}>
+                            <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full text-[10px] font-bold text-white" style={{ backgroundColor: botAvatarUrl ? undefined : ACCENT }}>
                               {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
                             </span>
                           ) : (
@@ -1726,7 +1734,7 @@ function WidgetContent() {
               })}
               {agentTyping && (
                 <div className="flex items-center gap-2">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full text-[10px] font-bold text-white" style={{ backgroundColor: ACCENT }}>
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full text-[10px] font-bold text-white" style={{ backgroundColor: botAvatarUrl ? undefined : ACCENT }}>
                     {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
                   </span>
                   <div className="flex items-center rounded-2xl px-3.5 py-3" style={{ backgroundColor: BUBBLE, width: "fit-content" }}>
@@ -1736,74 +1744,6 @@ function WidgetContent() {
               )}
             </div>
             <div className="relative px-5 pb-3 pt-2">
-              {contactOpen && (
-                <div className="absolute bottom-full left-3 right-3 mb-2 overflow-hidden rounded-2xl border shadow-xl" style={{ borderColor: BORDER, backgroundColor: SURFACE }}>
-                  <div className="flex transition-transform duration-300 ease-out" style={{ transform: contactStep === "name-phone" ? "translateX(-100%)" : "translateX(0%)" }}>
-                    <div className="w-full shrink-0 p-3">
-                      <div className="flex items-start justify-between gap-2">
-                        <p className="text-[12.5px] font-semibold leading-5">In case we get disconnected, what&apos;s your email?</p>
-                        <button type="button" onClick={dismissContact} aria-label="Dismiss" className="shrink-0 rounded-full p-1 hover:bg-black/5"><X size={13} /></button>
-                      </div>
-                      <div className="mt-2 flex gap-1.5">
-                        <input
-                          type="email"
-                          value={contactEmailInput}
-                          onChange={(event) => setContactEmailInput(event.target.value)}
-                          onKeyDown={(event) => { if (event.key === "Enter") void submitContactEmail(); }}
-                          placeholder="you@example.com"
-                          className="h-9 min-w-0 flex-1 rounded-full border px-3 text-[12.5px] outline-none"
-                          style={{ borderColor: BORDER, backgroundColor: BG, color: INK }}
-                        />
-                        <button
-                          type="button"
-                          disabled={!contactEmailInput.trim() || contactSubmitting}
-                          onClick={() => void submitContactEmail()}
-                          className="shrink-0 rounded-full px-4 text-[12.5px] font-semibold text-white disabled:opacity-50"
-                          style={{ backgroundColor: ACCENT }}
-                        >
-                          {contactSubmitting ? "…" : "Submit"}
-                        </button>
-                      </div>
-                    </div>
-                    <div className="w-full shrink-0 p-3">
-                      <div className="flex items-start justify-between gap-2">
-                        <p className="text-[12.5px] font-semibold leading-5">What&apos;s your name and phone number?</p>
-                        <button type="button" onClick={dismissContact} aria-label="Dismiss" className="shrink-0 rounded-full p-1 hover:bg-black/5"><X size={13} /></button>
-                      </div>
-                      <div className="mt-2 grid grid-cols-2 gap-1.5">
-                        <input
-                          type="text"
-                          value={contactNameInput}
-                          onChange={(event) => setContactNameInput(event.target.value)}
-                          placeholder="Your name"
-                          className="h-9 min-w-0 rounded-full border px-3 text-[12.5px] outline-none"
-                          style={{ borderColor: BORDER, backgroundColor: BG, color: INK }}
-                        />
-                        <input
-                          type="tel"
-                          value={contactPhoneInput}
-                          onChange={(event) => setContactPhoneInput(event.target.value)}
-                          onKeyDown={(event) => { if (event.key === "Enter") void submitContactNamePhone(); }}
-                          placeholder="+1 555 123 4567"
-                          className="h-9 min-w-0 rounded-full border px-3 text-[12.5px] outline-none"
-                          style={{ borderColor: BORDER, backgroundColor: BG, color: INK }}
-                        />
-                      </div>
-                      <div className="mt-2 flex justify-end">
-                        <button
-                          type="button"
-                          disabled={!contactNameInput.trim() || !contactPhoneInput.trim() || contactSubmitting}
-                          onClick={() => void submitContactNamePhone()}
-                          className="shrink-0 rounded-full px-4 text-[12.5px] font-semibold text-white disabled:opacity-50"
-                          style={{ backgroundColor: ACCENT }}
-                        >
-                          {contactSubmitting ? "…" : "Submit"}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
               {activePanel === "emoji" && (
                 <div className="absolute bottom-full left-3 right-3 mb-2 rounded-2xl border p-2.5 shadow-xl" style={{ borderColor: BORDER, backgroundColor: SURFACE }}>
                   <div className="mb-1 flex items-center justify-between px-0.5">
@@ -1865,7 +1805,48 @@ function WidgetContent() {
                 </div>
               )}
               {attachError && <p className="mb-2 px-1 text-[11px] text-[#e5626a]">{attachError}</p>}
+              {contactThanks && !contactActive && (
+                <p className="mb-2 px-1 text-[11.5px]" style={{ color: MUTED }}>Thanks — we&apos;ll reach you there if we get disconnected.</p>
+              )}
 
+              {contactActive && contactField ? (
+                <div>
+                  <div className="mb-1.5 flex items-center justify-between px-2">
+                    <p className="text-[11.5px] font-semibold" style={{ color: INK }}>
+                      {CONTACT_PROMPTS[contactField].label}
+                      {contactFields!.length > 1 && <span className="font-normal" style={{ color: MUTED }}>{` · ${contactStep + 1} of ${contactFields!.length}`}</span>}
+                    </p>
+                    <button type="button" onClick={skipContactStep} className="text-[11.5px] font-medium hover:underline" style={{ color: MUTED }}>
+                      {contactField === "email" ? "Skip" : "Skip this"}
+                    </button>
+                  </div>
+                  <div className="flex h-[54px] items-center rounded-[28px] border px-1.5 shadow-[0_3px_12px_rgba(15,23,42,.10)]" style={{ borderColor: contactError ? "#e5626a" : BORDER, backgroundColor: SURFACE }}>
+                    <input
+                      key={contactField}
+                      autoFocus
+                      type={CONTACT_PROMPTS[contactField].type}
+                      value={contactValue}
+                      onChange={(event) => { setContactValue(event.target.value); setContactError(""); }}
+                      onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); void submitContactStep(); } }}
+                      placeholder={CONTACT_PROMPTS[contactField].placeholder}
+                      autoComplete={contactField === "email" ? "email" : contactField === "phone" ? "tel" : "name"}
+                      className="h-[42px] min-w-0 flex-1 bg-transparent px-3 text-[14px] outline-none placeholder:text-[#777b82]"
+                      style={{ color: INK }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => void submitContactStep()}
+                      disabled={!contactValue.trim() || contactSaving}
+                      aria-label="Save"
+                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition disabled:opacity-100"
+                      style={{ backgroundColor: contactValue.trim() ? ACCENT : "#eceef0", color: contactValue.trim() ? "#fff" : "#b5b8bd" }}
+                    >
+                      <ArrowUp size={21} strokeWidth={2.2} />
+                    </button>
+                  </div>
+                  {contactError && <p className="mt-1.5 px-2 text-[11px] text-[#e5626a]">{contactError}</p>}
+                </div>
+              ) : (
               <div className="flex h-[54px] items-center rounded-[28px] border px-1.5 shadow-[0_3px_12px_rgba(15,23,42,.10)]" style={{ borderColor: BORDER, backgroundColor: SURFACE }}>
                 <input ref={fileInputRef} type="file" hidden onChange={handleFileSelect} />
                 <button type="button" aria-label="Attach file" onClick={() => fileInputRef.current?.click()} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-black/[0.055] transition hover:bg-black/10" style={{ color: INK }}>
@@ -1896,24 +1877,12 @@ function WidgetContent() {
                   </button>
                 </div>
               </div>
+              )}
             </div>
           </div>
         )}
       </div>
 
-      {showTabBar && (
-        <div className="flex shrink-0 items-center border-t" style={{ borderColor: BORDER, backgroundColor: SURFACE }}>
-          <button type="button" onClick={() => setTab("home")} className="flex flex-1 flex-col items-center gap-1 py-2.5 text-[10px] font-medium" style={{ color: tab === "home" ? INK : MUTED }}>
-            <Home size={18} strokeWidth={tab === "home" ? 2.4 : 2} /> Home
-          </button>
-          <button type="button" onClick={openChatList} className="flex flex-1 flex-col items-center gap-1 py-2.5 text-[10px] font-medium" style={{ color: tab === "chat" ? INK : MUTED }}>
-            <MessageCircle size={18} strokeWidth={tab === "chat" ? 2.4 : 2} /> Messages
-          </button>
-          <button type="button" onClick={() => setTab("help")} className="flex flex-1 flex-col items-center gap-1 py-2.5 text-[10px] font-medium" style={{ color: tab === "help" ? INK : MUTED }}>
-            <CircleHelp size={18} strokeWidth={tab === "help" ? 2.4 : 2} /> Help
-          </button>
-        </div>
-      )}
       {showBranding && (
         <a href="https://elpino.chat" target="_blank" rel="noreferrer" className="block shrink-0 py-2 text-center text-[10px] font-medium transition hover:text-[#18181b]" style={{ color: MUTED, backgroundColor: BG }}>
           Powered by Elpino

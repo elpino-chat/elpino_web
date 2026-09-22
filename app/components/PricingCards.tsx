@@ -146,7 +146,6 @@ export const plans: Plan[] = [
       'Seat packs from $0.60/seat',
       '5 GB knowledge base',
       'Then $0.04 per resolution',
-      'Multi-site knowledge scoping',
       'Integrations & API access',
     ],
   },

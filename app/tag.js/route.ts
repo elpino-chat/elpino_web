@@ -263,13 +263,23 @@ export function GET(request: Request) {
 
     // The two states the iframe's CSS ever takes: the normal bottom-right
     // panel, and full-screen when the visitor picks "Maximize" from the
-    // widget's own header menu. Only the loader can touch this — the iframe
-    // is a different origin and can't resize itself, only ask via postMessage.
+    // widget's own header menu — or, below MOBILE_BREAKPOINT, always: a
+    // 420px floating panel makes no sense on a phone screen, so mobile gets
+    // the full-screen layout by default instead of a shrunk-down panel.
+    // Only the loader can touch this — the iframe is a different origin and
+    // can't resize itself, only ask via postMessage.
     var PANEL_STYLE = 'position:fixed;bottom:88px;right:20px;width:420px;max-width:calc(100vw - 16px);height:640px;max-height:calc(100vh - 104px);border:none;border-radius:26px;box-shadow:0 18px 48px rgba(15,23,42,0.24);z-index:2147483000;background:#f7f7f8;';
     // A reply preview is rendered by the cross-origin widget iframe itself.
     // The host page can resize the frame but never receives the reply text.
     var PREVIEW_STYLE = 'position:fixed;bottom:88px;right:20px;width:340px;max-width:calc(100vw - 32px);height:132px;border:none;border-radius:18px;box-shadow:0 16px 40px rgba(15,23,42,0.25);z-index:2147483000;background:transparent;';
     var FULLSCREEN_STYLE = 'position:fixed;inset:0;width:100%;height:100%;max-width:100%;max-height:100%;border:none;border-radius:0;box-shadow:none;z-index:2147483000;background:#f7f7f8;';
+    var MOBILE_BREAKPOINT = 640;
+    function isMobile() {
+      return (window.innerWidth || document.documentElement.clientWidth || 0) <= MOBILE_BREAKPOINT;
+    }
+    function panelStyle(maximized) {
+      return maximized || isMobile() ? FULLSCREEN_STYLE : PANEL_STYLE;
+    }
 
     function mount(config) {
       var open = false;
@@ -425,7 +435,7 @@ export function GET(request: Request) {
         // resize itself since the loader owns the iframe's own CSS.
         if (event.data.type === 'elpino:maximize' && iframe) {
           maximized = Boolean(event.data.maximized);
-          iframe.style.cssText = maximized ? FULLSCREEN_STYLE : PANEL_STYLE;
+          iframe.style.cssText = panelStyle(maximized);
         }
         // The iframe needs to know whether anyone can see it before it
         // decides a reply deserves a sound.
@@ -486,7 +496,7 @@ export function GET(request: Request) {
         iframe.src = ORIGIN + '/widget?key=' + encodeURIComponent(key) + '&host=' + encodeURIComponent(location.hostname)
           + (view ? '&tab=' + view.tab + '&view=' + view.chatView + (view.conversationId ? '&conversation=' + view.conversationId : '') : '');
         iframe.setAttribute('allow', 'microphone');
-        iframe.style.cssText = PANEL_STYLE;
+        iframe.style.cssText = panelStyle(false);
         iframe.style.display = 'none';
         document.body.appendChild(iframe);
       };
@@ -511,10 +521,10 @@ export function GET(request: Request) {
             iframe.src = ORIGIN + '/widget?key=' + encodeURIComponent(key) + '&host=' + encodeURIComponent(location.hostname) + (startNew ? '&new=1' : '')
               + (view ? '&tab=' + view.tab + '&view=' + view.chatView + (view.conversationId ? '&conversation=' + view.conversationId : '') : '');
             iframe.setAttribute('allow', 'microphone');
-            iframe.style.cssText = PANEL_STYLE;
+            iframe.style.cssText = panelStyle(false);
             document.body.appendChild(iframe);
           }
-          iframe.style.cssText = maximized ? FULLSCREEN_STYLE : PANEL_STYLE;
+          iframe.style.cssText = panelStyle(maximized);
           iframe.style.display = 'block';
           rememberOpen(true);
           if (!pushedHistory) {

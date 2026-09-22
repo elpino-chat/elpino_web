@@ -144,7 +144,6 @@ function useCurrentWorkspace() {
 // Personal to the signed-in user, independent of which workspace they're in.
 const accountItems = [
   { label: "General", slug: "", icon: Settings },
-  { label: "Upgrade", slug: "upgrade", icon: Upload },
   { label: "Billing", slug: "billing", icon: CreditCard },
   { label: "Availability", slug: "availability", icon: CalendarDays },
   { label: "Security & Permissions", slug: "security-permissions", icon: ShieldCheck },
@@ -991,7 +990,7 @@ function TeamsSettingsPage() {
   );
 }
 
-function UpgradeSettingsPage() {
+export function UpgradeSettingsPage() {
   const [checkoutPlan, setCheckoutPlan] = useState<string | null>(null);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [cadence, setCadence] = useState<"monthly" | "annual">("monthly");
@@ -1816,8 +1815,63 @@ function GeneralSettingsPage({ user }: { user: SettingsUser }) {
 
   if (loading) {
     return (
-      <div className="mx-auto w-full max-w-[1120px] px-8 pb-6 pt-9 sm:px-10 lg:px-12">
-        <div className="h-64 animate-pulse rounded-2xl bg-[#F2F3F3]" />
+      <div className="mx-auto w-full max-w-[1120px] animate-pulse px-8 pb-6 pt-9 sm:px-10 lg:px-12">
+        <div className="h-[26px] w-40 rounded bg-[#F2F3F3]" />
+
+        <div className="mt-9 grid grid-cols-[310px_minmax(0,1fr)] gap-10 max-xl:grid-cols-[270px_minmax(0,1fr)] max-lg:grid-cols-1 max-lg:gap-5">
+          <div>
+            <div className="h-4 w-20 rounded bg-[#F2F3F3]" />
+            <div className="mt-2 h-3 w-56 rounded bg-[#F2F3F3]" />
+            <div className="mt-1.5 h-3 w-40 rounded bg-[#F2F3F3]" />
+          </div>
+          <div className="min-w-0">
+            <div className="h-[82px] w-[82px] rounded-full bg-[#F2F3F3]" />
+            <div className="mt-5 h-3 w-16 rounded bg-[#F2F3F3]" />
+            <div className="mt-2 h-11 w-full rounded-xl bg-[#F2F3F3]" />
+            <div className="mt-5 h-3 w-10 rounded bg-[#F2F3F3]" />
+            <div className="mt-2 h-11 w-full rounded-xl bg-[#F2F3F3]" />
+            <div className="mt-5 h-3 w-16 rounded bg-[#F2F3F3]" />
+            <div className="mt-2 h-11 w-full rounded-xl bg-[#F2F3F3]" />
+          </div>
+        </div>
+
+        <div className="my-7 h-px bg-[#e7e7e7]" />
+
+        <div className="grid grid-cols-[310px_minmax(0,1fr)] gap-10 max-xl:grid-cols-[270px_minmax(0,1fr)] max-lg:grid-cols-1 max-lg:gap-5">
+          <div>
+            <div className="h-4 w-36 rounded bg-[#F2F3F3]" />
+            <div className="mt-2 h-3 w-64 rounded bg-[#F2F3F3]" />
+            <div className="mt-1.5 h-3 w-48 rounded bg-[#F2F3F3]" />
+          </div>
+          <div className="min-w-0">
+            <div className="h-4 w-20 rounded bg-[#F2F3F3]" />
+            <div className="mt-2 h-3 w-52 rounded bg-[#F2F3F3]" />
+            <div className="mt-4 flex flex-wrap gap-4">
+              <div className="h-[70px] w-[116px] rounded-lg bg-[#F2F3F3]" />
+              <div className="h-[70px] w-[116px] rounded-lg bg-[#F2F3F3]" />
+              <div className="h-[70px] w-[116px] rounded-lg bg-[#F2F3F3]" />
+            </div>
+          </div>
+        </div>
+
+        <div className="my-7 h-px bg-[#e7e7e7]" />
+
+        <div className="grid grid-cols-[310px_minmax(0,1fr)] gap-10 max-xl:grid-cols-[270px_minmax(0,1fr)] max-lg:grid-cols-1 max-lg:gap-5">
+          <div>
+            <div className="h-4 w-52 rounded bg-[#F2F3F3]" />
+            <div className="mt-2 h-3 w-64 rounded bg-[#F2F3F3]" />
+            <div className="mt-1.5 h-3 w-44 rounded bg-[#F2F3F3]" />
+          </div>
+          <div className="min-w-0 py-5">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <div className="h-4 w-44 rounded bg-[#F2F3F3]" />
+                <div className="mt-2 h-3 w-56 rounded bg-[#F2F3F3]" />
+              </div>
+              <div className="h-8 w-20 shrink-0 rounded-lg bg-[#F2F3F3]" />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -1889,7 +1943,7 @@ function GeneralSettingsPage({ user }: { user: SettingsUser }) {
         <div className="grid grid-cols-[310px_minmax(0,1fr)] gap-10 max-xl:grid-cols-[270px_minmax(0,1fr)] max-lg:grid-cols-1 max-lg:gap-5">
           <div><h3 className="dashboard-settings-heading text-base font-semibold">Dashboard appearance</h3><p className="dashboard-settings-subdesc mt-1 max-w-[285px] text-[12px] leading-[1.55] text-[#858585]">Personalize the dashboard canvas, navigation, buttons, and active states. These choices do not change your customer-facing chatbot.</p></div>
           <div className="min-w-0">
-            <div><p className="dashboard-settings-heading text-base font-semibold">Appearance</p><p className="dashboard-settings-subdesc mt-1 text-sm text-[#858585]">Elpino's dashboard is dark — System will follow your device once a light theme ships.</p><div className="mt-4 flex flex-wrap gap-4">{([['dark','Dark'],['system','System']] as const).map(([value,label]) => <button key={value} type="button" onClick={() => updateDashboardAppearance(value)} className="text-left"><span className={`block h-[70px] w-[116px] overflow-hidden rounded-lg border-2 p-2 transition ${dashboardAppearance === value ? "border-white/70" : "border-white/10"} bg-[#202327]`}><span className="block h-2 w-8 rounded bg-white/35" /><span className="mt-2 block h-2 w-16 rounded bg-white/20" /></span><span className={`mt-2 block text-[11px] font-normal ${dashboardAppearance === value ? "text-white/90" : "text-white/55"}`}>{label}</span></button>)}</div></div>
+            <div><p className="dashboard-settings-heading text-base font-semibold">Appearance</p><p className="dashboard-settings-subdesc mt-1 text-sm text-[#858585]">Choose Light or Dark, or let System follow your device.</p><div className="mt-4 flex flex-wrap gap-4">{([['light','Light'],['dark','Dark'],['system','System']] as const).map(([value,label]) => { const swatchLight = value === 'light'; return <button key={value} type="button" onClick={() => updateDashboardAppearance(value)} className="text-left"><span className={`block h-[70px] w-[116px] overflow-hidden rounded-lg border-2 p-2 transition ${dashboardAppearance === value ? (swatchLight ? "border-black/70" : "border-white/70") : "border-white/10"} ${swatchLight ? "bg-[#f4f4f5]" : "bg-[#202327]"}`}><span className={`block h-2 w-8 rounded ${swatchLight ? "bg-black/30" : "bg-white/35"}`} /><span className={`mt-2 block h-2 w-16 rounded ${swatchLight ? "bg-black/15" : "bg-white/20"}`} /></span><span className={`mt-2 block text-[11px] font-normal ${dashboardAppearance === value ? "text-white/90" : "text-white/55"}`}>{label}</span></button>; })}</div></div>
           </div>
         </div>
 
@@ -4115,9 +4169,9 @@ export function SettingsClient({ user, page = "General", auditView = "all" }: { 
             ))}
           </nav>
 
-          <p className="mb-2 mt-6 px-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#74787c]">Workspace</p>
+          <p className="mb-2 mt-6 px-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#74787c]">Support tools</p>
           <nav className="space-y-0.5">
-            {workspaceItems.map(({ label, slug, icon: Icon }) => (
+            {featureItems.map(({ label, slug, icon: Icon }) => (
               <Link key={label} href={`/dashboard/settings/${slug}`} aria-current={currentPage === label ? "page" : undefined} className={`flex h-9 w-full items-center gap-3 rounded-md px-2.5 text-left text-[13px] text-black transition ${currentPage === label ? "dashboard-secondary-nav-active bg-[#eeeeee] font-medium" : "hover:bg-[#f0f0f0]"}`}>
                 <Icon size={16} strokeWidth={1.8} className={currentPage === label ? "text-[#55585c]" : "text-[#8b8d90]"} />
                 <span className="truncate">{label}</span>
@@ -4125,9 +4179,9 @@ export function SettingsClient({ user, page = "General", auditView = "all" }: { 
             ))}
           </nav>
 
-          <p className="mb-2 mt-6 px-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#74787c]">Support tools</p>
+          <p className="mb-2 mt-6 px-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#74787c]">Workspace</p>
           <nav className="space-y-0.5">
-            {featureItems.map(({ label, slug, icon: Icon }) => (
+            {workspaceItems.map(({ label, slug, icon: Icon }) => (
               <Link key={label} href={`/dashboard/settings/${slug}`} aria-current={currentPage === label ? "page" : undefined} className={`flex h-9 w-full items-center gap-3 rounded-md px-2.5 text-left text-[13px] text-black transition ${currentPage === label ? "dashboard-secondary-nav-active bg-[#eeeeee] font-medium" : "hover:bg-[#f0f0f0]"}`}>
                 <Icon size={16} strokeWidth={1.8} className={currentPage === label ? "text-[#55585c]" : "text-[#8b8d90]"} />
                 <span className="truncate">{label}</span>

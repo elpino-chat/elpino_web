@@ -38,38 +38,39 @@ export function CookieNotice() {
 
   return (
     <div
-      className="fixed inset-x-0 bottom-0 z-50 w-full bg-white p-5 text-left shadow-[0_-8px_30px_-15px_rgba(15,23,42,0.25)] sm:p-6"
+      className="fixed inset-x-0 bottom-0 z-50 w-full bg-white px-32 py-6 text-left shadow-[0_-8px_30px_-15px_rgba(15,23,42,0.25)] border-t border-slate-100"
       role="dialog"
       aria-label="Cookie preferences"
     >
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-8">
-        <div>
-          <h2 className="text-lg font-normal text-slate-950">Cookies</h2>
-          <p className="mt-2 text-base leading-7 text-slate-600">
-            We use one essential cookie to keep you signed in, plus optional analytics (Google
-            Analytics, Microsoft Clarity) to improve Elpino — those only run if you accept. See our{" "}
-            <Link href="/privacy" className="text-slate-900 underline underline-offset-2">
-              Privacy Policy
-            </Link>
-            .
-          </p>
-        </div>
+      <div className="flex w-full flex-col gap-5">
+        <p className="text-[15px] leading-relaxed text-slate-700">
+          We use cookies to run our website, analyze your use of our services, manage your online preferences & personalize ad content. By accepting our cookies, you&apos;ll get relevant content and social media features, personalized ads, and an enhanced browsing experience. To manage your choices, click &quot;Cookie Settings.&quot; Necessary cookies are required for the core website functionality and cannot be rejected. For more information, see our{" "}
+          <Link href="/privacy#cookies-analytics" className="text-blue-600 hover:underline">
+            Cookie Policy.
+          </Link>
+        </p>
 
-        <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-          <button
-            type="button"
-            onClick={() => dismiss("rejected")}
-            className="inline-flex h-11 items-center justify-center border border-slate-300 px-4 text-base font-normal text-slate-950 transition hover:bg-slate-100 sm:px-5"
-          >
-            Reject all
-          </button>
+        <div className="flex flex-wrap items-center gap-4">
           <button
             type="button"
             onClick={() => dismiss("accepted")}
-            className="inline-flex h-11 items-center justify-center bg-slate-950 px-4 text-base font-normal text-white transition hover:bg-slate-800 sm:px-5"
+            className="inline-flex h-11 items-center justify-center rounded-full bg-[#111310] px-6 text-base font-normal text-white transition hover:bg-black"
           >
-            Accept all
+            Allow all cookies
           </button>
+          <button
+            type="button"
+            onClick={() => dismiss("rejected")}
+            className="inline-flex h-11 items-center justify-center rounded-full border border-slate-300 bg-white px-6 text-base font-normal text-slate-900 transition hover:bg-slate-50"
+          >
+            Deny all
+          </button>
+          <Link
+            href="/privacy#cookies-analytics"
+            className="text-base font-normal text-slate-900 underline underline-offset-4 hover:text-slate-600"
+          >
+            Cookie settings
+          </Link>
         </div>
       </div>
     </div>

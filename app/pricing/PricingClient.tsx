@@ -106,9 +106,9 @@ const comparisonCategories: FeatureCategory[] = [
         values: ['No', 'Yes', 'Yes', 'Yes'],
       },
       {
-        label: 'Multi-site knowledge scoping',
-        description: 'Separate knowledge per site tag from one workspace.',
-        values: ['No', 'No', 'Yes', 'Yes'],
+        label: 'Connected domain',
+        description: 'One workspace, one website — need a second, start a second workspace.',
+        values: ['1', '1', '1', '1'],
       },
       {
         label: 'Support',

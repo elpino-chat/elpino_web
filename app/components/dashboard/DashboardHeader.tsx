@@ -9,6 +9,7 @@ import { connectPresenceSocket } from "@/lib/presence-socket";
 import { clearUnseenMessages, countUnseenMessage, playAssignmentChime, playMessageChimeOnce, primeOnFirstInteraction } from "@/lib/notification-sound";
 import { toast } from "sonner";
 import { InvitePeopleDialog } from "./InvitePeopleDialog";
+import { UpgradeDialog } from "./UpgradeDialog";
 import { NotificationsBell } from "./NotificationsBell";
 import { AssignmentToast } from "./AssignmentToast";
 import { useMobileDrawer } from "./mobile-drawer-context";
@@ -86,6 +87,7 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
   const [accountOpen, setAccountOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const [inviteOpen, setInviteOpen] = useState(false);
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [notificationsMuted, setNotificationsMuted] = useState(false);
   // Read inside the presence socket's event handler instead of
@@ -412,7 +414,7 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
         >
           <Menu size={19} />
           {isSpaceRoute && spaceBadgeCount > 0 && (
-            <span className="absolute right-0.5 top-0.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full border-2 border-[#262626] bg-[#e2574c] px-0.5 text-[7.5px] font-bold text-white">
+            <span className="dashboard-header-badge absolute right-0.5 top-0.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full border-2 border-[#262626] bg-[#e2574c] px-0.5 text-[7.5px] font-bold text-white">
               {spaceBadgeCount > 99 ? "99+" : spaceBadgeCount}
             </span>
           )}
@@ -562,10 +564,10 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
           <Gauge size={16} strokeWidth={1.7} />
           <span className="hidden lg:inline">Usage</span>
         </Link>
-        <Link href="/pricing#plans" className="flex h-9 items-center gap-2 rounded-lg border border-violet-300/20 bg-gradient-to-r from-[#6d5ce7] to-[#8b5cf6] px-2.5 text-[13px] font-normal text-white/90 shadow-[0_4px_16px_rgba(109,92,231,0.22)] transition hover:from-[#7868ed] hover:to-[#9568fa] hover:text-white sm:px-3">
+        <button type="button" onClick={() => setUpgradeOpen(true)} className="dashboard-upgrade-cta flex h-9 items-center gap-2 rounded-lg border border-violet-300/20 bg-gradient-to-r from-[#7c3aed] via-[#a855f7] to-[#ec4899] px-2.5 text-[13px] font-normal text-white/90 shadow-[0_4px_16px_rgba(168,85,247,0.28)] transition hover:from-[#8b4cf5] hover:via-[#b866fb] hover:to-[#f472b6] hover:text-white sm:px-3">
           <Rocket size={16} strokeWidth={1.7} />
           <span className="hidden lg:inline">Upgrade</span>
-        </Link>
+        </button>
       </div>
 
       <div className="hidden">
@@ -771,6 +773,7 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
           )}
         </div>
       <InvitePeopleDialog open={inviteOpen} onClose={() => setInviteOpen(false)} />
+      <UpgradeDialog open={upgradeOpen} onClose={() => setUpgradeOpen(false)} />
     </header>
   );
 }

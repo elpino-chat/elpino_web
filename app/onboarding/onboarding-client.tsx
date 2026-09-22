@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -1122,6 +1122,7 @@ const PHONE_COUNTRIES = [
 
 const TOTAL_STEPS = 5;
 const CRAWL_LIMIT_OPTIONS = [10, 25, 50] as const;
+const DEVELOPER_EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type PagePriority = "high" | "medium" | "low";
 type CrawlPage = {
@@ -1296,7 +1297,9 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
   const [verifyMessage, setVerifyMessage] = useState<string | null>(null);
   const [widgetKeyError, setWidgetKeyError] = useState<string | null>(null);
   const [snippetCopied, setSnippetCopied] = useState(false);
-  const [developerEmail, setDeveloperEmail] = useState("");
+  const [developerEmails, setDeveloperEmails] = useState<string[]>([]);
+  const [developerEmailDraft, setDeveloperEmailDraft] = useState("");
+  const [developerEmailDraftError, setDeveloperEmailDraftError] = useState(false);
   const [developerSending, setDeveloperSending] = useState(false);
   const [developerSendStatus, setDeveloperSendStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const developerEmailRef = useRef<HTMLInputElement>(null);
@@ -1336,6 +1339,45 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
       // keep UTC fallback
     }
   }, []);
+
+  function commitDeveloperEmail(raw: string): boolean {
+    const value = raw.trim().replace(/,$/, "");
+    if (!value) return true;
+    if (!DEVELOPER_EMAIL_RE.test(value)) return false;
+    setDeveloperEmails((current) => (current.includes(value) ? current : [...current, value]));
+    return true;
+  }
+
+  function handleDeveloperEmailChange(value: string) {
+    setDeveloperSendStatus(null);
+    if (/[,\s]$/.test(value)) {
+      const ok = commitDeveloperEmail(value);
+      setDeveloperEmailDraft(ok ? "" : value);
+      setDeveloperEmailDraftError(!ok);
+      return;
+    }
+    setDeveloperEmailDraft(value);
+    setDeveloperEmailDraftError(false);
+  }
+
+  function handleDeveloperEmailKeyDown(event: ReactKeyboardEvent<HTMLInputElement>) {
+    if (event.key === "Enter" || event.key === "Tab" || event.key === ",") {
+      if (developerEmailDraft.trim()) {
+        event.preventDefault();
+        const ok = commitDeveloperEmail(developerEmailDraft);
+        setDeveloperEmailDraft(ok ? "" : developerEmailDraft);
+        setDeveloperEmailDraftError(!ok);
+      }
+      return;
+    }
+    if (event.key === "Backspace" && !developerEmailDraft && developerEmails.length > 0) {
+      setDeveloperEmails((current) => current.slice(0, -1));
+    }
+  }
+
+  function removeDeveloperEmail(email: string) {
+    setDeveloperEmails((current) => current.filter((item) => item !== email));
+  }
 
   useEffect(() => {
     fetch("/api/onboarding/status")
@@ -2191,7 +2233,23 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
                 <form className="mt-5 space-y-4" onSubmit={async (event) => {
                   event.preventDefault();
                   if (!widgetKey || developerSending) return;
-                  const emails = developerEmail.split(",").map((email) => email.trim()).filter(Boolean);
+                  let emails = developerEmails;
+                  const draft = developerEmailDraft.trim().replace(/,$/, "");
+                  if (draft) {
+                    if (!DEVELOPER_EMAIL_RE.test(draft)) {
+                      setDeveloperEmailDraftError(true);
+                      developerEmailRef.current?.focus();
+                      return;
+                    }
+                    if (!emails.includes(draft)) emails = [...emails, draft];
+                    setDeveloperEmails(emails);
+                    setDeveloperEmailDraft("");
+                  }
+                  if (emails.length === 0) {
+                    setDeveloperEmailDraftError(true);
+                    developerEmailRef.current?.focus();
+                    return;
+                  }
                   setDeveloperSending(true);
                   setDeveloperSendStatus(null);
                   try {
@@ -2202,8 +2260,8 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
                     });
                     const result = await response.json().catch(() => ({})) as { message?: string; sent?: number };
                     if (!response.ok) throw new Error(result.message || "Could not send the instructions.");
-                    setDeveloperSendStatus({ type: "success", message: `Instructions sent to ${result.sent ?? emails.length} developer${(result.sent ?? emails.length) === 1 ? "" : "s"}.` });
-                    setDeveloperEmail("");
+                    setDeveloperSendStatus({ type: "success", message: `Instructions sent to you and ${result.sent ?? emails.length} developer${(result.sent ?? emails.length) === 1 ? "" : "s"}.` });
+                    setDeveloperEmails([]);
                   } catch (error) {
                     setDeveloperSendStatus({ type: "error", message: error instanceof Error ? error.message : "Could not send the instructions." });
                   } finally {
@@ -2212,8 +2270,45 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
                 }}>
                   <div>
                     <label htmlFor="developer-email" className="mb-1.5 block text-[12px] text-black/55">Developer emails</label>
-                    <input ref={developerEmailRef} id="developer-email" type="email" multiple required disabled={developerSending} value={developerEmail} onChange={(event) => { setDeveloperEmail(event.target.value); setDeveloperSendStatus(null); }} placeholder="dev@company.com, team@company.com" className="h-11 w-full rounded-lg bg-white px-3.5 text-[13px] outline-none ring-1 ring-black/10 transition placeholder:text-black/30 focus:ring-black/35 disabled:opacity-60" />
-                    <p className="mt-1.5 text-[11px] leading-4 text-black/40">Separate multiple addresses with commas.</p>
+                    <div
+                      onClick={() => developerEmailRef.current?.focus()}
+                      className={`flex min-h-11 w-full flex-wrap items-center gap-1.5 rounded-lg bg-white px-2.5 py-1.5 ring-1 transition focus-within:ring-black/35 ${developerEmailDraftError ? "ring-red-400" : "ring-black/10"}`}
+                    >
+                      {developerEmails.map((email) => (
+                        <span key={email} className="flex items-center gap-1 rounded-full bg-black/[0.06] py-1 pl-2.5 pr-1.5 text-[12px] text-black/80">
+                          {email}
+                          <button
+                            type="button"
+                            disabled={developerSending}
+                            onClick={() => removeDeveloperEmail(email)}
+                            aria-label={`Remove ${email}`}
+                            className="flex size-4 items-center justify-center rounded-full text-black/40 transition hover:bg-black/10 hover:text-black/70 disabled:opacity-50"
+                          >
+                            ×
+                          </button>
+                        </span>
+                      ))}
+                      <input
+                        ref={developerEmailRef}
+                        id="developer-email"
+                        type="text"
+                        inputMode="email"
+                        disabled={developerSending}
+                        value={developerEmailDraft}
+                        onChange={(event) => handleDeveloperEmailChange(event.target.value)}
+                        onKeyDown={handleDeveloperEmailKeyDown}
+                        onBlur={() => { if (developerEmailDraft.trim()) { const ok = commitDeveloperEmail(developerEmailDraft); setDeveloperEmailDraft(ok ? "" : developerEmailDraft); setDeveloperEmailDraftError(!ok); } }}
+                        onPaste={(event) => {
+                          const text = event.clipboardData.getData("text");
+                          if (!/[,\s]/.test(text)) return;
+                          event.preventDefault();
+                          text.split(/[,\s]+/).forEach((part) => { if (part.trim()) commitDeveloperEmail(part); });
+                        }}
+                        placeholder={developerEmails.length === 0 ? "dev@company.com, team@company.com" : "Add another…"}
+                        className="h-7 min-w-[8rem] flex-1 bg-transparent text-[13px] outline-none placeholder:text-black/30 disabled:opacity-60"
+                      />
+                    </div>
+                    <p className={`mt-1.5 text-[11px] leading-4 ${developerEmailDraftError ? "text-red-600" : "text-black/40"}`}>{developerEmailDraftError ? "Enter a valid email address." : "Press comma, space, or enter to add each address."}</p>
                   </div>
                   <button type="submit" disabled={!widgetKey || developerSending} className="flex h-11 w-full items-center justify-center rounded-lg bg-black px-4 text-[13px] text-white transition hover:bg-black/80 disabled:cursor-not-allowed disabled:opacity-50">{developerSending ? "Sending…" : "Send instructions"}</button>
                 </form>

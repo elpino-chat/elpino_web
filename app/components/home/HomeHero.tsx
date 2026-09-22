@@ -23,25 +23,15 @@ const conversations = [
 
 export function HomeHero() {
   return (
-    <section className="overflow-hidden bg-black font-[family-name:var(--font-rethink-sans)] text-white">
-      <Link
-        href="/features"
-        className="elpino-hero-enter elpino-hero-enter-1 group flex w-full items-center justify-center gap-2.5 bg-[#d9bef4] px-5 py-3 text-[13px] transition hover:brightness-105"
-      >
-        <span className="relative flex h-1.5 w-1.5" aria-hidden="true">
-          <span className="absolute inline-flex h-full w-full rounded-full bg-black/70 opacity-70 motion-safe:animate-ping" />
-          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-black/70" />
-        </span>
-        <span className="font-medium text-black/90 underline underline-offset-4">Meet Elpino, your customer support team</span>
-        <ArrowRight size={14} aria-hidden="true" className="text-black/50 transition-transform duration-200 group-hover:translate-x-0.5" />
-      </Link>
+    <section className="overflow-hidden bg-white font-[family-name:var(--font-rethink-sans)] text-black">
 
-      <div className="flex flex-col items-center px-5 pb-6 pt-16 text-center sm:px-8 sm:pt-20 lg:pt-24">
-        <h1 className="elpino-hero-enter elpino-hero-enter-1 max-w-3xl text-4xl font-normal leading-[1.15] tracking-[-0.02em] text-white sm:text-5xl">
-          Customers hate waiting. <span className="text-white">Elpino doesn&apos;t.</span>
+
+      <div className="mx-auto flex w-full max-w-7xl flex-col items-center px-5 pb-6 pt-8 text-center sm:px-8 sm:pt-12 lg:pt-16">
+        <h1 className="elpino-hero-enter elpino-hero-enter-1 w-full text-[63px] font-normal leading-none tracking-[-0.02em] text-black sm:text-[75px]">
+          The highest performing AI Agent for every customer conversation
         </h1>
-        <p className="elpino-hero-enter elpino-hero-enter-2 mt-6 max-w-[46ch] text-base font-normal not-italic leading-7 text-white/65 sm:text-lg">
-          Elpino answers from your own knowledge base in seconds, and hands the conversation to your team the moment it can&apos;t.
+        <p className="elpino-hero-enter elpino-hero-enter-2 mt-6 w-full max-w-4xl text-center text-lg font-light not-italic leading-7 text-black/65 sm:text-xl">
+          Elpino customers average a 76% resolution rate, across 12,000+ businesses including
         </p>
 
         {/* Both funnel into the real signup flow (AuthFlow), which already
@@ -49,19 +39,24 @@ export function HomeHero() {
             needs client-side Firebase, not something this page does. */}
         <div className="elpino-hero-enter elpino-hero-enter-2 mt-8 flex w-full max-w-2xl flex-col items-stretch gap-3 sm:flex-row sm:justify-center">
           <Link
-            href="/signup"
-            className="inline-flex h-12 items-center justify-center gap-2.5 rounded-md border border-white/80 px-6 text-[15px] font-semibold text-white transition hover:bg-white/10 sm:h-11"
+            href="/demo"
+            className="inline-flex h-12 items-center justify-center gap-2.5 rounded-md bg-[#111310] px-6 text-[16px] font-normal text-white transition hover:bg-black/90 sm:h-11"
           >
-            <GoogleIcon />
-            Continue with Google
+            View demo
           </Link>
           <Link
             href="/signup"
-            className="group inline-flex h-12 items-center justify-center gap-2 rounded-md bg-[#fe9238] px-6 text-[15px] font-semibold text-black transition duration-200 hover:brightness-95 active:translate-y-px sm:h-11"
+            className="inline-flex h-12 items-center justify-center gap-2 rounded-md border border-[#111310] bg-white px-6 text-[16px] font-normal text-[#111310] transition duration-200 hover:bg-[#fafafa] active:translate-y-px sm:h-11"
           >
-            Start for free <ArrowRight size={16} aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-0.5" />
+            Start free trial
           </Link>
         </div>
+        <p className="elpino-hero-enter elpino-hero-enter-2 mt-5 flex items-center justify-center gap-2 text-[14.5px] font-light text-[#4a4f56]">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none" className="text-[#111310]">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+          14 day free trial. No credit card required.
+        </p>
 
         {/* The actual dashboard shared inbox (dashboard-client.tsx / Sidebar.tsx
             / HomePanel.tsx), reproduced as a coded still frame: same icon
