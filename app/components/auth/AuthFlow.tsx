@@ -281,6 +281,14 @@ export function AuthFlow({ initialMode }: { initialMode: "login" | "signup" }) {
       // failure worth alarming someone with a toast.
       const code = (error as { code?: string })?.code;
       if (code === "auth/popup-closed-by-user" || code === "auth/cancelled-popup-request") return;
+      if (code === "auth/configuration-not-found") {
+        toast.error("Google sign-in is not enabled for this Firebase project. Enable the Google provider in Firebase Authentication.");
+        return;
+      }
+      if (code === "auth/unauthorized-domain") {
+        toast.error("This domain is not authorized for Google sign-in. Add it under Firebase Authentication → Settings → Authorized domains.");
+        return;
+      }
       toast.error(error instanceof Error && error.message ? error.message : "Couldn't sign in with Google. Please try again.");
     }
   };

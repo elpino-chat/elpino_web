@@ -30,6 +30,7 @@ export default function Sidebar({ user }: { user: DashboardUser }) {
 
   return (
     <aside
+      data-tour="navigation"
       aria-label="Dashboard navigation"
       className="dashboard-primary-sidebar relative hidden h-full w-[68px] shrink-0 flex-col md:flex"
     >

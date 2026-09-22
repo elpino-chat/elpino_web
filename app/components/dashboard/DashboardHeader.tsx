@@ -12,6 +12,7 @@ import { InvitePeopleDialog } from "./InvitePeopleDialog";
 import { NotificationsBell } from "./NotificationsBell";
 import { AssignmentToast } from "./AssignmentToast";
 import { useMobileDrawer } from "./mobile-drawer-context";
+import DashboardTour from "./DashboardTour";
 
 const NOTIFICATIONS_MUTED_KEY = "elpino-notifications-muted";
 import {
@@ -486,6 +487,7 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
         )}
       </div>
 
+      <DashboardTour userKey={user.email} />
       <div id="dashboard-global-search" ref={searchRef} className="relative mx-4 hidden min-w-0 max-w-2xl flex-1 md:block">
         <div className="dashboard-header-search flex h-9 items-center gap-2.5 rounded-lg border border-white/10 bg-white/[0.045] px-3.5 transition focus-within:border-white/25 focus-within:bg-white/[0.07]">
           <Search size={15} className="shrink-0 text-white/45" />

@@ -30,12 +30,9 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       { source: '/agent', destination: '/', permanent: true },
-      { source: '/product/ai-operator', destination: '/', permanent: true },
-      { source: '/product/email-triage', destination: '/features', permanent: true },
-      { source: '/product/approvals', destination: '/features', permanent: true },
-      { source: '/solutions/founders', destination: '/pricing', permanent: true },
-      { source: '/solutions/revenue-teams', destination: '/pricing', permanent: true },
-      { source: '/solutions/busy-operators', destination: '/pricing', permanent: true },
+      { source: '/product/ai-operator', destination: '/product/ai-agent', permanent: true },
+      { source: '/product/email-triage', destination: '/product/channels', permanent: true },
+      { source: '/product/approvals', destination: '/product/copilot', permanent: true },
     ];
   },
   // Fallbacks for deploys where env vars aren't configured. Real env vars

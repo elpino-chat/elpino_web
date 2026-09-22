@@ -4,11 +4,11 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://elpino.chat";
 
 export const metadata: Metadata = {
   title: "Careers",
-  description: "Join Elpino and help build the AI operator for founders and operators.",
+  description: "Join Elpino and help build more helpful, human customer support.",
   alternates: { canonical: `${SITE_URL}/careers` },
   openGraph: {
     title: "Careers",
-    description: "Join Elpino and help build the AI operator for founders.",
+    description: "Join Elpino and help build more helpful, human customer support.",
     url: `${SITE_URL}/careers`,
     type: "website",
   },
@@ -138,20 +138,21 @@ export default function CareersPage() {
   return (
     <main>
       {/* Hero */}
-      <section className="pt-40 pb-32 px-10 text-center relative border-b-2 border-black/10 bg-white overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none -z-10 opacity-[0.05]" style={{ backgroundImage: "radial-gradient(rgb(0, 0, 0) 1px, transparent 1px)", backgroundSize: "40px 40px" }}></div>
+      <section className="relative overflow-hidden bg-black px-5 pb-28 pt-28 text-center text-white sm:px-8 sm:pb-36 sm:pt-36 lg:px-14">
+        <div className="pointer-events-none absolute -right-44 -top-44 h-[34rem] w-[34rem] rounded-full border border-[#d9bef4]/25"></div>
+        <div className="pointer-events-none absolute -bottom-64 -left-40 h-[38rem] w-[38rem] rounded-full border border-white/10"></div>
         <div className="max-w-6xl mx-auto">
-          <span className="inline-block px-4 py-1.5 border-2 border-black bg-black text-white text-[11px] font-semibold uppercase tracking-[0.3em] mb-12">Recruitment v1.0 / Project Elpino</span>
-          <h1 className="text-5xl md:text-6xl font-semibold uppercase tracking-normal leading-tight mb-12">
-            Help us build <br />
-            <span className="text-[#D9BEF4]">the future of work</span>
+          <span className="mb-10 inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-[11px] font-medium uppercase tracking-[0.2em] text-white/65"><span className="h-2 w-2 rounded-full bg-[#d9bef4]" />We&apos;re building the early team</span>
+          <h1 className="mb-10 text-[clamp(3.6rem,8vw,8rem)] font-normal leading-[0.9] tracking-[-0.065em]">
+            Build support<br />
+            <span className="text-[#D9BEF4]">people remember.</span>
           </h1>
-          <p className="text-lg md:text-xl text-gray-400 max-w-4xl mx-auto mb-16 leading-relaxed">
-            We're at the very beginning of a decade-long mission at Elpino. We're looking for obsessive builders who want to help Elpino evolve into the founder's most trusted AI operator.
+          <p className="mx-auto mb-12 max-w-2xl text-base leading-8 text-white/60 md:text-lg">
+            Join a small team building AI customer support that answers from real knowledge, keeps context intact, and knows when a person should take over.
           </p>
           <div className="flex justify-center gap-6">
             <a
-              className="border-2 border-black bg-black text-white px-10 py-5 text-[14px] font-semibold uppercase tracking-widest shadow-[6px_6px_0px_0px_rgba(217,190,244,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
+              className="inline-flex min-h-14 items-center rounded-full bg-[#d9bef4] px-9 text-sm font-medium text-black transition hover:bg-[#e5d2f7]"
               href="#roles"
             >
               View open roles
@@ -161,24 +162,24 @@ export default function CareersPage() {
       </section>
 
       {/* Why join us */}
-      <section className="px-10 md:px-14 py-40 border-b-2 border-black/10 bg-[#fcfcfc]">
+      <section className="bg-[#f4f1f6] px-5 py-24 sm:px-8 md:py-32 lg:px-14">
         <div className="max-w-7xl mx-auto">
           <div className="mb-24">
             <span className="text-[#D9BEF4] text-[13px] font-semibold uppercase tracking-[0.4em] mb-6 block">Section 01 / The hook</span>
-            <h2 className="text-4xl md:text-6xl font-semibold uppercase tracking-normal leading-tight mb-6">Why join us?</h2>
+            <h2 className="mb-6 text-4xl font-normal leading-tight tracking-[-0.05em] md:text-6xl">Why join us?</h2>
             <p className="text-lg text-gray-400 leading-relaxed max-w-2xl">
               We're building more than a product at Elpino; we're building a new way of working — one that prioritizes approvals over meetings.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {whyJoin.map((item) => (
-              <div key={item.title} className="p-10 border-2 border-black bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(217,190,244,1)] transition-all group">
-                <div className="w-16 h-16 border-2 border-black flex items-center justify-center mb-8 group-hover:bg-[#D9BEF4] group-hover:text-white transition-all">
+              <div key={item.title} className="group rounded-3xl border border-black/10 bg-white p-8 transition duration-300 hover:-translate-y-1 hover:border-black/25">
+                <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-full bg-[#ede2f8] transition-all group-hover:bg-black group-hover:text-white">
                   <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="32" width="32" xmlns="http://www.w3.org/2000/svg">
                     <path d={item.icon}></path>
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold uppercase mb-4">{item.title}</h3>
+                <h3 className="mb-4 text-xl font-medium">{item.title}</h3>
                 <p className="text-gray-500 leading-relaxed mb-8">{item.description}</p>
                 <div className="pt-6 border-t border-black/5">
                   <span className="text-[11px] font-semibold uppercase text-[#D9BEF4] tracking-widest">{item.tag}</span>
@@ -384,12 +385,12 @@ export default function CareersPage() {
       </section>
 
       {/* Open roles */}
-      <section id="roles" className="px-10 md:px-14 py-40 border-b-2 border-black/10 bg-white">
+      <section id="roles" className="bg-[#f4f1f6] px-5 py-24 sm:px-8 md:py-32 lg:px-14">
         <div className="max-w-5xl mx-auto">
           <div className="mb-20 text-center">
             <span className="text-[#D9BEF4] text-[13px] font-semibold uppercase tracking-[0.4em] mb-4 block">Section 07 / Opportunity</span>
-            <h2 className="text-4xl md:text-6xl font-semibold uppercase tracking-normal leading-tight">
-              Join the <br /> foundation
+            <h2 className="text-4xl font-normal leading-tight tracking-[-0.05em] md:text-6xl">
+              Find your place<br />at Elpino.
             </h2>
             <p className="text-lg text-gray-400 uppercase tracking-widest mt-6">We are hiring for our core engineering team.</p>
           </div>
@@ -398,11 +399,11 @@ export default function CareersPage() {
               <a
                 key={role.title}
                 href={role.href}
-                className="group border-2 border-black p-10 bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(217,190,244,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all flex flex-col md:flex-row justify-between items-center gap-6 cursor-pointer"
+                className="group flex cursor-pointer flex-col items-center justify-between gap-6 rounded-3xl border border-black/10 bg-white p-8 transition duration-300 hover:-translate-y-1 hover:border-black/30 md:flex-row"
               >
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
-                    <h4 className="text-2xl font-semibold uppercase tracking-normal leading-tight">{role.title}</h4>
+                    <h4 className="text-2xl font-medium tracking-[-0.035em]">{role.title}</h4>
                   </div>
                   <p className="text-[13px] text-gray-400 leading-relaxed mb-4">{role.tagline}</p>
                   <div className="flex gap-6 text-[12px] font-semibold uppercase tracking-widest text-gray-400">
@@ -416,7 +417,7 @@ export default function CareersPage() {
                     </span>
                   </div>
                 </div>
-                <div className="w-16 h-16 border-2 border-black flex items-center justify-center group-hover:bg-[#D9BEF4] group-hover:text-white transition-all shrink-0">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-black transition group-hover:bg-black group-hover:text-white">
                   <ArrowIcon />
                 </div>
               </a>
@@ -426,15 +427,14 @@ export default function CareersPage() {
       </section>
 
       {/* Final CTA */}
-      <section className="py-40 px-10 text-center bg-[#fcfcfc]">
-        <h2 className="text-4xl md:text-7xl font-semibold uppercase tracking-normal leading-tight mb-12">
-          Don't just <br />
-          <span className="text-[#D9BEF4]">automate tasks</span> <br />
-          Build a partner
+      <section className="bg-black px-5 py-28 text-center text-white sm:px-8 md:py-36">
+        <h2 className="mb-12 text-4xl font-normal leading-[0.98] tracking-[-0.055em] md:text-7xl">
+          Do work that helps<br />
+          <span className="text-[#D9BEF4]">people feel supported.</span>
         </h2>
         <a
           href="#roles"
-          className="inline-flex items-center gap-3 border-2 border-black bg-black px-16 py-8 text-[18px] font-semibold text-white transition-all shadow-[10px_10px_0px_0px_rgba(217,190,244,1)] hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[16px_16px_0px_0px_rgba(217,190,244,1)] active:translate-x-0 active:translate-y-0 active:shadow-none"
+          className="inline-flex min-h-14 items-center gap-3 rounded-full bg-[#d9bef4] px-9 text-base font-medium text-black transition hover:bg-[#e5d2f7]"
         >
           Join the mission
           <ArrowIcon />

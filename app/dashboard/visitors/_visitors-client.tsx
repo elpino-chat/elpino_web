@@ -275,7 +275,7 @@ export function VisitorsClient({ view }: { view: VisitorView }) {
           <div className="flex flex-wrap items-center justify-between gap-2.5">
             <div className="flex flex-wrap items-center gap-2">
               <Popover open={rangeOpen} onOpenChange={setRangeOpen}>
-                <PopoverTrigger className="flex h-9 items-center gap-2 rounded-lg border border-[#DDE4E8] bg-white px-3 text-[12.5px] font-medium text-[#3c4245] hover:bg-[#f7f8f8]">
+                <PopoverTrigger data-tour="analytics-range" className="flex h-9 items-center gap-2 rounded-lg border border-[#DDE4E8] bg-white px-3 text-[12.5px] font-medium text-[#3c4245] hover:bg-[#f7f8f8]">
                   <Clock3 size={14} className="text-[#8a9298]" /> {rangeLabel} <ChevronDown size={13} className="text-[#9aa1a6]" />
                 </PopoverTrigger>
                 <PopoverContent align="start" className="w-[220px]">
@@ -301,7 +301,7 @@ export function VisitorsClient({ view }: { view: VisitorView }) {
               </Popover>
 
               <Popover open={compareOpen} onOpenChange={setCompareOpen}>
-                <PopoverTrigger className="flex h-9 items-center gap-2 rounded-lg border border-[#DDE4E8] bg-white px-3 text-[12.5px] font-medium text-[#3c4245] hover:bg-[#f7f8f8]">
+                <PopoverTrigger data-tour="analytics-compare" className="flex h-9 items-center gap-2 rounded-lg border border-[#DDE4E8] bg-white px-3 text-[12.5px] font-medium text-[#3c4245] hover:bg-[#f7f8f8]">
                   <Activity size={14} className="text-[#8a9298]" /> {compareLabel} <ChevronDown size={13} className="text-[#9aa1a6]" />
                 </PopoverTrigger>
                 <PopoverContent align="start" className="w-[200px]">
@@ -322,7 +322,7 @@ export function VisitorsClient({ view }: { view: VisitorView }) {
             <div className="flex flex-wrap items-center gap-2">
               {sites.length > 0 ? (
                 <Popover open={domainOpen} onOpenChange={setDomainOpen}>
-                  <PopoverTrigger className="flex h-9 items-center gap-2 rounded-lg border border-[#DDE4E8] bg-white px-3 text-[12.5px] font-medium text-[#3c4245] hover:bg-[#f7f8f8]">
+                  <PopoverTrigger data-tour="analytics-site" className="flex h-9 items-center gap-2 rounded-lg border border-[#DDE4E8] bg-white px-3 text-[12.5px] font-medium text-[#3c4245] hover:bg-[#f7f8f8]">
                     <Globe2 size={14} className="text-[#8a9298]" /> {domainLabel} <ChevronDown size={13} className="text-[#9aa1a6]" />
                   </PopoverTrigger>
                   <PopoverContent align="end" className="w-[260px]">

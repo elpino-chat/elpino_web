@@ -22,7 +22,26 @@ export async function GET(request: Request) {
   const key = url.searchParams.get("key")?.trim();
   const hostname = url.searchParams.get("hostname")?.trim();
   if (!key || !hostname) return Response.json({ allowed: false, message: "key and hostname are required" }, { status: 400 });
+
+  const claimedHost = hostname.toLowerCase().replace(/^www\./, "");
+  const source = request.headers.get("origin") || request.headers.get("referer");
+  let sourceHost = "";
+  try {
+    sourceHost = source ? new URL(source).hostname.toLowerCase().replace(/^www\./, "") : "";
+  } catch {
+    sourceHost = "";
+  }
+  if (!sourceHost || sourceHost !== claimedHost) {
+    return Response.json(
+      { allowed: false, message: "The widget request did not come from the registered domain" },
+      { status: 403, headers: { "access-control-allow-origin": "*", "cache-control": "no-store" } },
+    );
+  }
+
   const result = await callGateway<{ allowed?: boolean; config?: WidgetConfig }>(`/api/workspace/sites/resolve/${encodeURIComponent(key)}?hostname=${encodeURIComponent(hostname)}`);
+  if (result.allowed) {
+    await callGateway<{ allowed?: boolean }>("/api/workspace/sites/collect", { publicKey: key, hostname });
+  }
   if (result.allowed && result.config && !result.config.botAvatarUrl) result.config.botAvatarUrl = defaultAvatarUrl(request);
   return Response.json(result, { status: result.allowed ? 200 : 403, headers: { "access-control-allow-origin": "*", "cache-control": "no-store" } });
 }

@@ -23,11 +23,9 @@ export function AppShell({
   const isMinimalHeaderAuthPage = pathname === "/login" || pathname === "/signup";
   const isAppPage = pathname === "/onboarding" || pathname.startsWith("/dashboard");
   const isEmbeddedWidget = pathname.startsWith("/widget");
-  const isDocsLandingPage = pathname === "/docs";
+  const isDocsPage = pathname === "/docs" || pathname.startsWith("/docs/");
   const language = useStoredLanguage();
 
-  // Keep the document language in sync with the site-wide picker. This helps
-  // screen readers choose the right voice and makes locale-aware UI reliable.
   useEffect(() => {
     document.documentElement.lang = language;
   }, [language]);
@@ -58,7 +56,7 @@ export function AppShell({
     return <main className="flex min-h-screen flex-col">{children}</main>;
   }
 
-  if (isDocsLandingPage) {
+  if (isDocsPage) {
     return (
       <>
         <main className="flex flex-1 flex-col">{children}</main>

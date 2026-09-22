@@ -5,19 +5,20 @@ import { ArrowRight, BookOpen, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const SEARCH_ITEMS = [
-  { title: "Introduction", description: "Understand what Elpino does and how customer support flows through it.", href: "/docs#introduction", group: "Get started", keywords: "overview basics welcome" },
+  { title: "Introduction", description: "Understand what Elpino does and how customer support flows through it.", href: "/docs", group: "Get started", keywords: "overview basics welcome" },
   { title: "Quickstart", description: "Set up a workspace and reach your first customer conversation.", href: "/docs#quickstart", group: "Get started", keywords: "setup start workspace first conversation" },
-  { title: "How Elpino works", description: "Learn how knowledge, AI answers, and human handoff fit together.", href: "/docs#how-it-works", group: "Get started", keywords: "ai answer handoff flow" },
-  { title: "Knowledge base", description: "Add websites, documents, URLs, and help articles for the AI.", href: "/docs#knowledge", group: "AI support", keywords: "crawl upload file page source train" },
-  { title: "Install the chat widget", description: "Create a site tag and add Elpino to your website.", href: "/docs#install-widget", group: "Chat widget", keywords: "script tag javascript embed website install" },
+  { title: "AI answers", description: "Learn how knowledge, AI answers, and human handoff fit together.", href: "/docs/ai-answers", group: "AI support", keywords: "ai answer handoff confidence flow" },
+  { title: "Knowledge base", description: "Add websites, documents, URLs, and help articles for the AI.", href: "/docs/knowledge", group: "AI support", keywords: "crawl upload file page source train" },
+  { title: "Install the chat widget", description: "Create a site tag and add Elpino to your website.", href: "/docs/chat-widget", group: "Chat widget", keywords: "script tag javascript embed website install" },
   { title: "Pre-chat form", description: "Collect useful customer details before a conversation begins.", href: "/dashboard/connect/prechat-form", group: "Chat widget", keywords: "name email phone fields form" },
   { title: "Identity verification", description: "Safely identify signed-in customers with short-lived tokens.", href: "/docs/identity-verification", group: "Chat widget", keywords: "jwt token hs256 logged in user security" },
-  { title: "Shared inbox", description: "Claim, reply to, summarize, translate, and resolve conversations.", href: "/docs#inbox", group: "Team workspace", keywords: "agent teammate conversation reply ticket" },
+  { title: "Shared inbox", description: "Claim, reply to, summarize, translate, and resolve conversations.", href: "/docs/inbox", group: "Team workspace", keywords: "agent teammate conversation reply ticket" },
   { title: "Invite teammates", description: "Add people to your workspace and shared support inbox.", href: "/dashboard/settings/people", group: "Team workspace", keywords: "member people seat team invitation" },
   { title: "Availability", description: "Set the hours when you are available for customer handoffs.", href: "/dashboard/settings/availability", group: "Team workspace", keywords: "schedule online hours status" },
-  { title: "Integrations", description: "Connect payment and work tools to customer support.", href: "/docs#integrations", group: "Connect", keywords: "stripe razorpay trello tools" },
-  { title: "Site tags", description: "Manage domains, widget installation, and tracking permissions.", href: "/docs#install-widget", group: "Connect", keywords: "domain public key analytics permissions" },
-  { title: "Security guide", description: "Read how Elpino protects credentials and customer information.", href: "/security-guide", group: "Security", keywords: "encryption privacy data credentials" },
+  { title: "Integrations", description: "Connect payment and work tools to customer support.", href: "/docs/integrations", group: "Connect", keywords: "stripe razorpay trello tools" },
+  { title: "Billing and usage", description: "Understand credits, seats, payments, and recharge.", href: "/docs/billing", group: "Platform", keywords: "plan credit seat razorpay recharge" },
+  { title: "Troubleshooting", description: "Fix common widget, knowledge, identity, and billing issues.", href: "/docs/troubleshooting", group: "Help", keywords: "fix error broken diagnose" },
+  { title: "Security", description: "Read how Elpino protects credentials and customer information.", href: "/docs/security", group: "Security", keywords: "encryption privacy data credentials" },
 ] as const;
 
 export function DocsSearch({ autoFocus = false }: { autoFocus?: boolean }) {

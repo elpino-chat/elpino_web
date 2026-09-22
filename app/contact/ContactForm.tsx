@@ -11,7 +11,7 @@ const SendIcon = () => (
 );
 
 const inputClass =
-  "w-full rounded-xl border border-[#0d0d0d]/15 bg-[#f8f8f6] px-4 py-4 text-[15px] text-[#0d0d0d] outline-none transition placeholder:text-black/30 hover:border-[#0d0d0d]/30 focus:border-[#0d0d0d] focus:bg-white focus:ring-2 focus:ring-[#ff584a]/15";
+  "w-full rounded-xl border border-[#0d0d0d]/15 bg-[#f8f8f6] px-4 py-4 text-[15px] text-[#0d0d0d] outline-none transition placeholder:text-black/30 hover:border-[#0d0d0d]/30 focus:border-[#8c64b4] focus:bg-white focus:ring-2 focus:ring-[#d9bef4]/40";
 
 export function ContactForm() {
   const language = useStoredLanguage();
@@ -35,8 +35,8 @@ export function ContactForm() {
   if (status === "success") {
     return (
       <div className="flex min-h-[540px] flex-col items-center justify-center rounded-[2rem] bg-white p-10 text-center">
-        <span className="mb-6 flex h-12 w-12 items-center justify-center rounded-full bg-[#ff584a] text-xl text-white">✓</span>
-        <h3 className="mb-4 font-instrument-serif text-4xl font-normal text-[#0d0d0d]">{t("contact.form.successTitle", "Message sent")}</h3>
+        <span className="mb-6 flex h-12 w-12 items-center justify-center rounded-full bg-[#d9bef4] text-xl text-black">✓</span>
+        <h3 className="mb-4 text-4xl font-normal tracking-[-0.04em] text-[#0d0d0d]">{t("contact.form.successTitle", "Message sent")}</h3>
         <p className="mb-6 leading-6 text-black/60">{t("contact.form.successBody", "Thanks for reaching out. We'll get back to you shortly.")}</p>
         <button onClick={() => setStatus("idle")} className="text-sm text-black/60 underline underline-offset-4 transition hover:text-black">{t("contact.form.sendAnother", "Send another message")}</button>
       </div>
@@ -47,8 +47,8 @@ export function ContactForm() {
     <div className="rounded-[2rem] bg-white p-6 shadow-[0_24px_70px_-45px_rgba(0,0,0,0.35)] md:p-10">
       <div className="mb-8 flex items-end justify-between border-b border-[#0d0d0d]/12 pb-6">
         <div>
-          <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#ff584a]">{t("contact.form.yourMessage", "Your message")}</span>
-          <h3 className="mt-2 font-instrument-serif text-4xl font-normal tracking-[-0.035em] text-[#0d0d0d]">{t("contact.form.howCanWeHelp", "How can we help?")}</h3>
+          <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#8c64b4]">{t("contact.form.yourMessage", "Your message")}</span>
+          <h3 className="mt-2 text-4xl font-normal tracking-[-0.045em] text-[#0d0d0d]">{t("contact.form.howCanWeHelp", "How can we help?")}</h3>
         </div>
         <span className="hidden text-xs text-black/40 sm:block">{t("contact.form.requiredNote", "All fields marked * are required")}</span>
       </div>
@@ -61,7 +61,7 @@ export function ContactForm() {
         <div className="flex flex-col gap-2"><label className="text-xs uppercase tracking-[0.1em] text-gray-500">{t("contact.form.inquiryType", "Inquiry type *")}</label><select required name="inquiryType" defaultValue="Sales & Enterprise" className={`${inputClass} appearance-none`}><option>{t("contact.form.inquirySales", "Sales & Enterprise")}</option><option>{t("contact.form.inquiryTechnical", "Technical Support")}</option><option>{t("contact.form.inquiryPartnerships", "Partnerships")}</option><option>{t("contact.form.inquiryOther", "Other")}</option></select></div>
         <div className="flex flex-col gap-2"><label className="text-xs uppercase tracking-[0.1em] text-gray-500">{t("contact.form.message", "Message *")}</label><textarea required name="message" rows={5} className={`${inputClass} resize-none`} placeholder={t("contact.form.messagePlaceholder", "How can we help you?")} /></div>
         {status === "error" && <p className="text-xs text-red-600">{t("contact.form.error", "Something went wrong. Please try again.")}</p>}
-        <button type="submit" disabled={status === "submitting"} className="flex w-full items-center justify-center gap-2.5 rounded-full bg-[#0d0d0d] py-4 text-sm font-semibold text-white transition duration-200 hover:-translate-y-0.5 hover:bg-[#ff584a] disabled:pointer-events-none disabled:opacity-60">{status === "submitting" ? t("contact.form.sending", "Sending...") : t("contact.form.send", "Send message")}<SendIcon /></button>
+        <button type="submit" disabled={status === "submitting"} className="flex w-full items-center justify-center gap-2.5 rounded-full bg-[#0d0d0d] py-4 text-sm font-semibold text-white transition duration-200 hover:-translate-y-0.5 hover:bg-[#d9bef4] hover:text-black disabled:pointer-events-none disabled:opacity-60">{status === "submitting" ? t("contact.form.sending", "Sending...") : t("contact.form.send", "Send message")}<SendIcon /></button>
         <p className="text-center text-xs text-gray-500">{t("contact.form.agreeText", "By sending this, you agree to our")} <a href="/privacy" className="text-[#11120f] underline underline-offset-4">{t("contact.form.privacy", "Privacy Policy")}</a>.</p>
       </form>
     </div>

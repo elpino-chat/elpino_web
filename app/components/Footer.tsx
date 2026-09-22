@@ -33,7 +33,7 @@ export function Footer({ editorial = false }: { editorial?: boolean }) {
           </nav>
 
           <div className="sm:col-span-2 lg:col-span-1 lg:pl-6">
-            <Link href="/" aria-label="Elpino home" className="inline-flex"><Image src="/elpino.png" alt="Elpino" width={906} height={275} className="h-8 w-auto brightness-0" /></Link>
+            <Link href="/" aria-label="Elpino home" className="inline-flex"><Image src="/elpino.png" alt="Elpino" width={906} height={275} className="h-8 w-auto" /></Link>
             <p className="mt-6 max-w-xs text-sm leading-7 text-black/60">Elpino helps teams answer customers with AI grounded in their own knowledge, then hands conversations to a person when needed.</p>
             <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm">
               <Link href="/community" className="hover:underline">Community ↗</Link>

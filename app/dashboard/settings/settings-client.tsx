@@ -17,7 +17,7 @@ import { Switch } from "@/components/ui/switch";
 import { readDashboardTheme, saveDashboardTheme, type DashboardAppearance } from "@/app/components/dashboard/DashboardThemeProvider";
 import { InvitePeopleDialog } from "@/app/components/dashboard/InvitePeopleDialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { PreChatFormEditor, type PreChatField } from "@/app/dashboard/components/prechat-form-editor";
+import type { PreChatField } from "@/app/dashboard/components/prechat-form-editor";
 import { ContactCollectionSwitch } from "@/app/dashboard/components/contact-collection-switch";
 import { useMobileDrawer } from "@/app/components/dashboard/mobile-drawer-context";
 import { SUPPORTED_LANGUAGES } from "@/app/dashboard/settings/languages";
@@ -1995,7 +1995,6 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [previewFields, setPreviewFields] = useState<PreChatField[]>([]);
-  const [contactCollection, setContactCollection] = useState<"chat" | "off">("chat");
   const [avatarPickerOpen, setAvatarPickerOpen] = useState(false);
   const [avatarTab, setAvatarTab] = useState<"stock" | "upload">("stock");
   const [stockIconIds, setStockIconIds] = useState<string[]>([]);
@@ -2112,7 +2111,7 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
       ) : (
         <div className="mt-7">
           <div className="min-w-0">
-            <div className="dashboard-chatbot-section overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035] p-5">
+            <div data-tour="widget-identity" className="dashboard-chatbot-section overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035] p-5">
               <div className="px-0 py-2">
                 <h3 className="text-[16px] font-semibold">Identity</h3>
                 <p className="mt-1 text-[12px] text-[#667069]">The name and avatar shown to customers in chat.</p>
@@ -2151,7 +2150,7 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
 
             {error && <p className="mt-4 text-[12px] text-[#c63f4d]">{error}</p>}
 
-            <div className="dashboard-chatbot-section mt-4 rounded-2xl border border-white/10 bg-white/[0.035] p-5">
+            <div data-tour="widget-greeting" className="dashboard-chatbot-section mt-4 rounded-2xl border border-white/10 bg-white/[0.035] p-5">
               <h3 className="text-[16px] font-semibold">Greeting message</h3>
               <p className="mt-1 max-w-xl text-[12px] leading-5 text-[#667069]">
                 Shown before a visitor starts chatting — each line pops up as its own bubble, one below another, on the launcher and at the top of a new conversation.
@@ -2183,20 +2182,12 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
 
             <div className="dashboard-chatbot-section mt-4 rounded-2xl border border-white/10 bg-white/[0.035] p-5">
               <h3 className="text-[16px] font-semibold">Collect contact details</h3>
-              <p className="mt-1 max-w-xl text-[12px] leading-5 text-[#667069]">
-                Whether the chat widget asks visitors for their email and phone, so your team can follow up if they leave.
+              <p className="mt-1 max-w-xl text-[12px] leading-5 text-white/80">
+                Choose which contact details the chat widget asks visitors to share.
               </p>
               <div className="mt-4">
-                <ContactCollectionSwitch onChange={setContactCollection} />
+                <ContactCollectionSwitch onFieldsChange={setPreviewFields} />
               </div>
-              {contactCollection === "chat" && (
-                <div className="mt-5">
-                  <p className="mb-3 text-[12px] leading-5 text-[#667069]">
-                    Contact fields. The popup always asks for an email, and asks for a phone number only when a phone field is included here.
-                  </p>
-                  <PreChatFormEditor onFieldsChange={setPreviewFields} />
-                </div>
-              )}
             </div>
           </div>
         </div>
@@ -4188,6 +4179,7 @@ export function SettingsClient({ user, page = "General", auditView = "all" }: { 
       {showPreviewPanel && (
         <div
           ref={setPreviewPanel}
+          data-tour="widget-preview"
           className="dashboard-widget-preview-panel flex h-full min-h-0 w-[380px] shrink-0 flex-col overflow-hidden border-l border-white/10 bg-[#262626] max-xl:hidden"
         />
       )}

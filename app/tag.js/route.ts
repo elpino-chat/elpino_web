@@ -76,16 +76,31 @@ export function GET(request: Request) {
     var postToWidget = function () {};
     var identityGeneration = 0;
     var signedOut = false;
+    var identityDelivered = false;
+    var widgetReady = false;
+    var directIdentity = Boolean(identityToken);
+    var ensureIdentityFrame = function () {};
 
-    function refreshIdentity() {
-      if (signedOut || typeof settings.getIdentityToken !== 'function') {
+    function refreshIdentity(renewal) {
+      if (!widgetReady) return;
+      if (!signedOut && identityToken && !identityDelivered) {
+        identityDelivered = true;
         postToWidget({ type: 'elpino:identity', token: identityToken });
+        return;
+      }
+      if (signedOut || directIdentity || typeof settings.getIdentityToken !== 'function') {
+        if (renewal && !signedOut && identityDelivered) {
+          window.dispatchEvent(new CustomEvent('elpino:identity-required'));
+          return;
+        }
+        postToWidget({ type: 'elpino:identity', token: signedOut ? null : identityToken });
         return;
       }
       var generation = ++identityGeneration;
       Promise.resolve().then(function () { return settings.getIdentityToken(); }).then(function (token) {
         if (generation !== identityGeneration) return;
         identityToken = typeof token === 'string' ? token : null;
+        identityDelivered = Boolean(identityToken);
         postToWidget({ type: 'elpino:identity', token: identityToken });
       }).catch(function () {
         if (generation !== identityGeneration) return;
@@ -95,18 +110,80 @@ export function GET(request: Request) {
     }
 
     function identify(options) {
+      if (!options || typeof options.token !== 'string' || !options.token || options.token.length > 4096) {
+        throw new Error('identify requires a signed token');
+      }
+      if (!signedOut && identityDelivered && identityToken === options.token) return;
+      directIdentity = true;
       signedOut = false;
       identityGeneration += 1;
-      identityToken = options && typeof options.token === 'string' && options.token ? options.token : null;
-      postToWidget({ type: 'elpino:identity', token: identityToken });
+      identityToken = options.token;
+      identityDelivered = false;
+      ensureIdentityFrame();
+      refreshIdentity();
     }
 
     function logout() {
       signedOut = true;
       identityGeneration += 1;
       identityToken = null;
+      identityDelivered = false;
       postToWidget({ type: 'elpino:logout' });
     }
+
+    // Available immediately, including while the tag/config is loading.
+    // Keep the original array so references saved by a host app keep working.
+    var sdk = Array.isArray(window.$elpino) ? window.$elpino : [];
+    var queuedCommands = sdk.splice(0);
+    function command(entry) {
+      try {
+        if (!Array.isArray(entry)) throw new Error('Expected an $elpino command array');
+        if (entry[0] === 'configure') {
+          var options = entry[1] || {};
+          var endpoint = new URL(options.identityEndpoint, location.href);
+          if (typeof options.identityEndpoint !== 'string' || endpoint.origin !== location.origin || endpoint.username || endpoint.password) {
+            throw new Error('identityEndpoint must be a same-origin URL');
+          }
+          settings.getIdentityToken = function () {
+            return fetch(endpoint.href, { method: 'POST', credentials: 'same-origin', cache: 'no-store', redirect: 'error' })
+              .then(function (response) {
+                if (response.status === 401) return null;
+                if (!response.ok) throw new Error('Identity endpoint failed');
+                return response.json();
+              }).then(function (body) {
+                if (body === null || body.token === null) return null;
+                if (typeof body.token !== 'string' || !body.token || body.token.length > 4096) throw new Error('Identity endpoint must return { token }');
+                return body.token;
+              });
+          };
+          identityToken = null;
+          identityDelivered = false;
+          directIdentity = false;
+          identityGeneration += 1;
+          if (!signedOut) { ensureIdentityFrame(); refreshIdentity(); }
+        } else if (entry[0] === 'identify') {
+          if (entry.length > 1) identify(entry[1]);
+          else {
+            if (typeof settings.getIdentityToken !== 'function') throw new Error('Configure identityEndpoint before identify');
+            signedOut = false;
+            directIdentity = false;
+            identityToken = null;
+            identityDelivered = false;
+            ensureIdentityFrame();
+            refreshIdentity();
+          }
+        } else if (entry[0] === 'logout') logout();
+        else throw new Error('Unknown $elpino command');
+      } catch (error) {
+        console.warn('[Elpino]', error.message);
+      }
+    }
+    sdk.push = function () {
+      for (var i = 0; i < arguments.length; i += 1) command(arguments[i]);
+      return 0;
+    };
+    window.$elpino = sdk;
+    queuedCommands.forEach(command);
 
     fetch(TAG_ORIGIN + '/api/widget/config?key=' + encodeURIComponent(key) + '&hostname=' + encodeURIComponent(location.hostname))
       .then(function (response) { if (!response.ok) throw new Error('Tag is not allowed on this domain'); return response.json(); })
@@ -189,6 +266,9 @@ export function GET(request: Request) {
     // widget's own header menu. Only the loader can touch this — the iframe
     // is a different origin and can't resize itself, only ask via postMessage.
     var PANEL_STYLE = 'position:fixed;bottom:88px;right:20px;width:420px;max-width:calc(100vw - 16px);height:640px;max-height:calc(100vh - 104px);border:none;border-radius:26px;box-shadow:0 18px 48px rgba(15,23,42,0.24);z-index:2147483000;background:#f7f7f8;';
+    // A reply preview is rendered by the cross-origin widget iframe itself.
+    // The host page can resize the frame but never receives the reply text.
+    var PREVIEW_STYLE = 'position:fixed;bottom:88px;right:20px;width:340px;max-width:calc(100vw - 32px);height:132px;border:none;border-radius:18px;box-shadow:0 16px 40px rgba(15,23,42,0.25);z-index:2147483000;background:transparent;';
     var FULLSCREEN_STYLE = 'position:fixed;inset:0;width:100%;height:100%;max-width:100%;max-height:100%;border:none;border-radius:0;box-shadow:none;z-index:2147483000;background:#f7f7f8;';
 
     function mount(config) {
@@ -324,7 +404,6 @@ export function GET(request: Request) {
         };
         greeting.onclick = function () { dismissGreeting(); if (!open) toggle(true); };
         document.body.appendChild(greeting);
-        badge.style.display = 'block';
       }
 
       function dismissGreeting() {
@@ -355,11 +434,21 @@ export function GET(request: Request) {
         if (event.data.type === 'elpino:unread' && typeof event.data.count === 'number' && event.data.count > 0) {
           unread += Math.min(Math.floor(event.data.count), 50);
           showUnread();
+          if (iframe && !open) {
+            iframe.style.cssText = PREVIEW_STYLE;
+            iframe.style.display = 'block';
+          }
+        }
+        if (event.data.type === 'elpino:open' && !open) setOpen(true, false);
+        if (event.data.type === 'elpino:preview-dismiss' && iframe && !open) {
+          iframe.style.display = 'none';
+          iframe.style.cssText = PANEL_STYLE;
         }
         // The iframe asks once it has loaded; answer with whatever identity
         // the page has given so far, which may be none.
         if (event.data.type === 'elpino:widget-ready' || event.data.type === 'elpino:identity-refresh') {
-          refreshIdentity();
+          widgetReady = true;
+          refreshIdentity(event.data.type === 'elpino:identity-refresh');
         }
       });
 
@@ -389,6 +478,21 @@ export function GET(request: Request) {
         setOpen(!open, startNew);
       }
 
+      ensureIdentityFrame = function () {
+        if (iframe) return;
+        iframe = document.createElement('iframe');
+        iframe.title = 'Chat';
+        var view = savedView();
+        iframe.src = ORIGIN + '/widget?key=' + encodeURIComponent(key) + '&host=' + encodeURIComponent(location.hostname)
+          + (view ? '&tab=' + view.tab + '&view=' + view.chatView + (view.conversationId ? '&conversation=' + view.conversationId : '') : '');
+        iframe.setAttribute('allow', 'microphone');
+        iframe.style.cssText = PANEL_STYLE;
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+      };
+      // Exchange signed tokens now, even if the visitor opens chat much later.
+      if (!signedOut && (identityToken || typeof settings.getIdentityToken === 'function')) ensureIdentityFrame();
+
       function setOpen(next, startNew) {
         if (next === open) return;
         open = next;
@@ -410,6 +514,7 @@ export function GET(request: Request) {
             iframe.style.cssText = PANEL_STYLE;
             document.body.appendChild(iframe);
           }
+          iframe.style.cssText = maximized ? FULLSCREEN_STYLE : PANEL_STYLE;
           iframe.style.display = 'block';
           rememberOpen(true);
           if (!pushedHistory) {

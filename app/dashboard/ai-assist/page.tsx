@@ -295,7 +295,7 @@ export default function AiAssistPage() {
         } md:flex`}
       >
         <nav className="inbox-view-nav flex items-center gap-5 px-3" aria-label="Inbox views">
-          <Link href="/dashboard/inbox" className="flex w-fit items-center gap-1.5 border-b-2 border-transparent px-0 py-2 text-[13.5px] font-normal text-white/70 hover:border-white/30 hover:text-white/90">
+          <Link href="/dashboard/inbox" className="flex w-fit items-center gap-1.5 px-0 py-2 text-[13.5px] font-normal text-white/70 hover:text-white/90">
             Team Inbox
             {teamBadgeCount > 0 && (
               <span className="flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-[#27895d] px-1 text-[9px] font-bold text-white">
