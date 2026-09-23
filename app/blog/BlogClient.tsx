@@ -204,13 +204,21 @@ export function BlogClient({ posts }: { posts: BlogPost[] }) {
   return (
     <div className="flex flex-1 flex-col bg-[#f6f4ef] font-[family-name:var(--font-rethink-sans)] text-[#233d4d]">
       <section className="relative px-5 pt-12 sm:px-8 sm:pt-16">
+        <Image
+          src="/images/blog/learning-sloth.png"
+          alt=""
+          width={1145}
+          height={1374}
+          priority
+          className="pointer-events-none absolute -top-10 right-4 z-10 hidden w-56 select-none rotate-3 drop-shadow-[0_22px_30px_rgba(23,24,28,0.25)] md:block lg:right-10 lg:w-80"
+        />
         <div className="mx-auto max-w-[1440px]">
           <div className="relative border-b border-[#233d4d]/20 pb-8">
             <motion.div
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, ease: EASE }}
-              className="md:pr-56 lg:pr-80"
+              className="md:pr-64 lg:pr-96"
             >
               <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#6c48a0]">Notes from Elpino</p>
               <h1 className="mt-3 text-[clamp(3.75rem,10vw,9.5rem)] font-medium leading-[0.8] tracking-[-0.09em]">
@@ -230,14 +238,6 @@ export function BlogClient({ posts }: { posts: BlogPost[] }) {
                 Get new stories by email <ArrowDown size={15} className="transition-transform hover:translate-y-0.5" />
               </a>
             </motion.div>
-            <Image
-              src="/images/blog/learning-sloth.png"
-              alt=""
-              width={1145}
-              height={1374}
-              priority
-              className="pointer-events-none absolute bottom-0 right-0 hidden w-48 select-none rotate-2 drop-shadow-[0_18px_25px_rgba(23,24,28,0.22)] md:block lg:w-72"
-            />
           </div>
           <motion.div
             initial={{ opacity: 0 }}

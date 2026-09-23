@@ -1,104 +1,76 @@
 import type { Metadata } from "next";
-import { ProductFeatureLayout } from "../../components/product/ProductFeatureLayout";
-import { ShoppingBag, Truck, RotateCcw, PackageCheck, MessageSquareText, ShieldAlert, Sparkles, Clock } from "lucide-react";
+import { EcommerceClient } from "./EcommerceClient";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://elpino.chat";
 
 export const metadata: Metadata = {
   title: "E-Commerce AI Support Solutions",
-  description: "Resolve order tracking, returns, shipping inquiries, and pre-purchase sizing questions 24/7.",
+  description:
+    "Resolve order tracking, returns, shipping inquiries, and pre-purchase sizing questions 24/7 with AI grounded in your live store data.",
   alternates: { canonical: `${SITE_URL}/solutions/ecommerce` },
   openGraph: {
     title: "E-Commerce AI Support Solutions | Elpino",
-    description: "Resolve order tracking, returns, shipping inquiries, and pre-purchase sizing questions 24/7.",
+    description:
+      "Resolve order tracking, returns, shipping inquiries, and pre-purchase sizing questions 24/7 with AI grounded in your live store data.",
     url: `${SITE_URL}/solutions/ecommerce`,
     type: "website",
   },
 };
 
+const faqItems = [
+  {
+    q: "How does Elpino check order status?",
+    a: "Elpino securely queries your e-commerce platform (Shopify, WooCommerce, BigCommerce, or a custom API) using the customer's verified email and order number. Only the shopper whose account matches sees their order details.",
+  },
+  {
+    q: "Can Elpino issue refunds automatically?",
+    a: "You set the rules. Store credit, exchanges, and return labels can be fully automated, while cash refunds above an amount you choose always require human approval. Every proposed action is logged for your team.",
+  },
+  {
+    q: "Which platforms and couriers does it connect to?",
+    a: "Shopify, WooCommerce, BigCommerce, and custom storefronts via API — plus courier tracking from DHL, UPS, FedEx, Royal Mail, and regional carriers.",
+  },
+  {
+    q: "Will the widget slow my store down?",
+    a: "No. The Elpino widget is under 20KB, loads asynchronously, and is mobile-optimized — it won't hurt your Core Web Vitals or Lighthouse scores.",
+  },
+  {
+    q: "Can it handle Black Friday level traffic?",
+    a: "Yes. Elpino answers in parallel, not in queues — thousands of conversations can be verified and resolved simultaneously, so peak-season surges stop being a hiring problem.",
+  },
+  {
+    q: "Does it work across languages for international shoppers?",
+    a: "Yes — Elpino supports 95+ languages with accurate product and shipping terminology.",
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqItems.map((item) => ({
+    "@type": "Question",
+    name: item.q,
+    acceptedAnswer: { "@type": "Answer", text: item.a },
+  })),
+};
+
+const productSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Elpino for E-Commerce",
+  applicationCategory: "BusinessApplication",
+  description:
+    "AI customer support for e-commerce: automated order tracking (WISMO), policy-exact returns and exchanges, pre-purchase advice, and abandoned-cart recovery.",
+  url: `${SITE_URL}/solutions/ecommerce`,
+  publisher: { "@type": "Organization", name: "Elpino", url: SITE_URL },
+};
+
 export default function EcommerceSolutionPage() {
   return (
-    <ProductFeatureLayout
-      category="Solutions / Industry"
-      title="Instant WISMO & returns for"
-      highlightedTitle="modern online brands."
-      description="Resolve order tracking, exchanges, sizing questions, and checkout doubts instantly across Shopify, WooCommerce, and custom stores."
-      primaryCtaText="Start free for E-Commerce"
-      features={[
-        {
-          title: "Where Is My Order (WISMO)",
-          description: "Look up real-time courier tracking, estimated delivery dates, and package status in under two seconds.",
-          icon: Truck,
-          badge: "Highest ROI",
-        },
-        {
-          title: "Returns & Exchanges Automation",
-          description: "Enforce store return policies, generate return labels, and process exchanges automatically.",
-          icon: RotateCcw,
-        },
-        {
-          title: "Pre-Purchase Product Advice",
-          description: "Recommend complementary products, clarify sizing charts, and answer ingredient questions to boost conversion.",
-          icon: ShoppingBag,
-        },
-        {
-          title: "Inventory & Stock Checks",
-          description: "Check product variant availability and alert shoppers when out-of-stock items are replenished.",
-          icon: PackageCheck,
-        },
-        {
-          title: "Abandoned Cart Recovery",
-          description: "Engage hesitant shoppers on checkout pages to answer shipping or discount code questions.",
-          icon: MessageSquareText,
-        },
-        {
-          title: "Fraud & Chargeback Prevention",
-          description: "Flag suspicious address changes and route high-risk refund disputes to store managers.",
-          icon: ShieldAlert,
-        },
-      ]}
-      deepDiveTitle="Turn customer support into high-margin repeat revenue"
-      deepDiveDescription="Shoppers expect answers in seconds. Elpino delivers immediate, verified answers so you never lose a sale to slow response times."
-      deepDiveItems={[
-        {
-          title: "Shopify & ERP Sync",
-          description: "Connect your storefront to query customer orders, fulfillment statuses, and discount codes securely.",
-          icon: Sparkles,
-          accentColor: "#ff6038",
-        },
-        {
-          title: "Black Friday & Holiday Surge Ready",
-          description: "Scale seamlessly during peak traffic without hiring temporary support contractors.",
-          icon: Clock,
-          accentColor: "#168cff",
-        },
-        {
-          title: "Multi-Language Shopper Support",
-          description: "Communicate fluently with international shoppers in 95+ languages with accurate localized terminology.",
-          icon: ShoppingBag,
-          accentColor: "#8557e8",
-        },
-      ]}
-      stats={[
-        { value: "85%", label: "WISMO inquiries automated" },
-        { value: "< 1.2s", label: "Average order status response" },
-        { value: "+24%", label: "Shopper conversion lift" },
-        { value: "0", label: "Holiday queue backlog" },
-      ]}
-      faqItems={[
-        {
-          q: "How does Elpino check order status?",
-          a: "Elpino securely queries your e-commerce platform (e.g. Shopify, BigCommerce, or custom API) using customer email and order numbers.",
-        },
-        {
-          q: "Can Elpino issue refunds automatically?",
-          a: "You can configure strict policy rules: allow automatic store credit or return label generation, while requiring human approval for cash refunds over set limits.",
-        },
-        {
-          q: "Does Elpino work on mobile web stores?",
-          a: "Yes. The Elpino widget is ultra-lightweight (<20KB), mobile-optimized, and loads instantly without hurting your Google Core Web Vitals.",
-        },
-      ]}
-    />
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }} />
+      <EcommerceClient />
+    </>
   );
 }

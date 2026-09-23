@@ -9,7 +9,7 @@ function ArrowIcon() {
 }
 
 /** Shared, editorial layout for long-form legal documents. */
-export function LegalPage({ eyebrow = "Legal", title, updated, intro, sections, illustrationSrc = "/images/contact-support-sloth.png" }: { eyebrow?: string; title: string; updated: string; intro: ReactNode; sections: LegalSection[]; illustrationSrc?: string }) {
+export function LegalPage({ eyebrow = "Legal", title, updated, intro, sections, illustrationSrc }: { eyebrow?: string; title: string; updated: string; intro: ReactNode; sections: LegalSection[]; illustrationSrc?: string | null }) {
   return (
     <main className="relative flex flex-1 flex-col overflow-x-clip bg-[#fafaf7] font-[family-name:var(--font-rethink-sans)] text-[#20251d]">
       <section className="relative overflow-hidden border-b border-[#758269]/20 bg-[#e9eee3]">
@@ -21,7 +21,7 @@ export function LegalPage({ eyebrow = "Legal", title, updated, intro, sections, 
             <div className="mt-7 max-w-2xl text-base leading-7 text-[#596353] sm:text-lg sm:leading-8">{intro}</div>
           </div>
           <div className="relative rounded-[22px] border border-white/60 bg-white/55 p-6 backdrop-blur-sm">
-            <Image src={illustrationSrc} alt="" width={1024} height={1536} className="pointer-events-none absolute -right-8 -top-20 w-36 opacity-30" />
+            {illustrationSrc && <Image src={illustrationSrc} alt="" width={1024} height={1536} className="pointer-events-none absolute -right-8 -top-20 w-36 opacity-30" />}
             <p className="relative text-[10px] font-medium uppercase tracking-[0.16em] text-[#6d7d62]">Document record</p>
             <dl className="mt-5 grid grid-cols-2 gap-x-5 gap-y-4 text-sm lg:grid-cols-1">
               <div className="relative"><dt className="text-[#71806a]">Effective</dt><dd className="mt-1 font-medium text-[#20251d]">{updated}</dd></div>

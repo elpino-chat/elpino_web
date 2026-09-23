@@ -1,48 +1,22 @@
 import type { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
+import { FoundersClient } from "./FoundersClient";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://elpino.chat";
 
 export const metadata: Metadata = {
-  title: "For Founders",
-  description: "Give every customer a helpful answer while you keep building.",
-  alternates: { canonical: `${SITE_URL}/solutions/founders-team` },
-  openGraph: { title: "For Founders | Elpino", description: "Give every customer a helpful answer while you keep building.", url: `${SITE_URL}/solutions/founders-team`, type: "website" },
+  title: "For Founders | Elpino",
+  description:
+    "Autonomous AI customer service engineered for founders who would rather build product than drown in frontline support tickets.",
+  alternates: { canonical: `${SITE_URL}/solutions/founders` },
+  openGraph: {
+    title: "For Founders | Elpino",
+    description:
+      "Autonomous AI customer service engineered for founders who would rather build product than drown in frontline support tickets.",
+    url: `${SITE_URL}/solutions/founders`,
+    type: "website",
+  },
 };
 
-const benefits = [
-  ["Be there, even when you’re deep in work", "Elpino can answer the questions your help center already covers, without waiting for you to open another tab."],
-  ["Keep the important conversations close", "When a customer needs you, their context and question arrive together in one shared inbox."],
-  ["Build trust as you grow", "A helpful answer today is often the reason a customer stays, upgrades, or recommends you tomorrow."],
-];
-
-const rhythm = [
-  ["Morning", "See what needs a human", "Elpino has already handled the routine questions and kept the conversations that need judgment ready for you."],
-  ["During the day", "Stay in product mode", "Customers get helpful first answers while you keep shipping, selling, and solving the hard problems."],
-  ["When you check in", "Pick up with context", "Open one workspace to see every conversation, source, and handoff—not a pile of disconnected messages."],
-];
-
 export default function FoundersPage() {
-  return (
-    <div className="overflow-hidden bg-white font-[family-name:var(--font-rethink-sans)] text-[#17181c]">
-      <section className="relative overflow-hidden bg-[#fff1e3] px-5 pb-20 pt-28 text-[#17181c] sm:px-8 md:pb-28 md:pt-36 lg:px-16">
-        <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(100deg,rgba(255,241,227,0.98)_22%,rgba(255,241,227,0.68)_100%),url('/images/heros/elpino-dawn-hero.webp')] bg-cover bg-center" />
-        <div className="relative mx-auto grid max-w-[1400px] gap-12 lg:grid-cols-[minmax(0,0.98fr)_minmax(400px,0.8fr)] lg:items-center lg:gap-16">
-          <div className="max-w-3xl"><p className="flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#956840]"><span className="h-px w-8 bg-[#956840]" />Elpino for founders</p><h1 className="mt-7 text-balance text-5xl font-normal leading-[0.96] tracking-[-0.065em] sm:text-6xl md:text-7xl">Build the company.<br /><span className="text-[#956840]">Keep the conversation.</span></h1><p className="mt-7 max-w-2xl text-lg leading-8 text-black/60 sm:text-xl">Elpino gives every customer a helpful first answer, so you can keep your focus without making people wait for yours.</p><div className="mt-9 flex flex-wrap gap-3"><Link href="/signup" className="inline-flex h-12 items-center justify-center rounded-full bg-[#17181c] px-6 text-sm font-medium text-white transition hover:bg-[#fe9238] hover:text-black">Start free →</Link><Link href="/features" className="inline-flex h-12 items-center justify-center rounded-full border border-black/20 bg-white/55 px-6 text-sm font-medium transition hover:bg-white">See how it works</Link></div><p className="mt-5 text-xs text-black/45">No card required. Start with 50 free AI resolutions each month.</p></div>
-          <div className="relative mx-auto w-full max-w-[560px]"><div aria-hidden="true" className="absolute -inset-6 rounded-[2rem] bg-[radial-gradient(circle,#fc7b33_0%,transparent_65%)] opacity-40 blur-2xl" /><Image src="/images/founders-sloth.png" alt="" width={1145} height={1374} className="pointer-events-none absolute -right-20 -top-28 z-10 h-auto w-44 -rotate-6 drop-shadow-2xl sm:w-52" /><div className="relative overflow-hidden rounded-xl border border-[#428ce5] bg-[#edf7ff] p-3 text-[#17181c] shadow-[0_30px_80px_rgba(0,0,0,0.45)] sm:p-5"><div className="rounded-lg border border-black/10 bg-white p-5 sm:p-7"><div className="flex items-center justify-between border-b border-black/10 pb-4 text-xs"><span className="font-medium">Customer conversation</span><span className="rounded-full bg-[#e8f4eb] px-2.5 py-1 text-[10px] text-[#37744f]">AI answered</span></div><div className="mt-6 max-w-[84%] rounded-2xl rounded-tl-sm bg-[#f1f2ef] px-4 py-3 text-sm leading-6">Is there a way to invite the rest of my team?</div><div className="my-4 flex items-center gap-2 text-[10px] text-[#806698]"><span className="flex size-5 items-center justify-center rounded-full bg-[#eee5fa]">✦</span>Elpino checked: Team setup guide</div><div className="ml-auto max-w-[88%] rounded-2xl rounded-br-sm bg-[#eee5fa] px-4 py-3 text-sm leading-6">Absolutely. Go to Settings → Team, then select Invite teammate to send an invitation.</div><div className="mt-5 rounded-lg border border-[#d6e3f1] bg-[#f5faff] px-3 py-2 text-right text-[10px] text-[#527b97]">A helpful answer, while you keep building.</div></div></div></div>
-        </div>
-      </section>
-
-      <section className="border-b border-black/10 bg-[#428ce5] px-5 py-7 text-white sm:px-8 lg:px-16"><div className="mx-auto flex max-w-[1400px] flex-wrap items-center justify-between gap-x-10 gap-y-4 text-sm"><span className="font-medium">Customers feel heard.</span><span className="text-white/70">You keep your focus.</span><span className="text-white/70">Growth does not mean more waiting.</span></div></section>
-
-      <section className="px-5 py-20 sm:px-8 md:py-28 lg:px-16"><div className="mx-auto max-w-[1400px]"><div className="grid gap-8 md:grid-cols-[0.8fr_1.2fr] md:items-end"><div><p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#7060bd]">A small team can feel present</p><h2 className="mt-4 text-4xl font-normal leading-[1.03] tracking-[-0.055em] sm:text-5xl">Make every customer feel like someone is home.</h2></div><p className="max-w-xl text-base leading-7 text-black/60">You cannot be in every conversation all day. But your product knowledge can be, and your team can be right there when the conversation gets important.</p></div><div className="mt-12 grid gap-5 md:grid-cols-3">{benefits.map(([title, text], index) => <article key={title} className="flex min-h-[280px] flex-col rounded-xl border border-black/10 bg-[#fbfbfa] p-7"><span className="flex size-9 items-center justify-center rounded-lg bg-[#eee5fa] text-sm text-[#7060bd]">0{index + 1}</span><h3 className="mt-9 text-2xl font-medium tracking-[-0.04em]">{title}</h3><p className="mt-4 text-sm leading-7 text-black/55">{text}</p></article>)}</div></div></section>
-
-      <section className="bg-[#fff1e3] px-5 py-20 sm:px-8 md:py-28 lg:px-16"><div className="mx-auto max-w-[1400px]"><p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#956840]">A lighter customer-support day</p><div className="mt-4 flex flex-col justify-between gap-6 md:flex-row md:items-end"><h2 className="max-w-2xl text-4xl font-normal leading-[1.03] tracking-[-0.055em] sm:text-5xl">A customer experience<br />that keeps pace with you.</h2><p className="max-w-sm text-sm leading-7 text-[#76634f]">The routine stays moving in the background. You get the space to make the decisions only you can make.</p></div><div className="mt-14 grid gap-5 md:grid-cols-3">{rhythm.map(([time, title, text]) => <article key={time} className="rounded-xl border border-[#dfc7b1] bg-white/65 p-7"><span className="text-sm font-medium text-[#b56e36]">{time}</span><div className="my-8 h-px bg-[#dfc7b1]" /><h3 className="text-2xl font-medium tracking-[-0.04em]">{title}</h3><p className="mt-4 text-sm leading-7 text-[#76634f]">{text}</p></article>)}</div></div></section>
-
-      <section className="bg-[#111216] px-5 py-20 text-white sm:px-8 md:py-28 lg:px-16"><div className="mx-auto grid max-w-[1400px] gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-center"><div><p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#d9bef4]">Start with what you already know</p><h2 className="mt-5 text-4xl font-normal leading-[1.03] tracking-[-0.055em] sm:text-5xl">Your product knowledge can do more than sit in a folder.</h2><p className="mt-6 max-w-lg text-base leading-7 text-white/65">Bring your help articles, website pages, and documents into one knowledge base. Elpino can search it before it answers the next customer question.</p><Link href="/features#knowledge-base" className="mt-8 inline-flex h-12 items-center rounded-md border border-white/25 px-6 text-sm font-medium transition hover:bg-white hover:text-black">Explore the knowledge base ↗</Link></div><div className="rounded-xl border border-[#428ce5] bg-[#edf7ff] p-3 text-[#17181c] sm:p-5"><div className="rounded-lg bg-white p-5 sm:p-7"><div className="flex items-center justify-between border-b border-black/10 pb-4 text-xs"><span className="font-medium">Your knowledge library</span><span className="text-[#527b97]">Ready to answer</span></div>{["Getting started", "Pricing & billing", "Team setup", "Product FAQs"].map((item, index) => <div key={item} className="flex items-center gap-3 border-b border-black/5 py-4"><span className="flex size-7 items-center justify-center rounded-lg bg-[#eee5fa] text-xs text-[#765a99]">⌁</span><span className="flex-1 text-sm">{item}</span><span className="text-[10px] text-[#377755]">{index === 1 ? "Connected" : "Ready"} ✓</span></div>)}<p className="mt-5 text-xs leading-6 text-[#628099]">A little more useful than another browser tab.</p></div></div></div></section>
-
-      <section className="bg-[#428ce5] px-5 py-20 text-white sm:px-8 md:py-28 lg:px-16"><div className="mx-auto flex max-w-[1400px] flex-col items-start justify-between gap-10 lg:flex-row lg:items-end"><div className="max-w-3xl"><p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#d9bef4]">Give your customers a good first answer</p><h2 className="mt-5 text-balance text-4xl font-normal leading-[1.02] tracking-[-0.055em] sm:text-5xl md:text-6xl">Keep building. We’ll help keep the conversation moving.</h2><p className="mt-5 max-w-xl text-base leading-7 text-white/65">Start with the knowledge you have, then bring your team in as the company grows.</p></div><div className="flex flex-wrap gap-3"><Link href="/signup" className="inline-flex h-12 items-center justify-center rounded-md bg-[#fe9238] px-6 text-sm font-semibold text-black transition hover:bg-white">Start free →</Link><Link href="/contact" className="inline-flex h-12 items-center justify-center rounded-md border border-white/30 px-6 text-sm font-medium transition hover:bg-white hover:text-black">Talk to us</Link></div></div></section>
-    </div>
-  );
+  return <FoundersClient />;
 }

@@ -77,26 +77,26 @@ const navGroups: DropdownGroup[] = [
       {
         title: 'By industry',
         items: [
-          { label: 'SaaS & Software', href: '/solutions/revenue-teams' },
-          { label: 'E-Commerce', href: '/solutions/busy-operators' },
-          { label: 'Agencies & Services', href: '/solutions/founders' },
+          { label: 'SaaS & Software', href: '/solutions/saas-software' },
+          { label: 'E-Commerce', href: '/solutions/ecommerce' },
+          { label: 'Agencies & Services', href: '/solutions/agencies-services' },
         ],
       },
       {
         title: 'Capabilities',
         items: [
-          { label: 'Self-Service', href: '/features' },
-          { label: 'Omnichannel Triage', href: '/solutions/busy-operators' },
-          { label: 'Order Lookups', href: '/integrations' },
+          { label: 'Self-Service', href: '/solutions/self-service' },
+          { label: 'Omnichannel Triage', href: '/solutions/omnichannel-triage' },
+          { label: 'Order Lookups', href: '/solutions/order-lookups' },
         ],
       },
       {
         title: 'Human & Intel',
         items: [
-          { label: 'Human Escalations', href: '/features' },
-          { label: 'Workflows', href: '/features' },
-          { label: 'Visitor Intelligence', href: '/features' },
-          { label: 'Teammate Handoff', href: '/solutions/founders' },
+          { label: 'Human Escalations', href: '/solutions/human-escalations' },
+          { label: 'Workflows', href: '/solutions/workflows' },
+          { label: 'Visitor Intelligence', href: '/solutions/visitor-intelligence' },
+          { label: 'Teammate Handoff', href: '/solutions/teammate-handoff' },
         ],
       },
     ],
@@ -109,7 +109,7 @@ const navGroups: DropdownGroup[] = [
         items: [
           { label: 'Documentation', href: '/docs' },
           { label: 'Help & FAQ', href: '/faq' },
-          { label: 'API & Webhooks', href: '/docs' },
+          // { label: 'API & Webhooks', href: '/docs/api-webhooks' },
         ],
       },
       {
