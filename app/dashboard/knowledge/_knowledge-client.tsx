@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import posthog from "posthog-js";
-import { ArrowDownUp, ArrowLeft, Check, ChevronDown, FileText, Folder, Globe2, Link2, ListChecks, LoaderCircle, RefreshCw, Search, Sparkles, Trash2, Upload, X } from "lucide-react";
+import { ArrowDownUp, ArrowLeft, FileText, Folder, Globe2, Link2, ListChecks, LoaderCircle, RefreshCw, Search, Sparkles, Trash2, Upload, X } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useMobileDrawer } from "@/app/components/dashboard/mobile-drawer-context";
 
@@ -158,7 +158,7 @@ export function KnowledgeClient({ view }: { view: KnowledgeView }) {
       : ["URLs", "Add website URLs and keep their content searchable."];
 
   return <div id="dashboard-knowledge-page" className="dashboard-knowledge-shell flex h-full min-h-0 overflow-hidden bg-[#262626] text-white">
-    <KnowledgeSidebar view={view} items={items} sites={sites} selectedSiteId={selectedSiteId} setSelectedSiteId={setSelectedSiteId} onOpen={openEditor} />
+    <KnowledgeSidebar view={view} items={items} sites={sites} selectedSiteId={selectedSiteId} onOpen={openEditor} />
     <main className="dashboard-page-surface dashboard-knowledge-main-surface min-w-0 flex-1 overflow-y-auto bg-[#262626] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       <div className="mx-auto w-full max-w-[1320px] px-6 pb-16 pt-7 sm:px-10 lg:px-12">
         <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
@@ -377,12 +377,11 @@ function Favicon({ domain, size = 20 }: { domain?: string | null; size?: number 
 }
 
 function KnowledgeSidebar({
-  view, items, sites, selectedSiteId, setSelectedSiteId, onOpen,
+  view, items, sites, selectedSiteId, onOpen,
 }: {
-  view: KnowledgeView; items: KnowledgeItem[]; sites: Site[]; selectedSiteId: string; setSelectedSiteId: (id: string) => void; onOpen: (item: KnowledgeItem) => void;
+  view: KnowledgeView; items: KnowledgeItem[]; sites: Site[]; selectedSiteId: string; onOpen: (item: KnowledgeItem) => void;
 }) {
-  const [domainOpen, setDomainOpen] = useState(false);
-  const selected = sites.find((site) => site.id === selectedSiteId) ?? null;
+  const selected = sites.find((site) => site.id === selectedSiteId) ?? sites[0] ?? null;
   const { open, setOpen } = useMobileDrawer();
 
   return (
@@ -401,37 +400,11 @@ function KnowledgeSidebar({
       >
       <div className="min-h-0 flex-1 px-4 pt-3">
         <p className="mb-3 px-1 text-sm font-normal text-white/45">Knowledge</p>
-        <Popover open={domainOpen} onOpenChange={setDomainOpen}>
-          <PopoverTrigger className="flex w-full items-center gap-2 rounded-md border border-[#dde3e6] bg-transparent px-3 py-1.5 text-left hover:bg-black/[0.03]">
-            <Favicon domain={selected?.domain} />
-            <span className="min-w-0 flex-1 truncate text-[15px] text-[#17181a]">{selected ? selected.domain : "No website connected"}</span>
-            <ChevronDown size={14} className="shrink-0 text-[#9aa1a6]" />
-          </PopoverTrigger>
-          <PopoverContent align="start" className="w-[260px]">
-            <p className="px-2.5 pb-1.5 pt-1 text-[10.5px] font-bold uppercase tracking-[0.1em] text-[#8a9298]">Domains</p>
-            <div className="max-h-[260px] overflow-y-auto">
-              {sites.length === 0 && <p className="px-2.5 py-3 text-[12px] text-[#8a9298]">No websites connected yet.</p>}
-              {sites.map((site) => {
-                const active = site.id === selectedSiteId;
-                return (
-                  <button
-                    key={site.id}
-                    type="button"
-                    onClick={() => { setSelectedSiteId(site.id); setDomainOpen(false); }}
-                    className={`flex h-11 w-full items-center gap-2.5 rounded-lg px-2.5 text-left ${active ? "bg-[#f0f2f3]" : "hover:bg-[#f7f8f8]"}`}
-                  >
-                    <Favicon domain={site.domain} size={28} />
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-[12.5px] font-semibold text-[#17181a]">{site.domain}</span>
-                      <span className="block truncate text-[10.5px] text-[#7b858c]">{site.name}</span>
-                    </span>
-                    {active && <Check size={14} className="shrink-0 text-[#11120f]" />}
-                  </button>
-                );
-              })}
-            </div>
-          </PopoverContent>
-        </Popover>
+        {/* One domain per workspace — no switcher needed, just show it. */}
+        <div className="flex w-full items-center gap-2 rounded-md border border-[#dde3e6] bg-transparent px-3 py-1.5">
+          <Favicon domain={selected?.domain} />
+          <span className="min-w-0 flex-1 truncate text-[15px] text-[#17181a]">{selected ? selected.domain : "No website connected"}</span>
+        </div>
 
         <p className="mb-2 mt-5 px-1 text-[11px] font-normal text-white/40">Library</p>
         <nav className="space-y-0.5">
@@ -643,16 +616,20 @@ function Sources({ sites, items, defaultSiteId, onReload }: { sites: Site[]; ite
   const [urlInput, setUrlInput] = useState("");
   const [adding, setAdding] = useState(false);
   const [addError, setAddError] = useState<string | null>(null);
+  const [sitemapInput, setSitemapInput] = useState("");
+  const [addingSitemap, setAddingSitemap] = useState(false);
+  const [sitemapError, setSitemapError] = useState<string | null>(null);
+  const [sitemapResult, setSitemapResult] = useState<{ pagesFound: number } | null>(null);
+  const [urlOpen, setUrlOpen] = useState(false);
+  const [sitemapOpen, setSitemapOpen] = useState(false);
 
   const activeSite = sites.find((site) => site.id === activeSiteId) ?? null;
-  const baseUrl = activeSite ? (() => {
-    try { return `${new URL(/^https?:\/\//i.test(activeSite.domain) ? activeSite.domain : `https://${activeSite.domain}`).origin}/`; }
-    catch { return `https://${activeSite.domain.replace(/^\/+|\/+$/g, "")}/`; }
-  })() : "";
 
   useEffect(() => {
     setUrlInput("");
-  }, [baseUrl]);
+    setSitemapInput("");
+    setSitemapResult(null);
+  }, [activeSiteId]);
   const rows = useMemo(
     () =>
       items
@@ -664,11 +641,20 @@ function Sources({ sites, items, defaultSiteId, onReload }: { sites: Site[]; ite
   async function addUrl() {
     if (!urlInput.trim() || !activeSiteId || adding) return;
     setAdding(true); setAddError(null);
-    const fullUrl = `${baseUrl}${urlInput.trim().replace(/^\/+/, "")}`;
-    const response = await fetch("/api/workspace/knowledge/url", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ url: fullUrl, siteId: activeSiteId }) });
-    if (response.ok) { posthog.capture("knowledge_item_created", { source_type: "url" }); setUrlInput(""); onReload(); }
+    const response = await fetch("/api/workspace/knowledge/url", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ url: urlInput.trim(), siteId: activeSiteId }) });
+    if (response.ok) { posthog.capture("knowledge_item_created", { source_type: "url" }); setUrlInput(""); setUrlOpen(false); onReload(); }
     else { const data = await response.json().catch(() => ({})) as { message?: string }; setAddError(data.message ?? "That page could not be crawled."); }
     setAdding(false);
+  }
+
+  async function addSitemap() {
+    if (!sitemapInput.trim() || !activeSiteId || addingSitemap) return;
+    setAddingSitemap(true); setSitemapError(null); setSitemapResult(null);
+    const response = await fetch("/api/workspace/knowledge/sitemap", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ sitemapUrl: sitemapInput.trim(), siteId: activeSiteId }) });
+    const data = await response.json().catch(() => ({})) as { message?: string; pagesFound?: number };
+    if (response.ok) { posthog.capture("knowledge_item_created", { source_type: "sitemap" }); setSitemapInput(""); setSitemapResult({ pagesFound: data.pagesFound ?? 0 }); onReload(); }
+    else { setSitemapError(data.message ?? "That sitemap could not be crawled."); }
+    setAddingSitemap(false);
   }
 
   if (sites.length === 0) {
@@ -693,25 +679,54 @@ function Sources({ sites, items, defaultSiteId, onReload }: { sites: Site[]; ite
         </div>
       )}
 
-      <div className="knowledge-url-input mt-4 flex flex-col gap-2.5 rounded-lg border border-white/10 bg-white/[0.025] p-3 transition focus-within:border-white/25 focus-within:bg-white/[0.04] sm:min-h-14 sm:flex-row sm:items-center sm:gap-0 sm:p-0 sm:px-4">
-        <div className="flex min-w-0 items-center">
-          <Link2 size={15} className="shrink-0 text-white/40" />
-          <span className="ml-2 max-w-[55%] shrink-0 truncate text-[13px] text-white/55 sm:max-w-[35%] sm:border-r sm:border-white/10 sm:pr-2.5">{baseUrl}</span>
-          <input
-            id="knowledge-source-url"
-            value={urlInput}
-            onChange={(event) => setUrlInput(event.target.value)}
-            onKeyDown={(event) => { if (event.key === "Enter") void addUrl(); }}
-            placeholder="help/refunds"
-            aria-label="Page path"
-            className="min-w-0 flex-1 bg-transparent px-2.5 text-[13px] text-white/90 outline-none placeholder:text-white/30"
-          />
-        </div>
-        <button type="button" disabled={!urlInput.trim() || adding} onClick={() => void addUrl()} className="knowledge-source-add flex h-9 w-full shrink-0 items-center justify-center gap-1.5 rounded-md text-[12.5px] font-normal disabled:opacity-40 sm:h-8 sm:w-fit sm:justify-start sm:px-3 sm:text-[11.5px]">
-          {adding && <LoaderCircle size={12} className="animate-spin" />} Add page
-        </button>
+      <div className="mt-4 flex flex-wrap gap-2.5">
+        <Popover open={urlOpen} onOpenChange={setUrlOpen}>
+          <PopoverTrigger className="knowledge-source-add flex h-9 items-center justify-center gap-1.5 rounded-md px-3.5 text-[12.5px] font-normal">
+            <Link2 size={14} /> Add URL
+          </PopoverTrigger>
+          <PopoverContent align="start" className="w-[340px] p-3">
+            <p className="px-1 pb-2 text-[10.5px] font-bold uppercase tracking-[0.1em] text-[#8a9298]">Add a page</p>
+            <input
+              id="knowledge-source-url"
+              autoFocus
+              value={urlInput}
+              onChange={(event) => setUrlInput(event.target.value)}
+              onKeyDown={(event) => { if (event.key === "Enter") void addUrl(); }}
+              placeholder="https://example.com/help/refunds"
+              aria-label="Page URL"
+              className="h-10 w-full rounded-lg border border-[#dde3e6] px-3 text-[13px] outline-none focus:border-[#8f989e]"
+            />
+            {addError && <p className="mt-2 text-[11px] font-medium text-[#a64a53]">{addError}</p>}
+            <button type="button" disabled={!urlInput.trim() || adding} onClick={() => void addUrl()} className="mt-2.5 flex h-9 w-full items-center justify-center gap-1.5 rounded-md bg-[#17191b] text-[12.5px] font-normal text-white disabled:opacity-40">
+              {adding && <LoaderCircle size={12} className="animate-spin" />} Add page
+            </button>
+          </PopoverContent>
+        </Popover>
+
+        <Popover open={sitemapOpen} onOpenChange={setSitemapOpen}>
+          <PopoverTrigger className="knowledge-source-add flex h-9 items-center justify-center gap-1.5 rounded-md px-3.5 text-[12.5px] font-normal">
+            <ListChecks size={14} /> Add sitemap
+          </PopoverTrigger>
+          <PopoverContent align="start" className="w-[340px] p-3">
+            <p className="px-1 pb-2 text-[10.5px] font-bold uppercase tracking-[0.1em] text-[#8a9298]">Crawl a sitemap</p>
+            <input
+              id="knowledge-source-sitemap"
+              autoFocus
+              value={sitemapInput}
+              onChange={(event) => setSitemapInput(event.target.value)}
+              onKeyDown={(event) => { if (event.key === "Enter") void addSitemap(); }}
+              placeholder="https://example.com/sitemap.xml"
+              aria-label="Sitemap URL"
+              className="h-10 w-full rounded-lg border border-[#dde3e6] px-3 text-[13px] outline-none focus:border-[#8f989e]"
+            />
+            {sitemapError && <p className="mt-2 text-[11px] font-medium text-[#a64a53]">{sitemapError}</p>}
+            {sitemapResult && <p className="mt-2 text-[11px] font-medium text-[#2FA266]">Found {sitemapResult.pagesFound} page{sitemapResult.pagesFound === 1 ? "" : "s"} — crawling now.</p>}
+            <button type="button" disabled={!sitemapInput.trim() || addingSitemap} onClick={() => void addSitemap()} className="mt-2.5 flex h-9 w-full items-center justify-center gap-1.5 rounded-md bg-[#17191b] text-[12.5px] font-normal text-white disabled:opacity-40">
+              {addingSitemap && <LoaderCircle size={12} className="animate-spin" />} Add sitemap
+            </button>
+          </PopoverContent>
+        </Popover>
       </div>
-      {addError && <p className="mt-2 rounded-lg bg-[#fff1f1] px-3 py-2 text-[11px] font-medium text-[#a64a53]">{addError}</p>}
 
       <div className="mt-6 overflow-hidden border-y border-white/10">
         {/* A 4-column grid has no honest way to fit a phone screen — below md

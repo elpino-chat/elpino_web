@@ -1807,6 +1807,29 @@ body {
    permanently dark, so these never actually applied against a real light
    background either. */
 
+/* Except Tag Manager's page itself isn't inside .dashboard-settings-surface
+   (it renders its own root, .dashboard-tag-manager-page), so it never got
+   the permanently-dark treatment the comment above describes — it's
+   natively light-authored (text-[#17181a] etc.) and does follow the theme
+   toggle. But several bits were still left with a literal text-white/*
+   class (the "Website tags" heading, every table cell), which is more
+   specific than the page's own inherited dark text and stayed invisible on
+   the light page. Fix those, except inside the black code-snippet boxes
+   (bg-[#11120f]) where white text is correct in either theme. */
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-tag-manager-page [class*="text-white"] {
+  color: rgba(0, 0, 0, 0.75) !important;
+}
+/* Solid dark buttons/boxes that are meant to stay dark-with-white-text in
+   either theme (New tag, Verify tag, the code-snippet boxes, ...) — same
+   idea as the rule above, just naming every literal dark bg used here. */
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-tag-manager-page [class*="bg-[#11120f]"] [class*="text-white"],
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-tag-manager-page [class*="bg-[#202225]"][class*="text-white"],
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-tag-manager-page [class*="bg-[#262626]"][class*="text-white"],
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-tag-manager-page [class*="bg-[#428ce5]"][class*="text-white"],
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-tag-manager-page [class*="bg-[#c63f4d]"][class*="text-white"] {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
 .dashboard-nav-active {
   border-color: var(--dashboard-accent, #428ce5);
 }
@@ -3619,14 +3642,26 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
 .dashboard-shell .knowledge-editor-save :is(span, svg) {
   color: #202020 !important;
 }
-.dashboard-shell .knowledge-source-add,
-.dashboard-shell .knowledge-source-add:hover,
-.dashboard-shell .knowledge-source-add:focus-visible {
+[data-dashboard-theme="dark"] .dashboard-shell .knowledge-source-add,
+[data-dashboard-theme="dark"] .dashboard-shell .knowledge-source-add:hover,
+[data-dashboard-theme="dark"] .dashboard-shell .knowledge-source-add:focus-visible {
   background: rgb(255 255 255 / 0.9) !important;
   color: #202020 !important;
 }
-.dashboard-shell .knowledge-source-add :is(span, svg) {
+[data-dashboard-theme="dark"] .dashboard-shell .knowledge-source-add :is(span, svg) {
   color: #202020 !important;
+}
+/* Was unconditionally a near-white pill (fine floating on the dark page) —
+   on the white knowledge page in light theme that's a white button on a
+   white background. Same dark pill every other primary action here uses. */
+[data-dashboard-theme="light"] .dashboard-shell .knowledge-source-add,
+[data-dashboard-theme="light"] .dashboard-shell .knowledge-source-add:hover,
+[data-dashboard-theme="light"] .dashboard-shell .knowledge-source-add:focus-visible {
+  background: #17191b !important;
+  color: #ffffff !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .knowledge-source-add :is(span, svg) {
+  color: #ffffff !important;
 }
 [data-dashboard-theme="dark"] #dashboard-knowledge-page .knowledge-url-input {
   background: rgb(255 255 255 / 0.025) !important;

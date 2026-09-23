@@ -3761,6 +3761,8 @@ function TagManagerSettingsPage() {
   const [capabilities, setCapabilities] = useState({ chat: true, visitors: true, identify: true });
   const [creatingTag, setCreatingTag] = useState(false);
   const [tagPage, setTagPage] = useState(1);
+  const [deleteTarget, setDeleteTarget] = useState<SiteTag | null>(null);
+  const [deletingTagId, setDeletingTagId] = useState<string | null>(null);
   const TAGS_PER_PAGE = 8;
 
   function openTagDialog(tag: SiteTag, nextDialog: "install" | "permissions") { setSelectedTag(tag); setDialog(nextDialog); setCopied(false); setVerificationMessage(null); }
@@ -3770,6 +3772,17 @@ function TagManagerSettingsPage() {
     const rect = event.currentTarget.getBoundingClientRect();
     setActionMenuPos({ top: rect.bottom + 6, left: Math.max(8, rect.right - 160) });
     setActionMenu(tagId);
+  }
+
+  async function deleteTag(tag: SiteTag) {
+    setDeletingTagId(tag.id);
+    try {
+      const response = await fetch(`/api/workspace/sites/${encodeURIComponent(tag.id)}`, { method: "DELETE" });
+      if (response.ok) { setTags((current) => current.filter((item) => item.id !== tag.id)); setDeleteTarget(null); }
+      else setTagError("Could not delete this tag.");
+    } finally {
+      setDeletingTagId(null);
+    }
   }
 
   // The menu is portaled to <body> with position:fixed (see render below), so
@@ -3866,8 +3879,13 @@ function TagManagerSettingsPage() {
   ].join("\n");
 
   return (
-    <div className="mx-auto w-full max-w-[1120px] px-7 pb-14 pt-8 text-[#17181a] sm:px-9 lg:px-10">
-      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[#E5E8EA] pb-7"><div><p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Website data</p><h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em] text-white/90">Website tags</h2><p className="mt-2 max-w-xl text-[14px] leading-6 text-[#667069]">Install and manage the secure connection between Elpino and your websites.</p></div><button type="button" onClick={() => setDialog("create")} className="flex h-9 shrink-0 items-center gap-2 rounded-lg bg-[#202225] px-4 text-[12px] font-semibold text-white transition hover:bg-black"><Plus size={14} /> New tag</button></div>
+    <div className="dashboard-tag-manager-page mx-auto w-full max-w-[1120px] px-7 pb-14 pt-8 text-[#17181a] sm:px-9 lg:px-10">
+      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[#E5E8EA] pb-7"><div><p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Website data</p><h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em] text-white/90">Website tags</h2><p className="mt-2 max-w-xl text-[14px] leading-6 text-[#667069]">Install and manage the secure connection between Elpino and your website.</p></div>{tags.length === 0 && <button type="button" onClick={() => setDialog("create")} className="flex h-9 shrink-0 items-center gap-2 rounded-lg bg-[#202225] px-4 text-[12px] font-semibold text-white transition hover:bg-black"><Plus size={14} /> New tag</button>}</div>
+      {/* One domain per workspace, enforced server-side (SitesController's
+          SITE_LIMIT) — once a tag exists, don't offer a control that the
+          backend will just reject after a full form fill-out. A second
+          domain means a second workspace instead. */}
+      {tags.length > 0 && <p className="mt-4 rounded-lg border border-[#DFE3E6] bg-[#FAFBFB] px-3.5 py-2.5 text-[12px] leading-5 text-[#667069]">A workspace can only connect one website. To support another domain, create a separate workspace for it.</p>}
 
       <div className="dashboard-tag-table-surface mt-5 bg-transparent">
         {tagError && !dialog && <div role="alert" className="mb-4 flex items-center justify-between rounded-lg bg-[#FFF2F2] px-3.5 py-2.5 text-[11px] font-medium text-[#A64A53]"><span>{tagError}</span><button type="button" onClick={() => setTagError(null)} aria-label="Dismiss error"><X size={14} /></button></div>}
@@ -3928,12 +3946,7 @@ function TagManagerSettingsPage() {
             <button type="button" onClick={() => { openTagDialog(tag, "permissions"); setActionMenu(null); }} className="dashboard-tag-menu-item flex h-8 w-full items-center rounded-md px-2.5 text-[11px] font-medium">Permissions</button>
             <button
               type="button"
-              onClick={async () => {
-                const response = await fetch(`/api/workspace/sites/${encodeURIComponent(tag.id)}`, { method: "DELETE" });
-                if (response.ok) setTags((current) => current.filter((item) => item.id !== tag.id));
-                else setTagError("Could not delete this tag.");
-                setActionMenu(null);
-              }}
+              onClick={() => { setDeleteTarget(tag); setActionMenu(null); }}
               className="dashboard-tag-menu-delete flex h-8 w-full items-center rounded-md px-2.5 text-[11px] font-medium text-[#A64A53]"
             >
               Delete
@@ -3948,6 +3961,36 @@ function TagManagerSettingsPage() {
           document.querySelector(".dashboard-shell") ?? document.body,
         );
       })()}
+
+      {deleteTarget && (
+        <div className="fixed inset-0 z-[120] flex items-center justify-center bg-[#0b0f14]/40 p-4 backdrop-blur-[2px]" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget && deletingTagId !== deleteTarget.id) setDeleteTarget(null); }}>
+          <div role="dialog" aria-modal="true" aria-label="Delete website tag" className="w-full max-w-[420px] rounded-2xl border border-black/10 bg-white p-6 shadow-[0_24px_70px_rgba(15,23,42,0.24)]">
+            <h3 className="text-[17px] font-semibold text-[#17181a]">Delete {deleteTarget.name}?</h3>
+            <p className="mt-2 text-[13px] leading-6 text-[#667069]">
+              The chat widget on {deleteTarget.domain} will stop working immediately, and this cannot be undone.
+            </p>
+            <div className="mt-5 flex items-center justify-end gap-2">
+              <button
+                type="button"
+                disabled={deletingTagId === deleteTarget.id}
+                onClick={() => setDeleteTarget(null)}
+                className="flex h-10 items-center rounded-lg border border-[#DFE3E6] px-4 text-[13px] font-semibold text-[#17181a] transition hover:bg-[#F7F8FA] disabled:opacity-60"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={deletingTagId === deleteTarget.id}
+                onClick={() => void deleteTag(deleteTarget)}
+                className="flex h-10 items-center gap-2 rounded-lg bg-[#c63f4d] px-4 text-[13px] font-semibold text-white transition hover:bg-[#b23644] disabled:opacity-60"
+              >
+                {deletingTagId === deleteTarget.id ? <LoaderCircle size={14} className="animate-spin" /> : null}
+                {deletingTagId === deleteTarget.id ? "Deleting…" : "Delete tag"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {dialog === "create" && (
         <div className="fixed inset-0 z-[100] bg-[#0b0f14]/40 backdrop-blur-[2px]" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) closeCreateDialog(); }}>
