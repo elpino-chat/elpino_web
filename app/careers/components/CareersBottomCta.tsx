@@ -24,11 +24,11 @@ export function CareersBottomCta() {
 
       <div className="relative z-10 mx-auto max-w-4xl px-6 text-center sm:px-8">
         <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-white/90 backdrop-blur-md">
-          <Sparkles size={13} className="text-[#ff5600]" />
+          <Sparkles size={13} className="text-[#8B5CF6]" />
           <span>The Next Chapter Starts Now</span>
         </div>
 
-        <h2 className="mt-8 font-serif text-[clamp(2.75rem,6vw,5.5rem)] font-normal leading-[0.92] tracking-[-0.035em] text-white">
+        <h2 className="mt-8 text-[clamp(2.75rem,6vw,5.5rem)] font-normal leading-[0.92] tracking-[-0.035em] text-white">
           Now is the time. Take your career to the next level.
         </h2>
 
@@ -41,7 +41,7 @@ export function CareersBottomCta() {
           <button
             onClick={scrollToRoles}
             type="button"
-            className="group inline-flex cursor-pointer items-center justify-center gap-3 rounded-full bg-[#ff5600] px-9 py-4 text-base font-semibold text-white shadow-xl transition-all duration-300 hover:bg-white hover:text-black active:scale-[0.98]"
+            className="group inline-flex cursor-pointer items-center justify-center gap-3 rounded-full bg-[#8B5CF6] px-9 py-4 text-base font-semibold text-white shadow-xl transition-all duration-300 hover:bg-white hover:text-black active:scale-[0.98]"
           >
             Find your next role
             <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />

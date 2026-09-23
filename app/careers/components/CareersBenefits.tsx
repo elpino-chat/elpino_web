@@ -17,7 +17,7 @@ export function CareersBenefits() {
         "Comprehensive health, dental, and vision insurance for you and your dependents (100% premium covered)",
         "Employee Assistance Program with confidential mental health counseling whenever you need it",
         "Income protection & disability if illness or injury keeps you from work",
-        "Life insurance coverage up to 4x your annual salary — at zero cost to you",
+        "Life insurance coverage up to 4x your annual salary, at zero cost to you",
         "$200/month wellness stipend for fitness, therapy, gym, or massage",
       ],
     },
@@ -28,7 +28,7 @@ export function CareersBenefits() {
       perks: [
         "Up to 26 weeks of fully paid leave for birthing parents",
         "12 weeks of fully paid parental leave for non-birthing parents",
-        "Flexible vacation policy — take the time you need to recharge without counting days",
+        "Flexible vacation policy: take the time you need to recharge without counting days",
         "Work from home setup: $1,500 home-office budget + latest Apple M4 Max MacBook Pro",
         "Annual all-hands company offsites in world-class destinations (past: Lisbon, Kyoto)",
       ],
@@ -38,7 +38,7 @@ export function CareersBenefits() {
       title: "Financial future",
       description: "Generous ownership and wealth-building for long-term partners.",
       perks: [
-        "Meaningful equity ownership via stock grants / RSUs — your success is our success",
+        "Meaningful equity ownership via stock grants / RSUs: your success is our success",
         "Highly competitive tier-1 cash compensation benchmarked against top Silicon Valley tech",
         "401(k) / pension matching program up to 5% with immediate vesting",
         "Commuter benefits and global co-working pass (WeWork All-Access anywhere)",
@@ -56,7 +56,7 @@ export function CareersBenefits() {
             <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#ff5600]">
               Total Rewards
             </span>
-            <h2 className="mt-3 font-serif text-[clamp(2.5rem,5vw,5rem)] font-normal leading-[0.95] tracking-[-0.03em] text-[#0c1017]">
+            <h2 className="mt-3 text-[clamp(2.5rem,5vw,5rem)] font-normal leading-[0.95] tracking-[-0.03em] text-[#0c1017]">
               Benefits to support your best work.
             </h2>
           </div>
@@ -80,7 +80,7 @@ export function CareersBenefits() {
                     <Icon size={22} className="text-[#ff5600]" />
                   </div>
 
-                  <h3 className="mt-6 font-serif text-2xl font-normal tracking-tight text-black sm:text-3xl">
+                  <h3 className="mt-6 text-2xl font-normal tracking-tight text-black sm:text-3xl">
                     {category.title}
                   </h3>
                   <p className="mt-2 text-sm text-black/60">

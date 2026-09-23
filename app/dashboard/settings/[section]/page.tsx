@@ -17,6 +17,7 @@ const SETTINGS_SECTIONS: Record<string, string> = {
   tags: "Tag Manager",
   identity: "Identity Verification",
   translations: "Translations",
+  plugins: "Plugins",
 };
 
 export async function generateMetadata({ params }: { params: Promise<{ section: string }> }) {

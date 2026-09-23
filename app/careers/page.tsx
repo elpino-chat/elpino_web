@@ -1,14 +1,10 @@
 import type { Metadata } from "next";
 import { CareersHero } from "./components/CareersHero";
-import { CareersMarquee } from "./components/CareersMarquee";
 import { CareersWhoWeAre } from "./components/CareersWhoWeAre";
 import { CareersCeoVideo } from "./components/CareersCeoVideo";
 import { CareersValues } from "./components/CareersValues";
-import { CareersAmbitionBento } from "./components/CareersAmbitionBento";
 import { CareersBenefits } from "./components/CareersBenefits";
-import { CareersOffices } from "./components/CareersOffices";
 import { CareersJobBoard } from "./components/CareersJobBoard";
-import { CareersPayGapNotice } from "./components/CareersPayGapNotice";
 import { CareersBottomCta } from "./components/CareersBottomCta";
 import { CareersSlothGuide } from "./components/CareersSlothGuide";
 
@@ -45,12 +41,9 @@ export const metadata: Metadata = {
 
 export default function CareersPage() {
   return (
-    <main className="relative min-h-screen w-full bg-white font-[family-name:var(--font-rethink-sans)] text-[#111] antialiased selection:bg-black selection:text-white">
+    <main className="relative min-h-screen w-full bg-white text-[#111] antialiased selection:bg-black selection:text-white">
       {/* 01. Hero Section */}
       <CareersHero />
-
-      {/* 02. Infinite Moving Culture Marquee */}
-      <CareersMarquee />
 
       {/* 03. Who We Are: A Company Built for Extraordinary Success */}
       <CareersWhoWeAre />
@@ -61,20 +54,11 @@ export default function CareersPage() {
       {/* 05. The Values That Make Great Work Possible */}
       <CareersValues />
 
-      {/* 06. The Ambition That Sets Us Apart (Bento Grid) */}
-      <CareersAmbitionBento />
-
       {/* 08. Benefits to Support Your Best Work */}
       <CareersBenefits />
 
-      {/* 09. Six International Offices. One Global Team. */}
-      <CareersOffices />
-
       {/* 10. Live Filterable Job Board */}
       <CareersJobBoard />
-
-      {/* 11. Equal Pay & Diversity Transparency */}
-      <CareersPayGapNotice />
 
       {/* 12. Final Bottom CTA Banner */}
       <CareersBottomCta />

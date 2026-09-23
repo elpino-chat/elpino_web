@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, CheckCheck, Filter, Globe, LoaderCircle, MapPin, MessageCircle, MessageSquarePlus, MonitorSmartphone, Search, Send, Sparkles } from "lucide-react";
+import { ArrowLeft, CheckCheck, Filter, Globe, LoaderCircle, MapPin, MessageCircle, MessageSquarePlus, MonitorSmartphone, Search, Send, ShieldCheck, Sparkles } from "lucide-react";
 import MessageMarkdown from "@/app/components/MessageMarkdown";
 import TypingDots from "@/app/components/TypingDots";
 import { useRouter } from "next/navigation";
@@ -41,6 +41,8 @@ type Conversation = {
   location?: VisitorLocation;
   aiName?: string;
   aiAvatarUrl?: string | null;
+  /** Proved this is really them (signed in, or confirmed a code) — not just a typed-in name/email. */
+  verified?: boolean;
 };
 
 
@@ -444,6 +446,11 @@ export default function AiAssistPage() {
               <div className="ml-3 min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   <h1 className="truncate text-[15px] font-semibold text-[#17233a]">{selected.name}</h1>
+                  {selected.verified && (
+                    <span title="Proved their identity — signed in, or confirmed with a code" className="flex shrink-0 items-center gap-1 rounded-full bg-[#edf7f1] px-2 py-0.5 text-[10px] font-semibold text-[#2e8a5c]">
+                      <ShieldCheck size={11} /> Verified
+                    </span>
+                  )}
                   {joined && (
                     <span className="flex shrink-0 items-center gap-1 rounded-full bg-[#edf7f1] px-2 py-0.5 text-[10px] font-semibold text-[#2e8a5c]">
                       <CheckCheck size={11} /> Assigned to you
@@ -465,7 +472,7 @@ export default function AiAssistPage() {
                   type="button"
                   onClick={() => void joinConversation()}
                   disabled={joining}
-                  className="flex h-9 shrink-0 items-center gap-2 rounded-lg bg-[#202225] px-4 text-[13px] font-semibold text-white transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-60"
+                  className="chat-join-button flex h-9 shrink-0 items-center gap-2 rounded-lg bg-[#202225] px-4 text-[13px] font-semibold text-white transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {joining ? <LoaderCircle size={14} className="animate-spin" /> : <MessageCircle size={14} />}
                   {joining ? "Joining…" : "Join"}
@@ -586,7 +593,14 @@ export default function AiAssistPage() {
                 {selected.initials}
               </span>
               <div className="min-w-0">
-                <h2 className="truncate text-[15px] font-bold text-[#183252]">{selected.name}</h2>
+                <div className="flex items-center gap-2">
+                  <h2 className="truncate text-[15px] font-bold text-[#183252]">{selected.name}</h2>
+                  {selected.verified && (
+                    <span title="Proved their identity — signed in, or confirmed with a code" className="flex shrink-0 items-center gap-1 rounded-full bg-[#edf7f1] px-2 py-0.5 text-[10px] font-semibold text-[#2e8a5c]">
+                      <ShieldCheck size={11} /> Verified
+                    </span>
+                  )}
+                </div>
                 <p className="mt-0.5 text-[11px] font-medium opacity-70">Website visitor</p>
               </div>
             </div>

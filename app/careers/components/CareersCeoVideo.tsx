@@ -12,10 +12,10 @@ export function CareersCeoVideo() {
       <div className="mx-auto max-w-[1440px] px-6 sm:px-8 lg:px-12">
         <div className="mb-8 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
           <div>
-            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#ff5600]">
+            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8B5CF6]">
               Leadership Note
             </span>
-            <h3 className="mt-2 font-serif text-3xl font-normal tracking-[-0.03em] text-black sm:text-4xl md:text-5xl">
+            <h3 className="mt-2 text-3xl font-normal tracking-[-0.03em] text-black sm:text-4xl md:text-5xl">
               Why Elpino, from our CEO and Co-founder
             </h3>
           </div>
@@ -42,14 +42,14 @@ export function CareersCeoVideo() {
                 type="button"
                 onClick={() => setIsOpen(true)}
                 aria-label="Play CEO video message"
-                className="group/btn relative flex size-20 cursor-pointer items-center justify-center rounded-full bg-white text-black shadow-2xl transition-all duration-300 hover:scale-110 hover:bg-[#ff5600] hover:text-white sm:size-24"
+                className="group/btn relative flex size-20 cursor-pointer items-center justify-center rounded-full bg-white text-black shadow-2xl transition-all duration-300 hover:scale-110 hover:bg-[#8B5CF6] hover:text-white sm:size-24"
               >
-                <span className="absolute -inset-2 animate-ping rounded-full bg-white/20 duration-1000 group-hover/btn:bg-[#ff5600]/30" />
+                <span className="absolute -inset-2 animate-ping rounded-full bg-white/20 duration-1000 group-hover/btn:bg-[#8B5CF6]/30" />
                 <Play size={32} className="ml-1 fill-current text-inherit transition-transform group-hover/btn:scale-110" />
               </button>
 
               <div className="mt-6 flex items-center gap-2 rounded-full border border-white/20 bg-black/60 px-4 py-1.5 backdrop-blur-md">
-                <Volume2 size={14} className="text-[#ff5600]" />
+                <Volume2 size={14} className="text-[#8B5CF6]" />
                 <span className="text-xs font-medium text-white/90">
                   3:45 min · Founder Vision & Culture
                 </span>
@@ -59,12 +59,13 @@ export function CareersCeoVideo() {
             {/* Bottom quote overlay */}
             <div className="absolute inset-x-0 bottom-0 p-6 sm:p-10">
               <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
-                <div className="max-w-2xl">
-                  <p className="font-serif text-2xl font-normal leading-snug tracking-tight text-white sm:text-3xl lg:text-4xl">
-                    &ldquo;We believe in the work, not the position.&rdquo;
+                <div className="w-full md:flex-1">
+                  <p className="text-lg font-normal leading-snug tracking-tight text-white sm:text-xl lg:text-2xl">
+                    &ldquo;I don&apos;t believe in job titles. I just love to build things
+                    people love, and help the people building them with me.&rdquo;
                   </p>
                   <p className="mt-2 text-sm text-white/70">
-                    Unknown — CEO and Co-founder of Elpino
+                    CEO and Co-founder of Elpino
                   </p>
                 </div>
                 <button
@@ -91,8 +92,8 @@ export function CareersCeoVideo() {
             {/* Header */}
             <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
               <div className="flex items-center gap-2">
-                <span className="size-2 rounded-full bg-[#ff5600]" />
-                <span className="text-sm font-medium">Founder Conversation · Unknown</span>
+                <span className="size-2 rounded-full bg-[#8B5CF6]" />
+                <span className="text-sm font-medium">Founder Conversation</span>
               </div>
               <button
                 type="button"
@@ -107,7 +108,7 @@ export function CareersCeoVideo() {
             {/* Content Body */}
             <div className="p-6 sm:p-10 space-y-6">
               <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xs">
-                <h4 className="font-serif text-2xl font-normal text-white sm:text-3xl">
+                <h4 className="text-2xl font-normal text-white sm:text-3xl">
                   Why building Elpino is the most high-conviction bet in AI customer operations.
                 </h4>
                 <p className="mt-4 text-base leading-relaxed text-white/80 sm:text-lg">
@@ -120,7 +121,7 @@ export function CareersCeoVideo() {
 
               <div className="grid gap-4 sm:grid-cols-3">
                 <div className="rounded-xl border border-white/10 bg-black/40 p-5">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-[#ff5600]">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-[#8B5CF6]">
                     Pillar 01
                   </span>
                   <h5 className="mt-2 text-base font-medium">Small, Elite Squads</h5>
@@ -129,7 +130,7 @@ export function CareersCeoVideo() {
                   </p>
                 </div>
                 <div className="rounded-xl border border-white/10 bg-black/40 p-5">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-[#ff5600]">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-[#8B5CF6]">
                     Pillar 02
                   </span>
                   <h5 className="mt-2 text-base font-medium">Uncompromising Craft</h5>
@@ -138,7 +139,7 @@ export function CareersCeoVideo() {
                   </p>
                 </div>
                 <div className="rounded-xl border border-white/10 bg-black/40 p-5">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-[#ff5600]">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-[#8B5CF6]">
                     Pillar 03
                   </span>
                   <h5 className="mt-2 text-base font-medium">Calm Acceleration</h5>
@@ -152,7 +153,7 @@ export function CareersCeoVideo() {
                 <button
                   onClick={() => setIsOpen(false)}
                   type="button"
-                  className="rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-black hover:bg-[#ff5600] hover:text-white transition-colors"
+                  className="rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-black hover:bg-[#8B5CF6] hover:text-white transition-colors"
                 >
                   Continue exploring careers
                 </button>

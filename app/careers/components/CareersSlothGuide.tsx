@@ -63,7 +63,7 @@ export function CareersSlothGuide() {
 
           {/* Current Tip */}
           <div className="py-4">
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#ff5600]">
+            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#22C55E]">
               <Sparkles size={13} />
               <span>Culture Tip #{currentTip + 1}</span>
             </div>
@@ -88,7 +88,7 @@ export function CareersSlothGuide() {
             <button
               type="button"
               onClick={scrollToRoles}
-              className="cursor-pointer rounded-full bg-black px-4 py-1.5 font-semibold text-white transition hover:bg-[#ff5600]"
+              className="cursor-pointer rounded-full bg-black px-4 py-1.5 font-semibold text-white transition hover:bg-[#22C55E]"
             >
               See open roles
             </button>
@@ -113,7 +113,7 @@ export function CareersSlothGuide() {
         </div>
 
         {/* Pulse badge */}
-        <span className="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-[#ff5600] text-[9px] font-bold text-white shadow-xs">
+        <span className="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-[#22C55E] text-[9px] font-bold text-white shadow-xs">
           👋
         </span>
       </button>

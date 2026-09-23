@@ -3089,11 +3089,11 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
   color: rgba(0, 0, 0, 0.85) !important;
 }
 [data-dashboard-theme="light"] .dashboard-shell aside.dashboard-primary-sidebar:not([role="dialog"]) .dashboard-nav-active {
-  background: rgba(0, 0, 0, 0.06) !important;
+  background: transparent !important;
   border-color: transparent !important;
 }
 [data-dashboard-theme="light"] .dashboard-shell aside.dashboard-primary-sidebar:not([role="dialog"]) .dashboard-nav-active :is(span, svg) {
-  color: rgba(0, 0, 0, 0.9) !important;
+  color: rgba(0, 0, 0, 1) !important;
 }
 [data-dashboard-theme="light"] .dashboard-shell aside.dashboard-primary-sidebar:not([role="dialog"]) .sidebar-account {
   background: #262626 !important;
@@ -3138,35 +3138,47 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
   color: #171717 !important;
 }
 
-/* Workspace switcher popover on the charcoal dashboard header. */
-.dashboard-shell .dashboard-workspace-menu {
+/* Workspace switcher popover on the dashboard header. Used to be forced
+   dark unconditionally (no [data-dashboard-theme] scope at all), so it
+   stayed a black popover even with the rest of the dashboard in light
+   theme. Rescoped to dark-only, with a light mirror below — its own JSX
+   (bg-[#e8e8e8], text-[#1f2937], ...) already looks right for light theme
+   on its own, so the mirror only needs to clear these dark-mode overrides
+   rather than restate the light styling. */
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-workspace-menu {
   background: #262626 !important;
   border-color: rgb(255 255 255 / 0.14) !important;
   color: rgb(255 255 255 / 0.9) !important;
   box-shadow: 0 18px 42px rgb(0 0 0 / 0.35) !important;
 }
-.dashboard-shell .dashboard-workspace-menu p {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-workspace-menu p {
   color: rgb(255 255 255 / 0.5) !important;
 }
-.dashboard-shell .dashboard-workspace-menu button {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-workspace-menu button {
   color: rgb(255 255 255 / 0.9) !important;
 }
-.dashboard-shell .dashboard-workspace-menu button:hover {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-workspace-menu button:hover {
   background: rgb(255 255 255 / 0.08) !important;
 }
-.dashboard-shell .dashboard-workspace-menu button > span:not([class*="bg-"]) {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-workspace-menu button > span:not([class*="bg-"]) {
   color: rgb(255 255 255 / 0.9) !important;
 }
-.dashboard-shell .dashboard-workspace-menu [class*="border-black"] {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-workspace-menu [class*="border-black"] {
   border-color: rgb(255 255 255 / 0.12) !important;
 }
-.dashboard-shell .dashboard-workspace-menu input {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-workspace-menu input {
   background: #1f1f1f !important;
   border-color: rgb(255 255 255 / 0.16) !important;
   color: #fff !important;
 }
-.dashboard-shell .dashboard-workspace-menu input::placeholder {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-workspace-menu input::placeholder {
   color: rgb(255 255 255 / 0.4) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-workspace-menu {
+  background: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+  color: rgba(0, 0, 0, 0.9) !important;
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.14) !important;
 }
 
 :is([data-dashboard-theme="light"], [data-dashboard-theme="dark"])
@@ -3212,19 +3224,56 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
    anything. Selector shapes match the :is(light,dark) blocks above exactly
    so specificity ties and these (later in the file) win for light only. */
 [data-dashboard-theme="light"] .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) {
-  background: #ffffff !important;
+  background: #f5f6f7 !important;
   border-color: #e4e4e4 !important;
+}
+/* The icons (Home, Bell, CircleAlert, MessageCircle, ChevronRight, ...)
+   render with no className of their own, so the [class*="text-white"] rule
+   below never matches them — they were still hitting the theme-agnostic
+   `:is(a, button, p, span, svg) { color: #fff }` block above. Same selector
+   shape as that block, so this later light-only rule wins on the tie. */
+[data-dashboard-theme="light"] .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) :is(a, button, p, span, svg) {
+  color: rgba(0, 0, 0, 0.6) !important;
 }
 [data-dashboard-theme="light"] .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) [class*="text-white"] {
   color: rgba(0, 0, 0, 0.45) !important;
 }
+/* The catch-all above flattens every text-white/* fraction to the same
+   0.45, which washed out the Recent chats row: the conversation name
+   (text-white/75, meant to read as the primary line) came out the same
+   faint gray as its muted preview line and the "Recent chats" label.
+   Same selector shape, same specificity — these win the tie by coming
+   later, restoring a real near-black/mid-gray/faint scale. */
+[data-dashboard-theme="light"] .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) [class*="text-white/75"] {
+  color: rgba(0, 0, 0, 0.92) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) [class*="text-white/35"] {
+  color: rgba(0, 0, 0, 0.4) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) [class*="text-white/20"] {
+  color: rgba(0, 0, 0, 0.25) !important;
+}
 [data-dashboard-theme="light"] .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) [class*="bg-white"] {
-  background-color: rgba(0, 0, 0, 0.06) !important;
+  background-color: transparent !important;
 }
 [data-dashboard-theme="light"] .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) a[aria-current="page"] {
   color: rgba(0, 0, 0, 0.9) !important;
 }
+/* The blanket theme-agnostic block above also has an `a[aria-current="page"]
+   svg` selector one level more specific than a plain [class*="text-white"]
+   or :is(...,svg) match — same shape needed here again to actually win the
+   tie for the active item's icon (e.g. the Home icon on /dashboard). */
+[data-dashboard-theme="light"] .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) a[aria-current="page"] svg {
+  color: rgba(0, 0, 0, 0.9) !important;
+}
 [data-dashboard-theme="light"] .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) nav :is(a, button):not([aria-current="page"]) {
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+/* Same story for every other nav icon (Bell, CircleAlert, ...): the blanket
+   block's `nav :is(a, button):not([aria-current="page"]) svg` selector is
+   more specific than anything above it, so it needs its own tie-matching
+   mirror too. */
+[data-dashboard-theme="light"] .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) nav :is(a, button):not([aria-current="page"]) svg {
   color: rgba(0, 0, 0, 0.6) !important;
 }
 [data-dashboard-theme="light"] .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) nav :is(a, button):not([aria-current="page"]):hover {
@@ -3245,30 +3294,89 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
   color: rgba(0, 0, 0, 0.9) !important;
 }
 
-/* Analytics uses the same canvas and card language as the Space home. */
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-analytics-shell,
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-page-surface.dashboard-visitors-main-surface,
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-analytics-canvas,
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-analytics-sidebar {
+/* Analytics uses the same canvas and card language as the Space home.
+   Dark theme keeps the existing charcoal values (rescoped from forcing
+   both themes); light mirror added after. */
+[data-dashboard-theme="dark"] .dashboard-analytics-shell,
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-page-surface.dashboard-visitors-main-surface,
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-analytics-canvas,
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-analytics-sidebar {
   background: #262626 !important;
   color: #fff !important;
 }
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-analytics-sidebar {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-analytics-sidebar {
   border-color: rgb(255 255 255 / 0.1) !important;
 }
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-analytics-sidebar :is(p, a) {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-analytics-sidebar :is(p, a) {
   color: rgb(255 255 255 / 0.6) !important;
 }
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-analytics-sidebar a[aria-current="page"] {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-analytics-sidebar a[aria-current="page"] {
   background: rgb(255 255 255 / 0.1) !important;
   color: rgb(255 255 255 / 0.9) !important;
 }
-#analytics-report-sidebar p,
-#analytics-report-sidebar a:not([aria-current="page"]) {
+[data-dashboard-theme="dark"] #analytics-report-sidebar p,
+[data-dashboard-theme="dark"] #analytics-report-sidebar a:not([aria-current="page"]) {
   color: rgb(255 255 255 / 0.6) !important;
 }
-#analytics-report-sidebar a[aria-current="page"] {
+[data-dashboard-theme="dark"] #analytics-report-sidebar a[aria-current="page"] {
   color: rgb(255 255 255 / 0.9) !important;
+}
+
+[data-dashboard-theme="light"] .dashboard-analytics-shell,
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-page-surface.dashboard-visitors-main-surface {
+  background: #f5f6f7 !important;
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+/* Canvas (the actual report content, not the page chrome around it) — white
+   rather than the same light gray as the page behind it, so it reads as a
+   surface rather than blending into the shell. */
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-analytics-canvas {
+  background: #ffffff !important;
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-analytics-sidebar {
+  background: transparent !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-analytics-sidebar :is(p, a) {
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-analytics-sidebar a[aria-current="page"] {
+  background: rgba(0, 0, 0, 0.07) !important;
+  color: rgba(0, 0, 0, 0.9) !important;
+}
+/* Inactive tab hover — was left to Tailwind's own literal hover:bg-white/
+   [0.06] hover:text-white (authored for the permanently-dark sidebar), which
+   on a light, transparent sidebar reads as a near-invisible-to-jarring
+   overlay depending on what's behind it. Explicit, theme-correct hover. */
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-analytics-sidebar a:not([aria-current="page"]):hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+  color: rgba(0, 0, 0, 0.9) !important;
+}
+[data-dashboard-theme="light"] #analytics-report-sidebar p,
+[data-dashboard-theme="light"] #analytics-report-sidebar a:not([aria-current="page"]) {
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+[data-dashboard-theme="light"] #analytics-report-sidebar a[aria-current="page"] {
+  color: rgba(0, 0, 0, 0.9) !important;
+}
+[data-dashboard-theme="light"] #analytics-report-sidebar a:not([aria-current="page"]):hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+  color: rgba(0, 0, 0, 0.9) !important;
+}
+/* The page title block (Reports / <report name> / subtitle) carries its own
+   literal text-white/* utilities, more specific than the inherited
+   .dashboard-analytics-canvas color above — same recurring bug as every
+   other dark-only-authored page, same fix. */
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-analytics-canvas [class*="text-white/95"] {
+  color: rgba(0, 0, 0, 0.9) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-analytics-canvas [class*="text-white/45"] {
+  color: rgba(0, 0, 0, 0.45) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-analytics-canvas [class*="text-white/40"] {
+  color: rgba(0, 0, 0, 0.4) !important;
 }
 
 /* This id beats the .dashboard-shell header rules above on specificity
@@ -3325,126 +3433,181 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
   color: rgba(0, 0, 0, 0.7) !important;
 }
 
-/* Contacts follows the Space canvas and card hierarchy in every theme. */
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-contacts-shell,
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-page-surface.dashboard-contacts-main-surface,
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contacts-tools {
+/* Contacts: dark theme keeps its existing charcoal canvas/card hierarchy.
+   Everything here was previously forced dark in every theme (both the
+   :is(light,dark) rules and the unconditional #dashboard-contacts-* ones
+   below) — rescoped to dark-only, with a full light layer added after. */
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-contacts-shell,
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-page-surface.dashboard-contacts-main-surface,
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-contacts-tools {
   background: #262626 !important;
   color: #fff !important;
 }
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contacts-tools {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-contacts-tools {
   border-color: rgb(255 255 255 / 0.1) !important;
 }
-#dashboard-contacts-tools {
+[data-dashboard-theme="dark"] #dashboard-contacts-tools {
   background: #262626 !important;
   border-color: rgb(255 255 255 / 0.1) !important;
 }
-#dashboard-contacts-tools .dashboard-contact-tool-card,
-#dashboard-contacts-tools .dashboard-contact-tool-card > div {
+[data-dashboard-theme="dark"] #dashboard-contacts-tools .dashboard-contact-tool-card,
+[data-dashboard-theme="dark"] #dashboard-contacts-tools .dashboard-contact-tool-card > div {
   background: #262626 !important;
 }
-#dashboard-contacts-tools .dashboard-contact-tool-card h3 {
+[data-dashboard-theme="dark"] #dashboard-contacts-tools .dashboard-contact-tool-card h3 {
   color: rgb(255 255 255 / 0.9) !important;
 }
-#dashboard-contacts-tools .dashboard-contact-tool-card p {
+[data-dashboard-theme="dark"] #dashboard-contacts-tools .dashboard-contact-tool-card p {
   color: rgb(255 255 255 / 0.6) !important;
 }
-#dashboard-contacts-tools .dashboard-contact-tool-card a {
+[data-dashboard-theme="dark"] #dashboard-contacts-tools .dashboard-contact-tool-card a {
   color: rgb(255 255 255 / 0.9) !important;
 }
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contacts-main-surface :is(table, thead),
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contacts-tools [class*="bg-[#292a2b]"],
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contact-drawer {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-contacts-main-surface :is(table, thead),
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-contacts-tools [class*="bg-[#292a2b]"],
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-contact-drawer {
   background: #292a2b !important;
 }
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contacts-main-surface :is([class*="text-black"], td),
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contacts-tools :is(h3, p),
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contact-drawer :is(h2, h3, h4, p, span, button, svg) {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-contacts-main-surface :is([class*="text-black"], td),
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-contacts-tools :is(h3, p),
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-contact-drawer :is(h2, h3, h4, p, span, button, svg) {
   color: rgb(255 255 255 / 0.9) !important;
 }
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contacts-main-surface :is([class*="border-[#eceeef]"], [class*="border-[#f0f1f2]"], [class*="border-[#DDE4E8]"]),
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contact-drawer [class*="border-[#E3E4DF]"] {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-contacts-main-surface :is([class*="border-[#eceeef]"], [class*="border-[#f0f1f2]"], [class*="border-[#DDE4E8]"]),
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-contact-drawer [class*="border-[#E3E4DF]"] {
   border-color: rgb(255 255 255 / 0.1) !important;
 }
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contacts-search {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-contacts-search {
   background: rgb(255 255 255 / 0.045) !important;
   border-color: rgb(255 255 255 / 0.1) !important;
 }
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contacts-search :is(input, svg) {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-contacts-search :is(input, svg) {
   color: rgb(255 255 255 / 0.9) !important;
 }
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contacts-tools a {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-contacts-tools a {
   background: transparent !important;
   border-color: rgb(255 255 255 / 0.14) !important;
   color: rgb(255 255 255 / 0.8) !important;
 }
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contacts-tools .dashboard-contact-tool-card,
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contacts-tools .dashboard-contact-tool-card > div {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-contacts-tools .dashboard-contact-tool-card,
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-contacts-tools .dashboard-contact-tool-card > div {
   background: #262626 !important;
   border-color: rgb(255 255 255 / 0.1) !important;
 }
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-contact-drawer [class*="bg-[#F0F2F4]"] {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-contact-drawer [class*="bg-[#F0F2F4]"] {
   background: rgb(255 255 255 / 0.08) !important;
 }
-#dashboard-contacts-page .dashboard-contacts-main-surface :is(h1, p, th, td, input, svg),
-#dashboard-contacts-page .dashboard-contacts-main-surface td > span:not([class*="bg-"]) {
+[data-dashboard-theme="dark"] #dashboard-contacts-page .dashboard-contacts-main-surface :is(h1, p, th, td, input, svg),
+[data-dashboard-theme="dark"] #dashboard-contacts-page .dashboard-contacts-main-surface td > span:not([class*="bg-"]) {
   color: rgb(255 255 255 / 0.9) !important;
 }
-#dashboard-contacts-page .dashboard-contacts-main-surface thead,
-#dashboard-contacts-page .dashboard-contacts-main-surface table {
+[data-dashboard-theme="dark"] #dashboard-contacts-page .dashboard-contacts-main-surface thead,
+[data-dashboard-theme="dark"] #dashboard-contacts-page .dashboard-contacts-main-surface table {
   background: #292a2b !important;
 }
-#dashboard-contacts-page .dashboard-contacts-main-surface tbody tr:hover {
+[data-dashboard-theme="dark"] #dashboard-contacts-page .dashboard-contacts-main-surface tbody tr:hover {
   background: rgb(255 255 255 / 0.04) !important;
 }
 
-/* Knowledge workspace, aligned with the Space dashboard surfaces. */
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-knowledge-shell,
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-page-surface.dashboard-knowledge-main-surface,
-#dashboard-knowledge-sidebar {
+/* Light theme: the JSX throughout Contacts is natively dark-authored
+   (text-white/*, bg-white/*, border-white/* opacity utilities, plus a few
+   literal #262626/#292a2b/#F0F2F4 hex surfaces), same as the Connect/
+   Plugins page — no light variant existed anywhere before this. */
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-contacts-shell {
+  background: #f5f6f7 !important;
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell #dashboard-contacts-page [class*="text-white"] {
+  color: rgba(0, 0, 0, 0.7) !important;
+}
+/* The catch-all above sets the input's own (typed) text color, but a
+   Tailwind placeholder:text-white/* utility is a separate rule targeting
+   ::placeholder, untouched by that — so the search box's placeholder text
+   stayed white-on-white until something typed over it. */
+[data-dashboard-theme="light"] .dashboard-shell #dashboard-contacts-page input[class*="placeholder:text-white"]::placeholder {
+  color: rgba(0, 0, 0, 0.35) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell #dashboard-contacts-page [class*="bg-white/"] {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell #dashboard-contacts-page [class*="border-white"] {
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+/* #262626 is the page canvas in dark mode; #292a2b is the slightly-lighter
+   card surface on top of it (table, drawer). Light mode keeps that same
+   two-level relationship instead of collapsing both to white. */
+[data-dashboard-theme="light"] .dashboard-shell #dashboard-contacts-page [class*="bg-[#262626]"] {
+  background-color: #f5f6f7 !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell #dashboard-contacts-page [class*="bg-[#292a2b]"] {
+  background-color: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell #dashboard-contacts-page [class*="bg-[#F0F2F4]"] {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell #dashboard-contacts-page .dashboard-contacts-main-surface tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+}
+
+/* Knowledge workspace, aligned with the Space dashboard surfaces. Dark
+   theme keeps this fixed charcoal treatment. The page's inner content
+   (article cards, tables, the add-panel) is actually natively light-
+   authored already, with a full dark override built earlier in this file
+   (search "dashboard-knowledge-main-surface" above) — this block used to
+   apply unconditionally and collapsed all of that back to dark always.
+   Rescoped to dark-only so the native light classes show through. */
+[data-dashboard-theme="dark"] .dashboard-knowledge-shell,
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-page-surface.dashboard-knowledge-main-surface,
+[data-dashboard-theme="dark"] #dashboard-knowledge-sidebar {
   background: #262626 !important;
   color: #fff !important;
 }
-#dashboard-knowledge-sidebar {
+[data-dashboard-theme="dark"] #dashboard-knowledge-sidebar {
   border-color: rgb(255 255 255 / 0.1) !important;
 }
-#dashboard-knowledge-sidebar :is(p, button, span, svg),
-#dashboard-knowledge-sidebar a:not([aria-current="page"]) {
+[data-dashboard-theme="dark"] #dashboard-knowledge-sidebar :is(p, button, span, svg),
+[data-dashboard-theme="dark"] #dashboard-knowledge-sidebar a:not([aria-current="page"]) {
   color: rgb(255 255 255 / 0.6) !important;
 }
-#dashboard-knowledge-sidebar a[aria-current="page"] {
+[data-dashboard-theme="dark"] #dashboard-knowledge-sidebar a[aria-current="page"] {
   background: rgb(255 255 255 / 0.1) !important;
   color: rgb(255 255 255 / 0.9) !important;
 }
-#dashboard-knowledge-page .dashboard-knowledge-main-surface .bg-white,
-#dashboard-knowledge-page .dashboard-knowledge-main-surface [class*="bg-[#f8f9f9]"],
-#dashboard-knowledge-page .dashboard-knowledge-main-surface [class*="bg-[#f5f6f7]"] {
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .dashboard-knowledge-main-surface .bg-white,
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .dashboard-knowledge-main-surface [class*="bg-[#f8f9f9]"],
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .dashboard-knowledge-main-surface [class*="bg-[#f5f6f7]"] {
   background: #292a2b !important;
 }
-#dashboard-knowledge-page .dashboard-knowledge-main-surface :is([class*="border-[#e5e8ea]"], [class*="border-[#eef0f2]"], [class*="border-[#dde3e6]"], [class*="border-[#eceeef]"]) {
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .dashboard-knowledge-main-surface :is([class*="border-[#e5e8ea]"], [class*="border-[#eef0f2]"], [class*="border-[#dde3e6]"], [class*="border-[#eceeef]"]) {
   border-color: rgb(255 255 255 / 0.1) !important;
 }
-#dashboard-knowledge-page .dashboard-knowledge-main-surface :is(h1, h2, h3, h4, p, span, input, button) {
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .dashboard-knowledge-main-surface :is(h1, h2, h3, h4, p, span, input, button) {
   color: rgb(255 255 255 / 0.9) !important;
 }
-#dashboard-knowledge-page .dashboard-knowledge-main-surface :is(input, textarea) {
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .dashboard-knowledge-main-surface :is(input, textarea) {
   background: rgb(255 255 255 / 0.045) !important;
   border-color: rgb(255 255 255 / 0.1) !important;
 }
-#dashboard-knowledge-page .dashboard-knowledge-main-surface .dashboard-knowledge-add-button,
-#dashboard-knowledge-page .dashboard-knowledge-main-surface .dashboard-knowledge-add-button svg {
+/* Add-button, editor-save and source-add carry no native color classes of
+   their own (pure layout classes in JSX) or are already theme-neutral —
+   this white-pill treatment is deliberately unconditional, not dark-only,
+   since it reads fine as a high-contrast accent button on either canvas. */
+.dashboard-shell #dashboard-knowledge-page .dashboard-knowledge-main-surface .dashboard-knowledge-add-button,
+.dashboard-shell #dashboard-knowledge-page .dashboard-knowledge-main-surface .dashboard-knowledge-add-button svg {
   background: rgb(255 255 255 / 0.9) !important;
   color: #202020 !important;
 }
-.dashboard-knowledge-add-panel,
-.dashboard-knowledge-add-panel :is(input, textarea, select) {
+[data-dashboard-theme="dark"] .dashboard-knowledge-add-panel,
+[data-dashboard-theme="dark"] .dashboard-knowledge-add-panel :is(input, textarea, select) {
   background: #262626 !important;
   color: rgb(255 255 255 / 0.9) !important;
 }
-.dashboard-knowledge-add-panel :is(h2, label, p, span, button, svg) {
+[data-dashboard-theme="dark"] .dashboard-knowledge-add-panel :is(h2, label, p, span, button, svg) {
   color: rgb(255 255 255 / 0.9) !important;
 }
-.dashboard-knowledge-add-panel :is(input, textarea, select) {
+[data-dashboard-theme="dark"] .dashboard-knowledge-add-panel :is(input, textarea, select) {
   border-color: rgb(255 255 255 / 0.12) !important;
 }
 .dashboard-shell .knowledge-editor-save,
@@ -3465,20 +3628,62 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
 .dashboard-shell .knowledge-source-add :is(span, svg) {
   color: #202020 !important;
 }
-#dashboard-knowledge-page .knowledge-url-input {
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .knowledge-url-input {
   background: rgb(255 255 255 / 0.025) !important;
 }
-#dashboard-knowledge-page .knowledge-url-input:focus-within {
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .knowledge-url-input:focus-within {
   background: rgb(255 255 255 / 0.04) !important;
   border-color: rgb(255 255 255 / 0.25) !important;
 }
-#dashboard-knowledge-page .knowledge-url-input span {
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .knowledge-url-input span {
   color: rgb(255 255 255 / 0.55) !important;
 }
-#dashboard-knowledge-page .knowledge-url-input input {
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .knowledge-url-input input {
   background: transparent !important;
   border: 0 !important;
   color: rgb(255 255 255 / 0.9) !important;
+}
+
+/* Light theme: root canvases (.dashboard-knowledge-shell / -main-surface /
+   #dashboard-knowledge-sidebar) carry literal bg-[#262626] in JSX with no
+   light variant, same as Contacts/Connect — override those, then catch any
+   remaining dark-native stragglers (the "Knowledge" sidebar label,
+   knowledge-url-input, the add-panel's own text-white bits if any) with the
+   same blanket opacity-utility approach used there. Everything else in the
+   page is already natively light-authored and needs no help — this rule
+   only matches elements whose class actually contains these substrings. */
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-knowledge-shell,
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-page-surface.dashboard-knowledge-main-surface {
+  background: #f5f6f7 !important;
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell #dashboard-knowledge-sidebar {
+  background: transparent !important;
+  border-color: rgba(0, 0, 0, 0.14) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell #dashboard-knowledge-page [class*="text-white"] {
+  color: rgba(0, 0, 0, 0.7) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell #dashboard-knowledge-page [class*="bg-white/"] {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell #dashboard-knowledge-page [class*="border-white"] {
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell #dashboard-knowledge-page [class*="bg-[#262626]"]:not(#dashboard-knowledge-sidebar) {
+  background-color: #ffffff !important;
+}
+/* Active Pages/URLs tab: no background chip, full-black text and icon —
+   more specific than (and placed after) the blanket text-white rule above,
+   which would otherwise leave this at 0.7 opacity black like everything
+   else. Scoped to this sidebar specifically, not the shared
+   .dashboard-secondary-nav-active class other pages (Visitors) also use. */
+[data-dashboard-theme="light"] .dashboard-shell #dashboard-knowledge-sidebar .dashboard-secondary-nav-active {
+  background: transparent !important;
+  color: rgba(0, 0, 0, 1) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell #dashboard-knowledge-sidebar .dashboard-secondary-nav-active svg {
+  color: rgba(0, 0, 0, 1) !important;
 }
 
 /* Settings: dark theme uses the same fixed charcoal workspace as the rest
@@ -3605,17 +3810,23 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
   background: rgba(220, 38, 38, 0.08) !important;
 }
 
-/* Inbox is a single charcoal workspace across every appearance. */
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) #dashboard-inbox-page,
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) #dashboard-inbox-page > div,
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) #dashboard-inbox-list {
+/* Inbox: dark theme keeps its fixed charcoal workspace. Every rule below
+   used to apply in both themes (or had no theme scoping at all) — rescoped
+   to dark-only, with a full light mirror following. The conversation
+   thread is driven by --chat-* custom properties rather than utility
+   classes, so it gets its own light value set below instead of a blanket
+   text/bg catch-all (a plain white->black invert would put a white-on-dark
+   "team" bubble at zero contrast once the canvas goes light). */
+[data-dashboard-theme="dark"] #dashboard-inbox-page,
+[data-dashboard-theme="dark"] #dashboard-inbox-page > div,
+[data-dashboard-theme="dark"] #dashboard-inbox-list {
   background: #262626 !important;
   color: rgb(255 255 255 / 0.9) !important;
   border-color: rgb(255 255 255 / 0.1) !important;
   border-radius: 0 !important;
   box-shadow: none !important;
 }
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-conversation {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-conversation {
   --chat-team-bg: rgb(255 255 255 / 0.9);
   --chat-team-text: #202020;
   --chat-team-avatar-bg: rgb(255 255 255 / 0.9);
@@ -3632,57 +3843,57 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
   background: #262626 !important;
   color: rgb(255 255 255 / 0.9) !important;
 }
-#dashboard-inbox-list h2 {
+[data-dashboard-theme="dark"] #dashboard-inbox-list h2 {
   color: rgb(255 255 255 / 0.9) !important;
   font-weight: 500 !important;
 }
-#dashboard-inbox-list p,
-#dashboard-inbox-list .dashboard-filter-tab,
-#dashboard-inbox-list .dashboard-chat-row:not(.dashboard-chat-row-active) :is(span, svg) {
+[data-dashboard-theme="dark"] #dashboard-inbox-list p,
+[data-dashboard-theme="dark"] #dashboard-inbox-list .dashboard-filter-tab,
+[data-dashboard-theme="dark"] #dashboard-inbox-list .dashboard-chat-row:not(.dashboard-chat-row-active) :is(span, svg) {
   color: rgb(255 255 255 / 0.55) !important;
 }
-#dashboard-inbox-list .dashboard-search-box,
-#dashboard-inbox-list .dashboard-search-box[class*="bg-white"] {
+[data-dashboard-theme="dark"] #dashboard-inbox-list .dashboard-search-box,
+[data-dashboard-theme="dark"] #dashboard-inbox-list .dashboard-search-box[class*="bg-white"] {
   background: rgb(255 255 255 / 0.035) !important;
   border-color: rgb(255 255 255 / 0.1) !important;
   color: rgb(255 255 255 / 0.75) !important;
 }
-#dashboard-inbox-list .dashboard-search-box :is(input, span, svg, button) {
+[data-dashboard-theme="dark"] #dashboard-inbox-list .dashboard-search-box :is(input, span, svg, button) {
   color: inherit !important;
 }
-#dashboard-inbox-list .dashboard-chat-row {
+[data-dashboard-theme="dark"] #dashboard-inbox-list .dashboard-chat-row {
   background: transparent !important;
   border-radius: 8px !important;
 }
-#dashboard-inbox-list .dashboard-chat-row:hover {
+[data-dashboard-theme="dark"] #dashboard-inbox-list .dashboard-chat-row:hover {
   background: rgb(255 255 255 / 0.055) !important;
 }
-#dashboard-inbox-list .dashboard-chat-row-active {
+[data-dashboard-theme="dark"] #dashboard-inbox-list .dashboard-chat-row-active {
   background: rgb(255 255 255 / 0.1) !important;
 }
-#dashboard-inbox-list .dashboard-chat-row-active :is(span, svg) {
+[data-dashboard-theme="dark"] #dashboard-inbox-list .dashboard-chat-row-active :is(span, svg) {
   color: rgb(255 255 255 / 0.9) !important;
 }
-#dashboard-inbox-list .dashboard-filter-tab-active {
+[data-dashboard-theme="dark"] #dashboard-inbox-list .dashboard-filter-tab-active {
   background: rgb(255 255 255 / 0.1) !important;
   color: rgb(255 255 255 / 0.9) !important;
 }
-#dashboard-inbox-page .dashboard-conversation :is(input, textarea, select) {
+[data-dashboard-theme="dark"] #dashboard-inbox-page .dashboard-conversation :is(input, textarea, select) {
   color: rgb(255 255 255 / 0.9) !important;
 }
-#dashboard-inbox-list .inbox-view-nav a,
-#dashboard-inbox-page .inbox-view-nav a {
+[data-dashboard-theme="dark"] #dashboard-inbox-list .inbox-view-nav a,
+[data-dashboard-theme="dark"] #dashboard-inbox-page .inbox-view-nav a {
   color: rgb(255 255 255 / 0.7) !important;
   font-weight: 400 !important;
 }
-#dashboard-inbox-list .inbox-view-nav a[aria-current="page"],
-#dashboard-inbox-page .inbox-view-nav a[aria-current="page"] {
+[data-dashboard-theme="dark"] #dashboard-inbox-list .inbox-view-nav a[aria-current="page"],
+[data-dashboard-theme="dark"] #dashboard-inbox-page .inbox-view-nav a[aria-current="page"] {
   background: transparent !important;
   border-bottom-color: rgb(255 255 255 / 0.8) !important;
   color: #ffffff !important;
 }
-#dashboard-inbox-list .inbox-view-nav a:not([aria-current="page"]):hover,
-#dashboard-inbox-page .inbox-view-nav a:not([aria-current="page"]):hover {
+[data-dashboard-theme="dark"] #dashboard-inbox-list .inbox-view-nav a:not([aria-current="page"]):hover,
+[data-dashboard-theme="dark"] #dashboard-inbox-page .inbox-view-nav a:not([aria-current="page"]):hover {
   background: transparent !important;
   border-bottom-color: rgb(255 255 255 / 0.3) !important;
   color: rgb(255 255 255 / 0.9) !important;
@@ -3690,13 +3901,13 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
 #dashboard-inbox-page .inbox-list-summary {
   display: none;
 }
-#dashboard-chat-interface .dashboard-chat-center,
-#dashboard-chat-interface .dashboard-chat-header,
-#dashboard-customer-details {
+[data-dashboard-theme="dark"] #dashboard-chat-interface .dashboard-chat-center,
+[data-dashboard-theme="dark"] #dashboard-chat-interface .dashboard-chat-header,
+[data-dashboard-theme="dark"] #dashboard-customer-details {
   background: #262626 !important;
   border-color: rgb(255 255 255 / 0.1) !important;
 }
-#dashboard-chat-interface .chat-line {
+[data-dashboard-theme="dark"] #dashboard-chat-interface .chat-line {
   width: fit-content;
   max-width: 100%;
   border: 1px solid rgb(255 255 255 / 0.08);
@@ -3704,143 +3915,464 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
   background: rgb(255 255 255 / 0.035);
   padding: 9px 12px;
 }
-#dashboard-chat-interface .chat-line-team {
+[data-dashboard-theme="dark"] #dashboard-chat-interface .chat-line-team {
   margin-left: auto;
   background: rgb(255 255 255 / 0.08);
   color: rgb(255 255 255 / 0.92);
 }
-#dashboard-chat-interface .dashboard-reply-composer {
+[data-dashboard-theme="dark"] #dashboard-chat-interface .dashboard-reply-composer {
   background: rgb(255 255 255 / 0.025) !important;
   border-color: rgb(255 255 255 / 0.14) !important;
 }
-#dashboard-chat-interface .dashboard-reply-composer:focus-within {
+[data-dashboard-theme="dark"] #dashboard-chat-interface .dashboard-reply-composer:focus-within {
   border-color: rgb(255 255 255 / 0.3) !important;
 }
-#dashboard-customer-details .dashboard-contact-card {
+[data-dashboard-theme="dark"] #dashboard-customer-details .dashboard-contact-card {
   background: rgb(255 255 255 / 0.035) !important;
   border: 1px solid rgb(255 255 255 / 0.08);
 }
-#dashboard-customer-details .dashboard-detail-section > button {
+[data-dashboard-theme="dark"] #dashboard-customer-details .dashboard-detail-section > button {
   color: rgb(255 255 255 / 0.85) !important;
   font-weight: 500 !important;
 }
-#dashboard-customer-details .dashboard-detail-section > button:hover {
+[data-dashboard-theme="dark"] #dashboard-customer-details .dashboard-detail-section > button:hover {
   background: rgb(255 255 255 / 0.04) !important;
 }
-#dashboard-customer-details .dashboard-detail-section > div {
+[data-dashboard-theme="dark"] #dashboard-customer-details .dashboard-detail-section > div {
   color: rgb(255 255 255 / 0.75) !important;
 }
-#dashboard-customer-details a {
+[data-dashboard-theme="dark"] #dashboard-customer-details a {
   color: rgb(255 255 255 / 0.85) !important;
 }
-#dashboard-chat-interface :is(h1, h2, h3, h4, p, label, span, button, a, svg),
-#dashboard-customer-details :is(h1, h2, h3, h4, p, label, span, button, a, svg) {
+[data-dashboard-theme="dark"] #dashboard-chat-interface :is(h1, h2, h3, h4, p, label, span, button, a, svg),
+[data-dashboard-theme="dark"] #dashboard-customer-details :is(h1, h2, h3, h4, p, label, span, button, a, svg) {
   color: rgb(255 255 255 / 0.9) !important;
 }
-#dashboard-chat-interface [class*="text-[var(--chat-muted)]"],
-#dashboard-customer-details [class*="text-[var(--chat-muted)]"] {
+[data-dashboard-theme="dark"] #dashboard-chat-interface [class*="text-[var(--chat-muted)]"],
+[data-dashboard-theme="dark"] #dashboard-customer-details [class*="text-[var(--chat-muted)]"] {
   color: rgb(255 255 255 / 0.5) !important;
 }
-#dashboard-chat-interface .chat-line-customer {
+[data-dashboard-theme="dark"] #dashboard-chat-interface .chat-line-customer {
   color: rgb(255 255 255 / 0.68) !important;
 }
-#dashboard-chat-interface .chat-line-team {
+[data-dashboard-theme="dark"] #dashboard-chat-interface .chat-line-team {
   color: rgb(255 255 255 / 0.92) !important;
 }
-#dashboard-chat-interface .chat-action-primary,
-#dashboard-chat-interface .chat-action-primary :is(span, svg),
-#dashboard-customer-details .chat-action-primary,
-#dashboard-customer-details .chat-action-primary :is(span, svg) {
+[data-dashboard-theme="dark"] #dashboard-chat-interface .chat-action-primary,
+[data-dashboard-theme="dark"] #dashboard-chat-interface .chat-action-primary :is(span, svg),
+[data-dashboard-theme="dark"] #dashboard-customer-details .chat-action-primary,
+[data-dashboard-theme="dark"] #dashboard-customer-details .chat-action-primary :is(span, svg) {
   background: rgb(255 255 255 / 0.9) !important;
   color: #202020 !important;
 }
-#dashboard-chat-interface .chat-action-primary:disabled,
-#dashboard-customer-details .chat-action-primary:disabled {
+[data-dashboard-theme="dark"] #dashboard-chat-interface .chat-action-primary:disabled,
+[data-dashboard-theme="dark"] #dashboard-customer-details .chat-action-primary:disabled {
   background: rgb(255 255 255 / 0.1) !important;
   color: rgb(255 255 255 / 0.4) !important;
 }
-#dashboard-chat-interface .chat-action-primary:disabled :is(span, svg),
-#dashboard-customer-details .chat-action-primary:disabled :is(span, svg) {
+[data-dashboard-theme="dark"] #dashboard-chat-interface .chat-action-primary:disabled :is(span, svg),
+[data-dashboard-theme="dark"] #dashboard-customer-details .chat-action-primary:disabled :is(span, svg) {
   color: rgb(255 255 255 / 0.4) !important;
 }
-#dashboard-chat-interface .chat-avatar-team {
+[data-dashboard-theme="dark"] #dashboard-chat-interface .chat-avatar-team {
   color: #202020 !important;
 }
-#dashboard-setup-badge .dashboard-setup-panel,
-#dashboard-setup-badge .dashboard-setup-panel-inner,
-#dashboard-setup-badge .dashboard-setup-panel-header,
-#dashboard-setup-badge .dashboard-setup-trigger {
+[data-dashboard-theme="dark"] #dashboard-setup-badge .dashboard-setup-panel,
+[data-dashboard-theme="dark"] #dashboard-setup-badge .dashboard-setup-panel-inner,
+[data-dashboard-theme="dark"] #dashboard-setup-badge .dashboard-setup-panel-header,
+[data-dashboard-theme="dark"] #dashboard-setup-badge .dashboard-setup-trigger {
   background-color: #262626 !important;
   border-color: rgb(255 255 255 / 0.1) !important;
   color: rgb(255 255 255 / 0.9) !important;
 }
-#dashboard-setup-badge .dashboard-setup-step {
+[data-dashboard-theme="dark"] #dashboard-setup-badge .dashboard-setup-step {
   color: rgb(255 255 255 / 0.85) !important;
 }
-#dashboard-setup-badge .dashboard-setup-step:hover {
+[data-dashboard-theme="dark"] #dashboard-setup-badge .dashboard-setup-step:hover {
   background: rgb(255 255 255 / 0.04) !important;
 }
-#dashboard-ai-assist,
-#dashboard-ai-assist :is(.dashboard-ai-list, .dashboard-ai-assist-main, .dashboard-ai-header, .dashboard-ai-composer, .dashboard-ai-details),
-#dashboard-ai-assist [class*="bg-white"],
-#dashboard-ai-assist [class*="bg-[#f7f8f9]"] {
+[data-dashboard-theme="dark"] #dashboard-ai-assist,
+[data-dashboard-theme="dark"] #dashboard-ai-assist :is(.dashboard-ai-list, .dashboard-ai-assist-main, .dashboard-ai-header, .dashboard-ai-composer, .dashboard-ai-details),
+[data-dashboard-theme="dark"] #dashboard-ai-assist [class*="bg-white"],
+[data-dashboard-theme="dark"] #dashboard-ai-assist [class*="bg-[#f7f8f9]"] {
   background: #262626 !important;
   border-color: rgb(255 255 255 / 0.1) !important;
   color: rgb(255 255 255 / 0.9) !important;
   border-radius: 0 !important;
   box-shadow: none !important;
 }
-#dashboard-ai-assist :is(h1, h2, h3, h4, p, span, button, a, svg, input) {
+[data-dashboard-theme="dark"] #dashboard-ai-assist :is(h1, h2, h3, h4, p, span, button, a, svg, input) {
   color: rgb(255 255 255 / 0.9) !important;
 }
-#dashboard-ai-assist :is([class*="text-[#7b858a]"], [class*="text-[#74808c]"], [class*="text-[#8a929c]"], [class*="text-[#89929c]"], [class*="text-[#969ea7]"], [class*="text-[#9aa2ac]"]) {
+[data-dashboard-theme="dark"] #dashboard-ai-assist :is([class*="text-[#7b858a]"], [class*="text-[#74808c]"], [class*="text-[#8a929c]"], [class*="text-[#89929c]"], [class*="text-[#969ea7]"], [class*="text-[#9aa2ac]"]) {
   color: rgb(255 255 255 / 0.5) !important;
 }
-#dashboard-ai-assist .dashboard-search-box,
-#dashboard-ai-assist .dashboard-contact-card {
+[data-dashboard-theme="dark"] #dashboard-ai-assist .dashboard-search-box,
+[data-dashboard-theme="dark"] #dashboard-ai-assist .dashboard-contact-card {
   background: rgb(255 255 255 / 0.035) !important;
   border-color: rgb(255 255 255 / 0.1) !important;
 }
-#dashboard-ai-assist .dashboard-chat-row {
+[data-dashboard-theme="dark"] #dashboard-ai-assist .dashboard-chat-row {
   background: transparent !important;
 }
-#dashboard-ai-assist .dashboard-chat-row:hover {
+[data-dashboard-theme="dark"] #dashboard-ai-assist .dashboard-chat-row:hover {
   background: rgb(255 255 255 / 0.05) !important;
 }
-#dashboard-ai-assist .dashboard-chat-row-active {
+[data-dashboard-theme="dark"] #dashboard-ai-assist .dashboard-chat-row-active {
   background: rgb(255 255 255 / 0.1) !important;
 }
-#dashboard-ai-assist .chat-line {
+[data-dashboard-theme="dark"] #dashboard-ai-assist .chat-line {
   border: 1px solid rgb(255 255 255 / 0.08);
   border-radius: 12px;
   background: rgb(255 255 255 / 0.035);
   padding: 9px 12px;
 }
-#dashboard-ai-assist .chat-line-team {
+[data-dashboard-theme="dark"] #dashboard-ai-assist .chat-line-team {
   margin-left: auto;
   background: rgb(255 255 255 / 0.08);
 }
-#dashboard-ai-assist .chat-action-primary,
-#dashboard-ai-assist .chat-action-primary :is(span, svg) {
+[data-dashboard-theme="dark"] #dashboard-ai-assist .chat-action-primary,
+[data-dashboard-theme="dark"] #dashboard-ai-assist .chat-action-primary :is(span, svg) {
   background: rgb(255 255 255 / 0.9) !important;
   color: #202020 !important;
 }
-#dashboard-ai-assist :is(input, textarea) {
+[data-dashboard-theme="dark"] #dashboard-ai-assist :is(input, textarea) {
   background: transparent !important;
   color: rgb(255 255 255 / 0.9) !important;
 }
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-visitors-main-surface .bg-white,
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-visitors-main-surface [class*="bg-[#F3F4F0]"] {
+
+/* Inbox — light theme mirror. Team/AI bubbles switch from "near-white on
+   dark" to "dark on light" (a plain colour-invert would leave them white
+   on a now-white canvas, i.e. invisible); customer bubbles and every other
+   near-white-on-dark surface become a matching near-black-on-light one. */
+[data-dashboard-theme="light"] #dashboard-inbox-page,
+[data-dashboard-theme="light"] #dashboard-inbox-page > div,
+[data-dashboard-theme="light"] #dashboard-inbox-list {
+  background: #f5f6f7 !important;
+  color: rgba(0, 0, 0, 0.85) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-conversation {
+  --chat-team-bg: #17191b;
+  --chat-team-text: #ffffff;
+  /* Used to match --chat-team-bg (a solid near-black, "inverse of its own
+     bubble" so initials stayed legible) — now that the bubble itself is
+     transparent (see .chat-line-team below), that near-black chip is the
+     only black thing left in the view and reads as a bug, not a design.
+     The workspace's own accent color instead, same as every other avatar
+     chip in the product (e.g. .dashboard-account-avatar). */
+  --chat-team-avatar-bg: var(--dashboard-accent, #428ce5);
+  --chat-customer-bg: rgba(0, 0, 0, 0.035);
+  --chat-customer-text: rgba(0, 0, 0, 0.85);
+  --chat-customer-border: rgba(0, 0, 0, 0.1);
+  --chat-customer-avatar-bg: #e4e4e4;
+  --chat-surface: #f5f6f7;
+  --chat-muted: rgba(0, 0, 0, 0.5);
+  --chat-divider: rgba(0, 0, 0, 0.1);
+  --chat-notice: rgba(0, 0, 0, 0.4);
+  --chat-line-text: rgba(0, 0, 0, 0.88);
+  --chat-line-muted-text: rgba(0, 0, 0, 0.62);
+  background: #f5f6f7 !important;
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+[data-dashboard-theme="light"] #dashboard-inbox-list h2 {
+  color: rgba(0, 0, 0, 0.9) !important;
+  font-weight: 500 !important;
+}
+[data-dashboard-theme="light"] #dashboard-inbox-list p,
+[data-dashboard-theme="light"] #dashboard-inbox-list .dashboard-filter-tab,
+[data-dashboard-theme="light"] #dashboard-inbox-list .dashboard-chat-row:not(.dashboard-chat-row-active) :is(span, svg) {
+  color: rgba(0, 0, 0, 0.55) !important;
+}
+[data-dashboard-theme="light"] #dashboard-inbox-list .dashboard-search-box,
+[data-dashboard-theme="light"] #dashboard-inbox-list .dashboard-search-box[class*="bg-white"] {
+  background: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+  color: rgba(0, 0, 0, 0.75) !important;
+}
+[data-dashboard-theme="light"] #dashboard-inbox-list .dashboard-search-box :is(input, span, svg, button) {
+  color: inherit !important;
+}
+[data-dashboard-theme="light"] #dashboard-inbox-list .dashboard-chat-row {
+  background: transparent !important;
+  border-radius: 8px !important;
+}
+[data-dashboard-theme="light"] #dashboard-inbox-list .dashboard-chat-row:hover {
+  background: rgba(0, 0, 0, 0.045) !important;
+}
+[data-dashboard-theme="light"] #dashboard-inbox-list .dashboard-chat-row-active {
+  background: rgba(0, 0, 0, 0.07) !important;
+}
+[data-dashboard-theme="light"] #dashboard-inbox-list .dashboard-chat-row-active :is(span, svg) {
+  color: rgba(0, 0, 0, 0.9) !important;
+}
+[data-dashboard-theme="light"] #dashboard-inbox-list .dashboard-filter-tab-active {
+  background: rgba(0, 0, 0, 0.08) !important;
+  color: rgba(0, 0, 0, 0.9) !important;
+}
+[data-dashboard-theme="light"] #dashboard-inbox-page .dashboard-conversation :is(input, textarea, select) {
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+[data-dashboard-theme="light"] #dashboard-inbox-list .inbox-view-nav a,
+[data-dashboard-theme="light"] #dashboard-inbox-page .inbox-view-nav a {
+  color: rgba(0, 0, 0, 0.6) !important;
+  font-weight: 400 !important;
+}
+[data-dashboard-theme="light"] #dashboard-inbox-list .inbox-view-nav a[aria-current="page"],
+[data-dashboard-theme="light"] #dashboard-inbox-page .inbox-view-nav a[aria-current="page"] {
+  background: transparent !important;
+  border-bottom-color: rgba(0, 0, 0, 0.75) !important;
+  color: #000000 !important;
+}
+[data-dashboard-theme="light"] #dashboard-inbox-list .inbox-view-nav a:not([aria-current="page"]):hover,
+[data-dashboard-theme="light"] #dashboard-inbox-page .inbox-view-nav a:not([aria-current="page"]):hover {
+  background: transparent !important;
+  border-bottom-color: rgba(0, 0, 0, 0.25) !important;
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+[data-dashboard-theme="light"] #dashboard-chat-interface .dashboard-chat-center,
+[data-dashboard-theme="light"] #dashboard-chat-interface .dashboard-chat-header,
+[data-dashboard-theme="light"] #dashboard-customer-details {
+  background: #f5f6f7 !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+[data-dashboard-theme="light"] #dashboard-chat-interface .chat-line {
+  width: fit-content;
+  max-width: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.035);
+  padding: 9px 12px;
+}
+/* --chat-team-bg/text are also what the Send/Resolve buttons and the team
+   avatar use (deliberately solid black-on-white here), but that same solid
+   black read as too heavy as the fill behind every sent message. No fill at
+   all instead — plain text, no panel — same as the original design intent
+   for .chat-line generally; alignment and avatar still tell the sides apart. */
+[data-dashboard-theme="light"] #dashboard-chat-interface .chat-line-team {
+  margin-left: auto;
+  background: transparent;
+  border-color: transparent;
+  color: rgba(0, 0, 0, 0.88);
+}
+[data-dashboard-theme="light"] #dashboard-chat-interface .dashboard-reply-composer {
+  background: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.14) !important;
+}
+[data-dashboard-theme="light"] #dashboard-chat-interface .dashboard-reply-composer:focus-within {
+  border-color: rgba(0, 0, 0, 0.3) !important;
+}
+[data-dashboard-theme="light"] #dashboard-customer-details .dashboard-contact-card {
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+[data-dashboard-theme="light"] #dashboard-customer-details .dashboard-detail-section > button {
+  color: rgba(0, 0, 0, 0.85) !important;
+  font-weight: 500 !important;
+}
+[data-dashboard-theme="light"] #dashboard-customer-details .dashboard-detail-section > button:hover {
+  background: rgba(0, 0, 0, 0.04) !important;
+}
+[data-dashboard-theme="light"] #dashboard-customer-details .dashboard-detail-section > div {
+  color: rgba(0, 0, 0, 0.7) !important;
+}
+[data-dashboard-theme="light"] #dashboard-customer-details a {
+  color: rgba(0, 0, 0, 0.8) !important;
+}
+[data-dashboard-theme="light"] #dashboard-chat-interface :is(h1, h2, h3, h4, p, label, span, button, a, svg),
+[data-dashboard-theme="light"] #dashboard-customer-details :is(h1, h2, h3, h4, p, label, span, button, a, svg) {
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+[data-dashboard-theme="light"] #dashboard-chat-interface [class*="text-[var(--chat-muted)]"],
+[data-dashboard-theme="light"] #dashboard-customer-details [class*="text-[var(--chat-muted)]"] {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+[data-dashboard-theme="light"] #dashboard-chat-interface .chat-line-customer {
+  color: rgba(0, 0, 0, 0.62) !important;
+}
+/* var(--chat-team-text) is white here (it's what the solid-black button/
+   avatar fill needs) — now that the bubble itself is a light fill instead
+   of that same black, this needs its own dark color rather than the token,
+   or the text goes white-on-light-gray. */
+[data-dashboard-theme="light"] #dashboard-chat-interface .chat-line-team,
+[data-dashboard-theme="light"] #dashboard-chat-interface .chat-line-team :is(h1, h2, h3, h4, p, label, span, a, li, strong) {
+  color: rgba(0, 0, 0, 0.88) !important;
+}
+[data-dashboard-theme="light"] #dashboard-chat-interface .chat-action-primary,
+[data-dashboard-theme="light"] #dashboard-chat-interface .chat-action-primary :is(span, svg),
+[data-dashboard-theme="light"] #dashboard-customer-details .chat-action-primary,
+[data-dashboard-theme="light"] #dashboard-customer-details .chat-action-primary :is(span, svg) {
+  background: #17191b !important;
+  color: #ffffff !important;
+}
+[data-dashboard-theme="light"] #dashboard-chat-interface .chat-action-primary:disabled,
+[data-dashboard-theme="light"] #dashboard-customer-details .chat-action-primary:disabled {
+  background: rgba(0, 0, 0, 0.08) !important;
+  color: rgba(0, 0, 0, 0.35) !important;
+}
+[data-dashboard-theme="light"] #dashboard-chat-interface .chat-action-primary:disabled :is(span, svg),
+[data-dashboard-theme="light"] #dashboard-customer-details .chat-action-primary:disabled :is(span, svg) {
+  color: rgba(0, 0, 0, 0.35) !important;
+}
+[data-dashboard-theme="light"] #dashboard-chat-interface .chat-avatar-team {
+  color: #ffffff !important;
+}
+[data-dashboard-theme="light"] #dashboard-setup-badge .dashboard-setup-panel,
+[data-dashboard-theme="light"] #dashboard-setup-badge .dashboard-setup-panel-inner,
+[data-dashboard-theme="light"] #dashboard-setup-badge .dashboard-setup-panel-header,
+[data-dashboard-theme="light"] #dashboard-setup-badge .dashboard-setup-trigger {
+  background-color: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+[data-dashboard-theme="light"] #dashboard-setup-badge .dashboard-setup-step {
+  color: rgba(0, 0, 0, 0.8) !important;
+}
+[data-dashboard-theme="light"] #dashboard-setup-badge .dashboard-setup-step:hover {
+  background: rgba(0, 0, 0, 0.04) !important;
+}
+/* The badge/panel background above only covers the elements carrying its own
+   named classes — every label, count and detail inside is still hardcoded
+   with a literal text-white/* utility (this component was authored dark-only
+   and never had a light pass), which is more specific than the inherited
+   panel color and stayed white-on-white. Same fix as #dashboard-home:
+   override each literal utility directly. */
+[data-dashboard-theme="light"] #dashboard-setup-badge [class*="text-white/90"] {
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+[data-dashboard-theme="light"] #dashboard-setup-badge [class*="text-white/85"] {
+  color: rgba(0, 0, 0, 0.8) !important;
+}
+[data-dashboard-theme="light"] #dashboard-setup-badge [class*="text-white/80"] {
+  color: rgba(0, 0, 0, 0.7) !important;
+}
+[data-dashboard-theme="light"] #dashboard-setup-badge [class*="text-white/70"] {
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+[data-dashboard-theme="light"] #dashboard-setup-badge [class*="text-white/50"] {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+[data-dashboard-theme="light"] #dashboard-setup-badge [class*="text-white/45"] {
+  color: rgba(0, 0, 0, 0.45) !important;
+}
+[data-dashboard-theme="light"] #dashboard-setup-badge button[class~="hover:text-white"]:hover {
+  color: rgba(0, 0, 0, 0.9) !important;
+}
+[data-dashboard-theme="light"] #dashboard-setup-badge [class*="border-white/[0.07]"] {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+[data-dashboard-theme="light"] #dashboard-setup-badge [class*="border-white/15"] {
+  border-color: rgba(0, 0, 0, 0.15) !important;
+}
+[data-dashboard-theme="light"] #dashboard-setup-badge a[class*="hover:bg-white/[0.04]"]:hover {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+[data-dashboard-theme="light"] #dashboard-setup-badge button[class*="hover:border-white/20"]:hover {
+  border-color: rgba(0, 0, 0, 0.2) !important;
+}
+[data-dashboard-theme="light"] #dashboard-setup-badge button[class~="hover:bg-[#2b2b2b]"]:hover {
+  background-color: #eef0f1 !important;
+}
+/* The progress-ring badge's inner circle (masking the conic-gradient track)
+   and the panel/header/trigger surfaces all share the same literal
+   bg-[#262626] class — one rule for all of them. */
+[data-dashboard-theme="light"] #dashboard-setup-badge [class*="bg-[#262626]"] {
+  background: #ffffff !important;
+}
+[data-dashboard-theme="light"] #dashboard-ai-assist,
+[data-dashboard-theme="light"] #dashboard-ai-assist :is(.dashboard-ai-list, .dashboard-ai-assist-main, .dashboard-ai-header, .dashboard-ai-composer, .dashboard-ai-details),
+[data-dashboard-theme="light"] #dashboard-ai-assist [class*="bg-white"],
+[data-dashboard-theme="light"] #dashboard-ai-assist [class*="bg-[#f7f8f9]"] {
+  background: #f5f6f7 !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+  color: rgba(0, 0, 0, 0.85) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+[data-dashboard-theme="light"] #dashboard-ai-assist :is(h1, h2, h3, h4, p, span, button, a, svg, input) {
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+[data-dashboard-theme="light"] #dashboard-ai-assist :is([class*="text-[#7b858a]"], [class*="text-[#74808c]"], [class*="text-[#8a929c]"], [class*="text-[#89929c]"], [class*="text-[#969ea7]"], [class*="text-[#9aa2ac]"]) {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+[data-dashboard-theme="light"] #dashboard-ai-assist .dashboard-search-box,
+[data-dashboard-theme="light"] #dashboard-ai-assist .dashboard-contact-card {
+  background: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+[data-dashboard-theme="light"] #dashboard-ai-assist .dashboard-chat-row {
+  background: transparent !important;
+}
+[data-dashboard-theme="light"] #dashboard-ai-assist .dashboard-chat-row:hover {
+  background: rgba(0, 0, 0, 0.045) !important;
+}
+[data-dashboard-theme="light"] #dashboard-ai-assist .dashboard-chat-row-active {
+  background: rgba(0, 0, 0, 0.07) !important;
+}
+[data-dashboard-theme="light"] #dashboard-ai-assist .chat-line {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.035);
+  padding: 9px 12px;
+}
+/* Was a solid black fill (the "team speaks in black on white" bubble the
+   conversation view uses elsewhere) — too heavy for AI Assist's own reply
+   bubble. No fill at all instead — plain text, no panel — sides are still
+   told apart by alignment and avatar alone. */
+[data-dashboard-theme="light"] #dashboard-ai-assist .chat-line-team {
+  margin-left: auto;
+  background: transparent !important;
+  border-color: transparent !important;
+  color: rgba(0, 0, 0, 0.88) !important;
+}
+[data-dashboard-theme="light"] #dashboard-ai-assist .chat-line-team :is(h1, h2, h3, h4, p, label, span, a, li, strong) {
+  color: rgba(0, 0, 0, 0.88) !important;
+}
+[data-dashboard-theme="light"] #dashboard-ai-assist .chat-action-primary,
+[data-dashboard-theme="light"] #dashboard-ai-assist .chat-action-primary :is(span, svg) {
+  background: #17191b !important;
+  color: #ffffff !important;
+}
+[data-dashboard-theme="light"] #dashboard-ai-assist :is(input, textarea) {
+  background: transparent !important;
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+
+/* The Join button keeps a hardcoded near-black pill in both themes; without
+   this, the light-theme blanket button-text rule above overrides its
+   text-white and leaves black text on that near-black background. */
+#dashboard-ai-assist button.chat-join-button,
+#dashboard-ai-assist button.chat-join-button :is(span, svg) {
+  color: #ffffff !important;
+}
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-visitors-main-surface .bg-white,
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-visitors-main-surface [class*="bg-[#F3F4F0]"] {
   background: #292a2b !important;
 }
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-visitors-main-surface :is([class*="border-[#E3E4DF]"], [class*="border-[#DDE4E8]"], [class*="border-[#EEF0F2]"], [class*="border-[#E5E9EB]"]) {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-visitors-main-surface :is([class*="border-[#E3E4DF]"], [class*="border-[#DDE4E8]"], [class*="border-[#EEF0F2]"], [class*="border-[#E5E9EB]"]) {
   border-color: rgb(255 255 255 / 0.1) !important;
 }
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-visitors-main-surface :is([class*="text-black"], [class*="text-[#17181a]"], [class*="text-[#2b2923]"], [class*="text-[#3c4245]"]) {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-visitors-main-surface :is([class*="text-black"], [class*="text-[#17181a]"], [class*="text-[#2b2923]"], [class*="text-[#3c4245]"]) {
   color: rgb(255 255 255 / 0.9) !important;
 }
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-visitors-main-surface :is([class*="text-[#555e64]"], [class*="text-[#667069]"], [class*="text-[#687178]"], [class*="text-[#8A929C]"]) {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-visitors-main-surface :is([class*="text-[#555e64]"], [class*="text-[#667069]"], [class*="text-[#687178]"], [class*="text-[#8A929C]"]) {
   color: rgb(255 255 255 / 0.5) !important;
+}
+
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-visitors-main-surface .bg-white,
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-visitors-main-surface [class*="bg-[#F3F4F0]"] {
+  background: #ffffff !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-visitors-main-surface :is([class*="border-[#E3E4DF]"], [class*="border-[#DDE4E8]"], [class*="border-[#EEF0F2]"], [class*="border-[#E5E9EB]"]) {
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-visitors-main-surface :is([class*="text-black"], [class*="text-[#17181a]"], [class*="text-[#2b2923]"], [class*="text-[#3c4245]"]) {
+  color: rgba(0, 0, 0, 0.9) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-visitors-main-surface :is([class*="text-[#555e64]"], [class*="text-[#667069]"], [class*="text-[#687178]"], [class*="text-[#8A929C]"]) {
+  color: rgba(0, 0, 0, 0.55) !important;
 }
 
 /* AI usage follows the dashboard's permanent graphite theme. */
@@ -3907,6 +4439,162 @@ body:has(.dashboard-ai-usage-page) :is(.dashboard-ai-scope-menu, .dashboard-add-
 body:has(.dashboard-ai-usage-page) .dashboard-ai-scope-menu button:hover,
 body:has(.dashboard-ai-usage-page) .dashboard-ai-scope-menu button[class*="bg-[#f0f2f3]"] {
   background-color: rgb(255 255 255 / 0.08) !important;
+}
+
+/* Dashboard home ("Space > Home" overview, #dashboard-home in
+   app/dashboard/page.tsx) — was written dark-only (bg-[#262626]/text-white
+   literals) before this file's light-theme system existed. Light mirror
+   below, same id-scoped attribute-selector approach as every other page
+   above (AI Assist, Knowledge, Contacts, ...). */
+[data-dashboard-theme="light"] #dashboard-home {
+  background: #f5f6f7 !important;
+  color: rgba(0, 0, 0, 0.9) !important;
+}
+[data-dashboard-theme="light"] #dashboard-home article[class*="bg-[#262626]"] {
+  background: #ffffff !important;
+}
+[data-dashboard-theme="light"] #dashboard-home [class*="border-white/10"] {
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+[data-dashboard-theme="light"] #dashboard-home [class*="border-white/[0.07]"] {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+[data-dashboard-theme="light"] #dashboard-home [class*="border-white/[0.12]"] {
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+[data-dashboard-theme="light"] #dashboard-home [class*="divide-white/[0.07]"] {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+[data-dashboard-theme="light"] #dashboard-home [class*="bg-white/[0.035]"] {
+  background-color: rgba(0, 0, 0, 0.035) !important;
+}
+[data-dashboard-theme="light"] #dashboard-home [class*="bg-white/[0.07]"] {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
+[data-dashboard-theme="light"] #dashboard-home [class*="bg-white/[0.025]"] {
+  background-color: rgba(0, 0, 0, 0.025) !important;
+}
+[data-dashboard-theme="light"] #dashboard-home [class*="bg-white/25"] {
+  background-color: rgba(0, 0, 0, 0.25) !important;
+}
+[data-dashboard-theme="light"] #dashboard-home [class*="hover:bg-white/[0.03]"]:hover {
+  background-color: rgba(0, 0, 0, 0.035) !important;
+}
+[data-dashboard-theme="light"] #dashboard-home [class*="text-white/90"] {
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+[data-dashboard-theme="light"] #dashboard-home [class*="text-white/80"] {
+  color: rgba(0, 0, 0, 0.75) !important;
+}
+[data-dashboard-theme="light"] #dashboard-home [class*="text-white/70"] {
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+[data-dashboard-theme="light"] #dashboard-home [class*="text-white/55"] {
+  color: rgba(0, 0, 0, 0.55) !important;
+}
+[data-dashboard-theme="light"] #dashboard-home [class*="text-white/50"] {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+[data-dashboard-theme="light"] #dashboard-home [class*="text-white/45"] {
+  color: rgba(0, 0, 0, 0.45) !important;
+}
+[data-dashboard-theme="light"] #dashboard-home [class*="text-white/40"] {
+  color: rgba(0, 0, 0, 0.4) !important;
+}
+[data-dashboard-theme="light"] #dashboard-home [class*="text-white/35"] {
+  color: rgba(0, 0, 0, 0.35) !important;
+}
+[data-dashboard-theme="light"] #dashboard-home [class*="text-white/25"] {
+  color: rgba(0, 0, 0, 0.25) !important;
+}
+[data-dashboard-theme="light"] #dashboard-home a[class*="hover:text-white"]:hover {
+  color: rgba(0, 0, 0, 0.9) !important;
+}
+/* The "Install the Elpino chat widget" CTA is a literal bg-white/text-black
+   pill (a white pill reads fine floating on the dark page) — on a white
+   page that would disappear, so it becomes the same dark pill every other
+   primary action in this file uses on light theme. */
+[data-dashboard-theme="light"] #dashboard-home a[class~="bg-white"] {
+  background: #17191b !important;
+  color: #ffffff !important;
+}
+[data-dashboard-theme="light"] #dashboard-home a[class~="bg-white"]:hover {
+  background: #2a2d30 !important;
+}
+
+/* Notifications page (#dashboard-notifications in
+   app/dashboard/notifications/page.tsx) — same dark-only-literals situation
+   as #dashboard-home, same fix. */
+[data-dashboard-theme="light"] #dashboard-notifications {
+  background: #f5f6f7 !important;
+  color: rgba(0, 0, 0, 0.9) !important;
+}
+[data-dashboard-theme="light"] #dashboard-notifications [class*="bg-[#292a2b]"] {
+  background: #ffffff !important;
+}
+[data-dashboard-theme="light"] #dashboard-notifications [class*="border-white/10"] {
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+[data-dashboard-theme="light"] #dashboard-notifications [class*="border-white/[0.07]"] {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+[data-dashboard-theme="light"] #dashboard-notifications a[class*="hover:bg-white/[0.04]"]:hover {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+[data-dashboard-theme="light"] #dashboard-notifications [class*="text-white/85"] {
+  color: rgba(0, 0, 0, 0.8) !important;
+}
+[data-dashboard-theme="light"] #dashboard-notifications [class*="text-white/45"] {
+  color: rgba(0, 0, 0, 0.45) !important;
+}
+[data-dashboard-theme="light"] #dashboard-notifications [class*="text-white/40"] {
+  color: rgba(0, 0, 0, 0.4) !important;
+}
+[data-dashboard-theme="light"] #dashboard-notifications [class*="text-white/20"] {
+  color: rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Issues page (#dashboard-issues in app/dashboard/issues/page.tsx) — same
+   dark-only-literals situation as #dashboard-home, same fix. */
+[data-dashboard-theme="light"] #dashboard-issues {
+  background: #f5f6f7 !important;
+  color: rgba(0, 0, 0, 0.9) !important;
+}
+[data-dashboard-theme="light"] #dashboard-issues [class*="bg-[#292a2b]"] {
+  background: #ffffff !important;
+}
+[data-dashboard-theme="light"] #dashboard-issues [class*="border-white/10"] {
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+[data-dashboard-theme="light"] #dashboard-issues [class*="border-white/[0.07]"] {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+[data-dashboard-theme="light"] #dashboard-issues [class*="hover:bg-white/[0.04]"]:hover {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+[data-dashboard-theme="light"] #dashboard-issues [class*="border-white/20"] {
+  border-color: rgba(0, 0, 0, 0.2) !important;
+}
+[data-dashboard-theme="light"] #dashboard-issues button[class*="hover:border-white/40"]:hover {
+  border-color: rgba(0, 0, 0, 0.4) !important;
+}
+[data-dashboard-theme="light"] #dashboard-issues [class*="text-white/85"] {
+  color: rgba(0, 0, 0, 0.8) !important;
+}
+[data-dashboard-theme="light"] #dashboard-issues [class*="text-white/55"] {
+  color: rgba(0, 0, 0, 0.55) !important;
+}
+[data-dashboard-theme="light"] #dashboard-issues [class*="text-white/45"] {
+  color: rgba(0, 0, 0, 0.45) !important;
+}
+[data-dashboard-theme="light"] #dashboard-issues [class*="text-white/40"] {
+  color: rgba(0, 0, 0, 0.4) !important;
+}
+[data-dashboard-theme="light"] #dashboard-issues [class*="text-white/30"] {
+  color: rgba(0, 0, 0, 0.3) !important;
+}
+[data-dashboard-theme="light"] #dashboard-issues [class*="text-white/20"] {
+  color: rgba(0, 0, 0, 0.2) !important;
 }
 body:has(.dashboard-ai-usage-page) .dashboard-ai-scope-menu button,
 body:has(.dashboard-ai-usage-page) .dashboard-ai-scope-menu svg {
@@ -4116,6 +4804,41 @@ body:has(.dashboard-chatbot-settings-page) .dashboard-avatar-picker :is([class*=
 }
 [data-dashboard-theme="light"] .dashboard-shell .dashboard-upgrade-dialog-close:hover {
   background-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Connect/Plugins page (now embedded in Settings, so it inherits the
+   light/dark toggle): natively dark-authored throughout — text-white/*,
+   bg-white/* and border-white/* opacity utilities everywhere, no light
+   variant at all, same problem the Upgrade page and Space sidebar had
+   before they were fixed. Without this, light theme renders it
+   white-text-on-white-background. dashboard-connect-badge-letter is the
+   one exception: white letters on a solid colored circle (provider
+   monogram icons) that must stay white regardless of theme. */
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-connect-page {
+  background: #f5f6f7 !important;
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-connect-page [class*="text-white"]:not(.dashboard-connect-badge-letter) {
+  color: rgba(0, 0, 0, 0.7) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-connect-page [class*="bg-white/"] {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-connect-page [class*="border-white"] {
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+/* The API-key and MCP-server dialogs are separate dark cards floating over
+   the page (bg-[#292a2b]/[#222324]/[#262626]), not covered by the
+   bg-white/* rule above — without this their text would go dark from the
+   rule above while their card stayed dark, landing back on invisible. */
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-connect-page [class*="bg-[#292a2b]"],
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-connect-page [class*="bg-[#262626]"] {
+  background-color: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-connect-page [class*="bg-[#222324]"] {
+  background-color: #f5f6f7 !important;
+  border-color: rgba(0, 0, 0, 0.14) !important;
 }
 
 /* About hero: preserve the component's editorial details on its dark surface. */

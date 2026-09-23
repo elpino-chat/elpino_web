@@ -13,6 +13,7 @@ import {
   Filter,
   Globe2,
   Link2,
+  Lock,
   LoaderCircle,
   RefreshCw,
   Radio,
@@ -155,6 +156,7 @@ export function VisitorsClient({ view }: { view: VisitorView }) {
   const [pages, setPages] = useState<PageRow[]>([]);
   const [sources, setSources] = useState<SourceRow[]>([]);
   const [analyticsLoading, setAnalyticsLoading] = useState(true);
+  const [upgradeRequired, setUpgradeRequired] = useState<string | null>(null);
 
   function loadSites() {
     return fetch("/api/workspace/sites", { cache: "no-store" })
@@ -187,6 +189,7 @@ export function VisitorsClient({ view }: { view: VisitorView }) {
     const realtimeParams = selectedId !== "__all__" ? `?siteId=${encodeURIComponent(selectedId)}` : "";
 
     setAnalyticsLoading(true);
+    setUpgradeRequired(null);
     Promise.all([
       fetch(`/api/workspace/analytics/summary?${params.toString()}`).then((r) => (r.ok ? r.json() : { summary: null })),
       fetch(`/api/workspace/analytics/trend?${params.toString()}`).then((r) => (r.ok ? r.json() : { trend: [] })),
@@ -196,6 +199,18 @@ export function VisitorsClient({ view }: { view: VisitorView }) {
       fetch(`/api/workspace/analytics/sources?${params.toString()}`).then((r) => (r.ok ? r.json() : { sources: [] })),
     ])
       .then(([summaryRes, trendRes, realtimeRes, countriesRes, pagesRes, sourcesRes]) => {
+        // Every one of these routes returns the same { ok: false,
+        // upgradeRequired, error } shape (with a 200 status — see
+        // BillingService.requireFeature) when the plan doesn't include
+        // analytics, instead of the normal { summary: ... } etc. Checking
+        // just the first response is enough since they're all gated by the
+        // same plan flag and fail together.
+        const gate = summaryRes as { ok?: false; upgradeRequired?: true; error?: string };
+        if (gate.upgradeRequired) {
+          setUpgradeRequired(gate.error ?? "Visitor analytics is not included on your current plan.");
+          setSummary(null); setTrend([]); setRealtime(null); setCountries([]); setPages([]); setSources([]);
+          return;
+        }
         setSummary((summaryRes as { summary: Summary | null }).summary);
         setTrend((trendRes as { trend?: TrendPoint[] }).trend ?? []);
         setRealtime((realtimeRes as { realtime: Realtime | null }).realtime);
@@ -397,6 +412,8 @@ export function VisitorsClient({ view }: { view: VisitorView }) {
             <div className="mt-7 flex items-center justify-center py-24 text-[12px] text-[#687178]"><LoaderCircle size={15} className="mr-2 animate-spin" /> Loading analytics</div>
           ) : sites.length === 0 ? (
             <EmptyConnect />
+          ) : upgradeRequired ? (
+            <UpgradeRequired message={upgradeRequired} />
           ) : view === "overview" ? (
             <Overview
               site={selectedSite}
@@ -745,6 +762,19 @@ function ReportView({
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function UpgradeRequired({ message }: { message: string }) {
+  return (
+    <div className="mt-7 flex min-h-[420px] flex-col items-center justify-center rounded-xl border border-[#DDE4E8] bg-white text-center">
+      <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F0F2F4] text-[#667078]"><Lock size={20} /></span>
+      <p className="mt-3 text-[14px] font-semibold">Upgrade to unlock analytics</p>
+      <p className="mt-1 max-w-sm text-[11.5px] leading-5 text-[#687178]">{message}</p>
+      <Link href="/pricing#plans" className="mt-4 flex h-9 items-center gap-2 rounded-lg bg-[#202225] px-4 text-[12px] font-semibold text-white transition hover:bg-black">
+        <Lock size={14} /> View plans
+      </Link>
     </div>
   );
 }

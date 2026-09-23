@@ -29,7 +29,7 @@ export const roles: Role[] = [
     tagline: "Help us build the reasoning core of a truly proactive AI operator.",
     category: "Core Intelligence",
     department: "AI & Engineering",
-    location: "San Francisco, CA (or Remote)",
+    location: "Remote",
     employmentType: "Full-time",
     datePosted: "2026-09-07",
     sloth: {
@@ -69,7 +69,7 @@ export const roles: Role[] = [
     tagline: "Craft the world's most fluid, responsive, and delightful AI support workspace.",
     category: "Core Intelligence",
     department: "AI & Engineering",
-    location: "Remote (Global)",
+    location: "Remote",
     employmentType: "Full-time",
     datePosted: "2026-09-12",
     sloth: {
@@ -109,7 +109,7 @@ export const roles: Role[] = [
     tagline: "Define the visual language of approval-first automation and agentic software.",
     category: "UX & Brand",
     department: "Design & Product",
-    location: "San Francisco, CA (or Remote)",
+    location: "Remote",
     employmentType: "Full-time",
     datePosted: "2026-09-07",
     sloth: {
@@ -149,7 +149,7 @@ export const roles: Role[] = [
     tagline: "Scale the real-time agent engine to millions of concurrent conversations.",
     category: "Infrastructure",
     department: "AI & Engineering",
-    location: "London, UK (or Remote)",
+    location: "Remote",
     employmentType: "Full-time",
     datePosted: "2026-09-07",
     sloth: {
@@ -189,7 +189,7 @@ export const roles: Role[] = [
     tagline: "Push the frontier of task-oriented reasoning, evaluation, and grounding.",
     category: "Core Intelligence",
     department: "AI Research",
-    location: "San Francisco, CA (or Remote)",
+    location: "Remote",
     employmentType: "Full-time",
     datePosted: "2026-09-15",
     sloth: {
@@ -229,7 +229,7 @@ export const roles: Role[] = [
     tagline: "Make Elpino the safest, most trusted AI operator an enterprise can deploy.",
     category: "Security & Trust",
     department: "Infrastructure",
-    location: "Dublin, Ireland (or Remote)",
+    location: "Remote",
     employmentType: "Full-time",
     datePosted: "2026-09-07",
     sloth: {
@@ -269,7 +269,7 @@ export const roles: Role[] = [
     tagline: "Bridge frontier AI models with mission-critical customer workflows.",
     category: "Solutions",
     department: "Customer Engineering",
-    location: "Berlin, Germany (or Remote)",
+    location: "Remote",
     employmentType: "Full-time",
     datePosted: "2026-09-18",
     sloth: {
@@ -309,7 +309,7 @@ export const roles: Role[] = [
     tagline: "Champion customer delight and human-in-the-loop operational excellence.",
     category: "Solutions",
     department: "Customer Success",
-    location: "Chicago, IL (or Remote)",
+    location: "Remote",
     employmentType: "Full-time",
     datePosted: "2026-09-20",
     sloth: {
@@ -319,7 +319,7 @@ export const roles: Role[] = [
       alt: "Cheerful sloth with headset analyzing customer resolution growth",
     },
     overview:
-      "At Elpino, customer success is not about responding to tickets—it is about empowering teams to transform their customer support into a calm, proactive growth engine powered by intelligent agents.",
+      "At Elpino, customer success is not about responding to tickets. It is about empowering teams to transform their customer support into a calm, proactive growth engine powered by intelligent agents.",
     responsibilities: [
       "Manage relationships with high-value customer accounts and guide their AI transformation roadmap.",
       "Analyze agent resolution metrics, CSAT scores, and conversation transcripts to identify training opportunities.",

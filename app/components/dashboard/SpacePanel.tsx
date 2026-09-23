@@ -6,9 +6,15 @@ import { usePathname } from "next/navigation";
 import { Bell, ChevronRight, CircleAlert, Home, MessageCircle } from "lucide-react";
 import { useMobileDrawer } from "./mobile-drawer-context";
 
-type RecentChat = { id: string; name: string; preview?: string; status: string };
+type RecentChat = { id: string; name: string; preview?: string; status: string; assignedUserId?: string | null };
 
 const spaceRoutes = ["/dashboard", "/dashboard/notifications", "/dashboard/issues"];
+
+function recentChatHref(chat: RecentChat) {
+  const params = new URLSearchParams({ conversation: chat.id });
+  if (!chat.assignedUserId) params.set("view", "ai");
+  return `/dashboard/inbox?${params.toString()}`;
+}
 
 export default function SpacePanel() {
   const pathname = usePathname();
@@ -77,7 +83,11 @@ export default function SpacePanel() {
         </div>
         <div className="mt-2 min-h-0 flex-1 space-y-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {openChats.slice(0, 6).map((chat) => (
-            <Link key={chat.id} href={`/dashboard/inbox?conversation=${encodeURIComponent(chat.id)}`} className="group flex items-start gap-2.5 rounded-lg px-2.5 py-2.5 transition hover:bg-white/[0.06]">
+            // Unassigned conversations live in AI Assist, not Team Inbox —
+            // opening one there instead of AI Assist 404s the AI Assist tab
+            // out from under the visible chat (Team Inbox only lists chats
+            // someone has joined, same filter HomePanel's own list uses).
+            <Link key={chat.id} href={recentChatHref(chat)} className="group flex items-start gap-2.5 rounded-lg px-2.5 py-2.5 transition hover:bg-white/[0.06]">
               <MessageCircle size={16} strokeWidth={1.6} className="mt-0.5 shrink-0 text-white/35" />
               <span className="min-w-0 flex-1"><span className="block truncate text-xs font-normal text-white/75">{chat.name}</span><span className="mt-0.5 block truncate text-[11px] text-white/35">{chat.preview || "Open conversation"}</span></span>
               <ChevronRight size={14} className="mt-1 shrink-0 text-white/20" />

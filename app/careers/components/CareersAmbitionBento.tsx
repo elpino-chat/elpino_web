@@ -13,7 +13,7 @@ export function CareersAmbitionBento() {
           <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#ff5600]">
             The Long Game
           </span>
-          <h2 className="mt-3 font-serif text-[clamp(2.5rem,5vw,5rem)] font-normal leading-[0.95] tracking-[-0.03em] text-[#0c1017]">
+          <h2 className="mt-3 text-[clamp(2.5rem,5vw,5rem)] font-normal leading-[0.95] tracking-[-0.03em] text-[#0c1017]">
             The ambition that sets us apart.
           </h2>
           <p className="mt-4 text-base text-black/65 sm:text-lg">
@@ -37,13 +37,13 @@ export function CareersAmbitionBento() {
                 </span>
               </div>
 
-              <h3 className="mt-8 font-serif text-3xl font-normal tracking-tight text-black sm:text-4xl">
+              <h3 className="mt-8 text-3xl font-normal tracking-tight text-black sm:text-4xl">
                 Our vision: an Autonomous AI Customer Agent
               </h3>
 
               <p className="mt-4 text-base leading-relaxed text-black/70 sm:text-lg">
                 Elpino started as a customer support co-pilot, and now we are pursuing the holy
-                grail of customer experience — a seamless, personal, concierge experience
+                grail of customer experience: a seamless, personal, concierge experience
                 across the entire customer lifecycle, capable of multi-step reasoning, tool execution,
                 and instant resolution without human fatigue.
               </p>
@@ -77,7 +77,7 @@ export function CareersAmbitionBento() {
                 </span>
               </div>
 
-              <h3 className="mt-8 font-serif text-3xl font-normal tracking-tight text-black sm:text-4xl">
+              <h3 className="mt-8 text-3xl font-normal tracking-tight text-black sm:text-4xl">
                 Cutting-edge AI research
               </h3>
 
@@ -115,13 +115,13 @@ export function CareersAmbitionBento() {
                   <span className="text-xs text-black/50 font-medium">San Francisco · London · Berlin</span>
                 </div>
 
-                <h3 className="mt-6 font-serif text-3xl font-normal tracking-tight text-black sm:text-4xl">
+                <h3 className="mt-6 text-3xl font-normal tracking-tight text-black sm:text-4xl">
                   Hosting flagship events worldwide
                 </h3>
 
                 <p className="mt-4 text-base leading-relaxed text-black/70 sm:text-lg">
-                  We host flagship summits and intimate salons worldwide — from AI Operator
-                  Meetups to builder hackathons — bringing together the engineers, researchers,
+                  We host flagship summits and intimate salons worldwide, from AI Operator
+                  Meetups to builder hackathons, bringing together the engineers, researchers,
                   and founders shaping the future of agentic computing.
                 </p>
 

@@ -442,7 +442,7 @@ function KnowledgeSidebar({
               key={id}
               href={id === "articles" ? "/dashboard/knowledge" : `/dashboard/knowledge/${id}`}
               aria-current={active ? "page" : undefined}
-              className={`flex h-10 items-center gap-2.5 rounded-lg px-3 text-[13px] font-normal transition ${active ? "dashboard-secondary-nav-active bg-white/10 text-white/90" : "text-white/60 hover:bg-white/[0.06] hover:text-white"}`}
+              className={`flex h-10 items-center gap-2.5 rounded-lg px-3 text-[13px] font-normal transition ${active ? "dashboard-secondary-nav-active text-white/90" : "text-white/60 hover:text-white"}`}
             >
               <Icon size={16} className="shrink-0" />
               {label}

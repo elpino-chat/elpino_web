@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Bot, Download, LifeBuoy, Lightbulb, LoaderCircle, Mail, MessageSquare, Phone, RefreshCw, Search, User, Users, X } from "lucide-react";
+import { ArrowLeft, Bot, Download, LifeBuoy, Lightbulb, Lock, LoaderCircle, Mail, MessageSquare, Phone, RefreshCw, Search, User, Users, X } from "lucide-react";
 import { useMobileDrawer } from "@/app/components/dashboard/mobile-drawer-context";
 
 type Contact = {
@@ -41,11 +41,15 @@ export function ContactsClient() {
   const [query, setQuery] = useState("");
   const [openContact, setOpenContact] = useState<Contact | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [upgradeRequired, setUpgradeRequired] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/contacts", { cache: "no-store" })
       .then((response) => (response.ok ? response.json() : { contacts: [] }))
-      .then((data: { contacts?: Contact[] }) => setContacts(data.contacts ?? []))
+      .then((data: { contacts?: Contact[]; upgradeRequired?: true; error?: string }) => {
+        setContacts(data.contacts ?? []);
+        setUpgradeRequired(data.upgradeRequired ? (data.error ?? "Customer profiles are not included on your current plan.") : null);
+      })
       .catch(() => setContacts([]))
       .finally(() => setLoading(false));
   }, []);
@@ -64,8 +68,9 @@ export function ContactsClient() {
     setRefreshing(true);
     try {
       const response = await fetch("/api/contacts", { cache: "no-store" });
-      const data = response.ok ? await response.json() as { contacts?: Contact[] } : { contacts: [] };
+      const data = response.ok ? await response.json() as { contacts?: Contact[]; upgradeRequired?: true; error?: string } : { contacts: [] };
       setContacts(data.contacts ?? []);
+      setUpgradeRequired(data.upgradeRequired ? (data.error ?? "Customer profiles are not included on your current plan.") : null);
     } finally {
       setRefreshing(false);
     }
@@ -128,6 +133,8 @@ export function ContactsClient() {
             <div className="flex items-center justify-center py-16 text-[12px] text-[#687178]">
               <LoaderCircle size={15} className="mr-2 animate-spin" /> Loading contacts
             </div>
+          ) : upgradeRequired ? (
+            <UpgradeRequired message={upgradeRequired} />
           ) : filtered.length === 0 ? (
             <EmptyState />
           ) : (
@@ -310,7 +317,13 @@ function ContactPanel({ contact, onClose }: { contact: Contact; onClose: () => v
 
               <div className="mt-6">
                 <h4 className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#74787c]">What they asked about</h4>
-                <p className="mt-2 text-[13px] leading-5 text-[#2b2923]">{latestTopic ?? <span className="text-[#8A929C]">No topic recorded</span>}</p>
+                {latestTopic ? (
+                  <span className="mt-2 inline-flex max-w-full items-center truncate rounded-full bg-[#EAF0F5] px-3 py-1 text-[12.5px] font-semibold text-[#2b5b82]">
+                    {latestTopic}
+                  </span>
+                ) : (
+                  <p className="mt-2 text-[13px] leading-5 text-[#8A929C]">No topic recorded</p>
+                )}
               </div>
 
               {Object.keys(contact.customFields).length > 0 && (
@@ -343,9 +356,13 @@ function ContactPanel({ contact, onClose }: { contact: Contact; onClose: () => v
                         className="flex w-full flex-col gap-1.5 rounded-xl border border-[#E3E4DF] px-3.5 py-3 text-left transition hover:border-[#c7cdd1] hover:bg-[#fafbfb]"
                       >
                         <div className="flex items-center justify-between gap-2">
-                          <span className="flex items-center gap-1.5">
+                          <span className="flex min-w-0 items-center gap-1.5">
                             <HandledByBadge handledBy={session.handledBy} />
-                            {session.topic && <span className="text-[12px] font-medium text-black">{session.topic}</span>}
+                            {session.topic && (
+                              <span className="truncate rounded-full bg-[#EAF0F5] px-2 py-0.5 text-[11px] font-semibold text-[#2b5b82]">
+                                {session.topic}
+                              </span>
+                            )}
                           </span>
                           <span className="shrink-0 text-[10.5px] text-[#9aa1a6]">{new Date(session.time).toLocaleDateString()}</span>
                         </div>
@@ -445,6 +462,19 @@ function EmptyState() {
       <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F0F2F4] text-[#667078]"><Users size={20} /></span>
       <p className="mt-3 text-[14px] font-semibold">No contacts yet</p>
       <p className="mt-1 max-w-sm text-[11.5px] leading-5 text-[#687178]">Contacts appear here automatically once a visitor fills in their name and email or phone in the chat widget.</p>
+    </div>
+  );
+}
+
+function UpgradeRequired({ message }: { message: string }) {
+  return (
+    <div className="mt-7 flex min-h-[420px] flex-col items-center justify-center rounded-xl border border-white/10 bg-[#292a2b] text-center">
+      <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F0F2F4] text-[#667078]"><Lock size={20} /></span>
+      <p className="mt-3 text-[14px] font-semibold">Upgrade to unlock customer profiles</p>
+      <p className="mt-1 max-w-sm text-[11.5px] leading-5 text-[#687178]">{message}</p>
+      <Link href="/pricing#plans" className="mt-4 flex h-9 items-center gap-2 rounded-lg bg-white/10 px-4 text-[12px] font-semibold text-white transition hover:bg-white/20">
+        <Lock size={14} /> View plans
+      </Link>
     </div>
   );
 }

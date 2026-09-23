@@ -85,7 +85,7 @@ export function CareersOffices({ onSelectLocation }: { onSelectLocation?: (loc: 
             <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#ff5600]">
               Global Presence
             </span>
-            <h2 className="mt-3 font-serif text-[clamp(2.5rem,5vw,5rem)] font-normal leading-[0.95] tracking-[-0.03em] text-[#0c1017]">
+            <h2 className="mt-3 text-[clamp(2.5rem,5vw,5rem)] font-normal leading-[0.95] tracking-[-0.03em] text-[#0c1017]">
               Six international offices. One global team.
             </h2>
           </div>
@@ -141,7 +141,7 @@ export function CareersOffices({ onSelectLocation }: { onSelectLocation?: (loc: 
                     </span>
                   </div>
 
-                  <h3 className="mt-4 font-serif text-3xl font-normal text-black">
+                  <h3 className="mt-4 text-3xl font-normal text-black">
                     {office.city}
                   </h3>
 

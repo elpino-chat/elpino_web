@@ -52,16 +52,16 @@ const navigation = [
   {
     title: "AI support",
     links: [
-      ["Knowledge base", "#knowledge"],
-      ["AI answers", "#ai-answers"],
-      ["Human handoff", "#inbox"],
+      ["Knowledge base", "/docs/knowledge"],
+      ["AI answers", "/docs/ai-answers"],
+      ["Human handoff", "/docs/inbox"],
       ["Confidence & fallbacks", "#confidence"],
     ],
   },
   {
     title: "Chat widget",
     links: [
-      ["Install the widget", "#install-widget"],
+      ["Install the widget", "/docs/chat-widget"],
       ["Pre-chat form", "/dashboard/connect/prechat-form"],
       ["Widget customization", "#widget-customization"],
       ["Identity verification", "/docs/identity-verification"],
@@ -70,7 +70,7 @@ const navigation = [
   {
     title: "Team workspace",
     links: [
-      ["Shared inbox", "#inbox"],
+      ["Shared inbox", "/docs/inbox"],
       ["Invite teammates", "/dashboard/settings/people"],
       ["Availability", "/dashboard/settings/availability"],
       ["Conversation routing", "#routing"],
@@ -105,9 +105,16 @@ const navigation = [
   {
     title: "Connect",
     links: [
-      ["Integrations", "#integrations"],
+      ["Integrations", "/docs/integrations"],
       ["Site tags", "#install-widget"],
-      ["Security", "#security"],
+      ["Security", "/docs/security"],
+    ],
+  },
+  {
+    title: "Platform",
+    links: [
+      ["Billing and usage", "/docs/billing"],
+      ["Troubleshooting", "/docs/troubleshooting"],
     ],
   },
 ] as const;
@@ -126,7 +133,7 @@ const cards = [
     icon: BookOpen,
     title: "Build your knowledge base",
     text: "Add website pages, files, and help articles that Elpino can answer from.",
-    href: "#knowledge",
+    href: "/docs/knowledge",
     tone: "bg-[#e8f4ee] text-[#28745a]",
     bg: "bg-[#edf5ec]",
   },
@@ -134,7 +141,7 @@ const cards = [
     icon: MessageSquareText,
     title: "Install the chat widget",
     text: "Create a site tag, add one script to your website, and verify the connection.",
-    href: "#install-widget",
+    href: "/docs/chat-widget",
     tone: "bg-[#e9f1ff] text-[#3569ad]",
     bg: "bg-[#eaf2fb]",
   },
@@ -344,13 +351,13 @@ export default function DocsPage() {
         <nav aria-label="Documentation topics" className="mx-auto flex max-w-3xl gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {[
             ["Start here", "#quickstart"],
-            ["Knowledge", "#knowledge"],
-            ["Install widget", "#install-widget"],
-            ["Inbox", "#inbox"],
-            ["API", "#api-overview"],
-            ["Webhooks", "#webhooks"],
+            ["Knowledge", "/docs/knowledge"],
+            ["Install widget", "/docs/chat-widget"],
+            ["Inbox", "/docs/inbox"],
+            ["API", "/docs/api-webhooks"],
+            ["Webhooks", "/docs/api-webhooks#webhooks"],
             ["SDKs", "#sdk-js"],
-            ["Security", "#security"],
+            ["Security", "/docs/security"],
           ].map(([label, href], index) => (
             <Link key={label} href={href} className={`shrink-0 rounded-full px-3.5 py-2 text-xs font-medium ${index === 0 ? "bg-[#192016] text-white" : "border border-black/10 bg-white text-[#59615a]"}`}>
               {label}
@@ -507,70 +514,6 @@ export default function DocsPage() {
             </dl>
           </section>
 
-          {/* ── Knowledge base ── */}
-          <section id="knowledge" className="scroll-mt-40 border-b border-[#e8eaed] py-14">
-            <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[#2f8060]">Knowledge base</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em]">Give the AI reliable source material</h2>
-            <p className="mt-4 text-base leading-7 text-[#626c78]">Add public website pages, upload documents, import a URL, or write a page directly in Elpino. Keep customer-facing policies and product instructions current so answers stay useful.</p>
-
-            <div className="mt-7 grid gap-4 sm:grid-cols-2">
-              {[
-                { icon: Globe, title: "Website crawl", text: "Enter a URL and Elpino fetches all linked pages under that domain. Re-crawl on a schedule or on demand.", color: "text-[#2f8060]" },
-                { icon: FileText, title: "File upload", text: "Upload PDF, DOCX, or Markdown files up to 25 MB. Multiple files can be uploaded at once.", color: "text-[#3569ad]" },
-                { icon: Code2, title: "API import", text: "Push knowledge programmatically with POST /v1/knowledge. Useful for syncing from your CMS or help desk.", color: "text-[#7651b0]" },
-                { icon: BookOpen, title: "Help articles", text: "Write and format help articles directly inside the dashboard with a rich-text editor.", color: "text-[#98622a]" },
-              ].map(({ icon: Icon, title, text, color }) => (
-                <div key={title} className="flex gap-4 rounded-xl border border-[#e2e8e5] p-4">
-                  <Icon size={19} className={`mt-0.5 shrink-0 ${color}`} />
-                  <div>
-                    <h3 className="text-sm font-semibold">{title}</h3>
-                    <p className="mt-1 text-sm leading-6 text-[#626c78]">{text}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-7 rounded-xl border border-[#dfe5e2] bg-[#f3f8f5] p-5">
-              <h3 className="flex items-center gap-2 text-sm font-semibold">
-                <Check size={16} className="text-[#2d8b66]" />A good first knowledge set
-              </h3>
-              <ul className="mt-4 grid gap-3 text-sm text-[#56635d] sm:grid-cols-2">
-                <li>• Getting started guide</li>
-                <li>• Billing and refund policy</li>
-                <li>• Product FAQs</li>
-                <li>• Account and security help</li>
-                <li>• Shipping and returns</li>
-                <li>• Integration instructions</li>
-              </ul>
-            </div>
-            <Link href="/dashboard/knowledge" className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-[#6b55d8]">
-              Manage knowledge <ArrowRight size={14} />
-            </Link>
-          </section>
-
-          {/* ── AI answers ── */}
-          <section id="ai-answers" className="scroll-mt-40 border-b border-[#e8eaed] py-14">
-            <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[#7058d5]">AI support</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em]">How the AI generates answers</h2>
-            <p className="mt-4 text-base leading-7 text-[#626c78]">When a visitor sends a message, Elpino searches the indexed knowledge base for relevant passages, then uses a large language model to compose a helpful, cited response. The answer references only what you have approved — the AI does not hallucinate from outside sources.</p>
-
-            <div className="mt-7 space-y-3">
-              {[
-                { step: "1", title: "Retrieve", text: "Elpino performs a semantic search across your indexed sources and ranks the top matching passages by relevance." },
-                { step: "2", title: "Reason", text: "The language model reads the retrieved passages alongside the full conversation history to produce a contextual answer." },
-                { step: "3", title: "Respond", text: "The answer is sent to the visitor with a confidence level. Low-confidence answers can be automatically escalated to a teammate." },
-              ].map(({ step, title, text }) => (
-                <div key={step} className="flex gap-4 rounded-xl border border-black/10 bg-[#faf9f6] p-4">
-                  <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[#192016] font-mono text-xs font-semibold text-white">{step}</span>
-                  <div>
-                    <h3 className="text-sm font-semibold">{title}</h3>
-                    <p className="mt-1 text-sm leading-6 text-[#626c78]">{text}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-
           {/* ── Confidence & fallbacks ── */}
           <section id="confidence" className="scroll-mt-40 border-b border-[#e8eaed] py-14">
             <h2 className="text-3xl font-semibold tracking-[-0.035em]">Confidence &amp; fallbacks</h2>
@@ -588,30 +531,9 @@ export default function DocsPage() {
                 </div>
               ))}
             </div>
-          </section>
-
-          {/* ── Install widget ── */}
-          <section id="install-widget" className="scroll-mt-40 border-b border-[#e8eaed] py-14">
-            <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[#3569ad]">Chat widget</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em]">Install Elpino on your website</h2>
-            <p className="mt-4 text-base leading-7 text-[#626c78]">In <strong className="font-semibold text-[#313943]">Settings → Tag Manager</strong>, create a tag for your domain. Copy the generated snippet into every page before <code className="rounded bg-[#f0f2f4] px-1.5 py-0.5 font-mono text-sm">&lt;/head&gt;</code>, publish, then return to verify the tag.</p>
-            <div className="mt-7"><WidgetCodeSample /></div>
-
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              <div className="rounded-xl border border-[#dfe5e2] bg-[#f3f8f5] p-4">
-                <h3 className="text-sm font-semibold text-[#1e5c41]">Single-page apps</h3>
-                <p className="mt-2 text-sm leading-6 text-[#56635d]">For React, Vue, and Angular apps, add the script once in your root HTML file. The widget re-initializes automatically on client-side route changes.</p>
-              </div>
-              <div className="rounded-xl border border-[#dfe5e2] bg-[#f3f8f5] p-4">
-                <h3 className="text-sm font-semibold text-[#1e5c41]">Tag Manager</h3>
-                <p className="mt-2 text-sm leading-6 text-[#56635d]">Deploy via Google Tag Manager or Segment by pasting the script into a Custom HTML tag. Fire it on All Pages.</p>
-              </div>
-            </div>
-
-            <div className="mt-6 flex gap-3 rounded-xl border border-[#f0dcae] bg-[#fff9e9] p-4 text-sm leading-6 text-[#695b37]">
-              <ShieldCheck size={18} className="mt-0.5 shrink-0" />
-              <p>If your site uses a Content Security Policy, add the script, frame, and connection origins shown beside your generated tag. The dashboard provides the exact policy values.</p>
-            </div>
+            <Link href="/docs/ai-answers" className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-[#6b55d8]">
+              Full AI answers &amp; handoff guide <ArrowRight size={14} />
+            </Link>
           </section>
 
           {/* ── Widget customization ── */}
@@ -636,29 +558,9 @@ export default function DocsPage() {
                 </div>
               ))}
             </div>
-          </section>
-
-          {/* ── Shared inbox ── */}
-          <section id="inbox" className="scroll-mt-40 border-b border-[#e8eaed] py-14">
-            <h2 className="text-3xl font-semibold tracking-[-0.035em]">Work from one shared inbox</h2>
-            <p className="mt-4 text-base leading-7 text-[#626c78]">Every AI and human conversation appears in the inbox. Teammates can claim a conversation, see visitor context and history, translate or summarize a thread, send secure information requests, and resolve the conversation when the customer is helped.</p>
-            <div className="mt-7 grid gap-3 sm:grid-cols-2">
-              {[
-                [Inbox, "Claim and reply"],
-                [FileText, "Summarize and create tickets"],
-                [Users, "Assign across the team"],
-                [LifeBuoy, "Resolve with full history"],
-                [Zap, "Trigger automations from inbox"],
-                [RefreshCw, "Re-open and follow up"],
-              ].map(([Icon, label]) => {
-                const ItemIcon = Icon as typeof Inbox;
-                return (
-                  <div key={label as string} className="flex items-center gap-3 rounded-lg border border-[#e4e7ea] p-4 text-sm font-medium">
-                    <ItemIcon size={17} className="text-[#6b55d8]" />{label as string}
-                  </div>
-                );
-              })}
-            </div>
+            <Link href="/docs/chat-widget" className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-[#6b55d8]">
+              Full chat widget guide <ArrowRight size={14} />
+            </Link>
           </section>
 
           {/* ── Conversation routing ── */}
@@ -668,7 +570,7 @@ export default function DocsPage() {
             <div className="mt-7 space-y-3">
               {[
                 { title: "Round robin", text: "Distribute new conversations evenly across all available teammates." },
-                { title: "Keyword routing", text: "Route conversations containing specific words (e.g. \u2018refund\u2019, \u2018cancel\u2019) to designated teammates or teams." },
+                { title: "Keyword routing", text: "Route conversations containing specific words (e.g. ‘refund’, ‘cancel’) to designated teammates or teams." },
                 { title: "Contact attribute routing", text: "Send conversations from contacts with a specific plan or region to the right specialist." },
                 { title: "Fallback", text: "If no rule matches, conversations land in a shared unassigned queue." },
               ].map(({ title, text }) => (
@@ -678,6 +580,9 @@ export default function DocsPage() {
                 </div>
               ))}
             </div>
+            <Link href="/docs/inbox" className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-[#6b55d8]">
+              Full team inbox guide <ArrowRight size={14} />
+            </Link>
           </section>
 
           {/* ── API overview ── */}
@@ -728,8 +633,8 @@ export default function DocsPage() {
                 </tbody>
               </table>
             </div>
-            <Link href="#api-overview" className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-[#6b55d8]">
-              View full API explorer <ArrowRight size={14} />
+            <Link href="/docs/api-webhooks" className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-[#6b55d8]">
+              View full API reference <ArrowRight size={14} />
             </Link>
           </section>
 
@@ -891,7 +796,7 @@ window.Elpino("update", { mrr: 299 });`}</code></pre>
               ))}
             </div>
 
-            <Link href="/dashboard/connect" className="mt-6 inline-flex items-center gap-2 rounded-lg border border-[#dadddf] px-4 py-2.5 text-sm font-medium hover:bg-[#f7f8f9]">
+            <Link href="/docs/integrations" className="mt-6 inline-flex items-center gap-2 rounded-lg border border-[#dadddf] px-4 py-2.5 text-sm font-medium hover:bg-[#f7f8f9]">
               <Plug size={16} />Browse integrations
             </Link>
           </section>
@@ -921,8 +826,8 @@ window.Elpino("update", { mrr: 299 });`}</code></pre>
               <Link href="/docs/identity-verification" className="inline-flex items-center gap-2 rounded-lg bg-[#17191f] px-4 py-2.5 text-sm font-medium text-white">
                 <Code2 size={16} />Identity verification guide
               </Link>
-              <Link href="/security-guide" className="inline-flex items-center gap-2 rounded-lg border border-[#dadddf] px-4 py-2.5 text-sm font-medium">
-                <ShieldCheck size={16} />Security guide
+              <Link href="/docs/security" className="inline-flex items-center gap-2 rounded-lg border border-[#dadddf] px-4 py-2.5 text-sm font-medium">
+                <ShieldCheck size={16} />Full security guide
               </Link>
               <Link href="/privacy" className="inline-flex items-center gap-2 rounded-lg border border-[#dadddf] px-4 py-2.5 text-sm font-medium">
                 <FileText size={16} />Privacy policy
@@ -930,30 +835,21 @@ window.Elpino("update", { mrr: 299 });`}</code></pre>
             </div>
           </section>
 
-          {/* ── Changelog ── */}
-          <section className="scroll-mt-40 border-b border-[#e8eaed] py-14">
-            <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[#59615a]">What&apos;s new</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em]">Recent updates</h2>
-            <p className="mt-4 text-base leading-7 text-[#626c78]">Elpino ships continuously. Below is a summary of recent platform changes. Full release notes are in the <Link href="/changelog" className="font-medium text-[#6b55d8] underline underline-offset-4">changelog</Link>.</p>
-            <div className="mt-7 space-y-4">
-              {[
-                { date: "Sep 2026", title: "Webhook signature verification", body: "All outgoing webhooks now include an X-Elpino-Signature header for HMAC-SHA256 payload verification." },
-                { date: "Aug 2026", title: "JavaScript SDK v1.0", body: "The official @elpino/sdk package is now available on npm with full TypeScript support." },
-                { date: "Jul 2026", title: "Conversation routing rules", body: "Route conversations automatically by keyword, contact attribute, or round robin across your team." },
-                { date: "Jun 2026", title: "Pre-chat form builder", body: "Design custom pre-chat forms with text fields, dropdowns, and checkboxes from the dashboard." },
-              ].map(({ date, title, body }) => (
-                <div key={title} className="grid gap-2 rounded-xl border border-black/10 bg-[#faf9f6] p-4 sm:grid-cols-[120px_1fr]">
-                  <span className="text-xs font-semibold text-[#59615a]">{date}</span>
-                  <div>
-                    <p className="text-sm font-semibold">{title}</p>
-                    <p className="mt-1 text-sm leading-6 text-[#626c78]">{body}</p>
-                  </div>
-                </div>
-              ))}
+          {/* ── Billing & troubleshooting ── */}
+          <section id="platform" className="scroll-mt-40 border-b border-[#e8eaed] py-14">
+            <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[#59615a]">Platform</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em]">Billing and troubleshooting</h2>
+            <p className="mt-4 max-w-2xl text-base leading-7 text-[#626c78]">Understand plans, resolution credits, and recharge, or diagnose common widget, knowledge, identity, and handoff issues.</p>
+            <div className="mt-7 grid gap-3 sm:grid-cols-2">
+              <Link href="/docs/billing" className="group rounded-xl border border-black/10 p-4 transition hover:border-[#bf91ff] hover:bg-[#f8f3ff]">
+                <h3 className="text-sm font-semibold">Billing and usage</h3>
+                <p className="mt-1 text-sm leading-6 text-[#626c78]">Credits, plans, seats, and automatic recharge.</p>
+              </Link>
+              <Link href="/docs/troubleshooting" className="group rounded-xl border border-black/10 p-4 transition hover:border-[#bf91ff] hover:bg-[#f8f3ff]">
+                <h3 className="text-sm font-semibold">Troubleshooting</h3>
+                <p className="mt-1 text-sm leading-6 text-[#626c78]">Fix widget, knowledge, identity, and realtime issues.</p>
+              </Link>
             </div>
-            <Link href="/changelog" className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-[#6b55d8]">
-              View full changelog <ArrowRight size={14} />
-            </Link>
           </section>
 
           {/* ── Footer CTA ── */}
@@ -977,12 +873,8 @@ window.Elpino("update", { mrr: 299 });`}</code></pre>
               <Link className="block hover:text-black" href="#quickstart">Quickstart</Link>
               <Link className="block hover:text-black" href="#how-it-works">How Elpino works</Link>
               <Link className="block hover:text-black" href="#core-concepts">Core concepts</Link>
-              <Link className="block hover:text-black" href="#knowledge">Knowledge base</Link>
-              <Link className="block hover:text-black" href="#ai-answers">AI answers</Link>
               <Link className="block hover:text-black" href="#confidence">Confidence &amp; fallbacks</Link>
-              <Link className="block hover:text-black" href="#install-widget">Install the widget</Link>
               <Link className="block hover:text-black" href="#widget-customization">Widget customization</Link>
-              <Link className="block hover:text-black" href="#inbox">Shared inbox</Link>
               <Link className="block hover:text-black" href="#routing">Conversation routing</Link>
               <Link className="block hover:text-black" href="#api-overview">REST API</Link>
               <Link className="block hover:text-black" href="#api-auth">Authentication</Link>
@@ -994,6 +886,7 @@ window.Elpino("update", { mrr: 299 });`}</code></pre>
               <Link className="block hover:text-black" href="#webhook-retry">Retry policy</Link>
               <Link className="block hover:text-black" href="#integrations">Integrations</Link>
               <Link className="block hover:text-black" href="#security">Security</Link>
+              <Link className="block hover:text-black" href="#platform">Billing &amp; troubleshooting</Link>
             </nav>
           </div>
         </aside>

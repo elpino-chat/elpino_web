@@ -91,7 +91,7 @@ export default async function DashboardPage() {
   const recentConversations = conversations.slice(0, 5);
 
   return (
-    <section className="min-h-full bg-[#262626] px-6 py-7 text-white lg:px-10">
+    <section id="dashboard-home" className="min-h-full bg-[#262626] px-6 py-7 text-white lg:px-10">
       <div className="mx-auto max-w-[1200px]">
         <p className="text-sm font-normal text-white/70">{date}</p>
         <h1 className="mt-2 text-3xl font-normal tracking-[-0.03em] sm:text-4xl">{greeting}, {firstName}</h1>

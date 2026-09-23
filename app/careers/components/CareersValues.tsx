@@ -30,7 +30,7 @@ const values: ValueItem[] = [
     title: "Incredibly High Standards",
     shortTagline: "Aspire to true greatness; demand the best of ourselves.",
     description:
-      "We aspire to true greatness. We demand the very best of ourselves, and of those we work with. We aim for very-best-in-class work with everything we do—from distributed infra latency to every punctuation mark in our copy.",
+      "We aspire to true greatness. We demand the very best of ourselves, and of those we work with. We aim for very-best-in-class work with everything we do, from distributed infra latency to every punctuation mark in our copy.",
     slothNote: "Craft takes deliberation. We don't ship sloppiness.",
     slothImage: "/slotpointing.png",
     slothAlt: "Sloth inspecting every detail with precision",
@@ -105,10 +105,10 @@ export function CareersValues() {
         {/* Section Header */}
         <div className="flex flex-col justify-between gap-6 pb-12 sm:flex-row sm:items-end sm:pb-16 border-b border-black/10">
           <div>
-            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#ff5600]">
+            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#22C55E]">
               Our Culture & Ethos
             </span>
-            <h2 className="mt-3 font-serif text-[clamp(2.5rem,5vw,5rem)] font-normal leading-[0.95] tracking-[-0.03em] text-[#0c1017]">
+            <h2 className="mt-3 text-[clamp(2.5rem,5vw,5rem)] font-normal leading-[0.95] tracking-[-0.03em] text-[#0c1017]">
               The values that make great work possible.
             </h2>
           </div>
@@ -133,11 +133,11 @@ export function CareersValues() {
                     className="flex w-full cursor-pointer items-start justify-between gap-4 text-left group"
                   >
                     <div className="flex items-baseline gap-4 sm:gap-6">
-                      <span className="font-mono text-sm font-semibold text-black/40 group-hover:text-[#ff5600] transition-colors">
+                      <span className="font-mono text-sm font-semibold text-black/40 group-hover:text-[#22C55E] transition-colors">
                         0{index + 1}
                       </span>
                       <div>
-                        <h3 className="font-serif text-2xl font-normal tracking-tight text-black transition group-hover:text-[#ff5600] sm:text-3xl">
+                        <h3 className="text-2xl font-normal tracking-tight text-black transition group-hover:text-[#22C55E] sm:text-3xl">
                           {v.title}
                         </h3>
                         <p className="mt-1 text-xs text-black/55 sm:text-sm">
@@ -185,10 +185,10 @@ export function CareersValues() {
                     />
                   </div>
                   <div className="mt-6">
-                    <span className="text-xs font-semibold uppercase tracking-wider text-[#ff5600]">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-[#22C55E]">
                       Value in Action · 0{openIndex + 1}
                     </span>
-                    <h4 className="mt-1 font-serif text-2xl font-normal text-black">
+                    <h4 className="mt-1 text-2xl font-normal text-black">
                       {values[openIndex].title}
                     </h4>
                     <p className="mt-2 text-sm leading-relaxed text-black/65">
@@ -210,7 +210,7 @@ export function CareersValues() {
           <button
             onClick={scrollToRoles}
             type="button"
-            className="group inline-flex cursor-pointer items-center gap-3 rounded-full bg-black px-8 py-3 text-sm font-semibold text-white transition hover:bg-[#ff5600]"
+            className="group inline-flex cursor-pointer items-center gap-3 rounded-full bg-black px-8 py-3 text-sm font-semibold text-white transition hover:bg-[#22C55E]"
           >
             See 8 open roles aligning with our values
             <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />

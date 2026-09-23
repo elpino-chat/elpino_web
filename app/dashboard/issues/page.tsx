@@ -29,7 +29,7 @@ export default function IssuesPage() {
   }
 
   return (
-    <section className="min-h-full bg-[#262626] px-6 py-8 text-white lg:px-10">
+    <section id="dashboard-issues" className="min-h-full bg-[#262626] px-6 py-8 text-white lg:px-10">
       <div className="mx-auto max-w-4xl">
         <h1 className="text-3xl font-normal">Issues</h1>
         <p className="mt-2 text-sm text-white/45">Tickets created from support conversations.</p>

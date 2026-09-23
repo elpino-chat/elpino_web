@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { requireSession } from "../api/onboarding/_lib/require-user";
 import { PricingClient } from "./PricingClient";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://elpino.chat";
@@ -52,7 +53,12 @@ const breadcrumbSchema = {
   ],
 };
 
-export default function PricingPage() {
+export default async function PricingPage() {
+  // A signed-in visitor clicking a plan CTA wants to act on their existing
+  // workspace, not create a second account — routing them through /signup
+  // again just dead-ends back at a login they've already done.
+  const session = await requireSession().catch(() => null);
+
   return (
     <>
       <script
@@ -63,7 +69,7 @@ export default function PricingPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
       />
-      <PricingClient />
+      <PricingClient loggedIn={!!session} />
     </>
   );
 }

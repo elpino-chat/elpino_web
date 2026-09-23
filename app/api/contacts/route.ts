@@ -38,9 +38,18 @@ export async function GET() {
     return Response.json({ contacts: [] });
   }
 
-  const result = await callGateway<{ customers?: Contact[]; error?: string }>(
+  const result = await callGateway<{ customers?: Contact[]; ok?: false; upgradeRequired?: true; error?: string }>(
     `/api/workspace/customers?companyId=${encodeURIComponent(selected.id)}`,
   );
+
+  // A plan that doesn't include customer profiles gets { ok: false,
+  // upgradeRequired, error } instead of { customers }, at 200 — see
+  // BillingService.requireFeature. This used to collapse to an empty
+  // contacts list indistinguishable from "no contacts yet"; pass the gate
+  // through so the client can show why instead of a silent empty state.
+  if (result.upgradeRequired) {
+    return Response.json({ contacts: [], upgradeRequired: true, error: result.error });
+  }
 
   return Response.json({ contacts: result.customers ?? [] });
 }

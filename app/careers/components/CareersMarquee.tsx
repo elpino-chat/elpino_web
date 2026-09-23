@@ -13,38 +13,6 @@ type MarqueeItem = {
 
 const marqueeItems: MarqueeItem[] = [
   {
-    src: "/images/about-sloth-crew.png",
-    alt: "Elpino engineering crew in a deep design sprint",
-    caption: "Deep focus & unyielding craft",
-    width: 640,
-    height: 360,
-    aspect: "w-[300px] md:w-[380px]",
-  },
-  {
-    src: "/about-remote-team.png",
-    alt: "Remote-first global collaboration",
-    caption: "Global team, asynchronous flow",
-    width: 600,
-    height: 400,
-    aspect: "w-[280px] md:w-[360px]",
-  },
-  {
-    src: "/images/community-sloths.png",
-    alt: "Elpino community gathering and hackathon",
-    caption: "Pioneer salons & builder meetups",
-    width: 640,
-    height: 400,
-    aspect: "w-[310px] md:w-[400px]",
-  },
-  {
-    src: "/images/founders-sloth.png",
-    alt: "Founders aligning on product roadmap",
-    caption: "Founder-led & high conviction",
-    width: 620,
-    height: 380,
-    aspect: "w-[290px] md:w-[370px]",
-  },
-  {
     src: "/images/busy-teams-sloth.png",
     alt: "Cross-functional team shipping live AI workflows",
     caption: "Zero meetings, maximum velocity",

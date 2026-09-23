@@ -62,6 +62,8 @@ type ConversationSummary = {
   visitorLeft?: boolean;
   /** A reply can still reach them by email: they have a verified address. */
   canEmailVisitor?: boolean;
+  /** Proved this is really them (signed in, or confirmed a code) — not just a typed-in name/email. */
+  verified?: boolean;
   location?: VisitorLocation;
   /** The bot's name and face as configured for the widget this thread came through. */
   aiName?: string;
@@ -793,6 +795,11 @@ function DashboardContent({ name }: { name: string }) {
           <div className="ml-2.5 min-w-0 sm:ml-3">
             <div className="flex items-center gap-2">
               <h1 className="truncate text-[15px] font-semibold">{customerName}</h1>
+              {conversation?.verified && (
+                <span title="Proved their identity — signed in, or confirmed with a code" className="flex shrink-0 items-center gap-1 rounded-full bg-[#edf7f1] px-2 py-0.5 text-[10px] font-semibold text-[#2e8a5c]">
+                  <ShieldCheck size={11} /> Verified
+                </span>
+              )}
               {/* Redundant with the Resolve button's own state, and the
                   first thing to go when space is tight. */}
               {conversation && (
@@ -1378,7 +1385,14 @@ function DashboardContent({ name }: { name: string }) {
               />
             </span>
             <div className="min-w-0">
-              <h2 className="truncate text-[17px] font-bold">{customerName}</h2>
+              <div className="flex items-center gap-2">
+                <h2 className="truncate text-[17px] font-bold">{customerName}</h2>
+                {conversation?.verified && (
+                  <span title="Proved their identity — signed in, or confirmed with a code" className="flex shrink-0 items-center gap-1 rounded-full bg-[#edf7f1] px-2 py-0.5 text-[10px] font-semibold text-[#2e8a5c]">
+                    <ShieldCheck size={11} /> Verified
+                  </span>
+                )}
+              </div>
               <p className="mt-1 text-[11px] font-medium text-[var(--chat-muted)]">Website visitor · {visitorOnline ? "Online" : "Offline"}</p>
             </div>
           </div>
