@@ -7,7 +7,9 @@ export const DASHBOARD_THEME_EVENT = "elpino-dashboard-theme";
 export const DASHBOARD_THEME_KEY = "elpino-dashboard-theme";
 
 type DashboardTheme = { accent: string; appearance: DashboardAppearance };
-const fallback: DashboardTheme = { accent: "#428CE5", appearance: "dark" };
+// New accounts open the dashboard in the light theme. Anyone who has picked a
+// theme in Settings keeps their choice (it is saved in localStorage).
+const fallback: DashboardTheme = { accent: "#428CE5", appearance: "light" };
 
 export function readDashboardTheme(): DashboardTheme {
   if (typeof window === "undefined") return fallback;

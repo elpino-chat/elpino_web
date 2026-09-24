@@ -112,6 +112,7 @@ export function Header({
   pricingPage?: boolean;
 }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [openMobileGroup, setOpenMobileGroup] = useState<string | null>(null);
   const language = useStoredLanguage();
   const [languageOpen, setLanguageOpen] = useState(false);
   const { t } = useTranslation(language as any);
@@ -289,99 +290,88 @@ export function Header({
 
         {/* Mobile Navigation Drawer */}
         {isMobileMenuOpen && (
-          <div
-            className={`absolute inset-x-0 top-full z-40 max-h-[75dvh] overflow-y-auto border-t px-6 py-6 shadow-2xl lg:hidden ${light ? 'border-[#d8ddd6] bg-white' : 'border-white/10 bg-black'
-              }`}
-          >
-            <nav className="flex flex-col gap-5" aria-label="Mobile navigation">
-              {navGroups.map((group) => (
-                <div
-                  key={group.label}
-                  className={`border-b pb-5 ${light ? 'border-black/10' : 'border-white/10'
-                    }`}
-                >
-                  <div
-                    className={`mb-3 text-[12px] font-semibold uppercase tracking-[0.14em] ${light ? 'text-black/45' : 'text-white/40'
-                      }`}
-                  >
-                    {group.label}
-                  </div>
-                  <div className="space-y-4">
-                    {group.sections.map((sec) => (
-                      <div key={sec.title}>
-                        <p className="text-xs font-semibold text-white/50">{sec.title}</p>
-                        <div className="mt-1.5 space-y-2 border-l border-white/20 pl-3">
-                          {sec.items.map((item) => (
-                            <Link
-                              key={item.label}
-                              onClick={() => setIsMobileMenuOpen(false)}
-                              href={item.href}
-                              className="block text-[14px] text-white/90 underline underline-offset-4 decoration-white/30 hover:text-white"
-                            >
-                              {item.label}
-                            </Link>
-                          ))}
-                        </div>
+          <div className="absolute inset-x-3 top-full z-40 mt-2 max-h-[80dvh] overflow-y-auto rounded-3xl border-2 border-[#11120f] bg-[#fff8ec] p-4 text-[#11120f] shadow-xl lg:hidden">
+            <nav className="flex flex-col gap-2" aria-label="Mobile navigation">
+              {navGroups.map((group) => {
+                const open = openMobileGroup === group.label;
+                return (
+                  <div key={group.label} className="rounded-2xl border-2 border-[#11120f] bg-white">
+                    <button
+                      type="button"
+                      aria-expanded={open}
+                      onClick={() => setOpenMobileGroup(open ? null : group.label)}
+                      className="flex w-full items-center justify-between px-4 py-3.5 text-left text-[17px] font-semibold"
+                    >
+                      {group.label}
+                      <span className="grid size-7 place-items-center rounded-full border-2 border-[#11120f] transition-transform duration-300" style={{ backgroundColor: open ? '#ffd84d' : '#fff', transform: open ? 'rotate(45deg)' : 'none' }}>
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 1v10M1 6h10" stroke="#11120f" strokeWidth="2" strokeLinecap="round" /></svg>
+                      </span>
+                    </button>
+                    {open && (
+                      <div className="space-y-4 border-t-2 border-dashed border-[#11120f]/25 px-4 pb-4 pt-3">
+                        {group.sections.map((sec) => (
+                          <div key={sec.title}>
+                            <p className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[#11120f]/45">{sec.title}</p>
+                            <div className="mt-2 flex flex-wrap gap-2">
+                              {sec.items.map((item) => (
+                                <Link
+                                  key={item.label}
+                                  onClick={() => setIsMobileMenuOpen(false)}
+                                  href={item.href}
+                                  className="rounded-full border-2 border-[#11120f] bg-[#fffdf5] px-3.5 py-2 text-[14.5px] font-medium transition active:bg-[#ffd84d]"
+                                >
+                                  {item.label}
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                    )}
                   </div>
-                </div>
-              ))}
-              <div className="flex flex-col gap-2 pt-1">
-                <Link
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  href="/pricing"
-                  className={`text-[15px] font-medium ${light ? 'text-[#181e15]' : 'text-white/90'
-                    }`}
-                >
-                  {t('nav.pricing', 'Pricing')}
-                </Link>
-              </div>
+                );
+              })}
+
+              <Link
+                onClick={() => setIsMobileMenuOpen(false)}
+                href="/pricing"
+                className="rounded-2xl border-2 border-[#11120f] bg-white px-4 py-3.5 text-[17px] font-semibold"
+              >
+                {t('nav.pricing', 'Pricing')}
+              </Link>
 
               {session ? (
                 <Link
                   onClick={() => setIsMobileMenuOpen(false)}
                   href="/dashboard"
-                  className={`mt-3 flex h-11 items-center justify-center rounded-full text-sm font-medium transition ${light
-                      ? 'bg-black text-white'
-                      : 'bg-white text-black'
-                    }`}
+                  className="mt-2 flex h-12 items-center justify-center rounded-full border-2 border-[#11120f] bg-[#3784ff] text-[15px] font-semibold text-white"
                 >
                   {t('nav.goToDashboard', 'Go to dashboard')}
                 </Link>
               ) : (
-                <div className="mt-3 flex flex-col gap-2.5">
+                <div className="mt-2 grid grid-cols-2 gap-2.5">
                   <Link
                     onClick={() => setIsMobileMenuOpen(false)}
                     href="/login"
-                    className={`flex h-11 items-center justify-center rounded-full border text-sm font-medium transition ${light
-                        ? 'border-black/20 text-black'
-                        : 'border-white/20 text-white'
-                      }`}
+                    className="flex h-12 items-center justify-center rounded-full border-2 border-[#11120f] bg-white text-[15px] font-semibold"
                   >
                     {t('nav.login', 'Log in')}
                   </Link>
                   <Link
                     onClick={() => setIsMobileMenuOpen(false)}
                     href="/signup"
-                    className={`flex h-11 items-center justify-center rounded-full text-sm font-medium transition ${light
-                        ? 'bg-black text-white'
-                        : 'bg-white text-black'
-                      }`}
+                    className="flex h-12 items-center justify-center rounded-full border-2 border-[#11120f] bg-[#3784ff] text-[15px] font-semibold text-white"
                   >
                     {t('nav.getStarted', 'Sign up')}
                   </Link>
                 </div>
               )}
 
-              <div
-                className={`mt-4 border-t pt-4 ${light ? 'border-black/10' : 'border-white/10'
-                  }`}
-              >
+              <div className="mt-2 border-t-2 border-dashed border-[#11120f]/25 pt-3">
                 <LanguageSwitcher
                   language={language}
                   onChange={setStoredLanguage}
-                  light={light}
+                  light
                   open={languageOpen}
                   onOpenChange={setLanguageOpen}
                 />

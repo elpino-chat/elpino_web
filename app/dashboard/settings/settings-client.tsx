@@ -2569,7 +2569,7 @@ function GeneralSettingsPage({ user }: { user: SettingsUser }) {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [dashboardAppearance, setDashboardAppearance] = useState<DashboardAppearance>("dark");
+  const [dashboardAppearance, setDashboardAppearance] = useState<DashboardAppearance>("light");
 
   const [twoFaBusy, setTwoFaBusy] = useState(false);
   const [twoFaSetup, setTwoFaSetup] = useState<{ secret: string; otpauthUrl: string } | null>(null);
