@@ -34,24 +34,28 @@ function Chevron({ className = '' }: { className?: string }) {
 // Clean 4-column dropdown
 function MegaNav({ groups, light = false }: { groups: DropdownGroup[]; light?: boolean }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const wrapRef = useRef<HTMLDivElement>(null);
 
-  function open(index: number) {
-    clearTimeout(closeTimer.current);
-    setOpenIndex(index);
-  }
-
-  function scheduleClose() {
-    clearTimeout(closeTimer.current);
-    closeTimer.current = setTimeout(() => setOpenIndex(null), 180);
-  }
-
-  useEffect(() => () => clearTimeout(closeTimer.current), []);
+  // Opens and closes on click. Clicking outside, pressing Escape, or picking
+  // a link closes it.
+  useEffect(() => {
+    if (openIndex === null) return;
+    const onPointerDown = (e: PointerEvent) => {
+      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) setOpenIndex(null);
+    };
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpenIndex(null); };
+    document.addEventListener('pointerdown', onPointerDown);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [openIndex]);
 
   const activeGroup = openIndex !== null ? groups[openIndex] : null;
 
   return (
-    <div>
+    <div ref={wrapRef}>
       {/* Top Nav Trigger Buttons */}
       <div className="flex items-center gap-1">
         {groups.map((group, index) => {
@@ -70,9 +74,7 @@ function MegaNav({ groups, light = false }: { groups: DropdownGroup[]; light?: b
                 }`}
               aria-haspopup="menu"
               aria-expanded={isOpen}
-              onMouseEnter={() => open(index)}
-              onFocus={() => open(index)}
-              onMouseLeave={scheduleClose}
+              onClick={() => setOpenIndex(isOpen ? null : index)}
             >
               {group.label}
               <Chevron className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
@@ -90,8 +92,6 @@ function MegaNav({ groups, light = false }: { groups: DropdownGroup[]; light?: b
             : 'pointer-events-none invisible -translate-y-2 opacity-0'
           }`}
         role="menu"
-        onMouseEnter={() => openIndex !== null && open(openIndex)}
-        onMouseLeave={scheduleClose}
       >
         {activeGroup && <MegaMenuPanel group={activeGroup} onNavigate={() => setOpenIndex(null)} />}
       </div>

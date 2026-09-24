@@ -1,68 +1,129 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, BookOpen, Clock3, Share2, Sparkles } from "lucide-react";
-import { motion, useScroll, useSpring } from "framer-motion";
-import { BlogPost } from "../data";
-import { BlogCover } from "../../components/BlogCover";
+import { useEffect, useState } from "react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Clock3, Share2 } from "lucide-react";
+import { Rv } from "@/app/components/RevealOnScroll";
+import type { BlogPost } from "../data";
+import { Cover, colorFor, prettyDate } from "../BlogClient";
 
-const categoryTone: Record<string, string> = {
-  Company: "bg-[#e7ddf3] text-[#7651b0]",
-  Product: "bg-[#dceee8] text-[#28745a]",
-  Guides: "bg-[#fff1e3] text-[#a96027]",
-};
+const INK = "#11120f";
+const BLUE = "#3784ff";
+const YELLOW = "#ffd84d";
 
-function prettyDate(date: string) {
-  return new Intl.DateTimeFormat("en", { month: "long", day: "numeric", year: "numeric" }).format(new Date(`${date}T00:00:00`));
-}
+const card = "rounded-[22px] border-2 border-[#11120f]";
+const mono = "font-mono text-[11px] font-semibold uppercase tracking-[0.14em]";
+const dots = { backgroundImage: "radial-gradient(#000 1.2px, transparent 1.2px)", backgroundSize: "14px 14px" };
 
 export function BlogPostClient({ post, allPosts }: { post: BlogPost; allPosts: BlogPost[] }) {
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, { stiffness: 150, damping: 25, restDelta: 0.001 });
-  const relatedPosts = allPosts.filter((item) => item.slug !== post.slug && item.category === post.category).slice(0, 2);
-  if (relatedPosts.length < 2) relatedPosts.push(...allPosts.filter((item) => item.slug !== post.slug && !relatedPosts.some((related) => related.slug === item.slug)).slice(0, 2 - relatedPosts.length));
+  const [progress, setProgress] = useState(0);
+  const [copied, setCopied] = useState(false);
+  const accent = colorFor(post.category);
 
-  async function shareArticle() {
-    if (navigator.share) await navigator.share({ title: post.title, text: post.excerpt, url: window.location.href }).catch(() => undefined);
-    else await navigator.clipboard.writeText(window.location.href).catch(() => undefined);
+  useEffect(() => {
+    const on = () => {
+      const h = document.documentElement;
+      const max = h.scrollHeight - window.innerHeight;
+      setProgress(max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0);
+    };
+    on();
+    window.addEventListener("scroll", on, { passive: true });
+    window.addEventListener("resize", on);
+    return () => { window.removeEventListener("scroll", on); window.removeEventListener("resize", on); };
+  }, []);
+
+  const related = allPosts.filter((p) => p.slug !== post.slug && p.category === post.category).slice(0, 2);
+  if (related.length < 2) related.push(...allPosts.filter((p) => p.slug !== post.slug && !related.some((r) => r.slug === p.slug)).slice(0, 2 - related.length));
+
+  async function share() {
+    try {
+      if (navigator.share) await navigator.share({ title: post.title, text: post.excerpt, url: window.location.href });
+      else { await navigator.clipboard.writeText(window.location.href); setCopied(true); window.setTimeout(() => setCopied(false), 1600); }
+    } catch { /* cancelled or unavailable */ }
   }
 
+  const paragraphs = post.content.split("\n\n");
+
   return (
-    <div className="flex flex-1 flex-col overflow-hidden bg-[#f6f4ef] font-[family-name:var(--font-rethink-sans)] text-[#192016]">
-      <motion.div className="fixed inset-x-0 top-0 z-[100] h-[3px] origin-left bg-[#bf91ff]" style={{ scaleX }} />
+    <main className="font-[family-name:var(--font-rethink-sans)] text-[#11120f]">
+      <div aria-hidden="true" className="fixed inset-x-0 top-0 z-[100] h-1.5 border-b-2 border-[#11120f] bg-white/60">
+        <div className="h-full origin-left border-r-2 border-[#11120f]" style={{ width: `${progress * 100}%`, backgroundColor: accent }} />
+      </div>
 
       <article>
-        <header className="relative overflow-hidden bg-[#11120f] px-5 pb-36 pt-16 text-white sm:px-8 sm:pb-44 sm:pt-20">
-          <div aria-hidden="true" className="absolute -right-24 -top-28 size-[430px] rounded-full bg-[#bf91ff]/30 blur-[100px]" />
-          <div aria-hidden="true" className="absolute -bottom-36 left-[12%] size-[400px] rounded-full bg-[#fe9238]/20 blur-[110px]" />
-          <div className="relative mx-auto max-w-5xl">
-            <div className="flex items-center justify-between gap-4">
-              <Link href="/blog" className="group inline-flex items-center gap-2 text-xs font-semibold text-white/55 transition hover:text-white"><ArrowLeft size={14} className="transition group-hover:-translate-x-1" />Learning center</Link>
-              <button type="button" onClick={() => void shareArticle()} className="inline-flex h-9 items-center gap-2 rounded-full border border-white/15 px-3.5 text-xs font-medium text-white/70 transition hover:bg-white/10 hover:text-white"><Share2 size={13} />Share</button>
-            </div>
-            <div className="mt-16 flex flex-wrap items-center gap-3 text-xs"><span className={`rounded-full px-3 py-1.5 font-semibold ${categoryTone[post.category] ?? "bg-white/10 text-white"}`}>{post.category}</span><span className="inline-flex items-center gap-1.5 text-white/45"><Clock3 size={13} />{post.readTime}</span><span className="text-white/25">·</span><span className="text-white/45">{prettyDate(post.date)}</span></div>
-            <h1 className="mt-6 max-w-4xl text-[clamp(2.7rem,7vw,5.8rem)] font-medium leading-[0.98] tracking-[-0.06em]">{post.title}</h1>
-            <p className="mt-7 max-w-3xl text-lg leading-8 text-white/60 sm:text-xl">{post.excerpt}</p>
-            <div className="mt-9 flex items-center gap-3"><span className="flex size-10 items-center justify-center rounded-xl bg-[#bf91ff] text-sm font-bold text-black">E</span><div><p className="text-sm font-semibold">Elpino team</p><p className="mt-0.5 text-xs text-white/40">Product notes and practical guides</p></div></div>
+        <header className="relative isolate overflow-hidden bg-white">
+          <div aria-hidden="true" className="absolute inset-0 -z-10 bg-cover bg-top" style={{ backgroundImage: "url(/piliar-1-grandient.png)", maskImage: "linear-gradient(to bottom, #000 55%, transparent)", WebkitMaskImage: "linear-gradient(to bottom, #000 55%, transparent)" }} />
+          <div className="mx-auto max-w-4xl px-5 pb-12 pt-[124px] sm:px-8 lg:pt-[140px]">
+            <Rv variant="drop">
+              <Link href="/blog" className="inline-flex items-center gap-2 rounded-full border-2 border-[#11120f] bg-white px-3.5 py-1.5 text-[13.5px] font-semibold transition hover:-translate-y-0.5 hover:bg-[#ffd84d]"><ArrowLeft size={14} />All articles</Link>
+            </Rv>
+            <Rv delay={80}>
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                <span className={`${mono} rounded-full border-2 border-[#11120f] px-3 py-1.5 text-white`} style={{ backgroundColor: accent }}>{post.category}</span>
+                <span className="flex items-center gap-2 text-[14px] text-[#11120f]/60">{prettyDate(post.date)}<span aria-hidden="true">·</span><Clock3 size={13} />{post.readTime}</span>
+              </div>
+            </Rv>
+            <Rv delay={140}><h1 className="mt-6 text-[clamp(2.5rem,6vw,5rem)] font-semibold leading-[1] tracking-[-0.055em]">{post.title}</h1></Rv>
+            <Rv delay={200}><p className="mt-6 max-w-[56ch] text-xl leading-9 text-[#11120f]/65">{post.excerpt}</p></Rv>
+            <Rv delay={260}>
+              <div className="mt-8 flex items-center gap-3">
+                <span className="grid size-11 place-items-center rounded-full border-2 border-[#11120f] text-sm font-bold text-white" style={{ backgroundColor: accent }}>{post.authorAvatar}</span>
+                <div><p className="font-semibold leading-tight">{post.authorName}</p><p className="text-[13.5px] text-[#11120f]/55">{post.authorRole}</p></div>
+              </div>
+            </Rv>
           </div>
         </header>
 
-        <div className="relative z-10 mx-auto -mt-24 max-w-5xl px-5 sm:-mt-30 sm:px-8">
-          <div className="overflow-hidden rounded-[28px] border border-white/10 bg-[#17191f] shadow-[0_35px_80px_rgba(17,18,15,0.25)]"><BlogCover category={post.category} title={post.title} slug={post.slug} aspectRatio="hero" className="min-h-[300px] border-0 sm:min-h-[430px]" /></div>
+        <div className="mx-auto max-w-4xl px-5 sm:px-8">
+          <Rv variant="deal"><div className={`${card} overflow-hidden`}><Cover post={post} tall /></div></Rv>
         </div>
 
-        <div className="mx-auto grid max-w-5xl gap-10 px-5 py-16 sm:px-8 sm:py-20 lg:grid-cols-[minmax(0,680px)_180px] lg:justify-between">
-          <div className="min-w-0">
-            <div className="space-y-7 text-[17px] leading-8 text-[#59635b] sm:text-[18px] sm:leading-9">
-              {post.content.split("\n\n").map((paragraph, index) => <p key={index} className={index === 0 ? "text-xl font-medium leading-9 text-[#252c26] sm:text-2xl sm:leading-10" : ""}>{paragraph}</p>)}
+        <div className="mx-auto grid max-w-4xl gap-10 px-5 py-16 sm:px-8 lg:grid-cols-[minmax(0,1fr)_180px]">
+          <div className="min-w-0 space-y-7 text-[18px] leading-9 text-[#11120f]/75">
+            {paragraphs.map((p, i) => (
+              <p key={i} className={i === 0 ? "text-[22px] font-medium leading-10 text-[#11120f]" : ""}>{p}</p>
+            ))}
+
+            <div className={`${card} relative !mt-14 overflow-hidden p-7 text-white`} style={{ backgroundColor: BLUE }}>
+              <div aria-hidden="true" className="absolute inset-0 opacity-[0.16]" style={dots} />
+              <p className="relative text-2xl font-semibold leading-snug tracking-tight">Give your customers the answer before they finish typing.</p>
+              <p className="relative mt-2 text-[16px] leading-7 text-white/90">Start free with 50 AI conversations a month. No card required.</p>
+              <Link href="/signup" className="relative mt-5 inline-flex h-12 items-center gap-2 rounded-full border-2 border-[#11120f] px-6 font-semibold text-[#11120f] transition hover:-translate-y-0.5" style={{ backgroundColor: YELLOW }}>Start free <ArrowRight size={16} /></Link>
             </div>
-            <div className="mt-14 rounded-[24px] border border-black/10 bg-[#dceee8] p-6 sm:p-8"><span className="flex size-10 items-center justify-center rounded-full bg-white"><Sparkles size={17} /></span><h2 className="mt-5 text-2xl font-semibold tracking-[-0.035em]">Put the ideas into practice.</h2><p className="mt-3 max-w-xl text-sm leading-7 text-[#5f6d64]">Create an Elpino workspace and see how AI answers, shared context, and human handoff work together.</p><Link href="/signup" className="mt-6 inline-flex h-11 items-center gap-2 rounded-full bg-[#192016] px-5 text-sm font-semibold text-white">Start for free <ArrowRight size={14} /></Link></div>
           </div>
-          <aside className="hidden lg:block"><div className="sticky top-[calc(var(--elpino-header-h,64px)+32px)] border-l border-black/10 pl-5"><p className="text-[10px] font-bold uppercase tracking-[0.11em] text-[#969c96]">Article</p><p className="mt-3 text-xs font-semibold leading-5">{post.category}</p><p className="mt-2 text-xs leading-5 text-[#7a827b]">{post.readTime}<br />Published {prettyDate(post.date)}</p><button type="button" onClick={() => void shareArticle()} className="mt-5 inline-flex items-center gap-2 text-xs font-semibold text-[#7651b0]"><Share2 size={13} />Share article</button></div></aside>
+
+          <aside className="hidden lg:block">
+            <div className="sticky top-28 space-y-3">
+              <button type="button" onClick={() => void share()} className="flex w-full items-center justify-center gap-2 rounded-full border-2 border-[#11120f] bg-white px-4 py-2.5 text-[14px] font-semibold transition hover:-translate-y-0.5 hover:bg-[#ffd84d]">{copied ? <Check size={15} /> : <Share2 size={15} />}{copied ? "Link copied" : "Share"}</button>
+              <div className={`${card} bg-white p-3.5 text-[13px]`}>
+                <p className={`${mono} text-[#11120f]/45`}>Progress</p>
+                <p className="mt-1 font-mono text-2xl font-bold tabular-nums">{Math.round(progress * 100)}%</p>
+              </div>
+            </div>
+          </aside>
         </div>
       </article>
 
-      {relatedPosts.length > 0 && <section className="border-t border-black/10 bg-white px-5 py-16 sm:px-8 sm:py-20"><div className="mx-auto max-w-5xl"><div className="flex items-end justify-between gap-5"><div><p className="text-xs font-bold uppercase tracking-[0.11em] text-[#7651b0]">More from Elpino</p><h2 className="mt-3 text-3xl font-semibold tracking-[-0.045em]">Keep learning</h2></div><Link href="/blog" className="hidden items-center gap-2 text-sm font-semibold sm:inline-flex">All articles <ArrowRight size={14} /></Link></div><div className="mt-8 grid gap-5 md:grid-cols-2">{relatedPosts.map((related, index) => <Link key={related.slug} href={`/blog/${related.slug}`} className={`group overflow-hidden rounded-[24px] border border-black/10 ${index === 0 ? "bg-[#e7ddf3]" : "bg-[#fff1e3]"}`}><div className="overflow-hidden"><BlogCover category={related.category} title={related.title} slug={related.slug} aspectRatio="card" className="h-48 min-h-0 border-0 transition duration-300 group-hover:scale-[1.025]" /></div><div className="p-6"><div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.09em] text-[#717871]"><span>{related.category}</span><span>·</span><span>{related.readTime}</span></div><h3 className="mt-3 text-xl font-semibold leading-tight tracking-[-0.025em]">{related.title}</h3><p className="mt-3 line-clamp-2 text-sm leading-6 text-[#616a62]">{related.excerpt}</p><span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold">Read article <ArrowRight size={14} className="transition group-hover:translate-x-1" /></span></div></Link>)}</div></div></section>}
-    </div>
+      {related.length > 0 && (
+        <section className="border-t-2 border-[#11120f] bg-[#fff8ec] px-5 py-16 sm:px-8 sm:py-20">
+          <div className="mx-auto max-w-4xl">
+            <h2 className="text-3xl font-semibold tracking-[-0.03em]">Keep reading</h2>
+            <div className="mt-8 grid gap-5 sm:grid-cols-2">
+              {related.map((p) => (
+                <Link key={p.slug} href={`/blog/${p.slug}`} className={`${card} group flex flex-col overflow-hidden bg-white transition duration-300 hover:-translate-y-2`}>
+                  <Cover post={p} />
+                  <div className="flex flex-1 flex-col p-5">
+                    <h3 className="text-[20px] font-semibold leading-[1.15] tracking-[-0.025em]">{p.title}</h3>
+                    <p className="mt-2 line-clamp-2 text-[15px] leading-7 text-[#11120f]/65">{p.excerpt}</p>
+                    <ArrowUpRight size={18} className="mt-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+    </main>
   );
 }
+

@@ -22,6 +22,14 @@ export const categories: FaqCategory[] = [
         q: "Can I customize what the AI sounds like?",
         a: "Yes — its name, avatar, and persona are set per workspace in Settings, and the greeting shown before a visitor starts chatting is fully customizable.",
       },
+      {
+        q: "Which language does it reply in?",
+        a: "You choose. By default it matches the language the customer writes in, or you can fix a reply language in Settings. The greeting shown before a visitor starts chatting is your own text.",
+      },
+      {
+        q: "Is website chat the only channel?",
+        a: "Website chat is live today. Omnichannel is coming in November.",
+      },
     ],
   },
   {
@@ -33,7 +41,7 @@ export const categories: FaqCategory[] = [
       },
       {
         q: "What happens when it can't help?",
-        a: "It hands the conversation to your team with a written reason — what the customer needs and why it couldn't finish — and rounds-robins it to whoever's online. If nobody's free, it waits in the shared inbox instead of going silent.",
+        a: "It says so and asks the customer first: “Would you like me to connect you with our team?” On a yes, every teammate gets a Join alert at the same moment, and the first to tap takes the chat with the reason, a summary and the whole thread. If nobody joins within 90 seconds, the customer is told, a ticket is filed automatically, and they get an email with a reference.",
       },
       {
         q: "Can I see what the AI actually did?",
@@ -47,6 +55,10 @@ export const categories: FaqCategory[] = [
         q: "What's a \"secure request\"?",
         a: "A way to ask a customer for something too sensitive for chat — a password, a server detail. They get a single-use encrypted link; your team gets one look, then it's destroyed on the server for good.",
       },
+      {
+        q: "How does the AI know who it's talking to?",
+        a: "It checks. A visitor can confirm with a one-time email code, or your own login system can vouch for them with a short-lived signed token, and they get a Verified badge. Names and emails are also replaced with reference codes before the AI model reads a conversation.",
+      },
     ],
   },
   {
@@ -54,11 +66,15 @@ export const categories: FaqCategory[] = [
     items: [
       {
         q: "What does Elpino connect to?",
-        a: "Stripe or Razorpay, so the AI can verify a real order before it answers a billing question — read-only, matched to the customer's email. And Trello, so an escalation that needs tracked follow-up becomes a real card.",
+        a: "Stripe, Razorpay, Cashfree and Paystack for payments, Trello and Asana for tickets, and your own MCP servers for anything else. With Stripe or Razorpay connected, the AI can look up payments and subscriptions, send receipts and payment links, and cancel a subscription when asked. Refunds are off unless you turn them on.",
       },
       {
-        q: "Is that it — just payments and tickets?",
-        a: "For now. Elpino is early; the integration list grows from here. If there's a tool you need connected, tell us on the contact page.",
+        q: "Is there a Shopify, Slack or HubSpot connector?",
+        a: "Not as one-click connectors today. If your system has an MCP server, you can connect it and choose exactly which tools the AI may use. If there's a tool you'd like next, tell us on the contact page.",
+      },
+      {
+        q: "What is MCP, and how many servers can I connect?",
+        a: "The Model Context Protocol is a standard way for an AI to call tools on another system. You can connect up to five MCP servers and enable up to 15 tools on each. The AI only sees the tools you switch on, every call is checked again on the server, and tools that change data always need a verified customer.",
       },
       {
         q: "Can I disconnect something later?",
@@ -80,6 +96,10 @@ export const categories: FaqCategory[] = [
       {
         q: "Do escalations cost anything?",
         a: "No extra charge. On Free, a conversation the AI hands off to a human doesn't count toward your 50. On paid plans, the handoff itself is free, and the AI stops spending credit the moment a person takes over.",
+      },
+      {
+        q: "Can the AI issue refunds?",
+        a: "Only if the workspace owner turns refunds on. They're off by default. Even with refunds off, the AI can look up the payment and offer to connect the customer with your team.",
       },
       {
         q: "What happens when I use up my AI allowance?",

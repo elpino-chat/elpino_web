@@ -1,353 +1,201 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import { motion, useReducedMotion } from "framer-motion";
-import { ArrowDown, ArrowRight, Search, X } from "lucide-react";
-import { BlogCover } from "../components/BlogCover";
-import { useStoredLanguage } from "../hooks/useStoredLanguage";
+import { useMemo, useState, type FormEvent, type ReactNode } from "react";
+import { ArrowRight, ArrowUpRight, Check, Clock3, Mail, Search, SearchX, Sparkles, X } from "lucide-react";
+import { Rv } from "@/app/components/RevealOnScroll";
 import type { BlogPost } from "./data";
 
-const categories = ["All", "Company", "Product", "Guides"] as const;
-type Category = (typeof categories)[number];
+// The blog index in the site's sticker style: a searchable, filterable list
+// with a featured post, sticker covers generated from each post's category,
+// and the newsletter form (posts to /api/newsletter, unchanged).
 
-const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
+const INK = "#11120f";
+const BLUE = "#3784ff";
+const YELLOW = "#ffd84d";
+const PURPLE = "#7060bd";
+const ORANGE = "#fc7b33";
+const GREEN = "#1aa37a";
+const PINK = "#d9508a";
 
-function dateLabel(date: string, language: string) {
-  return new Intl.DateTimeFormat(language, { month: "short", day: "numeric", year: "numeric" }).format(new Date(`${date}T00:00:00`));
+const card = "rounded-[22px] border-2 border-[#11120f]";
+const mono = "font-mono text-[11px] font-semibold uppercase tracking-[0.14em]";
+const onDark = (c: string) => (c === YELLOW ? INK : "#fff");
+const dots = { backgroundImage: "radial-gradient(#000 1.2px, transparent 1.2px)", backgroundSize: "14px 14px" };
+
+export const CATEGORY_COLOR: Record<string, string> = { Company: BLUE, Product: GREEN, Guides: ORANGE };
+export const colorFor = (category: string) => CATEGORY_COLOR[category] ?? PURPLE;
+
+export function prettyDate(date: string) {
+  return new Intl.DateTimeFormat("en", { month: "short", day: "numeric", year: "numeric" }).format(new Date(`${date}T00:00:00`));
 }
 
-function Rise({ children, delay = 0, className }: { children: React.ReactNode; delay?: number; className?: string }) {
-  const reduce = useReducedMotion();
-  return (
-    <motion.div
-      className={className}
-      initial={reduce ? false : { opacity: 0, y: 26 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{ duration: 0.6, delay, ease: EASE }}
-    >
-      {children}
-    </motion.div>
-  );
-}
+function hash(s: string) { let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0; return h; }
 
-function Meta({ post, language }: { post: BlogPost; language: string }) {
+// A sticker cover: category colour, dot texture and three shapes whose
+// positions come from the slug so every post looks a little different.
+export function Cover({ post, tall = false }: { post: BlogPost; tall?: boolean }) {
+  const c = colorFor(post.category);
+  const h = hash(post.slug);
+  const shapes = [
+    { s: 46 + (h % 30), x: 8 + (h % 20), y: 14 + ((h >> 3) % 25), r: (h % 40) - 20, c: YELLOW, round: true },
+    { s: 40 + ((h >> 2) % 34), x: 62 + ((h >> 4) % 22), y: 44 + ((h >> 5) % 30), r: ((h >> 6) % 50) - 25, c: "#fff", round: false },
+    { s: 30 + ((h >> 3) % 26), x: 36 + ((h >> 7) % 26), y: 58 + ((h >> 8) % 18), r: ((h >> 9) % 60) - 30, c: PINK === c ? PURPLE : PINK, round: true },
+  ];
   return (
-    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#5d6872]">
-      <span className="text-[#6c48a0]">{post.category}</span>
-      <span aria-hidden="true">•</span>
-      <span>{dateLabel(post.date, language)}</span>
-      <span aria-hidden="true">•</span>
-      <span>{post.readTime}</span>
+    <div className={`relative overflow-hidden border-b-2 border-[#11120f] ${tall ? "h-full min-h-[240px]" : "h-44"}`} style={{ backgroundColor: c }} aria-hidden="true">
+      <div className="absolute inset-0 opacity-[0.16]" style={dots} />
+      {shapes.map((sh, i) => (
+        <span key={i} className={`absolute border-2 border-[#11120f] ${sh.round ? "rounded-full" : "rounded-2xl"}`} style={{ width: sh.s, height: sh.s, left: `${sh.x}%`, top: `${sh.y}%`, backgroundColor: sh.c, transform: `rotate(${sh.r}deg)`, animation: `elpino-float ${5 + i}s ease-in-out ${-i}s infinite` }} />
+      ))}
+      <span className={`${mono} absolute left-4 top-4 rounded-full border-2 border-[#11120f] bg-white px-2.5 py-1 text-[#11120f]`}>{post.category}</span>
     </div>
   );
 }
 
-function StoryLink({ post, language, delay = 0, tall = false }: { post: BlogPost; language: string; delay?: number; tall?: boolean }) {
+function Meta({ post, light = false }: { post: BlogPost; light?: boolean }) {
   return (
-    <Rise delay={delay}>
-      <Link href={`/blog/${post.slug}`} className="group block min-w-0">
-        <div className="overflow-hidden rounded-2xl bg-[#11120f] shadow-[0_20px_45px_-38px_rgba(23,24,28,0.7)]">
-          <BlogCover
-            category={post.category}
-            title={post.title}
-            slug={post.slug}
-            aspectRatio="card"
-            className={`${tall ? "h-[240px] sm:h-[280px]" : "h-[210px] sm:h-[240px]"} min-h-0 border-0 transition duration-500 group-hover:scale-[1.03]`}
-          />
-        </div>
-        <div className="pt-5">
-          <Meta post={post} language={language} />
-          <h3 className="mt-3 text-[clamp(1.3rem,2vw,1.8rem)] font-medium leading-[1.05] tracking-[-0.045em] text-[#233d4d] transition group-hover:text-[#6c48a0]">
-            {post.title}
-          </h3>
-          <p className="mt-3 line-clamp-2 max-w-xl text-sm leading-6 text-[#5d6872]">{post.excerpt}</p>
-          <p className="mt-4 text-sm text-[#7b858c]">By {post.authorName}</p>
-        </div>
-      </Link>
-    </Rise>
+    <p className={`flex items-center gap-2 text-[13px] ${light ? "text-white/80" : "text-[#11120f]/55"}`}>
+      {prettyDate(post.date)}<span aria-hidden="true">·</span><Clock3 size={12} />{post.readTime}
+    </p>
   );
 }
 
-function FeaturedStory({ post, language }: { post: BlogPost; language: string }) {
-  const reduce = useReducedMotion();
-  return (
-    <motion.div
-      initial={reduce ? false : { opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7, delay: 0.15, ease: EASE }}
-    >
-      <Link href={`/blog/${post.slug}`} className="group grid items-center gap-8 lg:grid-cols-[1.1fr_1fr] lg:gap-12">
-        <div className="overflow-hidden rounded-[24px] bg-[#11120f] shadow-[0_35px_80px_-50px_rgba(23,24,28,0.75)]">
-          <BlogCover
-            category={post.category}
-            title={post.title}
-            slug={post.slug}
-            aspectRatio="hero"
-            className="h-[280px] min-h-0 border-0 transition duration-500 group-hover:scale-[1.03] sm:h-[380px] lg:h-[440px]"
-          />
-        </div>
-        <div className="min-w-0">
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-            <span className="rounded-full bg-[#e7ddf3] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#5c416f]">Featured</span>
-            <Meta post={post} language={language} />
-          </div>
-          <h2 className="mt-5 text-[clamp(2rem,3.6vw,3.4rem)] font-medium leading-[0.98] tracking-[-0.055em] text-[#233d4d] transition group-hover:text-[#6c48a0]">
-            {post.title}
-          </h2>
-          <p className="mt-5 max-w-xl text-base leading-7 text-[#53616b]">{post.excerpt}</p>
-          <p className="mt-5 text-sm text-[#7b858c]">
-            By {post.authorName} · {post.authorRole}
-          </p>
-          <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#233d4d]">
-            Read the story <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
-          </span>
-        </div>
-      </Link>
-    </motion.div>
-  );
-}
-
-function NewsletterStrip() {
+function Newsletter() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
 
-  async function submit(event: React.FormEvent) {
+  async function submit(event: FormEvent) {
     event.preventDefault();
     if (status === "sending") return;
     setStatus("sending");
     setMessage("");
     try {
-      const response = await fetch("/api/newsletter", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
+      const response = await fetch("/api/newsletter", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ email }) });
       const data = await response.json().catch(() => null);
-      if (response.ok && data?.ok) {
-        setStatus("success");
-        setEmail("");
-      } else {
-        setStatus("error");
-        setMessage(data?.error === "invalid_email" ? "That email looks off — mind double-checking it?" : "That didn't send. Try again in a moment.");
-      }
-    } catch {
-      setStatus("error");
-      setMessage("That didn't send. Try again in a moment.");
-    }
+      if (response.ok && data?.ok) { setStatus("success"); setEmail(""); }
+      else { setStatus("error"); setMessage(data?.error === "invalid_email" ? "That email looks off. Mind double-checking it?" : "That didn't send. Try again in a moment."); }
+    } catch { setStatus("error"); setMessage("That didn't send. Try again in a moment."); }
   }
 
   return (
-    <Rise className="mt-20">
-      <div className="relative overflow-hidden rounded-[28px] bg-[#233d4d] p-8 text-white sm:p-12">
-        <div aria-hidden="true" className="absolute inset-0 opacity-[0.35] [background-image:radial-gradient(rgba(255,255,255,0.35)_1px,transparent_1px)] [background-size:20px_20px]" />
-        <div aria-hidden="true" className="absolute -left-24 -top-24 size-72 rounded-full bg-[#7651b0]/40 blur-3xl" />
-        <div className="relative grid gap-8 lg:grid-cols-[1.1fr_1fr] lg:items-center">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#d9bef4]">The newsletter</p>
-            <h2 className="mt-4 text-3xl font-medium tracking-[-0.05em] sm:text-4xl">
-              Calm support ops, <span className="font-[family-name:var(--font-instrument-serif)] font-normal italic text-[#d9bef4]">in your inbox.</span>
-            </h2>
-            <p className="mt-4 max-w-md text-sm leading-6 text-white/65">
-              One short letter on calmer support operations and thoughtful automation. No noise, unsubscribe anytime.
-            </p>
-          </div>
-          <form onSubmit={submit} className="w-full">
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <label htmlFor="blog-newsletter-email" className="sr-only">
-                Email address
-              </label>
-              <input
-                id="blog-newsletter-email"
-                type="email"
-                required
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                placeholder="you@company.com"
-                className="h-12 min-w-0 flex-1 rounded-full border border-white/25 bg-white/10 px-5 text-sm text-white outline-none transition placeholder:text-white/40 focus:border-[#d9bef4] focus:ring-4 focus:ring-[#d9bef4]/20"
-              />
-              <button
-                type="submit"
-                disabled={status === "sending"}
-                className="inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-[#d9bef4] px-7 text-sm font-semibold text-[#231c29] transition hover:bg-white disabled:opacity-60"
-              >
-                {status === "sending" ? "Sending…" : "Subscribe"}
-              </button>
+    <section id="subscribe" className="scroll-mt-24 bg-white px-5 pb-24 pt-4 sm:px-8">
+      <Rv variant="pop">
+        <div className={`${card} relative mx-auto max-w-6xl overflow-hidden px-6 py-14 text-white sm:px-12`} style={{ backgroundColor: BLUE }}>
+          <div aria-hidden="true" className="absolute inset-0 opacity-[0.16]" style={dots} />
+          <div className="relative grid items-center gap-8 lg:grid-cols-[1fr_1fr]">
+            <div>
+              <span className={`${mono} inline-flex items-center gap-1.5 rounded-full border-2 border-[#11120f] px-3 py-1.5 text-[#11120f]`} style={{ backgroundColor: YELLOW }}><Mail size={12} />The newsletter</span>
+              <h2 className="mt-5 text-[clamp(2rem,4.4vw,3.2rem)] font-semibold leading-[1.03] tracking-[-0.045em]">One short letter. No noise.</h2>
+              <p className="mt-3 max-w-[42ch] text-lg leading-8 text-white/90">Calmer support, thoughtful automation, and what we shipped. Unsubscribe any time.</p>
             </div>
-            <p aria-live="polite" className={`mt-3 min-h-5 text-sm ${status === "error" ? "text-[#ffb9b9]" : "text-[#d9bef4]"}`}>
-              {status === "success" ? "You're on the list — the next letter lands soon." : status === "error" ? message : ""}
-            </p>
-          </form>
+            {status === "success" ? (
+              <div className={`${card} flex items-center gap-4 bg-white p-6 text-[#11120f]`}><span className="grid size-12 place-items-center rounded-full border-2 border-[#11120f]" style={{ backgroundColor: GREEN }}><Check size={22} color="#fff" strokeWidth={3} /></span><div><p className="text-xl font-semibold">You&apos;re on the list.</p><p className="text-[15px] text-[#11120f]/60">Watch your inbox.</p></div></div>
+            ) : (
+              <form onSubmit={submit} className="flex flex-col gap-3 sm:flex-row">
+                <label htmlFor="blog-newsletter-email" className="sr-only">Email address</label>
+                <input id="blog-newsletter-email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@company.com" className="h-13 min-w-0 flex-1 rounded-full border-2 border-[#11120f] bg-white px-6 text-[16px] text-[#11120f] outline-none placeholder:text-[#11120f]/40 focus:bg-[#fff6cf]" />
+                <button type="submit" disabled={status === "sending"} className="inline-flex h-13 items-center justify-center gap-2 rounded-full border-2 border-[#11120f] px-7 font-semibold text-[#11120f] transition hover:-translate-y-0.5 disabled:opacity-60" style={{ backgroundColor: YELLOW }}>{status === "sending" ? "Sending…" : "Subscribe"}<ArrowRight size={16} /></button>
+                {status === "error" && <p role="alert" className="text-sm font-medium text-white sm:absolute sm:mt-[3.75rem]">{message}</p>}
+              </form>
+            )}
+          </div>
         </div>
-      </div>
-    </Rise>
+      </Rv>
+    </section>
   );
 }
 
 export function BlogClient({ posts }: { posts: BlogPost[] }) {
-  const language = useStoredLanguage();
   const [query, setQuery] = useState("");
-  const [activeCategory, setActiveCategory] = useState<Category>("All");
-  const sortedPosts = useMemo(() => [...posts].sort((a, b) => b.date.localeCompare(a.date)), [posts]);
-  const visiblePosts = useMemo(() => {
-    const words = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
-    return sortedPosts.filter((post) => (activeCategory === "All" || post.category === activeCategory) && words.every((word) => `${post.title} ${post.excerpt} ${post.category}`.toLowerCase().includes(word)));
-  }, [activeCategory, query, sortedPosts]);
-  const isBrowsing = !query && activeCategory === "All";
-  const featured = sortedPosts[0];
-  const secondary = sortedPosts.slice(1, 3);
-  const rest = sortedPosts.slice(3);
+  const [cat, setCat] = useState("All");
+  const sorted = useMemo(() => [...posts].sort((a, b) => b.date.localeCompare(a.date)), [posts]);
+  const categories = useMemo(() => ["All", ...Array.from(new Set(sorted.map((p) => p.category)))], [sorted]);
+  const counts = (c: string) => (c === "All" ? sorted.length : sorted.filter((p) => p.category === c).length);
+  const words = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
+  const visible = sorted.filter((p) => (cat === "All" || p.category === cat) && words.every((w) => `${p.title} ${p.excerpt} ${p.category}`.toLowerCase().includes(w)));
+  const browsing = !words.length && cat === "All";
+  const featured = browsing ? visible[0] : null;
+  const list = browsing ? visible.slice(1) : visible;
 
   return (
-    <div className="flex flex-1 flex-col bg-[#f6f4ef] font-[family-name:var(--font-rethink-sans)] text-[#233d4d]">
-      <section className="relative px-5 pt-12 sm:px-8 sm:pt-16">
-        <Image
-          src="/images/blog/learning-sloth.png"
-          alt=""
-          width={1145}
-          height={1374}
-          priority
-          className="pointer-events-none absolute -top-10 right-4 z-10 hidden w-56 select-none rotate-3 drop-shadow-[0_22px_30px_rgba(23,24,28,0.25)] md:block lg:right-10 lg:w-80"
-        />
-        <div className="mx-auto max-w-[1440px]">
-          <div className="relative border-b border-[#233d4d]/20 pb-8">
-            <motion.div
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: EASE }}
-              className="md:pr-64 lg:pr-96"
-            >
-              <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#6c48a0]">Notes from Elpino</p>
-              <h1 className="mt-3 text-[clamp(3.75rem,10vw,9.5rem)] font-medium leading-[0.8] tracking-[-0.09em]">
-                Shortcut<span className="text-[#7651b0]">.</span>
-              </h1>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.12, ease: EASE }}
-              className="mt-6 flex max-w-md flex-col items-start gap-4"
-            >
-              <p className="text-base leading-7 text-[#53616b]">
-                A field guide to <span className="font-[family-name:var(--font-instrument-serif)] text-lg italic text-[#667b55]">calmer support</span>, thoughtful automation, and the people building them.
-              </p>
-              <a href="#subscribe" className="inline-flex items-center gap-2 text-sm font-semibold text-[#6c48a0] transition hover:text-[#5c416f]">
-                Get new stories by email <ArrowDown size={15} className="transition-transform hover:translate-y-0.5" />
-              </a>
-            </motion.div>
+    <main className="font-[family-name:var(--font-rethink-sans)] text-[#11120f]">
+      <section className="relative isolate overflow-hidden bg-white">
+        <div aria-hidden="true" className="absolute inset-0 -z-10 bg-cover bg-top" style={{ backgroundImage: "url(/piliar-1-grandient.png)", maskImage: "linear-gradient(to bottom, #000 55%, transparent)", WebkitMaskImage: "linear-gradient(to bottom, #000 55%, transparent)" }} />
+        <div className="mx-auto max-w-6xl px-5 pb-14 pt-[124px] sm:px-8 lg:pt-[140px]">
+          <div className="max-w-3xl">
+            <Rv variant="drop"><span className={`${mono} inline-flex items-center gap-1.5 rounded-full border-2 border-[#11120f] px-3 py-1.5`} style={{ backgroundColor: YELLOW }}><Sparkles size={13} />The Elpino blog</span></Rv>
+            <Rv delay={80}><h1 className="mt-6 text-[clamp(2.9rem,7vw,5.8rem)] font-semibold leading-[0.96] tracking-[-0.058em]">Notes on <span className="hl">calmer support.</span></h1></Rv>
+            <Rv delay={170}><p className="mt-6 max-w-[52ch] text-lg leading-8 text-[#11120f]/70">Guides, product notes and lessons from building Elpino.</p></Rv>
           </div>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.25 }}
-            className="flex flex-col gap-5 py-5 lg:flex-row lg:items-center lg:justify-between"
-          >
-            <nav aria-label="Blog categories" className="flex flex-wrap gap-x-5 gap-y-2">
-              {categories.map((category) => (
-                <button key={category} type="button" onClick={() => setActiveCategory(category)} className="relative pb-1 text-sm font-semibold transition">
-                  <span className={activeCategory === category ? "text-[#233d4d]" : "text-[#71808a] transition hover:text-[#233d4d]"}>
-                    {category === "All" ? "Latest" : category}
-                  </span>
-                  {activeCategory === category && (
-                    <motion.span layoutId="blog-nav-underline" className="absolute inset-x-0 -bottom-0.5 h-0.5 rounded-full bg-[#6c48a0]" transition={{ duration: 0.35, ease: EASE }} />
-                  )}
-                </button>
-              ))}
-            </nav>
-            <label className="relative block w-full lg:w-72">
-              <Search size={16} className="pointer-events-none absolute left-0 top-1/2 -translate-y-1/2 text-[#71808a]" />
-              <input
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                type="search"
-                aria-label="Search articles"
-                placeholder="Search articles"
-                className="h-9 w-full border-b border-[#233d4d]/35 bg-transparent pl-7 pr-7 text-sm outline-none placeholder:text-[#71808a] focus:border-[#7651b0]"
-              />
-              {query && (
-                <button type="button" onClick={() => setQuery("")} aria-label="Clear search" className="absolute right-0 top-1/2 -translate-y-1/2 text-[#71808a] hover:text-[#233d4d]">
-                  <X size={15} />
-                </button>
-              )}
-            </label>
-          </motion.div>
+          <Rv delay={240}>
+            <div className="mt-9 flex flex-col gap-4 lg:flex-row lg:items-center">
+              <div className={`${card} flex max-w-md flex-1 items-center gap-3 bg-white px-4 py-3 focus-within:bg-[#fff6cf]`}>
+                <Search size={19} aria-hidden="true" />
+                <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search articles" aria-label="Search articles" className="min-w-0 flex-1 bg-transparent text-[16px] outline-none placeholder:text-[#11120f]/40" />
+                {query && <button type="button" onClick={() => setQuery("")} aria-label="Clear search" className="grid size-7 place-items-center rounded-full border-2 border-[#11120f] bg-white"><X size={13} /></button>}
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {categories.map((c) => {
+                  const on = cat === c;
+                  const col = c === "All" ? INK : colorFor(c);
+                  return <button key={c} type="button" onClick={() => setCat(c)} aria-pressed={on} className="rounded-full border-2 border-[#11120f] px-4 py-2 text-[14px] font-semibold transition hover:-translate-y-0.5" style={{ backgroundColor: on ? col : "#fff", color: on ? onDark(col) : INK }}>{c} <span className="opacity-60">{counts(c)}</span></button>;
+                })}
+              </div>
+            </div>
+          </Rv>
         </div>
       </section>
 
-      <main className="mx-auto w-full max-w-[1440px] px-5 pb-20 pt-4 sm:px-8 sm:pb-24 sm:pt-6">
-        {isBrowsing ? (
-          <>
-            {featured && (
-              <section aria-label="Featured story" className="border-b border-[#233d4d]/20 pb-14 sm:pb-16">
-                <FeaturedStory post={featured} language={language} />
-              </section>
-            )}
-            {secondary.length > 0 && (
-              <section aria-label="More featured stories" className="grid gap-x-6 gap-y-12 border-b border-[#233d4d]/20 py-14 sm:py-16 md:grid-cols-2">
-                {secondary.map((post, index) => (
-                  <StoryLink key={post.slug} post={post} language={language} delay={index * 0.08} tall />
-                ))}
-              </section>
-            )}
-            {rest.length > 0 && (
-              <section className="pt-14 sm:pt-16">
-                <div className="flex items-end justify-between border-b border-[#233d4d]/20 pb-5">
-                  <div>
-                    <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#6c48a0]">The latest</p>
-                    <h2 className="mt-2 text-4xl font-medium tracking-[-0.055em] sm:text-5xl">Keep exploring</h2>
+      <section className="bg-[#fff8ec] px-5 py-16 sm:px-8 sm:py-20">
+        <div className="mx-auto max-w-6xl">
+          {featured && (
+            <Rv variant="deal">
+              <Link href={`/blog/${featured.slug}`} className={`${card} group grid overflow-hidden bg-white transition duration-300 hover:-translate-y-1.5 md:grid-cols-[1.05fr_1fr]`}>
+                <div className="border-b-2 border-[#11120f] md:border-b-0 md:border-r-2"><Cover post={featured} tall /></div>
+                <div className="flex flex-col p-6 sm:p-8">
+                  <span className={`${mono} w-fit rounded-full border-2 border-[#11120f] px-2.5 py-1 text-white`} style={{ backgroundColor: YELLOW, color: INK }}>Latest</span>
+                  <h2 className="mt-4 text-[clamp(1.8rem,3.4vw,2.8rem)] font-semibold leading-[1.05] tracking-[-0.04em]">{featured.title}</h2>
+                  <p className="mt-3 line-clamp-4 text-[17px] leading-8 text-[#11120f]/65">{featured.excerpt}</p>
+                  <div className="mt-auto flex items-end justify-between gap-4 pt-6">
+                    <Meta post={featured} />
+                    <span className="grid size-11 shrink-0 place-items-center rounded-full border-2 border-[#11120f] bg-[#ffd84d] transition-transform duration-300 group-hover:rotate-45"><ArrowUpRight size={19} /></span>
                   </div>
-                  <span className="hidden text-sm text-[#71808a] sm:block">
-                    {rest.length} more {rest.length === 1 ? "story" : "stories"}
-                  </span>
                 </div>
-                <div className="grid gap-x-6 gap-y-12 pt-10 md:grid-cols-2 xl:grid-cols-3">
-                  {rest.map((post, index) => (
-                    <StoryLink key={post.slug} post={post} language={language} delay={Math.min(index * 0.06, 0.3)} />
-                  ))}
-                </div>
-              </section>
-            )}
-          </>
-        ) : (
-          <section aria-live="polite" className="pt-10 sm:pt-14">
-            <div className="flex items-end justify-between border-b border-[#233d4d]/20 pb-5">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#6c48a0]">{query ? "Search results" : activeCategory}</p>
-                <h2 className="mt-2 text-4xl font-medium tracking-[-0.055em] sm:text-5xl">
-                  {visiblePosts.length} {visiblePosts.length === 1 ? "story" : "stories"}
-                </h2>
-              </div>
-              <button
-                type="button"
-                onClick={() => {
-                  setQuery("");
-                  setActiveCategory("All");
-                }}
-                className="text-sm font-semibold underline underline-offset-4"
-              >
-                Reset filters
-              </button>
-            </div>
-            {visiblePosts.length ? (
-              <div className="grid gap-x-6 gap-y-12 pt-10 md:grid-cols-2 xl:grid-cols-3">
-                {visiblePosts.map((post, index) => (
-                  <StoryLink key={post.slug} post={post} language={language} delay={Math.min(index * 0.06, 0.3)} />
-                ))}
-              </div>
-            ) : (
-              <div className="py-24 text-center">
-                <p className="text-2xl font-medium tracking-[-0.04em]">No stories found.</p>
-                <p className="mt-2 text-sm text-[#5d6872]">Try another phrase or browse all articles.</p>
-              </div>
-            )}
-          </section>
-        )}
+              </Link>
+            </Rv>
+          )}
 
-        <NewsletterStrip />
-      </main>
-    </div>
+          {visible.length === 0 && (
+            <div className={`${card} flex flex-col items-center bg-white px-6 py-14 text-center`}>
+              <span className="grid size-16 place-items-center rounded-full border-2 border-[#11120f]" style={{ backgroundColor: YELLOW }}><SearchX size={28} /></span>
+              <p className="mt-5 text-2xl font-semibold tracking-tight">No articles match</p>
+              <button type="button" onClick={() => { setQuery(""); setCat("All"); }} className="mt-5 rounded-full border-2 border-[#11120f] bg-white px-5 py-2.5 font-semibold transition hover:bg-[#ffd84d]">Clear filters</button>
+            </div>
+          )}
+
+          <div className={`grid gap-5 sm:grid-cols-2 lg:grid-cols-3 ${featured ? "mt-8" : ""}`}>
+            {list.map((p, i) => (
+              <Rv key={p.slug} variant="deal" delay={(i % 3) * 90}>
+                <Link href={`/blog/${p.slug}`} className={`${card} group flex h-full flex-col overflow-hidden bg-white transition duration-300 hover:-translate-y-2 hover:rotate-[-0.8deg]`}>
+                  <Cover post={p} />
+                  <div className="flex flex-1 flex-col p-5">
+                    <h3 className="text-[21px] font-semibold leading-[1.15] tracking-[-0.025em]">{p.title}</h3>
+                    <p className="mt-2 line-clamp-3 text-[15.5px] leading-7 text-[#11120f]/65">{p.excerpt}</p>
+                    <div className="mt-auto flex items-center justify-between pt-5">
+                      <Meta post={p} />
+                      <ArrowUpRight size={18} className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                    </div>
+                  </div>
+                </Link>
+              </Rv>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <Newsletter />
+    </main>
   );
 }

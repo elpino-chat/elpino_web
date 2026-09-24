@@ -7,12 +7,12 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://elpino.chat";
 export const metadata: Metadata = {
   title: "Blog",
   description:
-    "Notes, guides, and technical updates from the elpino team on building a proactive AI operator for founders.",
+    "Guides, product notes and lessons from the Elpino team on AI customer support, human handoff and calmer support operations.",
   alternates: { canonical: `${SITE_URL}/blog` },
   openGraph: {
     title: "Blog",
     description:
-      "Notes, guides, and technical updates on building a proactive AI operator for founders.",
+      "Guides, product notes and lessons on AI customer support and calmer support operations.",
     url: `${SITE_URL}/blog`,
     type: "website",
   },
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Blog",
     description:
-      "Notes, guides, and technical updates on building a proactive AI operator for founders.",
+      "Guides, product notes and lessons on AI customer support and calmer support operations.",
   },
 };
 
