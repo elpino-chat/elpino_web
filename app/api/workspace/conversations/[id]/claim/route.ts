@@ -12,11 +12,12 @@ async function selectedWorkspace(email: string) {
   return organizations.find((item) => item.id === result.selectedOrganizationId) ?? organizations[0] ?? null;
 }
 
-export async function POST(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await requireSession();
   if (!session) return Response.json({ message: "Unauthenticated" }, { status: 401 });
 
   const { id } = await params;
+  const body = (await request.json().catch(() => null)) as { onlyIfUnclaimed?: unknown } | null;
   const [workspace, accountResult] = await Promise.all([
     selectedWorkspace(session.email),
     callGateway<AccountResult>(`/api/auth/account?email=${encodeURIComponent(session.email)}`),
@@ -27,7 +28,7 @@ export async function POST(_request: Request, { params }: { params: Promise<{ id
 
   const result = await callGateway<{ ok?: boolean; error?: string }>(
     `/api/workspace/conversations/${encodeURIComponent(id)}/claim`,
-    { companyId: workspace.id, userId: accountResult.account.id },
+    { companyId: workspace.id, userId: accountResult.account.id, onlyIfUnclaimed: body?.onlyIfUnclaimed === true },
   );
 
   if (!result.ok) {

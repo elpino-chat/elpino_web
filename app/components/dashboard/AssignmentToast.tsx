@@ -8,6 +8,8 @@ export type AssignmentNotification = {
   conversationId: string;
   title: string;
   detail: string;
+  // Sent to every teammate at once (an AI escalation), not offered to one.
+  teamAlert?: boolean;
 };
 
 /**
@@ -33,18 +35,38 @@ export function AssignmentToast({
 }) {
   const router = useRouter();
   const [busy, setBusy] = useState<"join" | "cancel" | null>(null);
+  const [error, setError] = useState("");
 
   async function join() {
     setBusy("join");
     try {
-      await fetch(`/api/workspace/conversations/${encodeURIComponent(notification.conversationId)}/claim`, { method: "POST" });
+      const response = await fetch(`/api/workspace/conversations/${encodeURIComponent(notification.conversationId)}/claim`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ onlyIfUnclaimed: Boolean(notification.teamAlert) }),
+      });
+      if (!response.ok && notification.teamAlert) {
+        // Someone else got there first — say so instead of silently opening it.
+        const data = (await response.json().catch(() => null)) as { message?: string } | null;
+        setError(data?.message ?? "Someone else already joined this chat");
+        setBusy(null);
+        window.setTimeout(onDismiss, 4000);
+        return;
+      }
       router.push(`/dashboard/inbox?conversation=${encodeURIComponent(notification.conversationId)}`);
-    } finally {
+      onDismiss();
+    } catch {
       onDismiss();
     }
   }
 
   async function cancel() {
+    // A team-wide alert was never assigned to this person, so there's
+    // nothing to hand back — just close it.
+    if (notification.teamAlert) {
+      onDismiss();
+      return;
+    }
     setBusy("cancel");
     try {
       // Hands it back and looks for someone else immediately — see
@@ -64,6 +86,7 @@ export function AssignmentToast({
       <div className="min-w-0 flex-1">
         <p className="dashboard-assignment-toast-title text-[13px] font-semibold leading-5 text-black">{notification.title}</p>
         <p className="dashboard-assignment-toast-detail mt-0.5 line-clamp-2 text-[12px] leading-5 text-[#687178]">{notification.detail}</p>
+        {error ? <p className="mt-1.5 text-[12px] leading-5 text-[#d0454c]">{error}</p> : null}
         <div className="mt-3 flex items-center gap-2">
           <button
             type="button"
@@ -78,11 +101,11 @@ export function AssignmentToast({
             type="button"
             disabled={busy !== null}
             onClick={() => void cancel()}
-            title="Hand it to someone else on the team"
+            title={notification.teamAlert ? "Leave it for someone else" : "Hand it to someone else on the team"}
             className="dashboard-assignment-toast-cancel flex h-8 flex-1 items-center justify-center gap-1.5 rounded-lg border border-[#d8dde1] text-[12.5px] font-semibold text-black transition hover:bg-[#f7f8fa] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {busy === "cancel" ? <LoaderCircle size={13} className="animate-spin" /> : null}
-            Cancel
+            {notification.teamAlert ? "Not now" : "Cancel"}
           </button>
         </div>
       </div>

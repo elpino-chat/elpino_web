@@ -198,6 +198,9 @@ function WidgetContent() {
   const [contactDoneFor, setContactDoneFor] = useState("");
   const [contactThanks, setContactThanks] = useState(false);
   const [agentTyping, setAgentTyping] = useState(false);
+  // Ms-epoch deadline while the team is notified and nobody has joined yet.
+  const [joinDeadline, setJoinDeadline] = useState<number | null>(null);
+  const [joinNow, setJoinNow] = useState(() => Date.now());
   const [sending, setSending] = useState(false);
   const [recent, setRecent] = useState<ConversationSummary[]>([]);
   const [team, setTeam] = useState<TeamMember[]>([]);
@@ -895,13 +898,20 @@ function WidgetContent() {
   }
 
   useEffect(() => {
+    if (joinDeadline === null) return;
+    setJoinNow(Date.now());
+    const timer = window.setInterval(() => setJoinNow(Date.now()), 1000);
+    return () => window.clearInterval(timer);
+  }, [joinDeadline]);
+
+  useEffect(() => {
     if (!conversationId || !visitorToken || tab !== "chat" || chatView !== "thread") return;
     let cancelled = false;
     const epoch = sessionEpochRef.current;
     const poll = () => {
       fetch("/api/widget/messages/read", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ key, hostname, visitorToken, conversationId }) })
         .then((response) => response.json())
-        .then((data: { messages?: WidgetMessage[]; agentTyping?: boolean; error?: string; ended?: boolean; contactAsk?: { fields?: ContactField[] } | null }) => {
+        .then((data: { messages?: WidgetMessage[]; agentTyping?: boolean; joinDeadlineAt?: string | null; serverNow?: string; error?: string; ended?: boolean; contactAsk?: { fields?: ContactField[] } | null }) => {
           if (cancelled || epoch !== sessionEpochRef.current) return;
           // Left with Leave Chat (in another tab, say): drop the thread and go
           // back to the list rather than treating it as a broken session.
@@ -944,6 +954,13 @@ function WidgetContent() {
             setMessages(data.messages);
           }
           setAgentTyping(!!data.agentTyping);
+          // Convert the server's deadline into this device's clock so a wrong
+          // local time can't shorten or stretch the countdown.
+          if (data.joinDeadlineAt && data.serverNow) {
+            setJoinDeadline(Date.now() + (Date.parse(data.joinDeadlineAt) - Date.parse(data.serverNow)));
+          } else {
+            setJoinDeadline(null);
+          }
           const fields = data.contactAsk?.fields?.filter((field): field is ContactField => field in CONTACT_PROMPTS) ?? [];
           // Keep a form already in progress; only a fresh ask starts at step 0.
           setContactFields((current) => (fields.length ? current ?? fields : current));
@@ -1732,6 +1749,19 @@ function WidgetContent() {
                   </div>
                 );
               })}
+              {joinDeadline !== null && (() => {
+                const remaining = Math.max(0, Math.ceil((joinDeadline - joinNow) / 1000));
+                return (
+                  <div className="flex items-center gap-2.5 rounded-xl border px-3 py-2.5" style={{ borderColor: BORDER, backgroundColor: SURFACE }}>
+                    <span className="flex h-7 min-w-[46px] items-center justify-center rounded-full px-2 text-[12px] font-semibold tabular-nums text-white" style={{ backgroundColor: ACCENT }}>
+                      {Math.floor(remaining / 60)}:{String(remaining % 60).padStart(2, "0")}
+                    </span>
+                    <p className="text-[11.5px] leading-4" style={{ color: MUTED }}>
+                      {remaining > 0 ? "We've notified the team. Someone should join any moment." : "Still checking with the team…"}
+                    </p>
+                  </div>
+                );
+              })()}
               {agentTyping && (
                 <div className="flex items-center gap-2">
                   <span className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full text-[10px] font-bold text-white" style={{ backgroundColor: botAvatarUrl ? undefined : ACCENT }}>

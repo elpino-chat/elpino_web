@@ -861,6 +861,33 @@ function TeamsSettingsPage() {
   const [invitations, setInvitations] = useState<PendingInvitation[]>([]);
   const [loadingInvitations, setLoadingInvitations] = useState(true);
   const [revokingInvite, setRevokingInvite] = useState<string | null>(null);
+  const [resendingInvite, setResendingInvite] = useState<string | null>(null);
+  const [inviteNotice, setInviteNotice] = useState<{ id: string; ok: boolean; text: string } | null>(null);
+
+  // Re-inviting the same address renews the link for another 7 days and
+  // emails it again — see AuthService.inviteMembers.
+  async function resendInvite(invite: PendingInvitation) {
+    setResendingInvite(invite.id);
+    setInviteNotice(null);
+    try {
+      const response = await fetch("/api/invitations", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ emails: [invite.email] }),
+      });
+      const data = (await response.json().catch(() => ({}))) as { invited?: string[]; skipped?: { reason: string }[]; message?: string };
+      if (response.ok && data.invited?.length) {
+        setInviteNotice({ id: invite.id, ok: true, text: "Invite sent again" });
+        loadInvitations();
+      } else {
+        setInviteNotice({ id: invite.id, ok: false, text: data.skipped?.[0]?.reason ?? data.message ?? "Could not resend the invite" });
+      }
+    } catch {
+      setInviteNotice({ id: invite.id, ok: false, text: "Could not resend the invite" });
+    } finally {
+      setResendingInvite(null);
+    }
+  }
 
   function loadInvitations() {
     setLoadingInvitations(true);
@@ -1102,9 +1129,22 @@ function TeamsSettingsPage() {
                       <span className={`h-1.5 w-1.5 rounded-full ${invite.expired ? "bg-[#C6555F]" : "bg-[#D89831]"}`} />
                       {invite.expired ? "Expired" : "Pending"}
                     </span>
-                    {new Date(invite.createdAt).toLocaleDateString()}
+                    {invite.expired
+                      ? `Link expired ${new Date(invite.expiresAt).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })}`
+                      : `Expires ${new Date(invite.expiresAt).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })}`}
                   </p>
+                  {inviteNotice?.id === invite.id && (
+                    <p className={`mt-1 text-[11px] ${inviteNotice.ok ? "text-[#2f855a]" : "text-[#c63f4d]"}`}>{inviteNotice.text}</p>
+                  )}
                 </div>
+                <button
+                  type="button"
+                  disabled={resendingInvite === invite.id}
+                  onClick={() => void resendInvite(invite)}
+                  className="shrink-0 rounded-md px-2.5 py-1.5 text-[12px] font-medium text-[#3578C8] transition hover:bg-[#EEF3F5] disabled:opacity-50"
+                >
+                  {resendingInvite === invite.id ? "Sending…" : "Resend"}
+                </button>
                 <button
                   type="button"
                   disabled={revokingInvite === invite.id}

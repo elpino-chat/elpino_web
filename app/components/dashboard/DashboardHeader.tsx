@@ -205,7 +205,7 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
       if (payload.userId !== accountId) return;
       setBusy(Boolean(payload.busy));
     });
-    socket.on("notification", (payload: { userId?: string; notification?: { conversationId?: string; title?: string; detail?: string } }) => {
+    socket.on("notification", (payload: { userId?: string; notification?: { id?: string; conversationId?: string; title?: string; detail?: string } }) => {
       if (payload.userId !== accountId) return;
       // Badge reflects real state regardless of whether the chime/toast is
       // muted — muting silences the alert, not the count.
@@ -214,14 +214,17 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
       const notification = payload.notification;
       if (!notification?.conversationId || !notification.title) return;
       playAssignmentChime();
+      // "escalated:" alerts go to the whole team at once — see
+      // ConversationsService.notifyTeamOfEscalation.
+      const teamAlert = notification.id?.startsWith("escalated:") ?? false;
       toast.custom(
         (id) => (
           <AssignmentToast
-            notification={{ conversationId: notification.conversationId!, title: notification.title!, detail: notification.detail ?? "" }}
+            notification={{ conversationId: notification.conversationId!, title: notification.title!, detail: notification.detail ?? "", teamAlert }}
             onDismiss={() => toast.dismiss(id)}
           />
         ),
-        { position: "bottom-right", duration: 45_000 },
+        { position: "bottom-right", duration: teamAlert ? 90_000 : 45_000 },
       );
     });
     // A customer wrote in a conversation this account is responsible for —
