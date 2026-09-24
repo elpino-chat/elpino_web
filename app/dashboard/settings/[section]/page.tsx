@@ -9,7 +9,9 @@ const SETTINGS_SECTIONS: Record<string, string> = {
   billing: "Billing",
   availability: "Availability",
   chatbot: "Chatbot Interface",
-  "ai-usage": "AI Usage",
+  "chatbot-restrictions": "Restrictions",
+  "chatbot-behavior": "Behavior",
+  "ai-usage": "Usage",
   "security-permissions": "Security & Permissions",
   "audit-logs": "Audit Logs",
   "presence-log": "Presence Log",
@@ -18,6 +20,10 @@ const SETTINGS_SECTIONS: Record<string, string> = {
   identity: "Identity Verification",
   translations: "Translations",
   plugins: "Plugins",
+  information: "Information",
+  "setup-integration": "Setup & Integration",
+  "data-legal": "Data Limits & Legal",
+  "danger-zone": "Danger Zone",
 };
 
 export async function generateMetadata({ params }: { params: Promise<{ section: string }> }) {

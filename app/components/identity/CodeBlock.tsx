@@ -2,7 +2,17 @@
 
 import { useState } from "react";
 import { Check, Copy } from "lucide-react";
+import { Highlight, Prism, themes, type Language } from "prism-react-renderer";
 import { SERVER_SNIPPETS } from "@/lib/identity-snippets";
+
+// Ruby isn't in prism-react-renderer's bundled language set (markup, css,
+// clike, javascript, php, python, ... but not ruby) — the documented
+// escape hatch is registering it on the package's own Prism instance
+// before anything renders. See https://github.com/FormidableLabs/prism-react-renderer#custom-language-support
+if (typeof window !== "undefined") {
+  (window as unknown as { Prism: typeof Prism }).Prism = Prism;
+  void import("prismjs/components/prism-ruby");
+}
 
 async function copyText(text: string) {
   try {
@@ -13,7 +23,7 @@ async function copyText(text: string) {
   }
 }
 
-export function CodeBlock({ title, code }: { title?: string; code: string }) {
+export function CodeBlock({ title, code, lang = "javascript" }: { title?: string; code: string; lang?: Language }) {
   const [copied, setCopied] = useState(false);
   return (
     <div className="overflow-hidden rounded-lg bg-[#17181a]">
@@ -27,7 +37,21 @@ export function CodeBlock({ title, code }: { title?: string; code: string }) {
           {copied ? <Check size={13} /> : <Copy size={13} />}{copied ? "Copied" : "Copy"}
         </button>
       </div>
-      <pre className="overflow-x-auto p-3 font-mono text-[11.5px] leading-5 text-[#e7e8ea]">{code}</pre>
+      <Highlight theme={themes.vsDark} code={code.trimEnd()} language={lang}>
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={`${className} overflow-x-auto p-3 font-mono text-[11.5px] leading-5`} style={{ ...style, background: "transparent" }}>
+            {tokens.map((line, lineIndex) => (
+              // eslint-disable-next-line react/jsx-key
+              <div {...getLineProps({ line })} key={lineIndex}>
+                {line.map((token, tokenIndex) => (
+                  // eslint-disable-next-line react/jsx-key
+                  <span {...getTokenProps({ token })} key={tokenIndex} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
     </div>
   );
 }
@@ -52,7 +76,7 @@ export function ServerSnippetTabs() {
           </button>
         ))}
       </div>
-      <CodeBlock title={snippet.install} code={snippet.code} />
+      <CodeBlock title={snippet.install} code={snippet.code} lang={snippet.lang as Language} />
     </div>
   );
 }

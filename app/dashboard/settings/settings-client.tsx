@@ -24,23 +24,14 @@ import { SUPPORTED_LANGUAGES } from "@/app/dashboard/settings/languages";
 import { IdentityVerificationSettingsPage } from "@/app/dashboard/settings/IdentityVerificationSettings";
 import { ConnectPageContent } from "@/app/dashboard/connect/ConnectPageContent";
 import {
-  computeCoverage,
   defaultAvailability,
   describeWindow,
-  formatHours,
-  formatTime,
   guessTimezone,
-  minuteOfWeek,
   normalizeAvailability,
   ownWeeklyMinutes,
-  timezoneOffsetMinutes,
   DAY_KEYS,
   DAY_LABELS,
-  DAY_SHORT,
-  MINUTES_PER_DAY,
-  MINUTES_PER_WEEK,
   type Availability,
-  type CoverageMember,
   type DayKey,
   type DayWindow,
 } from "@/lib/availability";
@@ -63,8 +54,12 @@ import {
   CreditCard,
   Download,
   Eye,
+  EyeOff,
+  BookOpen,
   Globe2,
+  HeartPulse,
   Home,
+  Info,
   Languages,
   LockKeyhole,
   LoaderCircle,
@@ -73,6 +68,7 @@ import {
   Mail,
   Mic,
   MessageCircle,
+  MessagesSquare,
   MessageSquarePlus,
   Monitor,
   MoreHorizontal,
@@ -84,19 +80,20 @@ import {
   RefreshCw,
   ReceiptText,
   Save,
+  Scale,
   Search,
   Send,
   Settings,
   ShieldCheck,
   Smile,
   Sparkles,
-  Tag,
   Table2,
   Trash2,
   Upload,
   UserRound,
   UserCog,
   UserCheck,
+  UserPlus,
   X,
   UsersRound,
 } from "lucide-react";
@@ -151,27 +148,39 @@ const accountItems = [
   { label: "Security & Permissions", slug: "security-permissions", icon: ShieldCheck },
 ];
 
-// Shared workspace configuration, visible the same way to every teammate.
-const workspaceItems = [
-  { label: "People", slug: "people", icon: UserRound },
+// A representative flag per supported language, for the reply-language
+// picker — same flagsapi.com country-code convention as AuthFlow's
+// language switcher (English maps to "gb" there too).
+const LANGUAGE_COUNTRY_CODES: Record<string, string> = {
+  en: "gb", es: "es", fr: "fr", de: "de", pt: "pt", it: "it", nl: "nl",
+  ja: "jp", ko: "kr", zh: "cn", ar: "sa", hi: "in", ru: "ru", tr: "tr",
+  pl: "pl", sv: "se", vi: "vn", th: "th", id: "id",
+};
+
+function LanguageFlag({ countryCode }: { countryCode: string }) {
+  return <img src={`https://flagsapi.com/${countryCode.toUpperCase()}/flat/32.png`} alt="" className="h-4 w-5 shrink-0 rounded-sm object-cover" />;
+}
+
+const chatbotItems = [
   { label: "Chatbot Interface", slug: "chatbot", icon: Bot },
-  { label: "AI Usage", slug: "ai-usage", icon: Sparkles },
-  { label: "Audit Logs", slug: "audit-logs", icon: Clock3 },
-  { label: "Presence Log", slug: "presence-log", icon: Radio },
-  { label: "Trash", slug: "trash", icon: Trash2 },
+  { label: "Identity Verification", slug: "identity", icon: UserCheck },
+  { label: "Restrictions", slug: "chatbot-restrictions", icon: ShieldCheck },
 ];
 
-const featureItems = [
-  { label: "Tag Manager", slug: "tags", icon: Tag },
-  { label: "Identity Verification", slug: "identity", icon: UserCheck },
-  { label: "Translations", slug: "translations", icon: Languages },
-  { label: "Plugins", slug: "plugins", icon: Puzzle },
+// Shared workspace configuration, visible the same way to every teammate.
+const workspaceItems = [
+  { label: "Information", slug: "information", icon: Info },
+  { label: "Teams", slug: "teams", icon: UserRound },
+  { label: "Presence Log", slug: "presence-log", icon: Radio },
+  { label: "Usage", slug: "ai-usage", icon: CircleGauge },
+  { label: "Setup & Integration", slug: "setup-integration", icon: Puzzle },
+  { label: "Data Limits & Legal", slug: "data-legal", icon: Scale },
+  { label: "Danger Zone", slug: "danger-zone", icon: CircleAlert },
 ];
 
 const pageDetails: Record<string, { description: string; action?: string; sections: Array<{ title: string; description: string; value?: string }> }> = {
   Upgrade: { description: "Choose a plan that grows with your support operation.", action: "Compare plans", sections: [{ title: "Current plan", description: "Core workspace tools for getting started.", value: "Free" }, { title: "Business features", description: "Unlock advanced security, automation, and reporting.", value: "Available" }] },
   Billing: { description: "Manage subscription, payment details, and invoices.", action: "Add payment method", sections: [{ title: "Subscription", description: "Your workspace is currently on the Free plan.", value: "$0 / month" }, { title: "Billing history", description: "Invoices and payment receipts will appear here.", value: "No invoices" }] },
-  "AI Usage": { description: "Track how your team uses AI across the workspace.", action: "View usage details", sections: [{ title: "Monthly AI actions", description: "Replies, summaries, classifications, and automated tasks.", value: "0 / 100" }, { title: "Usage resets", description: "Your included allowance refreshes each month.", value: "30 days" }] },
   "Security & Permissions": { description: "Control access, authentication, and workspace permissions.", sections: [{ title: "Authentication", description: "Require secure sign-in methods for workspace members.", value: "Standard" }, { title: "Default member role", description: "Access granted to newly invited teammates.", value: "Member" }, { title: "Two-factor authentication", description: "Add an extra layer of security to team accounts.", value: "Optional" }] },
   "Audit Logs": { description: "Review important workspace activity and security events.", action: "Export logs", sections: [{ title: "Recent activity", description: "Profile and workspace events from the last 30 days.", value: "Up to date" }, { title: "Data retention", description: "Audit events are retained according to your plan.", value: "30 days" }] },
   Trash: { description: "Review and restore recently deleted workspace content.", sections: [{ title: "Trash is empty", description: "Deleted conversations, templates, and automations will appear here.", value: "0 items" }] },
@@ -216,6 +225,83 @@ function rangeToDates(range: UsageRange, startDate: string, endDate: string) {
   const days = Number(range);
   const fromDate = new Date(today.getTime() - (days - 1) * 24 * 60 * 60 * 1000);
   return { from: fromDate.toISOString().slice(0, 10), to: toStr };
+}
+
+function UsageMeter({ label, used, total, unit, footer }: { label: string; used: number; total: number; unit: string; footer: string }) {
+  const pct = total > 0 ? Math.min(100, Math.round((used / total) * 100)) : 0;
+  return (
+    <article className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.035] p-5">
+      <div className="flex items-center justify-between">
+        <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/60">{label}</span>
+        <span className="text-[11px] font-medium text-white/50">{unit}</span>
+      </div>
+      <div className="mt-4 flex items-end gap-1.5">
+        <span className="text-[28px] font-medium tracking-[-0.04em]">{used.toLocaleString()}</span>
+        <span className="pb-1 text-[13px] text-white/60">of {total.toLocaleString()}</span>
+      </div>
+      <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
+        <div className="h-full rounded-full bg-[#6d5ce7] transition-[width]" style={{ width: `${pct}%` }} />
+      </div>
+      <p className="mt-3 text-[12px] leading-5 text-white/60">{footer}</p>
+    </article>
+  );
+}
+
+// The three plan meters (resolutions, seats, knowledge storage) — moved here
+// from Billing so that page can stay about the plan and payments only.
+function PlanUsageMeters() {
+  const [billing, setBilling] = useState<BillingStatus | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/billing/status")
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: BillingStatus | null) => setBilling(data))
+      .catch(() => undefined)
+      .finally(() => setLoading(false));
+  }, []);
+
+  const entitlement = billing?.entitlement;
+  const plan = pricingPlans.find((item) => item.id === (entitlement?.planId ?? "free")) ?? pricingPlans[0];
+
+  if (loading) return <div className="mt-6 grid gap-4 md:grid-cols-3"><div className="h-44 animate-pulse rounded-2xl bg-white/[0.04]" /><div className="h-44 animate-pulse rounded-2xl bg-white/[0.04]" /><div className="h-44 animate-pulse rounded-2xl bg-white/[0.04]" /></div>;
+  if (!entitlement) return null;
+
+  return (
+    <section className="mt-6 grid gap-4 md:grid-cols-3">
+      <UsageMeter
+        label="AI resolutions"
+        used={entitlement.resolutionsUsed ?? 0}
+        total={entitlement.resolutionsIncluded ?? 0}
+        unit="this period"
+        footer={
+          (entitlement.aiCreditGrantUsdCents ?? 0) > 0
+            ? `Includes $${((entitlement.aiCreditGrantUsdCents ?? 0) / 100).toFixed(2)} of AI credit every period. ${
+                entitlement.overageUsdCents != null
+                  ? `Past the resolution allowance, extra replies are $${(entitlement.overageUsdCents / 100).toFixed(2)} each.`
+                  : "At the limit the AI hands new conversations to your team instead of answering — escalations are never billed."
+              }`
+            : entitlement.overageUsdCents != null
+              ? `Past the allowance, extra resolutions are $${(entitlement.overageUsdCents / 100).toFixed(2)} each.`
+              : "At the limit the AI hands new conversations to your team instead of answering. Escalations are never billed."
+        }
+      />
+      <UsageMeter
+        label="Seats"
+        used={entitlement.seatsAllowed ?? 0}
+        total={entitlement.seatsMax ?? entitlement.seatsAllowed ?? 0}
+        unit="in this workspace"
+        footer={`${entitlement.seatsIncluded ?? 0} included with ${plan.name}${(entitlement.seatsPurchased ?? 0) > 0 ? `, ${entitlement.seatsPurchased} added in seat packs` : ""}. Adding seats never changes your resolution allowance.`}
+      />
+      <UsageMeter
+        label="Knowledge storage"
+        used={Math.round((entitlement.knowledgeBytesUsed ?? 0) / (1024 * 1024))}
+        total={entitlement.knowledgeStorageMb ?? 0}
+        unit="MB used"
+        footer="Crawled pages and uploaded files. New articles are refused once this is full — remove some, or upgrade for more room."
+      />
+    </section>
+  );
 }
 
 function AIUsageSettingsPage() {
@@ -419,13 +505,15 @@ function AIUsageSettingsPage() {
             <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-violet-300/15 bg-violet-400/10 px-2.5 py-1 text-[11px] font-medium text-violet-200">
               <Sparkles size={12} /> Workspace intelligence
             </div>
-            <h2 className="text-[30px] font-medium tracking-[-0.04em] text-white/90">AI Usage</h2>
-            <p className="mt-2 text-[13px] text-white/60">Monitor token consumption and spend across your workspace. Dates are shown in UTC.</p>
+            <h2 className="text-[30px] font-medium tracking-[-0.04em] text-white/90">Usage</h2>
+            <p className="mt-2 text-[13px] text-white/60">Your plan allowances, plus token consumption and spend across your workspace. Dates are shown in UTC.</p>
         </div>
         <button type="button" onClick={exportCsv} disabled={!events.length} className="flex h-10 items-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-3.5 text-[12px] font-medium text-white/90 transition hover:bg-white/[0.08] disabled:cursor-not-allowed disabled:opacity-40">
           <Download size={15} /> Export CSV
         </button>
       </header>
+
+      <PlanUsageMeters />
 
       <section className="dashboard-ai-credit-card mt-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.035] p-5">
         <div className="flex items-center gap-4">
@@ -759,6 +847,34 @@ function TeamsSettingsPage() {
   const [formError, setFormError] = useState<string | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [inviteOpen, setInviteOpen] = useState(false);
+  const [invitations, setInvitations] = useState<PendingInvitation[]>([]);
+  const [loadingInvitations, setLoadingInvitations] = useState(true);
+  const [revokingInvite, setRevokingInvite] = useState<string | null>(null);
+
+  function loadInvitations() {
+    setLoadingInvitations(true);
+    fetch("/api/invitations")
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: { invitations?: PendingInvitation[] } | null) => setInvitations(data?.invitations ?? []))
+      .catch(() => undefined)
+      .finally(() => setLoadingInvitations(false));
+  }
+  useEffect(loadInvitations, []);
+
+  async function revokeInvite(id: string) {
+    setRevokingInvite(id);
+    try {
+      const response = await fetch("/api/invitations/revoke", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      if (response.ok) setInvitations((current) => current.filter((item) => item.id !== id));
+    } finally {
+      setRevokingInvite(null);
+    }
+  }
 
   function loadTeams() {
     setLoadingTeams(true);
@@ -770,14 +886,15 @@ function TeamsSettingsPage() {
   }
   useEffect(loadTeams, []);
 
-  useEffect(() => {
+  function loadMembers() {
     setLoadingMembers(true);
-    fetch("/api/team-members")
+    return fetch("/api/team-members")
       .then((response) => (response.ok ? response.json() : null))
       .then((data: { members?: TeamMemberRow[] } | null) => setMembers(data?.members ?? []))
       .catch(() => undefined)
       .finally(() => setLoadingMembers(false));
-  }, []);
+  }
+  useEffect(() => { void loadMembers(); }, []);
 
   function openCreate() {
     setEditingTeam(null);
@@ -873,9 +990,14 @@ function TeamsSettingsPage() {
           <h2 className="text-[30px] font-medium tracking-[-0.04em]">Teams</h2>
           <p className="mt-2 text-[13px] text-[#707980]">Organize workspace members into focused groups for conversation routing.</p>
         </div>
-        <button type="button" onClick={openCreate} className="flex h-10 items-center gap-2 rounded-lg bg-[#11120f] px-4 text-[12px] font-semibold text-white transition hover:bg-black">
-          <Plus size={14} /> Create team
-        </button>
+        <div className="flex shrink-0 items-center gap-2">
+          <button type="button" onClick={() => setInviteOpen(true)} className="flex h-10 items-center gap-2 rounded-lg border border-[#D8DDE1] px-4 text-[12px] font-semibold transition hover:bg-[#F7F8FA]">
+            <UserPlus size={14} /> Invite team
+          </button>
+          <button type="button" onClick={openCreate} className="flex h-10 items-center gap-2 rounded-lg bg-[#11120f] px-4 text-[12px] font-semibold text-white transition hover:bg-black">
+            <Plus size={14} /> Create team
+          </button>
+        </div>
       </header>
 
       <section className="mt-6 flex flex-wrap items-center gap-4 rounded-2xl border border-[#DDE4E8] bg-[#FAFBFB] p-5">
@@ -942,6 +1064,51 @@ function TeamsSettingsPage() {
         )}
       </section>
 
+      <section className="mt-8">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <h3 className="text-[16px] font-semibold">Pending invitations</h3>
+            <p className="mt-1 text-[12.5px] text-[#7b848a]">People you&apos;ve invited who haven&apos;t joined yet.</p>
+          </div>
+          {invitations.length > 0 && <span className="text-[11px] font-medium text-[#92999e]">{invitations.length} {invitations.length === 1 ? "invite" : "invites"}</span>}
+        </div>
+        <div className="mt-3 overflow-hidden rounded-xl border border-[#dfe3e6] bg-white">
+          {loadingInvitations ? (
+            <div className="flex items-center justify-center py-10 text-[13px] text-[#8b9398]"><LoaderCircle size={15} className="mr-2 animate-spin" /> Loading invitations</div>
+          ) : invitations.length === 0 ? (
+            <div className="flex flex-col items-center px-6 py-10 text-center">
+              <Mail size={20} className="text-[#a5acb0]" />
+              <p className="mt-2 text-[13px] font-medium text-[#5b6368]">No pending invitations</p>
+              <p className="mt-1 max-w-sm text-[11.5px] leading-5 text-[#8b9398]">Invited teammates show up here until they accept.</p>
+            </div>
+          ) : (
+            invitations.map((invite, index) => (
+              <div key={invite.id} className={`flex flex-wrap items-center gap-3 px-4 py-3 ${index ? "border-t border-[#eceeef]" : ""}`}>
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#eef0f1] text-[12px] font-bold text-[#4a5666]">{invite.email.charAt(0).toUpperCase()}</span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-[13px] font-semibold">{invite.email}</p>
+                  <p className="mt-0.5 flex items-center gap-1.5 text-[11px] text-[#8b9398]">
+                    <span className={`inline-flex w-fit items-center gap-1 rounded-full px-1.5 py-0.5 font-semibold ${invite.expired ? "bg-[#FFF1F1] text-[#A64A53]" : "bg-[#FFF4E5] text-[#93651D]"}`}>
+                      <span className={`h-1.5 w-1.5 rounded-full ${invite.expired ? "bg-[#C6555F]" : "bg-[#D89831]"}`} />
+                      {invite.expired ? "Expired" : "Pending"}
+                    </span>
+                    {new Date(invite.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  disabled={revokingInvite === invite.id}
+                  onClick={() => void revokeInvite(invite.id)}
+                  className="shrink-0 rounded-md px-2.5 py-1.5 text-[12px] font-medium text-[#c63f4d] transition hover:bg-[#FFF1F1] disabled:opacity-50"
+                >
+                  {revokingInvite === invite.id ? "…" : "Revoke"}
+                </button>
+              </div>
+            ))
+          )}
+        </div>
+      </section>
+
       {formOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/35 p-4 backdrop-blur-[2px]" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setFormOpen(false); }}>
           <div role="dialog" aria-modal="true" className="flex max-h-[85vh] w-full max-w-[440px] flex-col overflow-hidden rounded-[24px] border border-black/10 bg-white shadow-[0_28px_80px_rgba(15,23,42,0.24)]">
@@ -989,6 +1156,8 @@ function TeamsSettingsPage() {
           </div>
         </div>
       )}
+
+      <InvitePeopleDialog open={inviteOpen} onClose={() => setInviteOpen(false)} onInvited={() => { void loadMembers(); loadInvitations(); }} />
     </div>
   );
 }
@@ -1188,43 +1357,6 @@ type BillingStatus = {
   invoices?: BillingInvoice[];
 };
 
-/**
- * One of the two billing meters. Deliberately identical in shape for seats
- * and resolutions so the settings page shows at a glance that they are
- * separate, equal things — neither one feeds the other.
- */
-function MeterCard({
-  label,
-  used,
-  total,
-  unit,
-  footer,
-}: {
-  label: string;
-  used: number;
-  total: number;
-  unit: string;
-  footer: string;
-}) {
-  const pct = total > 0 ? Math.min(100, Math.round((used / total) * 100)) : 0;
-  return (
-    <article className="flex min-h-[220px] flex-col rounded-[24px] border border-[#DDE4E8] bg-white p-6">
-      <div className="flex items-center justify-between">
-        <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#6D7D85]">{label}</span>
-        <span className="text-[11px] font-medium text-[#6D7D85]">{unit}</span>
-      </div>
-      <div className="mt-5 flex items-end gap-1.5">
-        <span className="text-[32px] font-medium tracking-[-0.05em]">{used.toLocaleString()}</span>
-        <span className="pb-1.5 text-[13px] text-[#667069]">of {total.toLocaleString()}</span>
-      </div>
-      <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-[#EEF3F5]">
-        <div className="h-full rounded-full bg-[#11120f] transition-[width]" style={{ width: `${pct}%` }} />
-      </div>
-      <p className="mt-auto pt-4 text-[12px] leading-5 text-[#667069]">{footer}</p>
-    </article>
-  );
-}
-
 function BillingSettingsPage() {
   const [tab, setTab] = useState<"overview" | "payment" | "history">("overview");
   const [billing, setBilling] = useState<BillingStatus | null>(null);
@@ -1327,39 +1459,7 @@ function BillingSettingsPage() {
             </div>
           </article>
 
-          <MeterCard
-            label="AI resolutions"
-            used={entitlement?.resolutionsUsed ?? 0}
-            total={entitlement?.resolutionsIncluded ?? 0}
-            unit="this period"
-            footer={
-              (entitlement?.aiCreditGrantUsdCents ?? 0) > 0
-                ? `Includes $${((entitlement?.aiCreditGrantUsdCents ?? 0) / 100).toFixed(2)} of AI credit every period. ${
-                    entitlement?.overageUsdCents != null
-                      ? `Past the resolution allowance, extra replies are $${(entitlement.overageUsdCents / 100).toFixed(2)} each.`
-                      : "At the limit the AI hands new conversations to your team instead of answering — escalations are never billed."
-                  }`
-                : entitlement?.overageUsdCents != null
-                  ? `Past the allowance, extra resolutions are $${(entitlement.overageUsdCents / 100).toFixed(2)} each.`
-                  : "At the limit the AI hands new conversations to your team instead of answering. Escalations are never billed."
-            }
-          />
-
-          <MeterCard
-            label="Seats"
-            used={entitlement?.seatsAllowed ?? 0}
-            total={entitlement?.seatsMax ?? entitlement?.seatsAllowed ?? 0}
-            unit="in this workspace"
-            footer={`${entitlement?.seatsIncluded ?? 0} included with ${plan.name}${(entitlement?.seatsPurchased ?? 0) > 0 ? `, ${entitlement?.seatsPurchased} added in seat packs` : ""}. Adding seats never changes your resolution allowance.`}
-          />
-
-          <MeterCard
-            label="Knowledge storage"
-            used={Math.round((entitlement?.knowledgeBytesUsed ?? 0) / (1024 * 1024))}
-            total={entitlement?.knowledgeStorageMb ?? 0}
-            unit="MB used"
-            footer="Crawled pages and uploaded files. New articles are refused once this is full — remove some, or upgrade for more room."
-          />
+          <Link href="/dashboard/settings/ai-usage" className="group flex items-center gap-4 rounded-2xl border border-[#DDE4E8] bg-white p-5 text-left hover:bg-[#FAFBFB] md:col-span-2"><span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#EEF3F5]"><CircleGauge size={19} /></span><span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">Usage</span><span className="mt-1 block text-[12px] text-[#667069]">AI resolutions, seats, and knowledge storage now live under Workspace → Usage.</span></span><ArrowRight size={16} className="transition group-hover:translate-x-1" /></Link>
 
           <button type="button" onClick={() => setTab("payment")} className="group flex items-center gap-4 rounded-2xl border border-[#DDE4E8] bg-white p-5 text-left hover:bg-[#FAFBFB]"><span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#EEF3F5]"><CreditCard size={19} /></span><span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">Payment method</span><span className="mt-1 block text-[12px] text-[#667069]">{paymentMethod?.last4 ? `${paymentMethod.brand ?? "Card"} ending in ${paymentMethod.last4}` : "No payment method saved"}</span></span><ArrowRight size={16} className="transition group-hover:translate-x-1" /></button>
           <button type="button" onClick={() => setTab("history")} className="group flex items-center gap-4 rounded-2xl border border-[#DDE4E8] bg-white p-5 text-left hover:bg-[#FAFBFB]"><span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#EEF3F5]"><ReceiptText size={19} /></span><span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">Billing history</span><span className="mt-1 block text-[12px] text-[#667069]">{payments.length ? `${payments.length} payment${payments.length === 1 ? "" : "s"}` : "No payments yet"}</span></span><ArrowRight size={16} className="transition group-hover:translate-x-1" /></button>
@@ -1418,7 +1518,7 @@ function BillingSettingsPage() {
   );
 }
 
-type AiPersona = { id: string; name: string; aiName: string; aiAvatarUrl: string | null; aiPersona: string | null; chatbotAccent: string; chatbotTheme: "light" | "dark" | "auto"; greetingLines: string[] };
+type AiPersona = { id: string; name: string; aiName: string; aiAvatarUrl: string | null; aiPersona: string | null; chatbotAccent: string; chatbotTheme: "light" | "dark" | "auto"; chatbotReplyLanguage: string; greetingLines: string[] };
 
 type Account = { email: string; name: string | null; avatarUrl: string | null; emailVerified: boolean; twoFactorEnabled: boolean };
 
@@ -1623,6 +1723,544 @@ function DangerZoneSection() {
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+function ChatbotComingSoonPage({ title, description }: { title: string; description: string }) {
+  return (
+    <div className="mx-auto w-full max-w-[1120px] px-7 pb-14 pt-8 text-[#17181a] sm:px-9 lg:px-10">
+      <div className="border-b border-[#E5E8EA] pb-7">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Chatbot</p>
+        <h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em] text-[#17181a]">{title}</h2>
+        <p className="mt-2 max-w-xl text-[14px] leading-6 text-[#667069]">{description}</p>
+      </div>
+      <div className="mt-6 rounded-xl border border-dashed border-[#e7e8ea] px-5 py-8 text-center">
+        <p className="text-[13px] font-medium text-[#17181a]">Not yet available</p>
+        <p className="mx-auto mt-1 max-w-sm text-[12px] leading-5 text-[#687178]">This is on the roadmap. There's nothing to configure here yet.</p>
+      </div>
+    </div>
+  );
+}
+
+function BehaviorCard({ icon: Icon, title, accent, children }: { icon: typeof Settings; title: string; accent: string; children: React.ReactNode }) {
+  return (
+    <div className="flex flex-col rounded-[22px] border border-[#ECEEF0] bg-white p-5 shadow-[0_1px_2px_rgba(15,23,42,0.04)] transition hover:shadow-[0_10px_28px_rgba(15,23,42,0.08)]">
+      <div className="flex items-center gap-3">
+        <span className="flex size-10 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: `${accent}17`, color: accent }}>
+          <Icon size={18} />
+        </span>
+        <h3 className="text-[14px] font-semibold text-[#17181a]">{title}</h3>
+      </div>
+      <div className="mt-4 space-y-1">{children}</div>
+    </div>
+  );
+}
+
+function BehaviorToggleRow({
+  label,
+  checked,
+  onCheckedChange,
+  disabled,
+  comingSoon,
+}: {
+  label: string;
+  checked: boolean;
+  onCheckedChange?: (checked: boolean) => void;
+  disabled?: boolean;
+  comingSoon?: boolean;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-4 rounded-xl px-2 py-2.5 transition hover:bg-[#fafbfc]">
+      <span className="min-w-0 flex-1 text-[12.5px] leading-5 text-[#3c4245]">
+        {label}
+        {comingSoon && <span className="ml-2 inline-block rounded-full bg-[#f1f1f1] px-2 py-0.5 align-middle text-[9.5px] font-semibold uppercase tracking-wide text-[#a4acb1]">Soon</span>}
+      </span>
+      <Switch checked={checked} disabled={disabled ?? comingSoon} onCheckedChange={onCheckedChange ?? (() => {})} aria-label={label} />
+    </div>
+  );
+}
+
+function BehaviorLinkRow({ label, href }: { label: string; href: string }) {
+  return (
+    <Link href={href} className="group flex items-center justify-between gap-4 rounded-xl px-2 py-2.5 transition hover:bg-[#fafbfc]">
+      <span className="min-w-0 flex-1 text-[12.5px] leading-5 text-[#3c4245]">{label}</span>
+      <span className="flex shrink-0 items-center gap-1 text-[12px] font-semibold text-[#428ce5]">
+        Restrictions <ArrowRight size={13} className="transition group-hover:translate-x-0.5" />
+      </span>
+    </Link>
+  );
+}
+
+function ChatbotBehaviorSettingsPage() {
+  const [emailEnabled, setEmailEnabled] = useState(false);
+  const [namePhoneEnabled, setNamePhoneEnabled] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    Promise.all([
+      fetch("/api/workspace/contact-collection", { cache: "no-store" }).then((response) => (response.ok ? response.json() : { contactCollection: "chat" })),
+      fetch("/api/workspace/prechat-fields", { cache: "no-store" }).then((response) => (response.ok ? response.json() : { fields: [] })),
+    ])
+      .then(([contactData, fieldData]: [{ contactCollection?: string }, { fields?: { id: string }[] }]) => {
+        setEmailEnabled(contactData.contactCollection !== "off");
+        setNamePhoneEnabled((fieldData.fields ?? []).some((field) => field.id === "name" || field.id === "phone"));
+      })
+      .catch(() => undefined)
+      .finally(() => setLoading(false));
+  }, []);
+
+  async function toggleEmail(enabled: boolean) {
+    setEmailEnabled(enabled);
+    setSaving(true);
+    await fetch("/api/workspace/contact-collection", {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ contactCollection: enabled ? "chat" : "off" }),
+    }).catch(() => undefined);
+    setSaving(false);
+  }
+
+  async function toggleNamePhone(enabled: boolean) {
+    setNamePhoneEnabled(enabled);
+    setSaving(true);
+    const fields = enabled
+      ? [
+          { id: "name", label: "Name", type: "text", required: true },
+          { id: "phone", label: "Phone number", type: "phone", required: true },
+        ]
+      : [];
+    await fetch("/api/workspace/prechat-fields", {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ fields }),
+    }).catch(() => undefined);
+    setSaving(false);
+  }
+
+  return (
+    <div className="mx-auto w-full max-w-[1120px] px-7 pb-14 pt-8 text-[#17181a] sm:px-9 lg:px-10">
+      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[#E5E8EA] pb-7">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Chatbot</p>
+          <h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em] text-[#17181a]">Behavior</h2>
+          <p className="mt-2 max-w-xl text-[14px] leading-6 text-[#667069]">Enable or disable features on your chat widget.</p>
+        </div>
+        {(saving || !loading) && (
+          <span className="mt-2 flex shrink-0 items-center gap-1.5 text-[12px] font-medium text-[#687178]">
+            {saving ? <><LoaderCircle size={13} className="animate-spin" /> Saving…</> : <><CheckCircle2 size={14} className="text-[#2e8a5c]" /> Automatically saved</>}
+          </span>
+        )}
+      </div>
+
+      <div className="mt-7 grid gap-4 sm:grid-cols-2">
+        <BehaviorCard icon={Home} title="Chatbot Home" accent="#7467E8">
+          <BehaviorToggleRow label="Show a home section when the chat opens (helps guide visitors)" checked={false} comingSoon />
+        </BehaviorCard>
+
+        <BehaviorCard icon={UsersRound} title="Visitors" accent="#1596D6">
+          <BehaviorToggleRow label="Ask visitors for their email address" checked={emailEnabled} onCheckedChange={(value) => void toggleEmail(value)} disabled={loading} />
+          <BehaviorToggleRow label="Ask visitors for their name and phone number" checked={namePhoneEnabled} onCheckedChange={(value) => void toggleNamePhone(value)} disabled={loading} />
+          <BehaviorToggleRow label="Force visitors to identify themselves before chatting" checked={false} comingSoon />
+        </BehaviorCard>
+
+        <BehaviorCard icon={Paperclip} title="Files" accent="#E56812">
+          <BehaviorToggleRow label="Allow files to be sent from the chat widget" checked={false} comingSoon />
+          <BehaviorToggleRow label="Allow voice recordings to be sent from the chat widget" checked={false} comingSoon />
+        </BehaviorCard>
+
+        <BehaviorCard icon={BookOpen} title="Knowledge Base" accent="#39B487">
+          <BehaviorToggleRow label="Show a Knowledge Base tab in the chat widget" checked={false} comingSoon />
+          <BehaviorToggleRow label="Knowledge-Base-only mode (AI answers are skipped)" checked={false} comingSoon />
+        </BehaviorCard>
+
+        <BehaviorCard icon={HeartPulse} title="Status" accent="#E6538D">
+          <BehaviorToggleRow label="Show an alert in the widget when your status page reports an outage" checked={false} comingSoon />
+        </BehaviorCard>
+
+        <BehaviorCard icon={EyeOff} title="Hide Chatbot" accent="#5878E8">
+          <BehaviorToggleRow label="Hide the chat widget if no teammate is available" checked={false} comingSoon />
+          <BehaviorToggleRow label="Hide the chat widget on mobile devices" checked={false} comingSoon />
+          <BehaviorLinkRow label="Show or hide the widget on specific pages" href="/dashboard/settings/chatbot-restrictions" />
+        </BehaviorCard>
+
+        <BehaviorCard icon={LockKeyhole} title="Privacy" accent="#A953D6">
+          <BehaviorToggleRow label="Operator privacy mode (disables read receipts)" checked={false} comingSoon />
+          <BehaviorToggleRow label="Show your team what a visitor is typing in real time" checked={false} comingSoon />
+        </BehaviorCard>
+
+        <BehaviorCard icon={MessagesSquare} title="Other" accent="#11999D">
+          <BehaviorToggleRow label="Allow visitors to start a new conversation" checked={false} comingSoon />
+        </BehaviorCard>
+      </div>
+    </div>
+  );
+}
+
+type ChatbotUrlRules = { show: string[]; hide: string[] };
+
+function UrlRuleSection({
+  title,
+  description,
+  paths,
+  loading,
+  open,
+  onOpenChange,
+  draft,
+  setDraft,
+  onAdd,
+  onRemove,
+}: {
+  title: string;
+  description: string;
+  paths: string[];
+  loading: boolean;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  draft: string;
+  setDraft: (value: string) => void;
+  onAdd: () => void;
+  onRemove: (path: string) => void;
+}) {
+  return (
+    <div className="mt-8">
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h3 className="text-[15px] font-semibold">{title}</h3>
+          <p className="mt-1 max-w-md text-[12px] leading-5 text-[#687178]">{description}</p>
+        </div>
+        <button type="button" onClick={() => onOpenChange(true)} className="flex h-9 shrink-0 items-center gap-1.5 rounded-lg bg-[#202020] px-3.5 text-[12px] font-medium text-white hover:bg-black">
+          <Plus size={14} /> Add URL
+        </button>
+      </div>
+
+      <div className="mt-4 overflow-hidden rounded-xl border border-[#e7e8ea]">
+        {loading ? (
+          <p className="px-4 py-5 text-[12px] text-[#687178]">Loading…</p>
+        ) : paths.length === 0 ? (
+          <p className="px-4 py-5 text-[12px] text-[#687178]">No URL added</p>
+        ) : (
+          paths.map((path, index) => (
+            <div key={path} className={`flex items-center justify-between gap-3 px-4 py-3 ${index ? "border-t border-[#e7e8ea]" : ""}`}>
+              <code className="min-w-0 truncate font-mono text-[12.5px]">{path}</code>
+              <button type="button" aria-label={`Remove ${path}`} onClick={() => onRemove(path)} className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-[#8b8d90] hover:bg-[#f7f8f8] hover:text-black">
+                <X size={14} />
+              </button>
+            </div>
+          ))
+        )}
+      </div>
+
+      {open && (
+        <div className="fixed inset-0 z-[120] flex items-center justify-center bg-[#0b0f14]/40 p-4 backdrop-blur-[2px]" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onOpenChange(false); }}>
+          <div role="dialog" aria-modal="true" aria-label={title} className="w-full max-w-[480px] rounded-2xl bg-white p-6 shadow-[0_24px_70px_rgba(15,23,42,0.24)]">
+            <label className="block text-[14px] font-semibold text-[#17181a]">
+              Allow a page by path (use <code className="font-mono text-[13px]">/*</code> for its sub-pages) <span className="text-[#e5484d]">*</span>
+            </label>
+            <input
+              autoFocus
+              value={draft}
+              onChange={(event) => setDraft(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") { event.preventDefault(); onAdd(); }
+              }}
+              placeholder="/docs/*"
+              className="mt-3 h-12 w-full rounded-xl border border-[#DDE4E8] bg-[#f7f8f8] px-3.5 text-[14px] outline-none focus:border-[#428ce5] focus:bg-white focus:ring-2 focus:ring-[#428ce5]/15"
+            />
+            <div className="mt-6 flex items-center justify-end gap-3">
+              <button type="button" onClick={() => onOpenChange(false)} className="h-10 rounded-xl border border-[#17181a] px-4 text-[13px] font-semibold text-[#17181a] hover:bg-[#f7f8f8]">
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={onAdd}
+                disabled={!draft.trim()}
+                className="flex h-10 items-center gap-1.5 rounded-xl bg-[#428ce5] px-4 text-[13px] font-semibold text-white transition disabled:cursor-not-allowed disabled:bg-[#428ce5]/40"
+              >
+                <Plus size={15} /> Add Allowed Page
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ChatbotUrlRestrictionsSettingsPage() {
+  const [rules, setRules] = useState<ChatbotUrlRules>({ show: [], hide: [] });
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [addOpen, setAddOpen] = useState<"show" | "hide" | null>(null);
+  const [draft, setDraft] = useState("");
+
+  useEffect(() => {
+    fetch("/api/workspace/chatbot-restrictions", { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: { rules?: ChatbotUrlRules } | null) => setRules(data?.rules ?? { show: [], hide: [] }))
+      .catch(() => undefined)
+      .finally(() => setLoading(false));
+  }, []);
+
+  async function save(next: ChatbotUrlRules) {
+    setRules(next);
+    setSaving(true);
+    setError(null);
+    const response = await fetch("/api/workspace/chatbot-restrictions", {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(next),
+    }).catch(() => null);
+    const data = response ? ((await response.json().catch(() => ({}))) as { rules?: ChatbotUrlRules; message?: string }) : {};
+    if (!response?.ok) setError(data.message ?? "Could not save. Try again.");
+    else if (data.rules) setRules(data.rules);
+    setSaving(false);
+  }
+
+  function addPath(list: "show" | "hide") {
+    const path = draft.trim();
+    if (!path) return;
+    if (!path.startsWith("/")) {
+      setError("A path must start with /, e.g. /docs or /docs/*");
+      return;
+    }
+    const next = { ...rules, [list]: Array.from(new Set([...rules[list], path])) };
+    setDraft("");
+    setAddOpen(null);
+    void save(next);
+  }
+
+  function removePath(list: "show" | "hide", path: string) {
+    void save({ ...rules, [list]: rules[list].filter((item) => item !== path) });
+  }
+
+  return (
+    <div className="mx-auto w-full max-w-[1120px] px-7 pb-14 pt-8 text-[#17181a] sm:px-9 lg:px-10">
+      <div className="border-b border-[#E5E8EA] pb-7">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Chatbot</p>
+        <h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em] text-[#17181a]">Restrictions</h2>
+        <p className="mt-2 max-w-xl text-[14px] leading-6 text-[#667069]">
+          Control which pages of your site show the chat widget. Use <code className="rounded bg-[#f1f1f1] px-1 py-0.5 font-mono text-[12px]">/docs/*</code> to match every page under a path.
+        </p>
+      </div>
+
+      {error && <p role="alert" className="mt-4 rounded-lg bg-[#FFF2F2] px-3 py-2 text-[12px] font-medium text-[#A64A53]">{error}</p>}
+
+      <UrlRuleSection
+        title="Show only on these pages"
+        description="Leave empty to show the widget everywhere. Add a path to limit it to just these pages."
+        paths={rules.show}
+        loading={loading}
+        open={addOpen === "show"}
+        onOpenChange={(open) => setAddOpen(open ? "show" : null)}
+        draft={draft}
+        setDraft={setDraft}
+        onAdd={() => addPath("show")}
+        onRemove={(path) => removePath("show", path)}
+      />
+
+      <UrlRuleSection
+        title="Hide on these pages"
+        description="The widget never shows on a matching page, even if it's also covered by a show rule above."
+        paths={rules.hide}
+        loading={loading}
+        open={addOpen === "hide"}
+        onOpenChange={(open) => setAddOpen(open ? "hide" : null)}
+        draft={draft}
+        setDraft={setDraft}
+        onAdd={() => addPath("hide")}
+        onRemove={(path) => removePath("hide", path)}
+      />
+
+      {saving && (
+        <p className="mt-4 flex items-center gap-1.5 text-[12px] text-[#687178]">
+          <LoaderCircle size={13} className="animate-spin" /> Saving…
+        </p>
+      )}
+    </div>
+  );
+}
+
+type CompanyInfo = { domain: string | null; createdAt: string; logoUrl: string | null };
+
+function WorkspaceInformationSettingsPage() {
+  const { workspace, loading } = useCurrentWorkspace();
+  const [info, setInfo] = useState<CompanyInfo | null>(null);
+  const [infoLoading, setInfoLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("/api/workspace/company-info", { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: CompanyInfo | null) => setInfo(data))
+      .catch(() => undefined)
+      .finally(() => setInfoLoading(false));
+  }, []);
+
+  async function saveLogo(logoUrl: string | null) {
+    setUploading(true);
+    setError(null);
+    const response = await fetch("/api/workspace/company-info", {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ logoUrl }),
+    }).catch(() => null);
+    const data = response ? ((await response.json().catch(() => ({}))) as Partial<CompanyInfo> & { message?: string }) : {};
+    if (!response?.ok) setError(data.message ?? "Could not save the logo. Try again.");
+    else setInfo((current) => (current ? { ...current, logoUrl: data.logoUrl ?? null } : current));
+    setUploading(false);
+  }
+
+  function chooseLogo(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file || !file.type.startsWith("image/") || file.size > 2 * 1024 * 1024) {
+      setError("Choose a PNG, JPG, or WebP image up to 2 MB.");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => { if (typeof reader.result === "string") void saveLogo(reader.result); };
+    reader.readAsDataURL(file);
+  }
+
+  const createdLabel = info?.createdAt ? new Date(info.createdAt).toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" }) : null;
+
+  return (
+    <div className="mx-auto w-full max-w-[1120px] px-7 pb-14 pt-8 text-[#17181a] sm:px-9 lg:px-10">
+      <div className="border-b border-[#E5E8EA] pb-7">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Workspace</p>
+        <h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em] text-[#17181a]">Information</h2>
+        <p className="mt-2 max-w-xl text-[14px] leading-6 text-[#667069]">The basics of this workspace, and your role in it.</p>
+      </div>
+
+      <div className="mt-6 flex items-center gap-5">
+        <div className="relative shrink-0">
+          <span className="flex size-16 items-center justify-center overflow-hidden rounded-2xl border border-[#e7e8ea] bg-[#f7f8f8] text-[20px] font-bold text-[#687178]">
+            {info?.logoUrl ? <img src={info.logoUrl} alt="Workspace logo" className="h-full w-full object-cover" /> : (workspace?.name || "W").charAt(0).toUpperCase()}
+          </span>
+          <label className="absolute -bottom-2 -right-2 flex size-7 cursor-pointer items-center justify-center rounded-full border-2 border-white bg-[#202020] text-white shadow-sm transition hover:bg-black">
+            {uploading ? <LoaderCircle size={12} className="animate-spin" /> : <Upload size={12} />}
+            <input type="file" accept="image/png,image/jpeg,image/webp" onChange={chooseLogo} className="sr-only" disabled={uploading} />
+          </label>
+        </div>
+        <div>
+          <p className="text-[13px] font-semibold">Workspace logo</p>
+          <p className="mt-0.5 text-[12px] text-[#687178]">PNG, JPG, or WebP — up to 2 MB.</p>
+          {info?.logoUrl && (
+            <button type="button" onClick={() => void saveLogo(null)} disabled={uploading} className="mt-1 text-[12px] font-medium text-[#A64A53] hover:underline disabled:opacity-50">
+              Remove logo
+            </button>
+          )}
+        </div>
+      </div>
+      {error && <p role="alert" className="mt-3 text-[12px] font-medium text-[#A64A53]">{error}</p>}
+
+      <div className="mt-6 overflow-hidden rounded-xl border border-[#e7e8ea]">
+        {loading && <p className="px-5 py-5 text-[12px] text-[#687178]">Loading…</p>}
+        {!loading && workspace && (
+          <>
+            <div className="flex items-center justify-between gap-4 px-5 py-4">
+              <span className="text-[12px] font-medium text-[#687178]">Workspace name</span>
+              <span className="text-[13px] font-medium">{workspace.name}</span>
+            </div>
+            <div className="flex items-center justify-between gap-4 border-t border-[#e7e8ea] px-5 py-4">
+              <span className="text-[12px] font-medium text-[#687178]">Your role</span>
+              <span className="text-[13px] font-medium capitalize">{workspace.role}</span>
+            </div>
+            <div className="flex items-center justify-between gap-4 border-t border-[#e7e8ea] px-5 py-4">
+              <span className="text-[12px] font-medium text-[#687178]">Connected domain</span>
+              <span className="text-[13px] font-medium">{infoLoading ? "…" : info?.domain ?? "Not connected yet"}</span>
+            </div>
+            <div className="flex items-center justify-between gap-4 border-t border-[#e7e8ea] px-5 py-4">
+              <span className="text-[12px] font-medium text-[#687178]">Created</span>
+              <span className="text-[13px] font-medium">{infoLoading ? "…" : createdLabel ?? "—"}</span>
+            </div>
+            <div className="flex items-center justify-between gap-4 border-t border-[#e7e8ea] px-5 py-4">
+              <span className="text-[12px] font-medium text-[#687178]">Workspace ID</span>
+              <span className="font-mono text-[12px] text-[#687178]">{workspace.id}</span>
+            </div>
+          </>
+        )}
+        {!loading && !workspace && <p className="px-5 py-5 text-[12px] text-[#687178]">Could not load workspace details.</p>}
+      </div>
+    </div>
+  );
+}
+
+function SettingsHubCard({ title, description, href }: { title: string; description: string; href: string }) {
+  return (
+    <Link href={href} className="group flex items-center justify-between gap-4 border-t border-[#e7e8ea] px-5 py-5 text-left transition first:border-t-0 hover:bg-[#fafafa]">
+      <span className="min-w-0 flex-1">
+        <span className="block text-[13px] font-medium text-[#17181a]">{title}</span>
+        <span className="mt-1 block text-[12px] leading-5 text-[#687178]">{description}</span>
+      </span>
+      <ArrowRight size={15} className="shrink-0 text-[#a4acb1] transition group-hover:translate-x-0.5 group-hover:text-[#687178]" />
+    </Link>
+  );
+}
+
+function SetupIntegrationSettingsPage() {
+  return (
+    <div className="mx-auto w-full max-w-[1120px] px-7 pb-14 pt-8 text-[#17181a] sm:px-9 lg:px-10">
+      <div className="border-b border-[#E5E8EA] pb-7">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Workspace</p>
+        <h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em] text-[#17181a]">Setup & Integration</h2>
+        <p className="mt-2 max-w-xl text-[14px] leading-6 text-[#667069]">Configure the chat widget and connect the tools your team already uses.</p>
+      </div>
+
+      <Link
+        href="/dashboard/settings/identity"
+        className="group mt-6 flex items-center justify-between gap-4 rounded-xl border border-[#e7e8ea] bg-[#fafbfc] px-5 py-4 transition hover:border-[#c9d0d4] hover:bg-[#ffffff]"
+      >
+        <div className="flex items-center gap-3">
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#428ce5]/10 text-[#428ce5]"><UserCheck size={17} /></span>
+          <div>
+            <p className="text-[13px] font-semibold">Enable verification</p>
+            <p className="mt-0.5 text-[12px] text-[#687178]">Verify logged-in customers before they chat, so no one can pretend to be someone else.</p>
+          </div>
+        </div>
+        <ArrowRight size={15} className="shrink-0 text-[#a4acb1] transition group-hover:translate-x-0.5 group-hover:text-[#687178]" />
+      </Link>
+
+      <div className="dashboard-connect-embedded mt-8 border-t border-[#E5E8EA] pt-8">
+        <ConnectPageContent />
+      </div>
+    </div>
+  );
+}
+
+function DataLimitsLegalSettingsPage() {
+  return (
+    <div className="mx-auto w-full max-w-[1120px] px-7 pb-14 pt-8 text-[#17181a] sm:px-9 lg:px-10">
+      <div className="border-b border-[#E5E8EA] pb-7">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Workspace</p>
+        <h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em] text-[#17181a]">Data Limits & Legal</h2>
+        <p className="mt-2 max-w-xl text-[14px] leading-6 text-[#667069]">Usage limits, activity records, and the policies your workspace runs under.</p>
+      </div>
+      <div className="mt-6 overflow-hidden rounded-xl border border-[#e7e8ea]">
+        <SettingsHubCard title="Audit Logs" description="Review workspace activity and security events." href="/dashboard/settings/audit-logs" />
+        <SettingsHubCard title="Trash" description="Restore recently deleted workspace content." href="/dashboard/settings/trash" />
+      </div>
+      <div className="mt-6 overflow-hidden rounded-xl border border-[#e7e8ea]">
+        <SettingsHubCard title="Terms of Service" description="The agreement covering use of Elpino." href="/terms" />
+        <SettingsHubCard title="Privacy Policy" description="How we handle your data and your customers' data." href="/privacy" />
+      </div>
+    </div>
+  );
+}
+
+function WorkspaceDangerZoneSettingsPage() {
+  return (
+    <div className="pb-14 pt-8">
+      <div className="mx-auto w-full max-w-[1120px] px-8 text-[#17181a] sm:px-10 lg:px-12">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Workspace</p>
+        <h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em] text-[#17181a]">Danger Zone</h2>
+        <p className="mt-2 max-w-xl text-[14px] leading-6 text-[#667069]">Irreversible actions. Read the descriptions carefully before continuing.</p>
+      </div>
+      <DangerZoneSection />
     </div>
   );
 }
@@ -2023,8 +2661,6 @@ function GeneralSettingsPage({ user }: { user: SettingsUser }) {
           {saving ? <><RefreshCw size={14} className="animate-spin" /> Saving...</> : <><Save size={14} /> Save changes</>}
         </button>
       </div>
-
-      <DangerZoneSection />
     </>
   );
 }
@@ -2042,11 +2678,12 @@ function stockIconUrl(id: string) {
 
 function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: HTMLDivElement | null }) {
   const [loading, setLoading] = useState(true);
-  const [workspaceName, setWorkspaceName] = useState("");
   const [aiName, setAiName] = useState("Elpino AI");
   const [aiAvatarUrl, setAiAvatarUrl] = useState("");
   const [accent, setAccent] = useState("#202225");
   const [theme, setTheme] = useState<"light" | "dark" | "auto">("light");
+  const [replyLanguage, setReplyLanguage] = useState("auto");
+  const [replyLanguageOpen, setReplyLanguageOpen] = useState(false);
   const [greetingLines, setGreetingLines] = useState<string[]>(["Hi there 👋", "How can I help you today?"]);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -2070,11 +2707,11 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
       .then((response) => (response.ok ? response.json() : null))
       .then((data: { persona?: AiPersona | null } | null) => {
         if (!data?.persona) return;
-        setWorkspaceName(data.persona.name ?? "");
         setAiName(data.persona.aiName ?? "Elpino AI");
         setAiAvatarUrl(data.persona.aiAvatarUrl ?? "");
         setAccent(data.persona.chatbotAccent ?? "#202225");
         setTheme(data.persona.chatbotTheme ?? "light");
+        setReplyLanguage(data.persona.chatbotReplyLanguage ?? "auto");
         setGreetingLines(Array.isArray(data.persona.greetingLines) && data.persona.greetingLines.length > 0 ? data.persona.greetingLines : ["Hi there 👋", "How can I help you today?"]);
       })
       .catch(() => undefined)
@@ -2097,6 +2734,7 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
           aiAvatarUrl: aiAvatarUrl.trim(),
           chatbotAccent: accent,
           chatbotTheme: theme,
+          chatbotReplyLanguage: replyLanguage,
           greetingLines: cleanGreetingLines,
         }),
       });
@@ -2125,7 +2763,7 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
     const timer = window.setTimeout(() => { void save(); }, 700);
     return () => window.clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accent, theme, aiName, aiAvatarUrl, greetingLines, loading]);
+  }, [accent, theme, replyLanguage, aiName, aiAvatarUrl, greetingLines, loading]);
 
   function updateGreetingLine(index: number, value: string) {
     setGreetingLines((current) => current.map((line, i) => (i === index ? value : line)));
@@ -2146,8 +2784,7 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
     <div className="dashboard-chatbot-settings-page mx-auto w-full max-w-[1280px] px-7 pb-20 pt-8 text-white/90 sm:px-9 lg:px-10">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <div className="inline-flex items-center gap-2 rounded-full border border-violet-300/15 bg-violet-400/10 px-2.5 py-1 text-[11px] font-medium text-violet-200"><Bot size={12} /> Customer experience</div>
-          <h2 className="mt-3 text-[32px] font-medium tracking-[-0.04em] text-white/90">Chatbot Interface</h2>
+          <h2 className="text-[32px] font-medium tracking-[-0.04em] text-white/90">Chatbot Interface</h2>
         </div>
         {/* Every field here autosaves 700ms after the last edit (see the
             debounced effect above) — there's no Save button, so without this
@@ -2159,47 +2796,50 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
           </span>
         )}
       </div>
-      <p className="mt-2 max-w-2xl text-[13px] leading-6 text-white/60">
-        Give your AI teammate its own identity and behavior for {workspaceName || "this workspace"}. This is who customers meet in every conversation, on every connected site.
-      </p>
 
       {loading ? (
         <div className="mt-7 h-72 animate-pulse rounded-[20px] border border-white/10 bg-white/[0.035]" />
       ) : (
         <div className="mt-7">
           <div className="min-w-0">
-            <div data-tour="widget-identity" className="dashboard-chatbot-section overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035] p-5">
-              <div className="px-0 py-2">
-                <h3 className="text-[16px] font-semibold">Identity</h3>
-                <p className="mt-1 text-[12px] text-[#667069]">The name and avatar shown to customers in chat.</p>
-              </div>
-              <div className="flex items-start gap-5 px-0 py-3">
-                <div className="relative shrink-0">
-                  <span className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl text-[22px] font-bold text-white" style={{ backgroundColor: accent }}>
-                    {aiAvatarUrl.trim() ? (
-                      <img src={aiAvatarUrl} alt="AI avatar preview" className="h-full w-full object-cover" />
-                    ) : (
-                      (aiName.trim() || "R").charAt(0).toUpperCase()
-                    )}
-                  </span>
-                  <button
-                    type="button"
-                    title="Change avatar"
-                    onClick={() => setAvatarPickerOpen(true)}
-                    className="absolute -bottom-2 -right-2 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border-2 border-white bg-[#202225] text-white shadow-sm transition hover:bg-black"
-                  >
-                    <Upload size={13} />
-                  </button>
+            <div data-tour="widget-identity" className="overflow-hidden py-5">
+              <div className="grid gap-6 sm:grid-cols-[220px_minmax(0,1fr)]">
+                <div>
+                  <h3 className="text-[16px] font-semibold">General information</h3>
+                  <p className="mt-1 max-w-[200px] text-[12px] leading-5 text-[#667069]">The name and avatar shown to customers in chat.</p>
                 </div>
-                <div className="min-w-0 flex-1 space-y-4">
-                  <label className="block">
-                    <span className="text-[14px] font-semibold text-[#17233A]">AI name</span>
-                    <input
-                      value={aiName}
-                      onChange={(event) => { setAiName(event.target.value); setSaved(false); }}
-                      placeholder="Elpino AI"
-                      className="mt-2 h-11 w-full rounded-xl border border-[#DDE4E8] px-3 text-[13px] outline-none transition focus:border-[#11120f] focus:ring-2 focus:ring-[#11120f]/8"
-                    />
+                <div className="w-full min-w-0">
+                  <span className="block text-[12px] font-semibold text-[#17233A]">Avatar</span>
+                  <div className="relative mt-2 inline-block">
+                    <span className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full text-[22px] font-bold text-white" style={{ backgroundColor: accent }}>
+                      {aiAvatarUrl.trim() ? (
+                        <img src={aiAvatarUrl} alt="AI avatar preview" className="h-full w-full object-cover" />
+                      ) : (
+                        (aiName.trim() || "R").charAt(0).toUpperCase()
+                      )}
+                    </span>
+                    <button
+                      type="button"
+                      title="Change avatar"
+                      onClick={() => setAvatarPickerOpen(true)}
+                      className="absolute -bottom-1 -right-1 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border-2 border-[#1c1c1c] bg-[#202225] text-white shadow-sm transition hover:bg-black"
+                    >
+                      <Upload size={13} />
+                    </button>
+                  </div>
+                  <p className="mt-2 text-[11px] text-[#8b8d90]">PNG, JPG, or WebP — up to 2 MB</p>
+
+                  <label className="mt-5 block w-1/2">
+                    <span className="text-[12px] font-semibold text-[#17233A]">Chatbot name</span>
+                    <div className="relative mt-2">
+                      <UserRound size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#8b8d90]" />
+                      <input
+                        value={aiName}
+                        onChange={(event) => { setAiName(event.target.value); setSaved(false); }}
+                        placeholder="Elpino AI"
+                        className="h-11 w-full rounded-xl border border-[#DDE4E8] pl-9 pr-3 text-[13px] outline-none transition focus:border-[#11120f] focus:ring-2 focus:ring-[#11120f]/8"
+                      />
+                    </div>
                   </label>
                 </div>
               </div>
@@ -2207,43 +2847,129 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
 
             {error && <p className="mt-4 text-[12px] text-[#c63f4d]">{error}</p>}
 
-            <div data-tour="widget-greeting" className="dashboard-chatbot-section mt-4 rounded-2xl border border-white/10 bg-white/[0.035] p-5">
-              <h3 className="text-[16px] font-semibold">Greeting message</h3>
-              <p className="mt-1 max-w-xl text-[12px] leading-5 text-[#667069]">
-                Shown before a visitor starts chatting — each line pops up as its own bubble, one below another, on the launcher and at the top of a new conversation.
-              </p>
-              <div className="mt-4 space-y-2">
-                {greetingLines.map((line, index) => (
-                  <div key={index} className="flex items-center gap-2">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#f1f1f1] text-[#666]"><MessageCircle size={15} /></span>
-                    <input
-                      value={line}
-                      onChange={(event) => updateGreetingLine(index, event.target.value)}
-                      placeholder={index === 0 ? "Hi there 👋" : "How can I help you today?"}
-                      className="h-9 w-full rounded-lg border border-[#DDE4E8] px-3 text-[13px] outline-none transition focus:border-[#11120f] focus:ring-2 focus:ring-[#11120f]/8"
-                    />
-                    {greetingLines.length > 1 && (
-                      <button type="button" aria-label="Remove line" onClick={() => removeGreetingLine(index)} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[#8b8d90] hover:bg-[#f7f8f8] hover:text-black">
-                        <X size={15} />
-                      </button>
-                    )}
+            <div data-tour="widget-greeting" className="overflow-hidden border-t border-white/10 py-5">
+              <div className="grid gap-6 sm:grid-cols-[220px_minmax(0,1fr)]">
+                <div>
+                  <h3 className="text-[16px] font-semibold">Greeting message</h3>
+                  <p className="mt-1 max-w-[200px] text-[12px] leading-5 text-[#667069]">Shown before a visitor starts chatting, on the launcher and at the top of a new conversation.</p>
+                </div>
+                <div className="w-full min-w-0">
+                  <div className="w-full space-y-2">
+                    {greetingLines.map((line, index) => (
+                      <div key={index} className="flex items-center gap-2">
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#f1f1f1] text-[#666]"><MessageCircle size={15} /></span>
+                        <input
+                          value={line}
+                          onChange={(event) => updateGreetingLine(index, event.target.value)}
+                          placeholder={index === 0 ? "Hi there 👋" : "How can I help you today?"}
+                          className="h-9 w-full rounded-lg border border-[#DDE4E8] px-3 text-[13px] outline-none transition focus:border-[#11120f] focus:ring-2 focus:ring-[#11120f]/8"
+                        />
+                        {greetingLines.length > 1 && (
+                          <button type="button" aria-label="Remove line" onClick={() => removeGreetingLine(index)} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[#8b8d90] hover:bg-[#f7f8f8] hover:text-black">
+                            <X size={15} />
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                    <button type="button" onClick={addGreetingLine} className="dashboard-greeting-add-button flex h-9 items-center gap-2 rounded-lg border border-dashed border-[#DDE4E8] px-3 text-[12px] font-semibold text-[#666] transition hover:border-[#b9c0c5] hover:text-black">
+                      <Plus size={14} /> Add message
+                    </button>
                   </div>
-                ))}
-                <button type="button" onClick={addGreetingLine} className="dashboard-greeting-add-button flex h-9 items-center gap-2 rounded-lg border border-dashed border-[#DDE4E8] px-3 text-[12px] font-semibold text-[#666] transition hover:border-[#b9c0c5] hover:text-black">
-                  <Plus size={14} /> Add message
-                </button>
+                </div>
               </div>
             </div>
 
-            <div className="dashboard-chatbot-section mt-4 grid grid-cols-[260px_minmax(0,1fr)] gap-8 rounded-2xl border border-white/10 bg-white/[0.035] p-5 max-lg:grid-cols-1 max-lg:gap-4"><div><h3 className="text-[14px] font-medium">Theme color</h3><p className="mt-1 max-w-[285px] text-[12px] leading-5 text-white/60">Choose the accent used by the chat launcher, buttons, and active states.</p></div><div className="flex flex-wrap items-center gap-3">{["#202225", "#7467E8", "#1596D6", "#E6538D", "#A953D6", "#5878E8", "#E56812", "#11999D", "#A98E82", "#39B487"].map((color) => <button key={color} type="button" aria-label={`Use ${color} theme`} onClick={() => { setAccent(color); setSaved(false); }} className={`flex h-9 w-9 items-center justify-center rounded-lg transition ${accent === color ? "ring-2 ring-white/80 ring-offset-2 ring-offset-[#2f2f2f]" : "hover:scale-105"}`} style={{ backgroundColor: color }}>{accent === color && <Check size={15} className="text-white" />}</button>)}</div></div>
+            <div className="overflow-hidden border-t border-white/10 py-5">
+              <div className="grid gap-6 sm:grid-cols-[220px_minmax(0,1fr)]">
+                <div>
+                  <h3 className="text-[16px] font-semibold">Theme color</h3>
+                  <p className="mt-1 max-w-[200px] text-[12px] leading-5 text-[#667069]">Choose the accent used by the chat launcher, buttons, and active states.</p>
+                </div>
+                <div className="w-full min-w-0">
+                  <div className="flex flex-wrap items-center gap-3">
+                    {["#202225", "#7467E8", "#1596D6", "#E6538D", "#A953D6", "#5878E8", "#E56812", "#11999D", "#A98E82", "#39B487"].map((color) => (
+                      <button key={color} type="button" aria-label={`Use ${color} theme`} onClick={() => { setAccent(color); setSaved(false); }} className={`flex h-9 w-9 items-center justify-center rounded-lg transition ${accent === color ? "ring-2 ring-white/80 ring-offset-2 ring-offset-[#2f2f2f]" : "hover:scale-105"}`} style={{ backgroundColor: color }}>
+                        {accent === color && <Check size={15} className="text-white" />}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
 
-            <div className="dashboard-chatbot-section mt-4 rounded-2xl border border-white/10 bg-white/[0.035] p-5">
-              <h3 className="text-[16px] font-semibold">Collect contact details</h3>
-              <p className="mt-1 max-w-xl text-[12px] leading-5 text-white/80">
-                Choose which contact details the chat widget asks visitors to share.
-              </p>
-              <div className="mt-4">
-                <ContactCollectionSwitch onFieldsChange={setPreviewFields} />
+            <div className="border-t border-white/10 py-5">
+              <div className="grid gap-6 sm:grid-cols-[220px_minmax(0,1fr)]">
+                <div>
+                  <h3 className="text-[16px] font-semibold">Reply language</h3>
+                  <p className="mt-1 max-w-[200px] text-[12px] leading-5 text-[#667069]">Auto matches whatever language the customer writes in. Forcing one replies in it regardless of what they type.</p>
+                </div>
+                <div className="relative w-full min-w-0 sm:w-1/2">
+                  <button
+                    type="button"
+                    onClick={() => setReplyLanguageOpen((open) => !open)}
+                    aria-expanded={replyLanguageOpen}
+                    aria-haspopup="listbox"
+                    className="flex h-11 w-full items-center gap-2.5 rounded-xl border border-[#DDE4E8] px-3 text-[13px] outline-none transition focus:border-[#11120f] focus:ring-2 focus:ring-[#11120f]/8"
+                  >
+                    {replyLanguage === "auto" ? (
+                      <span className="flex h-4 w-5 shrink-0 items-center justify-center text-[13px]">🌐</span>
+                    ) : (
+                      <LanguageFlag countryCode={LANGUAGE_COUNTRY_CODES[replyLanguage] ?? "gb"} />
+                    )}
+                    <span className="min-w-0 flex-1 truncate text-left">
+                      {replyLanguage === "auto" ? "Auto (match the customer)" : `Always reply in ${SUPPORTED_LANGUAGES.find((item) => item.code === replyLanguage)?.name ?? replyLanguage}`}
+                    </span>
+                    <ChevronDown size={15} className={`shrink-0 text-[#8b8d90] transition-transform ${replyLanguageOpen ? "rotate-180" : ""}`} />
+                  </button>
+
+                  {replyLanguageOpen && (
+                    <>
+                      <button type="button" className="fixed inset-0 z-40 cursor-default" aria-label="Close language menu" onClick={() => setReplyLanguageOpen(false)} />
+                      <div role="listbox" className="absolute left-0 top-[calc(100%+8px)] z-50 w-full overflow-hidden rounded-[14px] border border-[#e0e2e7] bg-[#ffffff] p-2 text-left shadow-[0_18px_50px_rgba(26,32,44,0.14)]">
+                        <div className="px-3 pb-2 pt-1 text-[11px] font-bold uppercase tracking-[0.14em] text-[#89909f]">Choose language</div>
+                        <div className="max-h-[280px] overflow-y-auto overscroll-contain">
+                          <button
+                            type="button"
+                            role="option"
+                            aria-selected={replyLanguage === "auto"}
+                            onClick={() => { setReplyLanguage("auto"); setReplyLanguageOpen(false); setSaved(false); }}
+                            className={`flex w-full items-center gap-3 rounded-[9px] px-3 py-2.5 text-left text-[13px] transition ${replyLanguage === "auto" ? "bg-[#eff6ff] font-semibold text-[#1d4ed8]" : "text-[#404653] hover:bg-[#f5f6f7]"}`}
+                          >
+                            <span className="flex h-4 w-5 shrink-0 items-center justify-center text-[13px]">🌐</span>
+                            <span>Auto (match the customer)</span>
+                            {replyLanguage === "auto" && <span className="ml-auto text-[#2563eb]">✓</span>}
+                          </button>
+                          {SUPPORTED_LANGUAGES.map((item) => (
+                            <button
+                              key={item.code}
+                              type="button"
+                              role="option"
+                              aria-selected={replyLanguage === item.code}
+                              onClick={() => { setReplyLanguage(item.code); setReplyLanguageOpen(false); setSaved(false); }}
+                              className={`flex w-full items-center gap-3 rounded-[9px] px-3 py-2.5 text-left text-[13px] transition ${replyLanguage === item.code ? "bg-[#eff6ff] font-semibold text-[#1d4ed8]" : "text-[#404653] hover:bg-[#f5f6f7]"}`}
+                            >
+                              <LanguageFlag countryCode={LANGUAGE_COUNTRY_CODES[item.code] ?? "gb"} />
+                              <span>{item.name}</span>
+                              {replyLanguage === item.code && <span className="ml-auto text-[#2563eb]">✓</span>}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="border-t border-white/10 py-5">
+              <div className="grid gap-6 sm:grid-cols-[220px_minmax(0,1fr)]">
+                <div>
+                  <h3 className="text-[16px] font-semibold">Collect contact details</h3>
+                  <p className="mt-1 max-w-[200px] text-[12px] leading-5 text-[#667069]">Choose which contact details the chat widget asks visitors to share.</p>
+                </div>
+                <div className="w-full min-w-0">
+                  <ContactCollectionSwitch onFieldsChange={setPreviewFields} />
+                </div>
               </div>
             </div>
           </div>
@@ -3114,10 +3840,49 @@ function TranslationSettingsPage() {
   );
 }
 
+type OrgSecuritySettings = { requireTwoFactor: boolean; signInAlerts: boolean; membersCanInvite: boolean };
+
 function SecuritySettingsPage() {
-  const [require2fa, setRequire2fa] = useState(false);
-  const [loginAlerts, setLoginAlerts] = useState(true);
-  const [adminInvites, setAdminInvites] = useState(true);
+  const [settings, setSettings] = useState<OrgSecuritySettings | null>(null);
+  const [role, setRole] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const isOwner = role === "owner";
+
+  useEffect(() => {
+    fetch("/api/organizations/security", { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: { settings?: OrgSecuritySettings | null; role?: string } | null) => {
+        setSettings(data?.settings ?? null);
+        setRole(data?.role ?? null);
+      })
+      .catch(() => undefined)
+      .finally(() => setLoading(false));
+  }, []);
+
+  async function update(patch: Partial<OrgSecuritySettings>) {
+    if (!settings || saving) return;
+    const previous = settings;
+    setSettings({ ...settings, ...patch });
+    setSaving(true);
+    setError(null);
+    const response = await fetch("/api/organizations/security", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(patch),
+    }).catch(() => null);
+    const data = response ? ((await response.json().catch(() => ({}))) as { settings?: OrgSecuritySettings; message?: string }) : {};
+    if (!response?.ok || !data.settings) {
+      setSettings(previous);
+      setError(data.message ?? "Could not save. Try again.");
+    } else {
+      setSettings(data.settings);
+    }
+    setSaving(false);
+  }
+
+  const toggleDisabled = loading || saving || !isOwner || !settings;
 
   return (
     <div className="dashboard-security-page mx-auto w-full max-w-[980px] px-7 pb-16 pt-8 text-white sm:px-9 lg:px-10">
@@ -3142,10 +3907,10 @@ function SecuritySettingsPage() {
 
       <SecuritySection title="Authentication policies" description="Set the minimum sign-in requirements for everyone in this workspace.">
         <SecurityRow icon={KeyRound} title="Require two-factor authentication" description="Members must configure an authenticator or SMS code before accessing workspace data." badge="Business">
-          <Toggle checked={require2fa} onChange={() => setRequire2fa((value) => !value)} label="Require two-factor authentication" />
+          <Toggle checked={settings?.requireTwoFactor ?? false} onChange={() => void update({ requireTwoFactor: !settings?.requireTwoFactor })} label="Require two-factor authentication" disabled={toggleDisabled} />
         </SecurityRow>
         <SecurityRow icon={Eye} title="New sign-in alerts" description="Notify workspace admins when an account signs in from a new browser or location.">
-          <Toggle checked={loginAlerts} onChange={() => setLoginAlerts((value) => !value)} label="New sign-in alerts" />
+          <Toggle checked={settings?.signInAlerts ?? false} onChange={() => void update({ signInAlerts: !settings?.signInAlerts })} label="New sign-in alerts" disabled={toggleDisabled} />
         </SecurityRow>
       </SecuritySection>
 
@@ -3154,9 +3919,14 @@ function SecuritySettingsPage() {
           <button type="button" className="flex h-9 items-center gap-3 rounded-lg border border-white/10 bg-white/[0.04] px-3 text-xs font-medium text-white transition hover:bg-white/[0.08]">Member <ChevronRight size={13} className="text-white/60" /></button>
         </SecurityRow>
         <SecurityRow title="Only admins can invite members" description="Prevent members from inviting additional people without administrator approval.">
-          <Toggle checked={adminInvites} onChange={() => setAdminInvites((value) => !value)} label="Only admins can invite members" />
+          <Toggle checked={settings ? !settings.membersCanInvite : true} onChange={() => void update({ membersCanInvite: !settings?.membersCanInvite })} label="Only admins can invite members" disabled={toggleDisabled} />
         </SecurityRow>
       </SecuritySection>
+
+      {!loading && !isOwner && (
+        <p className="mt-4 rounded-lg border border-amber-400/20 bg-amber-400/10 px-3 py-2 text-[11.5px] font-medium text-amber-200">Only the workspace owner can change these settings.</p>
+      )}
+      {error && <p role="alert" className="mt-4 text-[12px] font-medium text-[#e0707c]">{error}</p>}
 
       <div className="mt-5 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-white/10 bg-white/[0.025] px-5 py-4">
         <div><p className="text-sm font-semibold text-white">Review account-level security</p><p className="mt-1 text-xs text-white/80">Manage your personal password and two-factor authentication in General settings.</p></div>
@@ -3322,17 +4092,6 @@ function AuditLogsSettingsPage({ view = "all" }: { view?: "all" | AuditStatus })
   );
 }
 
-type TeamAvailabilityMember = {
-  id: string;
-  email: string;
-  name: string | null;
-  avatarUrl: string | null;
-  role: string;
-  presenceStatus: string;
-  busy: boolean;
-  availability: Availability | null;
-};
-
 // The full IANA list where the browser exposes it; a short practical set
 // otherwise, so the picker is never empty on an older engine.
 function timezoneOptions(): string[] {
@@ -3346,67 +4105,25 @@ function timezoneOptions(): string[] {
   return ["UTC", "Asia/Kolkata", "Asia/Singapore", "Asia/Dubai", "Europe/London", "Europe/Berlin", "America/New_York", "America/Chicago", "America/Los_Angeles", "Australia/Sydney"];
 }
 
-function statusChip(member: TeamAvailabilityMember) {
-  if (member.busy) return { label: "In a chat", className: "bg-[#FFF4E5] text-[#93651D]" };
-  if (member.presenceStatus === "online") return { label: "Online", className: "bg-[#EEF8F2] text-[#34845C]" };
-  if (member.presenceStatus === "away" || member.presenceStatus === "brb") {
-    return { label: member.presenceStatus === "away" ? "Away" : "Be right back", className: "bg-[#FFF4E5] text-[#93651D]" };
-  }
-  return { label: "Offline", className: "bg-[#F1F3F4] text-[#5F686D]" };
-}
-
 function AvailabilitySettingsPage() {
   const [schedule, setSchedule] = useState<Availability | null>(null);
-  const [members, setMembers] = useState<TeamAvailabilityMember[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState<{ tone: "ok" | "error"; text: string } | null>(null);
-  const [now, setNow] = useState(() => new Date());
+  const [now] = useState(() => new Date());
 
   const viewerTimezone = useMemo(() => guessTimezone(), []);
   const zones = useMemo(() => timezoneOptions(), []);
 
-  function loadTeam() {
-    return fetch("/api/account/availability/team")
-      .then((response) => (response.ok ? response.json() : null))
-      .then((data: { members?: TeamAvailabilityMember[] } | null) => {
-        if (data) setMembers((data.members ?? []).map((member) => ({ ...member, availability: normalizeAvailability(member.availability) })));
-      })
-      .catch(() => undefined);
-  }
-
   useEffect(() => {
-    Promise.all([
-      fetch("/api/account/availability")
-        .then((response) => (response.ok ? response.json() : null))
-        .catch(() => null),
-      loadTeam(),
-    ])
-      .then(([mine]: [{ availability?: unknown } | null, unknown]) => {
+    fetch("/api/account/availability")
+      .then((response) => (response.ok ? response.json() : null))
+      .then((mine: { availability?: unknown } | null) => {
         setSchedule(normalizeAvailability(mine?.availability) ?? defaultAvailability());
       })
+      .catch(() => setSchedule(defaultAvailability()))
       .finally(() => setLoading(false));
   }, []);
-
-  // "On duty right now" is a claim about the clock, so it has to be re-asked
-  // as the clock moves — otherwise the page slowly starts lying the longer
-  // it sits open.
-  useEffect(() => {
-    const timer = window.setInterval(() => setNow(new Date()), 60_000);
-    return () => window.clearInterval(timer);
-  }, []);
-
-  const coverage = useMemo(
-    () => computeCoverage(members as CoverageMember[], viewerTimezone, now),
-    [members, viewerTimezone, now],
-  );
-
-  // Where "now" falls on the viewer's own week, for the marker on the timeline.
-  const localNowMinute = useMemo(() => {
-    const shifted = minuteOfWeek(now) + timezoneOffsetMinutes(viewerTimezone, now);
-    return ((shifted % MINUTES_PER_WEEK) + MINUTES_PER_WEEK) % MINUTES_PER_WEEK;
-  }, [now, viewerTimezone]);
-  const todayIndex = Math.floor(localNowMinute / MINUTES_PER_DAY);
 
   function updateDay(key: DayKey, patch: Partial<DayWindow>) {
     setSchedule((current) =>
@@ -3432,8 +4149,6 @@ function AvailabilitySettingsPage() {
       }
       setSchedule(normalizeAvailability(data.availability) ?? schedule);
       setNotice({ tone: "ok", text: "Hours saved." });
-      // Fold the change straight back into the team picture below.
-      await loadTeam();
     } catch {
       setNotice({ tone: "error", text: "Could not save your hours." });
     } finally {
@@ -3442,8 +4157,6 @@ function AvailabilitySettingsPage() {
   }
 
   const myWeeklyHours = schedule ? ownWeeklyMinutes(schedule, now) / 60 : 0;
-  const coveredHours = coverage.coveredMinutes / 60;
-  const unscheduledCount = members.length - coverage.scheduledCount;
 
   return (
     <div className="dashboard-availability-page mx-auto w-full max-w-[1120px] px-7 pb-16 pt-8 text-white sm:px-9 lg:px-10">
@@ -3544,135 +4257,6 @@ function AvailabilitySettingsPage() {
             </div>
           </div>
 
-          <div className="mt-6 overflow-hidden rounded-xl border border-white/10 bg-white/[0.025]">
-            <div className="flex flex-wrap items-center gap-3 border-b border-white/10 px-5 py-4">
-              <UsersRound size={16} className="text-white/80" />
-              <h3 className="text-[14px] font-semibold text-white">Team coverage</h3>
-              <span className="ml-auto text-[12px] text-white/80">Shown in {viewerTimezone}</span>
-            </div>
-
-            <div className="grid gap-px border-b border-white/10 bg-white/10 sm:grid-cols-3">
-              <div className="bg-[#292a2b] px-5 py-4">
-                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/80">Covered</p>
-                <p className="mt-1.5 text-[26px] font-medium tracking-[-0.03em]">
-                  {coveredHours.toFixed(coveredHours % 1 ? 1 : 0)}<span className="text-[14px] text-white/80"> of 168h</span>
-                </p>
-              </div>
-              <div className="bg-[#292a2b] px-5 py-4">
-                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/80">Of the week</p>
-                <p className="mt-1.5 flex items-center gap-2 text-[26px] font-medium tracking-[-0.03em]">
-                  {coverage.coveragePercent.toFixed(coverage.coveragePercent % 1 ? 1 : 0)}%
-                  {coverage.is24x7 && (
-                    <span className="rounded-full bg-[#EEF8F2] px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.08em] text-[#34845C]">24/7</span>
-                  )}
-                </p>
-              </div>
-              <div className="bg-[#292a2b] px-5 py-4">
-                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/80">On duty now</p>
-                <p className="mt-1.5 text-[26px] font-medium tracking-[-0.03em]">
-                  {coverage.onDutyNow.length}
-                  <span className="text-[14px] text-white/80"> scheduled · {coverage.freeNow.length} free</span>
-                </p>
-              </div>
-            </div>
-
-            {coverage.scheduledCount === 0 ? (
-              <div className="flex flex-col items-center px-6 py-14 text-center">
-                <CalendarDays size={22} className="text-[#9AA3A7]" />
-                <p className="mt-3 text-[14px] font-semibold">No hours set yet</p>
-                <p className="mt-1 max-w-sm text-[12px] leading-5 text-white/80">
-                  Once you and your teammates save working hours, the week below fills in with the times someone is on.
-                </p>
-              </div>
-            ) : (
-              <div className="px-5 py-4">
-                <div className="flex items-center gap-3 pb-1.5 pl-[52px] text-[10.5px] text-white/80">
-                  {["00:00", "06:00", "12:00", "18:00"].map((label) => (
-                    <span key={label} className="flex-1">{label}</span>
-                  ))}
-                  <span className="w-[42px] shrink-0 text-right">24:00</span>
-                </div>
-
-                {DAY_KEYS.map((key, dayIndex) => {
-                  const segments = coverage.coveredByDay[key];
-                  const dayHours = coverage.hoursByDay[key];
-                  return (
-                    <div key={key} className="flex items-center gap-3 py-[3px]">
-                      <span className="w-[40px] shrink-0 text-[12px] font-medium text-white/80">{DAY_SHORT[key]}</span>
-                      <div className="dashboard-availability-track relative h-6 flex-1 overflow-hidden rounded-md bg-[#EFF2F3]">
-                        {segments.map((segment, index) => (
-                          <span
-                            key={index}
-                            className="absolute inset-y-0 bg-[#428ce5]"
-                            style={{
-                              left: `${(segment.start / MINUTES_PER_DAY) * 100}%`,
-                              width: `${((segment.end - segment.start) / MINUTES_PER_DAY) * 100}%`,
-                            }}
-                          />
-                        ))}
-                        {dayIndex === todayIndex && (
-                          <span
-                            aria-label="Now"
-                            className="dashboard-availability-now absolute inset-y-0 w-[2px] bg-[#17181a]"
-                            style={{ left: `${((localNowMinute % MINUTES_PER_DAY) / MINUTES_PER_DAY) * 100}%` }}
-                          />
-                        )}
-                      </div>
-                      <span className="w-[42px] shrink-0 text-right text-[11.5px] text-white/80">{formatHours(dayHours * 60)}</span>
-                    </div>
-                  );
-                })}
-
-                {coverage.gaps.length > 0 && (
-                  <div className="mt-4 rounded-xl border border-[#DDE4E8] px-4 py-3">
-                    <p className="flex items-center gap-2 text-[12.5px] font-semibold text-[#93651D]">
-                      <CircleAlert size={14} /> Nobody scheduled for {formatHours(MINUTES_PER_WEEK - coverage.coveredMinutes)} of the week
-                    </p>
-                    <div className="mt-2 flex flex-wrap gap-1.5">
-                      {DAY_KEYS.flatMap((key) =>
-                        coverage.gapsByDay[key].map((gap, index) => (
-                          <span key={`${key}-${index}`} className="rounded-full bg-white/10 px-2.5 py-1 text-[11.5px] text-white/80">
-                            {DAY_SHORT[key]} {formatTime(gap.start)}–{gap.end === MINUTES_PER_DAY ? "24:00" : formatTime(gap.end)}
-                          </span>
-                        )),
-                      ).slice(0, 14)}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            <div className="border-t border-white/10">
-              {members.map((member) => {
-                const chip = statusChip(member);
-                const onDuty = coverage.onDutyNow.some((entry) => entry.id === member.id);
-                const weeklyHours = member.availability ? ownWeeklyMinutes(member.availability, now) / 60 : 0;
-                return (
-                  <div key={member.id} className="flex flex-wrap items-center gap-3 border-b border-white/10 px-5 py-3.5 last:border-b-0">
-                    <span className={`h-2 w-2 shrink-0 rounded-full ${onDuty ? "bg-[#428ce5]" : "bg-white/30"}`} />
-                    <div className="min-w-0 flex-1">
-                      <p className="dashboard-presence-name truncate text-[14.5px] font-semibold">{member.name || member.email}</p>
-                      <p className="mt-0.5 truncate text-[11.5px] text-white/80">
-                        {member.availability
-                          ? `${weeklyHours.toFixed(weeklyHours % 1 ? 1 : 0)}h a week · ${member.availability.timezone}`
-                          : "No hours set"}
-                      </p>
-                    </div>
-                    {onDuty && (
-                      <span className="shrink-0 rounded-full bg-[#EEF8F2] px-2.5 py-1 text-[11px] font-semibold text-[#34845C]">On duty</span>
-                    )}
-                    <span className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold ${chip.className}`}>{chip.label}</span>
-                  </div>
-                );
-              })}
-            </div>
-
-            {unscheduledCount > 0 && (
-              <p className="dashboard-settings-subdesc border-t border-white/10 px-5 py-3 text-[12px] leading-4 text-white/80">
-                {unscheduledCount} teammate{unscheduledCount === 1 ? "" : "s"} haven&apos;t set hours yet, so they count as covering nothing above.
-              </p>
-            )}
-          </div>
         </>
       )}
     </div>
@@ -4164,9 +4748,40 @@ function TwoFactorSetupDialog({
   );
 }
 
-function Toggle({ checked, onChange, label }: { checked: boolean; onChange: () => void; label: string }) {
+function Toggle({ checked, onChange, label, disabled }: { checked: boolean; onChange: () => void; label: string; disabled?: boolean }) {
   return (
-    <Switch checked={checked} onCheckedChange={onChange} aria-label={label} />
+    <Switch checked={checked} onCheckedChange={onChange} aria-label={label} disabled={disabled} />
+  );
+}
+
+type NavItem = { label: string; slug: string; icon: typeof Settings };
+
+function SidebarNavGroup({ title, items, currentPage, spacingClassName = "mt-3" }: { title: string; items: NavItem[]; currentPage: string; spacingClassName?: string }) {
+  const [open, setOpen] = useState(true);
+  return (
+    <div className={spacingClassName}>
+      <button
+        type="button"
+        onClick={() => setOpen((value) => !value)}
+        aria-expanded={open}
+        className="flex w-full items-center justify-between rounded-md px-1 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#74787c] transition hover:text-[#4c4f52]"
+      >
+        <span>{title}</span>
+        <ChevronDown size={13} className={`transition-transform duration-200 ease-in-out ${open ? "rotate-0" : "-rotate-90"}`} />
+      </button>
+      <div className={`grid transition-all duration-200 ease-in-out ${open ? "mt-1 grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
+        <div className="overflow-hidden">
+          <nav className="space-y-0.5">
+            {items.map(({ label, slug, icon: Icon }) => (
+              <Link key={label} href={slug ? `/dashboard/settings/${slug}` : "/dashboard/settings"} aria-current={currentPage === label ? "page" : undefined} className={`flex h-9 w-full items-center gap-3 rounded-md px-2.5 text-left text-[13px] font-normal text-black/90 transition ${currentPage === label ? "dashboard-secondary-nav-active bg-[#eeeeee]" : "hover:bg-[#f0f0f0]"}`}>
+                <Icon size={16} strokeWidth={1.8} className={currentPage === label ? "text-[#55585c]" : "text-[#8b8d90]"} />
+                <span className="truncate">{label}</span>
+              </Link>
+            ))}
+          </nav>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -4205,35 +4820,9 @@ export function SettingsClient({ user, page = "General", auditView = "all" }: { 
         }`}
       >
         <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-4 pt-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <p className="mb-2 mt-1 px-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#74787c]">Account</p>
-          <nav className="space-y-0.5">
-            {accountItems.map(({ label, slug, icon: Icon }) => (
-              <Link key={label} href={slug ? `/dashboard/settings/${slug}` : "/dashboard/settings"} aria-current={currentPage === label ? "page" : undefined} className={`flex h-9 w-full items-center gap-3 rounded-md px-2.5 text-left text-[13px] text-black transition ${currentPage === label ? "dashboard-secondary-nav-active bg-[#eeeeee] font-medium" : "hover:bg-[#f0f0f0]"}`}>
-                <Icon size={16} strokeWidth={1.8} className={currentPage === label ? "text-[#55585c]" : "text-[#8b8d90]"} />
-                <span className="truncate">{label}</span>
-              </Link>
-            ))}
-          </nav>
-
-          <p className="mb-2 mt-6 px-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#74787c]">Support tools</p>
-          <nav className="space-y-0.5">
-            {featureItems.map(({ label, slug, icon: Icon }) => (
-              <Link key={label} href={`/dashboard/settings/${slug}`} aria-current={currentPage === label ? "page" : undefined} className={`flex h-9 w-full items-center gap-3 rounded-md px-2.5 text-left text-[13px] text-black transition ${currentPage === label ? "dashboard-secondary-nav-active bg-[#eeeeee] font-medium" : "hover:bg-[#f0f0f0]"}`}>
-                <Icon size={16} strokeWidth={1.8} className={currentPage === label ? "text-[#55585c]" : "text-[#8b8d90]"} />
-                <span className="truncate">{label}</span>
-              </Link>
-            ))}
-          </nav>
-
-          <p className="mb-2 mt-6 px-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#74787c]">Workspace</p>
-          <nav className="space-y-0.5">
-            {workspaceItems.map(({ label, slug, icon: Icon }) => (
-              <Link key={label} href={`/dashboard/settings/${slug}`} aria-current={currentPage === label ? "page" : undefined} className={`flex h-9 w-full items-center gap-3 rounded-md px-2.5 text-left text-[13px] text-black transition ${currentPage === label ? "dashboard-secondary-nav-active bg-[#eeeeee] font-medium" : "hover:bg-[#f0f0f0]"}`}>
-                <Icon size={16} strokeWidth={1.8} className={currentPage === label ? "text-[#55585c]" : "text-[#8b8d90]"} />
-                <span className="truncate">{label}</span>
-              </Link>
-            ))}
-          </nav>
+          <SidebarNavGroup title="Account" items={accountItems} currentPage={currentPage} spacingClassName="mt-1" />
+          <SidebarNavGroup title="Chatbot" items={chatbotItems} currentPage={currentPage} />
+          <SidebarNavGroup title="Workspace" items={workspaceItems} currentPage={currentPage} />
         </div>
         <div className="border-t border-[#e4e4e4] p-3">
           <button type="button" disabled={signingOut} onClick={() => void signOut()} className="flex h-10 w-full items-center gap-3 rounded-md px-3 text-[13px] text-black hover:bg-[#eeeeee] disabled:opacity-50">
@@ -4247,6 +4836,10 @@ export function SettingsClient({ user, page = "General", auditView = "all" }: { 
           <GeneralSettingsPage user={user} />
         ) : currentPage === "Chatbot Interface" ? (
           <ChatbotInterfaceSettingsPage previewContainer={previewPanel} />
+        ) : currentPage === "Restrictions" ? (
+          <ChatbotUrlRestrictionsSettingsPage />
+        ) : currentPage === "Behavior" ? (
+          <ChatbotBehaviorSettingsPage />
         ) : currentPage === "People" ? (
           <PeopleSettingsPage />
         ) : currentPage === "Teams" ? (
@@ -4255,7 +4848,7 @@ export function SettingsClient({ user, page = "General", auditView = "all" }: { 
           <UpgradeSettingsPage />
         ) : currentPage === "Billing" ? (
           <BillingSettingsPage />
-        ) : currentPage === "AI Usage" ? (
+        ) : currentPage === "Usage" ? (
           <AIUsageSettingsPage />
         ) : currentPage === "Security & Permissions" ? (
           <SecuritySettingsPage />
@@ -4265,6 +4858,14 @@ export function SettingsClient({ user, page = "General", auditView = "all" }: { 
           <AvailabilitySettingsPage />
         ) : currentPage === "Presence Log" ? (
           <PresenceLogSettingsPage />
+        ) : currentPage === "Information" ? (
+          <WorkspaceInformationSettingsPage />
+        ) : currentPage === "Setup & Integration" ? (
+          <SetupIntegrationSettingsPage />
+        ) : currentPage === "Data Limits & Legal" ? (
+          <DataLimitsLegalSettingsPage />
+        ) : currentPage === "Danger Zone" ? (
+          <WorkspaceDangerZoneSettingsPage />
         ) : currentPage === "Tag Manager" ? (
           <TagManagerSettingsPage />
         ) : currentPage === "Identity Verification" ? (

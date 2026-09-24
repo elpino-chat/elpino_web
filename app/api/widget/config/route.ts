@@ -8,6 +8,8 @@ type WidgetConfig = {
   permissions?: unknown;
   /** Plan entitlement: paid tiers drop the "Powered by Elpino" footer. */
   removeBranding?: boolean;
+  /** Which pages of the site show the widget — see Chatbot Interface > Restrictions. */
+  urlRules?: { show?: string[]; hide?: string[] };
 };
 
 // Same default as the Chatbot Interface settings page — a workspace that

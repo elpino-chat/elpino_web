@@ -2738,6 +2738,51 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
   color: #e0c26b !important;
 }
 
+/* Light theme: authored dark-only (literal text-white, border-white/10,
+   bg-white/[0.0NN]) with no theme-aware classes at all — same fix as
+   #dashboard-home and the availability page. The root itself carries
+   text-white, not just its descendants, so it needs a self-or-descendant
+   selector. */
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-security-page.dashboard-security-page,
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-security-page [class*="text-white"] {
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-security-page [class*="text-white/80"] {
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-security-page [class*="text-white/60"] {
+  color: rgba(0, 0, 0, 0.45) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-security-page [class*="border-white"] {
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-security-page [class*="bg-white/[0.025]"],
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-security-page [class*="bg-white/[0.04]"],
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-security-page [class*="bg-white/[0.05]"] {
+  background-color: #ffffff !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-security-page [class*="divide-white"] > :not(:first-child) {
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+/* The "Protected" badge and per-row icon badges use pale blues meant to sit
+   on a dark card — too low-contrast on white, so they get a darker blue. */
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-security-page [class*="text-[#5ca5fa]"] {
+  color: #2f6fb8 !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-security-page [class*="text-[#b8d9ff]"] {
+  color: #2f6fb8 !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-security-page [class*="text-amber-200"] {
+  color: #93651d !important;
+}
+/* "Open personal settings" is a literal bg-[#428ce5]/text-white pill —
+   legitimately white-on-blue in both themes. More specific (two attribute
+   selectors) so it wins regardless of source order. */
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-security-page [class*="bg-[#428ce5]"][class*="text-white"] {
+  color: #ffffff !important;
+}
+
 /* ---------------------------------------------------------------------------
    Conversation view (dashboard inbox)
 
@@ -3001,6 +3046,52 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
 
 [data-dashboard-theme="dark"] .dashboard-shell .dashboard-availability-page [class*="bg-[#202225]"]:hover {
   background-color: rgba(255, 255, 255, 0.88) !important;
+}
+
+/* Light theme: this page was authored dark-only (literal text-white,
+   border-white/10, bg-white/[0.0NN]) with no theme-aware classes at all —
+   same fix as #dashboard-home. The root itself carries text-white, not just
+   its descendants, so it needs a self-or-descendant selector (a plain
+   descendant combinator would miss the root — see the chatbot-settings-page
+   fix for the same mistake). */
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-availability-page.dashboard-availability-page,
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-availability-page [class*="text-white"] {
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-availability-page [class*="text-white/80"] {
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-availability-page [class*="text-white/30"] {
+  color: rgba(0, 0, 0, 0.25) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-availability-page [class*="border-white"] {
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-availability-page [class*="bg-white/[0.025]"] {
+  background-color: #ffffff !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-availability-page [class*="bg-white/[0.05]"] {
+  background-color: #ffffff !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-availability-page [class*="bg-white/10"] {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-availability-page [class*="bg-white/20"] {
+  background-color: rgba(0, 0, 0, 0.12) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-availability-page [class*="bg-white/30"] {
+  background-color: rgba(0, 0, 0, 0.2) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-availability-page [class*="bg-[#292a2b]"] {
+  background-color: #f5f6f7 !important;
+}
+/* "Save hours" is a literal bg-[#428ce5]/text-white pill — legitimately
+   white-on-blue in both themes, not the dark-page default text-white the
+   rule above is for. More specific (two attribute selectors) so it wins
+   regardless of source order. */
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-availability-page [class*="bg-[#428ce5]"][class*="text-white"] {
+  color: #ffffff !important;
 }
 
 /* Setup checklist badge (bottom-right). It sits inside .dashboard-shell
@@ -4644,94 +4735,144 @@ body:has(.dashboard-ai-usage-page) .dashboard-add-credits-dialog [class*="hover:
   background-color: rgb(255 255 255 / 0.08) !important;
 }
 
-/* Chatbot settings share the graphite dashboard surface; the live preview is
-   rendered outside this scope so it continues to mirror the embedded widget. */
-.dashboard-shell .dashboard-chatbot-settings-page,
-.dashboard-shell .dashboard-settings-surface:has(.dashboard-chatbot-settings-page) {
+/* Chatbot settings share the graphite dashboard surface in dark theme; the
+   live preview is rendered outside this scope so it continues to mirror the
+   embedded widget. */
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-chatbot-settings-page,
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-settings-surface:has(.dashboard-chatbot-settings-page) {
   background: #262626 !important;
   color: rgb(255 255 255 / 0.9) !important;
 }
-.dashboard-shell .dashboard-chatbot-settings-page .dashboard-chatbot-section {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-chatbot-settings-page .dashboard-chatbot-section {
   background: rgb(255 255 255 / 0.035) !important;
   border-color: rgb(255 255 255 / 0.1) !important;
 }
-.dashboard-shell .dashboard-chatbot-settings-page :is(input, textarea, select) {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-chatbot-settings-page :is(input, textarea, select) {
   background: #2d2d2d !important;
   border-color: rgb(255 255 255 / 0.12) !important;
   color: rgb(255 255 255 / 0.9) !important;
   color-scheme: dark;
 }
-.dashboard-shell .dashboard-chatbot-settings-page :is(input, textarea)::placeholder {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-chatbot-settings-page :is(input, textarea)::placeholder {
   color: rgb(255 255 255 / 0.35) !important;
 }
-.dashboard-shell .dashboard-chatbot-settings-page :is([class*="text-[#17181a]"], [class*="text-[#17233A]"], [class*="text-black"]) {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-chatbot-settings-page :is([class*="text-[#17181a]"], [class*="text-[#17233A]"], [class*="text-black"]) {
   color: rgb(255 255 255 / 0.9) !important;
 }
-.dashboard-shell .dashboard-chatbot-settings-page :is([class*="text-[#667069]"], [class*="text-[#6D7D85]"], [class*="text-[#858585]"], [class*="text-[#666]"], [class*="text-[#8a9298]"], [class*="text-[#8b8d90]"]) {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-chatbot-settings-page :is([class*="text-[#667069]"], [class*="text-[#6D7D85]"], [class*="text-[#858585]"], [class*="text-[#666]"], [class*="text-[#8a9298]"], [class*="text-[#8b8d90]"]) {
   color: rgb(255 255 255 / 0.6) !important;
 }
-.dashboard-shell .dashboard-chatbot-settings-page :is([class*="bg-[#f1f1f1]"], [class*="bg-[#F2F3F3]"], [class*="bg-[#F7F8F8]"], [class*="bg-white"]) {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-chatbot-settings-page :is([class*="bg-[#f1f1f1]"], [class*="bg-[#F2F3F3]"], [class*="bg-[#F7F8F8]"], [class*="bg-white"]) {
   background-color: rgb(255 255 255 / 0.07) !important;
 }
-.dashboard-shell .dashboard-chatbot-settings-page :is([class*="border-[#DDE4E8]"], [class*="border-[#E5E9EB]"], [class*="border-[#eceeef]"], [class*="border-[#c7cdd1]"]) {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-chatbot-settings-page :is([class*="border-[#DDE4E8]"], [class*="border-[#E5E9EB]"], [class*="border-[#eceeef]"], [class*="border-[#c7cdd1]"]) {
   border-color: rgb(255 255 255 / 0.1) !important;
 }
-.dashboard-shell .dashboard-chatbot-settings-page button:hover {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-chatbot-settings-page button:hover {
   color: rgb(255 255 255 / 0.95) !important;
 }
-.dashboard-shell .dashboard-chatbot-settings-page .dashboard-greeting-add-button {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-chatbot-settings-page .dashboard-greeting-add-button {
   color: rgb(255 255 255 / 0.65) !important;
 }
-body:has(.dashboard-chatbot-settings-page) .dashboard-avatar-picker {
+[data-dashboard-theme="dark"] body:has(.dashboard-chatbot-settings-page) .dashboard-avatar-picker {
   background: #2d2d2d !important;
   border-color: rgb(255 255 255 / 0.12) !important;
   color: rgb(255 255 255 / 0.9) !important;
 }
-body:has(.dashboard-chatbot-settings-page) .dashboard-avatar-picker :is(input, button) {
+[data-dashboard-theme="dark"] body:has(.dashboard-chatbot-settings-page) .dashboard-avatar-picker :is(input, button) {
   color: inherit;
 }
-body:has(.dashboard-chatbot-settings-page) .dashboard-avatar-picker :is([class*="border-[#"], [class*="border-black"]) {
+[data-dashboard-theme="dark"] body:has(.dashboard-chatbot-settings-page) .dashboard-avatar-picker :is([class*="border-[#"], [class*="border-black"]) {
   border-color: rgb(255 255 255 / 0.12) !important;
 }
-body:has(.dashboard-chatbot-settings-page) .dashboard-avatar-picker :is([class*="text-[#667069]"], [class*="text-[#8a9298]"]) {
+[data-dashboard-theme="dark"] body:has(.dashboard-chatbot-settings-page) .dashboard-avatar-picker :is([class*="text-[#667069]"], [class*="text-[#8a9298]"]) {
   color: rgb(255 255 255 / 0.6) !important;
 }
-body:has(.dashboard-chatbot-settings-page) .dashboard-avatar-picker :is([class*="hover:bg-[#F0F2F3]"]:hover, [class*="hover:bg-[#f7f8f8]"]:hover) {
+[data-dashboard-theme="dark"] body:has(.dashboard-chatbot-settings-page) .dashboard-avatar-picker :is([class*="hover:bg-[#F0F2F3]"]:hover, [class*="hover:bg-[#f7f8f8]"]:hover) {
   background: rgb(255 255 255 / 0.07) !important;
 }
 
-/* Simple, action-first billing UI. */
-.dashboard-shell .dashboard-billing-page,
-.dashboard-shell .dashboard-settings-surface:has(.dashboard-billing-page) {
+/* Light theme: the page's own JSX is written with dark-literal utility
+   classes (text-white/NN, bg-white/[0.0NN], border-white/10) since it was
+   built dark-only. Same fix as #dashboard-home etc. — flip the translucent
+   white overlays to translucent black ones on the white surface. */
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-chatbot-settings-page[class*="text-white/90"],
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-chatbot-settings-page [class*="text-white/90"] {
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-chatbot-settings-page [class*="text-white/80"] {
+  color: rgba(0, 0, 0, 0.7) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-chatbot-settings-page [class*="text-white/60"] {
+  color: rgba(0, 0, 0, 0.55) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-chatbot-settings-page [class~="text-white"] {
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-chatbot-settings-page [class*="text-white/65"] {
+  color: rgba(0, 0, 0, 0.55) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-chatbot-settings-page [class*="border-white/10"] {
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-chatbot-settings-page [class*="bg-white/[0.035]"] {
+  background-color: #fafafa !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-chatbot-settings-page .dashboard-chatbot-section {
+  box-shadow: none;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-chatbot-settings-page :is(input, textarea, select) {
+  background: #ffffff !important;
+  color-scheme: light;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-chatbot-settings-page [class*="ring-offset-[#2f2f2f]"] {
+  --tw-ring-offset-color: #ffffff !important;
+}
+[data-dashboard-theme="light"] body:has(.dashboard-chatbot-settings-page) .dashboard-avatar-picker {
+  background: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+[data-dashboard-theme="light"] body:has(.dashboard-chatbot-settings-page) .dashboard-avatar-picker [class*="text-white/90"] {
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+
+/* Simple, action-first billing UI. Dark theme keeps its fixed charcoal
+   look; light theme falls through to the [data-dashboard-theme="light"]
+   .dashboard-billing-page rules earlier in this file (previously
+   unreachable — this block used to apply unconditionally and always won
+   on source order, same bug as the Upgrade page below). */
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-billing-page,
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-settings-surface:has(.dashboard-billing-page) {
   background: #262626 !important;
   color: rgb(255 255 255 / 0.9) !important;
 }
-.dashboard-shell .dashboard-billing-page article:not(.dashboard-billing-plan-card),
-.dashboard-shell .dashboard-billing-page > div[class*="bg-white"],
-.dashboard-shell .dashboard-billing-page button[class*="border-[#DDE4E8]"] {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-billing-page article:not(.dashboard-billing-plan-card),
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-billing-page > div[class*="bg-white"],
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-billing-page button[class*="border-[#DDE4E8]"] {
   background: rgb(255 255 255 / 0.035) !important;
   border-color: rgb(255 255 255 / 0.1) !important;
   box-shadow: none !important;
 }
-.dashboard-shell .dashboard-billing-page :is([class*="text-[#11120f]"], [class*="text-black"]) {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-billing-page :is([class*="text-[#11120f]"], [class*="text-black"]) {
   color: rgb(255 255 255 / 0.9) !important;
 }
-.dashboard-shell .dashboard-billing-page :is([class*="text-[#667069]"], [class*="text-[#6D7D85]"], [class*="text-[#7A858B]"], [class*="text-[#9AA2A6]"]) {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-billing-page :is([class*="text-[#667069]"], [class*="text-[#6D7D85]"], [class*="text-[#7A858B]"], [class*="text-[#9AA2A6]"]) {
   color: rgb(255 255 255 / 0.58) !important;
 }
-.dashboard-shell .dashboard-billing-page :is([class*="bg-[#EEF3F5]"], [class*="bg-[#FAF9F6]"], [class*="bg-[#F2F3F3]"], [class*="bg-white"]) {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-billing-page :is([class*="bg-[#EEF3F5]"], [class*="bg-[#FAF9F6]"], [class*="bg-[#F2F3F3]"], [class*="bg-white"]) {
   background-color: rgb(255 255 255 / 0.065) !important;
 }
-.dashboard-shell .dashboard-billing-page :is([class*="border-[#DDE4E8]"], [class*="border-[#D8D5CE]"], [class*="border-[#E5E9EB]"], [class*="border-[#EDF0F1]"], [class*="border-[#CBD7DC]"]) {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-billing-page :is([class*="border-[#DDE4E8]"], [class*="border-[#D8D5CE]"], [class*="border-[#E5E9EB]"], [class*="border-[#EDF0F1]"], [class*="border-[#CBD7DC]"]) {
   border-color: rgb(255 255 255 / 0.1) !important;
 }
-.dashboard-shell .dashboard-billing-page article [class*="bg-[#11120f]"] {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-billing-page article [class*="bg-[#11120f]"] {
   background: #6d5ce7 !important;
 }
-.dashboard-shell .dashboard-billing-page button:hover {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-billing-page button:hover {
   color: rgb(255 255 255 / 0.92) !important;
 }
-.dashboard-shell .dashboard-billing-page .dashboard-billing-plan-card {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-billing-page .dashboard-billing-plan-card {
   border-color: rgb(167 139 250 / 0.22) !important;
 }
 
@@ -4876,6 +5017,51 @@ body:has(.dashboard-chatbot-settings-page) .dashboard-avatar-picker :is([class*=
   border-color: rgba(0, 0, 0, 0.14) !important;
 }
 
+/* ConnectPageContent embedded inline in the Setup & Integration settings
+   page (an always-light page, independent of the dashboard-wide dark/light
+   toggle) — same color flip as the light-theme rules above, but applied
+   unconditionally since this host page is never dark, plus dropping the
+   component's own dark background, header and max-width so it reads as
+   part of the page instead of a separate dark panel. */
+.dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page {
+  background: transparent !important;
+  color: rgba(0, 0, 0, 0.85) !important;
+  min-height: 0 !important;
+}
+.dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page > div[class*="max-w-[1320px]"] {
+  max-width: none !important;
+  padding: 0 !important;
+}
+.dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page header {
+  display: none !important;
+}
+.dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page [class*="text-white"]:not(.dashboard-connect-badge-letter) {
+  color: rgba(0, 0, 0, 0.7) !important;
+}
+.dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page [class*="bg-white/"] {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+.dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page [class*="border-white"] {
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+.dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page [class*="bg-[#292a2b]"],
+.dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page [class*="bg-[#262626]"] {
+  background-color: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+.dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page [class*="bg-[#222324]"] {
+  background-color: #f5f6f7 !important;
+  border-color: rgba(0, 0, 0, 0.14) !important;
+}
+/* Connector cards and the loading skeleton: border only, no fill — reads
+   as part of the page instead of a separate gray panel. Comes after the
+   general bg-white/ rule above so it wins on these specific cards. */
+.dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page [class*="bg-white/[0.025]"],
+.dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page [class*="bg-white/[0.03]"],
+.dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page [class*="bg-white/[0.045]"] {
+  background-color: transparent !important;
+}
+
 /* About hero: preserve the component's editorial details on its dark surface. */
 .about-hero > div > div:first-child > div:first-child p {
   color: rgb(255 255 255 / 0.62);
@@ -4925,4 +5111,50 @@ body:has(.dashboard-chatbot-settings-page) .dashboard-avatar-picker :is([class*=
 
 .about-hero > div > div:last-child p {
   justify-content: center;
+}
+
+/* Invite-people dialog (header "Invite team" and Settings > People/Teams).
+   Despite the component's own comment claiming it's "authored light by
+   default", it's actually hardcoded dark (bg-[#17191c], text-white/90,
+   bg-[#1d2023]) with zero light-theme handling — same dark-only-authored
+   bug as the availability/security settings pages, fixed the same way. The
+   dialog surface itself carries text-white/90, not just its descendants, so
+   it needs a self-or-descendant selector. */
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-invite-surface.dashboard-invite-surface,
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-invite-surface [class*="text-white/90"] {
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-invite-surface.dashboard-invite-surface {
+  background-color: #ffffff !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-invite-surface [class*="text-white/70"] {
+  color: rgba(0, 0, 0, 0.55) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-invite-surface [class*="text-white/55"] {
+  color: rgba(0, 0, 0, 0.55) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-invite-surface [class*="text-white/50"] {
+  color: rgba(0, 0, 0, 0.45) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-invite-surface [class*="text-white/35"] {
+  color: rgba(0, 0, 0, 0.35) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-invite-surface [class*="text-white/30"] {
+  color: rgba(0, 0, 0, 0.25) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-invite-surface [class*="border-white"] {
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-invite-surface [class*="bg-[#1d2023]"] {
+  background-color: #f5f6f7 !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-invite-surface [class*="bg-white/10"] {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-invite-surface [class*="bg-white/[0.04]"],
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-invite-surface [class*="bg-white/[0.06]"] {
+  background-color: rgba(0, 0, 0, 0.045) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-invite-surface [class*="hover:bg-white/[0.08]"]:hover {
+  background-color: rgba(0, 0, 0, 0.06) !important;
 }

@@ -4,7 +4,7 @@ import { getAuthRedirectBaseUrl } from "@/app/api/auth/_lib/redirect-url";
 
 type Organization = { id: string; name: string; role: string };
 type OrganizationsResult = { organizations?: Organization[]; selectedOrganizationId?: string };
-type Persona = { id: string; name: string; aiName: string; aiAvatarUrl: string | null; aiPersona: string | null; chatbotAccent: string; chatbotTheme: string; greetingLines: string[] };
+type Persona = { id: string; name: string; aiName: string; aiAvatarUrl: string | null; aiPersona: string | null; chatbotAccent: string; chatbotTheme: string; chatbotReplyLanguage: string; greetingLines: string[] };
 type CompanyResult = { company?: Persona; error?: string };
 
 // Every workspace starts out with this stock icon as its AI teammate's
@@ -61,6 +61,7 @@ export async function PATCH(request: Request) {
     aiPersona?: string;
     chatbotAccent?: string;
     chatbotTheme?: string;
+    chatbotReplyLanguage?: string;
     greetingLines?: string[];
   };
 

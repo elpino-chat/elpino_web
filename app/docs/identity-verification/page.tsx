@@ -65,11 +65,11 @@ export default function IdentityVerificationGuidePage() {
 
             <h3 className="pt-3 text-lg text-black" style={{ fontWeight: 500 }}>3. Pass the token to the widget</h3>
             <p>Your existing Elpino tag already includes the SDK, no extra script needed:</p>
-            <CodeBlock title="HTML" code={PAGE_SNIPPET} />
+            <CodeBlock title="HTML" code={PAGE_SNIPPET} lang="markup" />
 
             <h3 className="pt-3 text-lg text-black" style={{ fontWeight: 500 }}>4. Single-page apps: report login and logout</h3>
             <p>Tell the widget right away when login state changes without a page reload:</p>
-            <CodeBlock title="JavaScript" code={SPA_SNIPPET} />
+            <CodeBlock title="JavaScript" code={SPA_SNIPPET} lang="javascript" />
           </Section>
 
           <details id="renewal" className="group scroll-mt-24 rounded-lg border border-slate-200 p-4 open:pb-5">
@@ -77,7 +77,7 @@ export default function IdentityVerificationGuidePage() {
             <div className="mt-3 space-y-3 leading-relaxed text-slate-600">
               <p>A token works once, within 5 minutes. The chat session itself lasts up to 8 hours (30-minute idle limit) and keeps running after the token expires.</p>
               <p>For long-lived pages, the SDK emits <code className={code}>elpino:identity-required</code> when it needs a fresh token, or configure an endpoint for automatic renewal:</p>
-              <CodeBlock title="Optional JavaScript" code={AUTO_REFRESH_SNIPPET} />
+              <CodeBlock title="Optional JavaScript" code={AUTO_REFRESH_SNIPPET} lang="javascript" />
             </div>
           </details>
 

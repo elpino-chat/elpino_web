@@ -5,31 +5,36 @@
 // apart, a string sub. Optional claims are omitted rather than sent as null,
 // because a null email or phone is rejected as an invalid claim.
 
-export type ServerSnippet = { id: string; label: string; install: string; code: string };
+export type ServerSnippet = { id: string; label: string; install: string; code: string; lang: string };
 
 export const SERVER_SNIPPETS: ServerSnippet[] = [
   {
     id: "node",
     label: "Node.js",
-    install: "curl -fsS https://elpino.chat/sdk/elpino-server.mjs -o elpino-server.mjs",
-    code: `// In your existing authenticated page or login handler.
-// Never send the secret to the browser: send only the token.
-import { createIdentityToken } from "./elpino-server.mjs";
+    lang: "javascript",
+    install: "npm install jsonwebtoken",
+    code: `// Call this from your existing authenticated page or login handler.
+import jwt from "jsonwebtoken";
+import { randomUUID } from "node:crypto";
 
-// The user comes from your authenticated session, never from the request body.
-const user = req.user;
-const elpinoToken = createIdentityToken(process.env.ELPINO_IDENTITY_SECRET, {
-    id: user.id,
-    email: user.email,
-    emailVerified: user.emailVerified === true,
-    name: user.name,
-});
-// Include elpinoToken in your existing login response or page data.
-// Do not cache that response. No separate identity endpoint is required.`,
+function elpinoIdentityToken(user) {
+  const now = Math.floor(Date.now() / 1000);
+  return jwt.sign({
+    sub: String(user.id),          // stable account ID, required
+    aud: "elpino-widget",
+    jti: randomUUID(),             // fresh for every token
+    iat: now,
+    exp: now + 300,                // five minutes at most
+    email: user.email,             // omit this line if the user has none
+    email_verified: user.emailVerified === true,
+    name: user.name,               // omit this line if the user has none
+  }, process.env.ELPINO_IDENTITY_SECRET, { algorithm: "HS256" });
+}`,
   },
   {
     id: "python",
     label: "Python",
+    lang: "python",
     install: "pip install pyjwt",
     code: `# Call this from your existing authenticated page or login handler.
 import os, time, uuid
@@ -38,25 +43,21 @@ import jwt
 def elpino_identity_token(user):
     now = int(time.time())
     claims = {
-        "sub": str(user.id),          # stable account ID, required
+        "sub": str(user.id),              # stable account ID, required
         "aud": "elpino-widget",
-        "jti": str(uuid.uuid4()),     # fresh for every token
+        "jti": str(uuid.uuid4()),         # fresh for every token
         "iat": now,
-        "exp": now + 300,             # five minutes at most
+        "exp": now + 300,                 # five minutes at most
+        "email": user.email,              # omit this key if the user has none
+        "email_verified": bool(user.email_verified),
+        "name": user.name,                # omit this key if the user has none
     }
-    if user.email:
-        claims["email"] = user.email
-        claims["email_verified"] = bool(user.email_verified)
-    if user.phone:
-        claims["phone"] = user.phone
-        claims["phone_verified"] = bool(user.phone_verified)
-    if user.name:
-        claims["name"] = user.name
     return jwt.encode(claims, os.environ["ELPINO_IDENTITY_SECRET"], algorithm="HS256")`,
   },
   {
     id: "php",
     label: "PHP",
+    lang: "php",
     install: "composer require firebase/php-jwt",
     code: `<?php
 // Call this from your existing authenticated page or login handler.
@@ -65,27 +66,22 @@ use Firebase\\JWT\\JWT;
 function elpino_identity_token($user): string {
     $now = time();
     $claims = [
-        'sub' => (string) $user->id,          // stable account ID, required
+        'sub' => (string) $user->id,           // stable account ID, required
         'aud' => 'elpino-widget',
-        'jti' => bin2hex(random_bytes(16)),   // fresh for every token
+        'jti' => bin2hex(random_bytes(16)),    // fresh for every token
         'iat' => $now,
-        'exp' => $now + 300,                  // five minutes at most
+        'exp' => $now + 300,                   // five minutes at most
+        'email' => $user->email,               // omit this key if the user has none
+        'email_verified' => (bool) $user->email_verified,
+        'name' => $user->name,                 // omit this key if the user has none
     ];
-    if ($user->email) {
-        $claims['email'] = $user->email;
-        $claims['email_verified'] = (bool) $user->email_verified;
-    }
-    if ($user->phone) {
-        $claims['phone'] = $user->phone;
-        $claims['phone_verified'] = (bool) $user->phone_verified;
-    }
-    if ($user->name) $claims['name'] = $user->name;
     return JWT::encode($claims, getenv('ELPINO_IDENTITY_SECRET'), 'HS256');
 }`,
   },
   {
     id: "ruby",
     label: "Ruby",
+    lang: "ruby",
     install: "gem install jwt",
     code: `# Call this from your existing authenticated page or login handler.
 require "jwt"
@@ -94,15 +90,15 @@ require "securerandom"
 def elpino_identity_token(user)
   now = Time.now.to_i
   claims = {
-    sub: user.id.to_s,              # stable account ID, required
+    sub: user.id.to_s,                    # stable account ID, required
     aud: "elpino-widget",
-    jti: SecureRandom.uuid,         # fresh for every token
+    jti: SecureRandom.uuid,               # fresh for every token
     iat: now,
-    exp: now + 300                  # five minutes at most
+    exp: now + 300,                       # five minutes at most
+    email: user.email,                    # omit this key if the user has none
+    email_verified: user.email_verified == true,
+    name: user.name                       # omit this key if the user has none
   }
-  claims.merge!(email: user.email, email_verified: user.email_verified == true) if user.email
-  claims.merge!(phone: user.phone, phone_verified: user.phone_verified == true) if user.phone
-  claims[:name] = user.name if user.name
   JWT.encode(claims, ENV.fetch("ELPINO_IDENTITY_SECRET"), "HS256")
 end`,
   },

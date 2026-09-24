@@ -185,12 +185,37 @@ export function GET(request: Request) {
     window.$elpino = sdk;
     queuedCommands.forEach(command);
 
+    // Path or a prefix wildcard ("/docs/*" matches "/docs" and everything
+    // under it; a bare "/docs*" matches any path starting with "/docs").
+    function matchesPattern(pattern, path) {
+      if (pattern.slice(-2) === '/*') {
+        var prefix = pattern.slice(0, -2);
+        return path === prefix || path.indexOf(prefix + '/') === 0;
+      }
+      if (pattern.slice(-1) === '*') return path.indexOf(pattern.slice(0, -1)) === 0;
+      return path === pattern;
+    }
+    // A hide match always wins. An empty show list means every page is
+    // eligible; a non-empty one is an allowlist. Checked here (not by the
+    // backend) since the tag doesn't know the visitor's path until it's
+    // already running on that exact page.
+    function pathAllowed(rules) {
+      if (!rules) return true;
+      var path = location.pathname;
+      var hide = rules.hide || [];
+      var show = rules.show || [];
+      for (var i = 0; i < hide.length; i += 1) if (matchesPattern(hide[i], path)) return false;
+      if (show.length === 0) return true;
+      for (var j = 0; j < show.length; j += 1) if (matchesPattern(show[j], path)) return true;
+      return false;
+    }
+
     fetch(TAG_ORIGIN + '/api/widget/config?key=' + encodeURIComponent(key) + '&hostname=' + encodeURIComponent(location.hostname))
       .then(function (response) { if (!response.ok) throw new Error('Tag is not allowed on this domain'); return response.json(); })
       .then(function (payload) {
         window.ElpinoTag = { key: key, config: payload.config, identify: identify, logout: logout };
         window.dispatchEvent(new CustomEvent('elpino:ready', { detail: payload.config }));
-        mount(payload.config || {});
+        if (pathAllowed(payload.config && payload.config.urlRules)) mount(payload.config || {});
         track();
       })
       .catch(function (error) {
