@@ -10,7 +10,7 @@ export const docsPages = [
   { href: "/docs/identity-verification", title: "Identity verification", short: "Identify signed-in users", group: "Chat widget", description: "Safely identify customers before accessing private data." },
   { href: "/docs/inbox", title: "Team inbox", short: "Human support", group: "Team workspace", description: "Claim, route, reply to, and resolve conversations." },
   { href: "/docs/integrations", title: "Integrations", short: "Connect your tools", group: "Connect", description: "Connect payment, project, and MCP tools." },
-  { href: "/docs/billing", title: "Billing and usage", short: "Credits and plans", group: "Platform", description: "Understand plans, resolution credits, seats, and recharge." },
+  { href: "/docs/billing", title: "Billing and usage", short: "Credits and plans", group: "Platform", description: "Understand plans, AI credit, seats, and recharge." },
   { href: "/docs/security", title: "Security", short: "Protect customer data", group: "Platform", description: "Learn how identity, credentials, tenancy, and privacy are handled." },
   { href: "/docs/troubleshooting", title: "Troubleshooting", short: "Fix common issues", group: "Help", description: "Diagnose widget, knowledge, identity, realtime, and billing issues." },
 ] as const;

@@ -16,7 +16,7 @@ export function FinalCtaSection() {
             Let Elpino answer your first 50. <span className="text-white/45">No card, no lock-out.</span>
           </h2>
           <p className="mt-5 max-w-xl text-sm leading-6 text-white/50 md:text-base">
-            The Free plan is a real plan, not a countdown — 50 AI resolutions a month, two seats, no credit card.
+            The Free plan is a real plan, not a countdown — 50 AI conversations a month, two seats, no credit card.
             Upgrade when your customers outgrow it, not before.
           </p>
         </div>

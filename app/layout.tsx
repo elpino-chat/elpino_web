@@ -74,7 +74,7 @@ export const metadata: Metadata = {
     template: "%s | Elpino",
   },
   description:
-    "Elpino answers customers instantly with AI trained on your knowledge base, and hands off to a human when it can't. Pricing built around resolutions, not seats.",
+    "Elpino answers customers instantly with AI trained on your knowledge base, and hands off to a human when it can't. Start with 50 free AI conversations, then a monthly AI credit — not per-seat pricing.",
   keywords: [
     "AI customer support",
     "AI chatbot for support",
@@ -103,7 +103,7 @@ export const metadata: Metadata = {
     siteName: "Elpino",
     title: "Elpino | AI Customer Support Platform",
     description:
-      "AI that answers customers instantly and hands off to a human when it can't. Live chat widget, knowledge base, and pricing built around resolutions, not seats.",
+      "AI that answers customers instantly and hands off to a human when it can't. Live chat widget, knowledge base, and 50 free AI conversations, then a monthly AI credit — not per-seat pricing.",
     // og:image comes from the app/opengraph-image.tsx file convention.
   },
   twitter: {

@@ -178,7 +178,7 @@ export function ProductFeatureLayout({
               </Link>
             </div>
             <p className={`text-xs ${isWhiteHero ? "mt-2.5 text-[#17191c]/45" : "mt-3.5 text-white/45"}`}>
-              50 AI resolutions free each month · No credit card required
+              50 AI conversations free each month · No credit card required
             </p>
           </div>
         </div>
@@ -316,7 +316,7 @@ export function ProductFeatureLayout({
             Deliver instant support <span className="text-[#168cff]">without the burnout.</span>
           </h2>
           <p className="mx-auto mt-6 max-w-[550px] text-base leading-7 text-[#17191c]/60">
-            Set up your AI agent in minutes. 50 AI resolutions free each month.
+            Set up your AI agent in minutes. 50 AI conversations free each month.
           </p>
           <div className="mt-9 flex flex-col items-center justify-center gap-3.5 sm:flex-row">
             <Link

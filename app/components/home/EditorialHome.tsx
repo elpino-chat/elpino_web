@@ -55,8 +55,8 @@ function Products() {
 }
 
 const facts = [
-  { value: '50', label: 'AI resolutions, free every month', text: 'Start with real customer conversations. See what Elpino can take off your plate.' },
-  { value: '$0', label: 'AI resolution charge for human handoffs', text: 'Some questions need your team. Escalations are never billed as AI resolutions.' },
+  { value: '50', label: 'AI conversations, free every month', text: 'Start with real customer conversations. See what Elpino can take off your plate.' },
+  { value: '$0', label: 'Extra charge for human handoffs', text: 'Some questions need your team. Handing a conversation over never costs extra.' },
   { value: '1', label: 'Shared workspace for your team', text: 'All the context. All the conversation. One place to give a helpful answer.' },
 ];
 
@@ -93,7 +93,7 @@ function HumanSection() {
 const resources = [
   { tag: 'THE PRODUCT', title: 'A closer look at your new workspace.', text: 'Explore the inbox, knowledge base, and AI agent that work together.', href: '/features', icon: Inbox, color: 'bg-[#dceee8]' },
   { tag: 'TRUST & SECURITY', title: 'Good support starts with trust.', text: 'Learn how Elpino handles your data and keeps your team in control.', href: '/trust', icon: ShieldCheck, color: 'bg-[#e7dcf8]' },
-  { tag: 'YOUR QUESTIONS', title: 'A little clarity before you start.', text: 'Find answers about setup, AI resolutions, billing, and human handoffs.', href: '/faq', icon: MessageCircle, color: 'bg-[#e9eddf]' },
+  { tag: 'YOUR QUESTIONS', title: 'A little clarity before you start.', text: 'Find answers about setup, AI credit, billing, and human handoffs.', href: '/faq', icon: MessageCircle, color: 'bg-[#e9eddf]' },
 ];
 
 function Resources() {
@@ -102,9 +102,9 @@ function Resources() {
 
 function Questions() {
   const questions = [
-    ['What can I start with for free?', 'The free plan includes 50 AI resolutions each month. You can get started without adding a credit card.'],
+    ['What can I start with for free?', 'The free plan includes 50 AI conversations each month. You can get started without adding a credit card.'],
     ['Where does the AI get its answers?', 'Elpino searches the knowledge you provide, including help articles, website pages, and uploaded documents.'],
-    ["What happens when AI can't help?", 'It passes the conversation to your team with the context and a reason for the handoff. Human handoffs are never billed as AI resolutions.'],
+    ["What happens when AI can't help?", 'It passes the conversation to your team with the context and a reason for the handoff. Handing a conversation to your team never costs extra.'],
     ['Can I invite my team?', 'Yes. Your team works together in a shared inbox. Additional teammates cost $1 per month each; see the pricing page for included seats and the free-plan minimum charge.'],
   ];
   return <section className="bg-[#f4f5f0] py-20 sm:py-24"><div className={`${wrap} grid gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-20`}><div><Eyebrow>A FEW MORE ANSWERS</Eyebrow><h2 className={heading}>Glad<br />you asked.</h2><Link href="/faq" className="mt-7 inline-flex items-center gap-2 text-sm underline underline-offset-4">All your questions, answered <ArrowUpRight size={15} /></Link></div><div>{questions.map(([question, answer]) => <details key={question} className="group border-b border-black/15 first:border-t"><summary className="flex cursor-pointer list-none items-center justify-between gap-5 py-6 text-base font-medium [&::-webkit-details-marker]:hidden sm:text-lg">{question}<Plus size={19} className="shrink-0 transition group-open:rotate-45" /></summary><p className="max-w-[60ch] pb-6 pr-8 text-sm leading-7 text-[#5e6857]">{answer}</p></details>)}</div></div></section>;

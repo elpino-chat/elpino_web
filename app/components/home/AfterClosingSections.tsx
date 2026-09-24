@@ -142,7 +142,7 @@ function ControlSection() {
                   ["Answer from approved knowledge", "On", "#168cff"],
                   ["Hand off when confidence is low", "On", "#8557e8"],
                   ["Ask before collecting sensitive data", "Required", "#ff6038"],
-                  ["Monthly AI resolution limit", "1,000", "#168cff"],
+                  ["Monthly AI credit", "$40", "#168cff"],
                 ].map(([label, value, color]) => <div key={label} className="flex items-center justify-between gap-5 rounded-xl bg-[#f7f7f5] px-4 py-4"><span className="text-sm">{label}</span><span className="rounded-full bg-white px-3 py-1 text-xs font-semibold" style={{ color }}>{value}</span></div>)}
               </div>
               <div className="mt-6 flex items-center gap-3 rounded-xl border border-[#8557e8]/20 bg-[#8557e8]/7 p-4"><ShieldCheck className="shrink-0 text-[#8557e8]" size={20}/><p className="text-xs leading-5 text-[#17191c]/65">Every answer keeps its source and policy decision in the conversation.</p></div>
@@ -175,7 +175,7 @@ function FinalAction() {
       <div className="relative mx-auto max-w-[920px]">
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8557e8]">Start with the next question</p>
         <h2 className="mt-5 text-[clamp(3rem,6vw,6.6rem)] font-medium leading-[.9] tracking-[-0.065em]">Turn support questions into <span className="text-[#168cff]">resolved conversations.</span></h2>
-        <p className="mx-auto mt-7 max-w-[620px] text-base leading-7 text-[#17191c]/58 sm:text-lg">Bring your knowledge. Add the widget. Let Elpino handle your first 50 AI resolutions free.</p>
+        <p className="mx-auto mt-7 max-w-[620px] text-base leading-7 text-[#17191c]/58 sm:text-lg">Bring your knowledge. Add the widget. Let Elpino handle your first 50 AI conversations free.</p>
         <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Link href="/signup" className="group inline-flex min-h-13 items-center gap-4 rounded-full bg-[#ff6038] py-3 pl-7 pr-3 text-sm font-semibold text-white transition hover:bg-[#e84b25]">Start free <span className="flex size-8 items-center justify-center rounded-full bg-white text-[#ff6038] transition-transform group-hover:rotate-45"><ArrowUpRight size={16}/></span></Link>
           <Link href="/pricing" className="inline-flex min-h-13 items-center rounded-full border border-[#17191c]/20 px-7 text-sm font-semibold transition hover:border-[#17191c]">See pricing</Link>

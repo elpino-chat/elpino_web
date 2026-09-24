@@ -227,7 +227,7 @@ function rangeToDates(range: UsageRange, startDate: string, endDate: string) {
   return { from: fromDate.toISOString().slice(0, 10), to: toStr };
 }
 
-function UsageMeter({ label, used, total, unit, footer }: { label: string; used: number; total: number; unit: string; footer: string }) {
+function UsageMeter({ label, used, total, unit, footer, format = (value: number) => value.toLocaleString() }: { label: string; used: number; total: number; unit: string; footer: string; format?: (value: number) => string }) {
   const pct = total > 0 ? Math.min(100, Math.round((used / total) * 100)) : 0;
   return (
     <article className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.035] p-5">
@@ -236,8 +236,8 @@ function UsageMeter({ label, used, total, unit, footer }: { label: string; used:
         <span className="text-[11px] font-medium text-white/50">{unit}</span>
       </div>
       <div className="mt-4 flex items-end gap-1.5">
-        <span className="text-[28px] font-medium tracking-[-0.04em]">{used.toLocaleString()}</span>
-        <span className="pb-1 text-[13px] text-white/60">of {total.toLocaleString()}</span>
+        <span className="text-[28px] font-medium tracking-[-0.04em]">{format(used)}</span>
+        <span className="pb-1 text-[13px] text-white/60">of {format(total)}</span>
       </div>
       <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
         <div className="h-full rounded-full bg-[#6d5ce7] transition-[width]" style={{ width: `${pct}%` }} />
@@ -251,13 +251,18 @@ function UsageMeter({ label, used, total, unit, footer }: { label: string; used:
 // from Billing so that page can stay about the plan and payments only.
 function PlanUsageMeters() {
   const [billing, setBilling] = useState<BillingStatus | null>(null);
+  const [grantRemainingCents, setGrantRemainingCents] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/billing/status")
-      .then((response) => (response.ok ? response.json() : null))
-      .then((data: BillingStatus | null) => setBilling(data))
-      .catch(() => undefined)
+    Promise.all([
+      fetch("/api/billing/status").then((response) => (response.ok ? response.json() : null)).catch(() => null),
+      fetch("/api/workspace/usage/credits").then((response) => (response.ok ? response.json() : null)).catch(() => null),
+    ])
+      .then(([status, credits]: [BillingStatus | null, { grantedCents?: number } | null]) => {
+        setBilling(status);
+        setGrantRemainingCents(typeof credits?.grantedCents === "number" ? credits.grantedCents : null);
+      })
       .finally(() => setLoading(false));
   }, []);
 
@@ -267,31 +272,36 @@ function PlanUsageMeters() {
   if (loading) return <div className="mt-6 grid gap-4 md:grid-cols-3"><div className="h-44 animate-pulse rounded-2xl bg-white/[0.04]" /><div className="h-44 animate-pulse rounded-2xl bg-white/[0.04]" /><div className="h-44 animate-pulse rounded-2xl bg-white/[0.04]" /></div>;
   if (!entitlement) return null;
 
+  const grantCents = entitlement.aiCreditGrantUsdCents ?? 0;
+  const dollars = (value: number) => `$${value.toFixed(2)}`;
+  const handled = entitlement.resolutionsUsed ?? 0;
+
   return (
     <section className="mt-6 grid gap-4 md:grid-cols-3">
-      <UsageMeter
-        label="AI resolutions"
-        used={entitlement.resolutionsUsed ?? 0}
-        total={entitlement.resolutionsIncluded ?? 0}
-        unit="this period"
-        footer={
-          (entitlement.aiCreditGrantUsdCents ?? 0) > 0
-            ? `Includes $${((entitlement.aiCreditGrantUsdCents ?? 0) / 100).toFixed(2)} of AI credit every period. ${
-                entitlement.overageUsdCents != null
-                  ? `Past the resolution allowance, extra replies are $${(entitlement.overageUsdCents / 100).toFixed(2)} each.`
-                  : "At the limit the AI hands new conversations to your team instead of answering — escalations are never billed."
-              }`
-            : entitlement.overageUsdCents != null
-              ? `Past the allowance, extra resolutions are $${(entitlement.overageUsdCents / 100).toFixed(2)} each.`
-              : "At the limit the AI hands new conversations to your team instead of answering. Escalations are never billed."
-        }
-      />
+      {entitlement.creditBased ? (
+        <UsageMeter
+          label="AI credit"
+          used={grantRemainingCents === null ? 0 : Math.max(0, grantCents - grantRemainingCents) / 100}
+          total={grantCents / 100}
+          unit="this period"
+          format={dollars}
+          footer={`${handled.toLocaleString()} AI conversation${handled === 1 ? "" : "s"} handled this period. Your credit covers about ${(entitlement.estimatedConversations ?? 0).toLocaleString()} typical conversations. When it runs out the AI hands new conversations to your team until you top up or the month resets. Handoffs never cost extra.`}
+        />
+      ) : (
+        <UsageMeter
+          label="AI conversations"
+          used={handled}
+          total={entitlement.resolutionsIncluded ?? 0}
+          unit="this period"
+          footer="At the limit the AI hands new conversations to your team instead of answering. Conversations handed off to a person don't count."
+        />
+      )}
       <UsageMeter
         label="Seats"
         used={entitlement.seatsAllowed ?? 0}
         total={entitlement.seatsMax ?? entitlement.seatsAllowed ?? 0}
         unit="in this workspace"
-        footer={`${entitlement.seatsIncluded ?? 0} included with ${plan.name}${(entitlement.seatsPurchased ?? 0) > 0 ? `, ${entitlement.seatsPurchased} added in seat packs` : ""}. Adding seats never changes your resolution allowance.`}
+        footer={`${entitlement.seatsIncluded ?? 0} included with ${plan.name}${(entitlement.seatsPurchased ?? 0) > 0 ? `, ${entitlement.seatsPurchased} added in seat packs` : ""}. Adding seats never changes your AI allowance.`}
       />
       <UsageMeter
         label="Knowledge storage"
@@ -1309,6 +1319,10 @@ type Entitlement = {
   seatBundles?: { seats: number; usdCents: number; inrPaise: number }[];
   /** AI credit this plan grants each period, in USD cents. */
   aiCreditGrantUsdCents?: number;
+  /** Paid plans: metered by credit alone. Free: capped at a plain conversation count. */
+  creditBased?: boolean;
+  /** "About N conversations" the monthly credit covers; null on Free. */
+  estimatedConversations?: number | null;
   resolutionsIncluded: number;
   resolutionsUsed: number;
   resolutionsRemaining: number;
@@ -1455,7 +1469,7 @@ function BillingSettingsPage() {
                 ? "Cancelled — this plan runs to the end of the period, then moves to Free."
                 : entitlement?.pendingPlanId
                   ? "Finishing your plan change — it lands as soon as your payment is confirmed."
-                  : `Billed ${cadence === "annual" ? "yearly" : "monthly"}. Your plan buys AI resolutions; extra teammates come in seat packs from $${((entitlement?.seatFromUsdCents ?? 60) / 100).toFixed(2)} a seat.`}
+                  : `Billed ${cadence === "annual" ? "yearly" : "monthly"}. Your plan includes a monthly AI credit; extra teammates come in seat packs from $${((entitlement?.seatFromUsdCents ?? 60) / 100).toFixed(2)} a seat.`}
             </div>
           </article>
 
@@ -1505,7 +1519,7 @@ function BillingSettingsPage() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget && !cancelBusy) setCancelOpen(false); }}>
           <div role="dialog" aria-modal="true" aria-labelledby="cancel-plan-title" className="w-full max-w-[440px] rounded-2xl border border-white/10 bg-[#2d2d2d] p-6 text-white/90 shadow-[0_24px_80px_rgba(0,0,0,0.45)]">
             <p id="cancel-plan-title" className="text-[18px] font-medium">Cancel {plan.name}?</p>
-            <p className="mt-2 text-[13px] leading-6 text-white/60">Your plan stays active until the end of the paid period. Then the workspace moves to Free with {pricingPlans[0].resolutions} AI resolutions and {pricingPlans[0].seatsIncluded} included seats.</p>
+            <p className="mt-2 text-[13px] leading-6 text-white/60">Your plan stays active until the end of the paid period. Then the workspace moves to Free with {pricingPlans[0].resolutions} AI conversations a month and {pricingPlans[0].seatsIncluded} included seats.</p>
             {cancelError && <p role="alert" className="mt-3 text-[12px] text-red-300">{cancelError}</p>}
             <div className="mt-6 flex flex-col gap-2 sm:flex-row-reverse">
               <button type="button" disabled={cancelBusy} onClick={() => void cancelSubscription()} className="flex h-10 flex-1 items-center justify-center gap-2 rounded-lg bg-[#a5414b] px-4 text-[12px] font-medium text-white transition hover:bg-[#b44d58] disabled:opacity-60">{cancelBusy && <LoaderCircle size={13} className="animate-spin" />} Cancel at period end</button>

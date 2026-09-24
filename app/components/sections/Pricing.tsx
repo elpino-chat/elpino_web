@@ -12,7 +12,7 @@ export function Pricing() {
             One price, no surprise overage.
           </h2>
           <p className="mt-3 max-w-xl text-base leading-relaxed text-gray-500">
-            Start on Free with 50 AI resolutions a month — no credit card, no time limit.
+            Start on Free with 50 AI conversations a month — no credit card, no time limit.
             Upgrade when you outgrow it.
           </p>
         </Reveal>

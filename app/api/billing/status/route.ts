@@ -11,6 +11,9 @@ type Entitlement = {
   seatsAllowed: number;
   seatsMax: number | null;
   seatPriceUsdCents: number;
+  creditBased?: boolean;
+  estimatedConversations?: number | null;
+  aiCreditGrantUsdCents?: number;
   resolutionsIncluded: number;
   resolutionsUsed: number;
   resolutionsRemaining: number;

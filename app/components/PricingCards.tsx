@@ -14,11 +14,16 @@ export type Plan = {
   seatsIncluded: number;
   /** Hard seat ceiling; null means seats scale indefinitely at $1 each. */
   seatsMax: number | null;
-  /** AI resolutions per month, shared by the whole workspace. */
+  /**
+   * True on paid plans: the AI is metered by dollar credit alone, with no
+   * conversation count or per-conversation overage. Free is capped by count.
+   */
+  creditBased: boolean;
+  /** AI conversations per month, shared by the whole workspace. Only a limit on Free; 0 when creditBased. */
   resolutions: number;
   /** Knowledge base capacity, in megabytes of ingested content. */
   storageMb: number;
-  /** Per-resolution price past the allowance. Null = the AI hands off instead. */
+  /** Per-conversation price past the allowance. Always null now: Free hands off, paid plans run on credit. */
   overageUsdCents: number | null;
   /** AI inference credit granted every period, in USD cents. Mirrors Plan.aiCreditGrantUsdCents on the backend. */
   aiCreditGrantUsdCents: number;
@@ -32,9 +37,10 @@ export type Plan = {
 // page renders without a service round-trip. Keep prices, seats, and
 // resolution counts in sync with that file.
 //
-// The model in one line: upgrading buys AI resolutions, $1 buys a teammate,
-// and the two never affect each other. Everyone in a workspace shares one
-// inbox and one resolution pool no matter how many seats are open.
+// The model in one line: Free gets 50 AI conversations; paid plans get a
+// monthly AI credit that pays for however many conversations it covers. Seats
+// are separate and never affect the AI allowance. Everyone in a workspace
+// shares one inbox and one credit pool no matter how many seats are open.
 // Seats are sold in bundles, mirroring SEAT_BUNDLES in the backend catalog.
 // A standalone $1 charge loses roughly a third of itself to card processing
 // and some issuers decline it outright, so the smallest seat purchase is a
@@ -54,6 +60,23 @@ export const SEAT_BUNDLE_SUMMARY = '3 seats for $2, 5 for $3';
 export const ANNUAL_MONTHS_CHARGED = 10;
 export const ANNUAL_SAVING_PERCENT = Math.round((1 - ANNUAL_MONTHS_CHARGED / 12) * 100);
 
+// Mirrors ESTIMATED_CENTS_PER_CONVERSATION in the backend catalog: what the
+// UI assumes an average AI conversation costs when it says a credit covers
+// "about N conversations". Display only — real spend is whatever the model
+// calls cost, which is why every mention says "about".
+export const ESTIMATED_CENTS_PER_CONVERSATION = 5;
+
+/** "About N conversations" a credit-based plan's monthly credit covers; null on Free. */
+export function estimatedConversations(plan: Pick<Plan, 'creditBased' | 'aiCreditGrantUsdCents'>): number | null {
+  return plan.creditBased ? Math.floor(plan.aiCreditGrantUsdCents / ESTIMATED_CENTS_PER_CONVERSATION) : null;
+}
+
+/** "$7" / "$40" — the monthly AI credit as a short dollar string. */
+export function creditLabel(plan: Pick<Plan, 'aiCreditGrantUsdCents'>): string {
+  const dollars = plan.aiCreditGrantUsdCents / 100;
+  return `$${Number.isInteger(dollars) ? dollars : dollars.toFixed(2)}`;
+}
+
 export const plans: Plan[] = [
   {
     id: 'free',
@@ -65,12 +88,13 @@ export const plans: Plan[] = [
     href: '/signup',
     seatsIncluded: 2,
     seatsMax: 7,
+    creditBased: false,
     resolutions: 50,
     storageMb: 20,
     overageUsdCents: null,
     aiCreditGrantUsdCents: 100,
     features: [
-      'Up to 50 AI resolutions/month',
+      'Up to 50 AI conversations/month',
       '2 seats included',
       'Seat packs from $0.60/seat',
       '20 MB knowledge base',
@@ -88,16 +112,17 @@ export const plans: Plan[] = [
     href: '/signup',
     seatsIncluded: 5,
     seatsMax: null,
-    resolutions: 250,
+    creditBased: true,
+    resolutions: 0,
     storageMb: 200,
-    overageUsdCents: 10,
-    aiCreditGrantUsdCents: 500,
+    overageUsdCents: null,
+    aiCreditGrantUsdCents: 700,
     features: [
-      'Up to 250 AI resolutions/month',
+      '$7 AI credit every month (about 140 conversations)',
       '5 seats included',
       'Seat packs from $0.60/seat',
       '200 MB knowledge base',
-      'Then $0.10 per resolution',
+      'Top up credit any time',
       'Visitor analytics',
     ],
   },
@@ -111,17 +136,18 @@ export const plans: Plan[] = [
     href: '/signup',
     seatsIncluded: 15,
     seatsMax: null,
-    resolutions: 2000,
+    creditBased: true,
+    resolutions: 0,
     storageMb: 1000,
-    overageUsdCents: 6,
+    overageUsdCents: null,
     aiCreditGrantUsdCents: 4000,
     highlighted: true,
     features: [
-      'Up to 2,000 AI resolutions/month',
+      '$40 AI credit every month (about 800 conversations)',
       '15 seats included',
       'Seat packs from $0.60/seat',
       '1 GB knowledge base',
-      'Then $0.06 per resolution',
+      'Top up credit any time',
       'Full AI audit trail',
       'Priority support',
     ],
@@ -136,16 +162,17 @@ export const plans: Plan[] = [
     href: '/signup',
     seatsIncluded: 40,
     seatsMax: null,
-    resolutions: 12000,
+    creditBased: true,
+    resolutions: 0,
     storageMb: 5000,
-    overageUsdCents: 4,
+    overageUsdCents: null,
     aiCreditGrantUsdCents: 24000,
     features: [
-      'Up to 12,000 AI resolutions/month',
+      '$240 AI credit every month (about 4,800 conversations)',
       '40 seats included',
       'Seat packs from $0.60/seat',
       '5 GB knowledge base',
-      'Then $0.04 per resolution',
+      'Top up credit any time',
       'Integrations & API access',
     ],
   },
@@ -213,7 +240,7 @@ export function PricingCards({ billing = 'monthly', pageStyle = false }: { billi
                   </div>
                 </div>
                 <p className='mt-2 min-h-5 text-xs text-[#666666]'>
-                  {plan.id === 'free' ? '50 AI resolutions every month' : billing === 'yearly' ? `${annualTotal} per year · Save ${ANNUAL_SAVING_PERCENT}%` : 'Monthly billing, per workspace'}
+                  {plan.id === 'free' ? '50 AI conversations every month' : billing === 'yearly' ? `${annualTotal} per year · Save ${ANNUAL_SAVING_PERCENT}%` : 'Monthly billing, per workspace'}
                 </p>
                 <Link href={plan.href} className={`mt-7 flex min-h-14 w-full items-center justify-center rounded-none border px-4 py-3 text-base font-medium transition focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black ${plan.highlighted ? 'border-[#222222] bg-gradient-to-b from-[#343434] to-[#1C1C1C] text-white shadow-[0_2px_3px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.2)] hover:brightness-110' : 'border-[#CCCCCC] bg-gradient-to-b from-[#EEEEEE] to-[#E2E2E2] text-black shadow-[0_2px_3px_rgba(0,0,0,0.08),inset_0_1px_0_white] hover:brightness-95'}`}>
                   {plan.cta}

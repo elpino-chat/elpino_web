@@ -128,7 +128,7 @@ export function ProductSections() {
         </div><Illustration kind={kind} />
       </motion.div>
       <Showcase kind={kind} />
-      <div className={s.sectionFoot}><span>{kind === 'helpdesk' ? 'A little less busywork. A lot more human.' : 'Helpful by design. Human when it counts.'}</span><Link href={kind === 'helpdesk' ? '/features' : '/pricing'}>{kind === 'helpdesk' ? 'Meet your new workspace' : '50 AI resolutions a month, free'} <ArrowRight size={15} /></Link></div>
+      <div className={s.sectionFoot}><span>{kind === 'helpdesk' ? 'A little less busywork. A lot more human.' : 'Helpful by design. Human when it counts.'}</span><Link href={kind === 'helpdesk' ? '/features' : '/pricing'}>{kind === 'helpdesk' ? 'Meet your new workspace' : '50 AI conversations a month, free'} <ArrowRight size={15} /></Link></div>
     </div>
   </section>)}</div>;
 }

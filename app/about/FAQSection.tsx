@@ -4,8 +4,8 @@ import { ArrowUpRight, Plus } from "lucide-react";
 const faqs = [
   ["What is Elpino?", "Elpino is an AI customer support platform with a website chat widget, answers from your knowledge base, a shared team inbox, and human handoff when the AI cannot help."],
   ["Does Elpino replace my support team?", "Elpino handles everyday questions from your knowledge and brings your team in when a conversation needs a person. Your team stays part of the support experience."],
-  ["How can I get started?", "Start with the free plan, which includes 50 AI resolutions each month with no card required. Add your knowledge, connect your website, and bring in your teammates."],
-  ["How is pricing structured?", "Plans include a monthly allowance of AI resolutions. Extra teammates are priced separately at $1 per month each, and human handoffs are never billed as AI resolutions. The pricing page explains included seats and the free-plan minimum charge."],
+  ["How can I get started?", "Start with the free plan, which includes 50 AI conversations each month with no card required. Add your knowledge, connect your website, and bring in your teammates."],
+  ["How is pricing structured?", "Free includes 50 AI conversations a month, and paid plans include a monthly AI credit. Extra teammates come in seat packs from $0.60 a seat, and handing a conversation to a human never costs extra. The pricing page explains included seats and the free-plan minimum charge."],
 ];
 
 export default function FAQSection() {

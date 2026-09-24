@@ -5,7 +5,7 @@ import { Fragment, useState } from 'react';
 import { ArrowRight, ArrowUpRight, Check, Users, MessageSquare } from 'lucide-react';
 import { PricingPlanCards } from './PricingPlanCards';
 import { FairBillingSection } from './PricingCalculator';
-import { ANNUAL_SAVING_PERCENT, SEAT_BUNDLES, SEAT_BUNDLE_SUMMARY, plans, getPlanPrice } from '../components/PricingCards';
+import { ANNUAL_SAVING_PERCENT, SEAT_BUNDLES, SEAT_BUNDLE_SUMMARY, creditLabel, estimatedConversations, plans, getPlanPrice } from '../components/PricingCards';
 import { PricingFaqSection } from '../components/PricingFaqSection';
 
 // Reuse the billing answers from the /faq source of truth rather than keeping a
@@ -31,19 +31,24 @@ const comparisonCategories: FeatureCategory[] = [
     categoryName: 'What the AI is allowed to do',
     rows: [
       {
-        label: 'AI resolutions included',
-        description: 'Conversations the AI closes on its own each month, shared by the whole workspace.',
-        values: ['50', '250', '2,000', '12,000'],
+        label: 'Monthly AI allowance',
+        description: 'Free is capped at 50 AI conversations. Paid plans include a dollar credit that pays for however many conversations it covers, shared by the whole workspace.',
+        values: ['50 conversations', `${creditLabel(plans[1])} credit`, `${creditLabel(plans[2])} credit`, `${creditLabel(plans[3])} credit`],
       },
       {
-        label: 'Extra resolutions',
-        description: 'What each conversation costs once the monthly allowance runs out.',
-        values: ['Hands off to a human', '$0.10 each', '$0.06 each', '$0.04 each'],
+        label: 'Roughly how many conversations',
+        description: 'A guide, not a promise: a short question costs less credit than a long back-and-forth.',
+        values: ['50', `About ${estimatedConversations(plans[1])?.toLocaleString()}`, `About ${estimatedConversations(plans[2])?.toLocaleString()}`, `About ${estimatedConversations(plans[3])?.toLocaleString()}`],
+      },
+      {
+        label: 'When the allowance runs out',
+        description: 'The AI hands new conversations to your team. On paid plans you can top up credit at any time, or turn on auto-recharge.',
+        values: ['Hands off to a human', 'Top up or hand off', 'Top up or hand off', 'Top up or hand off'],
       },
       {
         label: 'Escalations to a human',
-        description: 'Threads the AI hands over because it could not answer confidently.',
-        values: ['Never billed', 'Never billed', 'Never billed', 'Never billed'],
+        description: 'Threads the AI hands over because it could not answer confidently. The handoff itself never costs extra.',
+        values: ['No extra charge', 'No extra charge', 'No extra charge', 'No extra charge'],
       },
     ],
   },
@@ -201,7 +206,7 @@ export function PricingClient({ loggedIn = false }: { loggedIn?: boolean }) {
                 <p className='text-right text-sm text-[#747078]'><span className='block text-2xl font-medium tracking-[-0.04em] text-black'>{SEAT_BUNDLE_SUMMARY}</span>per month</p>
               </div>
               <h3 className='mt-10 text-3xl font-normal tracking-[-0.04em]'>Additional teammates</h3>
-              <p className='mt-3 max-w-lg text-sm leading-6 text-[#747078]'>Give more people their own login while sharing the same inbox, knowledge, and AI resolution pool.</p>
+              <p className='mt-3 max-w-lg text-sm leading-6 text-[#747078]'>Give more people their own login while sharing the same inbox, knowledge, and AI credit.</p>
               <div className='mt-8 grid grid-cols-2 gap-3'>
                 {SEAT_BUNDLES.map((bundle) => <div key={bundle.seats} className='rounded-2xl border border-black/10 bg-[#faf9fb] p-4'><span className='block text-2xl font-medium'>{bundle.seats}</span><span className='mt-1 block text-sm text-[#747078]'>seats · {bundle.price}/month</span></div>)}
               </div>
@@ -210,12 +215,12 @@ export function PricingClient({ loggedIn = false }: { loggedIn?: boolean }) {
             <article className='group rounded-3xl border border-black/10 bg-white p-7 transition-transform duration-300 hover:-translate-y-1 sm:p-9'>
               <div className='flex items-start justify-between gap-6'>
                 <span className='flex h-12 w-12 items-center justify-center rounded-full bg-[#d9bef4] text-black'><MessageSquare size={22} aria-hidden='true' /></span>
-                <p className='text-right text-sm text-[#747078]'><span className='block text-2xl font-medium tracking-[-0.04em] text-black'>From $0.04</span>per extra resolution</p>
+                <p className='text-right text-sm text-[#747078]'><span className='block text-2xl font-medium tracking-[-0.04em] text-black'>Top up any time</span>on any paid plan</p>
               </div>
-              <h3 className='mt-10 text-3xl font-normal tracking-[-0.04em]'>Additional resolutions</h3>
-              <p className='mt-3 max-w-lg text-sm leading-6 text-[#747078]'>Keep the AI answering after the included monthly allowance is used. Human escalations remain free.</p>
+              <h3 className='mt-10 text-3xl font-normal tracking-[-0.04em]'>Additional AI credit</h3>
+              <p className='mt-3 max-w-lg text-sm leading-6 text-[#747078]'>Keep the AI answering after your monthly credit is used. Handing a conversation to your team never costs extra.</p>
               <div className='mt-8 grid grid-cols-3 gap-2'>
-                {[['Starter', '$0.10'], ['Growth', '$0.06'], ['Scale', '$0.04']].map(([name, price]) => <div key={name} className='rounded-2xl border border-black/10 bg-[#faf9fb] p-4'><span className='block text-xs text-[#747078]'>{name}</span><span className='mt-1 block text-xl font-medium'>{price}</span></div>)}
+                {[['Monthly credit', 'Resets each month'], ['Top-ups', 'Never expire'], ['Auto-recharge', 'Optional']].map(([name, note]) => <div key={name} className='rounded-2xl border border-black/10 bg-[#faf9fb] p-4'><span className='block text-xs text-[#747078]'>{name}</span><span className='mt-1 block text-base font-medium'>{note}</span></div>)}
               </div>
             </article>
           </div>
@@ -231,7 +236,7 @@ export function PricingClient({ loggedIn = false }: { loggedIn?: boolean }) {
             <h2 id='enterprise-title' className='mt-5 max-w-xl text-4xl font-normal leading-tight tracking-[-0.05em] sm:text-6xl'>Support that grows with you.</h2>
             <p className='mt-6 max-w-xl text-sm leading-7 text-black/60'>For organizations supporting more customers across multiple websites and teams. Let’s find the right capacity for your support.</p>
             <ul className='mt-10 grid gap-x-8 gap-y-6 sm:grid-cols-2'>
-              {['More than 12,000 AI resolutions a month', 'Multiple websites and growing teams', 'Shared customer context and knowledge', 'Volume pricing built around your needs'].map((item) => (
+              {['AI credit well beyond the Scale plan', 'Multiple websites and growing teams', 'Shared customer context and knowledge', 'Volume pricing built around your needs'].map((item) => (
                 <li key={item} className='flex items-start gap-3 border-t border-black/10 pt-4 text-sm leading-6 text-black/80'>
                   <Check size={16} className='mt-0.5 shrink-0 text-[#7c5ea0]' aria-hidden='true' />
                   {item}
@@ -244,7 +249,7 @@ export function PricingClient({ loggedIn = false }: { loggedIn?: boolean }) {
             <p className='mt-2 text-sm text-black/55'>Custom pricing available</p>
             <Link href='/contact' className='mt-7 inline-flex h-12 items-center justify-center gap-3 rounded-full bg-black px-5 text-sm font-semibold text-white transition hover:bg-black/80'>Contact sales <ArrowUpRight size={17} aria-hidden='true' /></Link>
             <ul className='mt-9 space-y-4 border-t border-black/15 pt-7 text-sm leading-6 text-black/65'>
-              {['Discuss your resolution volume', 'Plan your workspace and seats', 'Scope knowledge across websites', 'Explore onboarding and SLA needs'].map((item) => (
+              {['Discuss your conversation volume', 'Plan your workspace and seats', 'Scope knowledge across websites', 'Explore onboarding and SLA needs'].map((item) => (
                 <li key={item} className='flex items-start gap-3'>
                   <Check size={16} className='mt-0.5 shrink-0 text-black' aria-hidden='true' />
                   {item}

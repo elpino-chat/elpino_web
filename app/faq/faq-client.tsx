@@ -12,7 +12,7 @@ const categoryMeta: Record<string, { icon: LucideIcon; slug: string; blurb: stri
   "Getting started": { icon: Sparkles, slug: "getting-started", blurb: "Setup, the free plan, and your first answer." },
   "The AI & escalation": { icon: Bot, slug: "ai-escalation", blurb: "How the agent thinks, and when humans step in." },
   Integrations: { icon: Blocks, slug: "integrations", blurb: "Payments, tickets, and connectable tools." },
-  "Billing & plans": { icon: CreditCard, slug: "billing-plans", blurb: "Pricing, resolutions, and cancellation." },
+  "Billing & plans": { icon: CreditCard, slug: "billing-plans", blurb: "Pricing, AI credit, and cancellation." },
   "Data & security": { icon: ShieldCheck, slug: "data-security", blurb: "Training, encryption, and your data." },
 };
 

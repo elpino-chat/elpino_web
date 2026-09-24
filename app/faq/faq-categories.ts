@@ -12,7 +12,7 @@ export const categories: FaqCategory[] = [
       },
       {
         q: "How does the Free plan work?",
-        a: "It's a real plan, not a countdown — 50 AI resolutions a month and 2 seats, no credit card. Upgrade when your volume outgrows it, not on a deadline.",
+        a: "It's a real plan, not a countdown — 50 AI conversations a month and 2 seats, no credit card. Upgrade when your volume outgrows it, not on a deadline.",
       },
       {
         q: "Do I need a support team already?",
@@ -71,23 +71,23 @@ export const categories: FaqCategory[] = [
     items: [
       {
         q: "What do the plans cost?",
-        a: "Free is $0. Monthly plans are Starter at $12 with 250 resolutions, Growth at $59 with 2,000, and Scale at $299 with 12,000. Annual billing is two months free — you pay for ten months and get twelve: Starter is $120 a year ($10/month), Growth is $590 ($49.17/month), and Scale is $2,990 ($249.17/month).",
+        a: "Free is $0. Monthly plans are Starter at $12 with $7 of AI credit each month, Growth at $59 with $40, and Scale at $299 with $240. Annual billing is two months free — you pay for ten months and get twelve: Starter is $120 a year ($10/month), Growth is $590 ($49.17/month), and Scale is $2,990 ($249.17/month).",
       },
       {
-        q: "What's a \"resolution\"?",
-        a: "One conversation the AI closed on its own, without escalating — that's the whole meter. A ten-message back-and-forth the AI handles start to finish still counts as one.",
+        q: "How does the AI allowance work?",
+        a: "Free includes 50 AI conversations a month. A conversation the AI handles is counted once, however many messages it takes. Paid plans work differently: they include a monthly AI credit that the AI spends as it works, so a quick question uses less than a long back-and-forth. Starter's $7 covers about 140 typical conversations, Growth's $40 about 800, and Scale's $240 about 4,800 — an estimate, since real usage depends on conversation length.",
       },
       {
         q: "Do escalations cost anything?",
-        a: "No. A conversation the AI hands off to a human is never billed as a resolution — that's the point of the meter existing at all.",
+        a: "No extra charge. On Free, a conversation the AI hands off to a human doesn't count toward your 50. On paid plans, the handoff itself is free, and the AI stops spending credit the moment a person takes over.",
       },
       {
-        q: "What happens if I go over my plan's resolutions?",
-        a: "Free stops there and the AI hands new conversations straight to a human instead of answering. Paid plans keep answering and bill the extra at a per-resolution rate shown on the pricing page.",
+        q: "What happens when I use up my AI allowance?",
+        a: "The AI hands new conversations straight to your team instead of answering. On a paid plan you can top up credit at any time, or turn on automatic recharge so it never stops. Top-ups never expire. Your monthly credit resets each billing period.",
       },
       {
         q: "How much does an extra teammate cost?",
-        a: "$1 a month, on every plan including Free. Seats and resolutions are billed completely separately — adding a teammate never touches your AI allowance.",
+        a: "Extra seats come in packs on every plan including Free: 3 seats for $2 a month, or 5 for $3. Seats and AI credit are billed completely separately — adding a teammate never touches your AI allowance.",
       },
       {
         q: "Can I cancel anytime?",

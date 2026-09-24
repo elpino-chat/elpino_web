@@ -70,7 +70,7 @@ export default function TermsPage() {
             <>
               <p>
                 New accounts start on the Free plan, which has no time limit and needs no payment
-                method. Paid plans add AI resolution allowance, seats, and knowledge base capacity;
+                method. Paid plans add a monthly AI credit, seats, and knowledge base capacity;
                 you can move to a paid plan, or back to Free, at any time.
               </p>
               <ul>

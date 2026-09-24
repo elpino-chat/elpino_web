@@ -839,7 +839,7 @@ window.Elpino("update", { mrr: 299 });`}</code></pre>
           <section id="platform" className="scroll-mt-40 border-b border-[#e8eaed] py-14">
             <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[#59615a]">Platform</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em]">Billing and troubleshooting</h2>
-            <p className="mt-4 max-w-2xl text-base leading-7 text-[#626c78]">Understand plans, resolution credits, and recharge, or diagnose common widget, knowledge, identity, and handoff issues.</p>
+            <p className="mt-4 max-w-2xl text-base leading-7 text-[#626c78]">Understand plans, AI credit, and recharge, or diagnose common widget, knowledge, identity, and handoff issues.</p>
             <div className="mt-7 grid gap-3 sm:grid-cols-2">
               <Link href="/docs/billing" className="group rounded-xl border border-black/10 p-4 transition hover:border-[#bf91ff] hover:bg-[#f8f3ff]">
                 <h3 className="text-sm font-semibold">Billing and usage</h3>

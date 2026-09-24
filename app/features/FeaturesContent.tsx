@@ -133,7 +133,7 @@ const featureCards = [
     eyebrow: "Zero Risk Escalation",
     title: "AI knows when to bring\nyour people into the loop",
     description:
-      "When a question requires human judgment or custom discretion, Elpino transfers the thread with full historical context. You are never charged an AI resolution fee for escalations.",
+      "When a question requires human judgment or custom discretion, Elpino transfers the thread with full historical context. Handing a conversation over never costs extra.",
     icon: Users,
     accent: "#8557e8",
     previewType: "handoff",
@@ -240,7 +240,7 @@ export function FeaturesContent() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#ff7958] opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-[#ff6038]" />
             </span>
-            <span>The Elpino Support Engine — Built for resolutions, not seats</span>
+            <span>The Elpino Support Engine — Built for answers, not seats</span>
             <ArrowRight size={13} className="text-white/60 transition-transform group-hover:translate-x-0.5" />
           </Link>
         </div>
@@ -270,7 +270,7 @@ export function FeaturesContent() {
               Explore workspace demo
             </Link>
           </div>
-          <p className="mt-4 text-xs text-white/45">50 AI resolutions free each month · No credit card required</p>
+          <p className="mt-4 text-xs text-white/45">50 AI conversations free each month · No credit card required</p>
         </div>
 
         {/* 2. INTERACTIVE WORKSPACE CANVAS */}
@@ -664,7 +664,7 @@ export function FeaturesContent() {
             Turn support questions into <span className="text-[#168cff]">resolved conversations.</span>
           </h2>
           <p className="mx-auto mt-6 max-w-[620px] text-base leading-7 text-[#17191c]/60 sm:text-lg">
-            Bring your knowledge docs, connect the chat widget, and let Elpino handle your first 50 AI resolutions free.
+            Bring your knowledge docs, connect the chat widget, and let Elpino handle your first 50 AI conversations free.
           </p>
           <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
