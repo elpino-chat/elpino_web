@@ -304,7 +304,7 @@ export default function DocsPage() {
       {/* ── Top navbar ── */}
       <div className="fixed inset-x-0 top-0 z-30 bg-white text-[#11120f]">
         <div className="relative flex h-16 w-full items-center justify-between gap-4 px-4">
-          <Link href="/docs" className="relative z-10 flex w-fit shrink-0 items-center gap-2 transition-opacity hover:opacity-90">
+          <Link href="/" className="relative z-10 flex w-fit shrink-0 items-center gap-2 transition-opacity hover:opacity-90">
             <Image src="/icon.png" alt="" width={96} height={96} priority className="size-8 rounded-lg object-contain" />
             <span className="hidden items-center gap-2 text-[15px] font-normal tracking-[-0.01em] sm:flex">
               <span>elpino</span>

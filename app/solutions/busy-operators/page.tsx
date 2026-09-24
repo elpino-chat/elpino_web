@@ -1,48 +1,22 @@
 import type { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
+import { BusyTeamsClient } from "./BusyTeamsClient";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://elpino.chat";
 
 export const metadata: Metadata = {
-  title: "For Busy Teams",
-  description: "Keep customer conversations moving with AI answers, a shared inbox, and human handoff.",
+  title: "For Busy Teams | Elpino",
+  description:
+    "Autonomous AI customer service engineered for busy teams. Deflect 89% of routine support tickets, eliminate operator tab-hopping, and keep customer queues calm.",
   alternates: { canonical: `${SITE_URL}/solutions/busy` },
-  openGraph: { title: "For Busy Teams | Elpino", description: "Keep customer conversations moving with Elpino.", url: `${SITE_URL}/solutions/busy`, type: "website" },
+  openGraph: {
+    title: "For Busy Teams | Elpino",
+    description:
+      "Autonomous AI customer service engineered for busy teams. Deflect 89% of routine support tickets, eliminate operator tab-hopping, and keep customer queues calm.",
+    url: `${SITE_URL}/solutions/busy`,
+    type: "website",
+  },
 };
 
-const benefits = [
-  ["The first answer is already there", "Elpino answers straightforward questions from your knowledge base before the queue becomes your team’s problem."],
-  ["One inbox. A little less chaos.", "Every conversation, AI answer, and teammate reply lives in the same calm place."],
-  ["Hand off without the backstory", "When a person is needed, they get the customer’s question and context instead of a blank slate."],
-];
-
-const flow = [
-  ["01", "A customer needs help", "They ask directly in your website chat—right when they need an answer."],
-  ["02", "Elpino keeps it moving", "The AI finds useful information from your knowledge and responds in seconds."],
-  ["03", "Your team steps in", "Questions that need judgment land in the shared inbox with the story intact."],
-];
-
 export default function BusyOperatorsPage() {
-  return (
-    <div className="overflow-hidden bg-white font-[family-name:var(--font-rethink-sans)] text-[#17181c]">
-      <section className="relative overflow-hidden bg-[#111216] px-5 pb-20 pt-28 text-white sm:px-8 md:pb-28 md:pt-36 lg:px-16">
-        <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(circle_at_12%_84%,rgba(66,140,229,0.45),transparent_30rem),radial-gradient(circle_at_87%_18%,rgba(112,96,189,0.78),transparent_28rem)]" />
-        <div className="relative mx-auto grid max-w-[1400px] gap-12 lg:grid-cols-[minmax(0,0.98fr)_minmax(400px,0.8fr)] lg:items-center lg:gap-16">
-          <div className="max-w-3xl"><p className="flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#d9bef4]"><span className="h-px w-8 bg-[#d9bef4]" />Elpino for busy teams</p><h1 className="mt-7 text-balance text-5xl font-normal leading-[0.96] tracking-[-0.065em] sm:text-6xl md:text-7xl">The queue keeps moving.<br /><span className="text-[#d9bef4]">So can your team.</span></h1><p className="mt-7 max-w-2xl text-lg leading-8 text-white/65 sm:text-xl">Give customers an immediate, helpful first response. Keep the human moments close for the conversations that really need your team.</p><div className="mt-9 flex flex-wrap gap-3"><Link href="/signup" className="inline-flex h-12 items-center justify-center rounded-md bg-[#fe9238] px-6 text-sm font-semibold text-black transition hover:bg-white">Start free →</Link><Link href="/features" className="inline-flex h-12 items-center justify-center rounded-md border border-white/25 bg-white/5 px-6 text-sm font-medium transition hover:border-white hover:bg-white hover:text-black">Explore the workspace</Link></div><p className="mt-5 text-xs text-white/45">50 AI resolutions a month, free. No card required.</p></div>
-          <div className="relative mx-auto w-full max-w-[560px]"><div aria-hidden="true" className="absolute -inset-6 rounded-[2rem] bg-[radial-gradient(circle,#fc7b33_0%,transparent_65%)] opacity-40 blur-2xl" /><Image src="/images/busy-teams-sloth.png" alt="" width={1024} height={1536} className="pointer-events-none absolute -right-20 -top-32 z-10 h-auto w-40 rotate-6 drop-shadow-2xl sm:w-48" /><div className="relative overflow-hidden rounded-xl border border-[#428ce5] bg-[#edf7ff] p-3 text-[#17181c] shadow-[0_30px_80px_rgba(0,0,0,0.45)] sm:p-5"><div className="overflow-hidden rounded-lg border border-black/10 bg-white"><div className="flex items-center justify-between border-b border-black/10 px-5 py-4 text-xs"><span className="font-medium">Shared inbox</span><span className="text-[#527b97]">3 conversations</span></div><div className="space-y-1 p-3">{[["Maya Johnson", "How do I invite my teammates?", "Answered by AI"], ["Alex Lee", "Can someone help with my order?", "With your team"], ["Sam Kim", "I need help getting started.", "Open conversation"]].map(([name, question, status], index) => <div key={name} className={`flex items-center gap-3 rounded-lg p-3 ${index === 1 ? "bg-[#eee5fa]" : "hover:bg-black/[0.03]"}`}><span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#dbe6ee] text-[10px]">{name.split(" ").map(part => part[0]).join("")}</span><span className="min-w-0 flex-1"><strong className="block text-xs">{name}</strong><span className="mt-1 block truncate text-[10px] text-[#6d756c]">{question}</span></span><span className={`text-[9px] ${index === 1 ? "text-[#70558d]" : "text-[#55776b]"}`}>{status}</span></div>)}</div></div><div className="mt-4 rounded-lg bg-[#17181c] px-4 py-3 text-xs text-white">Helpful answers. Human support when it matters.</div></div></div>
-        </div>
-      </section>
-
-      <section className="border-b border-black/10 bg-[#428ce5] px-5 py-7 text-white sm:px-8 lg:px-16"><div className="mx-auto flex max-w-[1400px] flex-wrap items-center justify-between gap-x-10 gap-y-4 text-sm"><span className="font-medium">Fewer repeat questions.</span><span className="text-white/70">More helpful customer moments.</span><span className="text-white/70">A team that stays in sync.</span></div></section>
-
-      <section className="px-5 py-20 sm:px-8 md:py-28 lg:px-16"><div className="mx-auto max-w-[1400px]"><div className="grid gap-8 md:grid-cols-[0.8fr_1.2fr] md:items-end"><div><p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#7060bd]">Your team, amplified</p><h2 className="mt-4 text-4xl font-normal leading-[1.03] tracking-[-0.055em] sm:text-5xl">More helping.<br />Less chasing.</h2></div><p className="max-w-xl text-base leading-7 text-black/60">Your team does its best work when it is not buried under the same questions. Elpino gives each conversation the right first move.</p></div><div className="mt-12 grid gap-5 md:grid-cols-3">{benefits.map(([title, text], index) => <article key={title} className="flex min-h-[280px] flex-col rounded-xl border border-black/10 bg-[#fbfbfa] p-7"><span className="flex size-9 items-center justify-center rounded-lg bg-[#eee5fa] text-sm text-[#7060bd]">0{index + 1}</span><h3 className="mt-9 text-2xl font-medium tracking-[-0.04em]">{title}</h3><p className="mt-4 text-sm leading-7 text-black/55">{text}</p></article>)}</div></div></section>
-
-      <section className="bg-[#fff1e3] px-5 py-20 sm:px-8 md:py-28 lg:px-16"><div className="mx-auto max-w-[1400px]"><p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#956840]">How the handoff feels</p><div className="mt-4 flex flex-col justify-between gap-6 md:flex-row md:items-end"><h2 className="max-w-2xl text-4xl font-normal leading-[1.03] tracking-[-0.055em] sm:text-5xl">No dropped threads.<br />No starting over.</h2><p className="max-w-sm text-sm leading-7 text-[#76634f]">The AI handles the repeatable parts. Your people are ready when nuance, care, or judgment is required.</p></div><div className="mt-14 grid gap-5 md:grid-cols-3">{flow.map(([number, title, text]) => <article key={number} className="rounded-xl border border-[#dfc7b1] bg-white/65 p-7"><span className="text-sm font-medium text-[#b56e36]">{number}</span><div className="my-8 h-px bg-[#dfc7b1]" /><h3 className="text-2xl font-medium tracking-[-0.04em]">{title}</h3><p className="mt-4 text-sm leading-7 text-[#76634f]">{text}</p></article>)}</div></div></section>
-
-      <section className="bg-[#111216] px-5 py-20 text-white sm:px-8 md:py-28 lg:px-16"><div className="mx-auto grid max-w-[1400px] gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-center"><div><p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#d9bef4]">Your knowledge, ready to help</p><h2 className="mt-5 text-4xl font-normal leading-[1.03] tracking-[-0.055em] sm:text-5xl">Give AI a helpful place to start.</h2><p className="mt-6 max-w-lg text-base leading-7 text-white/65">Bring together your website pages, help articles, and documents. Elpino searches this knowledge before it responds to a customer.</p><Link href="/features#knowledge-base" className="mt-8 inline-flex h-12 items-center rounded-md border border-white/25 px-6 text-sm font-medium transition hover:bg-white hover:text-black">Explore the knowledge base ↗</Link></div><div className="rounded-xl border border-[#428ce5] bg-[#edf7ff] p-3 text-[#17181c] sm:p-5"><div className="rounded-lg bg-white p-5 sm:p-7"><div className="flex items-center justify-between border-b border-black/10 pb-4 text-xs"><span className="font-medium">Knowledge library</span><span className="text-[#527b97]">4 sources ready</span></div>{["Getting started guide", "Billing and plans", "Team setup", "Product FAQs"].map((item, index) => <div key={item} className="flex items-center gap-3 border-b border-black/5 py-4"><span className="flex size-7 items-center justify-center rounded-lg bg-[#eee5fa] text-xs text-[#765a99]">⌁</span><span className="flex-1 text-sm">{item}</span><span className="text-[10px] text-[#377755]">{index === 3 ? "Updated" : "Ready"} ✓</span></div>)}<p className="mt-5 text-xs leading-6 text-[#628099]">Your team’s knowledge, ready for the next customer question.</p></div></div></div></section>
-
-      <section className="bg-[#428ce5] px-5 py-20 text-white sm:px-8 md:py-28 lg:px-16"><div className="mx-auto flex max-w-[1400px] flex-col items-start justify-between gap-10 lg:flex-row lg:items-end"><div className="max-w-3xl"><p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#d9bef4]">Make the queue feel lighter</p><h2 className="mt-5 text-balance text-4xl font-normal leading-[1.02] tracking-[-0.055em] sm:text-5xl md:text-6xl">Every customer gets a helpful next step.</h2><p className="mt-5 max-w-xl text-base leading-7 text-white/65">Start with the answers you already have. Bring your team in exactly when it matters.</p></div><div className="flex flex-wrap gap-3"><Link href="/signup" className="inline-flex h-12 items-center justify-center rounded-md bg-[#fe9238] px-6 text-sm font-semibold text-black transition hover:bg-white">Start free →</Link><Link href="/contact" className="inline-flex h-12 items-center justify-center rounded-md border border-white/30 px-6 text-sm font-medium transition hover:bg-white hover:text-black">Talk to us</Link></div></div></section>
-    </div>
-  );
+  return <BusyTeamsClient />;
 }

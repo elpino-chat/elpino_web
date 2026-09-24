@@ -80,22 +80,22 @@ export function ContactClient() {
 
   return (
     <main className="bg-white text-[#0d0d0d] font-[family-name:var(--font-rethink-sans)]">
-      <section className="relative overflow-hidden bg-black px-5 py-20 text-white sm:px-8 md:py-28 lg:px-12">
-        <div aria-hidden="true" className="absolute inset-0 opacity-40 [background-image:radial-gradient(rgba(217,190,244,0.35)_1px,transparent_1px)] [background-size:26px_26px]" />
-        <div aria-hidden="true" className="absolute -right-48 -top-48 h-[36rem] w-[36rem] rounded-full border border-[#d9bef4]/25" />
-        <div aria-hidden="true" className="absolute -right-24 -top-24 h-96 w-96 rounded-full border border-[#d9bef4]/15" />
+      <section className="relative overflow-hidden bg-[#d9bef4] px-5 py-20 text-[#233d4d] sm:px-8 md:py-28 lg:px-12">
+        <div aria-hidden="true" className="absolute inset-0 opacity-30 [background-image:radial-gradient(rgba(35,61,77,0.3)_1px,transparent_1px)] [background-size:26px_26px]" />
+        <div aria-hidden="true" className="absolute -right-48 -top-48 h-[36rem] w-[36rem] rounded-full border border-[#233d4d]/15" />
+        <div aria-hidden="true" className="absolute -right-24 -top-24 h-96 w-96 rounded-full border border-[#233d4d]/10" />
         <motion.div
           aria-hidden="true"
           animate={reduce ? undefined : { y: [0, 18, 0], x: [0, -10, 0] }}
           transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -left-40 top-24 h-[28rem] w-[28rem] rounded-full bg-[#7651b0]/20 blur-3xl"
+          className="absolute -left-40 top-24 h-[28rem] w-[28rem] rounded-full bg-[#ffb28a]/45 blur-3xl"
         />
         <div className="relative mx-auto max-w-[108rem]">
-          <HeroRise delay={0} className="mb-8 flex items-center justify-center gap-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-white/55">
-            <span className="h-2 w-2 rounded-full bg-[#d9bef4]" />Talk to Elpino
+          <HeroRise delay={0} className="mb-8 flex items-center justify-center gap-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#233d4d]/60">
+            <span className="h-2 w-2 rounded-full bg-[#7651b0]" />Elpino help center
           </HeroRise>
           <HeroRise delay={0.08}>
-            <h1 className="mx-auto max-w-6xl text-center text-[clamp(4rem,8.5vw,9rem)] font-normal leading-[0.88] tracking-[-0.065em]"><span className="text-[#d9bef4]">Hello.</span> How can<br className="hidden sm:block" /> we help?</h1>
+            <h1 className="mx-auto max-w-6xl text-center text-[clamp(4rem,8.5vw,9rem)] font-normal leading-[0.88] tracking-[-0.065em]"><span className="text-[#7651b0]">Hello.</span> How can<br className="hidden sm:block" /> we help?</h1>
           </HeroRise>
           <HeroRise delay={0.18}>
             <div className="relative mx-auto mt-12 max-w-5xl">
@@ -134,15 +134,20 @@ export function ContactClient() {
                 )}
               </AnimatePresence>
               <div className="mt-6 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-                <p className="max-w-xl text-sm leading-6 text-white/60 sm:text-base">{t("contact.subheading", "Planning a new support setup, evaluating Elpino, or already need a hand? Tell us where you are and we'll meet you there.")}</p>
-                <a href="#send-message" className="group inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-white transition hover:text-[#d9bef4]">Or send us a message <span className="transition-transform group-hover:translate-x-1"><Arrow /></span></a>
+                <p className="max-w-xl text-sm leading-6 text-[#233d4d]/70 sm:text-base">{t("contact.subheading", "Planning a new support setup, evaluating Elpino, or already need a hand? Tell us where you are and we'll meet you there.")}</p>
+                <a href="#send-message" className="group inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-[#233d4d] transition hover:text-[#7651b0]">Or send us a message <span className="transition-transform group-hover:translate-x-1"><Arrow /></span></a>
+              </div>
+              <div className="mt-7 flex flex-wrap justify-center gap-2 sm:justify-start">
+                <a href="/faq" className="rounded-full border border-[#233d4d]/15 bg-white/55 px-4 py-2 text-xs font-semibold transition hover:bg-white">Getting started</a>
+                <a href="/docs" className="rounded-full border border-[#233d4d]/15 bg-white/55 px-4 py-2 text-xs font-semibold transition hover:bg-white">Featured guides</a>
+                <a href="/pricing" className="rounded-full border border-[#233d4d]/15 bg-white/55 px-4 py-2 text-xs font-semibold transition hover:bg-white">Plans & billing</a>
               </div>
             </div>
           </HeroRise>
         </div>
       </section>
 
-      <section className="bg-[#f7f6f2] px-5 py-20 sm:px-8 md:py-28 lg:px-12">
+      <section className="bg-[#fbfaff] px-5 py-20 sm:px-8 md:py-28 lg:px-12">
         <div className="mx-auto max-w-[108rem]">
           <Reveal>
             <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
@@ -173,7 +178,7 @@ export function ContactClient() {
         </div>
       </section>
 
-      <section id="send-message" className="scroll-mt-24 bg-[#f1efea] px-5 py-20 sm:px-8 md:py-28 lg:px-12">
+      <section id="send-message" className="scroll-mt-24 bg-[#f3eff8] px-5 py-20 sm:px-8 md:py-28 lg:px-12">
         <div className="mx-auto grid max-w-[108rem] gap-12 lg:grid-cols-[0.75fr_1.25fr] lg:gap-20">
           <Reveal>
             <div className="lg:sticky lg:top-28">
