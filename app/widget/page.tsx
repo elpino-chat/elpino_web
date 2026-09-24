@@ -198,6 +198,8 @@ function WidgetContent() {
   const [contactDoneFor, setContactDoneFor] = useState("");
   const [contactThanks, setContactThanks] = useState(false);
   const [agentTyping, setAgentTyping] = useState(false);
+  // First name of the teammate who joined; the header shows them instead of the AI.
+  const [agentName, setAgentName] = useState<string | null>(null);
   // Ms-epoch deadline while the team is notified and nobody has joined yet.
   const [joinDeadline, setJoinDeadline] = useState<number | null>(null);
   const [joinNow, setJoinNow] = useState(() => Date.now());
@@ -911,7 +913,7 @@ function WidgetContent() {
     const poll = () => {
       fetch("/api/widget/messages/read", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ key, hostname, visitorToken, conversationId }) })
         .then((response) => response.json())
-        .then((data: { messages?: WidgetMessage[]; agentTyping?: boolean; joinDeadlineAt?: string | null; serverNow?: string; error?: string; ended?: boolean; contactAsk?: { fields?: ContactField[] } | null }) => {
+        .then((data: { messages?: WidgetMessage[]; agentTyping?: boolean; agent?: { name?: string } | null; joinDeadlineAt?: string | null; serverNow?: string; error?: string; ended?: boolean; contactAsk?: { fields?: ContactField[] } | null }) => {
           if (cancelled || epoch !== sessionEpochRef.current) return;
           // Left with Leave Chat (in another tab, say): drop the thread and go
           // back to the list rather than treating it as a broken session.
@@ -954,6 +956,7 @@ function WidgetContent() {
             setMessages(data.messages);
           }
           setAgentTyping(!!data.agentTyping);
+          setAgentName(data.agent?.name?.trim() || null);
           // Convert the server's deadline into this device's clock so a wrong
           // local time can't shorten or stretch the countdown.
           if (data.joinDeadlineAt && data.serverNow) {
@@ -1615,8 +1618,8 @@ function WidgetContent() {
               <div className="flex items-center gap-2">
                 <button type="button" aria-label="Back to chats" onClick={() => requestLeave("list")} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-black/[0.07] transition hover:bg-black/[0.12]"><ChevronLeft size={19} /></button>
                 <div className="relative flex max-w-[220px] flex-col items-start gap-0.5 rounded-[28px] py-2.5">
-                  <h2 className="min-w-0 truncate text-[14px] font-bold leading-5" style={{ color: INK }}>{botName}</h2>
-                  <p className="min-w-0 text-[11.5px] leading-4" style={{ color: MUTED }}>AI Assistant</p>
+                  <h2 className="min-w-0 truncate text-[14px] font-bold leading-5" style={{ color: INK }}>{agentName ?? botName}</h2>
+                  <p className="min-w-0 text-[11.5px] leading-4" style={{ color: MUTED }}>{agentName ? "Support team" : "AI Assistant"}</p>
                 </div>
               </div>
               <div className="ml-auto flex gap-2">

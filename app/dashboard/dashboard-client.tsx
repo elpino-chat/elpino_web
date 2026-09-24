@@ -699,6 +699,20 @@ function DashboardContent({ name }: { name: string }) {
   // Mirrors the widget's own fallback (api/widget/start) so a workspace that
   // never picked an avatar still shows the icon its visitors actually see.
   const aiAvatarUrl = conversation?.aiAvatarUrl || DEFAULT_BOT_AVATAR;
+  // Who has taken this chat, learned live from the team-wide "joined" event
+  // (it carries their first name, which the conversation itself doesn't).
+  const [joinedBy, setJoinedBy] = useState<{ userId: string; name: string } | null>(null);
+  useEffect(() => {
+    setJoinedBy(null);
+    const onJoined = (event: Event) => {
+      const detail = (event as CustomEvent<{ conversationId?: string; userId?: string; name?: string }>).detail;
+      if (!detail?.conversationId || detail.conversationId !== conversationId || !detail.userId) return;
+      setJoinedBy({ userId: detail.userId, name: detail.name || "A teammate" });
+      setConversation((current) => (current ? { ...current, assignedUserId: detail.userId!, handledBy: "human" } : current));
+    };
+    window.addEventListener("elpino:conversation-joined", onJoined);
+    return () => window.removeEventListener("elpino:conversation-joined", onJoined);
+  }, [conversationId]);
   const isMine = !!myAccountId && conversation?.assignedUserId === myAccountId;
   const assignedElsewhere = !!conversation?.assignedUserId && conversation.assignedUserId !== myAccountId;
   const isResolved = conversation?.status === "resolved";
@@ -816,6 +830,11 @@ function DashboardContent({ name }: { name: string }) {
             {/* Joining is the act that takes a thread off the AI and puts a
                 named person on it, so it is the primary thing to do from
                 here until it has happened. */}
+            {assignedElsewhere && joinedBy && joinedBy.userId === conversation?.assignedUserId && (
+              <span className="mr-1 hidden items-center gap-1.5 rounded-full bg-[#EEF8F2] px-2.5 py-1 text-[11.5px] font-semibold text-[#34845c] sm:inline-flex">
+                <UserRound size={12} /> {joinedBy.name} joined
+              </span>
+            )}
             {!isMine && (
               <button
                 type="button"

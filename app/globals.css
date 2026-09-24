@@ -1885,7 +1885,7 @@ body {
    utility), so it isn't covered by the rules above — without this it stays
    dark-on-dark when the dashboard switches to dark appearance. */
 [data-dashboard-theme="dark"] .dashboard-shell header {
-  background-color: #1b1e21 !important;
+  background-color: #262626 !important;
   color: rgba(255, 255, 255, 0.9) !important;
 }
 

@@ -96,6 +96,8 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
   // mute would be wasteful), so the handler needs a ref to see the current
   // value rather than the one captured when it was first attached.
   const notificationsMutedRef = useRef(false);
+  // Toast ids of the Join alerts on screen, per conversation.
+  const alertToastsRef = useRef<Map<string, (string | number)[]>>(new Map());
   useEffect(() => {
     notificationsMutedRef.current = notificationsMuted;
   }, [notificationsMuted]);
@@ -217,15 +219,30 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
       // "escalated:" alerts go to the whole team at once — see
       // ConversationsService.notifyTeamOfEscalation.
       const teamAlert = notification.id?.startsWith("escalated:") ?? false;
-      toast.custom(
+      const ticket = notification.id?.startsWith("ticket:") ?? false;
+      // Remember which toast belongs to which conversation, so it can be
+      // cleared for everyone the moment someone joins.
+      const toastId = toast.custom(
         (id) => (
           <AssignmentToast
-            notification={{ conversationId: notification.conversationId!, title: notification.title!, detail: notification.detail ?? "", teamAlert }}
+            notification={{ conversationId: notification.conversationId!, title: notification.title!, detail: notification.detail ?? "", teamAlert, ticket }}
             onDismiss={() => toast.dismiss(id)}
           />
         ),
         { position: "bottom-right", duration: teamAlert ? 90_000 : 45_000 },
       );
+      const list = alertToastsRef.current.get(notification.conversationId) ?? [];
+      alertToastsRef.current.set(notification.conversationId, [...list, toastId]);
+    });
+    // Someone pressed Join (or replied): take the alert away from everyone
+    // else, tell them who has it, and let the inbox know.
+    socket.on("conversation:joined", (payload: { joined?: { conversationId?: string; userId?: string; name?: string } }) => {
+      const joined = payload.joined;
+      if (!joined?.conversationId || !joined.userId) return;
+      for (const id of alertToastsRef.current.get(joined.conversationId) ?? []) toast.dismiss(id);
+      alertToastsRef.current.delete(joined.conversationId);
+      if (joined.userId !== accountId) toast(`${joined.name || "A teammate"} joined this chat`, { duration: 4000 });
+      window.dispatchEvent(new CustomEvent("elpino:conversation-joined", { detail: joined }));
     });
     // A customer wrote in a conversation this account is responsible for —
     // see WidgetService.postMessage. A sound and a tab-title count, never a

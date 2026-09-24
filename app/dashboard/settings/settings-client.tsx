@@ -165,6 +165,7 @@ const chatbotItems = [
   { label: "Chatbot Interface", slug: "chatbot", icon: Bot },
   { label: "Identity Verification", slug: "identity", icon: UserCheck },
   { label: "Restrictions", slug: "chatbot-restrictions", icon: ShieldCheck },
+  { label: "Payments & refunds", slug: "chatbot-payments", icon: CreditCard },
 ];
 
 // Shared workspace configuration, visible the same way to every teammate.
@@ -1352,6 +1353,12 @@ type Entitlement = {
   status: string;
   seatsIncluded: number;
   seatsPurchased: number;
+  /** Seats the owner removed; they stop being billed at the next renewal. */
+  seatsPendingRelease?: number;
+  /** What the extra seats add to each monthly bill, in the smallest currency unit. */
+  seatsMonthlyMinor?: number;
+  /** The plan's own price per month, in the smallest currency unit. */
+  effectiveMonthlyMinor?: number;
   seatsAllowed: number;
   seatsMax: number | null;
   /** Cheapest per-seat rate across the bundles, for the "from" price. */
@@ -1425,6 +1432,28 @@ function BillingSettingsPage() {
   const [cancelBusy, setCancelBusy] = useState(false);
   const [cancelError, setCancelError] = useState<string | null>(null);
   const [cancelNotice, setCancelNotice] = useState<string | null>(null);
+  const [removeSeatsOpen, setRemoveSeatsOpen] = useState(false);
+  const [removeSeatsCount, setRemoveSeatsCount] = useState("1");
+  const [seatBusy, setSeatBusy] = useState(false);
+  const [seatError, setSeatError] = useState<string | null>(null);
+
+  // Removing seats takes effect at the next renewal: they were paid for
+  // through the end of this period, so they stay usable until then.
+  async function removeSeats() {
+    setSeatBusy(true);
+    setSeatError(null);
+    try {
+      const response = await fetch(`/api/billing/seats?quantity=${encodeURIComponent(removeSeatsCount)}`, { method: "DELETE" });
+      const data = (await response.json().catch(() => ({}))) as { message?: string };
+      if (!response.ok) throw new Error(data.message ?? "Could not remove seats.");
+      setRemoveSeatsOpen(false);
+      await loadStatus();
+    } catch (issue) {
+      setSeatError(issue instanceof Error ? issue.message : "Could not remove seats.");
+    } finally {
+      setSeatBusy(false);
+    }
+  }
 
   function loadStatus() {
     return fetch("/api/billing/status")
@@ -1494,6 +1523,36 @@ function BillingSettingsPage() {
             <div className="flex items-start justify-between gap-4"><div><p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#6D7D85]">Current plan</p><h3 className="mt-3 text-[28px] font-medium tracking-[-0.04em]">{plan.name}</h3></div><span className="rounded-full bg-white px-3 py-1 text-[10px] font-bold uppercase tracking-[0.08em] text-[#34845c]">{status}</span></div>
             <div className="mt-3 flex items-end gap-1"><span className="text-[32px] font-medium tracking-[-0.05em]">{plan.price}</span>{plan.id !== "free" && <span className="pb-1 text-[12px] text-[#667069]">/ month</span>}</div>
             <p className="mt-3 text-[12px] leading-5 text-[#667069]">{plan.description}</p>
+            {plan.id !== "free" && entitlement && (() => {
+              const currencyCode = entitlement.currency ?? "USD";
+              const keptSeats = Math.max(0, (entitlement.seatsPurchased ?? 0) - (entitlement.seatsPendingRelease ?? 0));
+              const planMinor = entitlement.effectiveMonthlyMinor ?? 0;
+              const seatsMinor = entitlement.seatsMonthlyMinor ?? 0;
+              return (
+                <div className="mt-4 max-w-[420px] rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-[12.5px]">
+                  <div className="flex items-center justify-between py-1"><span className="text-white/70">{plan.name} plan</span><span>{formatMoney(planMinor, currencyCode)}/mo</span></div>
+                  <div className="flex items-center justify-between py-1">
+                    <span className="text-white/70">Extra seats ({keptSeats})</span>
+                    <span className="flex items-center gap-2">
+                      {keptSeats > 0 && !removeSeatsOpen && <button type="button" onClick={() => { setRemoveSeatsOpen(true); setRemoveSeatsCount("1"); }} className="text-[11.5px] font-medium text-white/50 underline-offset-2 hover:text-white/90 hover:underline">Remove</button>}
+                      {formatMoney(seatsMinor, currencyCode)}/mo
+                    </span>
+                  </div>
+                  {removeSeatsOpen && (
+                    <div className="mt-1 flex flex-wrap items-center gap-2 rounded-lg bg-white/[0.04] px-3 py-2">
+                      <span className="text-white/70">Remove</span>
+                      <input type="number" min={1} max={keptSeats} value={removeSeatsCount} onChange={(event) => setRemoveSeatsCount(event.target.value)} className="h-7 w-14 rounded-md border border-white/15 bg-transparent px-2 text-[12.5px] outline-none" aria-label="Seats to remove" />
+                      <span className="text-white/70">seat(s) at the next renewal</span>
+                      <button type="button" disabled={seatBusy} onClick={() => void removeSeats()} className="h-7 rounded-md bg-[#6d5ce7] px-3 text-[11.5px] font-medium text-white disabled:opacity-60">{seatBusy ? "Saving…" : "Confirm"}</button>
+                      <button type="button" onClick={() => setRemoveSeatsOpen(false)} className="h-7 px-2 text-[11.5px] text-white/60">Cancel</button>
+                    </div>
+                  )}
+                  <div className="mt-1 flex items-center justify-between border-t border-white/10 pt-2 font-semibold"><span>Total</span><span>{formatMoney(planMinor + seatsMinor, currencyCode)}/mo</span></div>
+                  {(entitlement.seatsPendingRelease ?? 0) > 0 && <p className="mt-2 text-[11.5px] text-white/55">{entitlement.seatsPendingRelease} seat(s) will be removed at the next renewal and stay usable until then.</p>}
+                  {seatError && <p role="alert" className="mt-2 text-[11.5px] text-[#E26B75]">{seatError}</p>}
+                </div>
+              );
+            })()}
             <div className="mt-auto flex flex-wrap items-center gap-2 pt-5">
               <Link href="/dashboard/settings/upgrade" className="inline-flex h-9 items-center gap-2 rounded-lg bg-[#6d5ce7] px-4 text-[12px] font-medium text-white transition hover:bg-[#7b6bed]">{plan.id === "free" ? "Upgrade plan" : "Change plan"}<ArrowRight size={13} /></Link>
               {plan.id !== "free" && !cancelling && <button type="button" onClick={() => setCancelOpen(true)} className="h-9 rounded-lg px-3 text-[12px] font-medium text-white/60 transition hover:bg-white/[0.06] hover:text-white/90">Cancel plan</button>}
@@ -1509,7 +1568,7 @@ function BillingSettingsPage() {
                 ? "Cancelled — this plan runs to the end of the period, then moves to Free."
                 : entitlement?.pendingPlanId
                   ? "Finishing your plan change — it lands as soon as your payment is confirmed."
-                  : `Billed ${cadence === "annual" ? "yearly" : "monthly"}. Your plan includes a monthly AI credit; extra teammates come in seat packs from $${((entitlement?.seatFromUsdCents ?? 60) / 100).toFixed(2)} a seat.`}
+                  : `Billed ${cadence === "annual" ? "yearly" : "monthly"}. Your plan includes a monthly AI credit; extra seats are added to this bill every period until you remove them.`}
             </div>
           </article>
 
@@ -2038,6 +2097,185 @@ function UrlRuleSection({
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+type AiRefundSettings = { enabled: boolean; maxDays: number; limits: Record<string, number> };
+
+// Currencies the connected gateways (Stripe, Razorpay) are used with here. A
+// blank limit means the AI never refunds in that currency.
+const REFUND_CURRENCIES = [
+  { code: "USD", symbol: "$" },
+  { code: "INR", symbol: "₹" },
+  { code: "EUR", symbol: "€" },
+  { code: "GBP", symbol: "£" },
+];
+
+const AI_PAYMENT_ACTIONS = [
+  "Check a payment's real status in Stripe or Razorpay",
+  "Explain a failed payment and when the bank returns the money",
+  "Send a fresh payment link so they can pay again",
+  "Share the receipt or invoice for a payment",
+  "Show subscriptions and cancel one at the end of its paid period",
+];
+
+function ChatbotPaymentsSettingsPage() {
+  const [settings, setSettings] = useState<AiRefundSettings>({ enabled: false, maxDays: 14, limits: {} });
+  const [limitDrafts, setLimitDrafts] = useState<Record<string, string>>({});
+  const [daysDraft, setDaysDraft] = useState("14");
+  const [canEdit, setCanEdit] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [saved, setSaved] = useState(false);
+
+  function adopt(next: AiRefundSettings) {
+    setSettings(next);
+    setDaysDraft(String(next.maxDays));
+    setLimitDrafts(Object.fromEntries(REFUND_CURRENCIES.map(({ code }) => [code, next.limits[code] ? String(next.limits[code]) : ""])));
+  }
+
+  useEffect(() => {
+    fetch("/api/workspace/ai-refunds", { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: { settings?: AiRefundSettings; canEdit?: boolean } | null) => {
+        if (data?.settings) adopt(data.settings);
+        setCanEdit(Boolean(data?.canEdit));
+      })
+      .catch(() => undefined)
+      .finally(() => setLoading(false));
+  }, []);
+
+  async function save(enabled: boolean) {
+    setSaving(true);
+    setError(null);
+    setSaved(false);
+    const limits = Object.fromEntries(
+      Object.entries(limitDrafts).filter(([, value]) => value.trim() !== "").map(([code, value]) => [code, Number(value)]),
+    );
+    const response = await fetch("/api/workspace/ai-refunds", {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ enabled, maxDays: Number(daysDraft), limits }),
+    }).catch(() => null);
+    const data = response ? ((await response.json().catch(() => ({}))) as { settings?: AiRefundSettings; message?: string }) : {};
+    if (!response?.ok || !data.settings) {
+      setError(data.message ?? "Could not save. Try again.");
+    } else {
+      adopt(data.settings);
+      setSaved(true);
+    }
+    setSaving(false);
+  }
+
+  const hasLimit = Object.values(limitDrafts).some((value) => Number(value) > 0);
+
+  return (
+    <div className="mx-auto w-full max-w-[1120px] px-7 pb-14 pt-8 text-[#17181a] sm:px-9 lg:px-10">
+      <div className="border-b border-[#E5E8EA] pb-7">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Chatbot</p>
+        <h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em] text-[#17181a]">Payments &amp; refunds</h2>
+        <p className="mt-2 max-w-xl text-[14px] leading-6 text-[#667069]">
+          What the AI can sort out by itself with your connected Stripe or Razorpay account, so payment questions don&apos;t have to wait for your team. It only acts for a customer who has verified their email, and only on their own payments.
+        </p>
+      </div>
+
+      <section className="mt-8">
+        <h3 className="text-[16px] font-semibold">Always on</h3>
+        <p className="mt-1 text-[12.5px] text-[#7b848a]">Needs Stripe or Razorpay connected in <a href="/dashboard/settings/setup-integration" className="underline underline-offset-2">Setup &amp; Integration</a>.</p>
+        <ul className="mt-3 overflow-hidden rounded-xl border border-[#dfe3e6] bg-[#ffffff]">
+          {AI_PAYMENT_ACTIONS.map((item, index) => (
+            <li key={item} className={`flex items-center gap-3 px-4 py-3 text-[13px] text-[#2c3236] ${index ? "border-t border-[#eceeef]" : ""}`}>
+              <CheckCircle2 size={15} className="shrink-0 text-[#2f855a]" />
+              {item}
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="mt-8">
+        <div className="flex items-start justify-between gap-6 rounded-xl border border-[#dfe3e6] bg-[#ffffff] px-5 py-4">
+          <div>
+            <h3 className="text-[15px] font-semibold">Let the AI issue refunds</h3>
+            <p className="mt-1 max-w-lg text-[12.5px] leading-5 text-[#7b848a]">
+              Full refunds of a completed payment, when the customer asks and your refund policy allows it. One per conversation. Anything outside the limits below goes to your team with a ticket.
+            </p>
+          </div>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={settings.enabled}
+            aria-label="Let the AI issue refunds"
+            disabled={loading || saving || !canEdit}
+            onClick={() => void save(!settings.enabled)}
+            className={`relative mt-1 h-5 w-9 shrink-0 rounded-full transition disabled:cursor-not-allowed disabled:opacity-60 ${settings.enabled ? "bg-[#428ce5]" : "bg-[#d5dadd]"}`}
+          >
+            <span className={`absolute top-0.5 h-4 w-4 rounded-full bg-[#ffffff] transition-all ${settings.enabled ? "left-[18px]" : "left-0.5"}`} />
+          </button>
+        </div>
+
+        {settings.enabled && (
+          <div className="mt-3 rounded-xl border border-[#dfe3e6] bg-[#ffffff] px-5 py-5">
+            <label className="block max-w-[220px]">
+              <span className="text-[12.5px] font-semibold text-[#2c3236]">Only payments from the last</span>
+              <div className="mt-1.5 flex items-center gap-2">
+                <input
+                  type="number"
+                  min={1}
+                  max={180}
+                  value={daysDraft}
+                  disabled={!canEdit}
+                  onChange={(event) => setDaysDraft(event.target.value)}
+                  className="h-9 w-20 rounded-lg border border-[#d8dde1] bg-[#ffffff] px-3 text-[13px] outline-none focus:border-[#428ce5]"
+                />
+                <span className="text-[13px] text-[#667069]">days</span>
+              </div>
+            </label>
+
+            <p className="mt-5 text-[12.5px] font-semibold text-[#2c3236]">Largest payment the AI may refund</p>
+            <p className="mt-0.5 text-[11.5px] text-[#8b9398]">Leave a currency blank and the AI won&apos;t refund in it.</p>
+            <div className="mt-2 grid max-w-[520px] grid-cols-2 gap-3 sm:grid-cols-4">
+              {REFUND_CURRENCIES.map(({ code, symbol }) => (
+                <label key={code} className="flex h-9 items-center rounded-lg border border-[#d8dde1] bg-[#ffffff] px-2.5 focus-within:border-[#428ce5]">
+                  <span className="text-[12px] text-[#8b9398]">{symbol}</span>
+                  <input
+                    type="number"
+                    min={0}
+                    inputMode="decimal"
+                    placeholder="—"
+                    value={limitDrafts[code] ?? ""}
+                    disabled={!canEdit}
+                    onChange={(event) => setLimitDrafts((current) => ({ ...current, [code]: event.target.value }))}
+                    className="h-full min-w-0 flex-1 bg-transparent px-1.5 text-[13px] outline-none"
+                    aria-label={`${code} limit`}
+                  />
+                  <span className="text-[11px] font-medium text-[#8b9398]">{code}</span>
+                </label>
+              ))}
+            </div>
+            {!hasLimit && <p className="mt-2 text-[11.5px] text-[#93651D]">Set at least one limit, or the AI will hand every refund to your team.</p>}
+
+            {canEdit && (
+              <div className="mt-5 flex items-center gap-3">
+                <button
+                  type="button"
+                  disabled={saving}
+                  onClick={() => void save(true)}
+                  className="flex h-9 items-center gap-2 rounded-lg bg-[#202225] px-4 text-[12.5px] font-semibold text-white transition hover:bg-black disabled:opacity-60"
+                >
+                  {saving ? <LoaderCircle size={13} className="animate-spin" /> : null}
+                  Save limits
+                </button>
+                {saved && <span className="text-[12px] text-[#2f855a]">Saved</span>}
+              </div>
+            )}
+          </div>
+        )}
+
+        {!loading && !canEdit && <p className="mt-3 text-[12px] text-[#93651D]">Only the workspace owner can change refund settings.</p>}
+        {error && <p role="alert" className="mt-3 rounded-lg bg-[#FFF2F2] px-3 py-2 text-[12px] font-medium text-[#A64A53]">{error}</p>}
+      </section>
     </div>
   );
 }
@@ -4892,6 +5130,8 @@ export function SettingsClient({ user, page = "General", auditView = "all" }: { 
           <ChatbotInterfaceSettingsPage previewContainer={previewPanel} />
         ) : currentPage === "Restrictions" ? (
           <ChatbotUrlRestrictionsSettingsPage />
+        ) : currentPage === "Payments & refunds" ? (
+          <ChatbotPaymentsSettingsPage />
         ) : currentPage === "Behavior" ? (
           <ChatbotBehaviorSettingsPage />
         ) : currentPage === "People" ? (

@@ -10,6 +10,8 @@ export type AssignmentNotification = {
   detail: string;
   // Sent to every teammate at once (an AI escalation), not offered to one.
   teamAlert?: boolean;
+  // A ticket was raised because nobody joined in time: open it, nothing to join.
+  ticket?: boolean;
 };
 
 /**
@@ -87,6 +89,17 @@ export function AssignmentToast({
         <p className="dashboard-assignment-toast-title text-[13px] font-semibold leading-5 text-black">{notification.title}</p>
         <p className="dashboard-assignment-toast-detail mt-0.5 line-clamp-2 text-[12px] leading-5 text-[#687178]">{notification.detail}</p>
         {error ? <p className="mt-1.5 text-[12px] leading-5 text-[#d0454c]">{error}</p> : null}
+        {notification.ticket ? (
+          <div className="mt-3 flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => { router.push(`/dashboard/inbox?conversation=${encodeURIComponent(notification.conversationId)}`); onDismiss(); }}
+              className="dashboard-assignment-toast-join flex h-8 flex-1 items-center justify-center rounded-lg bg-[#202225] text-[12.5px] font-semibold text-white transition hover:bg-black"
+            >
+              Open conversation
+            </button>
+          </div>
+        ) : (
         <div className="mt-3 flex items-center gap-2">
           <button
             type="button"
@@ -108,6 +121,7 @@ export function AssignmentToast({
             {notification.teamAlert ? "Not now" : "Cancel"}
           </button>
         </div>
+        )}
       </div>
       <button
         type="button"

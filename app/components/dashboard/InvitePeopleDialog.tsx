@@ -147,7 +147,7 @@ export function InvitePeopleDialog({
       if (stillPending.length) setChips((current) => [...new Set([...current, ...stillPending])]);
       setSeatMessage(
         data.billedOnNextInvoice
-          ? "Seat added — billed on your next invoice. Click Send invites to try again."
+          ? "Seat added to your plan. It's billed with your plan every month from your next invoice. Click Send invites to try again."
           : "Payment received — the seat will be ready in a moment. Click Send invites to try again.",
       );
     } catch (checkoutIssue) {
