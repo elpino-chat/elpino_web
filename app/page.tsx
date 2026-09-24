@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
-import { HomeHero } from "./components/home/HomeHero";
-import FeatureCarousel from "./components/home/FeatureCarousel";
-import { ClosingCta } from "./components/home/ClosingCta";
-import { AfterClosingSections } from "./components/home/AfterClosingSections";
+import { HomeView } from "./components/home/HomeView";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://elpino.chat";
 
@@ -67,10 +64,7 @@ export default function Home() {
       {[organizationSchema, websiteSchema, softwareSchema].map((schema) => (
         <script key={schema['@type']} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, '\\u003c') }} />
       ))}
-      <HomeHero />
-      <FeatureCarousel />
-      <ClosingCta />
-      <AfterClosingSections />
+      <HomeView />
     </>
   );
 }

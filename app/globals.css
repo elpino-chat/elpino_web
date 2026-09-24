@@ -140,15 +140,11 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
-  --font-display: var(--font-rethink-sans), var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-rethink-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
   --font-serif: var(--font-instrument-serif), "Times New Roman", serif;
-  --font-hero: var(--font-outfit), var(--font-rethink-sans), sans-serif;
+  --font-hero: var(--font-rethink-sans), sans-serif;
 
-  --font-inter-tight: var(--font-inter-tight);
-  --font-geist-sans: var(--font-geist-sans);
-  --font-noto-serif: var(--font-noto-serif);
-  --font-jet-brains: var(--font-jet-brains);
   --font-neue-haas: var(--font-neue-haas);
 
   /* Brand colors in Tailwind */
@@ -308,7 +304,7 @@ html {
 }
 
 body {
-  font-family: var(--font-neue-haas), var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-neue-haas), Arial, Helvetica, sans-serif;
   line-height: 1.6;
 }
 
@@ -363,7 +359,7 @@ body {
 }
 
 .home-dark .elpino-hero-title {
-  font-family: var(--font-outfit), var(--font-rethink-sans), sans-serif;
+  font-family: var(--font-rethink-sans), sans-serif;
 }
 
 .hero-preview-light {
@@ -5157,4 +5153,298 @@ body:has(.dashboard-ai-usage-page) .dashboard-add-credits-dialog [class*="hover:
 }
 [data-dashboard-theme="light"] .dashboard-shell .dashboard-invite-surface [class*="hover:bg-white/[0.08]"]:hover {
   background-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Gentle bob for the sticker artwork in the header mega menu. */
+@keyframes elpino-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+
+/* ---- Footer motion ---- */
+
+/* The band of text scrolls forever; the content is doubled, so -50% loops seamlessly. */
+@keyframes elpino-marquee {
+  to { transform: translateX(-50%); }
+}
+
+/* The mascot ducks below the card edge, pops up, looks around, and ducks again. */
+@keyframes elpino-peek {
+  0%, 22% { transform: translateY(105%) rotate(0); }
+  34% { transform: translateY(0) rotate(-6deg); }
+  42% { transform: translateY(0) rotate(6deg); }
+  50%, 64% { transform: translateY(0) rotate(0); }
+  76%, 100% { transform: translateY(105%) rotate(0); }
+}
+
+/* ---- Security guide ---- */
+
+/* Data flowing along a connector on the architecture blueprint. */
+@keyframes elpino-dashflow {
+  to { stroke-dashoffset: -16; }
+}
+@media (prefers-reduced-motion: reduce) {
+  [class*="elpino-dashflow"] { animation: none !important; }
+}
+
+/* ---- Changelog page ---- */
+
+/* The dashes on the line map flow downward, as if the line were moving. */
+@keyframes elpino-dashrun {
+  to { background-position: 0 20px; }
+}
+
+/* List items inside a revealed card arrive one after another. */
+[data-rv]:not([data-in]) .rv-item { opacity: 0; }
+[data-rv][data-in] .rv-item { animation: elpino-rv-up 0.6s cubic-bezier(0.2, 0.9, 0.3, 1) var(--id, 0ms) both; }
+@media (prefers-reduced-motion: reduce) {
+  [data-rv]:not([data-in]) .rv-item { opacity: 1; }
+  [data-rv][data-in] .rv-item { animation: none !important; }
+  [class*="elpino-dashrun"] { animation: none !important; }
+}
+
+/* ---- Contact page ---- */
+
+/* The envelope pops up, waits a beat, then is mailed away up and to the right. */
+@keyframes elpino-mail {
+  0% { opacity: 0; transform: translate(0, 24px) scale(0.5) rotate(-8deg); }
+  22% { opacity: 1; transform: translate(0, 0) scale(1) rotate(0); }
+  50% { opacity: 1; transform: translate(0, -6px) scale(1.04) rotate(-2deg); }
+  100% { opacity: 0; transform: translate(240px, -220px) scale(0.45) rotate(18deg); }
+}
+
+/* A letter rides the tracking line from one end to the other. */
+@keyframes elpino-track {
+  0% { left: 0; }
+  50% { left: calc(100% - 44px); }
+  100% { left: 0; }
+}
+
+/* ---- Careers page ---- */
+
+/* The sloth hangs from a rope and swings, pivoting from the top. */
+@keyframes elpino-swing {
+  from { transform: rotate(-7deg); }
+  to { transform: rotate(7deg); }
+}
+
+/* Barcode on a boarding pass stub, with a scanner line sweeping over it. */
+.elpino-barcode {
+  background-image: repeating-linear-gradient(90deg, #11120f 0 2px, transparent 2px 4px, #11120f 4px 5px, transparent 5px 8px, #11120f 8px 11px, transparent 11px 13px);
+}
+@keyframes elpino-scan {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(46px); }
+}
+
+/* An arrow nudging forward between steps. */
+@keyframes elpino-nudge {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(5px); }
+}
+
+/* Scroll reveals: an element enters when it scrolls into view (see Rv in CareersView). */
+[data-rv]:not([data-in]) { opacity: 0; }
+[data-rv="words"]:not([data-in]) { opacity: 1; }
+
+@keyframes elpino-rv-up {
+  from { opacity: 0; transform: translateY(44px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes elpino-rv-drop {
+  from { opacity: 0; transform: translateY(-80px) rotate(-5deg); }
+  60% { opacity: 1; transform: translateY(8px) rotate(1deg); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes elpino-rv-deal {
+  from { opacity: 0; transform: translateY(80px) rotate(-7deg) scale(0.93); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes elpino-rv-pop {
+  from { opacity: 0; transform: scale(0.55) rotate(-8deg); }
+  70% { opacity: 1; transform: scale(1.08) rotate(2deg); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes elpino-rv-word {
+  from { opacity: 0; transform: translateY(0.7em); filter: blur(4px); }
+  to { opacity: 1; transform: none; filter: blur(0); }
+}
+[data-rv="up"][data-in] { animation: elpino-rv-up 0.85s cubic-bezier(0.2, 0.9, 0.3, 1) var(--d, 0ms) both; }
+[data-rv="drop"][data-in] { animation: elpino-rv-drop 0.95s cubic-bezier(0.3, 0.9, 0.4, 1) var(--d, 0ms) both; }
+[data-rv="deal"][data-in] { animation: elpino-rv-deal 0.9s cubic-bezier(0.2, 0.9, 0.3, 1.08) var(--d, 0ms) both; }
+[data-rv="pop"][data-in] { animation: elpino-rv-pop 0.7s cubic-bezier(0.3, 1.4, 0.5, 1) var(--d, 0ms) both; }
+[data-rv="words"] .w { opacity: 0; }
+[data-rv="words"][data-in] .w { animation: elpino-rv-word 0.7s cubic-bezier(0.2, 0.9, 0.3, 1) var(--wd, 0ms) both; }
+
+/* Highlighter that draws itself under a headline when it scrolls in. */
+.hl {
+  background-image: linear-gradient(transparent 62%, #ffd84d 62%);
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  transition: background-size 1s cubic-bezier(0.3, 1, 0.3, 1) 0.35s;
+}
+[data-in] .hl { background-size: 100% 100%; }
+@keyframes elpino-hl { from { background-size: 0% 100%; } to { background-size: 100% 100%; } }
+.hl-load { background-size: 100% 100%; animation: elpino-hl 1s cubic-bezier(0.3, 1, 0.3, 1) 0.7s both; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-rv]:not([data-in]) { opacity: 1; }
+  [data-rv][data-in], [data-rv="words"][data-in] .w { animation: none !important; }
+  [data-rv="words"] .w { opacity: 1; }
+  .hl { background-size: 100% 100%; transition: none; }
+  .hl-load { animation: none; }
+}
+
+/* ---- Privacy page ---- */
+
+/* "NEVER" stamps slam onto their cards as they scroll into view. */
+@keyframes elpino-slam {
+  0% { opacity: 0; transform: scale(2.6); }
+  60% { opacity: 1; transform: scale(0.9); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.elpino-stamp {
+  animation: elpino-slam 0.55s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+}
+@supports (animation-timeline: view()) {
+  .elpino-stamp {
+    animation: elpino-slam linear both;
+    animation-timeline: view();
+    animation-range: entry 25% entry 85%;
+  }
+}
+
+/* The 30-day ring draws itself. */
+@keyframes elpino-ring {
+  from { stroke-dashoffset: 264; }
+  to { stroke-dashoffset: 0; }
+}
+.elpino-ring {
+  stroke-dasharray: 264;
+  stroke-dashoffset: 0;
+  animation: elpino-ring 1.4s ease-out both;
+}
+@supports (animation-timeline: view()) {
+  .elpino-ring {
+    animation: elpino-ring linear both;
+    animation-timeline: view();
+    animation-range: entry 10% entry 100%;
+  }
+}
+
+/* A liked heart, repost spin (kept for any page that wants them). */
+@keyframes elpino-spin-once {
+  to { transform: rotate(360deg); }
+}
+
+/* ---- Pricing page motion (its own set, separate from the menu's bob) ---- */
+
+/* Plan cards are dealt onto the table. */
+@keyframes elpino-deal {
+  from { opacity: 0; transform: translateY(70px) rotate(-7deg) scale(0.94); }
+  to { opacity: 1; transform: translateY(0) rotate(0) scale(1); }
+}
+
+/* Headline sharpens into focus. */
+@keyframes elpino-focus {
+  from { opacity: 0; filter: blur(10px); transform: scale(1.03); }
+  to { opacity: 1; filter: blur(0); transform: scale(1); }
+}
+
+/* A price rolls up like an odometer when the billing period changes. */
+@keyframes elpino-roll {
+  from { opacity: 0; transform: translateY(65%) rotateX(-55deg); filter: blur(3px); }
+  to { opacity: 1; transform: translateY(0) rotateX(0); filter: blur(0); }
+}
+
+/* A glint sweeps across a card header now and then. */
+@keyframes elpino-shine {
+  0%, 62% { transform: translateX(-160%) skewX(-16deg); }
+  100% { transform: translateX(520%) skewX(-16deg); }
+}
+
+/* Springy pop for stickers and badges. */
+@keyframes elpino-pop {
+  0% { opacity: 0; transform: scale(0.2) rotate(-14deg); }
+  70% { opacity: 1; transform: scale(1.14) rotate(3deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+/* The mascot waves, pivoting from its base. */
+@keyframes elpino-wave {
+  0%, 62%, 100% { transform: rotate(0); }
+  68% { transform: rotate(14deg); }
+  76% { transform: rotate(-10deg); }
+  84% { transform: rotate(9deg); }
+  92% { transform: rotate(-4deg); }
+}
+
+/* A tick draws itself. */
+@keyframes elpino-draw {
+  from { stroke-dashoffset: 20; }
+  to { stroke-dashoffset: 0; }
+}
+.elpino-check-path {
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
+  animation: elpino-draw 0.55s ease-out 0.15s forwards;
+}
+@supports (animation-timeline: view()) {
+  .elpino-check-path {
+    animation: elpino-draw linear both;
+    animation-timeline: view();
+    animation-range: entry 15% entry 90%;
+  }
+}
+
+/* AI credit: spent by conversations, then refilled for the new month. */
+@keyframes elpino-drain {
+  0%, 10% { width: 100%; }
+  78%, 86% { width: 14%; }
+  100% { width: 100%; }
+}
+
+/* "$0" handoff stamp slamming onto the card. */
+@keyframes elpino-stamp {
+  0%, 4% { opacity: 0; transform: rotate(-9deg) scale(2.6); }
+  11% { opacity: 1; transform: rotate(-9deg) scale(0.92); }
+  15%, 86% { opacity: 1; transform: rotate(-9deg) scale(1); }
+  96%, 100% { opacity: 0; transform: rotate(-9deg) scale(1); }
+}
+
+/* Seat dots light up one after another. */
+@keyframes elpino-seat {
+  0%, 12% { background: #e4e6ea; transform: scale(0.75); }
+  22%, 62% { background: #3784ff; transform: scale(1); }
+  74%, 100% { background: #e4e6ea; transform: scale(0.75); }
+}
+
+/* Two conversations, AI and human, slide together into one. */
+@keyframes elpino-merge-left {
+  0%, 100% { transform: translateX(-26px); }
+  45%, 65% { transform: translateX(6px); }
+}
+@keyframes elpino-merge-right {
+  0%, 100% { transform: translateX(26px); }
+  45%, 65% { transform: translateX(-6px); }
+}
+
+/* A dot orbiting a ring. */
+@keyframes elpino-orbit {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [class*="animate-[elpino-"] {
+    animation: none !important;
+  }
+  .elpino-check-path {
+    animation: none !important;
+    stroke-dashoffset: 0;
+  }
+  .elpino-stamp,
+  .elpino-ring {
+    animation: none !important;
+    opacity: 1;
+  }
 }

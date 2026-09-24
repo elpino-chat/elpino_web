@@ -1,691 +1,388 @@
 "use client";
 
-import React, { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { useEffect, useState, type ReactNode } from "react";
 import {
-  ArrowRight,
-  ArrowUpRight,
-  BookOpen,
-  BookOpenCheck,
-  Check,
-  CheckCheck,
-  Clock3,
-  FileText,
-  Gauge,
-  Globe,
-  Headphones,
-  Inbox,
-  LockKeyhole,
-  MessagesSquare,
-  MoonStar,
-  Search,
-  Send,
-  ShieldCheck,
-  Sparkles,
-  UserRoundCheck,
-  Users,
-  Zap,
+  ArrowRight, BarChart3, BookOpen, Bot, Check, Code2, Headset, Plus, Rocket, Search, ShieldCheck, Sparkles, Store,
+  Users, Wrench, Zap,
 } from "lucide-react";
+import { Rv } from "@/app/components/RevealOnScroll";
 
-const heroScenarios = [
-  {
-    id: "ai-answer",
-    tabLabel: "AI Instant Answer",
-    icon: Sparkles,
-    badgeColor: "bg-[#168cff]/15 text-[#168cff] border-[#168cff]/30",
-    customer: {
-      name: "Rahul Das",
-      initials: "RD",
-      question: "I tried to upgrade to Growth twice and the payment failed — have I been billed?",
-      time: "Just now",
-    },
-    system: {
-      status: "AI Verified Answer",
-      source: "Billing & Subscriptions Guide · v3.2",
-      reply: "Good news — nothing was captured. Both attempts were declined by your bank, so you haven't been charged. The temporary pre-authorization holds will release within 3–5 business days.",
-      time: "Replied in 1.4s",
-      verified: true,
-    },
-  },
-  {
-    id: "human-handoff",
-    tabLabel: "Smart Human Handoff",
-    icon: Users,
-    badgeColor: "bg-[#8557e8]/15 text-[#8557e8] border-[#8557e8]/30",
-    customer: {
-      name: "Meera Iyer",
-      initials: "MI",
-      question: "Can we transfer our annual workspace subscription to our new holding company entity?",
-      time: "2m ago",
-    },
-    system: {
-      status: "Handed off to Support Team",
-      source: "Escalation Rule: Enterprise entity transfer requires team approval",
-      reply: "Hi Meera! I've connected you with our billing team. Teammate Alex Lee has picked up your thread with all account history attached.",
-      time: "Escalated instantly",
-      verified: true,
-      agentName: "Alex Lee (Support Lead)",
-    },
-  },
-  {
-    id: "visitor-context",
-    tabLabel: "Visitor Intelligence",
-    icon: Globe,
-    badgeColor: "bg-[#ff6038]/15 text-[#ff6038] border-[#ff6038]/30",
-    customer: {
-      name: "Sam Rivera",
-      initials: "SR",
-      question: "The checkout coupon code SUMMER26 isn't applying on the annual tier.",
-      time: "1m ago",
-    },
-    system: {
-      status: "Context Enriched",
-      source: "Live Telemetry & Cart Session",
-      reply: "Hi Sam! I see you are on our Pricing page from London, UK. The SUMMER26 discount applies automatically on checkout with code verified.",
-      time: "Live Session Attached",
-      metadata: [
-        "Location: London, UK",
-        "Device: macOS · Chrome 128",
-        "Active URL: /pricing#annual",
-        "Cart Value: $290/yr",
-      ],
-    },
-  },
+// Features, laid out like a periodic table: every real capability is a tile
+// with a symbol, grouped by colour into six families. Tap a tile for what it
+// does and where to read more. Everything here exists in the product today;
+// omnichannel is shown as "coming in November", not as a feature.
+
+const INK = "#11120f";
+const BLUE = "#3784ff";
+const YELLOW = "#ffd84d";
+const PURPLE = "#7060bd";
+const ORANGE = "#fc7b33";
+const GREEN = "#1aa37a";
+const PINK = "#d9508a";
+
+const card = "rounded-[22px] border-2 border-[#11120f]";
+const mono = "font-mono text-[11px] font-semibold uppercase tracking-[0.14em]";
+const onDark = (c: string) => (c === YELLOW ? INK : "#fff");
+
+function useReduced() {
+  const [r, setR] = useState(false);
+  useEffect(() => setR(window.matchMedia("(prefers-reduced-motion: reduce)").matches), []);
+  return r;
+}
+
+function Stamp({ color, children }: { color: string; children: ReactNode }) {
+  return (
+    <span className={`${mono} inline-flex items-center gap-1.5 rounded-full border-2 border-[#11120f] px-3 py-1.5`} style={{ backgroundColor: color, color: onDark(color) }}>
+      {children}
+    </span>
+  );
+}
+
+function Heading({ eyebrow, color, title, sub }: { eyebrow: string; color: string; title: ReactNode; sub?: string }) {
+  return (
+    <div className="mx-auto max-w-3xl text-center">
+      <Rv variant="drop"><Stamp color={color}>{eyebrow}</Stamp></Rv>
+      <Rv delay={80}><h2 className="mt-5 text-[clamp(2.1rem,4.6vw,3.6rem)] font-semibold leading-[1.03] tracking-[-0.045em]">{title}</h2></Rv>
+      {sub && <Rv delay={160}><p className="mt-5 text-lg leading-8 text-[#11120f]/65">{sub}</p></Rv>}
+    </div>
+  );
+}
+
+// ------------------------------------------------------------ the table
+
+type Family = "answer" | "team" | "know" | "act" | "trust" | "grow";
+const FAMILIES: Record<Family, { label: string; color: string }> = {
+  answer: { label: "Answer", color: BLUE },
+  team: { label: "Team", color: GREEN },
+  know: { label: "Knowledge", color: YELLOW },
+  act: { label: "Act", color: ORANGE },
+  trust: { label: "Trust", color: PURPLE },
+  grow: { label: "Grow", color: PINK },
+};
+
+type Feature = { sym: string; name: string; fam: Family; body: string; href: string; more: string };
+const FEATURES: Feature[] = [
+  { sym: "Ga", name: "Grounded answers", fam: "answer", body: "Replies come from the knowledge you approved. If it isn't there, the AI says so instead of guessing.", href: "/product/ai-agent", more: "AI agent" },
+  { sym: "Rl", name: "Reply language", fam: "answer", body: "Choose the language the chatbot replies in for your customers.", href: "/product/ai-agent", more: "AI agent" },
+  { sym: "Pa", name: "Page awareness", fam: "answer", body: "Decide whether the AI can see the page URL a visitor is on, and use it to answer in context.", href: "/product/ai-agent", more: "AI agent" },
+  { sym: "Wb", name: "Branded widget", fam: "answer", body: "Your logo and colours on a chat widget you embed with one snippet.", href: "/demo", more: "Demo" },
+  { sym: "Ty", name: "Live typing", fam: "answer", body: "Customers see when a teammate is replying, and you see when they are.", href: "/product/inbox", more: "Inbox" },
+  { sym: "At", name: "Attachments", fam: "answer", body: "Customers and your team can send files right inside the conversation.", href: "/product/inbox", more: "Inbox" },
+
+  { sym: "Si", name: "Shared inbox", fam: "team", body: "Every conversation and reply in one place, with a badge showing whether the AI, a teammate or nobody has it.", href: "/product/inbox", more: "Inbox" },
+  { sym: "Ja", name: "Join alerts", fam: "team", body: "When a customer asks for a person, every teammate gets a Join alert. The first to join takes it and the alert clears for everyone.", href: "/product/inbox", more: "Inbox" },
+  { sym: "Th", name: "Take over & hand back", fam: "team", body: "Take a chat from the AI or a colleague, and hand it back to the AI in one tap.", href: "/product/inbox", more: "Inbox" },
+  { sym: "As", name: "Assignments", fam: "team", body: "Conversations can be assigned to a teammate, who gets notified.", href: "/product/inbox", more: "Inbox" },
+  { sym: "Ti", name: "Team invites", fam: "team", body: "Invite teammates by email and add seats as your team grows.", href: "/pricing", more: "Pricing" },
+  { sym: "Tk", name: "Auto tickets", fam: "team", body: "If nobody joins within 90 seconds, the customer is told and a ticket is created automatically, with an email follow-up.", href: "/product/inbox", more: "Inbox" },
+
+  { sym: "Wc", name: "Website crawl", fam: "know", body: "Point Elpino at a page. JavaScript-built pages are rendered in a real browser first.", href: "/product/knowledge-hub", more: "Knowledge Hub" },
+  { sym: "Sm", name: "Sitemap import", fam: "know", body: "Pull in up to 20 pages from your sitemap in one go.", href: "/product/knowledge-hub", more: "Knowledge Hub" },
+  { sym: "Di", name: "Discover", fam: "know", body: "Start at one link and Elpino follows it through up to 50 pages, help and policy pages first.", href: "/product/knowledge-hub", more: "Knowledge Hub" },
+  { sym: "Fu", name: "File upload", fam: "know", body: "Upload PDF, Word, text and Markdown files and the text is extracted for you.", href: "/product/knowledge-hub", more: "Knowledge Hub" },
+  { sym: "Wp", name: "Written pages", fam: "know", body: "Write your own pages in the editor for things that live nowhere else.", href: "/product/knowledge-hub", more: "Knowledge Hub" },
+  { sym: "Pp", name: "Public / private", fam: "know", body: "Each source has a visibility switch, so internal notes stay internal.", href: "/product/knowledge-hub", more: "Knowledge Hub" },
+
+  { sym: "Pl", name: "Payment lookup", fam: "act", body: "Checks real payments in Stripe or Razorpay so answers are facts, not guesses.", href: "/product/ai-agent", more: "AI agent" },
+  { sym: "Pk", name: "Payment links", fam: "act", body: "Creates a fresh, secure payment link when a payment needs another try.", href: "/product/ai-agent", more: "AI agent" },
+  { sym: "Su", name: "Subscriptions", fam: "act", body: "Checks subscription status and can cancel one when the customer asks.", href: "/product/ai-agent", more: "AI agent" },
+  { sym: "Rf", name: "Refunds (opt-in)", fam: "act", body: "Off by default. The workspace owner decides whether the AI may refund at all.", href: "/product/ai-agent", more: "AI agent" },
+  { sym: "Rc", name: "Receipts", fam: "act", body: "Finds and sends the receipt for a specific payment.", href: "/product/ai-agent", more: "AI agent" },
+  { sym: "Mc", name: "MCP tools", fam: "act", body: "Connect up to five MCP servers and switch on exactly the tools the agent may use.", href: "/product/ai-agent", more: "AI agent" },
+
+  { sym: "Iv", name: "Identity check", fam: "trust", body: "A one-time email code or a signed token from your app confirms who the customer is.", href: "/security-guide", more: "Security guide" },
+  { sym: "Pd", name: "Private-data filter", fam: "trust", body: "Names and emails are swapped for reference codes before the AI reads a conversation, and secrets are stripped out.", href: "/security-guide", more: "Security guide" },
+  { sym: "Sr", name: "Secure requests", fam: "trust", body: "Ask for sensitive details through a one-time private form instead of the chat.", href: "/security-guide", more: "Security guide" },
+  { sym: "Ec", name: "Encrypted keys", fam: "trust", body: "Connected credentials are stored encrypted.", href: "/security-guide", more: "Security guide" },
+  { sym: "Bg", name: "Budget guardrails", fam: "trust", body: "A monthly AI credit on paid plans keeps AI spend predictable.", href: "/pricing", more: "Pricing" },
+  { sym: "Fr", name: "Fact review", fam: "trust", body: "Drafts are checked against tool results before the customer sees them.", href: "/product/ai-agent", more: "AI agent" },
+
+  { sym: "Vc", name: "Visitor context", fam: "grow", body: "Location, device and the page they were on, attached to every conversation.", href: "/product/inbox", more: "Inbox" },
+  { sym: "An", name: "Analytics", fam: "grow", body: "See how conversations are going across your workspace.", href: "/pricing", more: "Pricing" },
+  { sym: "Hi", name: "History", fam: "grow", body: "Earlier conversations with the same customer, right next to the thread.", href: "/product/inbox", more: "Inbox" },
+  { sym: "Fp", name: "Free plan", fam: "grow", body: "Start with 50 AI conversations a month, no card required.", href: "/pricing", more: "Pricing" },
+  { sym: "Cr", name: "Credit-based plans", fam: "grow", body: "Paid plans include a monthly AI credit, and extra seats are simple add-ons.", href: "/pricing", more: "Pricing" },
+  { sym: "Em", name: "Email replies", fam: "grow", body: "Verified visitors who left the chat can still get your reply by email.", href: "/product/inbox", more: "Inbox" },
 ];
 
-const featureCards = [
-  {
-    id: "ai-engine",
-    eyebrow: "Core Intelligence",
-    title: "Instant AI answers\nfrom your verified docs",
-    description:
-      "Elpino searches your uploaded help articles, FAQs, and web documentation before crafting every answer. Every response is grounded in your approved content.",
-    icon: Sparkles,
-    accent: "#168cff",
-    previewType: "chat",
-    previewData: {
-      question: "How do I invite my teammates?",
-      answer: "Open Settings → Team and select Invite teammate. Enter their email address to send an instant workspace invite.",
-      source: "Team Setup Guide · Section 2",
-    },
-  },
-  {
-    id: "shared-inbox",
-    eyebrow: "Collaboration",
-    title: "One shared inbox\nfor your entire team",
-    description:
-      "Bring all customer conversations into a single unified dashboard. Teammates can assign threads, review AI draft suggestions, and reply in real time.",
-    icon: Inbox,
-    accent: "#ff6038",
-    previewType: "inbox",
-    previewData: {
-      threads: [
-        { name: "Rahul Das", preview: "Payment authorization hold query", tag: "AI Resolved", color: "#168cff" },
-        { name: "Meera Iyer", preview: "Enterprise transfer request", tag: "With Alex", color: "#8557e8" },
-        { name: "Sam Rivera", preview: "Checkout discount code inquiry", tag: "Live", color: "#ff6038" },
-      ],
-    },
-  },
-  {
-    id: "human-handoff",
-    eyebrow: "Zero Risk Escalation",
-    title: "AI knows when to bring\nyour people into the loop",
-    description:
-      "When a question requires human judgment or custom discretion, Elpino transfers the thread with full historical context. Handing a conversation over never costs extra.",
-    icon: Users,
-    accent: "#8557e8",
-    previewType: "handoff",
-    previewData: {
-      step1: "Customer query submitted",
-      step2: "Confidence evaluation & policy check",
-      step3: "Seamless teammate takeover with full thread",
-    },
-  },
-  {
-    id: "audit-trail",
-    eyebrow: "Transparency",
-    title: "Verified answer ledger\nbehind every single reply",
-    description:
-      "Every answer Elpino generates keeps an immutable audit trail: the exact policy version referenced, knowledge source document, and timestamp.",
-    icon: BookOpenCheck,
-    accent: "#32a880",
-    previewType: "audit",
-    previewData: {
-      policy: "Refund & Cancellation Policy · v3.2",
-      source: "Billing Knowledge Base",
-      timestamp: "Today · 10:42:08 UTC",
-    },
-  },
-  {
-    id: "knowledge-sync",
-    eyebrow: "Dynamic Grounding",
-    title: "Multi-source knowledge\nready in seconds",
-    description:
-      "Connect your public documentation, Notion pages, and PDF product manuals. High-dimensional vector search retrieves exact context chunks in milliseconds.",
-    icon: BookOpen,
-    accent: "#fe9238",
-    previewType: "sources",
-    previewData: {
-      sources: ["Help Center Articles", "Website Documentation", "Uploaded PDFs & Guides"],
-    },
-  },
-  {
-    id: "visitor-intel",
-    eyebrow: "Customer Intelligence",
-    title: "Real-time context\nalongside every ticket",
-    description:
-      "See visitor geolocation, current page path, browser environment, and past conversation history so your agents can provide personal, high-speed help.",
-    icon: Globe,
-    accent: "#168cff",
-    previewType: "intel",
-    previewData: {
-      tags: ["London, UK", "Desktop · Chrome", "Page: /checkout", "Returning Customer"],
-    },
-  },
-];
-
-const stats = [
-  {
-    value: "1,000+",
-    label: "Conversations resolved",
-    heading: "Fewer tickets in the queue",
-    description: "Every question Elpino safely answers never becomes a backlog item for your team.",
-    icon: MessagesSquare,
-    accent: "#ff6038",
-  },
-  {
-    value: "<5s",
-    label: "Average response time",
-    heading: "Speed customers notice",
-    description: "No hold music or queue delays — answers arrive while the visitor is still on page.",
-    icon: Clock3,
-    accent: "#168cff",
-  },
-  {
-    value: "24/7",
-    label: "Continuous coverage",
-    heading: "Support that never sleeps",
-    description: "Nights, weekends, and global time zones — your support remains active and compliant.",
-    icon: MoonStar,
-    accent: "#8557e8",
-  },
-];
-
-const safeguards = [
-  { icon: BookOpenCheck, title: "Grounded Answers", detail: "Only replies using your verified knowledge docs" },
-  { icon: UserRoundCheck, title: "Zero-Risk Handoff", detail: "Uncertain or sensitive questions escalate to humans" },
-  { icon: Gauge, title: "Resolution Quotas", detail: "Hard caps ensure zero surprise overage fees" },
-  { icon: LockKeyhole, title: "Data Minimization", detail: "Encrypted transmission with no public model training" },
-  { icon: ShieldCheck, title: "Answer Audit Trail", detail: "Sources and policies stay permanently reviewable" },
-];
-
-export function FeaturesContent() {
-  const [activeScenario, setActiveScenario] = useState(0);
-  const reduced = useReducedMotion();
-  const scenario = heroScenarios[activeScenario];
+function Table() {
+  const [fam, setFam] = useState<Family | "all">("all");
+  const [sel, setSel] = useState(0);
+  const f = FEATURES[sel];
+  const fc = FAMILIES[f.fam];
 
   return (
-    <div className="overflow-hidden bg-white font-[family-name:var(--font-rethink-sans)] text-[#17191c]">
-      {/* 1. HERO SECTION (DARK ELEGANT HOME STYLE) */}
-      <section className="relative overflow-hidden bg-black pb-20 pt-16 font-[family-name:var(--font-rethink-sans)] text-white sm:pb-28 sm:pt-24 lg:pt-28">
-        {/* Top Announcement Ribbon */}
-        <div className="mx-auto flex max-w-7xl justify-center px-5">
-          <Link
-            href="/signup"
-            className="group inline-flex items-center gap-2.5 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-medium text-white backdrop-blur-md transition hover:bg-white/20"
-          >
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#ff7958] opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-[#ff6038]" />
-            </span>
-            <span>The Elpino Support Engine — Built for answers, not seats</span>
-            <ArrowRight size={13} className="text-white/60 transition-transform group-hover:translate-x-0.5" />
-          </Link>
+    <div>
+      <div className="mb-6 flex flex-wrap justify-center gap-2">
+        <button type="button" onClick={() => setFam("all")} aria-pressed={fam === "all"} className="rounded-full border-2 border-[#11120f] px-4 py-2 text-[13.5px] font-semibold transition hover:-translate-y-0.5" style={fam === "all" ? { backgroundColor: INK, color: "#fff" } : { backgroundColor: "#fff" }}>All · {FEATURES.length}</button>
+        {(Object.keys(FAMILIES) as Family[]).map((k) => (
+          <button key={k} type="button" onClick={() => setFam(fam === k ? "all" : k)} aria-pressed={fam === k} className="inline-flex items-center gap-2 rounded-full border-2 border-[#11120f] px-4 py-2 text-[13.5px] font-semibold transition hover:-translate-y-0.5" style={fam === k ? { backgroundColor: FAMILIES[k].color, color: onDark(FAMILIES[k].color) } : { backgroundColor: "#fff" }}>
+            <span className="size-3 rounded-full border-2 border-[#11120f]" style={{ backgroundColor: FAMILIES[k].color }} />{FAMILIES[k].label}
+          </button>
+        ))}
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
+        <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 md:grid-cols-6">
+          {FEATURES.map((x, i) => {
+            const c = FAMILIES[x.fam].color;
+            const dim = fam !== "all" && fam !== x.fam;
+            const on = i === sel;
+            return (
+              <button key={x.sym} type="button" onClick={() => setSel(i)} aria-pressed={on} aria-label={x.name} className="group relative aspect-square rounded-2xl border-2 border-[#11120f] p-2 text-left transition-all duration-300 hover:-translate-y-1 hover:rotate-[-2deg]" style={{ backgroundColor: c, color: onDark(c), opacity: dim ? 0.22 : 1, transform: on ? "scale(1.06) rotate(-3deg)" : undefined, boxShadow: on ? `0 0 0 4px #fff, 0 0 0 6px ${INK}` : "none", zIndex: on ? 2 : 1 }}>
+                <span className="font-mono text-[9px] font-bold opacity-70">{String(i + 1).padStart(2, "0")}</span>
+                <span className="absolute inset-x-0 top-[26%] text-center text-[clamp(1.4rem,3.2vw,2.1rem)] font-semibold leading-none tracking-[-0.04em]">{x.sym}</span>
+                <span className="absolute inset-x-1.5 bottom-1.5 truncate text-center text-[9.5px] font-semibold leading-tight sm:text-[10.5px]">{x.name}</span>
+              </button>
+            );
+          })}
         </div>
 
-        {/* Hero Headlines */}
-        <div className="mx-auto max-w-4xl px-5 pt-10 text-center sm:px-8">
-          <h1 className="text-[clamp(2.7rem,5.5vw,5.5rem)] font-normal leading-[1.02] tracking-[-0.04em] text-white">
-            Built to answer. <br />
-            <span className="text-[#58a9ff]">Designed to escalate.</span>
-          </h1>
-          <p className="mx-auto mt-6 max-w-[50ch] text-base leading-7 text-white/65 sm:text-lg sm:leading-8">
-            AI answers from your knowledge base in seconds, a shared team inbox, and automatic human handoff the moment a question needs a person.
-          </p>
-
-          {/* Action Buttons */}
-          <div className="mt-8 flex flex-col items-center justify-center gap-3.5 sm:flex-row">
-            <Link
-              href="/signup"
-              className="group inline-flex h-12 min-h-12 items-center justify-center gap-2 rounded-md bg-[#fe9238] px-7 text-[15px] font-semibold text-black transition duration-200 hover:brightness-95 active:translate-y-px"
-            >
-              Start for free <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
-            </Link>
-            <Link
-              href="#interactive-demo"
-              className="inline-flex h-12 min-h-12 items-center justify-center rounded-md border border-white/30 px-6 text-[15px] font-semibold text-white transition hover:bg-white/10"
-            >
-              Explore workspace demo
-            </Link>
+        <div className="lg:sticky lg:top-24 lg:self-start">
+          <div key={f.sym} className={`${card} bg-white p-5`} style={{ animation: "elpino-rv-deal .45s both" }}>
+            <div className="flex items-start justify-between">
+              <span className="grid size-24 place-items-center rounded-2xl border-2 border-[#11120f] text-[2.8rem] font-semibold leading-none tracking-[-0.05em]" style={{ backgroundColor: fc.color, color: onDark(fc.color) }}>{f.sym}</span>
+              <Stamp color={fc.color}>{fc.label}</Stamp>
+            </div>
+            <h3 className="mt-5 text-2xl font-semibold tracking-tight">{f.name}</h3>
+            <p className="mt-2 text-[16px] leading-7 text-[#11120f]/70">{f.body}</p>
+            <Link href={f.href} className="mt-5 inline-flex items-center gap-2 rounded-full border-2 border-[#11120f] bg-[#ffd84d] px-4 py-2 text-[14px] font-semibold transition hover:-translate-y-0.5">Read more in {f.more} <ArrowRight size={14} /></Link>
           </div>
-          <p className="mt-4 text-xs text-white/45">50 AI conversations free each month · No credit card required</p>
+          <p className="mt-3 text-center text-xs text-[#11120f]/50">Tap any tile. Every feature here is live today.</p>
         </div>
+      </div>
+    </div>
+  );
+}
 
-        {/* 2. INTERACTIVE WORKSPACE CANVAS */}
-        <div id="interactive-demo" className="relative mx-auto mt-14 max-w-6xl px-5 sm:px-8">
-          {/* Ambient Glow */}
-          <div
-            aria-hidden="true"
-            className="absolute -inset-10 -z-10 rounded-[40px] bg-[radial-gradient(circle_at_25%_20%,#fc7b33_0%,transparent_55%),radial-gradient(circle_at_75%_30%,#7060bd_0%,transparent_55%),radial-gradient(circle_at_50%_90%,#428ce5_0%,transparent_50%)] opacity-40 blur-3xl"
-          />
-
-          {/* Tab Controls */}
-          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-            <div className="flex flex-wrap gap-2">
-              {heroScenarios.map((item, idx) => {
-                const Icon = item.icon;
-                const isActive = activeScenario === idx;
-                return (
-                  <button
-                    key={item.id}
-                    type="button"
-                    onClick={() => setActiveScenario(idx)}
-                    className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-medium transition ${
-                      isActive
-                        ? "border-white bg-white text-black shadow-sm"
-                        : "border-white/15 bg-white/5 text-white/75 hover:border-white/40 hover:text-white"
-                    }`}
-                  >
-                    <Icon size={14} className={isActive ? "text-[#ff6038]" : "text-white/60"} />
-                    {item.tabLabel}
-                  </button>
-                );
-              })}
-            </div>
-            <span className="text-[11px] font-medium text-white/40">Interactive Product Preview</span>
-          </div>
-
-          {/* Interactive Coded Frame */}
-          <div
-            className="relative overflow-hidden rounded-2xl border border-[#2a2c31] text-left shadow-[0_35px_90px_rgba(0,0,0,0.6)]"
-            style={{ backgroundColor: "#17181c" }}
-          >
-            {/* Header Bar */}
-            <div className="flex items-center justify-between border-b border-[#2a2c31] px-5 py-3.5">
-              <div className="flex items-center gap-3">
-                <span className="flex size-7 items-center justify-center rounded-full bg-[#5c666f] text-[10px] font-bold text-white">
-                  {scenario.customer.initials}
-                </span>
-                <div>
-                  <p className="text-sm font-semibold text-white">{scenario.customer.name}</p>
-                  <p className="text-[11px] text-[#8a8f98]">Live Chat Widget · {scenario.customer.time}</p>
-                </div>
-              </div>
-              <span className={`rounded-full border px-3 py-1 text-[10px] font-semibold uppercase tracking-wider ${scenario.badgeColor}`}>
-                {scenario.system.status}
-              </span>
-            </div>
-
-            {/* Conversation Body */}
-            <div className="min-h-[290px] p-6 sm:p-8">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={scenario.id}
-                  initial={reduced ? false : { opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={reduced ? undefined : { opacity: 0, y: -8 }}
-                  transition={{ duration: 0.25 }}
-                  className="space-y-6"
-                >
-                  {/* Customer Message */}
-                  <div className="flex items-start gap-3">
-                    <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#5c666f] text-[10px] font-bold text-white">
-                      {scenario.customer.initials}
-                    </span>
-                    <div className="max-w-[85%] rounded-2xl rounded-tl-sm bg-[#22252a] px-5 py-3.5 text-sm leading-relaxed text-[#c6cbce]">
-                      {scenario.customer.question}
-                    </div>
-                  </div>
-
-                  {/* System/AI Response */}
-                  <div className="flex flex-row-reverse items-start gap-3">
-                    <span className="flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#428ce5]">
-                      <Image src="/icon.png" alt="" width={28} height={28} className="h-full w-full object-contain" />
-                    </span>
-                    <div className="ml-auto max-w-[85%] rounded-2xl rounded-tr-sm bg-[#1e2738] border border-[#168cff]/20 px-5 py-3.5 text-sm leading-relaxed text-white">
-                      <p>{scenario.system.reply}</p>
-                      <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-white/10 pt-2.5 text-[11px] text-[#8ac5ff]">
-                        <BookOpenCheck size={13} />
-                        <span>{scenario.system.source}</span>
-                        <span className="ml-auto text-[10px] text-white/50">{scenario.system.time}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Metadata Chips if available */}
-                  {scenario.system.metadata && (
-                    <div className="flex flex-wrap justify-end gap-2 pt-2">
-                      {scenario.system.metadata.map((meta) => (
-                        <span key={meta} className="rounded-md border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] text-white/70">
-                          {meta}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-            {/* Input Bar */}
-            <div className="border-t border-[#2a2c31] px-5 py-3.5">
-              <div className="flex items-center justify-between rounded-xl border border-[#2a2c31] bg-[#111215] px-4 py-2.5 text-xs text-[#8a8f98]">
-                <span>Write a response or assign thread…</span>
-                <span className="flex size-7 items-center justify-center rounded-lg bg-[#428ce5] text-white">
-                  <Send size={13} />
-                </span>
-              </div>
-            </div>
-          </div>
+function Hero() {
+  return (
+    <section className="relative isolate overflow-hidden bg-white text-[#11120f]">
+      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-cover bg-top" style={{ backgroundImage: "url(/piliar-1-grandient.png)", maskImage: "linear-gradient(to bottom, #000 45%, transparent)", WebkitMaskImage: "linear-gradient(to bottom, #000 45%, transparent)" }} />
+      <div className="mx-auto max-w-6xl px-5 pb-24 pt-[124px] sm:px-8 lg:pt-[140px]">
+        <div className="mx-auto max-w-4xl text-center">
+          <Rv variant="drop"><Stamp color={YELLOW}><Sparkles size={13} />Features</Stamp></Rv>
+          <Rv delay={80}>
+            <h1 className="mt-6 text-[clamp(2.7rem,6.4vw,5.2rem)] font-semibold leading-[0.98] tracking-[-0.055em]">
+              The elements of <span className="hl">great support.</span>
+            </h1>
+          </Rv>
+          <Rv delay={170}><p className="mx-auto mt-6 max-w-[58ch] text-lg leading-8 text-[#11120f]/70">{FEATURES.length} capabilities, one workspace. Filter by family, tap a tile, and see exactly what Elpino does.</p></Rv>
         </div>
-      </section>
+        <Rv variant="deal" delay={200} className="mt-12"><Table /></Rv>
+      </div>
+    </section>
+  );
+}
 
-      {/* 3. SIX CORE CAPABILITIES GRID (EDITORIAL CLEAN WHITE) */}
-      <section className="bg-[#fffdfa] px-5 py-24 sm:px-8 sm:py-32 lg:px-[4.2vw]">
-        <div className="mx-auto max-w-[1500px]">
-          <div className="text-center">
-            <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#ff6038]">
-              <span className="h-px w-6 bg-[#ff6038]" /> The Complete Toolkit <span className="h-px w-6 bg-[#ff6038]" />
-            </div>
-            <h2 className="mx-auto mt-4 max-w-[900px] text-[clamp(2.6rem,5vw,5.2rem)] font-medium leading-[0.94] tracking-[-0.055em]">
-              Everything your AI and team need. <br />
-              <span className="text-[#168cff]">In one unified workspace.</span>
-            </h2>
-            <p className="mx-auto mt-6 max-w-[620px] text-base leading-7 text-[#17191c]/60 sm:text-lg">
-              No disconnected widgets or complex ticketing pipelines. From first visitor greeting to full human resolution, Elpino keeps context together.
-            </p>
-          </div>
+// ---------------------------------------------------------------- the loop
 
-          {/* Cards Grid */}
-          <div className="mt-16 grid gap-7 md:grid-cols-2 lg:grid-cols-3">
-            {featureCards.map((card) => {
-              const Icon = card.icon;
+const LOOP = [
+  { icon: BookOpen, c: YELLOW, t: "Teach", d: "Crawl your site, upload files, write pages.", link: "/product/knowledge-hub" },
+  { icon: Bot, c: BLUE, t: "Answer", d: "The AI replies from your knowledge, in your language.", link: "/product/ai-agent" },
+  { icon: Wrench, c: ORANGE, t: "Act", d: "Payments, subscriptions and your MCP tools.", link: "/product/ai-agent" },
+  { icon: Headset, c: GREEN, t: "Hand off", d: "Ask first, alert the team, join or ticket.", link: "/product/inbox" },
+  { icon: BarChart3, c: PINK, t: "Learn", d: "Review conversations and improve your knowledge.", link: "/product/knowledge-hub" },
+];
+
+function Loop() {
+  const reduced = useReduced();
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    if (reduced) return;
+    const id = window.setInterval(() => setI((v) => (v + 1) % LOOP.length), 2200);
+    return () => window.clearInterval(id);
+  }, [reduced]);
+  const cur = LOOP[i];
+  return (
+    <section className="bg-[#fff8ec] px-5 py-24 sm:px-8 sm:py-28">
+      <div className="mx-auto max-w-6xl">
+        <Heading eyebrow="How they fit" color={BLUE} title={<>It&apos;s a loop, <span className="hl">not a list.</span></>} sub="Each feature feeds the next, so support gets better the more you use it." />
+        <div className="mt-16 grid items-center gap-10 lg:grid-cols-[1.1fr_.9fr]">
+          <div className="relative mx-auto aspect-square w-full max-w-[460px]">
+            <svg viewBox="0 0 400 400" className="absolute inset-0 h-full w-full" aria-hidden="true">
+              <circle cx="200" cy="200" r="150" fill="none" stroke={INK} strokeWidth="2.5" strokeDasharray="4 10" strokeLinecap="round" style={{ animation: "elpino-dashflow 4s linear infinite", transformOrigin: "200px 200px" }} />
+            </svg>
+            {LOOP.map((l, k) => {
+              const a = (k / LOOP.length) * Math.PI * 2 - Math.PI / 2;
+              const on = k === i;
               return (
-                <article
-                  key={card.id}
-                  className="group flex flex-col justify-between overflow-hidden rounded-[22px] border border-[#17191c]/10 bg-white p-7 shadow-xs transition-all duration-300 hover:border-[#17191c]/25 hover:shadow-lg sm:p-8"
-                >
-                  <div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold uppercase tracking-wider text-[#17191c]/45">{card.eyebrow}</span>
-                      <span
-                        className="flex size-10 items-center justify-center rounded-xl text-white transition-transform group-hover:scale-105"
-                        style={{ backgroundColor: card.accent }}
-                      >
-                        <Icon size={19} />
-                      </span>
-                    </div>
-
-                    <h3 className="mt-6 whitespace-pre-line text-2xl font-semibold leading-tight tracking-tight text-[#17191c]">
-                      {card.title}
-                    </h3>
-                    <p className="mt-4 text-sm leading-6 text-[#17191c]/60">{card.description}</p>
-                  </div>
-
-                  {/* Coded Mini Preview inside each card */}
-                  <div className="mt-8 rounded-xl border border-[#17191c]/8 bg-[#f9fafb] p-4 text-xs">
-                    {card.previewType === "chat" && card.previewData && (
-                      <div className="space-y-2">
-                        <div className="rounded-lg bg-white p-2.5 shadow-2xs border border-[#17191c]/5 text-[11px] font-medium text-[#17191c]">
-                          &ldquo;{card.previewData.question}&rdquo;
-                        </div>
-                        <div className="flex items-center gap-1.5 text-[10px] text-emerald-700">
-                          <CheckCheck size={12} /> {card.previewData.source}
-                        </div>
-                      </div>
-                    )}
-
-                    {card.previewType === "inbox" && card.previewData && (
-                      <div className="space-y-1.5">
-                        {card.previewData.threads?.map((th) => (
-                          <div key={th.name} className="flex items-center justify-between rounded-lg bg-white px-2.5 py-1.5 border border-[#17191c]/5 text-[11px]">
-                            <span className="font-semibold text-[#17191c] truncate">{th.name}</span>
-                            <span className="rounded px-1.5 py-0.5 text-[9px] font-bold" style={{ color: th.color, backgroundColor: `${th.color}15` }}>
-                              {th.tag}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-
-                    {card.previewType === "handoff" && (
-                      <div className="space-y-1.5 text-[11px] text-[#17191c]/75">
-                        <div className="flex items-center gap-2">
-                          <span className="flex size-4 items-center justify-center rounded-full bg-[#8557e8] text-[9px] text-white">1</span>
-                          <span>Inquiry submitted</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="flex size-4 items-center justify-center rounded-full bg-[#8557e8] text-[9px] text-white">2</span>
-                          <span>Reasoning & policy evaluation</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-emerald-700 font-medium">
-                          <Check size={12} />
-                          <span>Teammate picks up with context</span>
-                        </div>
-                      </div>
-                    )}
-
-                    {card.previewType === "audit" && card.previewData && (
-                      <div className="space-y-1.5 text-[10px] text-[#17191c]/70">
-                        <div className="flex items-center justify-between border-b border-[#17191c]/5 pb-1">
-                          <span className="text-[#17191c]/40">Policy</span>
-                          <span className="font-semibold text-[#17191c]">{card.previewData.policy}</span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-[#17191c]/40">Status</span>
-                          <span className="font-semibold text-emerald-600">Verified & Logged</span>
-                        </div>
-                      </div>
-                    )}
-
-                    {card.previewType === "sources" && card.previewData && (
-                      <div className="flex flex-wrap gap-1.5">
-                        {card.previewData.sources?.map((src) => (
-                          <span key={src} className="rounded-md border border-[#17191c]/10 bg-white px-2 py-1 text-[10px] font-medium text-[#17191c]/80">
-                            {src}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-
-                    {card.previewType === "intel" && card.previewData && (
-                      <div className="flex flex-wrap gap-1.5">
-                        {card.previewData.tags?.map((tag) => (
-                          <span key={tag} className="rounded-md bg-[#168cff]/10 text-[#168cff] px-2 py-1 text-[10px] font-semibold">
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </article>
+                <button key={l.t} type="button" onClick={() => setI(k)} aria-label={l.t} className="absolute grid size-[76px] place-items-center rounded-full border-2 border-[#11120f] transition-all duration-500" style={{ left: `${50 + Math.cos(a) * 37.5}%`, top: `${50 + Math.sin(a) * 37.5}%`, transform: `translate(-50%,-50%) scale(${on ? 1.2 : 1})`, backgroundColor: l.c, boxShadow: on ? `0 0 0 6px ${l.c}55` : "none" }}>
+                  <l.icon size={26} color={onDark(l.c)} />
+                </button>
               );
             })}
-          </div>
-        </div>
-      </section>
-
-      {/* 4. ANSWER RECORD & AUDIT LEDGER (EDITORIAL WARM BACKGROUND) */}
-      <section className="relative overflow-hidden bg-[#f7f5f0] px-5 py-24 sm:px-8 sm:py-32 lg:px-[4.2vw]">
-        <div aria-hidden="true" className="absolute -left-40 bottom-[-18rem] size-[34rem] rounded-full bg-[#8557e8]/12 blur-[110px]" />
-        <div aria-hidden="true" className="absolute -right-36 top-[-15rem] size-[38rem] rounded-full bg-[#168cff]/12 blur-[120px]" />
-
-        <div className="relative mx-auto max-w-[1500px]">
-          <div className="grid items-center gap-16 lg:grid-cols-[1.02fr_.98fr] lg:gap-20 xl:gap-28">
-            <div>
-              <div className="mb-7 flex items-center gap-3">
-                <span className="h-px w-8 bg-[#ff6038]" />
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#ff7958]">Answer Integrity</p>
-              </div>
-              <h2 className="max-w-[780px] text-[clamp(2.8rem,5.5vw,5.8rem)] font-medium leading-[0.92] tracking-[-0.06em]">
-                Numbers your team can <span className="text-[#58a9ff]">stand behind.</span>
-              </h2>
-              <p className="mt-8 max-w-[55ch] text-base leading-7 text-[#17191c]/65 sm:text-lg sm:leading-8">
-                Every reply Elpino sends is logged against an approved policy, a knowledge source, and a timestamp — so when someone asks &ldquo;why did it say that?&rdquo;, the verified trail is already sitting in the conversation.
-              </p>
-              <Link
-                href="/signup"
-                className="group mt-9 inline-flex min-h-13 items-center gap-4 rounded-full bg-[#17191c] py-3 pl-6 pr-2.5 text-sm font-semibold text-white transition duration-300 hover:bg-[#ff6038]"
-              >
-                Start for free
-                <span className="flex size-8 items-center justify-center rounded-full bg-[#151713] text-white transition-transform duration-300 group-hover:rotate-45">
-                  <ArrowUpRight size={16} />
-                </span>
-              </Link>
-            </div>
-
-            {/* Answer Record Ledger Card */}
-            <div className="relative mx-auto w-full max-w-[520px] lg:mx-0">
-              <div aria-hidden="true" className="absolute -inset-8 rounded-full bg-[#168cff]/15 blur-3xl" />
-              <div className="relative overflow-hidden rounded-[26px] border border-[#17191c]/10 bg-white shadow-[0_30px_90px_rgba(32,39,55,0.14)]">
-                <div className="flex items-center justify-between border-b border-[#17191c]/8 px-5 py-4 sm:px-6">
-                  <div className="flex items-center gap-3">
-                    <span className="flex size-9 items-center justify-center rounded-full bg-[#ff6038] text-white">
-                      <ShieldCheck size={18} strokeWidth={2.2} />
-                    </span>
-                    <div>
-                      <p className="text-sm font-semibold text-[#17191c]">Answer record</p>
-                      <p className="text-[11px] text-[#17191c]/45">Conversation #1048</p>
-                    </div>
-                  </div>
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-[#168cff]/30 bg-[#168cff]/10 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#8ac5ff]">
-                    <span className="size-1.5 rounded-full bg-[#168cff] shadow-[0_0_10px_#168cff]" />
-                    Verified
-                  </span>
-                </div>
-
-                <div className="p-5 sm:p-6">
-                  <div className="rounded-2xl rounded-bl-sm bg-[#f0f2f5] px-4 py-3.5 text-sm leading-6 text-[#17191c]/75">
-                    How long do I have to request a refund?
-                  </div>
-                  <div className="ml-7 mt-3 rounded-2xl rounded-br-sm bg-[#f3f0e8] px-4 py-3.5 text-sm leading-6 text-[#20231f] sm:ml-12">
-                    You can request a refund within 30 days of your purchase. I can connect you with our team if you need assistance processing one.
-                  </div>
-
-                  <div className="relative mt-7 pl-5 before:absolute before:bottom-3 before:left-[5px] before:top-3 before:w-px before:bg-[#17191c]/10">
-                    {[
-                      { icon: ShieldCheck, label: "Policy", value: "Refund policy · v3.2" },
-                      { icon: BookOpenCheck, label: "Source", value: "Billing & refunds doc" },
-                      { icon: Clock3, label: "Answered", value: "Today · 10:42:08 UTC" },
-                    ].map((item) => (
-                      <div key={item.label} className="relative flex items-center gap-3 py-2.5">
-                        <span className="absolute -left-5 size-[11px] rounded-full border-2 border-white bg-[#ff6038]" />
-                        <item.icon size={16} className="shrink-0 text-[#17191c]/40" />
-                        <span className="w-[60px] text-[11px] uppercase tracking-[0.1em] text-[#17191c]/40">{item.label}</span>
-                        <span className="truncate text-xs font-medium text-[#17191c]/80 sm:text-sm">{item.value}</span>
-                        <Check size={14} className="ml-auto shrink-0 text-[#168cff]" />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+            <div className="absolute left-1/2 top-1/2 w-[46%] -translate-x-1/2 -translate-y-1/2 text-center">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/icon.png" alt="" className="mx-auto size-16 rounded-full border-2 border-[#11120f] bg-white object-contain p-1" style={{ animation: "elpino-float 4s ease-in-out infinite" }} />
+              <p className={`${mono} mt-2 text-[#11120f]/50`}>Elpino</p>
             </div>
           </div>
-
-          {/* Stats Bar */}
-          <div className="mt-24 grid gap-14 md:grid-cols-3 md:gap-9 lg:mt-32 lg:gap-16">
-            {stats.map((stat, index) => (
-              <article
-                key={stat.label}
-                className={`group relative min-h-[280px] ${index === 1 ? "md:translate-y-12" : index === 2 ? "md:translate-y-6" : ""}`}
-              >
-                <div
-                  aria-hidden="true"
-                  className="absolute -left-6 top-3 size-28 rounded-full opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-25"
-                  style={{ backgroundColor: stat.accent }}
-                />
-                <div className="relative flex h-full flex-col">
-                  <div className="flex items-start justify-between gap-5 border-t border-[#17191c]/15 pt-6">
-                    <div>
-                      <p className="text-[clamp(3.5rem,6.5vw,6.5rem)] font-medium leading-none tracking-[-0.075em]" style={{ color: stat.accent }}>
-                        {stat.value}
-                      </p>
-                      <p className="mt-3 text-xs font-semibold uppercase tracking-[0.12em] text-[#17191c]/45">{stat.label}</p>
-                    </div>
-                    <span
-                      className="flex size-11 shrink-0 items-center justify-center rounded-full text-[#151713] transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110"
-                      style={{ backgroundColor: stat.accent }}
-                    >
-                      <stat.icon size={19} />
-                    </span>
-                  </div>
-                  <div className="mt-auto pt-10">
-                    <h3 className="text-xl font-medium leading-tight tracking-tight sm:text-2xl">{stat.heading}</h3>
-                    <p className="mt-3 max-w-[36ch] text-sm leading-6 text-[#17191c]/60">{stat.description}</p>
-                  </div>
-                </div>
-              </article>
-            ))}
+          <div key={cur.t} className={`${card} bg-white p-7`} style={{ animation: "elpino-rv-deal .45s both" }}>
+            <span className="grid size-14 place-items-center rounded-full border-2 border-[#11120f]" style={{ backgroundColor: cur.c }}><cur.icon size={26} color={onDark(cur.c)} /></span>
+            <p className={`${mono} mt-5 text-[#11120f]/45`}>Step {i + 1} of {LOOP.length}</p>
+            <h3 className="mt-1 text-4xl font-semibold tracking-[-0.04em]">{cur.t}</h3>
+            <p className="mt-3 text-[17px] leading-8 text-[#11120f]/65">{cur.d}</p>
+            <Link href={cur.link} className="mt-6 inline-flex items-center gap-2 font-semibold underline decoration-2 underline-offset-4">Explore this step <ArrowRight size={15} /></Link>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
+  );
+}
 
-      {/* 5. SAFEGUARDS SECTION */}
-      <section className="border-t border-[#17191c]/10 bg-[#f4f1eb] px-5 py-24 sm:px-8 sm:py-32 lg:px-[4.2vw]">
-        <div className="mx-auto max-w-[1500px]">
-          <div className="text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8557e8]">Built into every conversation</p>
-            <h2 className="mx-auto mt-4 max-w-[900px] text-[clamp(2.6rem,4.8vw,5rem)] font-medium leading-[0.96] tracking-[-0.055em]">
-              Support that stays <span className="text-[#ff6038]">inside the lines.</span>
-            </h2>
+// ---------------------------------------------------------------- personas
+
+const PERSONAS = [
+  { key: "founder", icon: Rocket, label: "Founder", c: ORANGE, line: "You're the whole support team and want your evenings back.", picks: ["Free plan, no card", "Answers from your site in minutes", "AI handles payments and receipts", "Only pings you when it truly needs you"] },
+  { key: "lead", icon: Users, label: "Support lead", c: GREEN, line: "You run a team and need clean ownership and no dropped chats.", picks: ["Shared inbox with clear badges", "Team-wide Join alerts", "Auto tickets when everyone's busy", "Visitor context on every thread"] },
+  { key: "dev", icon: Code2, label: "Developer", c: PURPLE, line: "You want it wired into your own product and data.", picks: ["Signed-token identity from your app", "MCP servers with per-tool approval", "Stripe and Razorpay lookups", "One embeddable widget snippet"] },
+  { key: "owner", icon: Store, label: "Store owner", c: PINK, line: "Customers ask about orders and payments all day.", picks: ["Order lookups through your MCP tools", "Payment links and receipts", "Refunds only if you switch them on", "Replies in your customer's language"] },
+] as const;
+
+function Personas() {
+  const [i, setI] = useState(0);
+  const p = PERSONAS[i];
+  return (
+    <section className="bg-white px-5 py-24 sm:px-8 sm:py-28">
+      <div className="mx-auto max-w-5xl">
+        <Heading eyebrow="Who it's for" color={GREEN} title={<>Pick your seat. <span className="hl">See your features.</span></>} />
+        <div className="mt-12 flex flex-wrap justify-center gap-2">
+          {PERSONAS.map((x, k) => (
+            <button key={x.key} type="button" onClick={() => setI(k)} aria-pressed={k === i} className="inline-flex items-center gap-2 rounded-full border-2 border-[#11120f] px-4 py-2.5 text-[14.5px] font-semibold transition hover:-translate-y-0.5" style={k === i ? { backgroundColor: x.c, color: "#fff" } : undefined}><x.icon size={16} />{x.label}</button>
+          ))}
+        </div>
+        <div key={p.key} className={`${card} mt-8 grid overflow-hidden lg:grid-cols-[.9fr_1.1fr]`} style={{ animation: "elpino-rv-deal .45s both" }}>
+          <div className="p-8 text-white" style={{ backgroundColor: p.c }}>
+            <p.icon size={34} />
+            <p className="mt-5 text-3xl font-semibold leading-tight tracking-[-0.03em]">{p.line}</p>
           </div>
-          <div className="mt-16 grid gap-x-10 gap-y-12 border-t border-[#17191c]/14 pt-8 sm:grid-cols-2 lg:grid-cols-5">
-            {safeguards.map((item, index) => (
-              <div key={item.title} className="flex min-h-[180px] flex-col">
-                <item.icon size={25} strokeWidth={1.7} style={{ color: ["#ff6038", "#168cff", "#8557e8", "#ff6038", "#168cff"][index] }} />
-                <div className="mt-auto pt-8">
-                  <h3 className="text-lg font-medium text-[#17191c]">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-[#17191c]/55">{item.detail}</p>
+          <ul className="divide-y-2 divide-[#11120f]/10 bg-[#fffdf5] p-3">
+            {p.picks.map((x) => <li key={x} className="flex items-center gap-3 px-4 py-4 text-[17px] font-medium"><span className="grid size-7 shrink-0 place-items-center rounded-full border-2 border-[#11120f]" style={{ backgroundColor: p.c }}><Check size={14} color="#fff" strokeWidth={3} /></span>{x}</li>)}
+          </ul>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ---------------------------------------------------------- replace the stack
+
+const STACK = ["Chat widget", "Helpdesk inbox", "Knowledge base", "Chatbot builder", "Payment look-ups", "Handoff rules"];
+
+function Stack() {
+  return (
+    <section className="bg-[#11120f] px-5 py-24 text-white sm:px-8 sm:py-28">
+      <div className="mx-auto max-w-6xl">
+        <div className="mx-auto max-w-3xl text-center">
+          <Rv variant="drop"><Stamp color={YELLOW}><Zap size={13} />One tool</Stamp></Rv>
+          <Rv delay={80}><h2 className="mt-5 text-[clamp(2.1rem,4.6vw,3.6rem)] font-semibold leading-[1.03] tracking-[-0.045em]">Six tools in. <span className="rounded-md px-2" style={{ backgroundColor: YELLOW, color: INK }}>One workspace out.</span></h2></Rv>
+          <Rv delay={160}><p className="mt-5 text-lg leading-8 text-white/65">Most teams stitch a widget, a helpdesk, a knowledge base and a bot together. Elpino is all of it in one place, with one memory of every customer.</p></Rv>
+        </div>
+        <div className="mt-14 grid items-center gap-6 md:grid-cols-[1fr_auto_1fr]">
+          <div className="flex flex-wrap justify-center gap-2.5">
+            {STACK.map((s, i) => <Rv key={s} variant="pop" delay={i * 70}><span className="inline-block rounded-full border-2 border-white/30 px-4 py-2 text-[15px] text-white/60 line-through decoration-[#d9508a] decoration-2" style={{ transform: `rotate(${(i % 3 - 1) * 3}deg)` }}>{s}</span></Rv>)}
+          </div>
+          <ArrowRight size={34} className="mx-auto rotate-90 md:rotate-0" style={{ color: YELLOW }} aria-hidden="true" />
+          <Rv variant="deal" delay={300}>
+            <div className={`${card} bg-[#fffdf5] p-7 text-center text-[#11120f]`}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/icon.png" alt="" className="mx-auto size-16 rounded-full border-2 border-[#11120f] bg-white object-contain p-1" style={{ animation: "elpino-float 4s ease-in-out infinite" }} />
+              <p className="mt-3 text-3xl font-semibold tracking-[-0.04em]">Elpino</p>
+              <p className="mt-1 text-[15px] text-[#11120f]/60">Widget · Inbox · Knowledge · AI agent · Tools · Handoff</p>
+            </div>
+          </Rv>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// -------------------------------------------------------------- coming soon
+
+function Soon() {
+  return (
+    <section className="bg-[#fff8ec] px-5 py-20 sm:px-8">
+      <Rv variant="pop">
+        <div className={`${card} relative mx-auto max-w-4xl overflow-hidden bg-white p-8 text-center`}>
+          <div aria-hidden="true" className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: "radial-gradient(#000 1.2px, transparent 1.2px)", backgroundSize: "14px 14px" }} />
+          <div className="relative">
+            <Stamp color={PINK}><Search size={12} />Coming in November</Stamp>
+            <h3 className="mt-5 text-3xl font-semibold tracking-[-0.035em]">Omnichannel is next.</h3>
+            <p className="mx-auto mt-3 max-w-[54ch] text-[17px] leading-8 text-[#11120f]/65">Website chat is live today. Bringing more channels into the same inbox is what we&apos;re shipping next, and we&apos;ll announce it on the changelog.</p>
+            <Link href="/changelog" className="mt-5 inline-flex items-center gap-2 font-semibold underline decoration-2 underline-offset-4">See the changelog <ArrowRight size={15} /></Link>
+          </div>
+        </div>
+      </Rv>
+    </section>
+  );
+}
+
+// --------------------------------------------------------------------- faq
+
+const FAQS: [string, string][] = [
+  ["Is everything on this page live?", "Yes. Every tile describes something Elpino does today. Omnichannel is the one thing we're still building, and it's marked as coming in November."],
+  ["Do I need all of it?", "No. Start with a knowledge base and the widget on the free plan, then turn on tools, MCP and teammates as you need them."],
+  ["What's included on the free plan?", "50 AI conversations a month with no card required."],
+  ["How do paid plans work?", "Paid plans include a monthly AI credit, and extra seats are simple add-ons. See the pricing page for details."],
+];
+
+function Faq() {
+  const [open, setOpen] = useState(0);
+  return (
+    <section className="bg-white px-5 py-24 sm:px-8 sm:py-28">
+      <div className="mx-auto max-w-3xl">
+        <Heading eyebrow="Questions" color={YELLOW} title={<>Good to <span className="hl">know.</span></>} />
+        <div className="mt-12 space-y-3">
+          {FAQS.map(([q, a], i) => (
+            <Rv key={q} variant="up" delay={i * 50}>
+              <div className={`${card} overflow-hidden ${open === i ? "bg-[#fffdf5]" : "bg-white"}`}>
+                <button type="button" aria-expanded={open === i} onClick={() => setOpen(open === i ? -1 : i)} className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left text-[17px] font-semibold">
+                  {q}
+                  <span className="grid size-8 shrink-0 place-items-center rounded-full border-2 border-[#11120f] transition-transform duration-300" style={{ backgroundColor: open === i ? YELLOW : "#fff", transform: open === i ? "rotate(45deg)" : "none" }}><Plus size={16} /></span>
+                </button>
+                <div className="grid transition-[grid-template-rows] duration-300" style={{ gridTemplateRows: open === i ? "1fr" : "0fr" }}>
+                  <div className="overflow-hidden"><p className="px-5 pb-5 text-[16px] leading-7 text-[#11120f]/70">{a}</p></div>
                 </div>
               </div>
-            ))}
-          </div>
+            </Rv>
+          ))}
         </div>
-      </section>
+      </div>
+    </section>
+  );
+}
 
-      {/* 6. FINAL CALL TO ACTION */}
-      <section className="relative overflow-hidden bg-[#edf3ff] px-5 py-24 text-center text-[#17191c] sm:px-8 sm:py-32">
-        <div aria-hidden="true" className="absolute left-[18%] top-[-8rem] size-72 rounded-full bg-[#8557e8]/20 blur-[90px]" />
-        <div aria-hidden="true" className="absolute bottom-[-10rem] right-[18%] size-80 rounded-full bg-[#ff6038]/18 blur-[100px]" />
-        <div className="relative mx-auto max-w-[920px]">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8557e8]">Start with your next question</p>
-          <h2 className="mt-4 text-[clamp(3rem,6vw,6.4rem)] font-medium leading-[0.92] tracking-[-0.065em]">
-            Turn support questions into <span className="text-[#168cff]">resolved conversations.</span>
-          </h2>
-          <p className="mx-auto mt-6 max-w-[620px] text-base leading-7 text-[#17191c]/60 sm:text-lg">
-            Bring your knowledge docs, connect the chat widget, and let Elpino handle your first 50 AI conversations free.
-          </p>
-          <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link
-              href="/signup"
-              className="group inline-flex min-h-13 items-center gap-4 rounded-full bg-[#ff6038] py-3 pl-7 pr-3 text-sm font-semibold text-white transition hover:bg-[#e84b25]"
-            >
-              Start for free
-              <span className="flex size-8 items-center justify-center rounded-full bg-white text-[#ff6038] transition-transform group-hover:rotate-45">
-                <ArrowUpRight size={16} />
-              </span>
-            </Link>
-            <Link
-              href="/pricing"
-              className="inline-flex min-h-13 items-center rounded-full border border-[#17191c]/20 px-7 text-sm font-semibold transition hover:border-[#17191c]"
-            >
-              See pricing
-            </Link>
+function Closing() {
+  return (
+    <section className="bg-white px-5 pb-24 pt-4 sm:px-8">
+      <Rv variant="pop">
+        <div className={`${card} relative mx-auto max-w-6xl overflow-hidden px-6 py-16 text-center text-white sm:px-12`} style={{ backgroundColor: BLUE }}>
+          <div aria-hidden="true" className="absolute inset-0 opacity-[0.16]" style={{ backgroundImage: "radial-gradient(#000 1.2px, transparent 1.2px)", backgroundSize: "16px 16px" }} />
+          <ShieldCheck size={38} className="relative mx-auto" aria-hidden="true" />
+          <h2 className="relative mx-auto mt-5 max-w-2xl text-[clamp(2.1rem,4.6vw,3.6rem)] font-semibold leading-[1.03] tracking-[-0.045em]">Every element, ready to use.</h2>
+          <p className="relative mx-auto mt-4 max-w-lg text-lg text-white/85">Start on the free plan and switch things on as you grow.</p>
+          <div className="relative mt-8 flex flex-wrap justify-center gap-3">
+            <Link href="/signup" className="inline-flex h-13 items-center gap-2 rounded-full border-2 border-[#11120f] px-8 font-semibold text-[#11120f] transition hover:-translate-y-0.5" style={{ backgroundColor: YELLOW }}>Start free <ArrowRight size={16} /></Link>
+            <Link href="/pricing" className="inline-flex h-13 items-center rounded-full border-2 border-[#11120f] bg-white px-8 font-semibold text-[#11120f] transition hover:-translate-y-0.5">See pricing</Link>
           </div>
-          <p className="mt-5 text-xs text-[#17191c]/45">No credit card required · Two seats included</p>
         </div>
-      </section>
-    </div>
+      </Rv>
+    </section>
+  );
+}
+
+export function FeaturesContent() {
+  return (
+    <main className="font-[family-name:var(--font-rethink-sans)]">
+      <Hero />
+      <Loop />
+      <Personas />
+      <Stack />
+      <Soon />
+      <Faq />
+      <Closing />
+    </main>
   );
 }

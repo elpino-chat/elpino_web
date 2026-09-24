@@ -28,11 +28,22 @@ const nextConfig: NextConfig = {
   // real instead of a 404, and any indexed-page authority they hold carries
   // forward instead of evaporating.
   async redirects() {
+    const to = (destination: string, ...sources: string[]) => sources.map((source) => ({ source, destination, permanent: true }));
     return [
-      { source: '/agent', destination: '/', permanent: true },
-      { source: '/product/ai-operator', destination: '/product/ai-agent', permanent: true },
-      { source: '/product/email-triage', destination: '/product/channels', permanent: true },
-      { source: '/product/approvals', destination: '/product/copilot', permanent: true },
+      ...to('/', '/agent'),
+      // Legacy product pages -> the page that now covers the topic.
+      ...to('/product/ai-agent', '/product/ai-operator', '/product/copilot'),
+      ...to('/product/inbox', '/product/email-triage', '/product/approvals'),
+      ...to('/features', '/product/channels', '/product/outbound', '/product/reporting'),
+      // Legacy solution pages.
+      ...to('/solutions/founders', '/solutions/founders-team'),
+      ...to('/solutions/busy-operators', '/solutions/busy', '/solutions/triage'),
+      ...to('/solutions/developers', '/solutions/saas', '/solutions/saas-software'),
+      ...to('/solutions/busy-operators', '/solutions/agencies', '/solutions/agencies-services'),
+      ...to('/features', '/solutions/revenue', '/solutions/revenue-teams'),
+      ...to('/product/knowledge-hub', '/solutions/self-service'),
+      ...to('/product/ai-agent', '/solutions/workflows'),
+      ...to('/product/inbox', '/solutions/visitor-intelligence', '/solutions/teammate-handoff', '/solutions/omnichannel-triage', '/solutions/omnichannel'),
     ];
   },
   // Fallbacks for deploys where env vars aren't configured. Real env vars

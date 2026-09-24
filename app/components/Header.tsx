@@ -7,140 +7,11 @@ import { useTranslation } from '@/app/hooks/useTranslation';
 import { useStoredLanguage, setStoredLanguage } from '@/app/hooks/useStoredLanguage';
 import { LanguageSwitcher } from '@/app/components/LanguageSwitcher';
 import UpgradeBanner from './dashboard/UpgradeBanner';
+import { MegaMenuPanel } from './MegaMenuPanel';
+import { navGroups, type DropdownGroup } from './nav-data';
 
 type Session = { email: string; name?: string; userId: string };
 
-type NavItem = {
-  label: string;
-  href: string;
-};
-
-type NavSection = {
-  title: string;
-  items: NavItem[];
-};
-
-type DropdownGroup = {
-  label: string;
-  sections: NavSection[];
-};
-
-const navGroups: DropdownGroup[] = [
-  {
-    label: 'Product',
-    sections: [
-      {
-        title: 'Get started',
-        items: [
-          { label: 'Elpino helpdesk', href: '/product/helpdesk' },
-          { label: 'Elpino AI Agent', href: '/product/ai-agent' },
-        ],
-      },
-      {
-        title: 'Platform',
-        items: [
-          { label: 'Channels', href: '/product/channels' },
-          { label: 'Integrations', href: '/integrations' },
-          { label: 'Safety & security', href: '/security-guide' },
-        ],
-      },
-      {
-        title: 'Capabilities',
-        items: [
-          { label: 'Inbox', href: '/product/inbox' },
-          { label: 'Tickets', href: '/product/tickets' },
-          { label: 'Help Center', href: '/product/help-center' },
-          { label: 'Reporting', href: '/product/reporting' },
-        ],
-      },
-      {
-        title: 'More tools',
-        items: [
-          { label: 'Outbound', href: '/product/outbound' },
-          { label: 'Knowledge Hub', href: '/product/knowledge-hub' },
-          { label: 'Copilot', href: '/product/copilot' },
-        ],
-      },
-    ],
-  },
-  {
-    label: 'Solutions',
-    sections: [
-      {
-        title: 'By team size',
-        items: [
-          { label: 'For Founders', href: '/solutions/founders' },
-          { label: 'For Busy Teams', href: '/solutions/busy-operators' },
-          { label: 'For Revenue Teams', href: '/solutions/revenue-teams' },
-        ],
-      },
-      {
-        title: 'By industry',
-        items: [
-          { label: 'SaaS & Software', href: '/solutions/saas-software' },
-          { label: 'E-Commerce', href: '/solutions/ecommerce' },
-          { label: 'Agencies & Services', href: '/solutions/agencies-services' },
-        ],
-      },
-      {
-        title: 'Capabilities',
-        items: [
-          { label: 'Self-Service', href: '/solutions/self-service' },
-          { label: 'Omnichannel Triage', href: '/solutions/omnichannel-triage' },
-          { label: 'Order Lookups', href: '/solutions/order-lookups' },
-        ],
-      },
-      {
-        title: 'Human & Intel',
-        items: [
-          { label: 'Human Escalations', href: '/solutions/human-escalations' },
-          { label: 'Workflows', href: '/solutions/workflows' },
-          { label: 'Visitor Intelligence', href: '/solutions/visitor-intelligence' },
-          { label: 'Teammate Handoff', href: '/solutions/teammate-handoff' },
-        ],
-      },
-    ],
-  },
-  {
-    label: 'Resources',
-    sections: [
-      {
-        title: 'Learning & Guides',
-        items: [
-          { label: 'Documentation', href: '/docs' },
-          { label: 'Help & FAQ', href: '/faq' },
-          // { label: 'API & Webhooks', href: '/docs/api-webhooks' },
-        ],
-      },
-      {
-        title: 'Trust & Legal',
-        items: [
-          { label: 'Trust Center', href: '/trust' },
-          { label: 'Privacy Policy', href: '/privacy' },
-          { label: 'Terms of Service', href: '/terms' },
-          { label: 'Safety & security', href: '/security-guide' },
-        ],
-      },
-      {
-        title: 'Community',
-        items: [
-          { label: 'Blog', href: '/blog' },
-          { label: 'Changelog', href: '/changelog' },
-          { label: 'Community Hub', href: '/community' },
-        ],
-      },
-      {
-        title: 'Company',
-        items: [
-          { label: 'Brand Kit', href: '/brand-kit' },
-          { label: 'About Us', href: '/about' },
-          { label: 'Careers', href: '/careers' },
-          { label: 'Contact Sales', href: '/contact' },
-        ],
-      },
-    ],
-  },
-];
 
 function Chevron({ className = '' }: { className?: string }) {
   return (
@@ -180,7 +51,7 @@ function MegaNav({ groups, light = false }: { groups: DropdownGroup[]; light?: b
   const activeGroup = openIndex !== null ? groups[openIndex] : null;
 
   return (
-    <div className="relative">
+    <div>
       {/* Top Nav Trigger Buttons */}
       <div className="flex items-center gap-1">
         {groups.map((group, index) => {
@@ -210,12 +81,11 @@ function MegaNav({ groups, light = false }: { groups: DropdownGroup[]; light?: b
         })}
       </div>
 
-      {/* Floating 4-Column Dropdown Card. Anchored to the nav group's own
-          left edge, not centered on it — the nav sits near the left of the
-          header right after the logo, so centering an 850px panel under its
-          midpoint pushed the whole left half of the panel off-screen. */}
+      {/* Floating 4-Column Dropdown Card. Anchored to the header bar (the
+          nearest positioned ancestor) and centred on it, so the wide panel is
+          centred on the page rather than hanging off the nav group. */}
       <div
-        className={`absolute left-0 top-[calc(100%+8px)] z-50 transition-all duration-200 ease-out ${activeGroup
+        className={`absolute left-1/2 top-[calc(100%+8px)] z-50 -translate-x-1/2 transition-all duration-200 ease-out ${activeGroup
             ? 'visible translate-y-0 opacity-100'
             : 'pointer-events-none invisible -translate-y-2 opacity-0'
           }`}
@@ -223,37 +93,7 @@ function MegaNav({ groups, light = false }: { groups: DropdownGroup[]; light?: b
         onMouseEnter={() => openIndex !== null && open(openIndex)}
         onMouseLeave={scheduleClose}
       >
-        {activeGroup && (
-          <div
-            className={`w-[850px] max-w-[95vw] overflow-hidden rounded-xl border px-10 py-10 shadow-[0_20px_50px_rgba(0,0,0,0.15)] transition-colors ${light
-                ? 'border-[#e5e7eb] bg-white text-[#11120f]'
-                : 'border-white/10 bg-white text-[#11120f] shadow-2xl'
-              }`}
-          >
-            {/* 4-Column Grid */}
-            <div className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-4">
-              {activeGroup.sections.map((section) => (
-                <div key={section.title} className="flex flex-col">
-                  <h4 className="mb-4 text-sm font-normal tracking-tight text-[#11120f]">
-                    {section.title}
-                  </h4>
-                  <div className="flex flex-col gap-3">
-                    {section.items.map((item) => (
-                      <Link
-                        key={item.label}
-                        href={item.href}
-                        onClick={() => setOpenIndex(null)}
-                        className="text-sm font-normal text-slate-700 transition-colors hover:text-black"
-                      >
-                        {item.label}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        {activeGroup && <MegaMenuPanel group={activeGroup} onNavigate={() => setOpenIndex(null)} />}
       </div>
     </div>
   );
@@ -298,21 +138,19 @@ export function Header({
     return () => observer.disconnect();
   }, [showOffer, scrolled]);
 
-  const headerClassName = `w-full transition-shadow duration-200 ${light ? 'bg-white' : 'bg-black'
-    } ${scrolled ? 'shadow-[0_1px_0_rgba(0,0,0,0.08)]' : ''}`;
+  // The strip is transparent; the nav inside it is the visible bar, hanging
+  // from the top edge with only its bottom corners rounded.
+  const headerClassName = 'w-full px-4 sm:px-6';
 
   const navLinkClassName = `hidden h-9 items-center px-3 text-sm font-normal transition lg:inline-flex ${light ? 'text-black hover:text-black/70' : 'text-white/80 hover:text-white'
     }`;
 
   const loginClassName = `hidden h-[36px] items-center justify-center rounded-lg border-2 px-4 text-sm font-normal transition-all duration-150 lg:inline-flex ${light 
-      ? 'border-black bg-transparent text-black hover:bg-black/5' 
+      ? 'border-black/30 bg-transparent text-black hover:bg-black/5' 
       : 'border-white bg-transparent text-white hover:bg-white/10'
     }`;
 
-  const signUpPillClassName = `inline-flex h-[36px] items-center justify-center rounded-lg px-4 text-sm font-normal transition-all duration-150 ${light
-      ? 'bg-black text-white hover:bg-black/85 shadow-xs'
-      : 'bg-white text-black hover:bg-white/90 shadow-xs'
-    }`;
+  const signUpPillClassName = `inline-flex h-[36px] items-center justify-center rounded-lg px-4 text-sm font-normal transition-all duration-150 bg-[#3784ff] text-white shadow-xs hover:bg-[#3784ff]/90`;
 
   const mobileLineClassName = light ? 'bg-[#11120f]' : 'bg-[var(--elpino-text)]';
 
@@ -352,24 +190,9 @@ export function Header({
       className={`fixed inset-x-0 top-0 z-50 w-full ${light ? 'text-[#11120f]' : 'text-[var(--elpino-text)]'
         }`}
     >
-      {!scrolled && (
-        <Link 
-          href="/blog/meet-elpino"
-          className="group flex h-10 w-full items-center justify-center gap-3 border-b border-white/10 bg-black px-4 text-sm text-white transition-colors hover:bg-black/90"
-        >
-          <div className="flex items-center rounded-sm bg-white px-1.5 py-0.5 text-xs font-semibold uppercase tracking-widest text-black">
-            New
-          </div>
-          <span className="font-medium">Meet Elpino</span>
-          <span className="hidden opacity-75 sm:inline">— Your super support team.</span>
-          <span className="opacity-75 transition-transform group-hover:translate-x-0.5">Read announcement →</span>
-        </Link>
-      )}
-      
-
       <header className={headerClassName}>
         <nav
-          className="flex h-16 w-full items-center justify-between px-10 transition-[height] duration-200"
+          className={`relative mx-auto flex h-14 w-full max-w-5xl items-center justify-between rounded-b-2xl border-x border-b px-5 sm:px-6 ${light ? 'border-white/70 bg-white/45 shadow-[0_8px_30px_rgba(15,23,42,0.06)]' : 'border-white/15 bg-black/40'} backdrop-blur-xl backdrop-saturate-150`}
           aria-label="Main navigation"
         >
           {/* Logo & Navigation Links */}
@@ -380,11 +203,11 @@ export function Header({
             >
               <Image
                 alt="Elpino"
-                src="/logo-full.png"
-                width={200}
-                height={60}
+                src="/elpino.png"
+                width={906}
+                height={275}
                 priority
-                className={`h-7 w-auto object-contain transition-all ${light ? '' : 'brightness-0 invert'}`}
+                className="h-8 w-auto object-contain"
               />
             </Link>
 

@@ -1,11 +1,5 @@
 import type { Metadata } from "next";
-import { CareersHero } from "./components/CareersHero";
-import { CareersWhoWeAre } from "./components/CareersWhoWeAre";
-import { CareersCeoVideo } from "./components/CareersCeoVideo";
-import { CareersValues } from "./components/CareersValues";
-import { CareersBenefits } from "./components/CareersBenefits";
-import { CareersJobBoard } from "./components/CareersJobBoard";
-import { CareersBottomCta } from "./components/CareersBottomCta";
+import { CareersView } from "./CareersView";
 import { CareersSlothGuide } from "./components/CareersSlothGuide";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://elpino.chat";
@@ -42,28 +36,8 @@ export const metadata: Metadata = {
 export default function CareersPage() {
   return (
     <main className="relative min-h-screen w-full bg-white text-[#111] antialiased selection:bg-black selection:text-white">
-      {/* 01. Hero Section */}
-      <CareersHero />
-
-      {/* 03. Who We Are: A Company Built for Extraordinary Success */}
-      <CareersWhoWeAre />
-
-      {/* 04. CEO & Co-founder Leadership Reflection */}
-      <CareersCeoVideo />
-
-      {/* 05. The Values That Make Great Work Possible */}
-      <CareersValues />
-
-      {/* 08. Benefits to Support Your Best Work */}
-      <CareersBenefits />
-
-      {/* 10. Live Filterable Job Board */}
-      <CareersJobBoard />
-
-      {/* 12. Final Bottom CTA Banner */}
-      <CareersBottomCta />
-
-      {/* 13. Interactive Floating Sloth Companion */}
+      <CareersView />
+      {/* Interactive floating sloth companion (unchanged) */}
       <CareersSlothGuide />
     </main>
   );

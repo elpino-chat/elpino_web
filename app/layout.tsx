@@ -1,19 +1,10 @@
 import type { Metadata } from "next";
-import { Outfit, Instrument_Serif, Geist_Mono, Rethink_Sans, Inter_Tight, Geist, Noto_Serif, JetBrains_Mono, Inter } from "next/font/google";
+import { Instrument_Serif, Geist_Mono, Rethink_Sans, Inter } from "next/font/google";
 import "./globals.css";
 import { AppShell } from "./components/AppShell";
 import { Toaster } from "@/components/ui/sonner";
 import { Analytics } from "./components/Analytics";
 import { SiteWidgetTag } from "./components/SiteWidgetTag";
-import { requireSession } from "./api/onboarding/_lib/require-user";
-
-export const dynamic = 'force-dynamic';
-
-const outfit = Outfit({
-  variable: "--font-outfit",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 const instrumentSerif = Instrument_Serif({
   variable: "--font-instrument-serif",
@@ -31,30 +22,6 @@ const geistMono = Geist_Mono({
 
 const rethinkSans = Rethink_Sans({
   variable: "--font-rethink-sans",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const interTight = Inter_Tight({
-  variable: "--font-inter-tight",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const notoSerif = Noto_Serif({
-  variable: "--font-noto-serif",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const jetBrainsMono = JetBrains_Mono({
-  variable: "--font-jet-brains",
   subsets: ["latin"],
   display: "swap",
 });
@@ -122,25 +89,21 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Resolved once here (not per-page) so every marketing page — home,
-  // pricing, faq, etc. — can render the signed-in header state without each
-  // one re-checking the session cookie itself. Null (not logged in) is the
-  // common case for public pages and is cheap to compute either way.
-  const session = await requireSession().catch(() => null);
-
+  // The signed-in state is resolved in the browser (see AppShell), so this
+  // layout reads no cookies and marketing pages can be prerendered and cached.
   return (
     <html
       lang="en"
-      className={`${outfit.variable} ${instrumentSerif.variable} ${geistMono.variable} ${rethinkSans.variable} ${interTight.variable} ${geistSans.variable} ${notoSerif.variable} ${jetBrainsMono.variable} ${neueHaas.variable} h-full antialiased`}
+      className={`${instrumentSerif.variable} ${geistMono.variable} ${rethinkSans.variable} ${neueHaas.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-white text-text-primary">
-        <AppShell session={session}>{children}</AppShell>
+        <AppShell>{children}</AppShell>
         <Toaster position="top-center" />
         <Analytics />
         <SiteWidgetTag />

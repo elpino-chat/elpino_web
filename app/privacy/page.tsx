@@ -6,7 +6,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://elpino.chat";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "How Elpino collects, processes, and protects your data — customer conversations, OAuth tokens, third-party AI provider safeguards (OpenAI, Claude, xAI, DeepSeek, GLM, Nomic), retention, and your rights.",
+    "How Elpino collects, uses and protects your data: customer conversations, credentials, AI provider safeguards, retention and your rights.",
   alternates: { canonical: `${SITE_URL}/privacy` },
   openGraph: {
     title: "Privacy Policy | Elpino",

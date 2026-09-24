@@ -26,27 +26,21 @@ function page(
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  // Only canonical, live pages. Legacy /solutions/* pages that describe
+  // features Elpino doesn't have are deliberately left out.
   const staticPages: MetadataRoute.Sitemap = [
     page("", 1.0, "weekly"),
     page("/features", 0.9, "weekly"),
     page("/pricing", 0.9, "monthly"),
-    // /agent, /product/*, and the legacy /solutions/* pages described the previous
-    // "operator" product and now redirect (see next.config.ts) — a
-    // redirecting URL has no business in the sitemap, which is a list of
-    // canonical destinations to crawl and index, not a list of routes that
-    // merely resolve.
     page("/integrations", 0.8, "weekly"),
-    page("/solutions/revenue", 0.8, "monthly"),
-    page("/solutions/busy", 0.8, "monthly"),
-    page("/solutions/founders-team", 0.8, "monthly"),
-    page("/solutions/saas-software", 0.8, "monthly"),
-    page("/solutions/agencies-services", 0.8, "monthly"),
-    page("/solutions/self-service", 0.8, "monthly"),
-    page("/solutions/order-lookups", 0.8, "monthly"),
-    page("/solutions/human-escalations", 0.8, "monthly"),
-    page("/solutions/workflows", 0.8, "monthly"),
-    page("/solutions/visitor-intelligence", 0.8, "monthly"),
-    page("/solutions/teammate-handoff", 0.8, "monthly"),
+    page("/product/helpdesk", 0.8, "monthly"),
+    page("/product/ai-agent", 0.8, "monthly"),
+    page("/product/inbox", 0.8, "monthly"),
+    page("/product/knowledge-hub", 0.8, "monthly"),
+    page("/product/tickets", 0.8, "monthly"),
+    page("/solutions/founders", 0.8, "monthly"),
+    page("/solutions/busy-operators", 0.8, "monthly"),
+    page("/solutions/developers", 0.8, "monthly"),
     page("/about", 0.7, "monthly"),
     page("/blog", 0.8, "weekly"),
     page("/careers", 0.7, "weekly"),
@@ -66,7 +60,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     page("/security-policy", 0.5, "monthly"),
     page("/faq", 0.6, "monthly"),
     page("/contact", 0.6, "monthly"),
-    page("/community", 0.5, "monthly"),
     page("/brand-kit", 0.4, "monthly"),
     page("/privacy", 0.3, "yearly"),
     page("/terms", 0.3, "yearly"),

@@ -4,7 +4,7 @@ import { TrustClient } from "./TrustClient";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://elpino.chat";
 
 export const metadata: Metadata = {
-  title: "Trust, Compliance & Enterprise Security | Elpino",
+  title: "Trust, Compliance & Enterprise Security",
   description:
     "How Elpino protects customer data: SOC 2 Type II certified, AES-256 and TLS 1.3 encryption, Zero Data Retention for AI training, and enterprise RBAC.",
   alternates: { canonical: `${SITE_URL}/trust` },

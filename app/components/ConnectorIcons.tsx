@@ -2,57 +2,57 @@ type IconProps = { className?: string };
 
 const base = "size-full";
 
-/** Official brand mark, served from /public/logos (sourced from Wikimedia Commons). */
+/** Official brand mark, served from /public/connector-logos (downloaded once from Brandfetch by scripts/download-connector-logos.mjs). */
 function BrandLogoImg({ src, alt, className }: { src: string; alt: string; className: string }) {
   return <img src={src} alt="" aria-hidden="true" title={alt} className={`${className} object-contain`} />;
 }
 
 export function GoogleIcon({ className = base }: IconProps) {
-  return <BrandLogoImg src="/logos/google.svg" alt="Google" className={className} />;
+  return <BrandLogoImg src="/connector-logos/google_workspace.webp" alt="Google" className={className} />;
 }
 
 export function CalendarIcon({ className = base }: IconProps) {
-  return <BrandLogoImg src="/logos/google-calendar.svg" alt="Google Calendar" className={className} />;
+  return <BrandLogoImg src="/connector-logos/calendar.webp" alt="Google Calendar" className={className} />;
 }
 
 export function GmailIcon({ className = base }: IconProps) {
-  return <BrandLogoImg src="/logos/gmail.svg" alt="Gmail" className={className} />;
+  return <BrandLogoImg src="/connector-logos/gmail.webp" alt="Gmail" className={className} />;
 }
 
 export function GoogleDriveIcon({ className = base }: IconProps) {
-  return <BrandLogoImg src="/logos/google-drive.svg" alt="Google Drive" className={className} />;
+  return <BrandLogoImg src="/connector-logos/google_workspace.webp" alt="Google Drive" className={className} />;
 }
 
 export function GoogleSheetsIcon({ className = base }: IconProps) {
-  return <BrandLogoImg src="/logos/google-sheets.svg" alt="Google Sheets" className={className} />;
+  return <BrandLogoImg src="/connector-logos/google_workspace.webp" alt="Google Sheets" className={className} />;
 }
 
 export function GoogleDocsIcon({ className = base }: IconProps) {
-  return <BrandLogoImg src="/logos/google-docs.svg" alt="Google Docs" className={className} />;
+  return <BrandLogoImg src="/connector-logos/google_workspace.webp" alt="Google Docs" className={className} />;
 }
 
 export function GoogleFormsIcon({ className = base }: IconProps) {
-  return <BrandLogoImg src="/logos/google-forms.svg" alt="Google Forms" className={className} />;
+  return <BrandLogoImg src="/connector-logos/google_workspace.webp" alt="Google Forms" className={className} />;
 }
 
 export function GoogleMeetIcon({ className = base }: IconProps) {
-  return <BrandLogoImg src="/logos/google-meet.svg" alt="Google Meet" className={className} />;
+  return <BrandLogoImg src="/connector-logos/google_workspace.webp" alt="Google Meet" className={className} />;
 }
 
 export function RazorpayIcon({ className = base }: IconProps) {
-  return <BrandLogoImg src="/logos/razorpay.svg" alt="Razorpay" className={className} />;
+  return <BrandLogoImg src="/connector-logos/razorpay.webp" alt="Razorpay" className={className} />;
 }
 
 export function StripeIcon({ className = base }: IconProps) {
-  return <BrandLogoImg src="/logos/stripe.svg" alt="Stripe" className={className} />;
+  return <BrandLogoImg src="/connector-logos/stripe.webp" alt="Stripe" className={className} />;
 }
 
 export function PostgresIcon({ className = base }: IconProps) {
-  return <BrandLogoImg src="/logos/postgresql.svg" alt="PostgreSQL" className={className} />;
+  return <BrandLogoImg src="/connector-logos/postgres.webp" alt="PostgreSQL" className={className} />;
 }
 
 export function MongoDbIcon({ className = base }: IconProps) {
-  return <BrandLogoImg src="/logos/mongodb.svg" alt="MongoDB" className={className} />;
+  return <BrandLogoImg src="/connector-logos/mongodb.webp" alt="MongoDB" className={className} />;
 }
 
 export function CustomApiIcon({ className = base }: IconProps) {
@@ -67,19 +67,19 @@ export function CustomApiIcon({ className = base }: IconProps) {
 }
 
 export function TelegramIcon({ className = base }: IconProps) {
-  return <BrandLogoImg src="/logos/telegram.svg" alt="Telegram" className={className} />;
+  return <BrandLogoImg src="/connector-logos/telegram.webp" alt="Telegram" className={className} />;
 }
 
 export function CalComIcon({ className = base }: IconProps) {
-  return <BrandLogoImg src="/logos/calcom.svg" alt="Cal.com" className={className} />;
+  return <BrandLogoImg src="/connector-logos/calcom.webp" alt="Cal.com" className={className} />;
 }
 
 export function SlackIcon({ className = base }: IconProps) {
-  return <BrandLogoImg src="/logos/slack.svg" alt="Slack" className={className} />;
+  return <BrandLogoImg src="/connector-logos/slack.webp" alt="Slack" className={className} />;
 }
 
 export function NotionIcon({ className = base }: IconProps) {
-  return <BrandLogoImg src="/logos/notion.svg" alt="Notion" className={className} />;
+  return <BrandLogoImg src="/connector-logos/notion.webp" alt="Notion" className={className} />;
 }
 
 export function PayPalIcon({ className = base }: IconProps) {
@@ -129,23 +129,23 @@ export function DiscordIcon({ className = base }: IconProps) {
 // static files (same convention as the Google/Slack/etc logos above) — see
 // web/public/logos. No runtime dependency on Brandfetch or any API key.
 export function JiraIcon({ className = base }: IconProps) {
-  return <BrandLogoImg src="/logos/jira.png" alt="Jira" className={className} />;
+  return <BrandLogoImg src="/connector-logos/jira.webp" alt="Jira" className={className} />;
 }
 
 export function PagerDutyIcon({ className = base }: IconProps) {
-  return <BrandLogoImg src="/logos/pagerduty.svg" alt="PagerDuty" className={className} />;
+  return <BrandLogoImg src="/connector-logos/pagerduty.webp" alt="PagerDuty" className={className} />;
 }
 
 export function TrelloIcon({ className = base }: IconProps) {
-  return <BrandLogoImg src="/logos/trello.svg" alt="Trello" className={className} />;
+  return <BrandLogoImg src="/connector-logos/trello.webp" alt="Trello" className={className} />;
 }
 
 export function AirtableIcon({ className = base }: IconProps) {
-  return <BrandLogoImg src="/logos/airtable.svg" alt="Airtable" className={className} />;
+  return <BrandLogoImg src="/connector-logos/airtable.webp" alt="Airtable" className={className} />;
 }
 
 export function TwilioIcon({ className = base }: IconProps) {
-  return <BrandLogoImg src="/logos/twilio.svg" alt="Twilio" className={className} />;
+  return <BrandLogoImg src="/connector-logos/twilio.webp" alt="Twilio" className={className} />;
 }
 
 /** Simple letter-badge placeholders (no vendored brand asset yet) for the newest push-webhook connectors — swap for a real /logos/*.svg when one is added, same as the providers above. */

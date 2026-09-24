@@ -4,13 +4,13 @@ import { IntegrationsContent } from "./IntegrationsContent";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://elpino.chat";
 
 export const metadata: Metadata = {
-  title: "Stripe, Razorpay & Trello Integrations",
+  title: "Integrations",
   description:
-    "Connect Elpino to Stripe or Razorpay so the AI can verify a real order before it answers, and to Trello so an escalation becomes tracked work. Read-only for payment data.",
+    "Connect Stripe, Razorpay, Cashfree or Paystack for payments, Trello or Asana for tickets, and your own MCP servers. The AI only uses what you switch on.",
   alternates: { canonical: `${SITE_URL}/integrations` },
   openGraph: {
-    title: "Stripe, Razorpay & Trello Integrations",
-    description: "Payments the AI can verify, and tickets your team can track.",
+    title: "Integrations",
+    description: "Payments, tickets and your own systems, plugged into Elpino.",
     url: `${SITE_URL}/integrations`,
     type: "website",
   },

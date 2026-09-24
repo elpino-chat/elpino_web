@@ -1,629 +1,394 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import {
-  ArrowRight,
-  Check,
-  ChevronDown,
-  Sparkles,
-  Zap,
-  ShieldCheck,
-  Bot,
-  MessageSquare,
-  Clock,
-  Layers,
-  ArrowUpRight,
-  Terminal,
-  Cpu,
-  CreditCard,
-  Bell,
-  Code2,
-  Workflow,
-} from "lucide-react";
+import { useEffect, useState, type ReactNode } from "react";
+import { ArrowRight, BellRing, BookOpen, Check, CreditCard, Globe2, Headset, Lock, Plus, Rocket, Ticket, UserPlus, Users, Zap } from "lucide-react";
+import { Rv } from "@/app/components/RevealOnScroll";
 
-export function FoundersClient() {
-  const [activeTab, setActiveTab] = useState<number>(0);
-  const [openFaq, setOpenFaq] = useState<number | null>(0);
+// Founders, in the site's sticker language but built around one idea:
+// your time. A live stream of customer questions shows what Elpino takes
+// and what really needs you; a calculator (your numbers, your guess for how
+// much the AI resolves, no promises) turns that into hours back; the rest
+// covers setup, what reaches you, payments, and how it grows with a team.
+// Only real product behaviour is shown; omnichannel is "coming in November".
 
-  const stats = [
-    {
-      value: "82%",
-      label: "of founder interruptions come from repetitive questions already answered in docs",
-    },
-    {
-      value: "85%",
-      label: "first-contact autonomous resolution rate across routine customer conversations",
-    },
-    {
-      value: "< 45s",
-      label: "median answer speed 24/7 without hiring an outsourced frontline support team",
-    },
-    {
-      value: "14 hrs",
-      label: "saved per founder each week, redirected straight back into shipping product",
-    },
-  ];
+const INK = "#11120f";
+const BLUE = "#3784ff";
+const YELLOW = "#ffd84d";
+const PURPLE = "#7060bd";
+const ORANGE = "#fc7b33";
+const GREEN = "#1aa37a";
+const PINK = "#d9508a";
 
-  const pillars = [
-    {
-      tag: "Focus Preservation",
-      title: "AI that shows up so you can stay in product mode",
-      description:
-        "Most customer tools force you into a separate tabbed inbox all day. Elpino ingests your docs, syncs with your website, and handles frontline triage quietly in the background. When a VIP lead or complex bug arrives, it pings your Slack or Telegram with full context.",
-      bulletPoints: [
-        "Resolves repetitive setup, pricing, and FAQ queries instantly",
-        "Hands off to you only when human judgment is genuinely required",
-        "No tab-hopping: manage triage from Slack or your unified dashboard",
-      ],
-      image: "/images/founders-sloth-v2.png",
-      imageAlt: "Founders staying in deep focus while Elpino handles customer triage",
-      chip: "Deep Work Protected",
-    },
-    {
-      tag: "Absolute Grounding",
-      title: "Built on your actual product truth, not a blank prompt",
-      description:
-        "Generic AI tools hallucinate and guess. Elpino indexes your live documentation, GitHub issues, help centers, and API schemas. Every answer is strictly grounded in your verified company knowledge, with direct citations so customers trust every reply.",
-      bulletPoints: [
-        "Continuous crawl of your docs, Notion pages, and URLs",
-        "Configurable confidence guardrails prevent speculative answers",
-        "Cites exact documentation paragraphs for transparency",
-      ],
-      image: "/images/about-sloth-crew.png",
-      imageAlt: "Grounded AI customer operator powered by company knowledge",
-      chip: "0% Hallucination Policy",
-    },
-    {
-      tag: "Revenue Intelligence",
-      title: "Turn customer questions into closed deals before intent cools",
-      description:
-        "When an interested buyer asks about enterprise pricing, integrations, or security compliance at 11 PM on a Sunday, Elpino provides definitive, accurate answers in seconds, collects their email, and stages high-intent sales conversations for you.",
-      bulletPoints: [
-        "Captures verified leads with pre-chat qualification",
-        "Connects with Stripe to verify customer subscription status instantly",
-        "Never lets a high-value customer wait hours for basic answers",
-      ],
-      image: "/images/revenue-sloth-v2.png",
-      imageAlt: "Capturing high-intent buyers and speeding up revenue cycles",
-      chip: "Instant Buyer Conversion",
-    },
-  ];
+const card = "rounded-[22px] border-2 border-[#11120f]";
+const mono = "font-mono text-[11px] font-semibold uppercase tracking-[0.14em]";
+const onDark = (c: string) => (c === YELLOW ? INK : "#fff");
+const dots = { backgroundImage: "radial-gradient(#000 1.2px, transparent 1.2px)", backgroundSize: "14px 14px" };
 
-  const demoTabs = [
-    {
-      title: "1. Instant Knowledge Resolution",
-      subtitle: "Customer asks complex setup question",
-      content: {
-        userQuery: "How do I verify customer identity using JWT tokens with your chat widget?",
-        aiResponse:
-          "To verify customer identity, generate an HMAC-SHA256 token on your backend using your workspace identity secret, then pass userHash and email to elpino.identify().",
-        source: "Source: docs.elpino.chat/identity-verification",
-        status: "Auto-Resolved · 380ms",
-      },
-    },
-    {
-      title: "2. Intelligent Founder Escalation",
-      subtitle: "VIP customer needs custom contract term",
-      content: {
-        userQuery: "We're a team of 45 looking for HIPAA BAA and annual invoicing. Can we talk to the founder?",
-        aiResponse:
-          "I've flagged this conversation directly to our founder team with your workspace details and contract request. Jagdeep will follow up within 20 minutes!",
-        source: "Trigger: Tier-1 Enterprise Handoff Rule",
-        status: "Escalated to Slack #founders",
-      },
-    },
-    {
-      title: "3. Real-Time Stripe Context",
-      subtitle: "Instant billing and subscription lookup",
-      content: {
-        userQuery: "Can I add 3 more operator seats before my next renewal date?",
-        aiResponse:
-          "Yes! You are currently on the Pro Tier. Additional seats prorate at $29/seat. I can send an update link to your billing email right now.",
-        source: "Stripe Connector · Customer ID: cus_8912",
-        status: "Verified Customer · Active Plan",
-      },
-    },
-    {
-      title: "4. Auto-Updating Knowledge",
-      subtitle: "Ship code, docs sync automatically",
-      content: {
-        userQuery: "Does Elpino support Claude 3.7 Sonnet for reasoning?",
-        aiResponse:
-          "Yes! Claude 3.7 Sonnet reasoning models are supported as of yesterday's changelog update with sub-second response streaming.",
-        source: "Auto-synced from /changelog (Indexed 2 hours ago)",
-        status: "Knowledge Live & Verified",
-      },
-    },
-  ];
+function useReduced() {
+  const [r, setR] = useState(false);
+  useEffect(() => setR(window.matchMedia("(prefers-reduced-motion: reduce)").matches), []);
+  return r;
+}
 
-  const agents = [
-    {
-      name: "Frontline Operator",
-      role: "Frontline triage & answers",
-      description: "Answers 80%+ of incoming inquiries using real documentation in 400ms.",
-      icon: Bot,
-      accent: "bg-[#ff5600]/10 text-[#ff5600]",
-    },
-    {
-      name: "Founder Pager",
-      role: "Smart escalation",
-      description: "Routes urgent bugs, security inquiries, and high-value buyers to Slack or SMS.",
-      icon: Bell,
-      accent: "bg-[#7651b0]/10 text-[#7651b0]",
-    },
-    {
-      name: "Stripe Billing Guard",
-      role: "Payment intelligence",
-      description: "Pulls subscription tier, invoice history, and credit usage in real time.",
-      icon: CreditCard,
-      accent: "bg-[#18c983]/10 text-[#18c983]",
-    },
-    {
-      name: "Knowledge Crawler",
-      role: "Continuous sync",
-      description: "Crawls documentation, API specs, and release notes whenever you push updates.",
-      icon: Workflow,
-      accent: "bg-[#233d4d]/10 text-[#233d4d]",
-    },
-    {
-      name: "Lead Qualifier",
-      role: "Buyer conversion",
-      description: "Collects verified emails, company size, and use-cases from high-intent visitors.",
-      icon: Zap,
-      accent: "bg-[#ff5600]/10 text-[#ff5600]",
-    },
-    {
-      name: "Zero-Hallucination Guard",
-      role: "Strict verification",
-      description: "Refuses to guess. When confidence is below threshold, hands off smoothly.",
-      icon: ShieldCheck,
-      accent: "bg-[#18c983]/10 text-[#18c983]",
-    },
-  ];
+function Stamp({ color, children }: { color: string; children: ReactNode }) {
+  return (
+    <span className={`${mono} inline-flex items-center gap-1.5 rounded-full border-2 border-[#11120f] px-3 py-1.5`} style={{ backgroundColor: color, color: onDark(color) }}>
+      {children}
+    </span>
+  );
+}
 
-  const faqs = [
-    {
-      q: "How is Elpino different from generic chatbot widgets?",
-      a: "Generic chatbots require manual 'if-this-then-that' decision trees or use disconnected prompts that hallucinate. Elpino is an autonomous customer agent that deeply indexes your real knowledge base, connects with your live customer data (Stripe, CRM), and hands off to you with full conversational memory the moment human judgment is required.",
-    },
-    {
-      q: "How fast can I set up Elpino as a solo founder or small team?",
-      a: "Under 5 minutes. Paste your website URL or documentation link to start instant indexing, copy one script tag into your website or React app, and Elpino begins answering customer queries immediately.",
-    },
-    {
-      q: "How does Elpino know when to answer vs when to alert me?",
-      a: "You configure simple confidence thresholds and keyword rules. Routine setup, feature questions, and documentation queries are answered autonomously. Custom pricing, refund requests, security questions, or explicit requests for a human immediately notify your team in Slack, Telegram, or email.",
-    },
-    {
-      q: "Will Elpino ever make up answers or hallucinate to my customers?",
-      a: "No. Elpino enforces strict grounding policies. If an answer cannot be verified with high confidence from your ingested documentation and past approved answers, the agent politely states it will check with the founding team and creates a ticket.",
-    },
-    {
-      q: "Can I connect Stripe to handle billing questions without exposing sensitive credentials?",
-      a: "Yes. The Elpino Stripe connector operates through secure, restricted-scope OAuth tokens. It allows the agent to check invoice status, active plan tiers, and billing dates without ever storing or exposing raw card numbers or payout secrets.",
-    },
-    {
-      q: "What happens when our startup scales and we hire our first support lead?",
-      a: "Elpino transitions seamlessly. You can invite your new support teammate with one click, assign conversation routing rules, and grant them access to the shared inbox. Your historical knowledge and approved answers are already indexed and ready to assist them from day one.",
-    },
-  ];
+function Heading({ eyebrow, color, title, sub, left = false }: { eyebrow: string; color: string; title: ReactNode; sub?: string; left?: boolean }) {
+  return (
+    <div className={left ? "max-w-3xl" : "mx-auto max-w-3xl text-center"}>
+      <Rv variant="drop"><Stamp color={color}>{eyebrow}</Stamp></Rv>
+      <Rv delay={80}><h2 className="mt-5 text-[clamp(2.2rem,5vw,3.9rem)] font-semibold leading-[1.02] tracking-[-0.045em]">{title}</h2></Rv>
+      {sub && <Rv delay={160}><p className="mt-5 text-lg leading-8 text-[#11120f]/65">{sub}</p></Rv>}
+    </div>
+  );
+}
+
+// -------------------------------------------------------------------- hero
+
+const STREAM: { q: string; who: string; you?: boolean; why?: string }[] = [
+  { q: "How do I export my data?", who: "Maya" },
+  { q: "Why did my card fail?", who: "Jordan" },
+  { q: "Do you offer a startup discount?", who: "Sam" },
+  { q: "Can we get a custom contract?", who: "Riya · large account", you: true, why: "Asked for a person" },
+  { q: "Where's my invoice for March?", who: "Leo" },
+  { q: "How do I reset my password?", who: "Ana" },
+  { q: "Can I talk to the founder?", who: "Tom", you: true, why: "Asked for a person" },
+  { q: "Does it work with Shopify?", who: "Ivy" },
+];
+
+function Stream() {
+  const reduced = useReduced();
+  const [n, setN] = useState(reduced ? STREAM.length : 3);
+  useEffect(() => {
+    if (reduced) { setN(STREAM.length); return; }
+    const id = window.setTimeout(() => setN((v) => (v >= STREAM.length + 2 ? 1 : v + 1)), n >= STREAM.length ? 2600 : 1500);
+    return () => window.clearTimeout(id);
+  }, [n, reduced]);
+
+  const shown = STREAM.slice(0, Math.min(n, STREAM.length));
+  const visible = shown.slice(-4);
+  const handled = shown.filter((s) => !s.you).length;
+  const needs = shown.filter((s) => s.you).length;
 
   return (
-    <main className="relative min-h-screen w-full bg-white font-[family-name:var(--font-rethink-sans)] text-[#111] antialiased">
-      {/* 1. HERO SECTION matching Superhuman */}
-      <section className="relative overflow-hidden bg-white pt-24 pb-16 md:pt-36 md:pb-24 lg:pt-44 lg:pb-32">
-        {/* Subtle warm mesh gradient */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -top-40 left-1/2 -z-10 h-[38rem] w-[60rem] -translate-x-1/2 rounded-full bg-gradient-to-tr from-[#fff4ec] via-[#faf7f2] to-[#f4f3ec] opacity-80 blur-3xl"
-        />
-
-        <div className="mx-auto max-w-[1440px] px-6 sm:px-8 lg:px-12">
-          <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
-            {/* Pill Eyebrow */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-[#faf9f6] px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-black/75 shadow-xs">
-              <span className="size-2 rounded-full bg-[#ff5600] animate-pulse" />
-              <span>Elpino for Founders · Automation with Human Craft</span>
+    <div className={`${card} relative overflow-hidden bg-[#fffdf5]`}>
+      <div className="flex items-center justify-between border-b-2 border-[#11120f] bg-white px-4 py-3">
+        <span className={`${mono} text-[#11120f]/55`}>Incoming, live</span>
+        <span className="flex items-center gap-1.5 text-[12px] font-medium"><span className="size-2 animate-pulse rounded-full" style={{ backgroundColor: GREEN }} />Elpino on duty</span>
+      </div>
+      <div className="min-h-[286px] space-y-2.5 p-4">
+        {visible.map((s) => (
+          <div key={s.q} className="rounded-2xl border-2 border-[#11120f] bg-white p-3.5" style={{ animation: "elpino-rv-drop .45s both" }}>
+            <div className="flex items-center justify-between gap-3">
+              <span className={`${mono} text-[10px] text-[#11120f]/50`}>{s.who}</span>
+              {s.you
+                ? <span className={`${mono} inline-flex items-center gap-1 rounded-full border-2 border-[#11120f] px-2 py-0.5 text-[9px]`} style={{ backgroundColor: YELLOW, animation: "elpino-ring 1.4s ease-out infinite" }}><BellRing size={10} />Needs you</span>
+                : <span className={`${mono} inline-flex items-center gap-1 rounded-full border-2 border-[#11120f] px-2 py-0.5 text-[9px] text-white`} style={{ backgroundColor: GREEN }}><Check size={10} strokeWidth={3} />Handled</span>}
             </div>
+            <p className="mt-1.5 text-[15px] font-semibold leading-snug">{s.q}</p>
+            {s.you && <p className="mt-1 text-[12.5px] text-[#11120f]/55">{s.why}. Elpino asked first, then alerted you.</p>}
+          </div>
+        ))}
+      </div>
+      <div className="grid grid-cols-2 border-t-2 border-[#11120f]">
+        <div className="border-r-2 border-[#11120f] p-4 text-white" style={{ backgroundColor: GREEN }}><p className="text-4xl font-semibold tabular-nums tracking-[-0.04em]">{handled}</p><p className={`${mono} text-white/80`}>Handled without you</p></div>
+        <div className="p-4" style={{ backgroundColor: YELLOW }}><p className="text-4xl font-semibold tabular-nums tracking-[-0.04em]">{needs}</p><p className={`${mono} text-[#11120f]/70`}>Actually needed you</p></div>
+      </div>
+    </div>
+  );
+}
 
-            {/* Display Headline */}
-            <h1 className="mt-8 text-[clamp(2.75rem,6vw,5.5rem)] font-medium leading-[0.96] tracking-[-0.04em] text-[#0c1017]">
-              The AI customer operator that keeps you building.
-            </h1>
-
-            {/* Subhead */}
-            <p className="mt-7 max-w-2xl text-lg leading-relaxed text-black/65 sm:text-xl md:leading-8">
-              Resolve 85% of customer questions autonomously from your real knowledge base,
-              capture high-intent buyers around the clock, and protect your calendar from
-              support chaos.
-            </p>
-
-            {/* CTAs */}
-            <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-              <Link
-                href="/signup"
-                className="inline-flex h-13 items-center justify-center gap-2 rounded-full bg-black px-8 text-sm font-semibold text-white transition-all duration-200 hover:bg-[#ff5600] hover:shadow-lg active:scale-95"
-              >
-                Start free trial
-                <ArrowRight size={16} />
-              </Link>
-              <Link
-                href="/contact"
-                className="inline-flex h-13 items-center justify-center rounded-full border border-black/15 bg-white px-7 text-sm font-medium text-black transition hover:border-black hover:bg-black/5"
-              >
-                Book a founder demo
-              </Link>
+function Hero() {
+  return (
+    <section className="relative isolate overflow-hidden bg-white text-[#11120f]">
+      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-cover bg-top" style={{ backgroundImage: "url(/piliar-1-grandient.png)", maskImage: "linear-gradient(to bottom, #000 50%, transparent)", WebkitMaskImage: "linear-gradient(to bottom, #000 50%, transparent)" }} />
+      <div className="mx-auto grid max-w-6xl items-center gap-14 px-5 pb-24 pt-[124px] sm:px-8 lg:grid-cols-[1.1fr_.9fr] lg:pt-[140px]">
+        <div>
+          <Rv variant="drop"><Stamp color={YELLOW}><Rocket size={13} />For founders</Stamp></Rv>
+          <Rv delay={80}>
+            <h1 className="mt-6 text-[clamp(2.9rem,6.8vw,5.6rem)] font-semibold leading-[0.96] tracking-[-0.058em]">Ship product. <span className="hl">Not support replies.</span></h1>
+          </Rv>
+          <Rv delay={170}><p className="mt-6 max-w-[52ch] text-lg leading-8 text-[#11120f]/70">You started a company to build something, not to answer &ldquo;how do I reset my password?&rdquo; forty times a week. Elpino takes the repeat questions and only taps you for the ones that truly need a founder.</p></Rv>
+          <Rv delay={250}>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/signup" className="inline-flex h-13 items-center gap-2 rounded-full border-2 border-[#11120f] px-7 font-semibold text-white transition hover:-translate-y-0.5" style={{ backgroundColor: BLUE }}>Start free <ArrowRight size={17} /></Link>
+              <Link href="/pricing" className="inline-flex h-13 items-center rounded-full border-2 border-[#11120f] bg-white px-7 font-semibold transition hover:-translate-y-0.5 hover:bg-[#ffd84d]">See pricing</Link>
             </div>
+            <p className="mt-4 text-sm text-[#11120f]/55">Free plan: 50 AI conversations a month. No card.</p>
+          </Rv>
+        </div>
+        <Rv variant="deal" delay={200}><Stream /></Rv>
+      </div>
+    </section>
+  );
+}
 
-            {/* Trust badge */}
-            <p className="mt-12 text-xs font-medium uppercase tracking-[0.14em] text-black/45">
-              Trusted by 500+ high-velocity founders & fast-growing startups
-            </p>
-          </div>
+// -------------------------------------------------------------- calculator
 
-          {/* Hero Visual Card with Mascot */}
-          <div className="mt-14 overflow-hidden rounded-3xl border border-black/10 bg-[#faf9f6] p-4 shadow-xl sm:p-8 lg:p-10">
-            <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl border border-black/10 bg-[#f5effb] shadow-inner">
-              <Image
-                src="/images/founders-sloth-v2.png"
-                alt="Elpino founder dashboard and customer operator in action"
-                fill
-                priority
-                className="object-contain p-5 transition-transform duration-700 hover:scale-[1.02] sm:p-8"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+function Slider({ label, value, min, max, unit, onChange, color }: { label: string; value: number; min: number; max: number; unit: string; onChange: (v: number) => void; color: string }) {
+  return (
+    <label className="block">
+      <span className="flex items-baseline justify-between"><span className="text-[15px] font-semibold">{label}</span><span className="font-mono text-2xl font-bold tabular-nums" style={{ color }}>{value}<span className="text-sm font-medium text-[#11120f]/50"> {unit}</span></span></span>
+      <input type="range" min={min} max={max} value={value} onChange={(e) => onChange(Number(e.target.value))} className="mt-2 w-full" style={{ accentColor: color }} />
+    </label>
+  );
+}
 
-              {/* Floating UI Badges */}
-              <div className="absolute bottom-6 left-6 right-6 flex flex-wrap items-center justify-between gap-4 text-white">
-                <div className="flex items-center gap-3">
-                  <div className="size-3 rounded-full bg-[#18c983] animate-ping" />
-                  <span className="text-sm font-semibold tracking-tight">
-                    Elpino Agent Active · Autonomous Resolution: 88.4%
-                  </span>
-                </div>
-                <div className="rounded-full bg-white/20 px-3.5 py-1 text-xs font-medium backdrop-blur-md">
-                  Grounded in /docs & Stripe live context
-                </div>
-              </div>
+function Calculator() {
+  const [q, setQ] = useState(30);
+  const [m, setM] = useState(4);
+  const [pct, setPct] = useState(60);
+  const perDay = (q * m) / 60;
+  const now = Math.min(8, perDay);
+  const after = Math.min(8, perDay * (1 - pct / 100));
+  const backWeek = ((perDay - perDay * (1 - pct / 100)) * 5);
+  const bar = (support: number) => (
+    <div className="flex h-12 overflow-hidden rounded-xl border-2 border-[#11120f]">
+      <div className="grid place-items-center text-[12px] font-semibold text-white transition-[width] duration-500" style={{ width: `${(support / 8) * 100}%`, backgroundColor: ORANGE }}>{support >= 0.6 ? `${support.toFixed(1)}h support` : ""}</div>
+      <div className="grid flex-1 place-items-center text-[12px] font-semibold text-white" style={{ backgroundColor: GREEN }}>{(8 - support) >= 1 ? `${(8 - support).toFixed(1)}h building` : ""}</div>
+    </div>
+  );
+  return (
+    <section className="bg-[#fff8ec] px-5 py-24 sm:px-8 sm:py-28">
+      <div className="mx-auto max-w-6xl">
+        <Heading eyebrow="Do the maths" color={GREEN} title={<>Get your afternoons <span className="hl">back.</span></>} sub="Plug in your own numbers. The AI share is your guess, not a promise, and it depends on what's in your knowledge base." />
+        <div className="mt-14 grid gap-6 lg:grid-cols-[.9fr_1.1fr]">
+          <Rv variant="up">
+            <div className={`${card} space-y-7 bg-white p-6 sm:p-8`}>
+              <Slider label="Customer questions a day" value={q} min={5} max={200} unit="/day" onChange={setQ} color={BLUE} />
+              <Slider label="Minutes to answer each" value={m} min={1} max={15} unit="min" onChange={setM} color={PURPLE} />
+              <Slider label="Share you guess the AI resolves" value={pct} min={0} max={100} unit="%" onChange={setPct} color={GREEN} />
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 2. THE DATA PLATEAU SECTION matching Superhuman */}
-      <section className="relative w-full border-t border-black/10 bg-[#faf9f6] py-20 sm:py-28 lg:py-36">
-        <div className="mx-auto max-w-[1440px] px-6 sm:px-8 lg:px-12">
-          <div className="max-w-3xl">
-            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#ff5600]">
-              The Founder Dilemma
-            </span>
-            <h2 className="mt-3 text-[clamp(2.2rem,4vw,3.8rem)] font-medium leading-tight tracking-[-0.035em] text-[#0c1017]">
-              Founders have hit an AI support plateau.
-            </h2>
-            <p className="mt-4 text-base leading-relaxed text-black/65 sm:text-lg">
-              Generic chatbots promise automation, but lack deep business context, hallucinate answers,
-              and dump half-broken tickets back into your personal inbox. Here is what builders
-              experience before switching to Elpino:
-            </p>
-          </div>
-
-          {/* 4 Stats Grid matching Superhuman's big numbers */}
-          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {stats.map((stat, i) => (
-              <div
-                key={i}
-                className="flex flex-col justify-between rounded-3xl border border-black/10 bg-white p-8 shadow-xs transition hover:border-black/30 hover:shadow-md"
-              >
-                <div className="text-5xl font-semibold tracking-tight text-black sm:text-6xl">
-                  {stat.value}
-                </div>
-                <p className="mt-6 text-sm leading-relaxed text-black/65">
-                  {stat.label}
-                </p>
+          </Rv>
+          <Rv variant="up" delay={120}>
+            <div className={`${card} relative h-full overflow-hidden bg-[#fffdf5] p-6 sm:p-8`}>
+              <p className={`${mono} text-[#11120f]/55`}>Your 8-hour day</p>
+              <p className="mt-3 text-[13px] font-semibold text-[#11120f]/70">Today</p>{bar(now)}
+              <p className="mt-4 text-[13px] font-semibold text-[#11120f]/70">With Elpino at {pct}%</p>{bar(after)}
+              <div className="mt-6 grid grid-cols-2 gap-3">
+                <div className={`${card} p-4 text-white`} style={{ backgroundColor: PURPLE }}><p className="text-4xl font-semibold tabular-nums tracking-[-0.04em]">{backWeek.toFixed(1)}h</p><p className={`${mono} text-white/80`}>Back each week</p></div>
+                <div className={`${card} p-4`} style={{ backgroundColor: YELLOW }}><p className="text-4xl font-semibold tabular-nums tracking-[-0.04em]">{Math.round(q * (pct / 100))}</p><p className={`${mono} text-[#11120f]/70`}>Chats a day, untouched</p></div>
               </div>
-            ))}
-          </div>
+              {perDay > 8 && <p className="mt-4 text-[13px] text-[#11120f]/55">At this volume, support alone is more than a full day.</p>}
+            </div>
+          </Rv>
         </div>
-      </section>
+      </div>
+    </section>
+  );
+}
 
-      {/* 3. CORE VALUE PROPOSITION PILLARS matching Superhuman */}
-      <section className="relative w-full border-t border-black/10 bg-white py-20 sm:py-28 lg:py-36">
-        <div className="mx-auto max-w-[1440px] px-6 sm:px-8 lg:px-12">
-          <div className="mx-auto max-w-3xl text-center">
-            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#ff5600]">
-              Built for Velocity
-            </span>
-            <h2 className="mt-3 text-[clamp(2.2rem,4vw,3.8rem)] font-medium leading-tight tracking-[-0.035em] text-[#0c1017]">
-              Everything a founder needs to run calm, world-class support.
-            </h2>
-            <p className="mt-4 text-base text-black/65 sm:text-lg">
-              Connect your documentation, billing, and communication channels into one
-              autonomous operator that represents your company with extreme craft.
-            </p>
-          </div>
+// -------------------------------------------------------------- setup
 
-          <div className="mt-16 space-y-16 sm:space-y-24">
-            {pillars.map((pillar, i) => (
-              <div
-                key={i}
-                className={`grid items-center gap-12 lg:grid-cols-12 lg:gap-16 ${
-                  i % 2 === 1 ? "lg:grid-flow-dense" : ""
-                }`}
-              >
-                {/* Text column */}
-                <div className={`space-y-6 lg:col-span-6 ${i % 2 === 1 ? "lg:col-start-7" : ""}`}>
-                  <span className="inline-block rounded-full bg-[#f4f3ec] px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-black/75">
-                    {pillar.tag}
-                  </span>
-                  <h3 className="text-3xl font-medium tracking-tight text-black sm:text-4xl">
-                    {pillar.title}
-                  </h3>
-                  <p className="text-base leading-relaxed text-black/70 sm:text-lg">
-                    {pillar.description}
-                  </p>
-                  <ul className="space-y-3 pt-2">
-                    {pillar.bulletPoints.map((pt, j) => (
-                      <li key={j} className="flex items-start gap-3 text-sm text-black/80">
-                        <Check size={16} className="mt-1 shrink-0 text-[#ff5600]" strokeWidth={2.5} />
-                        <span>{pt}</span>
-                      </li>
-                    ))}
-                  </ul>
+const SETUP = [
+  { icon: Globe2, c: BLUE, t: "Paste your site", d: "Elpino crawls your pages, including JavaScript-built ones, and learns your product.", meter: "Reading your site" },
+  { icon: BookOpen, c: YELLOW, t: "Add the rest", d: "Upload docs, or write the policies that live only in your head.", meter: "Adding knowledge" },
+  { icon: Zap, c: PURPLE, t: "Drop in the widget", d: "One snippet and the chat is live on your site.", meter: "Installing widget" },
+  { icon: CreditCard, c: PINK, t: "Connect payments (optional)", d: "Stripe or Razorpay, so it can look up billing for you.", meter: "Connecting" },
+];
+
+function Setup() {
+  const reduced = useReduced();
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    if (reduced) return;
+    const id = window.setInterval(() => setI((v) => (v + 1) % SETUP.length), 2600);
+    return () => window.clearInterval(id);
+  }, [reduced]);
+  return (
+    <section className="bg-white px-5 py-24 sm:px-8 sm:py-28">
+      <div className="mx-auto max-w-6xl">
+        <Heading eyebrow="Setup" color={BLUE} title={<>Live before your <span className="hl">coffee cools.</span></>} sub="No engineers, no training period. Four steps, and the last is optional." />
+        <div className="mt-14 grid gap-4 md:grid-cols-4">
+          {SETUP.map((s, k) => {
+            const on = k === i;
+            return (
+              <button key={s.t} type="button" onClick={() => setI(k)} aria-pressed={on} className={`${card} p-5 text-left transition-all duration-500`} style={{ backgroundColor: on ? s.c : "#fff", color: on ? onDark(s.c) : INK, transform: on ? "translateY(-8px)" : "none" }}>
+                <span className="grid size-12 place-items-center rounded-full border-2 border-[#11120f] bg-white"><s.icon size={22} color={INK} /></span>
+                <p className={`${mono} mt-4 text-[10px] opacity-70`}>Step {k + 1}</p>
+                <p className="mt-1 text-xl font-semibold leading-snug tracking-tight">{s.t}</p>
+                <p className="mt-2 text-[14.5px] leading-6 opacity-85">{s.d}</p>
+                <div className="mt-4 h-2.5 overflow-hidden rounded-full border-2 border-[#11120f] bg-white/70">
+                  <div key={on ? `on${i}` : "off"} className="h-full w-full" style={on ? { backgroundImage: `linear-gradient(${INK}, ${INK})`, backgroundRepeat: "no-repeat", animation: "elpino-hl 2.4s ease-out both" } : { backgroundColor: k < i ? INK : "transparent" }} />
                 </div>
-
-                {/* Visual column */}
-                <div className={`lg:col-span-6 ${i % 2 === 1 ? "lg:col-start-1" : ""}`}>
-                  <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl border border-black/10 bg-[#faf9f6] p-4 shadow-md sm:p-6">
-                    <div className="relative h-full w-full overflow-hidden rounded-2xl bg-[#f5effb] shadow-inner">
-                      <Image
-                        src={pillar.image}
-                        alt={pillar.imageAlt}
-                        fill
-                        className="object-contain p-5 transition-transform duration-700 hover:scale-[1.03] sm:p-7"
-                      />
-                      <div className="absolute top-4 left-4 rounded-full border border-black/10 bg-white/90 px-3 py-1 text-xs font-semibold text-black shadow-xs backdrop-blur-md">
-                        {pillar.chip}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 4. INTERACTIVE TABBED WORKFLOW DEMO matching Superhuman */}
-      <section className="relative w-full border-t border-black/10 bg-[#faf9f6] py-20 sm:py-28 lg:py-36">
-        <div className="mx-auto max-w-[1440px] px-6 sm:px-8 lg:px-12">
-          <div className="max-w-3xl">
-            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#ff5600]">
-              Interactive Preview
-            </span>
-            <h2 className="mt-3 text-[clamp(2.2rem,4vw,3.8rem)] font-medium leading-tight tracking-[-0.035em] text-[#0c1017]">
-              See how it all works together for your startup.
-            </h2>
-            <p className="mt-4 text-base text-black/65 sm:text-lg">
-              Click through the stages of customer interaction to see how Elpino balances
-              autonomous speed with high-touch human escalation.
-            </p>
-          </div>
-
-          {/* Tab Navigation */}
-          <div className="mt-12 flex flex-wrap gap-2 border-b border-black/10 pb-4">
-            {demoTabs.map((tab, idx) => (
-              <button
-                key={idx}
-                type="button"
-                onClick={() => setActiveTab(idx)}
-                className={`cursor-pointer rounded-full px-5 py-2.5 text-xs font-semibold transition-all sm:text-sm ${
-                  activeTab === idx
-                    ? "bg-black text-white shadow-sm"
-                    : "bg-white text-black/70 hover:bg-black/5 hover:text-black border border-black/10"
-                }`}
-              >
-                {tab.title}
               </button>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ---------------------------------------------------------- what reaches you
+
+function Reaches() {
+  const rules = [
+    { c: GREEN, icon: Check, t: "Answers from your docs", d: "Handled. You never see it." },
+    { c: BLUE, icon: CreditCard, t: "Payment and account lookups", d: "Handled with the tools you switched on." },
+    { c: YELLOW, icon: Headset, t: "\"Can I talk to someone?\"", d: "Asks the customer first, then alerts you and your team." },
+    { c: ORANGE, icon: Ticket, t: "You're heads-down?", d: "After 90 seconds, a ticket is filed and the customer is told." },
+  ];
+  return (
+    <section className="bg-[#11120f] px-5 py-24 text-white sm:px-8 sm:py-28">
+      <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
+        <div>
+          <Rv variant="drop"><Stamp color={ORANGE}><BellRing size={13} />The filter</Stamp></Rv>
+          <Rv delay={80}><h2 className="mt-5 text-[clamp(2.2rem,5vw,3.9rem)] font-semibold leading-[1.02] tracking-[-0.045em]">Only the <span className="rounded-md px-2" style={{ backgroundColor: YELLOW, color: INK }}>important stuff</span> reaches you.</h2></Rv>
+          <Rv delay={160}><p className="mt-5 max-w-[48ch] text-lg leading-8 text-white/65">You decide what the AI may do. Everything else is a clear rule: ask first, alert together, and never leave the customer hanging.</p></Rv>
+        </div>
+        <div className="space-y-3">
+          {rules.map((r, i) => (
+            <Rv key={r.t} variant="up" delay={i * 90}>
+              <div className={`${card} flex items-center gap-4 bg-[#fffdf5] p-4 text-[#11120f] transition duration-300 hover:translate-x-2`}>
+                <span className="grid size-12 shrink-0 place-items-center rounded-full border-2 border-[#11120f]" style={{ backgroundColor: r.c }}><r.icon size={20} color={onDark(r.c)} /></span>
+                <div><p className="text-[17px] font-semibold leading-snug">{r.t}</p><p className="text-[14.5px] text-[#11120f]/60">{r.d}</p></div>
+              </div>
+            </Rv>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// -------------------------------------------------------------- money
+
+function Money() {
+  const [refunds, setRefunds] = useState(false);
+  return (
+    <section className="bg-white px-5 py-24 sm:px-8 sm:py-28">
+      <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1fr_1.05fr]">
+        <div>
+          <Heading left eyebrow="Billing questions" color={PINK} title={<>It checks the real payment. <span className="hl">You keep the keys.</span></>} sub="Connect Stripe or Razorpay and the AI can look up payments and subscriptions, send receipts and payment links, and cancel a subscription when asked. Refunds stay off until you flip the switch." />
+        </div>
+        <Rv variant="deal" delay={100}>
+          <div className={`${card} bg-[#fffdf5] p-5`}>
+            <div className="space-y-2.5 text-[14.5px]">
+              <div className="ml-auto max-w-[85%] rounded-2xl rounded-br-sm border-2 border-[#11120f] px-4 py-2.5 text-white" style={{ backgroundColor: PURPLE }}>Can I get my last payment refunded?</div>
+              <div key={String(refunds)} className="max-w-[92%] rounded-2xl rounded-bl-sm border-2 border-[#11120f] bg-white px-4 py-2.5" style={{ animation: "elpino-rv-pop .35s both" }}>{refunds ? "I've found your payment and started the refund. It usually reaches your account in 5 to 7 working days." : "I can see the payment, but I can't refund it myself. Would you like me to connect you with our team?"}</div>
+            </div>
+            <div className="mt-5 flex items-center justify-between rounded-2xl border-2 border-[#11120f] bg-white px-4 py-3.5">
+              <span className="flex items-center gap-2.5 font-semibold"><Lock size={17} />Let the AI issue refunds</span>
+              <button type="button" role="switch" aria-checked={refunds} aria-label="Let the AI issue refunds" onClick={() => setRefunds(!refunds)} className="relative h-7 w-12 rounded-full border-2 border-[#11120f] transition-colors" style={{ backgroundColor: refunds ? GREEN : "#e7e2d6" }}><span className="absolute top-0.5 size-5 rounded-full border-2 border-[#11120f] bg-white transition-all" style={{ left: refunds ? "calc(100% - 22px)" : "2px" }} /></button>
+            </div>
+            <p className="mt-3 text-center text-xs text-[#11120f]/50">Off by default. Try the switch.</p>
+          </div>
+        </Rv>
+      </div>
+    </section>
+  );
+}
+
+// -------------------------------------------------------------- grows
+
+const STAGES = [
+  { icon: Rocket, c: BLUE, t: "Just you", d: "Free plan, 50 AI conversations a month, one inbox you rarely open." },
+  { icon: UserPlus, c: GREEN, t: "First hire", d: "Invite them by email. They get Join alerts and take chats over from the AI." },
+  { icon: Users, c: ORANGE, t: "A small team", d: "Assign conversations, share the inbox, add seats when you need them." },
+  { icon: Zap, c: PURPLE, t: "Scaling up", d: "Paid plans with a monthly AI credit, MCP tools for your own systems." },
+];
+
+function Grows() {
+  return (
+    <section className="bg-[#fff8ec] px-5 py-24 sm:px-8 sm:py-28">
+      <div className="mx-auto max-w-6xl">
+        <Heading eyebrow="Room to grow" color={PURPLE} title={<>Starts with you. <span className="hl">Scales with your team.</span></>} />
+        <div className="relative mt-16">
+          <div aria-hidden="true" className="absolute left-[12%] right-[12%] top-[38px] hidden h-0.5 md:block" style={{ backgroundImage: `linear-gradient(90deg, ${INK} 50%, transparent 50%)`, backgroundSize: "12px 2px" }} />
+          <div className="grid gap-5 md:grid-cols-4">
+            {STAGES.map((s, i) => (
+              <Rv key={s.t} variant="up" delay={i * 100}>
+                <div className="group flex flex-col items-center text-center">
+                  <span className="relative z-10 grid size-[76px] place-items-center rounded-full border-2 border-[#11120f] transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6" style={{ backgroundColor: s.c }}><s.icon size={28} color="#fff" /></span>
+                  <div className={`${card} mt-4 w-full bg-white p-4`} style={{ marginTop: 16 + i * 6 }}>
+                    <p className={`${mono} text-[10px] text-[#11120f]/45`}>Stage {i + 1}</p>
+                    <p className="mt-1 text-xl font-semibold tracking-tight">{s.t}</p>
+                    <p className="mt-1.5 text-[14.5px] leading-6 text-[#11120f]/60">{s.d}</p>
+                  </div>
+                </div>
+              </Rv>
             ))}
           </div>
+        </div>
+      </div>
+    </section>
+  );
+}
 
-          {/* Active Tab Preview Window */}
-          <div className="mt-8 rounded-3xl border border-black/15 bg-white p-6 shadow-xl sm:p-10">
-            <div className="flex items-center justify-between border-b border-black/10 pb-4 text-xs font-medium text-black/50">
-              <span className="flex items-center gap-2">
-                <span className="size-2.5 rounded-full bg-[#18c983]" />
-                {demoTabs[activeTab].subtitle}
-              </span>
-              <span className="rounded-full bg-[#f4f3ec] px-3 py-1 font-mono text-[11px] font-semibold text-black">
-                {demoTabs[activeTab].content.status}
-              </span>
-            </div>
+// ------------------------------------------------------------------- faq
 
-            <div className="mt-8 space-y-6">
-              {/* User Query message */}
-              <div className="flex items-start gap-4">
-                <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-black/5 text-xs font-bold">
-                  User
-                </div>
-                <div className="rounded-2xl rounded-tl-xs bg-[#faf9f6] p-4 text-sm font-medium text-black sm:text-base sm:p-5 max-w-2xl border border-black/5">
-                  &ldquo;{demoTabs[activeTab].content.userQuery}&rdquo;
+const FAQS: [string, string][] = [
+  ["How is this different from a generic chatbot widget?", "Elpino answers only from the knowledge you gave it, can look up real payments and use your own tools, verifies identity before touching anything personal, and hands over to a person with the full conversation when it can't help."],
+  ["How fast can I set it up on my own?", "Most founders are live the same day: add your site or files, paste the widget snippet, and optionally connect Stripe or Razorpay."],
+  ["How does it decide between answering and alerting me?", "If it can answer from your knowledge or a tool, it does. If it can't, it says so and asks the customer whether to connect them with your team. Only then are you and your team alerted."],
+  ["Will it make things up?", "It answers from what you've approved, and a review pass checks drafts against tool results. When it doesn't know, it says so."],
+  ["Is my Stripe or Razorpay account safe?", "Credentials are stored encrypted, and money-moving actions such as refunds are off unless you turn them on."],
+  ["What happens when I hire a support person?", "Invite them and they'll get Join alerts, can take over chats from the AI, and can hand them back."],
+];
+
+function Faq() {
+  const [open, setOpen] = useState(0);
+  return (
+    <section className="bg-white px-5 py-24 sm:px-8 sm:py-28">
+      <div className="mx-auto max-w-3xl">
+        <Heading eyebrow="Founder questions" color={YELLOW} title={<>Straight <span className="hl">answers.</span></>} />
+        <div className="mt-12 space-y-3">
+          {FAQS.map(([q, a], i) => (
+            <Rv key={q} variant="up" delay={i * 50}>
+              <div className={`${card} overflow-hidden ${open === i ? "bg-[#fffdf5]" : "bg-white"}`}>
+                <button type="button" aria-expanded={open === i} onClick={() => setOpen(open === i ? -1 : i)} className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left text-[17px] font-semibold">
+                  {q}
+                  <span className="grid size-8 shrink-0 place-items-center rounded-full border-2 border-[#11120f] transition-transform duration-300" style={{ backgroundColor: open === i ? YELLOW : "#fff", transform: open === i ? "rotate(45deg)" : "none" }}><Plus size={16} /></span>
+                </button>
+                <div className="grid transition-[grid-template-rows] duration-300" style={{ gridTemplateRows: open === i ? "1fr" : "0fr" }}>
+                  <div className="overflow-hidden"><p className="px-5 pb-5 text-[16px] leading-7 text-[#11120f]/70">{a}</p></div>
                 </div>
               </div>
+            </Rv>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
 
-              {/* AI Agent Response */}
-              <div className="flex items-start gap-4">
-                <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#ff5600] text-xs font-bold text-white">
-                  🦥
-                </div>
-                <div className="space-y-3 max-w-2xl">
-                  <div className="rounded-2xl rounded-tl-xs bg-[#f4f7f5] p-4 text-sm leading-relaxed text-[#1b2b24] sm:text-base sm:p-5 border border-[#18c983]/20 shadow-xs">
-                    {demoTabs[activeTab].content.aiResponse}
-                  </div>
-                  <div className="inline-flex items-center gap-2 rounded-lg bg-black/5 px-3 py-1 font-mono text-xs text-black/60">
-                    <Sparkles size={12} className="text-[#ff5600]" />
-                    {demoTabs[activeTab].content.source}
-                  </div>
-                </div>
-              </div>
-            </div>
+function Closing() {
+  return (
+    <section className="bg-white px-5 pb-24 pt-4 sm:px-8">
+      <Rv variant="pop">
+        <div className={`${card} relative mx-auto max-w-6xl overflow-hidden px-6 py-16 text-center text-white sm:px-12`} style={{ backgroundColor: ORANGE }}>
+          <div aria-hidden="true" className="absolute inset-0 opacity-[0.16]" style={dots} />
+          <Rocket size={38} className="relative mx-auto" aria-hidden="true" />
+          <h2 className="relative mx-auto mt-5 max-w-3xl text-[clamp(2.3rem,5.4vw,4.4rem)] font-semibold leading-[1.02] tracking-[-0.05em]">Go back to building.</h2>
+          <p className="relative mx-auto mt-4 max-w-lg text-lg text-white/90">Start free, teach Elpino your product, and let it take the repeat questions.</p>
+          <div className="relative mt-8 flex flex-wrap justify-center gap-3">
+            <Link href="/signup" className="inline-flex h-13 items-center gap-2 rounded-full border-2 border-[#11120f] px-8 font-semibold text-[#11120f] transition hover:-translate-y-0.5" style={{ backgroundColor: YELLOW }}>Start free <ArrowRight size={16} /></Link>
+            <Link href="/product/ai-agent" className="inline-flex h-13 items-center rounded-full border-2 border-[#11120f] bg-white px-8 font-semibold text-[#11120f] transition hover:-translate-y-0.5">Meet the AI agent</Link>
           </div>
         </div>
-      </section>
+      </Rv>
+    </section>
+  );
+}
 
-      {/* 5. SPECIALIZED AGENTS GRID matching Superhuman */}
-      <section className="relative w-full border-t border-black/10 bg-white py-20 sm:py-28 lg:py-36">
-        <div className="mx-auto max-w-[1440px] px-6 sm:px-8 lg:px-12">
-          <div className="max-w-3xl">
-            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#ff5600]">
-              Modular Intelligence
-            </span>
-            <h2 className="mt-3 text-[clamp(2.2rem,4vw,3.8rem)] font-medium leading-tight tracking-[-0.035em] text-[#0c1017]">
-              The right AI operator for every founder task.
-            </h2>
-            <p className="mt-4 text-base text-black/65 sm:text-lg">
-              First-party autonomous agents that handle triage, resolution, payment sync, and
-              verification without requiring engineering maintenance.
-            </p>
-          </div>
-
-          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {agents.map((agent, i) => {
-              const Icon = agent.icon;
-              return (
-                <div
-                  key={i}
-                  className="flex flex-col justify-between rounded-3xl border border-black/10 bg-[#faf9f6] p-8 transition hover:border-black/30 hover:bg-white hover:shadow-md"
-                >
-                  <div>
-                    <div className={`flex size-12 items-center justify-center rounded-2xl ${agent.accent}`}>
-                      <Icon size={22} />
-                    </div>
-                    <div className="mt-6 text-xs font-semibold uppercase tracking-wider text-black/40">
-                      {agent.role}
-                    </div>
-                    <h3 className="mt-1 text-2xl font-semibold text-black">
-                      {agent.name}
-                    </h3>
-                    <p className="mt-3 text-sm leading-relaxed text-black/65">
-                      {agent.description}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* 6. FOUNDER TESTIMONIAL SPOTLIGHT matching Superhuman */}
-      <section className="relative w-full border-t border-black/10 bg-[#070b14] py-20 text-white sm:py-28 lg:py-36">
-        <div className="mx-auto max-w-[1440px] px-6 sm:px-8 lg:px-12">
-          <div className="mx-auto max-w-4xl text-center">
-            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#ff5600]">
-              Founder Stories
-            </span>
-            <h2 className="mt-3 text-[clamp(2.2rem,4vw,3.8rem)] font-medium leading-tight tracking-[-0.035em] text-white">
-              Don&apos;t take it from us.
-            </h2>
-
-            <blockquote className="mt-10 text-2xl font-normal leading-relaxed tracking-tight text-white/90 sm:text-3xl md:text-4xl">
-              &ldquo;Before Elpino, I spent 3 hours every morning answering the exact same 10 setup
-              questions across email and web chat. Now Elpino resolves 85% of them autonomously with
-              zero hallucinations, and I only see the conversations that truly need my judgment.&rdquo;
-            </blockquote>
-
-            <div className="mt-8 flex flex-col items-center justify-center gap-2">
-              <p className="text-base font-semibold text-white">Alex Rodriguez</p>
-              <p className="text-sm text-white/60">Founder & CEO · HyperScale Cloud</p>
-              <div className="mt-2 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1 text-xs text-[#ff5600]">
-                <span>Resolved 12,400+ inquiries autonomously</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 7. FREQUENTLY ASKED QUESTIONS matching Superhuman */}
-      <section className="relative w-full border-t border-black/10 bg-white py-20 sm:py-28 lg:py-36">
-        <div className="mx-auto max-w-[1440px] px-6 sm:px-8 lg:px-12">
-          <div className="max-w-3xl">
-            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#ff5600]">
-              Founder FAQs
-            </span>
-            <h2 className="mt-3 text-[clamp(2.2rem,4vw,3.8rem)] font-medium leading-tight tracking-[-0.035em] text-[#0c1017]">
-              Frequently asked questions.
-            </h2>
-          </div>
-
-          <div className="mt-12 divide-y divide-black/10 border-y border-black/10">
-            {faqs.map((faq, idx) => {
-              const isOpen = openFaq === idx;
-              return (
-                <div key={idx} className="py-6">
-                  <button
-                    type="button"
-                    onClick={() => setOpenFaq(isOpen ? null : idx)}
-                    className="flex w-full cursor-pointer items-center justify-between text-left group"
-                  >
-                    <span className="text-xl font-medium tracking-tight text-black transition group-hover:text-[#ff5600] sm:text-2xl">
-                      {faq.q}
-                    </span>
-                    <span
-                      className={`flex size-8 shrink-0 items-center justify-center rounded-full border border-black/10 transition-transform duration-300 ${
-                        isOpen ? "rotate-180 bg-black text-white" : "group-hover:border-black"
-                      }`}
-                    >
-                      <ChevronDown size={16} />
-                    </span>
-                  </button>
-
-                  {isOpen && (
-                    <div className="pt-4 pr-12 text-base leading-relaxed text-black/70 animate-in fade-in duration-200">
-                      <p>{faq.a}</p>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* 8. CLOSING BANNER matching Superhuman */}
-      <section className="relative mx-auto w-full max-w-[1568px] overflow-hidden bg-black py-28 text-white sm:py-36 2xl:rounded-t-3xl">
-        <div className="relative z-10 mx-auto max-w-4xl px-6 text-center sm:px-8">
-          <span className="inline-block rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-white/90">
-            Stop Tab-Hopping. Start Outperforming.
-          </span>
-
-          <h2 className="mt-8 text-[clamp(2.75rem,5.5vw,5rem)] font-medium leading-[0.96] tracking-[-0.04em] text-white">
-            Give every customer a helpful answer while you keep building.
-          </h2>
-
-          <p className="mx-auto mt-6 max-w-xl text-base text-white/70 sm:text-xl">
-            Start your free 14-day trial today. Connect your knowledge base in minutes with
-            zero credit card required.
-          </p>
-
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-            <Link
-              href="/signup"
-              className="inline-flex items-center gap-2 rounded-full bg-[#ff5600] px-8 py-3.5 text-base font-semibold text-white shadow-xl transition-all hover:bg-white hover:text-black"
-            >
-              Start free trial
-              <ArrowRight size={17} />
-            </Link>
-            <Link
-              href="/contact"
-              className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-7 py-3.5 text-base font-medium text-white transition hover:bg-white/20"
-            >
-              Talk to our team
-            </Link>
-          </div>
-        </div>
-      </section>
+export function FoundersClient() {
+  return (
+    <main className="font-[family-name:var(--font-rethink-sans)]">
+      <Hero />
+      <Calculator />
+      <Setup />
+      <Reaches />
+      <Money />
+      <Grows />
+      <Faq />
+      <Closing />
     </main>
   );
 }

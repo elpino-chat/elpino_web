@@ -3,9 +3,12 @@ import { notFound } from "next/navigation";
 import { BlogPostClient } from "./BlogPostClient";
 import { findPost, posts } from "../data";
 
-export const dynamic = 'force-dynamic';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://elpino.chat";
+
+export function generateStaticParams() {
+  return posts.map((post) => ({ slug: post.slug }));
+}
 
 export async function generateMetadata({
   params,
