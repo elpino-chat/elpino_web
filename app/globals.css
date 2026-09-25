@@ -5599,3 +5599,15 @@ body:has(.dashboard-ai-usage-page) .dashboard-add-credits-dialog [class*="hover:
     background-color: #f5f6f7 !important;
   }
 }
+
+/* Header account avatar: initials always use the accent's own contrast color.
+   The theme rules that color every span in the header ("header :is(a, button,
+   span ...)") are (0,2,2) and were beating the earlier avatar rule at (0,2,1),
+   so the initials came out black in the light theme and near-white in the dark
+   one whatever the accent: black on a black accent, white on a white one. The
+   extra theme selector makes this (0,3,2), above them, and it covers the avatar
+   in the account dropdown too. */
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell header span.dashboard-account-avatar {
+  background-color: var(--dashboard-accent, #428ce5) !important;
+  color: var(--dashboard-accent-contrast, rgba(255, 255, 255, 0.92)) !important;
+}
