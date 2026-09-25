@@ -212,7 +212,7 @@ type UsageRange = "7" | "20" | "30" | "40" | "custom";
 type UsageSite = { id: string; name: string; domain: string };
 type DailyUsage = { date: string; inputTokens: number; outputTokens: number; costCents: number; requests: number };
 type UsageSummary = { totalInputTokens: number; totalOutputTokens: number; totalRequests: number; totalCostCents: number; todaySpendCents: number; daily: DailyUsage[] };
-type UsageEventRow = { id: string; model: string; inputTokens: number; outputTokens: number; costCents: number; createdAt: string; siteDomain: string | null };
+type UsageEventRow = { id: string; inputTokens: number; outputTokens: number; costCents: number; createdAt: string; siteDomain: string | null };
 
 function formatCents(cents: number) {
   return (cents / 100).toLocaleString(undefined, { style: "currency", currency: "USD" });
@@ -489,9 +489,9 @@ function AIUsageSettingsPage() {
   }
 
   function exportCsv() {
-    const header = "Date,Model,Website,Input tokens,Output tokens,Cost (USD)\n";
+    const header = "Date,Website,Input tokens,Output tokens,Cost (USD)\n";
     const rows = events
-      .map((event) => [new Date(event.createdAt).toISOString(), event.model, event.siteDomain ?? "", event.inputTokens, event.outputTokens, (event.costCents / 100).toFixed(4)].join(","))
+      .map((event) => [new Date(event.createdAt).toISOString(), event.siteDomain ?? "", event.inputTokens, event.outputTokens, (event.costCents / 100).toFixed(4)].join(","))
       .join("\n");
     const blob = new Blob([header + rows], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
@@ -681,11 +681,10 @@ function AIUsageSettingsPage() {
         ) : (
           <div className="overflow-x-auto p-5">
             <div className="min-w-[560px]">
-              <div className="grid grid-cols-5 rounded-lg bg-[#f4f5f6] px-4 py-2.5 text-[10.5px] font-bold uppercase tracking-[0.08em] text-[#7a8389]"><span>Date</span><span>Model</span><span>Website</span><span>Tokens (in / out)</span><span>Cost</span></div>
+              <div className="grid grid-cols-4 rounded-lg bg-[#f4f5f6] px-4 py-2.5 text-[10.5px] font-bold uppercase tracking-[0.08em] text-[#7a8389]"><span>Date</span><span>Website</span><span>Tokens (in / out)</span><span>Cost</span></div>
               {events.map((event) => (
-                <div key={event.id} className="grid grid-cols-5 items-center border-b border-[#eef0f1] px-4 py-3 text-[13px]">
+                <div key={event.id} className="grid grid-cols-4 items-center border-b border-[#eef0f1] px-4 py-3 text-[13px]">
                   <span className="text-[#5f686d]">{new Date(event.createdAt).toLocaleString()}</span>
-                  <span className="truncate font-medium">{event.model}</span>
                   <span className="truncate text-[#5f686d]">{event.siteDomain ?? "—"}</span>
                   <span className="text-[#5f686d]">{event.inputTokens.toLocaleString()} / {event.outputTokens.toLocaleString()}</span>
                   <span className="font-medium">{formatCents(event.costCents)}</span>

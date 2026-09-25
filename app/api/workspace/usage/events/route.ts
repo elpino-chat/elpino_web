@@ -23,5 +23,11 @@ export async function GET(request: Request) {
   }
 
   const result = await callGateway<{ events?: unknown[]; error?: string }>(`/api/workspace/usage/events?${params.toString()}`);
-  return Response.json(result.error ? { events: [], message: result.error } : { events: result.events ?? [] });
+  // Which model served a request is not shown to customers, so it is dropped here rather than
+  // only hidden in the table (it would still be readable in the browser's network tab).
+  const events = (result.events ?? []).map((event) => {
+    const { model: _model, ...visible } = event as Record<string, unknown>;
+    return visible;
+  });
+  return Response.json(result.error ? { events: [], message: result.error } : { events });
 }
