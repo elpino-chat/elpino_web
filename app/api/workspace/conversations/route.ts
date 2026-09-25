@@ -56,7 +56,9 @@ export async function GET() {
   }
 
   const result = await callGateway<{ conversations?: Conversation[]; error?: string }>(
-    `/api/workspace/conversations?companyId=${encodeURIComponent(selected.id)}`,
+    // avatarRefs=1: get the AI avatar as a short URL (served by /api/workspace/ai-avatar)
+    // instead of a 300 KB image repeated in every conversation.
+    `/api/workspace/conversations?companyId=${encodeURIComponent(selected.id)}&avatarRefs=1`,
   );
 
   return Response.json({
