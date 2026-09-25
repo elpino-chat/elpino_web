@@ -58,7 +58,7 @@ const nextConfig: NextConfig = {
         : process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
     AUTH_INTERNAL_SECRET:
       process.env.AUTH_INTERNAL_SECRET ??
-      "Y78vEBQB8cNNqM6bSnv7w0GfSp6qomcAoNdJdY6o2/6fddxea1ZM8Q1cjcsb4eao",
+      "53fe6175f780eb04b00378e6843fcdc28a598a7a13c1f4cb9deb60c932ca2b9f",
     AUTH_JWT_SECRET:
       process.env.AUTH_JWT_SECRET ??
       "2CAK52uRNuzrSxFrdRNRZexpB5Qqc/go44RNbF7CrvjKFoXAkmk24QueAv1p9G35",
