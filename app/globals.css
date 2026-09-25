@@ -5586,3 +5586,16 @@ body:has(.dashboard-ai-usage-page) .dashboard-add-credits-dialog [class*="hover:
 @media (prefers-reduced-motion: reduce) {
   .elpino-skel { animation: none; }
 }
+
+/* Mobile drawers on the light theme. Below md the second sidebar (Settings,
+   Knowledge, Visitors) is a fixed overlay opened from the header's menu button.
+   The light theme makes .dashboard-secondary-sidebar transparent because on
+   desktop it sits beside the page, but as an overlay that let the page show
+   straight through it and left the options unreadable. Give the overlay a solid
+   surface. The ids are listed so this beats the id-scoped rules that set the
+   transparency; desktop (md and up) is untouched. */
+@media (max-width: 767.98px) {
+  [data-dashboard-theme="light"] .dashboard-shell :is(#dashboard-settings-sidebar, #dashboard-knowledge-sidebar, #analytics-report-sidebar) {
+    background-color: #f5f6f7 !important;
+  }
+}
