@@ -62,7 +62,7 @@ export function SiteWidgetTag() {
   return (
     <Script
       src={TAG_SRC}
-      data-site-key="rz_site_a9ea653bc866c86f5e88c7af4c832b"
+      data-site-key="rz_site_22006bb0f7f000862ef24b9f240420"
       strategy="afterInteractive"
     />
   );
