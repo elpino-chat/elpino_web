@@ -73,7 +73,7 @@ const nextConfig: NextConfig = {
     // elpino.chat (app/api/widget-identity). Must equal the identity secret of
     // Elpino own workspace: rotating it there means updating it here.
     ELPINO_WIDGET_IDENTITY_SECRET:
-      process.env.ELPINO_WIDGET_IDENTITY_SECRET ?? "elid_A8bprFkI-T-bTitrd_xnFFkv8xUs42hEkzO4i6kNUew",
+      process.env.ELPINO_WIDGET_IDENTITY_SECRET ?? "elid_oDZeyJE-nxwAfmskWAixwYfalyLMsmDildAPa4RzWgc",
     // Google sign-in now runs through Firebase (see lib/firebase-client.ts):
     // the popup completes entirely client-side, so this is public web config,
     // not a secret, and the same project serves both dev and prod for now.
