@@ -1,5 +1,6 @@
 "use client";
 
+import { fetchConversations } from "@/app/lib/fetch-conversations";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
@@ -316,7 +317,7 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
   function loadSearchData() {
     if (searchLoaded) return;
     setSearchLoaded(true);
-    fetch("/api/workspace/conversations")
+    fetchConversations()
       .then((response) => (response.ok ? response.json() : null))
       .then((data: { conversations?: SearchConversation[] } | null) => setSearchConversations(data?.conversations ?? []))
       .catch(() => undefined);

@@ -25,6 +25,8 @@ type Conversation = {
   };
 };
 
+const ensuredCompanies = new Set<string>();
+
 export async function GET() {
   const session = await requireSession();
   if (!session) {
@@ -46,7 +48,12 @@ export async function GET() {
   // A workspace-service Company row mirrors this organization 1:1 by id.
   // Upserting here means an org created before this wiring existed (or any
   // future one) always gets its Company row lazily, no backfill script needed.
-  await callGateway("/api/workspace/companies", { organizationId: selected.id, name: selected.name });
+  // Idempotent, so once per workspace per server instance is enough; repeating
+  // it on every 2-second poll was a whole extra round trip each time.
+  if (!ensuredCompanies.has(selected.id)) {
+    await callGateway("/api/workspace/companies", { organizationId: selected.id, name: selected.name });
+    ensuredCompanies.add(selected.id);
+  }
 
   const result = await callGateway<{ conversations?: Conversation[]; error?: string }>(
     `/api/workspace/conversations?companyId=${encodeURIComponent(selected.id)}`,

@@ -34,6 +34,11 @@ function labelFor(pathname: string) {
   return words ? words.charAt(0).toUpperCase() + words.slice(1) : "the next page";
 }
 
+/** Call just before a programmatic navigation (router.push after login) so the loader shows for it too. */
+export function announceNavigation(href: string) {
+  if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent("elpino:navigate-start", { detail: { href } }));
+}
+
 type Phase = "idle" | "active" | "done";
 
 export function NavigationLoader() {
@@ -129,6 +134,10 @@ export function NavigationLoader() {
   const left = `calc(${progress}% - ${(progress / 100) * SLOTH_W}px)`;
 
   return (
+    <>
+    {/* Softly blurs the page while the next one loads. Clicks pass through, so
+        a slow page never traps the visitor behind it. */}
+    <div aria-hidden="true" className={`elpino-nav-blur ${arrived ? "elpino-nav-blur--out" : ""}`} />
     <div
       role="status"
       aria-live="polite"
@@ -179,5 +188,6 @@ export function NavigationLoader() {
 
       <span className="sr-only">{arrived ? "Page loaded" : `Loading ${label}`}</span>
     </div>
+    </>
   );
 }

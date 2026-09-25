@@ -1,5 +1,6 @@
 "use client";
 
+import { fetchConversations } from "@/app/lib/fetch-conversations";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, CheckCheck, Filter, Globe, LoaderCircle, MapPin, MessageCircle, MessageSquarePlus, MonitorSmartphone, Search, Send, ShieldCheck, Sparkles } from "lucide-react";
 import MessageMarkdown from "@/app/components/MessageMarkdown";
@@ -114,7 +115,7 @@ export default function AiAssistPage() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   function loadConversations() {
-    return fetch("/api/workspace/conversations", { cache: "no-store" })
+    return fetchConversations()
       .then((response) => (response.ok ? response.json() : { conversations: [] }))
       .then((data: { conversations?: Conversation[] }) => setConversations(data.conversations ?? []))
       .catch(() => setConversations([]));

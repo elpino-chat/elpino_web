@@ -1,5 +1,6 @@
 "use client";
 
+import { fetchConversations } from "@/app/lib/fetch-conversations";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -19,7 +20,7 @@ export default function Sidebar({ user }: { user: DashboardUser }) {
   const [aiHandledCount, setAiHandledCount] = useState(0);
 
   useEffect(() => {
-    fetch("/api/workspace/conversations", { cache: "no-store" })
+    fetchConversations()
       .then((response) => (response.ok ? response.json() : { conversations: [] }))
       .then((data: { conversations?: Conversation[] }) => {
         const count = (data.conversations ?? []).filter((conversation) => !conversation.assignedUserId && conversation.status !== "resolved").length;

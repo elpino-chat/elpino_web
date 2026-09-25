@@ -4497,42 +4497,43 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
   color: rgba(0, 0, 0, 0.55) !important;
 }
 
-/* AI usage follows the dashboard's permanent graphite theme. */
-.dashboard-shell .dashboard-ai-usage-page,
-.dashboard-shell .dashboard-settings-surface:has(.dashboard-ai-usage-page) {
+/* AI usage in the dark theme: graphite surfaces. The light theme has its own
+   rules further down ("AI usage, light theme"). */
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page,
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-settings-surface:has(.dashboard-ai-usage-page) {
   background: #262626 !important;
   color: rgb(255 255 255 / 0.9) !important;
 }
-.dashboard-shell .dashboard-ai-usage-page :is(article, section[class*="bg-white"], .dashboard-ai-credit-card) {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page :is(article, section[class*="bg-white"], .dashboard-ai-credit-card) {
   background: rgb(255 255 255 / 0.035) !important;
   border-color: rgb(255 255 255 / 0.1) !important;
   box-shadow: none !important;
 }
-.dashboard-shell .dashboard-ai-usage-page :is([class*="text-[#17191b]"], [class*="text-[#11120f]"], [class*="text-[#17233A]"], [class*="text-[#33383c]"]) {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page :is([class*="text-[#17191b]"], [class*="text-[#11120f]"], [class*="text-[#17233A]"], [class*="text-[#33383c]"]) {
   color: rgb(255 255 255 / 0.9) !important;
 }
-.dashboard-shell .dashboard-ai-usage-page :is([class*="text-[#707980]"], [class*="text-[#6D7D85]"], [class*="text-[#69737a]"], [class*="text-[#8a9298]"], [class*="text-[#8A9299]"], [class*="text-[#8b9398]"], [class*="text-[#92999e]"], [class*="text-[#939a9e]"], [class*="text-[#5f686d]"], [class*="text-[#667069]"], [class*="text-[#737c82]"], [class*="text-[#7B858A]"], [class*="text-[#7a8389]"], [class*="text-[#7b848a]"], [class*="text-[#a5acb0]"]) {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page :is([class*="text-[#707980]"], [class*="text-[#6D7D85]"], [class*="text-[#69737a]"], [class*="text-[#8a9298]"], [class*="text-[#8A9299]"], [class*="text-[#8b9398]"], [class*="text-[#92999e]"], [class*="text-[#939a9e]"], [class*="text-[#5f686d]"], [class*="text-[#667069]"], [class*="text-[#737c82]"], [class*="text-[#7B858A]"], [class*="text-[#7a8389]"], [class*="text-[#7b848a]"], [class*="text-[#a5acb0]"]) {
   color: rgb(255 255 255 / 0.6) !important;
 }
-.dashboard-shell .dashboard-ai-usage-page :is(input, select, [role="dialog"], [class*="bg-white"]) {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page :is(input, select, [role="dialog"], [class*="bg-white"]) {
   background-color: #2d2d2d !important;
   border-color: rgb(255 255 255 / 0.12) !important;
   color: rgb(255 255 255 / 0.9) !important;
 }
-.dashboard-shell .dashboard-ai-usage-page input {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page input {
   color-scheme: dark;
 }
-.dashboard-shell .dashboard-ai-usage-page :is([class*="bg-[#f0f2f3]"], [class*="bg-[#f4f5f6]"], [class*="bg-[#eef0f1]"]) {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page :is([class*="bg-[#f0f2f3]"], [class*="bg-[#f4f5f6]"], [class*="bg-[#eef0f1]"]) {
   background-color: rgb(255 255 255 / 0.07) !important;
 }
-.dashboard-shell .dashboard-ai-usage-page :is([class*="border-[#"], [class*="border-black"]) {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page :is([class*="border-[#"], [class*="border-black"]) {
   border-color: rgb(255 255 255 / 0.1) !important;
 }
 /* :not(:disabled) — a disabled button still matches :hover (nothing here
    sets pointer-events:none), so without this exclusion a disabled button's
    own readable text color would get overwritten white the moment the mouse
    sits over it. */
-.dashboard-shell .dashboard-ai-usage-page button:not(:disabled):hover {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page button:not(:disabled):hover {
   color: rgb(255 255 255 / 0.95) !important;
 }
 /* Same recurring bug as the scope-menu/credits-dialog fixes above, one level
@@ -4540,14 +4541,14 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
    light-theme classes, on a page whose text this file already forces white
    unconditionally. Covers the "Reporting period" day-range pills and
    anything else in this direct DOM subtree using these hover classes. */
-.dashboard-shell .dashboard-ai-usage-page [class*="hover:bg-[#f7f8f8]"]:hover,
-.dashboard-shell .dashboard-ai-usage-page [class*="hover:bg-[#f1f3f4]"]:hover {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page [class*="hover:bg-[#f7f8f8]"]:hover,
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page [class*="hover:bg-[#f1f3f4]"]:hover {
   background-color: rgb(255 255 255 / 0.08) !important;
 }
-.dashboard-shell .dashboard-ai-usage-page .dashboard-ai-usage-toolbar {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page .dashboard-ai-usage-toolbar {
   background: rgb(38 38 38 / 0.94) !important;
 }
-body:has(.dashboard-ai-usage-page) :is(.dashboard-ai-scope-menu, .dashboard-add-credits-dialog) {
+body:has([data-dashboard-theme="dark"]):has(.dashboard-ai-usage-page) :is(.dashboard-ai-scope-menu, .dashboard-add-credits-dialog) {
   background: #2d2d2d !important;
   border-color: rgb(255 255 255 / 0.12) !important;
   color: rgb(255 255 255 / 0.9) !important;
@@ -4558,9 +4559,55 @@ body:has(.dashboard-ai-usage-page) :is(.dashboard-ai-scope-menu, .dashboard-add-
    so on the light theme, this popover's text (forced white by the rule
    above) hovered into the button's own light `hover:bg-[#f7f8f8]`/
    `bg-[#f0f2f3]` classes and went invisible. */
-body:has(.dashboard-ai-usage-page) .dashboard-ai-scope-menu button:hover,
-body:has(.dashboard-ai-usage-page) .dashboard-ai-scope-menu button[class*="bg-[#f0f2f3]"] {
+body:has([data-dashboard-theme="dark"]):has(.dashboard-ai-usage-page) .dashboard-ai-scope-menu button:hover,
+body:has([data-dashboard-theme="dark"]):has(.dashboard-ai-usage-page) .dashboard-ai-scope-menu button[class*="bg-[#f0f2f3]"] {
   background-color: rgb(255 255 255 / 0.08) !important;
+}
+
+/* AI usage, light theme. The component is written with white-on-dark utility
+   classes (text-white/90, border-white/10, bg-white/[0.04]...) that only make
+   sense on graphite, so on the light theme they are mapped to their dark-on-white
+   equivalents here. Scoped to .dashboard-ai-usage-page and its portaled popovers. */
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-ai-usage-page,
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-ai-usage-page [class*="text-white/90"] {
+  color: #17191b !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-ai-usage-page [class*="text-white/60"] {
+  color: #5f686d !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-ai-usage-page [class*="border-white/"] {
+  border-color: rgb(15 23 42 / 0.12) !important;
+}
+/* Cards and panels: a white surface with a hairline border. */
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-ai-usage-page :is(article, section[class*="bg-white"], .dashboard-ai-credit-card) {
+  background: #ffffff !important;
+  border-color: rgb(15 23 42 / 0.1) !important;
+  box-shadow: 0 1px 2px rgb(15 23 42 / 0.04) !important;
+}
+/* Small tinted controls (Export CSV, chart/table toggle, badges). */
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-ai-usage-page :is([class*="bg-white/[0.04]"], [class*="bg-white/10"]) {
+  background-color: rgb(15 23 42 / 0.045) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-ai-usage-page button:not(:disabled):is([class*="hover:bg-white/"]):hover {
+  background-color: rgb(15 23 42 / 0.08) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-ai-usage-page .dashboard-ai-usage-toolbar {
+  background: rgb(250 251 251 / 0.94) !important;
+  border-color: rgb(15 23 42 / 0.1) !important;
+}
+/* The "Workspace intelligence" pill: violet-200 text is invisible on white. */
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-ai-usage-page [class*="text-violet-200"] {
+  color: #5b47c7 !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-ai-usage-page [class*="bg-violet-400/10"] {
+  background-color: rgb(109 92 231 / 0.1) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-ai-usage-page [class*="border-violet-300/"] {
+  border-color: rgb(109 92 231 / 0.28) !important;
+}
+/* Solid dark buttons keep their white label. */
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-ai-usage-page :is([class*="bg-[#1f2224]"], [class*="bg-[#11120f]"], [class*="bg-[#6d5ce7]"]):not(:disabled) {
+  color: #ffffff !important;
 }
 
 /* Dashboard home ("Space > Home" overview, #dashboard-home in
@@ -5495,4 +5542,47 @@ body:has(.dashboard-ai-usage-page) .dashboard-add-credits-dialog [class*="hover:
 @media (prefers-reduced-motion: reduce) {
   .elpino-nav-loader, .elpino-nav-loader--out { animation-duration: 0.01s; }
   .elpino-nav-sloth, .elpino-limb { animation: none; }
+}
+
+/* Blurred backdrop while a page loads: fades in with the sloth, out on arrival. */
+.elpino-nav-blur {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  background: rgb(255 255 255 / 0.28);
+  -webkit-backdrop-filter: blur(6px) saturate(1.05);
+  backdrop-filter: blur(6px) saturate(1.05);
+  animation: elpino-nav-blur-in 0.35s ease-out both;
+}
+.elpino-nav-blur--out {
+  animation: elpino-nav-blur-out 0.4s ease-in 0.15s both;
+}
+@keyframes elpino-nav-blur-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes elpino-nav-blur-out {
+  to { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .elpino-nav-blur, .elpino-nav-blur--out { animation-duration: 0.01s; }
+}
+
+/* Dashboard loading skeletons: grey shapes with a soft shimmer, tinted per dashboard theme. */
+[data-dashboard-theme="dark"] { --skel-base: rgb(255 255 255 / 0.07); --skel-hi: rgb(255 255 255 / 0.14); --skel-line: rgb(255 255 255 / 0.1); }
+[data-dashboard-theme="light"] { --skel-base: rgb(15 23 42 / 0.07); --skel-hi: rgb(15 23 42 / 0.13); --skel-line: rgb(15 23 42 / 0.1); }
+.elpino-skel {
+  border-radius: 8px;
+  background: linear-gradient(90deg, var(--skel-base, rgb(128 128 128 / 0.12)) 25%, var(--skel-hi, rgb(128 128 128 / 0.22)) 50%, var(--skel-base, rgb(128 128 128 / 0.12)) 75%);
+  background-size: 200% 100%;
+  animation: elpino-skel-shimmer 1.5s ease-in-out infinite;
+}
+.elpino-skel-card { border: 1px solid var(--skel-line, rgb(128 128 128 / 0.18)); border-radius: 12px; }
+@keyframes elpino-skel-shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .elpino-skel { animation: none; }
 }

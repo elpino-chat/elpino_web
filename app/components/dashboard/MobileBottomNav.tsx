@@ -1,5 +1,6 @@
 "use client";
 
+import { fetchConversations } from "@/app/lib/fetch-conversations";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -29,7 +30,7 @@ export default function MobileBottomNav() {
   const moreRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    fetch("/api/workspace/conversations", { cache: "no-store" })
+    fetchConversations()
       .then((response) => (response.ok ? response.json() : { conversations: [] }))
       .then((data: { conversations?: Conversation[] }) => {
         const count = (data.conversations ?? []).filter((conversation) => !conversation.assignedUserId && conversation.status !== "resolved").length;

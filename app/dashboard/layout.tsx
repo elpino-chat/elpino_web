@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { requireSession } from "@/app/api/onboarding/_lib/require-user";
 import Sidebar from "@/app/components/dashboard/Sidebar";
@@ -9,13 +10,24 @@ import SetupChecklist from "@/app/components/dashboard/SetupChecklist";
 import MobileBottomNav from "@/app/components/dashboard/MobileBottomNav";
 import DashboardMain from "@/app/components/dashboard/DashboardMain";
 import { MobileDrawerProvider } from "@/app/components/dashboard/mobile-drawer-context";
+import { DashboardShellSkeleton } from "@/app/components/dashboard/DashboardSkeleton";
 
-export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+// The session check is the only thing this layout waits for. It sits inside a
+// Suspense boundary so the frame of the dashboard (sidebar, header) is on screen
+// straight away as grey shapes, instead of a blank page until the check returns.
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  return <DashboardThemeProvider>
+    <Suspense fallback={<DashboardShellSkeleton />}>
+      <AuthedDashboard>{children}</AuthedDashboard>
+    </Suspense>
+  </DashboardThemeProvider>;
+}
+
+async function AuthedDashboard({ children }: { children: React.ReactNode }) {
   const session = await requireSession();
   if (!session) redirect("/login");
 
-  return <DashboardThemeProvider>
-    <MobileDrawerProvider>
+  return <MobileDrawerProvider>
       <div className="dashboard-shell relative flex h-dvh w-full flex-row overflow-hidden">
         <Sidebar user={{ email: session.email, name: session.name }} />
         {/* Top safe-area padding — without it, on a phone with a notch or
@@ -33,6 +45,5 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <SetupChecklist />
         <MobileBottomNav />
       </div>
-    </MobileDrawerProvider>
-  </DashboardThemeProvider>;
+    </MobileDrawerProvider>;
 }

@@ -1,5 +1,7 @@
 "use client";
 
+import { ConversationListSkeleton } from "@/app/components/dashboard/DashboardSkeleton";
+import { fetchConversations } from "@/app/lib/fetch-conversations";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
@@ -86,7 +88,7 @@ export default function HomePanel({ user: _user }: { user: PanelUser }) {
 
     function load(isFirst: boolean) {
       if (isFirst) setLoading(true);
-      fetch("/api/workspace/conversations")
+      fetchConversations()
         .then((response) => (response.ok ? response.json() : null))
         .then((data: { conversations?: Conversation[]; workspace?: Workspace } | null) => {
           if (cancelled || !data) return;
@@ -285,6 +287,7 @@ export default function HomePanel({ user: _user }: { user: PanelUser }) {
       </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto p-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {loading && <ConversationListSkeleton />}
         {visibleConversations.map((conversation) => {
           const active = conversation.id === (openedConversationId ?? activeId);
           return (

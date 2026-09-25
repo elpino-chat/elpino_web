@@ -1,5 +1,7 @@
 "use client";
 
+import { ChatSkeleton } from "@/app/components/dashboard/DashboardSkeleton";
+import { fetchConversations } from "@/app/lib/fetch-conversations";
 import { Suspense, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -220,7 +222,7 @@ function DashboardContent({ name }: { name: string }) {
   useEffect(() => {
     if (conversationId || hasAnyConversations !== null) return;
     let cancelled = false;
-    fetch("/api/workspace/conversations")
+    fetchConversations()
       .then((response) => (response.ok ? response.json() : null))
       .then((data: { conversations?: unknown[] } | null) => {
         if (!cancelled) setHasAnyConversations((data?.conversations?.length ?? 0) > 0);
@@ -251,7 +253,7 @@ function DashboardContent({ name }: { name: string }) {
 
     function load() {
       Promise.all([
-        fetch("/api/workspace/conversations", { cache: "no-store" }).then((response) => (response.ok ? response.json() : { conversations: [] })),
+        fetchConversations().then((response) => (response.ok ? response.json() : { conversations: [] })),
         fetch(`/api/workspace/conversations/${encodeURIComponent(conversationId!)}/messages`, { cache: "no-store" }).then((response) => (response.ok ? response.json() : { messages: [] })),
       ]).then(([conversationsData, messagesData]: [{ conversations?: ConversationSummary[] }, { messages?: Message[]; customerTyping?: boolean }]) => {
         if (cancelled) return;
@@ -1048,7 +1050,7 @@ function DashboardContent({ name }: { name: string }) {
           <div ref={scrollRef} className="dashboard-message-scroll flex-1 overflow-y-auto px-6 py-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <div className="mx-auto max-w-[820px]">
               {loading ? (
-                <div className="flex min-h-[200px] items-center justify-center text-[12px] text-[var(--chat-muted)]"><LoaderCircle size={15} className="mr-2 animate-spin" /> Loading conversation</div>
+                <ChatSkeleton />
               ) : messages.length === 0 ? (
                 <div className="flex min-h-[200px] items-center justify-center text-[12px] text-[var(--chat-muted)]">No messages yet.</div>
               ) : searchTerm && visibleMessages.length === 0 ? (
@@ -1905,7 +1907,7 @@ function TicketDialog({
 
 export function DashboardClient({ name }: { name: string }) {
   return (
-    <Suspense fallback={<div className="dashboard-conversation flex h-full items-center justify-center text-[12px] text-[var(--chat-muted)]">Loading…</div>}>
+    <Suspense fallback={<div className="dashboard-conversation h-full"><ChatSkeleton withHeader /></div>}>
       <DashboardContent name={name} />
     </Suspense>
   );

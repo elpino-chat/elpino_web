@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import api from "@/lib/api";
 import { useTranslation } from "@/app/hooks/useTranslation";
+import { announceNavigation } from "@/app/components/NavigationLoader";
 import {
   getErrorMessage,
   getFriendlyAuthError,
@@ -220,15 +221,16 @@ export function AuthFlow({ initialMode }: { initialMode: "login" | "signup" }) {
           const res = await fetch("/api/onboarding/status");
           const data = (await res.json()) as { onboarding?: { completedAt?: string } };
           if (res.ok && !data.onboarding?.completedAt) {
+            announceNavigation("/onboarding");
             router.replace("/onboarding");
             return;
           }
         } catch {
           // fall through to the dashboard on status errors
         }
-        router.replace(
-          next || (requestedPlan ? `/dashboard?plan=${requestedPlan}` : "/dashboard"),
-        );
+        const destination = next || (requestedPlan ? `/dashboard?plan=${requestedPlan}` : "/dashboard");
+        announceNavigation(destination);
+        router.replace(destination);
       })
       .catch(() => null);
   }, [router, params, requestedPlan]);
@@ -335,7 +337,9 @@ export function AuthFlow({ initialMode }: { initialMode: "login" | "signup" }) {
         setPendingVerifyEmail(data.email ?? email);
         return;
       }
-      router.push(getPostAuthDestination(data));
+      const destination = getPostAuthDestination(data);
+      announceNavigation(destination);
+      router.push(destination);
     } catch (err: unknown) {
       const status = (err as { response?: { status?: number } })?.response?.status;
       if (mode === "signup" && status === 409) {
@@ -350,7 +354,9 @@ export function AuthFlow({ initialMode }: { initialMode: "login" | "signup" }) {
   };
 
   const handleVerified = (data: AuthResponse) => {
-    router.push(getPostAuthDestination(data));
+    const destination = getPostAuthDestination(data);
+    announceNavigation(destination);
+    router.push(destination);
   };
 
   const handleVerifyOtp = async (event: FormEvent<HTMLFormElement>) => {

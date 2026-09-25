@@ -1,5 +1,6 @@
 "use client";
 
+import { fetchConversations } from "@/app/lib/fetch-conversations";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -26,7 +27,7 @@ export default function SpacePanel() {
   useEffect(() => {
     if (!spaceRoutes.includes(pathname)) return;
     Promise.all([
-      fetch("/api/workspace/conversations", { cache: "no-store" }).then((response) => response.ok ? response.json() : { conversations: [] }),
+      fetchConversations().then((response) => response.ok ? response.json() : { conversations: [] }),
       fetch("/api/notifications", { cache: "no-store" }).then((response) => response.ok ? response.json() : { entries: [] }),
       fetch("/api/workspace/tickets", { cache: "no-store" }).then((response) => response.ok ? response.json() : { tickets: [] }),
     ]).then(([chatData, notificationData, ticketData]) => {
