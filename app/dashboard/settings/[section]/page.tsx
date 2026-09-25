@@ -10,7 +10,6 @@ const SETTINGS_SECTIONS: Record<string, string> = {
   availability: "Availability",
   chatbot: "Chatbot Interface",
   "chatbot-restrictions": "Restrictions",
-  "chatbot-payments": "Payments & refunds",
   "chatbot-behavior": "Behavior",
   "ai-usage": "Usage",
   "security-permissions": "Security & Permissions",

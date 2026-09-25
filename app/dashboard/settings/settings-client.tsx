@@ -165,7 +165,6 @@ const chatbotItems = [
   { label: "Chatbot Interface", slug: "chatbot", icon: Bot },
   { label: "Identity Verification", slug: "identity", icon: UserCheck },
   { label: "Restrictions", slug: "chatbot-restrictions", icon: ShieldCheck },
-  { label: "Payments & refunds", slug: "chatbot-payments", icon: CreditCard },
 ];
 
 // Shared workspace configuration, visible the same way to every teammate.
@@ -2097,185 +2096,6 @@ function UrlRuleSection({
           </div>
         </div>
       )}
-    </div>
-  );
-}
-
-type AiRefundSettings = { enabled: boolean; maxDays: number; limits: Record<string, number> };
-
-// Currencies the connected gateways (Stripe, Razorpay) are used with here. A
-// blank limit means the AI never refunds in that currency.
-const REFUND_CURRENCIES = [
-  { code: "USD", symbol: "$" },
-  { code: "INR", symbol: "₹" },
-  { code: "EUR", symbol: "€" },
-  { code: "GBP", symbol: "£" },
-];
-
-const AI_PAYMENT_ACTIONS = [
-  "Check a payment's real status in Stripe or Razorpay",
-  "Explain a failed payment and when the bank returns the money",
-  "Send a fresh payment link so they can pay again",
-  "Share the receipt or invoice for a payment",
-  "Show subscriptions and cancel one at the end of its paid period",
-];
-
-function ChatbotPaymentsSettingsPage() {
-  const [settings, setSettings] = useState<AiRefundSettings>({ enabled: false, maxDays: 14, limits: {} });
-  const [limitDrafts, setLimitDrafts] = useState<Record<string, string>>({});
-  const [daysDraft, setDaysDraft] = useState("14");
-  const [canEdit, setCanEdit] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [saved, setSaved] = useState(false);
-
-  function adopt(next: AiRefundSettings) {
-    setSettings(next);
-    setDaysDraft(String(next.maxDays));
-    setLimitDrafts(Object.fromEntries(REFUND_CURRENCIES.map(({ code }) => [code, next.limits[code] ? String(next.limits[code]) : ""])));
-  }
-
-  useEffect(() => {
-    fetch("/api/workspace/ai-refunds", { cache: "no-store" })
-      .then((response) => (response.ok ? response.json() : null))
-      .then((data: { settings?: AiRefundSettings; canEdit?: boolean } | null) => {
-        if (data?.settings) adopt(data.settings);
-        setCanEdit(Boolean(data?.canEdit));
-      })
-      .catch(() => undefined)
-      .finally(() => setLoading(false));
-  }, []);
-
-  async function save(enabled: boolean) {
-    setSaving(true);
-    setError(null);
-    setSaved(false);
-    const limits = Object.fromEntries(
-      Object.entries(limitDrafts).filter(([, value]) => value.trim() !== "").map(([code, value]) => [code, Number(value)]),
-    );
-    const response = await fetch("/api/workspace/ai-refunds", {
-      method: "PATCH",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ enabled, maxDays: Number(daysDraft), limits }),
-    }).catch(() => null);
-    const data = response ? ((await response.json().catch(() => ({}))) as { settings?: AiRefundSettings; message?: string }) : {};
-    if (!response?.ok || !data.settings) {
-      setError(data.message ?? "Could not save. Try again.");
-    } else {
-      adopt(data.settings);
-      setSaved(true);
-    }
-    setSaving(false);
-  }
-
-  const hasLimit = Object.values(limitDrafts).some((value) => Number(value) > 0);
-
-  return (
-    <div className="mx-auto w-full max-w-[1120px] px-7 pb-14 pt-8 text-[#17181a] sm:px-9 lg:px-10">
-      <div className="border-b border-[#E5E8EA] pb-7">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Chatbot</p>
-        <h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em] text-[#17181a]">Payments &amp; refunds</h2>
-        <p className="mt-2 max-w-xl text-[14px] leading-6 text-[#667069]">
-          What the AI can sort out by itself with your connected Stripe or Razorpay account, so payment questions don&apos;t have to wait for your team. It only acts for a customer who has verified their email, and only on their own payments.
-        </p>
-      </div>
-
-      <section className="mt-8">
-        <h3 className="text-[16px] font-semibold">Always on</h3>
-        <p className="mt-1 text-[12.5px] text-[#7b848a]">Needs Stripe or Razorpay connected in <a href="/dashboard/settings/setup-integration" className="underline underline-offset-2">Setup &amp; Integration</a>.</p>
-        <ul className="mt-3 overflow-hidden rounded-xl border border-[#dfe3e6] bg-[#ffffff]">
-          {AI_PAYMENT_ACTIONS.map((item, index) => (
-            <li key={item} className={`flex items-center gap-3 px-4 py-3 text-[13px] text-[#2c3236] ${index ? "border-t border-[#eceeef]" : ""}`}>
-              <CheckCircle2 size={15} className="shrink-0 text-[#2f855a]" />
-              {item}
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="mt-8">
-        <div className="flex items-start justify-between gap-6 rounded-xl border border-[#dfe3e6] bg-[#ffffff] px-5 py-4">
-          <div>
-            <h3 className="text-[15px] font-semibold">Let the AI issue refunds</h3>
-            <p className="mt-1 max-w-lg text-[12.5px] leading-5 text-[#7b848a]">
-              Full refunds of a completed payment, when the customer asks and your refund policy allows it. One per conversation. Anything outside the limits below goes to your team with a ticket.
-            </p>
-          </div>
-          <button
-            type="button"
-            role="switch"
-            aria-checked={settings.enabled}
-            aria-label="Let the AI issue refunds"
-            disabled={loading || saving || !canEdit}
-            onClick={() => void save(!settings.enabled)}
-            className={`relative mt-1 h-5 w-9 shrink-0 rounded-full transition disabled:cursor-not-allowed disabled:opacity-60 ${settings.enabled ? "bg-[#428ce5]" : "bg-[#d5dadd]"}`}
-          >
-            <span className={`absolute top-0.5 h-4 w-4 rounded-full bg-[#ffffff] transition-all ${settings.enabled ? "left-[18px]" : "left-0.5"}`} />
-          </button>
-        </div>
-
-        {settings.enabled && (
-          <div className="mt-3 rounded-xl border border-[#dfe3e6] bg-[#ffffff] px-5 py-5">
-            <label className="block max-w-[220px]">
-              <span className="text-[12.5px] font-semibold text-[#2c3236]">Only payments from the last</span>
-              <div className="mt-1.5 flex items-center gap-2">
-                <input
-                  type="number"
-                  min={1}
-                  max={180}
-                  value={daysDraft}
-                  disabled={!canEdit}
-                  onChange={(event) => setDaysDraft(event.target.value)}
-                  className="h-9 w-20 rounded-lg border border-[#d8dde1] bg-[#ffffff] px-3 text-[13px] outline-none focus:border-[#428ce5]"
-                />
-                <span className="text-[13px] text-[#667069]">days</span>
-              </div>
-            </label>
-
-            <p className="mt-5 text-[12.5px] font-semibold text-[#2c3236]">Largest payment the AI may refund</p>
-            <p className="mt-0.5 text-[11.5px] text-[#8b9398]">Leave a currency blank and the AI won&apos;t refund in it.</p>
-            <div className="mt-2 grid max-w-[520px] grid-cols-2 gap-3 sm:grid-cols-4">
-              {REFUND_CURRENCIES.map(({ code, symbol }) => (
-                <label key={code} className="flex h-9 items-center rounded-lg border border-[#d8dde1] bg-[#ffffff] px-2.5 focus-within:border-[#428ce5]">
-                  <span className="text-[12px] text-[#8b9398]">{symbol}</span>
-                  <input
-                    type="number"
-                    min={0}
-                    inputMode="decimal"
-                    placeholder="—"
-                    value={limitDrafts[code] ?? ""}
-                    disabled={!canEdit}
-                    onChange={(event) => setLimitDrafts((current) => ({ ...current, [code]: event.target.value }))}
-                    className="h-full min-w-0 flex-1 bg-transparent px-1.5 text-[13px] outline-none"
-                    aria-label={`${code} limit`}
-                  />
-                  <span className="text-[11px] font-medium text-[#8b9398]">{code}</span>
-                </label>
-              ))}
-            </div>
-            {!hasLimit && <p className="mt-2 text-[11.5px] text-[#93651D]">Set at least one limit, or the AI will hand every refund to your team.</p>}
-
-            {canEdit && (
-              <div className="mt-5 flex items-center gap-3">
-                <button
-                  type="button"
-                  disabled={saving}
-                  onClick={() => void save(true)}
-                  className="flex h-9 items-center gap-2 rounded-lg bg-[#202225] px-4 text-[12.5px] font-semibold text-white transition hover:bg-black disabled:opacity-60"
-                >
-                  {saving ? <LoaderCircle size={13} className="animate-spin" /> : null}
-                  Save limits
-                </button>
-                {saved && <span className="text-[12px] text-[#2f855a]">Saved</span>}
-              </div>
-            )}
-          </div>
-        )}
-
-        {!loading && !canEdit && <p className="mt-3 text-[12px] text-[#93651D]">Only the workspace owner can change refund settings.</p>}
-        {error && <p role="alert" className="mt-3 rounded-lg bg-[#FFF2F2] px-3 py-2 text-[12px] font-medium text-[#A64A53]">{error}</p>}
-      </section>
     </div>
   );
 }
@@ -5130,8 +4950,6 @@ export function SettingsClient({ user, page = "General", auditView = "all" }: { 
           <ChatbotInterfaceSettingsPage previewContainer={previewPanel} />
         ) : currentPage === "Restrictions" ? (
           <ChatbotUrlRestrictionsSettingsPage />
-        ) : currentPage === "Payments & refunds" ? (
-          <ChatbotPaymentsSettingsPage />
         ) : currentPage === "Behavior" ? (
           <ChatbotBehaviorSettingsPage />
         ) : currentPage === "People" ? (
