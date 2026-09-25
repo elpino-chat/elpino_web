@@ -38,36 +38,36 @@ export function CookieNotice() {
 
   return (
     <div
-      className="fixed inset-x-0 bottom-0 z-50 w-full bg-white px-32 py-6 text-left shadow-[0_-8px_30px_-15px_rgba(15,23,42,0.25)] border-t border-slate-100"
+      className="fixed inset-x-0 bottom-0 z-50 max-h-[85dvh] w-full overflow-y-auto border-t border-slate-100 bg-white px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] text-left shadow-[0_-8px_30px_-15px_rgba(15,23,42,0.25)] sm:px-8 sm:py-6 lg:px-32"
       role="dialog"
       aria-label="Cookie preferences"
     >
-      <div className="flex w-full flex-col gap-5">
-        <p className="text-[15px] leading-relaxed text-slate-700">
+      <div className="flex w-full flex-col gap-4 sm:gap-5">
+        <p className="text-[13px] leading-relaxed text-slate-700 sm:text-[15px]">
           We use cookies to run our website, analyze your use of our services, manage your online preferences & personalize ad content. By accepting our cookies, you&apos;ll get relevant content and social media features, personalized ads, and an enhanced browsing experience. To manage your choices, click &quot;Cookie Settings.&quot; Necessary cookies are required for the core website functionality and cannot be rejected. For more information, see our{" "}
           <Link href="/privacy#cookies-analytics" className="text-blue-600 hover:underline">
             Cookie Policy.
           </Link>
         </p>
 
-        <div className="flex flex-wrap items-center gap-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
           <button
             type="button"
             onClick={() => dismiss("accepted")}
-            className="inline-flex h-11 items-center justify-center rounded-full bg-[#111310] px-6 text-base font-normal text-white transition hover:bg-black"
+            className="inline-flex h-11 w-full items-center justify-center rounded-full bg-[#111310] px-6 text-sm sm:w-auto sm:text-base font-normal text-white transition hover:bg-black"
           >
             Allow all cookies
           </button>
           <button
             type="button"
             onClick={() => dismiss("rejected")}
-            className="inline-flex h-11 items-center justify-center rounded-full border border-slate-300 bg-white px-6 text-base font-normal text-slate-900 transition hover:bg-slate-50"
+            className="inline-flex h-11 w-full items-center justify-center rounded-full border border-slate-300 bg-white px-6 text-sm sm:w-auto sm:text-base font-normal text-slate-900 transition hover:bg-slate-50"
           >
             Deny all
           </button>
           <Link
             href="/privacy#cookies-analytics"
-            className="text-base font-normal text-slate-900 underline underline-offset-4 hover:text-slate-600"
+            className="py-1 text-center text-sm font-normal text-slate-900 underline underline-offset-4 hover:text-slate-600 sm:text-base"
           >
             Cookie settings
           </Link>
