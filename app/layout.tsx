@@ -5,6 +5,7 @@ import { AppShell } from "./components/AppShell";
 import { Toaster } from "@/components/ui/sonner";
 import { Analytics } from "./components/Analytics";
 import { SiteWidgetTag } from "./components/SiteWidgetTag";
+import { NavigationLoader } from "./components/NavigationLoader";
 
 const instrumentSerif = Instrument_Serif({
   variable: "--font-instrument-serif",
@@ -104,6 +105,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-white text-text-primary">
         <AppShell>{children}</AppShell>
+        <NavigationLoader />
         <Toaster position="top-center" />
         <Analytics />
         <SiteWidgetTag />
