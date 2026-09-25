@@ -77,6 +77,8 @@ const REVEAL_MS_PER_WORD = 45;
 const TEAM_POLL_MS = 15000;
 const START_TIMEOUT_MS = 12000;
 const TYPING_PING_MS = 2000;
+// Longest the send button stays locked waiting for a reply.
+const REPLY_WAIT_MAX_MS = 60000;
 const MAX_ATTACHMENT_BYTES = 4 * 1024 * 1024;
 // Giphy's well-known public "beta" test key — fine for demo-scale traffic,
 // rate-limited; swap for a real key before any real production usage.
@@ -202,6 +204,17 @@ function WidgetContent() {
   const [contactDoneFor, setContactDoneFor] = useState("");
   const [contactThanks, setContactThanks] = useState(false);
   const [agentTyping, setAgentTyping] = useState(false);
+  // While a reply is being written the visitor can keep typing but not send: a second message
+  // mid-turn starts a second, overlapping answer. The block lifts by itself after a while so a
+  // reply that never arrives can never leave the chat stuck.
+  const [replyWaitExpired, setReplyWaitExpired] = useState(false);
+  useEffect(() => {
+    setReplyWaitExpired(false);
+    if (!agentTyping) return;
+    const timer = window.setTimeout(() => setReplyWaitExpired(true), REPLY_WAIT_MAX_MS);
+    return () => window.clearTimeout(timer);
+  }, [agentTyping]);
+  const sendBlockedByReply = agentTyping && !replyWaitExpired;
   // First name of the teammate who joined; the header shows them instead of the AI.
   const [agentName, setAgentName] = useState<string | null>(null);
   // Ms-epoch deadline while the team is notified and nobody has joined yet.
@@ -1211,6 +1224,7 @@ function WidgetContent() {
     const body = draft.trim();
     const attachment = pendingAttachment;
     if (!body && !attachment) return;
+    if (sendBlockedByReply) return;
     setDraft("");
     setPendingAttachment(null);
     await sendPayload(body, attachment);
@@ -1914,7 +1928,7 @@ function WidgetContent() {
                   value={draft}
                   onChange={(event) => { setDraft(event.target.value); notifyTyping(); }}
                   onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); void sendMessage(); } }}
-                  placeholder="Write a message…"
+                  placeholder={sendBlockedByReply ? `${botName.trim() || "Elpino"} is replying…` : "Write a message…"}
                   rows={1}
                   className="h-[42px] min-w-0 flex-1 resize-none bg-transparent px-3 py-[11px] text-[14px] leading-5 outline-none placeholder:text-[#777b82]"
                   style={{ color: INK }}
@@ -1926,10 +1940,10 @@ function WidgetContent() {
                   <button
                     type="button"
                     onClick={() => void sendMessage()}
-                    disabled={(!draft.trim() && !pendingAttachment) || sending}
+                    disabled={(!draft.trim() && !pendingAttachment) || sending || sendBlockedByReply}
                     aria-label="Send"
                     className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition disabled:opacity-100"
-                    style={{ backgroundColor: draft.trim() || pendingAttachment ? ACCENT : "#eceef0", color: draft.trim() || pendingAttachment ? "#fff" : "#b5b8bd" }}
+                    style={{ backgroundColor: (draft.trim() || pendingAttachment) && !sendBlockedByReply ? ACCENT : "#eceef0", color: (draft.trim() || pendingAttachment) && !sendBlockedByReply ? "#fff" : "#b5b8bd" }}
                   >
                     <ArrowUp size={21} strokeWidth={2.2} />
                   </button>
