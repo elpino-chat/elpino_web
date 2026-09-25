@@ -20,7 +20,12 @@ export async function POST(request: Request) {
         { status: 403 },
       );
     }
-    return jsonError(result.error ?? "Invalid email or password", 401);
+    // The gateway answers { error: "Unauthorized" } when it rejects this site's internal secret;
+    // that is a deployment problem, not something the visitor did wrong.
+    if (result.error === "Unauthorized") {
+      return jsonError("Sign-in is temporarily unavailable. Please try again in a few minutes.", 503);
+    }
+    return jsonError(result.error ?? "The email or password you entered may be incorrect.", 401);
   }
 
   const jwt = signAuthToken(result.identity);
