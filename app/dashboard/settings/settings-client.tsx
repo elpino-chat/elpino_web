@@ -210,9 +210,9 @@ function FeatureSettingsPage({ title }: { title: string }) {
 
 type UsageRange = "7" | "20" | "30" | "40" | "custom";
 type UsageSite = { id: string; name: string; domain: string };
-type DailyUsage = { date: string; inputTokens: number; outputTokens: number; costCents: number; requests: number };
-type UsageSummary = { totalInputTokens: number; totalOutputTokens: number; totalRequests: number; totalCostCents: number; todaySpendCents: number; daily: DailyUsage[] };
-type UsageEventRow = { id: string; inputTokens: number; outputTokens: number; costCents: number; createdAt: string; siteDomain: string | null };
+type DailyUsage = { date: string; costCents: number; requests: number };
+type UsageSummary = { totalRequests: number; totalCostCents: number; todaySpendCents: number; daily: DailyUsage[] };
+type UsageEventRow = { id: string; costCents: number; createdAt: string; siteDomain: string | null };
 
 function formatCents(cents: number) {
   return (cents / 100).toLocaleString(undefined, { style: "currency", currency: "USD" });
@@ -489,9 +489,9 @@ function AIUsageSettingsPage() {
   }
 
   function exportCsv() {
-    const header = "Date,Website,Input tokens,Output tokens,Cost (USD)\n";
+    const header = "Date,Website,Cost (USD)\n";
     const rows = events
-      .map((event) => [new Date(event.createdAt).toISOString(), event.siteDomain ?? "", event.inputTokens, event.outputTokens, (event.costCents / 100).toFixed(4)].join(","))
+      .map((event) => [new Date(event.createdAt).toISOString(), event.siteDomain ?? "", (event.costCents / 100).toFixed(4)].join(","))
       .join("\n");
     const blob = new Blob([header + rows], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
@@ -626,11 +626,9 @@ function AIUsageSettingsPage() {
         </div>
       </div>
 
-      <section className="mt-6 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+      <section className="mt-6 grid gap-3 md:grid-cols-2">
         {([
-          ["Total tokens in", summary?.totalInputTokens ?? 0, "Prompts and context", "bg-[#3c86d8]"],
-          ["Total tokens out", summary?.totalOutputTokens ?? 0, "Generated responses", "bg-[#42a879]"],
-          ["AI requests", summary?.totalRequests ?? 0, "Completed model calls", "bg-[#d39443]"],
+          ["AI replies", summary?.totalRequests ?? 0, "Answers and actions by the AI", "bg-[#d39443]"],
         ] as const).map(([label, value, caption, dot]) => (
           <article key={label} className="rounded-xl border border-[#dfe3e6] bg-white p-5">
             <div className="flex items-start justify-between"><p className="text-[13px] font-medium text-[#69737a]">{label}</p><span className={`h-2 w-2 rounded-full ${dot}`} /></div>
@@ -648,8 +646,8 @@ function AIUsageSettingsPage() {
       <section className="mt-4 overflow-hidden rounded-xl border border-[#dfe3e6] bg-white">
         <div className="flex items-start justify-between border-b border-[#eceeef] px-5 py-4">
           <div>
-            <h3 className="text-[15px] font-semibold">Token usage</h3>
-            <p className="mt-1 text-[12.5px] text-[#7b848a]">{filterCount === 0 ? "All usage" : filterLabel} — input and output tokens per day</p>
+            <h3 className="text-[15px] font-semibold">Daily spend</h3>
+            <p className="mt-1 text-[12.5px] text-[#7b848a]">{filterCount === 0 ? "All usage" : filterLabel} — AI credit spent per day</p>
           </div>
           <div className="flex rounded-lg bg-[#f0f2f3] p-1">
             <button type="button" onClick={() => setDisplay("chart")} aria-label="Chart view" className={`flex h-7 w-8 items-center justify-center rounded-md ${display === "chart" ? "bg-white" : "text-[#7b848a]"}`}><BarChart3 size={14} /></button>
@@ -681,12 +679,11 @@ function AIUsageSettingsPage() {
         ) : (
           <div className="overflow-x-auto p-5">
             <div className="min-w-[560px]">
-              <div className="grid grid-cols-4 rounded-lg bg-[#f4f5f6] px-4 py-2.5 text-[10.5px] font-bold uppercase tracking-[0.08em] text-[#7a8389]"><span>Date</span><span>Website</span><span>Tokens (in / out)</span><span>Cost</span></div>
+              <div className="grid grid-cols-3 rounded-lg bg-[#f4f5f6] px-4 py-2.5 text-[10.5px] font-bold uppercase tracking-[0.08em] text-[#7a8389]"><span>Date</span><span>Website</span><span>Cost</span></div>
               {events.map((event) => (
-                <div key={event.id} className="grid grid-cols-4 items-center border-b border-[#eef0f1] px-4 py-3 text-[13px]">
+                <div key={event.id} className="grid grid-cols-3 items-center border-b border-[#eef0f1] px-4 py-3 text-[13px]">
                   <span className="text-[#5f686d]">{new Date(event.createdAt).toLocaleString()}</span>
                   <span className="truncate text-[#5f686d]">{event.siteDomain ?? "—"}</span>
-                  <span className="text-[#5f686d]">{event.inputTokens.toLocaleString()} / {event.outputTokens.toLocaleString()}</span>
                   <span className="font-medium">{formatCents(event.costCents)}</span>
                 </div>
               ))}

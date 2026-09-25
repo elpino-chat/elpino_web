@@ -23,5 +23,13 @@ export async function GET(request: Request) {
   }
 
   const result = await callGateway<{ summary?: unknown; error?: string }>(`/api/workspace/usage/summary?${params.toString()}`);
-  return Response.json(result.error ? { summary: null, message: result.error } : { summary: result.summary });
+  // Token counts are internal cost detail, not shown to customers: only requests and spend go out.
+  const summary = result.summary as ({ daily?: Record<string, unknown>[] } & Record<string, unknown>) | undefined;
+  const visible = summary
+    ? (() => {
+        const { totalInputTokens: _in, totalOutputTokens: _out, daily, ...rest } = summary;
+        return { ...rest, daily: (daily ?? []).map(({ inputTokens: _i, outputTokens: _o, ...day }) => day) };
+      })()
+    : summary;
+  return Response.json(result.error ? { summary: null, message: result.error } : { summary: visible });
 }
