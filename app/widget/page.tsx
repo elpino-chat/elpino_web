@@ -171,6 +171,10 @@ function WidgetContent() {
   const [denied, setDenied] = useState(false);
   const [loadFailed, setLoadFailed] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
+  // The page of the customer's site this visitor is on, as reported by the tag
+  // (path and title only). Forwarded to the backend so a teammate sees it in the inbox.
+  const sitePageRef = useRef<{ path: string; title: string } | null>(null);
+  const [sitePageVersion, setSitePageVersion] = useState(0);
   const [botName, setBotName] = useState("Elpino Support");
   const [botAvatarUrl, setBotAvatarUrl] = useState<string | null>(null);
   const [greetingLines, setGreetingLines] = useState<string[]>(["Hi there 👋", "How can I help you today?"]);
@@ -502,6 +506,12 @@ function WidgetContent() {
         // (see tag.js) — mirror that here so reopening doesn't show
         // "Restore size" for a panel that's already back to normal.
         if (!isOpen) setIsMaximized(false);
+      } else if (data.type === "elpino:page") {
+        const page = event.data as { path?: unknown; title?: unknown };
+        if (typeof page.path === "string" && page.path.startsWith("/")) {
+          sitePageRef.current = { path: page.path.slice(0, 300), title: typeof page.title === "string" ? page.title.slice(0, 160) : "" };
+          setSitePageVersion((version) => version + 1);
+        }
       } else if (data.type === "elpino:logout") {
         // Forget this browser's session entirely, so the next person on it
         // cannot resume the signed-out user's conversations.
@@ -1030,6 +1040,21 @@ function WidgetContent() {
       socket?.close();
     };
   }, [conversationId, visitorToken, tab, chatView, key, hostname]);
+
+  // Report the visitor's current page once there is a conversation, and again when
+  // it changes. Debounced so a burst of navigations sends one request.
+  useEffect(() => {
+    const page = sitePageRef.current;
+    if (!page || !conversationId || !visitorToken) return;
+    const timer = window.setTimeout(() => {
+      fetch("/api/widget/page", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ key, hostname, visitorToken, conversationId, path: page.path, title: page.title }),
+      }).catch(() => undefined);
+    }, 600);
+    return () => window.clearTimeout(timer);
+  }, [sitePageVersion, conversationId, visitorToken, key, hostname]);
 
   const lastTypingPingRef = useRef(0);
   function notifyTyping() {

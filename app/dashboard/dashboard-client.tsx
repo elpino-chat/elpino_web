@@ -67,6 +67,8 @@ type ConversationSummary = {
   /** Proved this is really them (signed in, or confirmed a code) — not just a typed-in name/email. */
   verified?: boolean;
   location?: VisitorLocation;
+  /** Pages of the customer's site the visitor was on while chatting, newest last. */
+  visitorPages?: { path: string; title: string | null; at: string }[];
   /** The bot's name and face as configured for the widget this thread came through. */
   aiName?: string;
   aiAvatarUrl?: string | null;
@@ -122,6 +124,42 @@ function DetailSection({
       </button>
       {!collapsed && <div className="space-y-3 px-5 pb-4 text-[13px]">{children}</div>}
     </section>
+  );
+}
+
+// Where the visitor is on the customer's site: the page they are on now, and the
+// few before it. Plain text only (the path and title come from the visitor's
+// browser); the query string is never kept.
+function VisitorPages({ pages }: { pages: { path: string; title: string | null; at: string }[] }) {
+  const current = pages.at(-1);
+  if (!current) return null;
+  const earlier = pages.slice(0, -1).reverse();
+  const at = (iso: string) => new Date(iso).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+  return (
+    <div className="space-y-3">
+      <div className="flex items-start gap-2.5">
+        <span className="mt-0.5 shrink-0 text-[var(--chat-muted)]"><Globe size={14} /></span>
+        <span className="min-w-0">
+          <span className="block text-[11px] uppercase tracking-[0.08em] text-[var(--chat-muted)]">Currently on</span>
+          <span className="mt-0.5 block break-all font-mono text-[12.5px]" title={current.path}>{current.path}</span>
+          {current.title && <span className="mt-0.5 block break-words text-[11.5px] text-[var(--chat-muted)]">{current.title}</span>}
+          <span className="mt-0.5 block text-[11px] text-[var(--chat-muted)]">Since {at(current.at)}</span>
+        </span>
+      </div>
+      {earlier.length > 0 && (
+        <div>
+          <span className="block text-[11px] uppercase tracking-[0.08em] text-[var(--chat-muted)]">Before that</span>
+          <ul className="mt-1.5 space-y-1.5">
+            {earlier.map((page) => (
+              <li key={`${page.path}-${page.at}`} className="flex items-baseline justify-between gap-3 text-[12px]">
+                <span className="min-w-0 truncate font-mono" title={page.title ? `${page.path} — ${page.title}` : page.path}>{page.path}</span>
+                <span className="shrink-0 text-[11px] text-[var(--chat-muted)]">{at(page.at)}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -1446,6 +1484,11 @@ function DashboardContent({ name }: { name: string }) {
         </div>
 
         <div className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {!!conversation?.visitorPages?.length && (
+            <DetailSection title="Visitor's page">
+              <VisitorPages pages={conversation.visitorPages} />
+            </DetailSection>
+          )}
           <DetailSection title="Location & device">
             {place || ip || device ? (
               <div className="space-y-3">

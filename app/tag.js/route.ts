@@ -464,7 +464,12 @@ export function GET(request: Request) {
         }
         // The iframe needs to know whether anyone can see it before it
         // decides a reply deserves a sound.
-        if (event.data.type === 'elpino:widget-ready') postToWidget({ type: 'elpino:panel', open: open });
+        if (event.data.type === 'elpino:widget-ready') {
+          postToWidget({ type: 'elpino:panel', open: open });
+          // The chat just loaded (or reloaded): tell it where the visitor is.
+          lastPageSent = '';
+          sendPage();
+        }
         if (event.data.type === 'elpino:view') rememberView(event.data);
         if (event.data.type === 'elpino:unread' && typeof event.data.count === 'number' && event.data.count > 0) {
           unread += Math.min(Math.floor(event.data.count), 50);
@@ -486,6 +491,32 @@ export function GET(request: Request) {
           refreshIdentity(event.data.type === 'elpino:identity-refresh');
         }
       });
+
+      // Tells the chat which page of this site the visitor is on, so a teammate can
+      // see it in the inbox. Path and title only, never the query string. Sent when
+      // the chat loads and whenever the page changes, including single-page-app
+      // navigations that never reload this tag. The chat only forwards it when the
+      // site's "Support context" permission is on.
+      var lastPageSent = '';
+      function sendPage() {
+        // Not document.title while an unread count is prefixed onto it above.
+        var title = String(titleBeforeUnread !== null ? titleBeforeUnread : document.title || '').slice(0, 200);
+        var signature = location.pathname + '|' + title;
+        if (signature === lastPageSent) return;
+        lastPageSent = signature;
+        postToWidget({ type: 'elpino:page', path: location.pathname, title: title });
+      }
+      ['pushState', 'replaceState'].forEach(function (method) {
+        var original = history[method];
+        if (typeof original !== 'function') return;
+        history[method] = function () {
+          var result = original.apply(this, arguments);
+          // Give the app a moment to set the new page's title first.
+          setTimeout(sendPage, 200);
+          return result;
+        };
+      });
+      window.addEventListener('popstate', function () { setTimeout(sendPage, 200); });
 
       // Opening the panel pushes a history entry, so the browser's back
       // button doesn't navigate the visitor off the page mid-conversation.
