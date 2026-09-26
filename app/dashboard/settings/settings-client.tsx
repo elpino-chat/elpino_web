@@ -82,7 +82,6 @@ import {
   RefreshCw,
   ReceiptText,
   Save,
-  Scale,
   Search,
   Send,
   Settings,
@@ -175,7 +174,6 @@ const workspaceItems = [
   { label: "Presence Log", slug: "presence-log", icon: Radio },
   { label: "Usage", slug: "ai-usage", icon: CircleGauge },
   { label: "Setup & Integration", slug: "setup-integration", icon: Puzzle },
-  { label: "Data Limits & Legal", slug: "data-legal", icon: Scale },
   { label: "Danger Zone", slug: "danger-zone", icon: CircleAlert },
 ];
 
@@ -1198,6 +1196,11 @@ type BillingPayment = {
   currency: string;
   status: string;
   createdAt: string;
+  /** Razorpay's payment id, for quoting in a support request. */
+  providerPaymentId?: string;
+  providerOrderId?: string | null;
+  /** What was bought, taken from the checkout notes. */
+  details?: { planId?: string; cadence?: string; seats?: string };
 };
 
 /** Formats a Razorpay amount, which is always in the smallest currency unit. */
@@ -1214,6 +1217,46 @@ type BillingStatus = {
   paymentMethod?: { brand?: string; last4?: string; expiryMonth?: number; expiryYear?: number };
   invoices?: BillingInvoice[];
 };
+
+const PAYMENT_STATUS_LABEL: Record<string, string> = { captured: "Paid", failed: "Failed", refunded: "Refunded" };
+
+// What a charge was for, in a few words.
+function paymentTitle(payment: BillingPayment): string {
+  if (payment.kind === "seats") {
+    const seats = Number(payment.details?.seats);
+    return seats > 0 ? `${seats} extra seats` : "Extra seats";
+  }
+  if (payment.kind === "overage") return "AI overage";
+  const planName = pricingPlans.find((item) => item.id === payment.details?.planId)?.name;
+  return planName ? `${planName} plan` : "Subscription";
+}
+
+// One label/value line in the payment detail panel, with an optional copy button for ids.
+function PaymentDetailRow({ label, value, mono, copyable }: { label: string; value: string; mono?: boolean; copyable?: boolean }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <div className="flex items-start justify-between gap-6 border-b border-[var(--b-border)] py-3 text-[13px]">
+      <dt className="shrink-0 text-[var(--b-muted)]">{label}</dt>
+      <dd className="flex min-w-0 items-center justify-end gap-2 text-right">
+        <span className={`min-w-0 break-all ${mono ? "font-mono text-[12px]" : ""}`}>{value}</span>
+        {copyable && (
+          <button
+            type="button"
+            onClick={() => {
+              void navigator.clipboard?.writeText(value).then(() => {
+                setCopied(true);
+                window.setTimeout(() => setCopied(false), 1500);
+              });
+            }}
+            className="shrink-0 text-[11.5px] text-[var(--b-muted)] underline underline-offset-2 transition hover:text-[var(--b-text)]"
+          >
+            {copied ? "Copied" : "Copy"}
+          </button>
+        )}
+      </dd>
+    </div>
+  );
+}
 
 // Plan-tinted glow behind the plan card on the Billing page.
 const BILLING_HERO_TINT: Record<string, string> = {
@@ -1268,6 +1311,10 @@ function BillingSettingsPage() {
   // with real charges behind them. The payments endpoint is the actual
   // source, and it has existed all along with nothing calling it.
   const [payments, setPayments] = useState<BillingPayment[]>([]);
+  const [tab, setTab] = useState<"plan" | "history">("plan");
+  const [selectedPayment, setSelectedPayment] = useState<BillingPayment | null>(null);
+  // A seat is held by a member or by a pending invite, the same rule the backend applies when inviting.
+  const [seatsInUse, setSeatsInUse] = useState<{ members: number; pending: number } | null>(null);
   const [cancelOpen, setCancelOpen] = useState(false);
   const [cancelBusy, setCancelBusy] = useState(false);
   const [cancelError, setCancelError] = useState<string | null>(null);
@@ -1352,12 +1399,28 @@ function BillingSettingsPage() {
 
   useEffect(() => {
     void loadStatus().finally(() => setLoading(false));
-    fetch("/api/billing/payments")
+    Promise.all([
+      fetch("/api/team-members").then((response) => (response.ok ? response.json() : null)),
+      fetch("/api/invitations").then((response) => (response.ok ? response.json() : null)),
+    ])
+      .then(([membersData, invitationsData]: [{ members?: unknown[] } | null, { invitations?: unknown[] } | null]) => {
+        if (!membersData) return;
+        setSeatsInUse({ members: membersData.members?.length ?? 0, pending: invitationsData?.invitations?.length ?? 0 });
+      })
+      .catch(() => undefined);
+    fetch("/api/billing/payments?limit=100")
       .then((response) => (response.ok ? response.json() : null))
       .then((data: { payments?: BillingPayment[] } | null) => setPayments(data?.payments ?? []))
       .catch(() => undefined);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!selectedPayment) return;
+    const onKeyDown = (event: KeyboardEvent) => { if (event.key === "Escape") setSelectedPayment(null); };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [selectedPayment]);
 
   const entitlement = billing?.entitlement;
   const rawPlanId = entitlement?.planId ?? "free";
@@ -1394,6 +1457,7 @@ function BillingSettingsPage() {
   const planMinor = entitlement?.effectiveMonthlyMinor ?? 0;
   const seatsMinor = entitlement?.seatsMonthlyMinor ?? 0;
   const seatBundles = entitlement?.seatBundles ?? [];
+  const seatsCapHit = entitlement?.seatsMax != null && seatBundles.some((bundle) => (entitlement?.seatsAllowed ?? 0) + bundle.seats > (entitlement?.seatsMax ?? 0));
   const keptSeats = Math.max(0, (entitlement?.seatsPurchased ?? 0) - (entitlement?.seatsPendingRelease ?? 0));
   const renewAt = entitlement ? (periodEnd ? new Date(periodEnd) : nextAllowanceReset(entitlement)) : null;
   const periodStartMs = entitlement ? new Date(entitlement.currentPeriodStart).getTime() : NaN;
@@ -1513,10 +1577,27 @@ function BillingSettingsPage() {
             )}
           </section>
 
+          <div role="tablist" aria-label="Billing sections" className="mt-9 inline-flex gap-1 rounded-full border-2 border-[var(--s-line)] bg-[var(--s-paper)] p-1">
+            {([["plan", "What's included"], ["history", "Payment history"]] as const).map(([id, label]) => (
+              <button
+                key={id}
+                type="button"
+                role="tab"
+                aria-selected={tab === id}
+                onClick={() => setTab(id)}
+                className={`inline-flex h-9 items-center gap-2 rounded-full px-4 text-[13px] font-semibold transition ${tab === id ? "bg-[var(--s-ink)] text-[var(--s-ink-text)]" : "text-[var(--b-muted)] hover:text-[var(--b-text)]"}`}
+              >
+                {label}
+                {id === "history" && payments.length > 0 && <span className={`rounded-full px-1.5 py-0.5 text-[10.5px] leading-none ${tab === id ? "bg-[var(--s-ink-text)]/20" : "bg-[var(--s-yellow)] text-[var(--s-ink)]"}`}>{payments.length}</span>}
+              </button>
+            ))}
+          </div>
+
+          {tab === "plan" && (
+          <>
           {/* ------------------------------------------------------------ what's included */}
-          <section className="mt-9">
-            <span className={`${stamp} bg-[var(--s-yellow)]`}>Included</span>
-            <div className={`${sticker} mt-3 divide-y-2 divide-[var(--s-line)] overflow-hidden bg-[var(--s-paper)]`}>
+          <section className="mt-5">
+            <div className={`${sticker} divide-y-2 divide-[var(--s-line)] overflow-hidden bg-[var(--s-paper)]`}>
               <div className="grid items-center gap-4 px-6 py-5 md:grid-cols-[210px_minmax(0,1fr)_auto]">
                 <div className="flex items-center gap-3">
                   <span className="grid size-10 shrink-0 place-items-center rounded-xl border-2 border-[var(--s-line)] bg-[var(--s-blue-solid)] text-white"><CircleGauge size={18} /></span>
@@ -1540,8 +1621,8 @@ function BillingSettingsPage() {
                     <p className="text-[15px] font-semibold">Seats</p>
                   </div>
                   <div className="min-w-0">
-                    <p className="text-[26px] font-semibold leading-none tracking-[-0.04em] tabular-nums">{(entitlement?.seatsAllowed ?? 0).toLocaleString()}<span className="text-[16px] font-medium tracking-normal text-[var(--b-muted)]"> {entitlement?.seatsMax ? `of ${entitlement.seatsMax} max` : "seats"}</span></p>
-                    <p className="mt-1.5 text-[12.5px] text-[var(--b-muted)]">{entitlement?.seatsIncluded ?? 0} included{(entitlement?.seatsPurchased ?? 0) > 0 ? ` · ${entitlement?.seatsPurchased} extra` : ""}. Adding seats never changes your AI allowance.</p>
+                    <p className="text-[26px] font-semibold leading-none tracking-[-0.04em] tabular-nums">{seatsInUse ? (seatsInUse.members + seatsInUse.pending).toLocaleString() : "–"}<span className="text-[16px] font-medium tracking-normal text-[var(--b-muted)]"> of {(entitlement?.seatsAllowed ?? 0).toLocaleString()} {(entitlement?.seatsAllowed ?? 0) === 1 ? "seat" : "seats"} used</span></p>
+                    <p className="mt-1.5 text-[12.5px] text-[var(--b-muted)]">{seatsInUse ? `${seatsInUse.members} member${seatsInUse.members === 1 ? "" : "s"}${seatsInUse.pending > 0 ? ` and ${seatsInUse.pending} pending invite${seatsInUse.pending === 1 ? "" : "s"}` : ""}. ` : ""}{entitlement?.seatsIncluded ?? 0} included{(entitlement?.seatsPurchased ?? 0) > 0 ? ` · ${entitlement?.seatsPurchased} extra` : ""}. Adding seats never changes your AI allowance.</p>
                   </div>
                   {seatBundles.length > 0 && (
                     <div className="flex flex-wrap items-center gap-2 md:justify-end">
@@ -1570,6 +1651,12 @@ function BillingSettingsPage() {
                 {seatBundles.length > 0 && (
                   <p className="mt-3 text-[12px] leading-5 text-[var(--b-muted)] md:pl-[226px]">
                     {isFree ? "One-time payment, and the seats stay on your workspace." : "Added to your subscription and billed with it from the next invoice, every period until you remove them."}
+                  </p>
+                )}
+                {seatsCapHit && (
+                  <p className="mt-2 text-[12.5px] font-semibold md:pl-[226px]">
+                    {plan.name} allows up to {entitlement?.seatsMax} seats.{" "}
+                    <button type="button" onClick={() => setUpgradeOpen(true)} className="underline underline-offset-2 transition hover:opacity-70">Upgrade to add more</button>
                   </p>
                 )}
                 {addSeatsNotice && <p role="status" className="mt-2 text-[12.5px] font-semibold text-[var(--b-good)] md:pl-[226px]">{addSeatsNotice}</p>}
@@ -1655,40 +1742,86 @@ function BillingSettingsPage() {
             </article>
           </div>
 
+          </>
+          )}
+
           {/* ------------------------------------------------------------------- history */}
-          <section className={`${sticker} mt-5 overflow-hidden bg-[var(--s-paper)]`}>
-            <div className="flex flex-wrap items-center justify-between gap-3 px-6 py-5">
-              <div className="flex items-center gap-3">
-                <span className={`${stamp} bg-[var(--s-pink)] text-white`}><ReceiptText size={11} /> History</span>
-                <p className="text-[13px] text-[var(--b-muted)]">Every charge on this workspace.</p>
+          {tab === "history" && (
+          <>
+            <section className="mt-5 overflow-hidden rounded-2xl border border-[var(--b-border)] bg-[var(--b-surface)]">
+              <div className="flex items-baseline justify-between gap-3 px-6 py-5">
+                <div>
+                  <h3 className="text-[15px] font-semibold">Payment history</h3>
+                  <p className="mt-0.5 text-[12.5px] text-[var(--b-muted)]">Every charge on this workspace{payments.length >= 100 ? " (latest 100)" : ""}. Select one to see its details.</p>
+                </div>
+                {payments.length > 0 && <span className="text-[12.5px] text-[var(--b-muted)]">{payments.length} payment{payments.length === 1 ? "" : "s"}</span>}
               </div>
-              {payments.length > 0 && <span className={`${stamp} bg-[var(--s-paper)]`}>{payments.length} payment{payments.length === 1 ? "" : "s"}</span>}
-            </div>
-            {payments.length ? (
-              <ol className="border-t-2 border-[var(--s-line)]">
-                {payments.map((payment, index) => (
-                  <li key={payment.id} className={`flex items-center gap-4 px-6 py-4 ${index ? "border-t-2 border-[var(--s-line)]" : ""}`}>
-                    <span className={`grid size-10 shrink-0 place-items-center rounded-xl border-2 border-[var(--s-line)] text-white ${payment.status === "failed" ? "bg-[var(--s-pink)]" : "bg-[var(--s-green)]"}`}>
-                      {payment.status === "failed" ? <CircleAlert size={17} /> : <ReceiptText size={17} />}
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-[14.5px] font-semibold">{payment.kind === "seats" ? "Extra seats" : payment.kind === "overage" ? "AI overage" : "Subscription"}</p>
-                      <p className="mt-0.5 text-[12px] text-[var(--b-muted)]">{new Date(payment.createdAt).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })}</p>
-                    </div>
-                    <span className="text-[16px] font-semibold tracking-[-0.02em] tabular-nums">{formatMoney(payment.amountMinor ?? payment.amountPaise, payment.currency)}</span>
-                    <span className={`${stamp} w-[88px] justify-center text-white ${payment.status === "failed" ? "bg-[var(--s-pink)]" : "bg-[var(--s-green)]"}`}>{payment.status}</span>
-                  </li>
-                ))}
-              </ol>
-            ) : (
-              <div className="relative flex flex-col items-center border-t-2 border-[var(--s-line)] bg-[var(--s-cream)] px-5 py-14 text-center">
-                <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[0.07]" style={{ backgroundImage: "radial-gradient(var(--s-line) 1.2px, transparent 1.2px)", backgroundSize: "14px 14px" }} />
-                <span className="relative grid size-14 place-items-center rounded-full border-2 border-[var(--s-line)] bg-[var(--s-pink)] text-white"><ReceiptText size={22} /></span>
-                <p className="relative mt-4 text-[18px] font-semibold tracking-[-0.03em]">No charges yet</p>
-                <p className="relative mt-1 max-w-xs text-[13px] leading-5 text-[var(--b-muted)]">When you pay for a plan or extra seats, each charge shows up here.</p>
+              {payments.length ? (
+                <div className="border-t border-[var(--b-border)]">
+                  <div className="hidden grid-cols-[130px_minmax(0,1fr)_90px_110px_20px] gap-4 px-6 py-2.5 text-[11.5px] font-medium text-[var(--b-muted)] sm:grid">
+                    <span>Date</span><span>Description</span><span>Status</span><span className="text-right">Amount</span><span />
+                  </div>
+                  <ul>
+                    {payments.map((payment) => (
+                      <li key={payment.id} className="border-t border-[var(--b-border)]">
+                        <button
+                          type="button"
+                          onClick={() => setSelectedPayment(payment)}
+                          className="grid w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-0.5 px-6 py-3.5 text-left text-[13.5px] transition hover:bg-[var(--b-surface-2)] sm:grid-cols-[130px_minmax(0,1fr)_90px_110px_20px]"
+                        >
+                          <span className="order-2 text-[12.5px] text-[var(--b-muted)] sm:order-none sm:text-[13.5px]">{new Date(payment.createdAt).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })}</span>
+                          <span className="order-1 min-w-0 truncate font-medium sm:order-none">{paymentTitle(payment)}</span>
+                          <span className="order-4 text-[12.5px] text-[var(--b-muted)] sm:order-none sm:text-[13.5px]">{PAYMENT_STATUS_LABEL[payment.status] ?? payment.status}</span>
+                          <span className="order-3 text-right font-medium tabular-nums sm:order-none">{formatMoney(payment.amountMinor ?? payment.amountPaise, payment.currency)}</span>
+                          <ChevronRight size={15} className="hidden text-[var(--b-muted)] sm:block" />
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : (
+                <div className="border-t border-[var(--b-border)] px-6 py-12 text-center">
+                  <p className="text-[14px] font-medium">No payments yet</p>
+                  <p className="mt-1 text-[12.5px] text-[var(--b-muted)]">When you pay for a plan or extra seats, each charge shows up here.</p>
+                </div>
+              )}
+            </section>
+
+            {selectedPayment && (
+              <div className="fixed inset-0 z-[100]" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setSelectedPayment(null); }}>
+                <div aria-hidden className="absolute inset-0 bg-black/30" />
+                <aside role="dialog" aria-modal="true" aria-label="Payment details" className="billing-drawer absolute right-0 top-0 flex h-full w-full max-w-[440px] flex-col border-l border-[var(--b-border)] bg-[var(--b-surface)] shadow-[0_0_60px_rgba(0,0,0,0.25)]">
+                  <div className="flex items-center justify-between border-b border-[var(--b-border)] px-6 py-4">
+                    <p className="text-[14px] font-semibold">Payment details</p>
+                    <button type="button" onClick={() => setSelectedPayment(null)} aria-label="Close" className="flex h-8 w-8 items-center justify-center rounded-lg text-[var(--b-muted)] transition hover:bg-[var(--b-surface-2)] hover:text-[var(--b-text)]"><X size={16} /></button>
+                  </div>
+                  <div className="flex-1 overflow-y-auto px-6 py-6">
+                    <p className="text-[13px] text-[var(--b-muted)]">{paymentTitle(selectedPayment)}</p>
+                    <p className="mt-1 text-[38px] font-semibold leading-none tracking-[-0.045em] tabular-nums">{formatMoney(selectedPayment.amountMinor ?? selectedPayment.amountPaise, selectedPayment.currency)}</p>
+                    <p className="mt-2 text-[13px] text-[var(--b-muted)]">{PAYMENT_STATUS_LABEL[selectedPayment.status] ?? selectedPayment.status} on {new Date(selectedPayment.createdAt).toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" })}</p>
+
+                    <dl className="mt-7 border-t border-[var(--b-border)]">
+                      <PaymentDetailRow label="Type" value={selectedPayment.kind === "seats" ? "Extra seats" : selectedPayment.kind === "overage" ? "AI overage" : "Subscription"} />
+                      {selectedPayment.details?.planId && <PaymentDetailRow label="Plan" value={pricingPlans.find((item) => item.id === selectedPayment.details?.planId)?.name ?? selectedPayment.details.planId} />}
+                      {selectedPayment.details?.cadence && <PaymentDetailRow label="Billing" value={selectedPayment.details.cadence === "annual" ? "Yearly" : "Monthly"} />}
+                      {selectedPayment.details?.seats && <PaymentDetailRow label="Seats" value={selectedPayment.details.seats} />}
+                      <PaymentDetailRow label="Status" value={PAYMENT_STATUS_LABEL[selectedPayment.status] ?? selectedPayment.status} />
+                      <PaymentDetailRow label="Amount" value={formatMoney(selectedPayment.amountMinor ?? selectedPayment.amountPaise, selectedPayment.currency)} />
+                      <PaymentDetailRow label="Currency" value={selectedPayment.currency} />
+                      <PaymentDetailRow label="Date" value={new Date(selectedPayment.createdAt).toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" })} />
+                      <PaymentDetailRow label="Time" value={new Date(selectedPayment.createdAt).toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })} />
+                      {selectedPayment.providerPaymentId && <PaymentDetailRow label="Payment ID" value={selectedPayment.providerPaymentId} mono copyable />}
+                      {selectedPayment.providerOrderId && <PaymentDetailRow label="Order ID" value={selectedPayment.providerOrderId} mono copyable />}
+                      <PaymentDetailRow label="Reference" value={selectedPayment.id} mono copyable />
+                    </dl>
+
+                    <p className="mt-6 text-[12.5px] leading-5 text-[var(--b-muted)]">Questions about this charge? <Link href="/contact" className="underline underline-offset-2 hover:text-[var(--b-text)]">Contact us</Link> and quote the payment ID.</p>
+                  </div>
+                </aside>
               </div>
             )}
-          </section>
+          </>
+          )}
         </>
       )}
 
@@ -2421,26 +2554,6 @@ function SetupIntegrationSettingsPage() {
 
       <div className="dashboard-connect-embedded mt-8 border-t border-[#E5E8EA] pt-8">
         <ConnectPageContent />
-      </div>
-    </div>
-  );
-}
-
-function DataLimitsLegalSettingsPage() {
-  return (
-    <div className="mx-auto w-full max-w-[1120px] px-7 pb-14 pt-8 text-[#17181a] sm:px-9 lg:px-10">
-      <div className="border-b border-[#E5E8EA] pb-7">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Workspace</p>
-        <h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em] text-[#17181a]">Data Limits & Legal</h2>
-        <p className="mt-2 max-w-xl text-[14px] leading-6 text-[#667069]">Usage limits, activity records, and the policies your workspace runs under.</p>
-      </div>
-      <div className="mt-6 overflow-hidden rounded-xl border border-[#e7e8ea]">
-        <SettingsHubCard title="Audit Logs" description="Review workspace activity and security events." href="/dashboard/settings/audit-logs" />
-        <SettingsHubCard title="Trash" description="Restore recently deleted workspace content." href="/dashboard/settings/trash" />
-      </div>
-      <div className="mt-6 overflow-hidden rounded-xl border border-[#e7e8ea]">
-        <SettingsHubCard title="Terms of Service" description="The agreement covering use of Elpino." href="/terms" />
-        <SettingsHubCard title="Privacy Policy" description="How we handle your data and your customers' data." href="/privacy" />
       </div>
     </div>
   );
@@ -5054,8 +5167,6 @@ export function SettingsClient({ user, page = "General", auditView = "all" }: { 
           <WorkspaceInformationSettingsPage />
         ) : currentPage === "Setup & Integration" ? (
           <SetupIntegrationSettingsPage />
-        ) : currentPage === "Data Limits & Legal" ? (
-          <DataLimitsLegalSettingsPage />
         ) : currentPage === "Danger Zone" ? (
           <WorkspaceDangerZoneSettingsPage />
         ) : currentPage === "Tag Manager" ? (

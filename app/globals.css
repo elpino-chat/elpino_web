@@ -5705,3 +5705,14 @@ body:has(.dashboard-ai-usage-page) .dashboard-add-credits-dialog [class*="hover:
   --s-yellow: #ffd84d;
   --s-blue: #c9d9ff;
 }
+
+@keyframes billing-drawer-in {
+  from { transform: translateX(24px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+.billing-v2 .billing-drawer {
+  animation: billing-drawer-in 180ms ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .billing-v2 .billing-drawer { animation: none; }
+}

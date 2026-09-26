@@ -21,7 +21,6 @@ const SETTINGS_SECTIONS: Record<string, string> = {
   plugins: "Plugins",
   information: "Information",
   "setup-integration": "Setup & Integration",
-  "data-legal": "Data Limits & Legal",
   "danger-zone": "Danger Zone",
 };
 
