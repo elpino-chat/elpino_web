@@ -4591,6 +4591,11 @@ body:has([data-dashboard-theme="dark"]):has(.dashboard-ai-usage-page) .dashboard
   border-color: rgb(15 23 42 / 0.1) !important;
   box-shadow: 0 1px 2px rgb(15 23 42 / 0.04) !important;
 }
+/* Header action (Upgrade plan / Add credits): outline only, no fill. */
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-ai-usage-page header button[class*="border-white/20"] {
+  border-color: rgb(15 23 42 / 0.28) !important;
+  background-color: transparent !important;
+}
 /* Small tinted controls (Export CSV, chart/table toggle, badges). */
 [data-dashboard-theme="light"] .dashboard-shell .dashboard-ai-usage-page :is([class*="bg-white/[0.04]"], [class*="bg-white/10"]) {
   background-color: rgb(15 23 42 / 0.045) !important;

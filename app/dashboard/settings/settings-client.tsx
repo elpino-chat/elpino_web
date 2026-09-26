@@ -1,5 +1,6 @@
 "use client";
 
+import { UpgradeDialog } from "@/app/components/dashboard/UpgradeDialog";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import QRCode from "qrcode";
@@ -37,7 +38,6 @@ import {
 } from "@/lib/availability";
 import {
   ArrowRight,
-  BarChart3,
   Bot,
   CalendarDays,
   Check,
@@ -75,6 +75,8 @@ import {
   Paperclip,
   Pencil,
   Plus,
+  Rocket,
+  Hourglass,
   Puzzle,
   Radio,
   RefreshCw,
@@ -86,7 +88,6 @@ import {
   Settings,
   ShieldCheck,
   Smile,
-  Sparkles,
   Table2,
   Trash2,
   Upload,
@@ -208,131 +209,63 @@ function FeatureSettingsPage({ title }: { title: string }) {
   );
 }
 
-type UsageRange = "7" | "20" | "30" | "40" | "custom";
-type UsageSite = { id: string; name: string; domain: string };
-type DailyUsage = { date: string; costCents: number; requests: number };
-type UsageSummary = { totalRequests: number; totalCostCents: number; todaySpendCents: number; daily: DailyUsage[] };
-type UsageEventRow = { id: string; costCents: number; createdAt: string; siteDomain: string | null };
-
 function formatCents(cents: number) {
   return (cents / 100).toLocaleString(undefined, { style: "currency", currency: "USD" });
 }
 
-function rangeToDates(range: UsageRange, startDate: string, endDate: string) {
-  const today = new Date();
-  const toStr = today.toISOString().slice(0, 10);
-  if (range === "custom") return { from: startDate, to: endDate };
-  const days = Number(range);
-  const fromDate = new Date(today.getTime() - (days - 1) * 24 * 60 * 60 * 1000);
-  return { from: fromDate.toISOString().slice(0, 10), to: toStr };
+function addMonthsClamped(date: Date, months: number) {
+  const result = new Date(date);
+  const day = result.getUTCDate();
+  result.setUTCDate(1);
+  result.setUTCMonth(result.getUTCMonth() + months);
+  const lastDay = new Date(Date.UTC(result.getUTCFullYear(), result.getUTCMonth() + 1, 0)).getUTCDate();
+  result.setUTCDate(Math.min(day, lastDay));
+  return result;
 }
 
-function UsageMeter({ label, used, total, unit, footer, format = (value: number) => value.toLocaleString() }: { label: string; used: number; total: number; unit: string; footer: string; format?: (value: number) => string }) {
-  const pct = total > 0 ? Math.min(100, Math.round((used / total) * 100)) : 0;
-  return (
-    <article className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.035] p-5">
-      <div className="flex items-center justify-between">
-        <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/60">{label}</span>
-        <span className="text-[11px] font-medium text-white/50">{unit}</span>
-      </div>
-      <div className="mt-4 flex items-end gap-1.5">
-        <span className="text-[28px] font-medium tracking-[-0.04em]">{format(used)}</span>
-        <span className="pb-1 text-[13px] text-white/60">of {format(total)}</span>
-      </div>
-      <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
-        <div className="h-full rounded-full bg-[#6d5ce7] transition-[width]" style={{ width: `${pct}%` }} />
-      </div>
-      <p className="mt-3 text-[12px] leading-5 text-white/60">{footer}</p>
-    </article>
-  );
+// When the monthly allowance next resets. A monthly paid plan resets when it
+// renews; Free and annual plans reset on a monthly step from the period start
+// (the backend rolls them lazily the same way).
+function nextAllowanceReset(entitlement: { creditBased?: boolean; cadence?: "monthly" | "annual"; currentPeriodStart: string; currentPeriodEnd: string | null }) {
+  const now = new Date();
+  if (entitlement.creditBased && entitlement.cadence !== "annual" && entitlement.currentPeriodEnd) {
+    const end = new Date(entitlement.currentPeriodEnd);
+    if (!Number.isNaN(end.getTime()) && end > now) return end;
+  }
+  const start = new Date(entitlement.currentPeriodStart);
+  if (Number.isNaN(start.getTime())) return null;
+  for (let step = 1; step < 600; step += 1) {
+    const next = addMonthsClamped(start, step);
+    if (next > now) return next;
+  }
+  return null;
 }
 
-// The three plan meters (resolutions, seats, knowledge storage) — moved here
-// from Billing so that page can stay about the plan and payments only.
-function PlanUsageMeters() {
-  const [billing, setBilling] = useState<BillingStatus | null>(null);
-  const [grantRemainingCents, setGrantRemainingCents] = useState<number | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    Promise.all([
-      fetch("/api/billing/status").then((response) => (response.ok ? response.json() : null)).catch(() => null),
-      fetch("/api/workspace/usage/credits").then((response) => (response.ok ? response.json() : null)).catch(() => null),
-    ])
-      .then(([status, credits]: [BillingStatus | null, { grantedCents?: number } | null]) => {
-        setBilling(status);
-        setGrantRemainingCents(typeof credits?.grantedCents === "number" ? credits.grantedCents : null);
-      })
-      .finally(() => setLoading(false));
-  }, []);
-
-  const entitlement = billing?.entitlement;
-  const plan = pricingPlans.find((item) => item.id === (entitlement?.planId ?? "free")) ?? pricingPlans[0];
-
-  if (loading) return <div className="mt-6 grid gap-4 md:grid-cols-3"><div className="h-44 animate-pulse rounded-2xl bg-white/[0.04]" /><div className="h-44 animate-pulse rounded-2xl bg-white/[0.04]" /><div className="h-44 animate-pulse rounded-2xl bg-white/[0.04]" /></div>;
-  if (!entitlement) return null;
-
-  const grantCents = entitlement.aiCreditGrantUsdCents ?? 0;
-  const dollars = (value: number) => `$${value.toFixed(2)}`;
-  const handled = entitlement.resolutionsUsed ?? 0;
-
-  return (
-    <section className="mt-6 grid gap-4 md:grid-cols-3">
-      {entitlement.creditBased ? (
-        <UsageMeter
-          label="AI credit"
-          used={grantRemainingCents === null ? 0 : Math.max(0, grantCents - grantRemainingCents) / 100}
-          total={grantCents / 100}
-          unit="this period"
-          format={dollars}
-          footer={`${handled.toLocaleString()} AI conversation${handled === 1 ? "" : "s"} handled this period. Your credit covers about ${(entitlement.estimatedConversations ?? 0).toLocaleString()} typical conversations. When it runs out the AI hands new conversations to your team until you top up or the month resets. Handoffs never cost extra.`}
-        />
-      ) : (
-        <UsageMeter
-          label="AI conversations"
-          used={handled}
-          total={entitlement.resolutionsIncluded ?? 0}
-          unit="this period"
-          footer="At the limit the AI hands new conversations to your team instead of answering. Conversations handed off to a person don't count."
-        />
-      )}
-      <UsageMeter
-        label="Seats"
-        used={entitlement.seatsAllowed ?? 0}
-        total={entitlement.seatsMax ?? entitlement.seatsAllowed ?? 0}
-        unit="in this workspace"
-        footer={`${entitlement.seatsIncluded ?? 0} included with ${plan.name}${(entitlement.seatsPurchased ?? 0) > 0 ? `, ${entitlement.seatsPurchased} added in seat packs` : ""}. Adding seats never changes your AI allowance.`}
-      />
-      <UsageMeter
-        label="Knowledge storage"
-        used={Math.round((entitlement.knowledgeBytesUsed ?? 0) / (1024 * 1024))}
-        total={entitlement.knowledgeStorageMb ?? 0}
-        unit="MB used"
-        footer="Crawled pages and uploaded files. New articles are refused once this is full — remove some, or upgrade for more room."
-      />
-    </section>
-  );
+function formatResetDate(date: Date) {
+  return date.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
 }
 
 function AIUsageSettingsPage() {
-  const [range, setRange] = useState<UsageRange>("30");
-  const [display, setDisplay] = useState<"chart" | "table">("chart");
-  const [customOpen, setCustomOpen] = useState(false);
-  const [scopeOpen, setScopeOpen] = useState(false);
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const rangeLabel = range === "custom" && startDate && endDate ? `${new Date(`${startDate}T00:00:00`).toLocaleDateString()} – ${new Date(`${endDate}T00:00:00`).toLocaleDateString()}` : `Last ${range === "custom" ? "30" : range} days`;
-
-  const [sites, setSites] = useState<UsageSite[]>([]);
-  const [selectedSiteIds, setSelectedSiteIds] = useState<string[]>([]);
-  const [includeWorkspace, setIncludeWorkspace] = useState(false);
-
-  const [summary, setSummary] = useState<UsageSummary | null>(null);
-  const [loadingSummary, setLoadingSummary] = useState(true);
-  const [events, setEvents] = useState<UsageEventRow[]>([]);
-  const [loadingEvents, setLoadingEvents] = useState(false);
-
   const [creditsCents, setCreditsCents] = useState<number | null>(null);
+  // Free is limited by AI messages, not dollars, so the credit balance, "Add
+  // credits" and auto-recharge only make sense on credit-based (paid) plans.
+  // null while loading, so they don't flash in and out for Free workspaces.
+  const [billing, setBilling] = useState<BillingStatus | null>(null);
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
+  useEffect(() => {
+    fetch("/api/billing/status")
+      .then((response) => (response.ok ? response.json() : null))
+      .then((status: BillingStatus | null) => setBilling(status))
+      .catch(() => setBilling(null));
+  }, []);
+  const entitlement = billing?.entitlement;
+  const creditBased: boolean | null = entitlement ? Boolean(entitlement.creditBased) : null;
+  const isFreePlan = creditBased === false;
+  const resetAt = entitlement ? nextAllowanceReset(entitlement) : null;
+  const daysToReset = resetAt ? Math.max(0, Math.ceil((resetAt.getTime() - Date.now()) / 86_400_000)) : 0;
+  const messagesUsed = entitlement?.resolutionsUsed ?? 0;
+  const messagesTotal = entitlement?.resolutionsIncluded ?? 0;
+  const grantCents = entitlement?.aiCreditGrantUsdCents ?? 0;
   // Where the balance came from. The grant resets every period; purchased
   // credit does not, and the split is the whole reason buying credit is worth
   // doing, so the UI says which is which rather than showing one number.
@@ -350,13 +283,6 @@ function AIUsageSettingsPage() {
   const [addNotice, setAddNotice] = useState<string | null>(null);
   const [autoBusy, setAutoBusy] = useState(false);
 
-  useEffect(() => {
-    fetch("/api/workspace/sites")
-      .then((response) => (response.ok ? response.json() : null))
-      .then((data: { sites?: UsageSite[] } | null) => setSites(data?.sites ?? []))
-      .catch(() => undefined);
-  }, []);
-
   function loadCredits() {
     setLoadingCredits(true);
     fetch("/api/workspace/usage/credits")
@@ -372,33 +298,6 @@ function AIUsageSettingsPage() {
       .finally(() => setLoadingCredits(false));
   }
   useEffect(loadCredits, []);
-
-  useEffect(() => {
-    const { from, to } = rangeToDates(range, startDate, endDate);
-    if (range === "custom" && (!startDate || !endDate)) return;
-
-    const params = new URLSearchParams({ from, to });
-    if (selectedSiteIds.length) params.set("siteIds", selectedSiteIds.join(","));
-    if (includeWorkspace) params.set("includeWorkspace", "1");
-
-    setLoadingSummary(true);
-    fetch(`/api/workspace/usage/summary?${params.toString()}`)
-      .then((response) => (response.ok ? response.json() : null))
-      .then((data: { summary?: UsageSummary | null } | null) => setSummary(data?.summary ?? null))
-      .catch(() => setSummary(null))
-      .finally(() => setLoadingSummary(false));
-
-    setLoadingEvents(true);
-    fetch(`/api/workspace/usage/events?${params.toString()}`)
-      .then((response) => (response.ok ? response.json() : null))
-      .then((data: { events?: UsageEventRow[] } | null) => setEvents(data?.events ?? []))
-      .catch(() => setEvents([]))
-      .finally(() => setLoadingEvents(false));
-  }, [range, startDate, endDate, selectedSiteIds, includeWorkspace]);
-
-  function toggleSite(id: string) {
-    setSelectedSiteIds((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]));
-  }
 
   /**
    * Buys AI credit through Razorpay.
@@ -488,276 +387,179 @@ function AIUsageSettingsPage() {
     }
   }
 
-  function exportCsv() {
-    const header = "Date,Website,Cost (USD)\n";
-    const rows = events
-      .map((event) => [new Date(event.createdAt).toISOString(), event.siteDomain ?? "", (event.costCents / 100).toFixed(4)].join(","))
-      .join("\n");
-    const blob = new Blob([header + rows], { type: "text/csv;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `ai-usage-${new Date().toISOString().slice(0, 10)}.csv`;
-    link.click();
-    URL.revokeObjectURL(url);
-  }
-
-  const selectedSites = sites.filter((site) => selectedSiteIds.includes(site.id));
-  const filterCount = selectedSites.length + (includeWorkspace ? 1 : 0);
-  const filterLabel = filterCount === 0 ? "All" : filterCount === 1 ? (includeWorkspace ? "Workspace" : selectedSites[0].domain) : `${filterCount} selected`;
-  const maxDailyCost = Math.max(1, ...(summary?.daily.map((day) => day.costCents) ?? [0]));
-  const hasUsage = Boolean(summary && summary.totalRequests > 0);
-
+  const [manageOpen, setManageOpen] = useState(false);
+  // "Add credits to continue" only reads right when the balance is nearly gone.
+  const creditLow = creditsCents !== null && creditsCents <= Math.max(0, grantCents * 0.15);
+  // How much of this month's allowance is gone, against how much of the month
+  // has passed — that comparison is what the headline is built from.
+  const usedPercent = !entitlement
+    ? 0
+    : isFreePlan
+      ? messagesTotal > 0 ? Math.min(100, (messagesUsed / messagesTotal) * 100) : 0
+      : grantCents > 0 ? Math.min(100, Math.max(0, ((grantCents - grantedCents) / grantCents) * 100)) : 0;
   return (
     <div className="dashboard-ai-usage-page mx-auto w-full max-w-[1280px] px-6 pb-16 pt-8 text-white/90 sm:px-9">
       <header className="flex flex-wrap items-start justify-between gap-5">
         <div>
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-violet-300/15 bg-violet-400/10 px-2.5 py-1 text-[11px] font-medium text-violet-200">
-              <Sparkles size={12} /> Workspace intelligence
-            </div>
             <h2 className="text-[30px] font-medium tracking-[-0.04em] text-white/90">Usage</h2>
-            <p className="mt-2 text-[13px] text-white/60">Your plan allowances, plus token consumption and spend across your workspace. Dates are shown in UTC.</p>
+            <p className="mt-2 text-[13px] text-white/60">Your plan allowance and credits. Dates are shown in UTC.</p>
         </div>
-        <button type="button" onClick={exportCsv} disabled={!events.length} className="flex h-10 items-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-3.5 text-[12px] font-medium text-white/90 transition hover:bg-white/[0.08] disabled:cursor-not-allowed disabled:opacity-40">
-          <Download size={15} /> Export CSV
-        </button>
+        {entitlement && (
+          <button type="button" onClick={() => (isFreePlan ? setUpgradeOpen(true) : setAddOpen(true))} className="flex h-10 items-center gap-2 rounded-xl border border-white/20 bg-transparent px-4 text-[13px] font-semibold text-white/90 transition hover:bg-white/[0.06]">
+            {isFreePlan ? <><Rocket size={14} /> Upgrade plan</> : <><Plus size={14} /> {creditLow ? "Add credits to continue" : "Add credits"}</>}
+          </button>
+        )}
       </header>
 
-      <PlanUsageMeters />
-
-      <section className="dashboard-ai-credit-card mt-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.035] p-5">
-        <div className="flex items-center gap-4">
-          <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-[#6d5ce7] to-[#8b5cf6] text-white shadow-[0_8px_24px_rgba(109,92,231,0.25)]"><CreditCard size={18} /></span>
-          <div>
-            <p className="text-[11px] font-medium text-[#6D7D85]">AI credits remaining</p>
-            <p className="mt-0.5 text-[24px] font-semibold tracking-[-0.02em]">{loadingCredits ? "…" : formatCents(creditsCents ?? 0)}</p>
-            {!loadingCredits && (creditsCents ?? 0) > 0 && (
-              <p className="mt-0.5 text-[11px] text-[#8A9299]">
-                {formatCents(grantedCents)} from your plan this month
-                {purchasedCents > 0 ? ` · ${formatCents(purchasedCents)} purchased, never expires` : ""}
-              </p>
-            )}
-          </div>
-          <div className="ml-4 border-l border-[#E1E5E8] pl-4">
-            <p className="text-[11px] font-medium text-[#6D7D85]">Spent today</p>
-            <p className="mt-0.5 text-[16px] font-semibold">{loadingSummary ? "…" : formatCents(summary?.todaySpendCents ?? 0)}</p>
-          </div>
-        </div>
-        <button type="button" onClick={() => setAddOpen(true)} className="flex h-10 items-center gap-2 rounded-lg bg-[#6d5ce7] px-4 text-[12px] font-medium text-white transition hover:bg-[#7b6bed]">
-          <Plus size={14} /> Add credits
-        </button>
-      </section>
-
-      <div className="dashboard-ai-usage-toolbar sticky top-0 z-10 -mx-2 mt-5 border-y border-white/10 bg-[#262626]/95 px-2 py-3 backdrop-blur">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <Popover open={scopeOpen} onOpenChange={setScopeOpen}>
-            <PopoverTrigger className="flex min-h-10 max-w-[420px] flex-wrap items-center gap-1.5 rounded-lg border border-[#dfe3e6] bg-white px-3 py-1.5 text-[13px]">
-              <Globe2 size={14} className="shrink-0 text-[#8a9298]" />
-              <span className="shrink-0 text-[#8a9298]">Scope</span>
-              {filterCount === 0 ? (
-                <span className="font-medium">All</span>
-              ) : (
-                <span className="flex flex-wrap items-center gap-1 py-0.5">
-                  {includeWorkspace && (
-                    <span className="inline-flex items-center rounded-full bg-[#eef0f1] px-2 py-0.5 text-[11.5px] font-medium text-[#33383c]">Workspace</span>
-                  )}
-                  {selectedSites.map((site) => (
-                    <span key={site.id} className="inline-flex items-center rounded-full bg-[#eef0f1] px-2 py-0.5 text-[11.5px] font-medium text-[#33383c]">{site.domain}</span>
-                  ))}
-                </span>
-              )}
-              <ChevronDown size={13} className="ml-auto shrink-0 text-[#737c82]" />
-            </PopoverTrigger>
-            <PopoverContent align="start" className="dashboard-ai-scope-menu w-[280px]">
-              <p className="px-2.5 pb-1.5 pt-1 text-[10.5px] font-bold uppercase tracking-[0.1em] text-[#8a9298]">Filter by scope</p>
-              <button
-                type="button"
-                onClick={() => setIncludeWorkspace((value) => !value)}
-                className={`flex h-9 w-full items-center justify-between gap-2.5 rounded-lg px-2.5 text-left text-[13px] font-medium ${includeWorkspace ? "bg-[#f0f2f3]" : "hover:bg-[#f7f8f8]"}`}
-              >
-                <span>Workspace <span className="text-[11px] font-normal text-[#8a9298]">(internal, not from a website)</span></span>
-                {includeWorkspace && <Check size={14} className="shrink-0 text-[#11120f]" />}
-              </button>
-              {sites.length > 0 && <div className="my-1 border-t border-[#eceeef]" />}
-              <div className="max-h-[220px] overflow-y-auto">
-                {sites.map((site) => {
-                  const checked = selectedSiteIds.includes(site.id);
-                  return (
-                    <button key={site.id} type="button" onClick={() => toggleSite(site.id)} className={`flex h-9 w-full items-center justify-between gap-2.5 truncate rounded-lg px-2.5 text-left text-[13px] font-medium ${checked ? "bg-[#f0f2f3]" : "hover:bg-[#f7f8f8]"}`}>
-                      <span className="truncate">{site.domain}</span>
-                      {checked && <Check size={14} className="shrink-0 text-[#11120f]" />}
-                    </button>
-                  );
-                })}
-                {!sites.length && <p className="px-2.5 py-2 text-[12px] text-[#8a9298]">No websites connected yet.</p>}
-              </div>
-              {filterCount > 0 && (
-                <div className="mt-1 border-t border-[#eceeef] pt-1">
-                  <button type="button" onClick={() => { setSelectedSiteIds([]); setIncludeWorkspace(false); }} className="flex h-9 w-full items-center rounded-lg px-2.5 text-left text-[13px] font-medium text-[#8a9298] hover:bg-[#f7f8f8]">Clear filters</button>
-                </div>
-              )}
-            </PopoverContent>
-          </Popover>
-
-          <div className="relative">
-            <button type="button" onClick={() => setCustomOpen((open) => !open)} className="flex h-10 min-w-[168px] items-center justify-between gap-3 rounded-lg border border-[#dfe3e6] bg-white px-3 text-[12px] shadow-sm">
-              <span><span className="mr-2 text-[#8a9298]">Range</span><span className="font-medium">{rangeLabel}</span></span>
-              <CalendarDays size={14} />
-            </button>
-            {customOpen && (
-              <div className="absolute right-0 top-12 z-30 w-[310px] rounded-xl border border-[#dfe3e6] bg-white p-3 shadow-[0_18px_45px_rgba(15,23,42,0.14)]">
-                <p className="mb-2 px-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#8a9298]">Reporting period</p>
-                <div className="grid grid-cols-4 gap-1">
-                  {(["7", "20", "30", "40"] as const).map((value) => (
-                    <button key={value} type="button" onClick={() => { setRange(value); setCustomOpen(false); }} className={`h-9 rounded-lg text-[11px] font-semibold ${range === value ? "bg-[#1f2224] text-white" : "hover:bg-[#f1f3f4]"}`}>{value} days</button>
-                  ))}
-                </div>
-                <div className="mt-3 border-t border-[#eceeef] pt-3">
-                  <p className="mb-2 text-[11px] font-semibold">Custom range</p>
-                  <div className="grid grid-cols-2 gap-2">
-                    <input type="date" value={startDate} max={endDate || undefined} onChange={(event) => setStartDate(event.target.value)} className="h-9 min-w-0 rounded-lg border border-[#dfe3e6] px-2 text-[11px]" />
-                    <input type="date" value={endDate} min={startDate || undefined} onChange={(event) => setEndDate(event.target.value)} className="h-9 min-w-0 rounded-lg border border-[#dfe3e6] px-2 text-[11px]" />
-                  </div>
-                  <button type="button" disabled={!startDate || !endDate} onClick={() => { setRange("custom"); setCustomOpen(false); }} className="mt-2 h-9 w-full rounded-lg bg-[#1f2224] text-[11px] font-semibold text-white disabled:bg-[#dfe2e4] disabled:text-[#9aa0a4]">Apply custom range</button>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <section className="mt-6 grid gap-3 md:grid-cols-2">
-        {([
-          ["AI replies", summary?.totalRequests ?? 0, "Answers and actions by the AI", "bg-[#d39443]"],
-        ] as const).map(([label, value, caption, dot]) => (
-          <article key={label} className="rounded-xl border border-[#dfe3e6] bg-white p-5">
-            <div className="flex items-start justify-between"><p className="text-[13px] font-medium text-[#69737a]">{label}</p><span className={`h-2 w-2 rounded-full ${dot}`} /></div>
-            <p className="mt-5 text-[28px] font-medium tracking-[-0.04em]">{loadingSummary ? "…" : value.toLocaleString()}</p>
-            <p className="mt-1 text-[11.5px] text-[#92999e]">{caption} · {rangeLabel}</p>
-          </article>
-        ))}
-        <article className="rounded-xl border border-[#dfe3e6] bg-white p-5">
-          <div className="flex items-start justify-between"><p className="text-[13px] font-medium text-[#69737a]">Spend</p><span className="h-2 w-2 rounded-full bg-[#6246df]" /></div>
-          <p className="mt-5 text-[28px] font-medium tracking-[-0.04em]">{loadingSummary ? "…" : formatCents(summary?.totalCostCents ?? 0)}</p>
-          <p className="mt-1 text-[11.5px] text-[#92999e]">Deducted from AI credits · {rangeLabel}</p>
-        </article>
-      </section>
-
-      <section className="mt-4 overflow-hidden rounded-xl border border-[#dfe3e6] bg-white">
-        <div className="flex items-start justify-between border-b border-[#eceeef] px-5 py-4">
-          <div>
-            <h3 className="text-[15px] font-semibold">Daily spend</h3>
-            <p className="mt-1 text-[12.5px] text-[#7b848a]">{filterCount === 0 ? "All usage" : filterLabel} — AI credit spent per day</p>
-          </div>
-          <div className="flex rounded-lg bg-[#f0f2f3] p-1">
-            <button type="button" onClick={() => setDisplay("chart")} aria-label="Chart view" className={`flex h-7 w-8 items-center justify-center rounded-md ${display === "chart" ? "bg-white" : "text-[#7b848a]"}`}><BarChart3 size={14} /></button>
-            <button type="button" onClick={() => setDisplay("table")} aria-label="Table view" className={`flex h-7 w-8 items-center justify-center rounded-md ${display === "table" ? "bg-white" : "text-[#7b848a]"}`}><Table2 size={14} /></button>
-          </div>
-        </div>
-
-        {loadingSummary || loadingEvents ? (
-          <div className="flex min-h-[250px] items-center justify-center text-[13px] text-[#8b9398]"><LoaderCircle size={15} className="mr-2 animate-spin" /> Loading usage</div>
-        ) : !hasUsage ? (
-          <div className="flex min-h-[250px] flex-col items-center justify-center px-6 text-center">
-            <Table2 size={24} className="text-[#a5acb0]" />
-            <p className="mt-3 text-[14px] font-semibold">No usage in this period</p>
-            <p className="mt-1 max-w-sm text-[12.5px] leading-5 text-[#8b9398]">AI requests will appear here once your workspace starts processing conversations with the AI teammate.</p>
-          </div>
-        ) : display === "chart" ? (
-          <div className="p-5">
-            <div className="relative flex h-[290px] items-end gap-1.5 border-b border-l border-[#e7eaec] px-4">
-              <div className="pointer-events-none absolute inset-0 flex flex-col justify-between">{[0, 1, 2, 3, 4].map((line) => <span key={line} className="border-t border-dashed border-[#edf0f1]" />)}</div>
-              {summary!.daily.map((day) => (
-                <div key={day.date} className="group relative z-[1] flex h-full flex-1 flex-col items-center justify-end gap-1">
-                  <div style={{ height: `${Math.max(2, (day.costCents / maxDailyCost) * 100)}%` }} className="w-full rounded-t-[4px] bg-[#428ce5] transition hover:bg-[#2f78c8]" title={`${day.date}: ${formatCents(day.costCents)}`} />
-                </div>
-              ))}
-            </div>
-            <div className="mt-3 flex justify-between text-[11px] text-[#939a9e]"><span>{summary!.daily[0]?.date ?? ""}</span><span>{rangeLabel}</span><span>{summary!.daily.at(-1)?.date ?? ""}</span></div>
-            <div className="mt-5 flex gap-5 text-[12px] text-[#69737a]"><span className="flex items-center gap-2"><i className="h-2.5 w-2.5 rounded-sm bg-[#428ce5]" /> Daily spend</span></div>
-          </div>
+      <section className="mt-6 rounded-xl bg-white p-6">
+        {!entitlement ? (
+          <div className="flex h-[140px] items-center justify-center text-[13px] text-[#8b9398]"><LoaderCircle size={15} className="mr-2 animate-spin" /> Loading plan</div>
         ) : (
-          <div className="overflow-x-auto p-5">
-            <div className="min-w-[560px]">
-              <div className="grid grid-cols-3 rounded-lg bg-[#f4f5f6] px-4 py-2.5 text-[10.5px] font-bold uppercase tracking-[0.08em] text-[#7a8389]"><span>Date</span><span>Website</span><span>Cost</span></div>
-              {events.map((event) => (
-                <div key={event.id} className="grid grid-cols-3 items-center border-b border-[#eef0f1] px-4 py-3 text-[13px]">
-                  <span className="text-[#5f686d]">{new Date(event.createdAt).toLocaleString()}</span>
-                  <span className="truncate text-[#5f686d]">{event.siteDomain ?? "—"}</span>
-                  <span className="font-medium">{formatCents(event.costCents)}</span>
+          <>
+            <div>
+              <div className="grid items-center gap-2 py-5 sm:grid-cols-[minmax(0,1fr)_minmax(0,2fr)_84px] sm:gap-6">
+                <div>
+                  <p className="text-[14px] font-medium">AI usage</p>
+                  <p className="mt-0.5 text-[12px] text-[#8b9398]">
+                    {isFreePlan ? `${messagesUsed.toLocaleString()} of ${messagesTotal.toLocaleString()} messages used` : `${formatCents(Math.max(0, grantCents - grantedCents))} of ${formatCents(grantCents)} used`}
+                  </p>
                 </div>
-              ))}
+                <div className="h-2 overflow-hidden rounded-full bg-[#e8ecef]"><div className="h-full rounded-full bg-[#428ce5] transition-all" style={{ width: `${usedPercent}%` }} /></div>
+                <p className="text-[13px] text-[#5f686d] sm:text-right">{Math.round(usedPercent)}% used</p>
+              </div>
             </div>
-          </div>
+
+            <div className="mt-2 flex gap-4 rounded-xl p-5">
+              <Hourglass size={32} strokeWidth={1.2} className="mt-0.5 shrink-0 text-[#9aa2a7]" />
+              <div className="min-w-0">
+                <p className="text-[14px] font-semibold">Resets</p>
+                <p className="mt-0.5 text-[12.5px] leading-5 text-[#667069]">
+                  {resetAt
+                    ? isFreePlan
+                      ? `Your ${messagesTotal.toLocaleString()} AI messages refill on ${formatResetDate(resetAt)}, in ${daysToReset} day${daysToReset === 1 ? "" : "s"}. Unused messages don't roll over.`
+                      : `Your plan credit refills on ${formatResetDate(resetAt)}, in ${daysToReset} day${daysToReset === 1 ? "" : "s"}. Unused plan credit doesn't roll over.`
+                    : "Your allowance refills every month."}
+                </p>
+                {!isFreePlan && (
+                  <>
+                    <p className="mt-4 text-[14px] font-semibold">Purchased credit</p>
+                    <p className="mt-0.5 text-[12.5px] leading-5 text-[#667069]">
+                      {purchasedCents > 0
+                        ? `${formatCents(purchasedCents)} of purchased credit is on top of your plan credit, and it never expires.`
+                        : "No purchased credit right now. Anything you buy never expires."}
+                    </p>
+                  </>
+                )}
+              </div>
+            </div>
+
+          </>
         )}
       </section>
+
+      {creditBased && (
+      <section className="mt-4 rounded-xl border border-[#dfe3e6] bg-white p-6">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h3 className="text-[15px] font-semibold">Usage credits</h3>
+            <p className="mt-1 text-[12.5px] text-[#667069]">Available for any task. Plan credit is used before purchased credit.</p>
+          </div>
+          <p className="text-[15px] font-semibold tabular-nums">{creditBased ? (loadingCredits ? "…" : formatCents(creditsCents ?? 0)) : "$0"}</p>
+        </div>
+
+        {creditBased ? (
+          <>
+            {isOwner && (
+              <div className="mt-5 flex items-center justify-between gap-4">
+                <p className="max-w-xl text-[13px] leading-5 text-[#5f686d]">
+                  {autoRecharge?.cardOnFile
+                    ? "Turn on auto-recharge to keep the AI answering if you run out of credit."
+                    : "Buy credit once with “Save this card” ticked, and you can turn on auto-recharge."}
+                </p>
+                <Switch
+                  checked={Boolean(autoRecharge?.enabled)}
+                  disabled={autoBusy || !autoRecharge?.cardOnFile}
+                  onCheckedChange={(next) =>
+                    void saveAutoRecharge({
+                      enabled: next,
+                      // Top up by $10 unless a different amount was chosen,
+                      // and never more than $50 a month by default.
+                      amountCents: autoRecharge?.amountCents ?? 1000,
+                      monthlyCapCents: autoRecharge?.monthlyCapCents ?? 5000,
+                    })
+                  }
+                />
+              </div>
+            )}
+
+            {autoRecharge?.lastError && (
+              <p role="alert" className="mt-3 rounded-xl border border-[#E9C8CC] bg-[#FFF7F7] px-3 py-2 text-[11.5px] text-[#A5414B]">{autoRecharge.lastError}</p>
+            )}
+
+            {isOwner && (
+              <div className="mt-6 border-t border-[#eef0f1] pt-5">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-[14px] font-semibold">Monthly auto-recharge limit</p>
+                    <p className="mt-1 text-[12.5px] text-[#667069]">
+                      {autoRecharge?.enabled
+                        ? `Up to ${formatCents(autoRecharge.monthlyCapCents ?? 5000)} a month · Auto-recharge on`
+                        : "Auto-recharge off"}
+                    </p>
+                  </div>
+                  <button type="button" onClick={() => setManageOpen((open) => !open)} className="h-9 rounded-lg px-3 text-[13px] font-medium text-[#33383c] transition hover:bg-[#f0f2f3]">
+                    {manageOpen ? "Close" : "Manage"}
+                  </button>
+                </div>
+
+                {manageOpen && (
+                  autoRecharge?.cardOnFile ? (
+                    <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                      <label className="block">
+                        <span className="block text-[11.5px] font-semibold text-[#17233A]">Recharge by</span>
+                        <select
+                          value={String(autoRecharge.amountCents ?? 1000)}
+                          disabled={autoBusy}
+                          onChange={(event) => void saveAutoRecharge({ amountCents: Number(event.target.value) })}
+                          className="mt-1.5 h-10 w-full rounded-xl border border-[#DDE4E8] bg-white px-3 text-[12.5px]"
+                        >
+                          {[500, 1000, 2500, 5000, 10000].map((cents) => (
+                            <option key={cents} value={cents}>{formatCents(cents)}</option>
+                          ))}
+                        </select>
+                      </label>
+                      <label className="block">
+                        <span className="block text-[11.5px] font-semibold text-[#17233A]">Never more than, per month</span>
+                        <select
+                          value={String(autoRecharge.monthlyCapCents ?? 5000)}
+                          disabled={autoBusy}
+                          onChange={(event) => void saveAutoRecharge({ monthlyCapCents: Number(event.target.value) })}
+                          className="mt-1.5 h-10 w-full rounded-xl border border-[#DDE4E8] bg-white px-3 text-[12.5px]"
+                        >
+                          {[2500, 5000, 10000, 25000, 50000].map((cents) => (
+                            <option key={cents} value={cents}>{formatCents(cents)}</option>
+                          ))}
+                        </select>
+                      </label>
+                    </div>
+                  ) : (
+                    <p className="mt-4 text-[12.5px] text-[#667069]">Buy credit once with {"“"}Save this card{"”"} ticked, and you can set how much to top up and the monthly limit here.</p>
+                  )
+                )}
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="flex h-[72px] items-center justify-center text-[13px] text-[#8b9398]"><LoaderCircle size={15} className="mr-2 animate-spin" /> Loading</div>
+        )}
+      </section>
+      )}
 
       {addNotice && (
         <div role="status" className="mt-4 rounded-2xl border border-[#CBD9D0] bg-[#F5FAF7] px-5 py-3 text-[12.5px] text-[#33684C]">{addNotice}</div>
       )}
 
-      {isOwner && (
-        <section className="mt-4 rounded-[20px] border border-[#DDE4E8] bg-white p-5">
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div>
-              <h3 className="text-[14px] font-semibold">Auto-recharge</h3>
-              <p className="mt-1 max-w-lg text-[12px] leading-5 text-[#667069]">
-                {autoRecharge?.cardOnFile
-                  ? `Top up automatically when your balance falls below ${autoRecharge.thresholdPercent}% of the recharge amount, so the AI never stops mid-conversation.`
-                  : "Add credits once with \u201cSave this card\u201d ticked, and you can have us top you up automatically when the balance runs low."}
-              </p>
-            </div>
-            <Switch
-              checked={Boolean(autoRecharge?.enabled)}
-              disabled={autoBusy || !autoRecharge?.cardOnFile}
-              onCheckedChange={(next) =>
-                void saveAutoRecharge({
-                  enabled: next,
-                  // Default to topping up by what is already on the balance
-                  // plan-wise, but never below the $5 minimum charge.
-                  amountCents: autoRecharge?.amountCents ?? 1000,
-                  monthlyCapCents: autoRecharge?.monthlyCapCents ?? 5000,
-                })
-              }
-            />
-          </div>
-
-          {autoRecharge?.lastError && (
-            <p role="alert" className="mt-3 rounded-xl border border-[#E9C8CC] bg-[#FFF7F7] px-3 py-2 text-[11.5px] text-[#A5414B]">{autoRecharge.lastError}</p>
-          )}
-
-          {autoRecharge?.enabled && (
-            <div className="mt-4 grid gap-3 sm:grid-cols-2">
-              <label className="block">
-                <span className="block text-[11.5px] font-semibold text-[#17233A]">Recharge by</span>
-                <select
-                  value={String(autoRecharge.amountCents ?? 1000)}
-                  disabled={autoBusy}
-                  onChange={(event) => void saveAutoRecharge({ amountCents: Number(event.target.value) })}
-                  className="mt-1.5 h-10 w-full rounded-xl border border-[#DDE4E8] bg-white px-3 text-[12.5px]"
-                >
-                  {[500, 1000, 2500, 5000, 10000].map((cents) => (
-                    <option key={cents} value={cents}>{formatCents(cents)}</option>
-                  ))}
-                </select>
-              </label>
-              <label className="block">
-                <span className="block text-[11.5px] font-semibold text-[#17233A]">Never more than, per month</span>
-                <select
-                  value={String(autoRecharge.monthlyCapCents ?? 5000)}
-                  disabled={autoBusy}
-                  onChange={(event) => void saveAutoRecharge({ monthlyCapCents: Number(event.target.value) })}
-                  className="mt-1.5 h-10 w-full rounded-xl border border-[#DDE4E8] bg-white px-3 text-[12.5px]"
-                >
-                  {[2500, 5000, 10000, 25000, 50000].map((cents) => (
-                    <option key={cents} value={cents}>{formatCents(cents)}</option>
-                  ))}
-                </select>
-              </label>
-            </div>
-          )}
-        </section>
-      )}
+      <UpgradeDialog open={upgradeOpen} onClose={() => setUpgradeOpen(false)} />
 
       {addOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/35 p-4 backdrop-blur-[2px]" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setAddOpen(false); }}>
@@ -1613,7 +1415,7 @@ function BillingSettingsPage() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget && !cancelBusy) setCancelOpen(false); }}>
           <div role="dialog" aria-modal="true" aria-labelledby="cancel-plan-title" className="w-full max-w-[440px] rounded-2xl border border-white/10 bg-[#2d2d2d] p-6 text-white/90 shadow-[0_24px_80px_rgba(0,0,0,0.45)]">
             <p id="cancel-plan-title" className="text-[18px] font-medium">Cancel {plan.name}?</p>
-            <p className="mt-2 text-[13px] leading-6 text-white/60">Your plan stays active until the end of the paid period. Then the workspace moves to Free with {pricingPlans[0].resolutions} AI conversations a month and {pricingPlans[0].seatsIncluded} included seats.</p>
+            <p className="mt-2 text-[13px] leading-6 text-white/60">Your plan stays active until the end of the paid period. Then the workspace moves to Free with {pricingPlans[0].resolutions} AI messages a month and {pricingPlans[0].seatsIncluded} included seats.</p>
             {cancelError && <p role="alert" className="mt-3 text-[12px] text-red-300">{cancelError}</p>}
             <div className="mt-6 flex flex-col gap-2 sm:flex-row-reverse">
               <button type="button" disabled={cancelBusy} onClick={() => void cancelSubscription()} className="flex h-10 flex-1 items-center justify-center gap-2 rounded-lg bg-[#a5414b] px-4 text-[12px] font-medium text-white transition hover:bg-[#b44d58] disabled:opacity-60">{cancelBusy && <LoaderCircle size={13} className="animate-spin" />} Cancel at period end</button>

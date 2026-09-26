@@ -23,7 +23,7 @@ export async function GET(request: Request) {
   }
 
   const result = await callGateway<{ events?: unknown[]; error?: string }>(`/api/workspace/usage/events?${params.toString()}`);
-  // Which model served a request, and token counts, are not shown to customers, so it is dropped here rather than
+  // Which model served a request, and token counts, are never shown to customers, so it is dropped here rather than
   // only hidden in the table (it would still be readable in the browser's network tab).
   const events = (result.events ?? []).map((event) => {
     const { model: _model, inputTokens: _in, outputTokens: _out, ...visible } = event as Record<string, unknown>;
