@@ -5,7 +5,6 @@ import { SettingsClient } from "../settings-client";
 const SETTINGS_SECTIONS: Record<string, string> = {
   people: "People",
   teams: "Teams",
-  upgrade: "Upgrade",
   billing: "Billing",
   availability: "Availability",
   chatbot: "Chatbot Interface",
@@ -34,6 +33,8 @@ export async function generateMetadata({ params }: { params: Promise<{ section: 
 
 export default async function SettingsSectionPage({ params }: { params: Promise<{ section: string }> }) {
   const { section } = await params;
+  // The old standalone Upgrade page is gone: plans open in the full-screen dialog now.
+  if (section === "upgrade") redirect("/dashboard/settings/billing");
   const page = SETTINGS_SECTIONS[section];
   if (!page) notFound();
 

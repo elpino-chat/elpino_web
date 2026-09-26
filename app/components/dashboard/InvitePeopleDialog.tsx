@@ -122,7 +122,7 @@ export function InvitePeopleDialog({
       const data = (await response.json().catch(() => ({}))) as SeatPurchaseResult;
       if (!response.ok) {
         if (data.upgradeRequired) {
-          setSeatError(`${data.message ?? "This plan doesn't support extra seats."} Upgrade from Settings → Upgrade.`);
+          setSeatError(`${data.message ?? "This plan doesn't support extra seats."} Upgrade your plan from the header.`);
         } else {
           setSeatError(data.message ?? "Could not add a seat");
         }

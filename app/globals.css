@@ -5666,6 +5666,18 @@ body:has(.dashboard-ai-usage-page) .dashboard-add-credits-dialog [class*="hover:
   --b-bad-bg: rgb(240 138 146 / 0.14);
   --b-info: #7db4f2;
   --b-info-bg: rgb(125 180 242 / 0.14);
+  /* Sticker palette (the homepage look). Dark keeps the same shapes on deeper fills. */
+  --s-line: rgb(255 255 255 / 0.2);
+  --s-ink: #f4f4f5;
+  --s-ink-text: #11120f;
+  --s-paper: #1f2124;
+  --s-cream: #25272b;
+  --s-yellow: #4a3f14;
+  --s-blue: #1f2c4a;
+  --s-blue-solid: #3784ff;
+  --s-purple: #7060bd;
+  --s-green: #1aa37a;
+  --s-pink: #d9508a;
   color: var(--b-text);
 }
 [data-dashboard-theme="light"] .billing-v2 {
@@ -5685,4 +5697,11 @@ body:has(.dashboard-ai-usage-page) .dashboard-add-credits-dialog [class*="hover:
   --b-bad-bg: #fdf0f1;
   --b-info: #2f6fb8;
   --b-info-bg: #eaf2fc;
+  --s-line: rgb(17 18 15 / 0.2);
+  --s-ink: #11120f;
+  --s-ink-text: #ffffff;
+  --s-paper: #ffffff;
+  --s-cream: #fffdf5;
+  --s-yellow: #ffd84d;
+  --s-blue: #c9d9ff;
 }

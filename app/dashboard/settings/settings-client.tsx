@@ -1277,6 +1277,7 @@ function BillingSettingsPage() {
   const [seatBusy, setSeatBusy] = useState(false);
   const [seatError, setSeatError] = useState<string | null>(null);
   const [addingSeats, setAddingSeats] = useState<number | null>(null);
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
   const [addSeatsNotice, setAddSeatsNotice] = useState<string | null>(null);
   const [addSeatsError, setAddSeatsError] = useState<string | null>(null);
 
@@ -1405,9 +1406,6 @@ function BillingSettingsPage() {
   const messagesTotal = entitlement?.resolutionsIncluded ?? 0;
   const messagesPercent = messagesTotal > 0 ? Math.min(100, (messagesUsed / messagesTotal) * 100) : 0;
   const ringPercent = isFree ? messagesPercent : elapsedPercent;
-  const storageUsedMb = (entitlement?.knowledgeBytesUsed ?? 0) / (1024 * 1024);
-  const storageTotalMb = entitlement?.knowledgeStorageMb ?? 0;
-  const storagePercent = storageTotalMb > 0 ? Math.min(100, (storageUsedMb / storageTotalMb) * 100) : 0;
   const billedInOtherCurrency = !isFree && currencyCode !== "USD";
   const priceMain = isFree ? "$0" : billedInOtherCurrency ? getPlanPrice(plan, cadence === "annual" ? "yearly" : "monthly") : planMinor > 0 ? formatMoney(planMinor, currencyCode) : plan.price;
   const renewLabel = renewAt ? renewAt.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" }) : null;
@@ -1428,6 +1426,11 @@ function BillingSettingsPage() {
   const card = "rounded-2xl border border-[var(--b-border)] bg-[var(--b-surface)]";
   const primaryBtn = "inline-flex h-10 items-center gap-2 rounded-xl bg-[var(--b-ink)] px-4 text-[13px] font-semibold text-[var(--b-ink-text)] transition hover:opacity-85";
   const ghostBtn = "inline-flex h-10 items-center gap-2 rounded-xl border border-[var(--b-border)] px-4 text-[13px] font-medium text-[var(--b-text)] transition hover:bg-[var(--b-surface-2)]";
+  // The homepage's language: ink outlines, flat sticker fills, mono "stamp" labels.
+  const sticker = "rounded-[22px] border-2 border-[var(--s-line)]";
+  const stamp = "inline-flex items-center gap-1.5 rounded-full border-2 border-[var(--s-line)] px-2.5 py-1 font-mono text-[10.5px] font-semibold uppercase tracking-[0.14em]";
+  const chipBtn = "inline-flex h-9 items-center gap-1.5 rounded-full border-2 border-[var(--s-line)] bg-[var(--s-paper)] px-3.5 text-[12.5px] font-semibold transition hover:-translate-y-0.5";
+  const pillBtn = "inline-flex h-11 items-center gap-2 rounded-full border-2 border-[var(--s-line)] bg-[var(--s-ink)] px-6 text-[13.5px] font-semibold text-[var(--s-ink-text)] transition hover:-translate-y-0.5";
 
   return (
     <div className="billing-v2 mx-auto w-full max-w-[1080px] px-6 pb-20 pt-8 sm:px-9">
@@ -1436,7 +1439,7 @@ function BillingSettingsPage() {
           <h2 className="text-[32px] font-semibold tracking-[-0.04em]">Billing</h2>
           <p className="mt-1.5 text-[13px] text-[var(--b-muted)]">Your plan, what&apos;s included, and how you pay.</p>
         </div>
-        <Link href="/dashboard/settings/upgrade" className={ghostBtn}>View plans <ArrowRight size={14} /></Link>
+        <button type="button" onClick={() => setUpgradeOpen(true)} className={ghostBtn}>View plans <ArrowRight size={14} /></button>
       </header>
 
       {loading && (
@@ -1452,7 +1455,7 @@ function BillingSettingsPage() {
       {!loading && billedInOtherCurrency && (
         <div className="mt-7 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-[var(--b-info-bg)] px-5 py-4 text-[13px] text-[var(--b-info)]">
           <p>This subscription was started in {currencyCode}, so it is still charged as {formatMoney(planMinor + seatsMinor, currencyCode)} a month. Plans and top-ups are now priced in dollars, and changing your plan moves you to dollar billing.</p>
-          <Link href="/dashboard/settings/upgrade" className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-current px-3 text-[12px] font-semibold">Switch to dollars <ArrowRight size={13} /></Link>
+          <button type="button" onClick={() => setUpgradeOpen(true)} className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-current px-3 text-[12px] font-semibold">Switch to dollars <ArrowRight size={13} /></button>
         </div>
       )}
 
@@ -1475,7 +1478,7 @@ function BillingSettingsPage() {
                 </p>
                 <p className="mt-3 max-w-md text-[13px] leading-6 text-[var(--b-muted)]">{plan.description}</p>
                 <div className="mt-6 flex flex-wrap items-center gap-2">
-                  <Link href="/dashboard/settings/upgrade" className={primaryBtn}>{isFree ? <><Rocket size={14} /> Upgrade plan</> : <>Change plan <ArrowRight size={14} /></>}</Link>
+                  <button type="button" onClick={() => setUpgradeOpen(true)} className={primaryBtn}>{isFree ? <><Rocket size={14} /> Upgrade plan</> : <>Change plan <ArrowRight size={14} /></>}</button>
                   {!isFree && !cancelling && <button type="button" onClick={() => setCancelOpen(true)} className="h-10 rounded-xl px-3 text-[13px] font-medium text-[var(--b-muted)] transition hover:bg-[var(--b-surface-2)] hover:text-[var(--b-text)]">Cancel plan</button>}
                 </div>
               </div>
@@ -1511,171 +1514,186 @@ function BillingSettingsPage() {
           </section>
 
           {/* ------------------------------------------------------------ what's included */}
-          <div className="mt-4 grid gap-4 md:grid-cols-3">
-            <article className={`${card} p-5`}>
-              <div className="flex items-center gap-2.5"><span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--b-surface-2)]"><CircleGauge size={16} /></span><p className="text-[12.5px] font-medium text-[var(--b-muted)]">{isFree ? "AI messages" : "AI credit"}</p></div>
-              {isFree ? (
-                <>
-                  <p className="mt-4 text-[22px] font-semibold tabular-nums tracking-[-0.03em]">{messagesUsed.toLocaleString()} <span className="text-[14px] font-normal text-[var(--b-muted)]">/ {messagesTotal.toLocaleString()}</span></p>
-                  <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-[var(--b-track)]"><div className="h-full rounded-full bg-[var(--b-ink)] transition-all" style={{ width: `${messagesPercent}%` }} /></div>
-                </>
-              ) : (
-                <p className="mt-4 text-[22px] font-semibold tabular-nums tracking-[-0.03em]">{formatCents(entitlement?.aiCreditGrantUsdCents ?? 0)} <span className="text-[14px] font-normal text-[var(--b-muted)]">/ month</span></p>
-              )}
-              <Link href="/dashboard/settings/ai-usage" className="mt-3 inline-flex items-center gap-1 text-[12px] font-medium text-[var(--b-muted)] transition hover:text-[var(--b-text)]">View usage <ArrowRight size={12} /></Link>
-            </article>
-
-            <article className={`${card} p-5`}>
-              <div className="flex items-center gap-2.5"><span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--b-surface-2)]"><UsersRound size={16} /></span><p className="text-[12.5px] font-medium text-[var(--b-muted)]">Seats</p></div>
-              <p className="mt-4 text-[22px] font-semibold tabular-nums tracking-[-0.03em]">{(entitlement?.seatsAllowed ?? 0).toLocaleString()} <span className="text-[14px] font-normal text-[var(--b-muted)]">{entitlement?.seatsMax ? `of ${entitlement.seatsMax} max` : "seats"}</span></p>
-              <p className="mt-3 text-[12px] leading-5 text-[var(--b-muted)]">{entitlement?.seatsIncluded ?? 0} included{(entitlement?.seatsPurchased ?? 0) > 0 ? ` · ${entitlement?.seatsPurchased} extra` : ""}. Adding seats never changes your AI allowance.</p>
-              {seatBundles.length > 0 && (
-                <div className="mt-4 border-t border-[var(--b-border)] pt-4">
-                  <p className="text-[12px] font-semibold">Add more seats</p>
-                  <div className="mt-2.5 flex flex-wrap gap-2">
-                    {seatBundles.map((bundle) => {
-                      const minor = currencyCode === "INR" ? bundle.inrPaise : bundle.usdCents;
-                      const overCap = entitlement?.seatsMax != null && (entitlement?.seatsAllowed ?? 0) + bundle.seats > entitlement.seatsMax;
-                      const busy = addingSeats === bundle.seats;
-                      return (
-                        <button
-                          key={bundle.seats}
-                          type="button"
-                          disabled={addingSeats !== null || overCap}
-                          onClick={() => void addSeats(bundle.seats)}
-                          title={overCap ? `${plan.name} allows up to ${entitlement?.seatsMax} seats` : undefined}
-                          className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-[var(--b-border)] px-3 text-[12.5px] font-medium transition hover:bg-[var(--b-surface-2)] disabled:cursor-not-allowed disabled:opacity-45"
-                        >
-                          {busy ? <LoaderCircle size={13} className="animate-spin" /> : <Plus size={13} />}
-                          {bundle.seats} seats
-                          <span className="text-[var(--b-muted)]">{formatMoney(minor, currencyCode)}{isFree ? "" : "/mo"}</span>
-                        </button>
-                      );
-                    })}
+          <section className="mt-9">
+            <span className={`${stamp} bg-[var(--s-yellow)]`}>Included</span>
+            <div className={`${sticker} mt-3 divide-y-2 divide-[var(--s-line)] overflow-hidden bg-[var(--s-paper)]`}>
+              <div className="grid items-center gap-4 px-6 py-5 md:grid-cols-[210px_minmax(0,1fr)_auto]">
+                <div className="flex items-center gap-3">
+                  <span className="grid size-10 shrink-0 place-items-center rounded-xl border-2 border-[var(--s-line)] bg-[var(--s-blue-solid)] text-white"><CircleGauge size={18} /></span>
+                  <p className="text-[15px] font-semibold">{isFree ? "AI messages" : "AI credit"}</p>
+                </div>
+                {isFree ? (
+                  <div className="flex items-center gap-4">
+                    <div className="h-3 min-w-0 flex-1 overflow-hidden rounded-full border-2 border-[var(--s-line)] bg-[var(--s-paper)]"><div className="h-full bg-[var(--s-blue-solid)] transition-all" style={{ width: `${messagesPercent}%` }} /></div>
+                    <p className="shrink-0 text-[26px] font-semibold leading-none tracking-[-0.04em] tabular-nums">{messagesUsed.toLocaleString()}<span className="text-[16px] font-medium tracking-normal text-[var(--b-muted)]"> / {messagesTotal.toLocaleString()}</span></p>
                   </div>
-                  <p className="mt-2.5 text-[11.5px] leading-5 text-[var(--b-muted)]">
+                ) : (
+                  <p className="text-[26px] font-semibold leading-none tracking-[-0.04em] tabular-nums">{formatCents(entitlement?.aiCreditGrantUsdCents ?? 0)}<span className="text-[16px] font-medium tracking-normal text-[var(--b-muted)]"> of AI credit every month</span></p>
+                )}
+                <Link href="/dashboard/settings/ai-usage" className={`${chipBtn} hover:bg-[var(--s-yellow)]`}>View usage <ArrowRight size={13} /></Link>
+              </div>
+
+              <div className="px-6 py-5">
+                <div className="grid items-center gap-4 md:grid-cols-[210px_minmax(0,1fr)_auto]">
+                  <div className="flex items-center gap-3">
+                    <span className="grid size-10 shrink-0 place-items-center rounded-xl border-2 border-[var(--s-line)] bg-[var(--s-purple)] text-white"><UsersRound size={18} /></span>
+                    <p className="text-[15px] font-semibold">Seats</p>
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-[26px] font-semibold leading-none tracking-[-0.04em] tabular-nums">{(entitlement?.seatsAllowed ?? 0).toLocaleString()}<span className="text-[16px] font-medium tracking-normal text-[var(--b-muted)]"> {entitlement?.seatsMax ? `of ${entitlement.seatsMax} max` : "seats"}</span></p>
+                    <p className="mt-1.5 text-[12.5px] text-[var(--b-muted)]">{entitlement?.seatsIncluded ?? 0} included{(entitlement?.seatsPurchased ?? 0) > 0 ? ` · ${entitlement?.seatsPurchased} extra` : ""}. Adding seats never changes your AI allowance.</p>
+                  </div>
+                  {seatBundles.length > 0 && (
+                    <div className="flex flex-wrap items-center gap-2 md:justify-end">
+                      {seatBundles.map((bundle) => {
+                        const minor = currencyCode === "INR" ? bundle.inrPaise : bundle.usdCents;
+                        const overCap = entitlement?.seatsMax != null && (entitlement?.seatsAllowed ?? 0) + bundle.seats > entitlement.seatsMax;
+                        const busy = addingSeats === bundle.seats;
+                        return (
+                          <button
+                            key={bundle.seats}
+                            type="button"
+                            disabled={addingSeats !== null || overCap}
+                            onClick={() => void addSeats(bundle.seats)}
+                            title={overCap ? `${plan.name} allows up to ${entitlement?.seatsMax} seats` : undefined}
+                            className={`${chipBtn} hover:bg-[var(--s-yellow)] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0 disabled:hover:bg-[var(--s-paper)]`}
+                          >
+                            {busy ? <LoaderCircle size={13} className="animate-spin" /> : <Plus size={13} strokeWidth={3} />}
+                            {bundle.seats} seats
+                            <span className="font-mono text-[11px] font-semibold opacity-70">{formatMoney(minor, currencyCode)}{isFree ? "" : "/mo"}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+                {seatBundles.length > 0 && (
+                  <p className="mt-3 text-[12px] leading-5 text-[var(--b-muted)] md:pl-[226px]">
                     {isFree ? "One-time payment, and the seats stay on your workspace." : "Added to your subscription and billed with it from the next invoice, every period until you remove them."}
                   </p>
-                  {addSeatsNotice && <p role="status" className="mt-2 text-[12px] text-[var(--b-good)]">{addSeatsNotice}</p>}
-                  {addSeatsError && <p role="alert" className="mt-2 text-[12px] text-[var(--b-bad)]">{addSeatsError}</p>}
-                </div>
-              )}
-            </article>
-
-            <article className={`${card} p-5`}>
-              <div className="flex items-center gap-2.5"><span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--b-surface-2)]"><BookOpen size={16} /></span><p className="text-[12.5px] font-medium text-[var(--b-muted)]">Knowledge storage</p></div>
-              <p className="mt-4 text-[22px] font-semibold tabular-nums tracking-[-0.03em]">{storageUsedMb.toFixed(storageUsedMb < 10 ? 1 : 0)} <span className="text-[14px] font-normal text-[var(--b-muted)]">/ {storageTotalMb} MB</span></p>
-              <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-[var(--b-track)]"><div className={`h-full rounded-full transition-all ${storagePercent >= 90 ? "bg-[var(--b-bad)]" : "bg-[var(--b-ink)]"}`} style={{ width: `${storagePercent}%` }} /></div>
-            </article>
-          </div>
+                )}
+                {addSeatsNotice && <p role="status" className="mt-2 text-[12.5px] font-semibold text-[var(--b-good)] md:pl-[226px]">{addSeatsNotice}</p>}
+                {addSeatsError && <p role="alert" className="mt-2 text-[12.5px] font-semibold text-[var(--b-bad)] md:pl-[226px]">{addSeatsError}</p>}
+              </div>
+            </div>
+          </section>
 
           {/* ------------------------------------------- bill (or upgrade pitch) + card */}
-          <div className="mt-4 grid gap-4 md:grid-cols-2">
+          <div className="mt-5 grid gap-5 md:grid-cols-2">
             {!isFree && entitlement ? (
-              <article className={`${card} p-6`}>
-                <div className="flex items-center justify-between">
-                  <h3 className="text-[15px] font-semibold">Your monthly bill</h3>
-                  <span className="rounded-full bg-[var(--b-surface-2)] px-2.5 py-1 text-[11px] font-medium text-[var(--b-muted)]">{cadence === "annual" ? "Billed yearly" : "Billed monthly"}</span>
+              <article className={`${sticker} bg-[var(--s-paper)] p-7`}>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className={`${stamp} bg-[var(--s-yellow)]`}>Monthly bill</span>
+                  <span className={`${stamp} bg-[var(--s-paper)]`}>{cadence === "annual" ? "Billed yearly" : "Billed monthly"}</span>
                 </div>
-                <div className="mt-5 space-y-3 text-[13px]">
-                  <div className="flex items-center justify-between"><span className="text-[var(--b-muted)]">{plan.name} plan</span><span className="tabular-nums">{formatMoney(planMinor, currencyCode)}</span></div>
+                <div className="mt-6 space-y-3.5 text-[14px]">
+                  <div className="flex items-center justify-between"><span className="text-[var(--b-muted)]">{plan.name} plan</span><span className="font-semibold tabular-nums">{formatMoney(planMinor, currencyCode)}</span></div>
                   <div className="flex items-center justify-between">
                     <span className="text-[var(--b-muted)]">Extra seats ({keptSeats})</span>
                     <span className="flex items-center gap-3">
-                      {keptSeats > 0 && !removeSeatsOpen && <button type="button" onClick={() => { setRemoveSeatsOpen(true); setRemoveSeatsCount("1"); }} className="text-[11.5px] font-medium text-[var(--b-muted)] underline underline-offset-2 transition hover:text-[var(--b-text)]">Remove</button>}
-                      <span className="tabular-nums">{formatMoney(seatsMinor, currencyCode)}</span>
+                      {keptSeats > 0 && !removeSeatsOpen && <button type="button" onClick={() => { setRemoveSeatsOpen(true); setRemoveSeatsCount("1"); }} className="text-[12px] font-semibold underline underline-offset-2 transition hover:opacity-70">Remove</button>}
+                      <span className="font-semibold tabular-nums">{formatMoney(seatsMinor, currencyCode)}</span>
                     </span>
                   </div>
                   {removeSeatsOpen && (
-                    <div className="flex flex-wrap items-center gap-2 rounded-xl bg-[var(--b-surface-2)] px-3 py-2.5 text-[12.5px]">
-                      <span className="text-[var(--b-muted)]">Remove</span>
-                      <input type="number" min={1} max={keptSeats} value={removeSeatsCount} onChange={(event) => setRemoveSeatsCount(event.target.value)} className="h-8 w-14 rounded-lg border border-[var(--b-border)] bg-transparent px-2 text-[12.5px] outline-none" aria-label="Seats to remove" />
-                      <span className="text-[var(--b-muted)]">at the next renewal</span>
-                      <button type="button" disabled={seatBusy} onClick={() => void removeSeats()} className="h-8 rounded-lg bg-[var(--b-ink)] px-3 text-[12px] font-semibold text-[var(--b-ink-text)] disabled:opacity-60">{seatBusy ? "Saving…" : "Confirm"}</button>
-                      <button type="button" onClick={() => setRemoveSeatsOpen(false)} className="h-8 px-2 text-[12px] text-[var(--b-muted)]">Cancel</button>
+                    <div className="flex flex-wrap items-center gap-2 rounded-2xl border-2 border-[var(--s-line)] bg-[var(--s-cream)] px-3.5 py-3 text-[13px]">
+                      <span>Remove</span>
+                      <input type="number" min={1} max={keptSeats} value={removeSeatsCount} onChange={(event) => setRemoveSeatsCount(event.target.value)} className="h-8 w-14 rounded-lg border-2 border-[var(--s-line)] bg-transparent px-2 text-[13px] outline-none" aria-label="Seats to remove" />
+                      <span>at the next renewal</span>
+                      <button type="button" disabled={seatBusy} onClick={() => void removeSeats()} className="h-8 rounded-full border-2 border-[var(--s-line)] bg-[var(--s-ink)] px-3.5 text-[12px] font-semibold text-[var(--s-ink-text)] disabled:opacity-60">{seatBusy ? "Saving…" : "Confirm"}</button>
+                      <button type="button" onClick={() => setRemoveSeatsOpen(false)} className="h-8 px-2 text-[12px] font-semibold text-[var(--b-muted)]">Cancel</button>
                     </div>
                   )}
-                  <div className="border-t border-dashed border-[var(--b-border)] pt-3">
-                    <div className="flex items-center justify-between"><span className="font-semibold">Total per {cadence === "annual" ? "month" : "month"}</span><span className="text-[20px] font-semibold tabular-nums tracking-[-0.03em]">{formatMoney(planMinor + seatsMinor, currencyCode)}</span></div>
+                  <div className="flex items-end justify-between border-t-2 border-dashed border-[var(--s-line)] pt-4">
+                    <span className="font-semibold">Total per month</span>
+                    <span className="text-[30px] font-semibold leading-none tracking-[-0.045em] tabular-nums">{formatMoney(planMinor + seatsMinor, currencyCode)}</span>
                   </div>
                 </div>
-                {(entitlement.seatsPendingRelease ?? 0) > 0 && <p className="mt-3 text-[11.5px] text-[var(--b-muted)]">{entitlement.seatsPendingRelease} seat(s) will be removed at the next renewal and stay usable until then.</p>}
-                {seatError && <p role="alert" className="mt-3 text-[12px] text-[var(--b-bad)]">{seatError}</p>}
-                <p className="mt-4 flex items-center gap-2 text-[12px] text-[var(--b-muted)]"><CalendarDays size={14} />{cancelling ? `No further charges. Plan ends ${renewLabel ?? "at the end of the period"}.` : renewLabel ? `Next payment on ${renewLabel}` : "Charged every period"}</p>
+                {(entitlement.seatsPendingRelease ?? 0) > 0 && <p className="mt-3 text-[12px] text-[var(--b-muted)]">{entitlement.seatsPendingRelease} seat(s) will be removed at the next renewal and stay usable until then.</p>}
+                {seatError && <p role="alert" className="mt-3 text-[12.5px] font-semibold text-[var(--b-bad)]">{seatError}</p>}
+                <p className="mt-5 flex items-center gap-2 text-[12.5px] text-[var(--b-muted)]"><CalendarDays size={14} />{cancelling ? `No further charges. Plan ends ${renewLabel ?? "at the end of the period"}.` : renewLabel ? `Next payment on ${renewLabel}` : "Charged every period"}</p>
               </article>
             ) : (
-              <article className={`${card} relative overflow-hidden p-6`}>
-                <div aria-hidden className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-gradient-to-br from-[#7c3aed]/25 via-[#428ce5]/20 to-transparent blur-2xl" />
+              <article className={`${sticker} relative overflow-hidden bg-[var(--s-yellow)] p-7`}>
+                <div aria-hidden className="pointer-events-none absolute -right-8 -top-8 size-44 opacity-25" style={{ backgroundImage: "radial-gradient(var(--s-line) 1.2px, transparent 1.2px)", backgroundSize: "14px 14px" }} />
                 <div className="relative">
-                  <h3 className="text-[15px] font-semibold">Outgrowing Free?</h3>
-                  <p className="mt-1 text-[12.5px] text-[var(--b-muted)]">Paid plans swap the message limit for a monthly AI credit.</p>
-                  <ul className="mt-4 space-y-2.5 text-[13px]">
+                  <span className={`${stamp} bg-[var(--s-paper)]`}><Rocket size={11} /> Upgrade</span>
+                  <h3 className="mt-5 text-[32px] font-semibold leading-[1.03] tracking-[-0.045em]">Outgrowing Free?</h3>
+                  <p className="mt-2 text-[14px] text-[var(--b-muted)]">Paid plans swap the message limit for a monthly AI credit.</p>
+                  <ul className="mt-5 space-y-2.5 text-[14.5px]">
                     {(pricingPlans[1]?.features ?? []).slice(0, 5).map((feature) => (
-                      <li key={feature} className="flex items-start gap-2.5"><span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[var(--b-good-bg)] text-[var(--b-good)]"><Check size={10} strokeWidth={3} /></span><span>{feature}</span></li>
+                      <li key={feature} className="flex items-center gap-2.5"><Check size={16} strokeWidth={3} className="shrink-0 text-[var(--s-green)]" />{feature}</li>
                     ))}
                   </ul>
-                  <Link href="/dashboard/settings/upgrade" className={`${primaryBtn} mt-5`}><Rocket size={14} /> See plans</Link>
+                  <button type="button" onClick={() => setUpgradeOpen(true)} className={`${pillBtn} mt-7`}>See plans <ArrowRight size={14} /></button>
                 </div>
               </article>
             )}
 
-            <article className={`${card} p-6`}>
-              <h3 className="text-[15px] font-semibold">Payment method</h3>
+            <article className={`${sticker} bg-[var(--s-blue)] p-7`}>
+              <span className={`${stamp} bg-[var(--s-paper)]`}><CreditCard size={11} /> Payment method</span>
               {paymentMethod?.last4 ? (
-                <div className="relative mt-4 overflow-hidden rounded-2xl p-5 text-white" style={{ background: "linear-gradient(135deg,#171a21 0%,#2a2856 55%,#3d2d80 100%)" }}>
-                  <div aria-hidden className="pointer-events-none absolute -right-10 -top-12 h-44 w-44 rounded-full bg-[#7c6cf0]/35 blur-2xl" />
+                <div className="relative mt-6 -rotate-1 overflow-hidden rounded-[18px] border-2 border-[var(--s-line)] bg-[var(--s-purple)] p-5 text-white">
+                  <div aria-hidden className="pointer-events-none absolute -right-6 -top-6 size-32 opacity-25" style={{ backgroundImage: "radial-gradient(#fff 1.2px, transparent 1.2px)", backgroundSize: "12px 12px" }} />
                   <div className="relative flex items-center justify-between">
-                    <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/80">{paymentMethod.brand ?? "Card"}</span>
-                    <CreditCard size={18} className="text-white/70" />
+                    <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em]">{paymentMethod.brand ?? "Card"}</span>
+                    <CreditCard size={18} />
                   </div>
                   <p className="relative mt-8 font-mono text-[18px] tracking-[0.16em]">•••• •••• •••• {paymentMethod.last4}</p>
-                  <div className="relative mt-5 flex items-end justify-between text-[11px] text-white/70">
+                  <div className="relative mt-5 flex items-end justify-between text-[11.5px]">
                     <span>{paymentMethod.expiryMonth && paymentMethod.expiryYear ? `Expires ${String(paymentMethod.expiryMonth).padStart(2, "0")}/${String(paymentMethod.expiryYear).slice(-2)}` : "Saved card"}</span>
-                    <span className="rounded-full bg-white/15 px-2.5 py-1 font-semibold text-white">Default</span>
+                    <span className="rounded-full border-2 border-white/80 px-2.5 py-0.5 font-mono text-[10.5px] font-semibold uppercase tracking-[0.12em]">Default</span>
                   </div>
                 </div>
               ) : (
-                <div className="mt-4 flex flex-col items-center rounded-2xl border border-dashed border-[var(--b-border)] px-5 py-9 text-center">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--b-surface-2)]"><CreditCard size={19} /></span>
-                  <p className="mt-3 text-[13.5px] font-semibold">No card saved yet</p>
-                  <p className="mt-1 max-w-[240px] text-[12px] leading-5 text-[var(--b-muted)]">Your card is saved securely by our payment provider when you pay for a plan.</p>
+                <div className="mt-6 flex flex-col items-center rounded-[18px] border-2 border-dashed border-[var(--s-line)] bg-[var(--s-paper)] px-5 py-9 text-center">
+                  <span className="grid size-12 place-items-center rounded-full border-2 border-[var(--s-line)] bg-[var(--s-yellow)]"><CreditCard size={20} /></span>
+                  <p className="mt-3 text-[16px] font-semibold tracking-[-0.02em]">No card saved yet</p>
+                  <p className="mt-1 max-w-[250px] text-[12.5px] leading-5 text-[var(--b-muted)]">Your card is saved securely by our payment provider when you pay for a plan.</p>
                 </div>
               )}
             </article>
           </div>
 
           {/* ------------------------------------------------------------------- history */}
-          <section className={`${card} mt-4 overflow-hidden`}>
-            <div className="flex items-center justify-between px-6 py-5">
-              <div><h3 className="text-[15px] font-semibold">Billing history</h3><p className="mt-0.5 text-[12px] text-[var(--b-muted)]">Every charge on this workspace.</p></div>
-              {payments.length > 0 && <span className="rounded-full bg-[var(--b-surface-2)] px-2.5 py-1 text-[11px] font-medium text-[var(--b-muted)]">{payments.length} payment{payments.length === 1 ? "" : "s"}</span>}
+          <section className={`${sticker} mt-5 overflow-hidden bg-[var(--s-paper)]`}>
+            <div className="flex flex-wrap items-center justify-between gap-3 px-6 py-5">
+              <div className="flex items-center gap-3">
+                <span className={`${stamp} bg-[var(--s-pink)] text-white`}><ReceiptText size={11} /> History</span>
+                <p className="text-[13px] text-[var(--b-muted)]">Every charge on this workspace.</p>
+              </div>
+              {payments.length > 0 && <span className={`${stamp} bg-[var(--s-paper)]`}>{payments.length} payment{payments.length === 1 ? "" : "s"}</span>}
             </div>
             {payments.length ? (
-              <ol className="border-t border-[var(--b-border)]">
+              <ol className="border-t-2 border-[var(--s-line)]">
                 {payments.map((payment, index) => (
-                  <li key={payment.id} className={`flex items-center gap-4 px-6 py-4 ${index ? "border-t border-[var(--b-border)]" : ""}`}>
-                    <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${payment.status === "failed" ? "bg-[var(--b-bad-bg)] text-[var(--b-bad)]" : "bg-[var(--b-good-bg)] text-[var(--b-good)]"}`}>
-                      {payment.status === "failed" ? <CircleAlert size={16} /> : <ReceiptText size={16} />}
+                  <li key={payment.id} className={`flex items-center gap-4 px-6 py-4 ${index ? "border-t-2 border-[var(--s-line)]" : ""}`}>
+                    <span className={`grid size-10 shrink-0 place-items-center rounded-xl border-2 border-[var(--s-line)] text-white ${payment.status === "failed" ? "bg-[var(--s-pink)]" : "bg-[var(--s-green)]"}`}>
+                      {payment.status === "failed" ? <CircleAlert size={17} /> : <ReceiptText size={17} />}
                     </span>
                     <div className="min-w-0 flex-1">
-                      <p className="text-[13px] font-semibold">{payment.kind === "seats" ? "Extra seats" : payment.kind === "overage" ? "AI overage" : "Subscription"}</p>
-                      <p className="mt-0.5 text-[11.5px] text-[var(--b-muted)]">{new Date(payment.createdAt).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })}</p>
+                      <p className="text-[14.5px] font-semibold">{payment.kind === "seats" ? "Extra seats" : payment.kind === "overage" ? "AI overage" : "Subscription"}</p>
+                      <p className="mt-0.5 text-[12px] text-[var(--b-muted)]">{new Date(payment.createdAt).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })}</p>
                     </div>
-                    <span className="text-[13.5px] font-semibold tabular-nums">{formatMoney(payment.amountMinor ?? payment.amountPaise, payment.currency)}</span>
-                    <span className={`w-[68px] rounded-full px-2.5 py-1 text-center text-[10.5px] font-semibold capitalize ${payment.status === "failed" ? tone.bad : tone.good}`}>{payment.status}</span>
+                    <span className="text-[16px] font-semibold tracking-[-0.02em] tabular-nums">{formatMoney(payment.amountMinor ?? payment.amountPaise, payment.currency)}</span>
+                    <span className={`${stamp} w-[88px] justify-center text-white ${payment.status === "failed" ? "bg-[var(--s-pink)]" : "bg-[var(--s-green)]"}`}>{payment.status}</span>
                   </li>
                 ))}
               </ol>
             ) : (
-              <div className="flex flex-col items-center border-t border-[var(--b-border)] px-5 py-12 text-center">
-                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--b-surface-2)]"><ReceiptText size={20} /></span>
-                <p className="mt-3 text-[14px] font-semibold">No charges yet</p>
-                <p className="mt-1 max-w-xs text-[12px] leading-5 text-[var(--b-muted)]">When you pay for a plan or extra seats, each charge shows up here.</p>
+              <div className="relative flex flex-col items-center border-t-2 border-[var(--s-line)] bg-[var(--s-cream)] px-5 py-14 text-center">
+                <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[0.07]" style={{ backgroundImage: "radial-gradient(var(--s-line) 1.2px, transparent 1.2px)", backgroundSize: "14px 14px" }} />
+                <span className="relative grid size-14 place-items-center rounded-full border-2 border-[var(--s-line)] bg-[var(--s-pink)] text-white"><ReceiptText size={22} /></span>
+                <p className="relative mt-4 text-[18px] font-semibold tracking-[-0.03em]">No charges yet</p>
+                <p className="relative mt-1 max-w-xs text-[13px] leading-5 text-[var(--b-muted)]">When you pay for a plan or extra seats, each charge shows up here.</p>
               </div>
             )}
           </section>
         </>
       )}
+
+      {/* The same full-screen plan picker the header opens. Closing it refreshes the plan in case a checkout just finished. */}
+      <UpgradeDialog open={upgradeOpen} onClose={() => { setUpgradeOpen(false); void loadStatus(); }} />
 
       {plan.id !== "free" && !cancelling && cancelOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget && !cancelBusy) setCancelOpen(false); }}>
@@ -5020,8 +5038,6 @@ export function SettingsClient({ user, page = "General", auditView = "all" }: { 
           <PeopleSettingsPage />
         ) : currentPage === "Teams" ? (
           <TeamsSettingsPage />
-        ) : currentPage === "Upgrade" ? (
-          <UpgradeSettingsPage />
         ) : currentPage === "Billing" ? (
           <BillingSettingsPage />
         ) : currentPage === "Usage" ? (
