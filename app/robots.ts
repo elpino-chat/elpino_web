@@ -8,22 +8,14 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: [
-          "/dashboard",
-          "/onboarding",
-          "/login",
-          "/signup",
-          "/api/",
-          // Embeddable chat fragment — duplicate content with no
-          // standalone search value; see the X-Robots-Tag rule in
-          // next.config.ts for the matching HTTP-header enforcement.
-          "/widget",
-          // Single-use tokenised links. Kept out of the crawl entirely
-          // rather than relying only on the page-level noindex, so a
-          // well-behaved crawler never even fetches one.
-          "/invite/",
-          "/secure/",
-        ],
+        // Only non-HTML endpoints are disallowed. Private pages (/login,
+        // /signup, /dashboard, /onboarding, /widget, /invite/, /secure/)
+        // are kept out of the index by the X-Robots-Tag: noindex header in
+        // next.config.ts. They must stay crawlable: a page blocked here is
+        // never fetched, so Google can't see the noindex and reports
+        // "Indexed, though blocked by robots.txt" for any URL it finds a
+        // link to.
+        disallow: ["/api/"],
       },
     ],
     sitemap: `${BASE_URL}/sitemap.xml`,
