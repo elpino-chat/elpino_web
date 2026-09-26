@@ -1,4 +1,5 @@
 import { callGateway } from "@/app/api/auth/_lib/gateway";
+import { isMockWidgetRequest } from "@/app/api/widget/_mock";
 
 type PreChatField = {
   id: string;
@@ -22,6 +23,7 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   const key = url.searchParams.get("key")?.trim();
   const hostname = url.searchParams.get("hostname")?.trim();
+  if (isMockWidgetRequest(key)) return Response.json({ allowed: true, fields: [] }, { headers: corsHeaders() });
   if (!key || !hostname) {
     return Response.json({ allowed: false, message: "key and hostname are required" }, { status: 400, headers: corsHeaders() });
   }

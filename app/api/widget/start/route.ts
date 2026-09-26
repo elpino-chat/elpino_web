@@ -1,6 +1,7 @@
 import { callGateway } from "@/app/api/auth/_lib/gateway";
 import { clientLocation } from "@/app/api/_lib/client-geo";
 import { getAuthRedirectBaseUrl } from "@/app/api/auth/_lib/redirect-url";
+import { isMockWidgetRequest, mockGreeting, mockVisitorToken } from "@/app/api/widget/_mock";
 
 type WidgetMessage = { id: string; senderType: string; senderId: string | null; body: string; createdAt: string };
 type StartResult = { allowed: boolean; visitorToken?: string; conversationId?: string; botName?: string; botAvatarUrl?: string | null; messages?: WidgetMessage[]; error?: string };
@@ -18,6 +19,15 @@ export async function OPTIONS() {
 
 export async function POST(request: Request) {
   const body = (await request.json().catch(() => ({}))) as { key?: string; hostname?: string; visitorToken?: string; name?: string; identityToken?: unknown };
+  if (isMockWidgetRequest(body.key)) {
+    return Response.json({
+      allowed: true,
+      visitorToken: mockVisitorToken(),
+      botName: "Elpino Support",
+      greetingLines: ["Hi there 👋", "How can we help today?"],
+      messages: [mockGreeting()],
+    }, { headers: corsHeaders() });
+  }
   if (!body.key?.trim() || !body.hostname?.trim()) {
     return Response.json({ allowed: false, message: "key and hostname are required" }, { status: 400, headers: corsHeaders() });
   }

@@ -1,4 +1,5 @@
 import { callGateway } from "@/app/api/auth/_lib/gateway";
+import { isMockWidgetRequest, mockGreeting } from "@/app/api/widget/_mock";
 
 type WidgetMessage = { id: string; senderType: string; senderId: string | null; body: string; attachmentUrl?: string | null; attachmentType?: string | null; attachmentName?: string | null; createdAt: string };
 type MessagesResult = { messages?: WidgetMessage[]; message?: WidgetMessage; greeting?: WidgetMessage | null; conversationId?: string; agentTyping?: boolean; error?: string };
@@ -26,6 +27,14 @@ export async function POST(request: Request) {
     topic?: string;
   };
   const text = body.body?.trim() ?? "";
+  if (isMockWidgetRequest(body.key) && (text || body.attachment?.url)) {
+    const now = new Date().toISOString();
+    return Response.json({
+      conversationId: "mock-conversation",
+      greeting: mockGreeting(),
+      message: { id: `mock-customer-${Date.now()}`, senderType: "customer", senderId: "mock-visitor", body: text || "Sent an attachment", createdAt: now },
+    }, { headers: corsHeaders() });
+  }
   if (!body.key?.trim() || !body.hostname?.trim() || !body.visitorToken?.trim() || (!text && !body.attachment?.url)) {
     return Response.json({ error: "key, hostname, visitorToken and body (or an attachment) are required" }, { status: 400, headers: corsHeaders() });
   }

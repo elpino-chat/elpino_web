@@ -80,6 +80,7 @@ const TYPING_PING_MS = 2000;
 // Longest the send button stays locked waiting for a reply.
 const REPLY_WAIT_MAX_MS = 60000;
 const MAX_ATTACHMENT_BYTES = 4 * 1024 * 1024;
+const LOCAL_MOCK_WEBSITE_ID = "7b1326d6-e7e0-4dbe-a001-4bbcf2f577e9";
 // Giphy's well-known public "beta" test key — fine for demo-scale traffic,
 // rate-limited; swap for a real key before any real production usage.
 const GIPHY_KEY = "dc6zaTOxFJmzC";
@@ -151,8 +152,13 @@ function formatTime(iso: string) {
 
 function WidgetContent() {
   const searchParams = useSearchParams();
-  const key = searchParams.get("key")?.trim() ?? "";
+  // `website_id` is used by public/widget.js. Keep `key` for the existing
+  // tag.js loader and direct preview URLs during the migration.
+  const key = searchParams.get("website_id")?.trim() || searchParams.get("key")?.trim() || "";
   const hostname = searchParams.get("host")?.trim() ?? "";
+  // Keep the full realtime stack out of local widget demos. This is both
+  // development-only and limited to one explicit non-production test ID.
+  const isLocalMockWidget = process.env.NODE_ENV === "development" && key === LOCAL_MOCK_WEBSITE_ID;
   const startFresh = searchParams.get("new") === "1";
   // Where the visitor was on the previous page, handed over by the loader
   // (see VIEW_KEY in tag.js), so moving around the site doesn't drop them
@@ -254,7 +260,12 @@ function WidgetContent() {
   const identityTokenRef = useRef<string | null>(null);
   const activeVisitorRef = useRef("");
   const sessionEpochRef = useRef(0);
+  const mockReplyTimersRef = useRef<number[]>([]);
   const [sessionExpiresAt, setSessionExpiresAt] = useState<number | null>(null);
+  useEffect(() => () => {
+    for (const timer of mockReplyTimersRef.current) window.clearTimeout(timer);
+    mockReplyTimersRef.current = [];
+  }, []);
   // keepDraft: the session merely lapsed and the same person is about to be
   // signed back in, so what they were typing survives. Logout and account
   // switches clear everything.
@@ -305,6 +316,9 @@ function WidgetContent() {
   // panelOpenRef comes from the loader; the iframe cannot tell on its own
   // whether it is hidden behind a closed launcher.
   const panelOpenRef = useRef(true);
+  // The iframe owns its visible state. The host page owns only its dimensions;
+  // opening must never navigate the iframe or replace its current URL.
+  const [isOpen, setIsOpen] = useState(false);
   const seenMessageIdsRef = useRef<Set<string>>(new Set());
   const seenConversationRef = useRef("");
   const [soundOn, setSoundOn] = useState(true);
@@ -514,6 +528,7 @@ function WidgetContent() {
       } else if (data.type === "elpino:panel") {
         const isOpen = Boolean((data as { open?: unknown }).open);
         panelOpenRef.current = isOpen;
+        setIsOpen(isOpen);
         if (isOpen) setReplyPreview(null);
         // Closing always restores the normal size on the loader's side
         // (see tag.js) — mirror that here so reopening doesn't show
@@ -909,7 +924,21 @@ function WidgetContent() {
   }
 
   function closeWidget() {
+    setIsOpen(false);
+    panelOpenRef.current = false;
+    // The compact iframe loader listens for `action`; retain the legacy event
+    // so sites still using public/tag.js resize correctly during migration.
+    window.parent.postMessage({ action: "close" }, "*");
     window.parent.postMessage({ type: "elpino:close" }, "*");
+  }
+
+  function openWidget() {
+    setIsOpen(true);
+    panelOpenRef.current = true;
+    // This is deliberately state-only: no links, router calls, or iframe URL
+    // changes are involved in opening the widget.
+    window.parent.postMessage({ action: "open" }, "*");
+    window.parent.postMessage({ type: "elpino:open" }, "*");
   }
 
   // Abandons the resumed conversation (if any) so the next message starts a
@@ -930,7 +959,7 @@ function WidgetContent() {
   }, [joinDeadline]);
 
   useEffect(() => {
-    if (!conversationId || !visitorToken || tab !== "chat" || chatView !== "thread") return;
+    if (isLocalMockWidget || !conversationId || !visitorToken || tab !== "chat" || chatView !== "thread") return;
     let cancelled = false;
     const epoch = sessionEpochRef.current;
     const poll = () => {
@@ -996,7 +1025,7 @@ function WidgetContent() {
     poll();
     const interval = window.setInterval(poll, POLL_MS);
     return () => { cancelled = true; window.clearInterval(interval); };
-  }, [conversationId, visitorToken, tab, chatView, key, hostname, discardSession]);
+  }, [conversationId, visitorToken, tab, chatView, key, hostname, discardSession, isLocalMockWidget]);
 
   // Live push for the instant a reply is approved and saved — see
   // apps/gateway/src/realtime/realtime.service.ts's /rt/widget channel. The
@@ -1004,7 +1033,9 @@ function WidgetContent() {
   // drop, gateway restart, etc.), so a message is never lost, only possibly
   // duplicated — seenMessageIdsRef dedupes either way.
   useEffect(() => {
-    if (!conversationId || !visitorToken || tab !== "chat" || chatView !== "thread") return;
+    // The local demo deliberately has no gateway process, so never construct
+    // a ws://localhost:4000 connection for its test tenant.
+    if (isLocalMockWidget || !conversationId || !visitorToken || tab !== "chat" || chatView !== "thread") return;
     let closed = false;
     let socket: WebSocket | null = null;
     let reconnectDelay = 1000;
@@ -1052,7 +1083,7 @@ function WidgetContent() {
       if (reconnectTimer) window.clearTimeout(reconnectTimer);
       socket?.close();
     };
-  }, [conversationId, visitorToken, tab, chatView, key, hostname]);
+  }, [conversationId, visitorToken, tab, chatView, key, hostname, isLocalMockWidget]);
 
   // Report the visitor's current page once there is a conversation, and again when
   // it changes. Debounced so a burst of navigations sends one request.
@@ -1107,6 +1138,47 @@ function WidgetContent() {
     // carry the view down to it, even if they'd scrolled up to read back.
     stickToBottomRef.current = true;
     setSending(true);
+    if (isLocalMockWidget) {
+      const sentAt = new Date().toISOString();
+      const messageId = `mock-customer-${Date.now()}`;
+      const mockConversationId = conversationId || "mock-conversation";
+
+      setConversationId(mockConversationId);
+      setMessages((current) => [
+        ...current,
+        {
+          id: messageId,
+          senderType: "customer",
+          senderId: "mock-visitor",
+          body,
+          attachmentUrl: attachment?.url ?? null,
+          attachmentType: attachment?.type ?? null,
+          attachmentName: attachment?.name ?? null,
+          createdAt: sentAt,
+        },
+      ]);
+      setAgentTyping(true);
+      // No network acknowledgement exists in mock mode, so release the
+      // composer immediately. The delayed reply only simulates AI latency.
+      setSending(false);
+
+      const timer = window.setTimeout(() => {
+        setMessages((current) => [
+          ...current,
+          {
+            id: `mock-ai-${Date.now()}`,
+            senderType: "ai",
+            senderId: "mock-elpinobot",
+            body: "This is a mock response from Elpino AI!",
+            createdAt: new Date().toISOString(),
+          },
+        ]);
+        setAgentTyping(false);
+        mockReplyTimersRef.current = mockReplyTimersRef.current.filter((id) => id !== timer);
+      }, 1500);
+      mockReplyTimersRef.current.push(timer);
+      return;
+    }
     const epoch = sessionEpochRef.current;
     try {
       const response = await fetch("/api/widget/messages", {
@@ -1342,6 +1414,27 @@ function WidgetContent() {
   // at it. Real teams already at or above that size just show their true
   // count instead of a padded one.
   const paddedTeamTotal = useMemo(() => Math.floor(Math.random() * 6) + 6, []);
+
+  if (!isOpen) {
+    return (
+      <div className="flex h-full w-full items-center justify-center bg-transparent p-2">
+        <button
+          type="button"
+          onClick={openWidget}
+          aria-label="Open chat"
+          className="flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-200"
+          style={{ backgroundColor: ACCENT }}
+        >
+          <img
+            src="/icon0.svg"
+            alt=""
+            aria-hidden="true"
+            className="h-8 w-8 object-contain"
+          />
+        </button>
+      </div>
+    );
+  }
 
   if (loading) {
     return <div className="flex h-full items-center justify-center text-[12px]" style={{ backgroundColor: BG, color: MUTED }}>Loading…</div>;
