@@ -38,7 +38,7 @@ export async function POST(request: Request) {
     companyId: owner.workspace.id,
     planId: body.planId,
     cadence: body.cadence ?? "monthly",
-    currency: body.currency ?? "INR",
+    currency: body.currency ?? "USD",
   }).catch(() => null);
 
   if (!result || result.error) {
