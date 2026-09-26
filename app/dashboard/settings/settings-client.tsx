@@ -1276,6 +1276,9 @@ function BillingSettingsPage() {
   const [removeSeatsCount, setRemoveSeatsCount] = useState("1");
   const [seatBusy, setSeatBusy] = useState(false);
   const [seatError, setSeatError] = useState<string | null>(null);
+  const [addingSeats, setAddingSeats] = useState<number | null>(null);
+  const [addSeatsNotice, setAddSeatsNotice] = useState<string | null>(null);
+  const [addSeatsError, setAddSeatsError] = useState<string | null>(null);
 
   // Removing seats takes effect at the next renewal: they were paid for
   // through the end of this period, so they stay usable until then.
@@ -1292,6 +1295,50 @@ function BillingSettingsPage() {
       setSeatError(issue instanceof Error ? issue.message : "Could not remove seats.");
     } finally {
       setSeatBusy(false);
+    }
+  }
+
+  // Buys a seat pack. On a paid plan the seats are added to the subscription
+  // straight away and billed on its next invoice, then on every renewal until
+  // removed. On Free there is no invoice, so Razorpay Checkout takes a one-off
+  // payment first and the webhook grants the seats.
+  async function addSeats(quantity: number) {
+    if (addingSeats !== null) return;
+    setAddingSeats(quantity);
+    setAddSeatsError(null);
+    setAddSeatsNotice(null);
+    try {
+      const response = await fetch("/api/billing/seats", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ quantity }),
+      });
+      const data = (await response.json().catch(() => ({}))) as {
+        message?: string;
+        upgradeRequired?: boolean;
+        orderId?: string;
+        keyId?: string;
+        amountPaise?: number;
+        seatsGranted?: number;
+        billedOnNextInvoice?: boolean;
+      };
+      if (!response.ok) {
+        setAddSeatsError(data.upgradeRequired ? `${data.message ?? "This plan can't add more seats."} Upgrade to add more teammates.` : data.message ?? "Could not add seats.");
+        return;
+      }
+      if (data.orderId && data.keyId) {
+        await openRazorpayCheckout({ keyId: data.keyId, orderId: data.orderId, amountPaise: data.amountPaise, description: "Extra seats" });
+        setAddSeatsNotice("Payment received. Your seats will be ready in a moment.");
+        // The grant lands when Razorpay's webhook confirms the payment.
+        window.setTimeout(() => void loadStatus(), 2500);
+      } else {
+        setAddSeatsNotice(`${data.seatsGranted ?? quantity} seats added. They're billed with your subscription, starting on your next invoice.`);
+      }
+      await loadStatus();
+    } catch (issue) {
+      setAddSeatsError(issue instanceof Error ? issue.message : "Could not add seats.");
+    } finally {
+      setAddingSeats(null);
     }
   }
 
@@ -1345,6 +1392,7 @@ function BillingSettingsPage() {
   const currencyCode = entitlement?.currency ?? "USD";
   const planMinor = entitlement?.effectiveMonthlyMinor ?? 0;
   const seatsMinor = entitlement?.seatsMonthlyMinor ?? 0;
+  const seatBundles = entitlement?.seatBundles ?? [];
   const keptSeats = Math.max(0, (entitlement?.seatsPurchased ?? 0) - (entitlement?.seatsPendingRelease ?? 0));
   const renewAt = entitlement ? (periodEnd ? new Date(periodEnd) : nextAllowanceReset(entitlement)) : null;
   const periodStartMs = entitlement ? new Date(entitlement.currentPeriodStart).getTime() : NaN;
@@ -1360,7 +1408,8 @@ function BillingSettingsPage() {
   const storageUsedMb = (entitlement?.knowledgeBytesUsed ?? 0) / (1024 * 1024);
   const storageTotalMb = entitlement?.knowledgeStorageMb ?? 0;
   const storagePercent = storageTotalMb > 0 ? Math.min(100, (storageUsedMb / storageTotalMb) * 100) : 0;
-  const priceMain = isFree ? "$0" : planMinor > 0 ? formatMoney(planMinor, currencyCode) : plan.price;
+  const billedInOtherCurrency = !isFree && currencyCode !== "USD";
+  const priceMain = isFree ? "$0" : billedInOtherCurrency ? getPlanPrice(plan, cadence === "annual" ? "yearly" : "monthly") : planMinor > 0 ? formatMoney(planMinor, currencyCode) : plan.price;
   const renewLabel = renewAt ? renewAt.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" }) : null;
   const statusPill =
     status === "past_due"
@@ -1400,6 +1449,12 @@ function BillingSettingsPage() {
         <div className="mt-7 rounded-2xl bg-[var(--b-bad-bg)] px-5 py-4 text-[13px] text-[var(--b-bad)]">Billing information could not be loaded. You can still change your plan from View plans.</div>
       )}
       {cancelNotice && <div role="status" className="mt-7 rounded-2xl bg-[var(--b-good-bg)] px-5 py-4 text-[13px] text-[var(--b-good)]">{cancelNotice}</div>}
+      {!loading && billedInOtherCurrency && (
+        <div className="mt-7 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-[var(--b-info-bg)] px-5 py-4 text-[13px] text-[var(--b-info)]">
+          <p>This subscription was started in {currencyCode}, so it is still charged as {formatMoney(planMinor + seatsMinor, currencyCode)} a month. Plans and top-ups are now priced in dollars, and changing your plan moves you to dollar billing.</p>
+          <Link href="/dashboard/settings/upgrade" className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-current px-3 text-[12px] font-semibold">Switch to dollars <ArrowRight size={13} /></Link>
+        </div>
+      )}
 
       {!loading && (
         <>
@@ -1474,6 +1529,37 @@ function BillingSettingsPage() {
               <div className="flex items-center gap-2.5"><span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--b-surface-2)]"><UsersRound size={16} /></span><p className="text-[12.5px] font-medium text-[var(--b-muted)]">Seats</p></div>
               <p className="mt-4 text-[22px] font-semibold tabular-nums tracking-[-0.03em]">{(entitlement?.seatsAllowed ?? 0).toLocaleString()} <span className="text-[14px] font-normal text-[var(--b-muted)]">{entitlement?.seatsMax ? `of ${entitlement.seatsMax} max` : "seats"}</span></p>
               <p className="mt-3 text-[12px] leading-5 text-[var(--b-muted)]">{entitlement?.seatsIncluded ?? 0} included{(entitlement?.seatsPurchased ?? 0) > 0 ? ` · ${entitlement?.seatsPurchased} extra` : ""}. Adding seats never changes your AI allowance.</p>
+              {seatBundles.length > 0 && (
+                <div className="mt-4 border-t border-[var(--b-border)] pt-4">
+                  <p className="text-[12px] font-semibold">Add more seats</p>
+                  <div className="mt-2.5 flex flex-wrap gap-2">
+                    {seatBundles.map((bundle) => {
+                      const minor = currencyCode === "INR" ? bundle.inrPaise : bundle.usdCents;
+                      const overCap = entitlement?.seatsMax != null && (entitlement?.seatsAllowed ?? 0) + bundle.seats > entitlement.seatsMax;
+                      const busy = addingSeats === bundle.seats;
+                      return (
+                        <button
+                          key={bundle.seats}
+                          type="button"
+                          disabled={addingSeats !== null || overCap}
+                          onClick={() => void addSeats(bundle.seats)}
+                          title={overCap ? `${plan.name} allows up to ${entitlement?.seatsMax} seats` : undefined}
+                          className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-[var(--b-border)] px-3 text-[12.5px] font-medium transition hover:bg-[var(--b-surface-2)] disabled:cursor-not-allowed disabled:opacity-45"
+                        >
+                          {busy ? <LoaderCircle size={13} className="animate-spin" /> : <Plus size={13} />}
+                          {bundle.seats} seats
+                          <span className="text-[var(--b-muted)]">{formatMoney(minor, currencyCode)}{isFree ? "" : "/mo"}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <p className="mt-2.5 text-[11.5px] leading-5 text-[var(--b-muted)]">
+                    {isFree ? "One-time payment, and the seats stay on your workspace." : "Added to your subscription and billed with it from the next invoice, every period until you remove them."}
+                  </p>
+                  {addSeatsNotice && <p role="status" className="mt-2 text-[12px] text-[var(--b-good)]">{addSeatsNotice}</p>}
+                  {addSeatsError && <p role="alert" className="mt-2 text-[12px] text-[var(--b-bad)]">{addSeatsError}</p>}
+                </div>
+              )}
             </article>
 
             <article className={`${card} p-5`}>
