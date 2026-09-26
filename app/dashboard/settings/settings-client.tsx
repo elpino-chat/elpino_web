@@ -1215,8 +1215,51 @@ type BillingStatus = {
   invoices?: BillingInvoice[];
 };
 
+// Plan-tinted glow behind the plan card on the Billing page.
+const BILLING_HERO_TINT: Record<string, string> = {
+  free: "from-[#94a3b8]/30 via-[#428ce5]/20 to-transparent",
+  starter: "from-[#7c3aed]/35 via-[#428ce5]/25 to-transparent",
+  growth: "from-[#2aa876]/35 via-[#428ce5]/25 to-transparent",
+  scale: "from-[#f59e0b]/35 via-[#ec4899]/25 to-transparent",
+};
+
+// A circular gauge: how far through the billing period you are (paid) or how
+// much of the Free message allowance is used. The label goes in the middle.
+function BillingRing({ percent, children }: { percent: number; children: React.ReactNode }) {
+  const size = 152;
+  const stroke = 11;
+  const radius = (size - stroke) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const value = Math.max(0, Math.min(100, percent));
+  return (
+    <div className="relative" style={{ width: size, height: size }}>
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90" aria-hidden>
+        <defs>
+          <linearGradient id="billing-ring-gradient" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#7c3aed" />
+            <stop offset="100%" stopColor="#428ce5" />
+          </linearGradient>
+        </defs>
+        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="var(--b-track)" strokeWidth={stroke} />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke="url(#billing-ring-gradient)"
+          strokeWidth={stroke}
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={circumference - (value / 100) * circumference}
+          className="transition-[stroke-dashoffset] duration-700"
+        />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center text-center">{children}</div>
+    </div>
+  );
+}
+
 function BillingSettingsPage() {
-  const [tab, setTab] = useState<"overview" | "payment" | "history">("overview");
   const [billing, setBilling] = useState<BillingStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
@@ -1298,117 +1341,254 @@ function BillingSettingsPage() {
     }
   }
 
+  const isFree = plan.id === "free";
+  const currencyCode = entitlement?.currency ?? "USD";
+  const planMinor = entitlement?.effectiveMonthlyMinor ?? 0;
+  const seatsMinor = entitlement?.seatsMonthlyMinor ?? 0;
+  const keptSeats = Math.max(0, (entitlement?.seatsPurchased ?? 0) - (entitlement?.seatsPendingRelease ?? 0));
+  const renewAt = entitlement ? (periodEnd ? new Date(periodEnd) : nextAllowanceReset(entitlement)) : null;
+  const periodStartMs = entitlement ? new Date(entitlement.currentPeriodStart).getTime() : NaN;
+  const daysLeft = renewAt ? Math.max(0, Math.ceil((renewAt.getTime() - Date.now()) / 86_400_000)) : 0;
+  const elapsedPercent =
+    renewAt && Number.isFinite(periodStartMs) && renewAt.getTime() > periodStartMs
+      ? Math.min(100, Math.max(0, ((Date.now() - periodStartMs) / (renewAt.getTime() - periodStartMs)) * 100))
+      : 0;
+  const messagesUsed = entitlement?.resolutionsUsed ?? 0;
+  const messagesTotal = entitlement?.resolutionsIncluded ?? 0;
+  const messagesPercent = messagesTotal > 0 ? Math.min(100, (messagesUsed / messagesTotal) * 100) : 0;
+  const ringPercent = isFree ? messagesPercent : elapsedPercent;
+  const storageUsedMb = (entitlement?.knowledgeBytesUsed ?? 0) / (1024 * 1024);
+  const storageTotalMb = entitlement?.knowledgeStorageMb ?? 0;
+  const storagePercent = storageTotalMb > 0 ? Math.min(100, (storageUsedMb / storageTotalMb) * 100) : 0;
+  const priceMain = isFree ? "$0" : planMinor > 0 ? formatMoney(planMinor, currencyCode) : plan.price;
+  const renewLabel = renewAt ? renewAt.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" }) : null;
+  const statusPill =
+    status === "past_due"
+      ? { label: "Payment issue", tone: "bad" as const }
+      : cancelling
+        ? { label: "Cancelling", tone: "warn" as const }
+        : entitlement?.pendingPlanId
+          ? { label: "Confirming payment", tone: "info" as const }
+          : { label: "Active", tone: "good" as const };
+  const tone = {
+    good: "bg-[var(--b-good-bg)] text-[var(--b-good)]",
+    warn: "bg-[var(--b-warn-bg)] text-[var(--b-warn)]",
+    bad: "bg-[var(--b-bad-bg)] text-[var(--b-bad)]",
+    info: "bg-[var(--b-info-bg)] text-[var(--b-info)]",
+  };
+  const card = "rounded-2xl border border-[var(--b-border)] bg-[var(--b-surface)]";
+  const primaryBtn = "inline-flex h-10 items-center gap-2 rounded-xl bg-[var(--b-ink)] px-4 text-[13px] font-semibold text-[var(--b-ink-text)] transition hover:opacity-85";
+  const ghostBtn = "inline-flex h-10 items-center gap-2 rounded-xl border border-[var(--b-border)] px-4 text-[13px] font-medium text-[var(--b-text)] transition hover:bg-[var(--b-surface-2)]";
+
   return (
-    <div className="dashboard-billing-page mx-auto w-full max-w-[1080px] px-7 pb-16 pt-8 text-white/90 sm:px-9 lg:px-10">
-      <div className="flex flex-wrap items-start justify-between gap-5">
-        <div><p className="text-xs font-medium text-violet-300">Workspace billing</p><h2 className="mt-2 text-[32px] font-medium tracking-[-0.04em] text-white/90">Billing</h2><p className="mt-2 text-[13px] text-white/60">Your plan, payment method, and receipts in one place.</p></div>
-        <Link href="/dashboard/settings/upgrade" className="flex h-10 items-center gap-2 rounded-lg bg-[#6d5ce7] px-4 text-[13px] font-medium text-white transition hover:bg-[#7b6bed]">View plans <ArrowRight size={14} /></Link>
-      </div>
+    <div className="billing-v2 mx-auto w-full max-w-[1080px] px-6 pb-20 pt-8 sm:px-9">
+      <header className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h2 className="text-[32px] font-semibold tracking-[-0.04em]">Billing</h2>
+          <p className="mt-1.5 text-[13px] text-[var(--b-muted)]">Your plan, what&apos;s included, and how you pay.</p>
+        </div>
+        <Link href="/dashboard/settings/upgrade" className={ghostBtn}>View plans <ArrowRight size={14} /></Link>
+      </header>
 
-      <div className="mt-7 inline-flex gap-1 rounded-xl border border-white/10 bg-white/[0.035] p-1" role="tablist" aria-label="Billing sections">
-        {([['overview', 'Overview'], ['payment', 'Payment methods'], ['history', 'Billing history']] as const).map(([id, label]) => (
-          <button key={id} type="button" role="tab" aria-selected={tab === id} onClick={() => setTab(id)} className={`rounded-lg px-3.5 py-2 text-[12px] font-medium transition ${tab === id ? "bg-white/10 text-white/90" : "text-white/55 hover:bg-white/[0.05] hover:text-white/90"}`}>{label}</button>
-        ))}
-      </div>
+      {loading && (
+        <div className="mt-7 space-y-4">
+          <div className="h-64 animate-pulse rounded-3xl bg-[var(--b-surface-2)]" />
+          <div className="grid gap-4 md:grid-cols-3"><div className="h-28 animate-pulse rounded-2xl bg-[var(--b-surface-2)]" /><div className="h-28 animate-pulse rounded-2xl bg-[var(--b-surface-2)]" /><div className="h-28 animate-pulse rounded-2xl bg-[var(--b-surface-2)]" /></div>
+        </div>
+      )}
+      {loadError && !loading && (
+        <div className="mt-7 rounded-2xl bg-[var(--b-bad-bg)] px-5 py-4 text-[13px] text-[var(--b-bad)]">Billing information could not be loaded. You can still change your plan from View plans.</div>
+      )}
+      {cancelNotice && <div role="status" className="mt-7 rounded-2xl bg-[var(--b-good-bg)] px-5 py-4 text-[13px] text-[var(--b-good)]">{cancelNotice}</div>}
 
-      {loading && <div className="mt-7 grid gap-4 md:grid-cols-2"><div className="h-52 animate-pulse rounded-[24px] bg-[#F2F3F3]" /><div className="h-52 animate-pulse rounded-[24px] bg-[#F2F3F3]" /></div>}
-      {loadError && !loading && <div className="mt-7 rounded-2xl border border-[#E9C8CC] bg-[#FFF7F7] px-5 py-4 text-[13px] text-[#A5414B]">Billing information could not be loaded. You can still change your plan or try refreshing this page.</div>}
+      {!loading && (
+        <>
+          {/* ------------------------------------------------------------- plan hero */}
+          <section className="relative mt-7 overflow-hidden rounded-3xl border border-[var(--b-border)] bg-[var(--b-surface)] p-7 md:p-9">
+            <div aria-hidden className={`pointer-events-none absolute -right-24 -top-32 h-96 w-96 rounded-full bg-gradient-to-br ${BILLING_HERO_TINT[plan.id] ?? BILLING_HERO_TINT.free} blur-3xl`} />
+            <div aria-hidden className="pointer-events-none absolute -bottom-40 -left-24 h-80 w-80 rounded-full bg-gradient-to-tr from-[#428ce5]/15 to-transparent blur-3xl" />
+            <div className="relative grid items-center gap-8 md:grid-cols-[minmax(0,1fr)_auto]">
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="rounded-full border border-[var(--b-border)] px-2.5 py-1 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[var(--b-muted)]">Current plan</span>
+                  <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${tone[statusPill.tone]}`}>{statusPill.label}</span>
+                </div>
+                <h3 className="mt-5 text-[46px] font-semibold leading-none tracking-[-0.05em]">{plan.name}</h3>
+                <p className="mt-3 flex items-baseline gap-1.5">
+                  <span className="text-[24px] font-semibold tabular-nums tracking-[-0.03em]">{priceMain}</span>
+                  <span className="text-[13px] text-[var(--b-muted)]">{isFree ? "forever" : cadence === "annual" ? "/ month · billed yearly" : "/ month"}</span>
+                </p>
+                <p className="mt-3 max-w-md text-[13px] leading-6 text-[var(--b-muted)]">{plan.description}</p>
+                <div className="mt-6 flex flex-wrap items-center gap-2">
+                  <Link href="/dashboard/settings/upgrade" className={primaryBtn}>{isFree ? <><Rocket size={14} /> Upgrade plan</> : <>Change plan <ArrowRight size={14} /></>}</Link>
+                  {!isFree && !cancelling && <button type="button" onClick={() => setCancelOpen(true)} className="h-10 rounded-xl px-3 text-[13px] font-medium text-[var(--b-muted)] transition hover:bg-[var(--b-surface-2)] hover:text-[var(--b-text)]">Cancel plan</button>}
+                </div>
+              </div>
 
-      {!loading && tab === "overview" && (
-        <div className="mt-7 grid gap-4 md:grid-cols-2">
-          <article className="dashboard-billing-plan-card flex min-h-[190px] flex-col rounded-2xl border border-violet-300/15 bg-gradient-to-br from-violet-400/[0.09] to-white/[0.025] p-6 md:col-span-2">
-            <div className="flex items-start justify-between gap-4"><div><p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#6D7D85]">Current plan</p><h3 className="mt-3 text-[28px] font-medium tracking-[-0.04em]">{plan.name}</h3></div><span className="rounded-full bg-white px-3 py-1 text-[10px] font-bold uppercase tracking-[0.08em] text-[#34845c]">{status}</span></div>
-            <div className="mt-3 flex items-end gap-1"><span className="text-[32px] font-medium tracking-[-0.05em]">{plan.price}</span>{plan.id !== "free" && <span className="pb-1 text-[12px] text-[#667069]">/ month</span>}</div>
-            <p className="mt-3 text-[12px] leading-5 text-[#667069]">{plan.description}</p>
-            {plan.id !== "free" && entitlement && (() => {
-              const currencyCode = entitlement.currency ?? "USD";
-              const keptSeats = Math.max(0, (entitlement.seatsPurchased ?? 0) - (entitlement.seatsPendingRelease ?? 0));
-              const planMinor = entitlement.effectiveMonthlyMinor ?? 0;
-              const seatsMinor = entitlement.seatsMonthlyMinor ?? 0;
-              return (
-                <div className="mt-4 max-w-[420px] rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-[12.5px]">
-                  <div className="flex items-center justify-between py-1"><span className="text-white/70">{plan.name} plan</span><span>{formatMoney(planMinor, currencyCode)}/mo</span></div>
-                  <div className="flex items-center justify-between py-1">
-                    <span className="text-white/70">Extra seats ({keptSeats})</span>
-                    <span className="flex items-center gap-2">
-                      {keptSeats > 0 && !removeSeatsOpen && <button type="button" onClick={() => { setRemoveSeatsOpen(true); setRemoveSeatsCount("1"); }} className="text-[11.5px] font-medium text-white/50 underline-offset-2 hover:text-white/90 hover:underline">Remove</button>}
-                      {formatMoney(seatsMinor, currencyCode)}/mo
+              <div className="flex flex-col items-center">
+                <BillingRing percent={ringPercent}>
+                  {isFree ? (
+                    <>
+                      <span className="text-[30px] font-semibold leading-none tabular-nums tracking-[-0.04em]">{messagesUsed.toLocaleString()}</span>
+                      <span className="mt-1 text-[11px] text-[var(--b-muted)]">of {messagesTotal.toLocaleString()} messages</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="text-[34px] font-semibold leading-none tabular-nums tracking-[-0.04em]">{daysLeft}</span>
+                      <span className="mt-1 text-[11px] text-[var(--b-muted)]">{daysLeft === 1 ? "day left" : "days left"}</span>
+                    </>
+                  )}
+                </BillingRing>
+                <p className="mt-3 max-w-[170px] text-center text-[12px] leading-5 text-[var(--b-muted)]">
+                  {isFree
+                    ? renewLabel ? `AI messages reset ${renewLabel}` : "AI messages reset monthly"
+                    : cancelling
+                      ? `Plan ends ${renewLabel ?? "at the end of the period"}`
+                      : entitlement?.pendingPlanId
+                        ? "Finishing your plan change"
+                        : renewLabel ? `Renews ${renewLabel}` : "Renews monthly"}
+                </p>
+              </div>
+            </div>
+            {cancelling && (
+              <p className="relative mt-6 rounded-xl bg-[var(--b-warn-bg)] px-4 py-3 text-[12.5px] text-[var(--b-warn)]">This plan is cancelled. It keeps working until {renewLabel ?? "the end of the period"}, then your workspace moves to Free.</p>
+            )}
+          </section>
+
+          {/* ------------------------------------------------------------ what's included */}
+          <div className="mt-4 grid gap-4 md:grid-cols-3">
+            <article className={`${card} p-5`}>
+              <div className="flex items-center gap-2.5"><span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--b-surface-2)]"><CircleGauge size={16} /></span><p className="text-[12.5px] font-medium text-[var(--b-muted)]">{isFree ? "AI messages" : "AI credit"}</p></div>
+              {isFree ? (
+                <>
+                  <p className="mt-4 text-[22px] font-semibold tabular-nums tracking-[-0.03em]">{messagesUsed.toLocaleString()} <span className="text-[14px] font-normal text-[var(--b-muted)]">/ {messagesTotal.toLocaleString()}</span></p>
+                  <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-[var(--b-track)]"><div className="h-full rounded-full bg-[var(--b-ink)] transition-all" style={{ width: `${messagesPercent}%` }} /></div>
+                </>
+              ) : (
+                <p className="mt-4 text-[22px] font-semibold tabular-nums tracking-[-0.03em]">{formatCents(entitlement?.aiCreditGrantUsdCents ?? 0)} <span className="text-[14px] font-normal text-[var(--b-muted)]">/ month</span></p>
+              )}
+              <Link href="/dashboard/settings/ai-usage" className="mt-3 inline-flex items-center gap-1 text-[12px] font-medium text-[var(--b-muted)] transition hover:text-[var(--b-text)]">View usage <ArrowRight size={12} /></Link>
+            </article>
+
+            <article className={`${card} p-5`}>
+              <div className="flex items-center gap-2.5"><span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--b-surface-2)]"><UsersRound size={16} /></span><p className="text-[12.5px] font-medium text-[var(--b-muted)]">Seats</p></div>
+              <p className="mt-4 text-[22px] font-semibold tabular-nums tracking-[-0.03em]">{(entitlement?.seatsAllowed ?? 0).toLocaleString()} <span className="text-[14px] font-normal text-[var(--b-muted)]">{entitlement?.seatsMax ? `of ${entitlement.seatsMax} max` : "seats"}</span></p>
+              <p className="mt-3 text-[12px] leading-5 text-[var(--b-muted)]">{entitlement?.seatsIncluded ?? 0} included{(entitlement?.seatsPurchased ?? 0) > 0 ? ` · ${entitlement?.seatsPurchased} extra` : ""}. Adding seats never changes your AI allowance.</p>
+            </article>
+
+            <article className={`${card} p-5`}>
+              <div className="flex items-center gap-2.5"><span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--b-surface-2)]"><BookOpen size={16} /></span><p className="text-[12.5px] font-medium text-[var(--b-muted)]">Knowledge storage</p></div>
+              <p className="mt-4 text-[22px] font-semibold tabular-nums tracking-[-0.03em]">{storageUsedMb.toFixed(storageUsedMb < 10 ? 1 : 0)} <span className="text-[14px] font-normal text-[var(--b-muted)]">/ {storageTotalMb} MB</span></p>
+              <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-[var(--b-track)]"><div className={`h-full rounded-full transition-all ${storagePercent >= 90 ? "bg-[var(--b-bad)]" : "bg-[var(--b-ink)]"}`} style={{ width: `${storagePercent}%` }} /></div>
+            </article>
+          </div>
+
+          {/* ------------------------------------------- bill (or upgrade pitch) + card */}
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            {!isFree && entitlement ? (
+              <article className={`${card} p-6`}>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-[15px] font-semibold">Your monthly bill</h3>
+                  <span className="rounded-full bg-[var(--b-surface-2)] px-2.5 py-1 text-[11px] font-medium text-[var(--b-muted)]">{cadence === "annual" ? "Billed yearly" : "Billed monthly"}</span>
+                </div>
+                <div className="mt-5 space-y-3 text-[13px]">
+                  <div className="flex items-center justify-between"><span className="text-[var(--b-muted)]">{plan.name} plan</span><span className="tabular-nums">{formatMoney(planMinor, currencyCode)}</span></div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[var(--b-muted)]">Extra seats ({keptSeats})</span>
+                    <span className="flex items-center gap-3">
+                      {keptSeats > 0 && !removeSeatsOpen && <button type="button" onClick={() => { setRemoveSeatsOpen(true); setRemoveSeatsCount("1"); }} className="text-[11.5px] font-medium text-[var(--b-muted)] underline underline-offset-2 transition hover:text-[var(--b-text)]">Remove</button>}
+                      <span className="tabular-nums">{formatMoney(seatsMinor, currencyCode)}</span>
                     </span>
                   </div>
                   {removeSeatsOpen && (
-                    <div className="mt-1 flex flex-wrap items-center gap-2 rounded-lg bg-white/[0.04] px-3 py-2">
-                      <span className="text-white/70">Remove</span>
-                      <input type="number" min={1} max={keptSeats} value={removeSeatsCount} onChange={(event) => setRemoveSeatsCount(event.target.value)} className="h-7 w-14 rounded-md border border-white/15 bg-transparent px-2 text-[12.5px] outline-none" aria-label="Seats to remove" />
-                      <span className="text-white/70">seat(s) at the next renewal</span>
-                      <button type="button" disabled={seatBusy} onClick={() => void removeSeats()} className="h-7 rounded-md bg-[#6d5ce7] px-3 text-[11.5px] font-medium text-white disabled:opacity-60">{seatBusy ? "Saving…" : "Confirm"}</button>
-                      <button type="button" onClick={() => setRemoveSeatsOpen(false)} className="h-7 px-2 text-[11.5px] text-white/60">Cancel</button>
+                    <div className="flex flex-wrap items-center gap-2 rounded-xl bg-[var(--b-surface-2)] px-3 py-2.5 text-[12.5px]">
+                      <span className="text-[var(--b-muted)]">Remove</span>
+                      <input type="number" min={1} max={keptSeats} value={removeSeatsCount} onChange={(event) => setRemoveSeatsCount(event.target.value)} className="h-8 w-14 rounded-lg border border-[var(--b-border)] bg-transparent px-2 text-[12.5px] outline-none" aria-label="Seats to remove" />
+                      <span className="text-[var(--b-muted)]">at the next renewal</span>
+                      <button type="button" disabled={seatBusy} onClick={() => void removeSeats()} className="h-8 rounded-lg bg-[var(--b-ink)] px-3 text-[12px] font-semibold text-[var(--b-ink-text)] disabled:opacity-60">{seatBusy ? "Saving…" : "Confirm"}</button>
+                      <button type="button" onClick={() => setRemoveSeatsOpen(false)} className="h-8 px-2 text-[12px] text-[var(--b-muted)]">Cancel</button>
                     </div>
                   )}
-                  <div className="mt-1 flex items-center justify-between border-t border-white/10 pt-2 font-semibold"><span>Total</span><span>{formatMoney(planMinor + seatsMinor, currencyCode)}/mo</span></div>
-                  {(entitlement.seatsPendingRelease ?? 0) > 0 && <p className="mt-2 text-[11.5px] text-white/55">{entitlement.seatsPendingRelease} seat(s) will be removed at the next renewal and stay usable until then.</p>}
-                  {seatError && <p role="alert" className="mt-2 text-[11.5px] text-[#E26B75]">{seatError}</p>}
-                </div>
-              );
-            })()}
-            <div className="mt-auto flex flex-wrap items-center gap-2 pt-5">
-              <Link href="/dashboard/settings/upgrade" className="inline-flex h-9 items-center gap-2 rounded-lg bg-[#6d5ce7] px-4 text-[12px] font-medium text-white transition hover:bg-[#7b6bed]">{plan.id === "free" ? "Upgrade plan" : "Change plan"}<ArrowRight size={13} /></Link>
-              {plan.id !== "free" && !cancelling && <button type="button" onClick={() => setCancelOpen(true)} className="h-9 rounded-lg px-3 text-[12px] font-medium text-white/60 transition hover:bg-white/[0.06] hover:text-white/90">Cancel plan</button>}
-            </div>
-          </article>
-
-          <article className="flex min-h-[220px] flex-col rounded-[24px] border border-[#DDE4E8] bg-white p-6">
-            <div className="flex items-center justify-between"><span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#EEF3F5]"><CalendarDays size={18} /></span><span className="text-[11px] font-medium text-[#6D7D85]">Billing cycle</span></div>
-            <h3 className="mt-5 text-[18px] font-medium">{plan.id === "free" ? "No upcoming charge" : "Next payment"}</h3>
-            <p className="mt-2 text-[13px] text-[#667069]">{periodEnd ? new Date(periodEnd).toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" }) : plan.id === "free" ? "Upgrade whenever your team is ready." : "Monthly subscription"}</p>
-            <div className="mt-auto border-t border-[#E5E9EB] pt-4 text-[12px] text-[#667069]">
-              {cancelling
-                ? "Cancelled — this plan runs to the end of the period, then moves to Free."
-                : entitlement?.pendingPlanId
-                  ? "Finishing your plan change — it lands as soon as your payment is confirmed."
-                  : `Billed ${cadence === "annual" ? "yearly" : "monthly"}. Your plan includes a monthly AI credit; extra seats are added to this bill every period until you remove them.`}
-            </div>
-          </article>
-
-          <Link href="/dashboard/settings/ai-usage" className="group flex items-center gap-4 rounded-2xl border border-[#DDE4E8] bg-white p-5 text-left hover:bg-[#FAFBFB] md:col-span-2"><span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#EEF3F5]"><CircleGauge size={19} /></span><span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">Usage</span><span className="mt-1 block text-[12px] text-[#667069]">AI resolutions, seats, and knowledge storage now live under Workspace → Usage.</span></span><ArrowRight size={16} className="transition group-hover:translate-x-1" /></Link>
-
-          <button type="button" onClick={() => setTab("payment")} className="group flex items-center gap-4 rounded-2xl border border-[#DDE4E8] bg-white p-5 text-left hover:bg-[#FAFBFB]"><span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#EEF3F5]"><CreditCard size={19} /></span><span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">Payment method</span><span className="mt-1 block text-[12px] text-[#667069]">{paymentMethod?.last4 ? `${paymentMethod.brand ?? "Card"} ending in ${paymentMethod.last4}` : "No payment method saved"}</span></span><ArrowRight size={16} className="transition group-hover:translate-x-1" /></button>
-          <button type="button" onClick={() => setTab("history")} className="group flex items-center gap-4 rounded-2xl border border-[#DDE4E8] bg-white p-5 text-left hover:bg-[#FAFBFB]"><span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#EEF3F5]"><ReceiptText size={19} /></span><span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">Billing history</span><span className="mt-1 block text-[12px] text-[#667069]">{payments.length ? `${payments.length} payment${payments.length === 1 ? "" : "s"}` : "No payments yet"}</span></span><ArrowRight size={16} className="transition group-hover:translate-x-1" /></button>
-
-          {cancelNotice && <div role="status" className="md:col-span-2 rounded-2xl border border-[#CBD9D0] bg-[#F5FAF7] px-5 py-4 text-[13px] text-[#33684C]">{cancelNotice}</div>}
-
-        </div>
-      )}
-
-      {!loading && tab === "payment" && (
-        <div className="mt-7 rounded-[24px] border border-[#DDE4E8] bg-white">
-          <div className="flex flex-wrap items-center justify-between gap-5 p-6"><div><h3 className="text-[18px] font-medium">Payment methods</h3><p className="mt-1 text-[12px] text-[#667069]">Cards are securely handled by our payment provider.</p></div><button type="button" disabled className="rounded-full border border-[#CBD7DC] px-4 py-2 text-[12px] font-semibold text-[#9AA2A6]">Add payment method</button></div>
-          <div className="border-t border-[#E5E9EB] p-6">
-            {paymentMethod?.last4 ? <div className="flex items-center gap-4 rounded-2xl bg-[#FAF9F6] p-5"><span className="flex h-12 w-16 items-center justify-center rounded-lg bg-[#11120f] text-[10px] font-bold uppercase text-white">{paymentMethod.brand ?? "Card"}</span><div className="flex-1"><p className="text-[14px] font-semibold">•••• •••• •••• {paymentMethod.last4}</p><p className="mt-1 text-[11px] text-[#667069]">Expires {paymentMethod.expiryMonth}/{paymentMethod.expiryYear}</p></div><span className="rounded-full bg-white px-3 py-1 text-[10px] font-semibold text-[#34845c]">Default</span></div> : <div className="flex flex-col items-center px-5 py-12 text-center"><span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#EEF3F5]"><CreditCard size={23} /></span><h4 className="mt-4 text-[15px] font-semibold">No payment method saved</h4><p className="mt-2 max-w-sm text-[12px] leading-5 text-[#667069]">A payment method will be securely collected when you choose a paid plan.</p><Link href="/dashboard/settings/upgrade" className="mt-5 rounded-full bg-[#11120f] px-5 py-2.5 text-[12px] font-semibold text-white">Choose a plan</Link></div>}
-          </div>
-        </div>
-      )}
-
-      {!loading && tab === "history" && (
-        <div className="mt-7 overflow-hidden rounded-[24px] border border-[#DDE4E8] bg-white">
-          <div className="flex items-center justify-between border-b border-[#E5E9EB] px-6 py-5"><div><h3 className="text-[18px] font-medium">Billing history</h3><p className="mt-1 text-[12px] text-[#667069]">Download invoices and review previous charges.</p></div></div>
-          {payments.length ? (
-            <div>
-              {payments.map((payment, index) => (
-                <div key={payment.id} className={`flex items-center gap-4 px-6 py-4 ${index ? "border-t border-[#EDF0F1]" : ""}`}>
-                  <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#EEF3F5]"><ReceiptText size={16} /></span>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-[13px] font-semibold capitalize">{payment.kind === "seats" ? "Extra seats" : payment.kind === "overage" ? "Resolution overage" : "Subscription"}</p>
-                    <p className="mt-0.5 text-[11px] text-[#667069]">{new Date(payment.createdAt).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })}</p>
+                  <div className="border-t border-dashed border-[var(--b-border)] pt-3">
+                    <div className="flex items-center justify-between"><span className="font-semibold">Total per {cadence === "annual" ? "month" : "month"}</span><span className="text-[20px] font-semibold tabular-nums tracking-[-0.03em]">{formatMoney(planMinor + seatsMinor, currencyCode)}</span></div>
                   </div>
-                  <span className="text-[13px] font-semibold">{formatMoney(payment.amountMinor ?? payment.amountPaise, payment.currency)}</span>
-                  <span className={`rounded-full px-2.5 py-1 text-[10px] font-semibold capitalize ${payment.status === "failed" ? "bg-[#FDF1F2] text-[#A5414B]" : "bg-[#EEF8F2] text-[#34845c]"}`}>{payment.status}</span>
                 </div>
-              ))}
+                {(entitlement.seatsPendingRelease ?? 0) > 0 && <p className="mt-3 text-[11.5px] text-[var(--b-muted)]">{entitlement.seatsPendingRelease} seat(s) will be removed at the next renewal and stay usable until then.</p>}
+                {seatError && <p role="alert" className="mt-3 text-[12px] text-[var(--b-bad)]">{seatError}</p>}
+                <p className="mt-4 flex items-center gap-2 text-[12px] text-[var(--b-muted)]"><CalendarDays size={14} />{cancelling ? `No further charges. Plan ends ${renewLabel ?? "at the end of the period"}.` : renewLabel ? `Next payment on ${renewLabel}` : "Charged every period"}</p>
+              </article>
+            ) : (
+              <article className={`${card} relative overflow-hidden p-6`}>
+                <div aria-hidden className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-gradient-to-br from-[#7c3aed]/25 via-[#428ce5]/20 to-transparent blur-2xl" />
+                <div className="relative">
+                  <h3 className="text-[15px] font-semibold">Outgrowing Free?</h3>
+                  <p className="mt-1 text-[12.5px] text-[var(--b-muted)]">Paid plans swap the message limit for a monthly AI credit.</p>
+                  <ul className="mt-4 space-y-2.5 text-[13px]">
+                    {(pricingPlans[1]?.features ?? []).slice(0, 5).map((feature) => (
+                      <li key={feature} className="flex items-start gap-2.5"><span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[var(--b-good-bg)] text-[var(--b-good)]"><Check size={10} strokeWidth={3} /></span><span>{feature}</span></li>
+                    ))}
+                  </ul>
+                  <Link href="/dashboard/settings/upgrade" className={`${primaryBtn} mt-5`}><Rocket size={14} /> See plans</Link>
+                </div>
+              </article>
+            )}
+
+            <article className={`${card} p-6`}>
+              <h3 className="text-[15px] font-semibold">Payment method</h3>
+              {paymentMethod?.last4 ? (
+                <div className="relative mt-4 overflow-hidden rounded-2xl p-5 text-white" style={{ background: "linear-gradient(135deg,#171a21 0%,#2a2856 55%,#3d2d80 100%)" }}>
+                  <div aria-hidden className="pointer-events-none absolute -right-10 -top-12 h-44 w-44 rounded-full bg-[#7c6cf0]/35 blur-2xl" />
+                  <div className="relative flex items-center justify-between">
+                    <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/80">{paymentMethod.brand ?? "Card"}</span>
+                    <CreditCard size={18} className="text-white/70" />
+                  </div>
+                  <p className="relative mt-8 font-mono text-[18px] tracking-[0.16em]">•••• •••• •••• {paymentMethod.last4}</p>
+                  <div className="relative mt-5 flex items-end justify-between text-[11px] text-white/70">
+                    <span>{paymentMethod.expiryMonth && paymentMethod.expiryYear ? `Expires ${String(paymentMethod.expiryMonth).padStart(2, "0")}/${String(paymentMethod.expiryYear).slice(-2)}` : "Saved card"}</span>
+                    <span className="rounded-full bg-white/15 px-2.5 py-1 font-semibold text-white">Default</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="mt-4 flex flex-col items-center rounded-2xl border border-dashed border-[var(--b-border)] px-5 py-9 text-center">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--b-surface-2)]"><CreditCard size={19} /></span>
+                  <p className="mt-3 text-[13.5px] font-semibold">No card saved yet</p>
+                  <p className="mt-1 max-w-[240px] text-[12px] leading-5 text-[var(--b-muted)]">Your card is saved securely by our payment provider when you pay for a plan.</p>
+                </div>
+              )}
+            </article>
+          </div>
+
+          {/* ------------------------------------------------------------------- history */}
+          <section className={`${card} mt-4 overflow-hidden`}>
+            <div className="flex items-center justify-between px-6 py-5">
+              <div><h3 className="text-[15px] font-semibold">Billing history</h3><p className="mt-0.5 text-[12px] text-[var(--b-muted)]">Every charge on this workspace.</p></div>
+              {payments.length > 0 && <span className="rounded-full bg-[var(--b-surface-2)] px-2.5 py-1 text-[11px] font-medium text-[var(--b-muted)]">{payments.length} payment{payments.length === 1 ? "" : "s"}</span>}
             </div>
-          ) : (
-            <div className="flex flex-col items-center px-5 py-14 text-center"><span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#EEF3F5]"><ReceiptText size={23} /></span><h4 className="mt-4 text-[15px] font-semibold">No billing history yet</h4><p className="mt-2 max-w-sm text-[12px] leading-5 text-[#667069]">Payments and receipts will appear here after your first paid billing cycle.</p></div>
-          )}
-        </div>
+            {payments.length ? (
+              <ol className="border-t border-[var(--b-border)]">
+                {payments.map((payment, index) => (
+                  <li key={payment.id} className={`flex items-center gap-4 px-6 py-4 ${index ? "border-t border-[var(--b-border)]" : ""}`}>
+                    <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${payment.status === "failed" ? "bg-[var(--b-bad-bg)] text-[var(--b-bad)]" : "bg-[var(--b-good-bg)] text-[var(--b-good)]"}`}>
+                      {payment.status === "failed" ? <CircleAlert size={16} /> : <ReceiptText size={16} />}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[13px] font-semibold">{payment.kind === "seats" ? "Extra seats" : payment.kind === "overage" ? "AI overage" : "Subscription"}</p>
+                      <p className="mt-0.5 text-[11.5px] text-[var(--b-muted)]">{new Date(payment.createdAt).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })}</p>
+                    </div>
+                    <span className="text-[13.5px] font-semibold tabular-nums">{formatMoney(payment.amountMinor ?? payment.amountPaise, payment.currency)}</span>
+                    <span className={`w-[68px] rounded-full px-2.5 py-1 text-center text-[10.5px] font-semibold capitalize ${payment.status === "failed" ? tone.bad : tone.good}`}>{payment.status}</span>
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <div className="flex flex-col items-center border-t border-[var(--b-border)] px-5 py-12 text-center">
+                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--b-surface-2)]"><ReceiptText size={20} /></span>
+                <p className="mt-3 text-[14px] font-semibold">No charges yet</p>
+                <p className="mt-1 max-w-xs text-[12px] leading-5 text-[var(--b-muted)]">When you pay for a plan or extra seats, each charge shows up here.</p>
+              </div>
+            )}
+          </section>
+        </>
       )}
 
       {plan.id !== "free" && !cancelling && cancelOpen && (

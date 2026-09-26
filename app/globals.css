@@ -5642,3 +5642,47 @@ body:has(.dashboard-ai-usage-page) .dashboard-add-credits-dialog [class*="hover:
   background-color: #ffffff !important;
   border-color: rgba(0, 0, 0, 0.1) !important;
 }
+
+/* ---------------------------------------------------------------------------
+   Billing page (v2)
+
+   Themed through its own variables instead of remapping literal colours, so
+   light and dark are each defined once. Dark is the base; light overrides it.
+--------------------------------------------------------------------------- */
+.billing-v2 {
+  --b-surface: #1f2124;
+  --b-surface-2: #292c30;
+  --b-border: rgb(255 255 255 / 0.1);
+  --b-text: rgb(255 255 255 / 0.92);
+  --b-muted: rgb(255 255 255 / 0.58);
+  --b-track: rgb(255 255 255 / 0.12);
+  --b-ink: #f4f4f5;
+  --b-ink-text: #11120f;
+  --b-good: #5fd09a;
+  --b-good-bg: rgb(63 185 122 / 0.14);
+  --b-warn: #f0c060;
+  --b-warn-bg: rgb(240 192 96 / 0.14);
+  --b-bad: #f08a92;
+  --b-bad-bg: rgb(240 138 146 / 0.14);
+  --b-info: #7db4f2;
+  --b-info-bg: rgb(125 180 242 / 0.14);
+  color: var(--b-text);
+}
+[data-dashboard-theme="light"] .billing-v2 {
+  --b-surface: #ffffff;
+  --b-surface-2: #f5f6f7;
+  --b-border: rgb(15 23 42 / 0.1);
+  --b-text: #14161a;
+  --b-muted: #66707a;
+  --b-track: #e6eaed;
+  --b-ink: #11120f;
+  --b-ink-text: #ffffff;
+  --b-good: #1f8f5f;
+  --b-good-bg: #e8f6ee;
+  --b-warn: #a16207;
+  --b-warn-bg: #fef6e0;
+  --b-bad: #a5414b;
+  --b-bad-bg: #fdf0f1;
+  --b-info: #2f6fb8;
+  --b-info-bg: #eaf2fc;
+}
