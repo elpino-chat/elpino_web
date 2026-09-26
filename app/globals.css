@@ -1860,6 +1860,13 @@ body {
   border-color: rgba(0, 0, 0, 0.2) !important;
 }
 
+/* Header buttons (Invite team, Usage) carry the dark-only hover:bg-white/[0.07],
+   which the global .dashboard-shell hover rule turns into solid #292a2d — dark
+   text on a dark fill in light theme. Use a light tint instead. */
+[data-dashboard-theme="light"] .dashboard-shell header [class*="hover:bg-white"]:hover {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
+
 [data-dashboard-theme="light"] .dashboard-shell header .dashboard-upgrade-inner,
 [data-dashboard-theme="light"] .dashboard-shell header .dashboard-upgrade-inner :is(span, svg) {
   background-color: #ffffff !important;
@@ -5201,6 +5208,16 @@ body:has(.dashboard-ai-usage-page) .dashboard-add-credits-dialog [class*="hover:
 [data-dashboard-theme="light"] .dashboard-shell .dashboard-invite-surface [class*="hover:bg-white/[0.08]"]:hover {
   background-color: rgba(0, 0, 0, 0.06) !important;
 }
+/* "Send invites" turns black once a valid email is added (enabled state
+   only; the disabled state keeps the pale tint above). */
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-invite-surface button[class*="bg-[#428CE5]"]:not(:disabled) {
+  background-color: #111214 !important;
+  color: #ffffff !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-invite-surface button[class*="bg-[#428CE5]"]:not(:disabled):hover {
+  background-color: #2a2c30 !important;
+}
 
 /* Gentle bob for the sticker artwork in the header mega menu. */
 @keyframes elpino-float {
@@ -5610,4 +5627,13 @@ body:has(.dashboard-ai-usage-page) .dashboard-add-credits-dialog [class*="hover:
 :is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell header span.dashboard-account-avatar {
   background-color: var(--dashboard-accent, #428ce5) !important;
   color: var(--dashboard-accent-contrast, rgba(255, 255, 255, 0.92)) !important;
+}
+
+/* Chatbot Interface preview panel in light theme. The panel is authored dark
+   (bg-[#262626], border-white/10) and only the dark theme had overrides, so in
+   light theme the "Preview" header sat on a black bar. Its inner header text
+   (#17181a / #858585) is already light-theme colours. */
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-widget-preview-panel {
+  background-color: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
 }
