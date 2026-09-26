@@ -12,7 +12,7 @@ export const categories: FaqCategory[] = [
       },
       {
         q: "How does the Free plan work?",
-        a: "It's a real plan, not a countdown — 50 AI conversations a month and 2 seats, no credit card. Upgrade when your volume outgrows it, not on a deadline.",
+        a: "It's a real plan, not a countdown — 100 AI messages a month and 2 seats, no credit card. Upgrade when your volume outgrows it, not on a deadline.",
       },
       {
         q: "Do I need a support team already?",
@@ -91,11 +91,11 @@ export const categories: FaqCategory[] = [
       },
       {
         q: "How does the AI allowance work?",
-        a: "Free includes 50 AI conversations a month. A conversation the AI handles is counted once, however many messages it takes. Paid plans work differently: they include a monthly AI credit that the AI spends as it works, so a quick question uses less than a long back-and-forth. Starter's $7 covers about 140 typical conversations, Growth's $40 about 800, and Scale's $240 about 4,800 — an estimate, since real usage depends on conversation length.",
+        a: "Free includes 100 AI messages a month. Each reply the AI sends counts as one message, so a short chat uses a few and a long back-and-forth uses more. Paid plans work differently: they include a monthly AI credit that the AI spends as it works, so a quick question uses less than a long back-and-forth. Starter includes $7 of credit a month, Growth $40 and Scale $240.",
       },
       {
         q: "Do escalations cost anything?",
-        a: "No extra charge. On Free, a conversation the AI hands off to a human doesn't count toward your 50. On paid plans, the handoff itself is free, and the AI stops spending credit the moment a person takes over.",
+        a: "No extra charge. The handoff itself is free on every plan, and the AI stops the moment a person takes over. On Free, messages the AI already sent before the handoff still count toward your 50; on paid plans, the AI only spends credit while it is answering, and the AI stops spending credit the moment a person takes over.",
       },
       {
         q: "Can the AI issue refunds?",

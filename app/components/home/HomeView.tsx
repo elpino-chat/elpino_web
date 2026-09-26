@@ -151,7 +151,7 @@ function Hero() {
               <Link href="#try-it" className="inline-flex h-13 items-center rounded-full border-2 border-[#11120f] bg-white px-7 font-semibold transition hover:-translate-y-0.5 hover:bg-[#ffd84d]">Try it yourself</Link>
             </div>
             <p className="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-1 text-sm text-[#11120f]/60">
-              {["50 free AI conversations a month", "No card required", "Live in an afternoon"].map((t) => <span key={t} className="inline-flex items-center gap-1.5"><Check size={14} color={GREEN} strokeWidth={3} />{t}</span>)}
+              {["100 free AI messages a month", "No card required", "Live in an afternoon"].map((t) => <span key={t} className="inline-flex items-center gap-1.5"><Check size={14} color={GREEN} strokeWidth={3} />{t}</span>)}
             </p>
           </Rv>
         </div>
@@ -261,10 +261,10 @@ const ACCENTS = [BLUE, PURPLE, GREEN, ORANGE, PINK, INK];
 
 type LangKey = "en" | "es" | "fr" | "hi";
 const LANGS: { k: LangKey; label: string; q: string; a1: string; a0: string }[] = [
-  { k: "en", label: "English", q: "Do you have a free plan?", a1: "Yes! Since you're looking at pricing, the Free plan includes 50 AI conversations a month.", a0: "Yes, the Free plan includes 50 AI conversations a month." },
+  { k: "en", label: "English", q: "Do you have a free plan?", a1: "Yes! Since you're looking at pricing, the Free plan includes 100 AI messages a month.", a0: "Yes, the Free plan includes 100 AI messages a month." },
   { k: "es", label: "Español", q: "¿Tienen un plan gratuito?", a1: "¡Sí! Como estás viendo los precios, el plan Gratis incluye 50 conversaciones con IA al mes.", a0: "Sí, el plan Gratis incluye 50 conversaciones con IA al mes." },
-  { k: "fr", label: "Français", q: "Avez-vous une offre gratuite ?", a1: "Oui ! Puisque vous consultez les tarifs, l'offre Gratuite comprend 50 conversations IA par mois.", a0: "Oui, l'offre Gratuite comprend 50 conversations IA par mois." },
-  { k: "hi", label: "हिन्दी", q: "क्या आपके पास कोई मुफ़्त प्लान है?", a1: "हाँ! चूँकि आप कीमतें देख रहे हैं, मुफ़्त प्लान में हर महीने 50 AI बातचीत शामिल हैं।", a0: "हाँ, मुफ़्त प्लान में हर महीने 50 AI बातचीत शामिल हैं।" },
+  { k: "fr", label: "Français", q: "Avez-vous une offre gratuite ?", a1: "Oui ! Puisque vous consultez les tarifs, l'offre Gratuite comprend 100 messages IA par mois.", a0: "Oui, l'offre Gratuite comprend 100 messages IA par mois." },
+  { k: "hi", label: "हिन्दी", q: "क्या आपके पास कोई मुफ़्त प्लान है?", a1: "हाँ! चूँकि आप कीमतें देख रहे हैं, मुफ़्त प्लान में हर महीने 100 AI संदेश शामिल हैं।", a0: "हाँ, मुफ़्त प्लान में हर महीने 100 AI संदेश शामिल हैं।" },
 ];
 
 function Customizer() {
@@ -425,7 +425,7 @@ function Tour() {
 // -------------------------------------------------------------- who
 
 const WHO = [
-  { href: "/solutions/founders", c: BLUE, icon: Rocket, t: "Founders", d: "Ship product, not support replies. Elpino only taps you when it truly needs a founder.", pts: ["Free plan, 50 AI conversations a month", "Alerts you only when a person is needed", "Set up in an afternoon"], vis: "founder" },
+  { href: "/solutions/founders", c: BLUE, icon: Rocket, t: "Founders", d: "Ship product, not support replies. Elpino only taps you when it truly needs a founder.", pts: ["Free plan, 100 AI messages a month", "Alerts you only when a person is needed", "Set up in an afternoon"], vis: "founder" },
   { href: "/solutions/busy-operators", c: GREEN, icon: Users, t: "Busy teams", d: "Rush hour handled: the AI takes repeats, everyone gets the same Join alert, nobody double-replies.", pts: ["One Join alert reaches the whole team", "Ownership badges on every thread", "A ticket when nobody's free"], vis: "team" },
   { href: "/solutions/developers", c: PURPLE, icon: Code2, t: "Developers", d: "One tag, a signed identity token and MCP servers. You choose what the AI can touch.", pts: ["One script tag for the widget", "Signed, short-lived identity tokens", "MCP servers, approved tool by tool"], vis: "dev" },
 ] as const;
@@ -646,7 +646,7 @@ function Trust() {
 
 function Pricing() {
   const plans = [
-    { name: "Free", big: "$0", note: "50 AI conversations a month", pts: ["No card required", "Widget, knowledge and inbox", "Handoffs never cost extra"], c: "#fff" },
+    { name: "Free", big: "$0", note: "100 AI messages a month", pts: ["No card required", "Widget, knowledge and inbox", "Handoffs never cost extra"], c: "#fff" },
     { name: "Paid plans", big: "Credit-based", note: "A monthly AI credit that fits your volume", pts: ["Payment and account tools", "Room for a bigger team", "Top up any time"], c: YELLOW },
     { name: "Extra teammates", big: "Seat packs", note: "Add seats that renew with your plan", pts: ["Only when you grow", "Same inbox, more hands", "Cancel any time"], c: "#c9d9ff" },
   ];
@@ -679,7 +679,7 @@ const FAQS: [string, string][] = [
   ["Will the AI make things up?", "It answers from the knowledge you've approved, and a review pass checks drafts against tool results. When it doesn't know, it says so and offers a person."],
   ["What happens when it can't help?", "It asks the customer first. On a yes, every teammate gets a Join alert and has 90 seconds to jump in. If nobody does, a ticket is filed and the customer is emailed."],
   ["How long does setup take?", "Most teams are live the same day: add your knowledge, paste the widget snippet and invite your team."],
-  ["Is there a free plan?", "Yes: 50 AI conversations a month, no card required."],
+  ["Is there a free plan?", "Yes: 100 AI messages a month, no card required."],
   ["Does it work on other channels?", "Website chat is live today. Omnichannel is coming in November."],
 ];
 

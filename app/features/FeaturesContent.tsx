@@ -101,7 +101,7 @@ const FEATURES: Feature[] = [
   { sym: "Vc", name: "Visitor context", fam: "grow", body: "Location, device and the page they were on, attached to every conversation.", href: "/product/inbox", more: "Inbox" },
   { sym: "An", name: "Analytics", fam: "grow", body: "See how conversations are going across your workspace.", href: "/pricing", more: "Pricing" },
   { sym: "Hi", name: "History", fam: "grow", body: "Earlier conversations with the same customer, right next to the thread.", href: "/product/inbox", more: "Inbox" },
-  { sym: "Fp", name: "Free plan", fam: "grow", body: "Start with 50 AI conversations a month, no card required.", href: "/pricing", more: "Pricing" },
+  { sym: "Fp", name: "Free plan", fam: "grow", body: "Start with 100 AI messages a month, no card required.", href: "/pricing", more: "Pricing" },
   { sym: "Cr", name: "Credit-based plans", fam: "grow", body: "Paid plans include a monthly AI credit, and extra seats are simple add-ons.", href: "/pricing", more: "Pricing" },
   { sym: "Em", name: "Email replies", fam: "grow", body: "Verified visitors who left the chat can still get your reply by email.", href: "/product/inbox", more: "Inbox" },
 ];
@@ -324,7 +324,7 @@ function Soon() {
 const FAQS: [string, string][] = [
   ["Is everything on this page live?", "Yes. Every tile describes something Elpino does today. Omnichannel is the one thing we're still building, and it's marked as coming in November."],
   ["Do I need all of it?", "No. Start with a knowledge base and the widget on the free plan, then turn on tools, MCP and teammates as you need them."],
-  ["What's included on the free plan?", "50 AI conversations a month with no card required."],
+  ["What's included on the free plan?", "100 AI messages a month with no card required."],
   ["How do paid plans work?", "Paid plans include a monthly AI credit, and extra seats are simple add-ons. See the pricing page for details."],
 ];
 

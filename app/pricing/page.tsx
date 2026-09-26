@@ -6,12 +6,12 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://elpino.chat";
 export const metadata: Metadata = {
   title: "Pricing",
   description:
-    "Elpino pricing: 50 free AI conversations, then a monthly AI credit on paid plans. Extra teammates come in seat packs from $0.60 a seat. Handing off to a human never costs extra.",
+    "Elpino pricing: 100 free AI messages, then a monthly AI credit on paid plans. Extra teammates come in seat packs from $0.60 a seat. Handing off to a human never costs extra.",
   alternates: { canonical: `${SITE_URL}/pricing` },
   openGraph: {
     title: "Pricing",
     description:
-      "Start with 50 free AI conversations. Paid plans include a monthly AI credit; extra teammates come in seat packs from $0.60 a seat.",
+      "Start with 100 free AI messages. Paid plans include a monthly AI credit; extra teammates come in seat packs from $0.60 a seat.",
     url: `${SITE_URL}/pricing`,
     type: "website",
   },
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Pricing",
     description:
-      "50 free AI conversations, then a monthly AI credit — teammates come in seat packs from $0.60 a seat.",
+      "100 free AI messages, then a monthly AI credit — teammates come in seat packs from $0.60 a seat.",
   },
 };
 

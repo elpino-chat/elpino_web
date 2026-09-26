@@ -15,7 +15,7 @@ export function FairBillingSection() {
               <span className='bg-[linear-gradient(transparent_62%,#ffd84d_62%)]'>Not for handoffs.</span>
             </h2>
           </div>
-          <p className='max-w-2xl text-base leading-7 text-black/60 lg:justify-self-end'>Free includes 50 AI conversations a month. Paid plans include a monthly AI credit that covers as many conversations as it can, so a quick question costs less than a long back-and-forth. Handing a conversation to your team is always free.</p>
+          <p className='max-w-2xl text-base leading-7 text-black/60 lg:justify-self-end'>Free includes 100 AI messages a month. Paid plans include a monthly AI credit that covers as many conversations as it can, so a quick question costs less than a long back-and-forth. Handing a conversation to your team is always free.</p>
         </div>
 
         <div className='mt-12 grid gap-6 md:grid-cols-3'>
@@ -36,7 +36,7 @@ export function FairBillingSection() {
                 <span>refills monthly</span>
               </div>
             </div>
-            <p className='mt-auto pt-10 text-sm leading-6 text-black/65'>Starter includes $7, Growth $40 and Scale $240 of AI credit each month, roughly 140, 800 and 4,800 conversations. Need more? Top up any time or turn on auto-recharge.</p>
+            <p className='mt-auto pt-10 text-sm leading-6 text-black/65'>Starter includes $7, Growth $40 and Scale $240 of AI credit each month. Need more? Top up any time or turn on auto-recharge.</p>
             <Link href='#comparison' className='group/link mt-6 inline-flex w-fit items-center gap-2 text-sm font-semibold underline decoration-[#3784ff] decoration-2 underline-offset-4'>
               Compare plans <ArrowUpRight size={16} className='transition-transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5' />
             </Link>

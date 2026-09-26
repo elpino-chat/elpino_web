@@ -15,7 +15,7 @@ const columns = [
 ];
 
 // The strip that scrolls across the band above the links.
-const ticker = ["AI answers from your own knowledge", "Human handoff, always free", "50 free AI conversations", "One shared inbox", "Live in an afternoon"];
+const ticker = ["AI answers from your own knowledge", "Human handoff, always free", "100 free AI messages", "One shared inbox", "Live in an afternoon"];
 
 const wordmark = "elpino".split("");
 

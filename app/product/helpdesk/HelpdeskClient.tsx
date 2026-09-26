@@ -338,7 +338,7 @@ function Statement() {
 // ---------------------------------------------------------------------- start
 
 const STEPS: [string, string, string, string][] = [
-  ["01", "Sign up free", "50 AI conversations a month. No card.", BLUE],
+  ["01", "Sign up free", "100 AI messages a month. No card.", BLUE],
   ["02", "Teach it", "Add your site, files or write pages.", YELLOW],
   ["03", "Paste the snippet", "The widget appears on your site.", GREEN],
   ["04", "Invite your team", "So people are ready when it asks.", PINK],
@@ -371,7 +371,7 @@ function Start() {
 const FAQS: [string, string][] = [
   ["What is the Elpino helpdesk?", "The whole support workspace: a chat widget, an AI agent, a shared inbox, tickets and a knowledge base, working together."],
   ["Do I need to keep my old helpdesk?", "No. Elpino covers chat, the AI agent, the shared inbox and tickets. Tickets can still be sent to Trello or Asana if your team works there."],
-  ["Is there a free plan?", "Yes: 50 AI conversations a month, no card required."],
+  ["Is there a free plan?", "Yes: 100 AI messages a month, no card required."],
   ["What channels are supported?", "Website chat is live today. Omnichannel is coming in November."],
   ["Can my team use it too?", "Yes. Invite teammates, add seats as you grow, and they'll get Join alerts when a customer needs a person."],
 ];

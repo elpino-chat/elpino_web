@@ -120,7 +120,7 @@ function Hero() {
               <Link href="/signup" className="inline-flex h-13 items-center gap-2 rounded-full border-2 border-[#11120f] px-7 font-semibold text-white transition hover:-translate-y-0.5" style={{ backgroundColor: BLUE }}>Start free <ArrowRight size={17} /></Link>
               <Link href="/pricing" className="inline-flex h-13 items-center rounded-full border-2 border-[#11120f] bg-white px-7 font-semibold transition hover:-translate-y-0.5 hover:bg-[#ffd84d]">See pricing</Link>
             </div>
-            <p className="mt-4 text-sm text-[#11120f]/55">Free plan: 50 AI conversations a month. No card.</p>
+            <p className="mt-4 text-sm text-[#11120f]/55">Free plan: 100 AI messages a month. No card.</p>
           </Rv>
         </div>
         <Rv variant="deal" delay={200}><Stream /></Rv>
@@ -289,7 +289,7 @@ function Money() {
 // -------------------------------------------------------------- grows
 
 const STAGES = [
-  { icon: Rocket, c: BLUE, t: "Just you", d: "Free plan, 50 AI conversations a month, one inbox you rarely open." },
+  { icon: Rocket, c: BLUE, t: "Just you", d: "Free plan, 100 AI messages a month, one inbox you rarely open." },
   { icon: UserPlus, c: GREEN, t: "First hire", d: "Invite them by email. They get Join alerts and take chats over from the AI." },
   { icon: Users, c: ORANGE, t: "A small team", d: "Assign conversations, share the inbox, add seats when you need them." },
   { icon: Zap, c: PURPLE, t: "Scaling up", d: "Paid plans with a monthly AI credit, MCP tools for your own systems." },

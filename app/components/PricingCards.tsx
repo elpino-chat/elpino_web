@@ -19,7 +19,7 @@ export type Plan = {
    * conversation count or per-conversation overage. Free is capped by count.
    */
   creditBased: boolean;
-  /** AI conversations per month, shared by the whole workspace. Only a limit on Free; 0 when creditBased. */
+  /** AI messages (replies) per month, shared by the whole workspace. Only a limit on Free; 0 when creditBased. */
   resolutions: number;
   /** Knowledge base capacity, in megabytes of ingested content. */
   storageMb: number;
@@ -37,7 +37,7 @@ export type Plan = {
 // page renders without a service round-trip. Keep prices, seats, and
 // resolution counts in sync with that file.
 //
-// The model in one line: Free gets 50 AI conversations; paid plans get a
+// The model in one line: Free gets 100 AI messages; paid plans get a
 // monthly AI credit that pays for however many conversations it covers. Seats
 // are separate and never affect the AI allowance. Everyone in a workspace
 // shares one inbox and one credit pool no matter how many seats are open.
@@ -89,12 +89,12 @@ export const plans: Plan[] = [
     seatsIncluded: 2,
     seatsMax: 7,
     creditBased: false,
-    resolutions: 50,
+    resolutions: 100,
     storageMb: 20,
     overageUsdCents: null,
-    aiCreditGrantUsdCents: 100,
+    aiCreditGrantUsdCents: 200,
     features: [
-      'Up to 50 AI conversations/month',
+      'Up to 100 AI messages/month',
       '2 seats included',
       'Seat packs from $0.60/seat',
       '20 MB knowledge base',
@@ -118,7 +118,7 @@ export const plans: Plan[] = [
     overageUsdCents: null,
     aiCreditGrantUsdCents: 700,
     features: [
-      '$7 AI credit every month (about 140 conversations)',
+      '$7 AI credit every month',
       '5 seats included',
       'Seat packs from $0.60/seat',
       '200 MB knowledge base',
@@ -143,7 +143,7 @@ export const plans: Plan[] = [
     aiCreditGrantUsdCents: 4000,
     highlighted: true,
     features: [
-      '$40 AI credit every month (about 800 conversations)',
+      '$40 AI credit every month',
       '15 seats included',
       'Seat packs from $0.60/seat',
       '1 GB knowledge base',
@@ -168,7 +168,7 @@ export const plans: Plan[] = [
     overageUsdCents: null,
     aiCreditGrantUsdCents: 24000,
     features: [
-      '$240 AI credit every month (about 4,800 conversations)',
+      '$240 AI credit every month',
       '40 seats included',
       'Seat packs from $0.60/seat',
       '5 GB knowledge base',
@@ -240,7 +240,7 @@ export function PricingCards({ billing = 'monthly', pageStyle = false }: { billi
                   </div>
                 </div>
                 <p className='mt-2 min-h-5 text-xs text-[#666666]'>
-                  {plan.id === 'free' ? '50 AI conversations every month' : billing === 'yearly' ? `${annualTotal} per year · Save ${ANNUAL_SAVING_PERCENT}%` : 'Monthly billing, per workspace'}
+                  {plan.id === 'free' ? '100 AI messages every month' : billing === 'yearly' ? `${annualTotal} per year · Save ${ANNUAL_SAVING_PERCENT}%` : 'Monthly billing, per workspace'}
                 </p>
                 <Link href={plan.href} className={`mt-7 flex min-h-14 w-full items-center justify-center rounded-none border px-4 py-3 text-base font-medium transition focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black ${plan.highlighted ? 'border-[#222222] bg-gradient-to-b from-[#343434] to-[#1C1C1C] text-white shadow-[0_2px_3px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.2)] hover:brightness-110' : 'border-[#CCCCCC] bg-gradient-to-b from-[#EEEEEE] to-[#E2E2E2] text-black shadow-[0_2px_3px_rgba(0,0,0,0.08),inset_0_1px_0_white] hover:brightness-95'}`}>
                   {plan.cta}

@@ -87,7 +87,7 @@ export function BlogPostClient({ post, allPosts }: { post: BlogPost; allPosts: B
             <div className={`${card} relative !mt-14 overflow-hidden p-7 text-white`} style={{ backgroundColor: BLUE }}>
               <div aria-hidden="true" className="absolute inset-0 opacity-[0.16]" style={dots} />
               <p className="relative text-2xl font-semibold leading-snug tracking-tight">Give your customers the answer before they finish typing.</p>
-              <p className="relative mt-2 text-[16px] leading-7 text-white/90">Start free with 50 AI conversations a month. No card required.</p>
+              <p className="relative mt-2 text-[16px] leading-7 text-white/90">Start free with 100 AI messages a month. No card required.</p>
               <Link href="/signup" className="relative mt-5 inline-flex h-12 items-center gap-2 rounded-full border-2 border-[#11120f] px-6 font-semibold text-[#11120f] transition hover:-translate-y-0.5" style={{ backgroundColor: YELLOW }}>Start free <ArrowRight size={16} /></Link>
             </div>
           </div>

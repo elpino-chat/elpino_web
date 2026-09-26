@@ -5,7 +5,7 @@ import { Fragment, useState } from 'react';
 import { ArrowRight, ArrowUpRight, Check, Users, MessageSquare } from 'lucide-react';
 import { PricingPlanCards } from './PricingPlanCards';
 import { FairBillingSection } from './PricingCalculator';
-import { ANNUAL_SAVING_PERCENT, SEAT_BUNDLES, SEAT_BUNDLE_SUMMARY, creditLabel, estimatedConversations, plans, getPlanPrice } from '../components/PricingCards';
+import { ANNUAL_SAVING_PERCENT, SEAT_BUNDLES, SEAT_BUNDLE_SUMMARY, creditLabel, plans, getPlanPrice } from '../components/PricingCards';
 import { PricingFaqSection } from '../components/PricingFaqSection';
 
 // Reuse the billing answers from the /faq source of truth rather than keeping a
@@ -32,13 +32,8 @@ const comparisonCategories: FeatureCategory[] = [
     rows: [
       {
         label: 'Monthly AI allowance',
-        description: 'Free is capped at 50 AI conversations. Paid plans include a dollar credit that pays for however many conversations it covers, shared by the whole workspace.',
-        values: ['50 conversations', `${creditLabel(plans[1])} credit`, `${creditLabel(plans[2])} credit`, `${creditLabel(plans[3])} credit`],
-      },
-      {
-        label: 'Roughly how many conversations',
-        description: 'A guide, not a promise: a short question costs less credit than a long back-and-forth.',
-        values: ['50', `About ${estimatedConversations(plans[1])?.toLocaleString()}`, `About ${estimatedConversations(plans[2])?.toLocaleString()}`, `About ${estimatedConversations(plans[3])?.toLocaleString()}`],
+        description: 'Free is capped at 100 AI messages. Paid plans include a monthly dollar credit that the AI spends as it works, shared by the whole workspace.',
+        values: ['100 messages', `${creditLabel(plans[1])} credit`, `${creditLabel(plans[2])} credit`, `${creditLabel(plans[3])} credit`],
       },
       {
         label: 'When the allowance runs out',
