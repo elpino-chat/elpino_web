@@ -113,6 +113,8 @@ export default function AiAssistPage() {
   const [draft, setDraft] = useState("");
   const [sending, setSending] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  // True while the reader is at (or near) the bottom of the thread. Only then does a new message pull the view down.
+  const stickToBottomRef = useRef(true);
 
   function loadConversations() {
     return fetchConversations()
@@ -204,6 +206,7 @@ export default function AiAssistPage() {
     if (!selectedId) { setMessages([]); setCustomerTyping(false); return; }
     let cancelled = false;
     setMessagesLoading(true);
+    stickToBottomRef.current = true;
 
     function load() {
       fetch(`/api/workspace/conversations/${encodeURIComponent(selectedId!)}/messages`, { cache: "no-store" })
@@ -221,9 +224,16 @@ export default function AiAssistPage() {
     return () => { cancelled = true; window.clearInterval(interval); };
   }, [selectedId]);
 
+  // Keyed on the last message's id and the count rather than the `messages` array itself: polling
+  // swaps that array for a new reference every 2s even when nothing changed, which used to yank the
+  // view back to the bottom over and over, so nothing could be read after scrolling up. This only
+  // re-fires when a message really arrives (or the typing indicator changes), and only pulls the
+  // view down when the reader is already at the bottom.
+  const lastMessageKey = `${messages.length}:${messages[messages.length - 1]?.id ?? ""}`;
   useEffect(() => {
+    if (!stickToBottomRef.current) return;
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
-  }, [messages, customerTyping]);
+  }, [lastMessageKey, customerTyping]);
 
   function notifyTyping() {
     const now = Date.now();
@@ -483,7 +493,7 @@ export default function AiAssistPage() {
 
             {error && <p className="mx-4 mt-3 rounded-lg bg-[#fff1f1] px-3 py-2 text-[11.5px] font-medium text-[#a64a53]">{error}</p>}
 
-            <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto px-5 py-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div ref={scrollRef} onScroll={(event) => { const el = event.currentTarget; stickToBottomRef.current = el.scrollHeight - el.scrollTop - el.clientHeight < 120; }} className="min-h-0 flex-1 overflow-y-auto px-5 py-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               <div className="mx-auto max-w-2xl">
                 {messagesLoading && messages.length === 0 ? (
                   <div className="flex min-h-[160px] items-center justify-center text-[12px] text-[#7b858a]"><LoaderCircle size={15} className="mr-2 animate-spin" /> Loading conversation</div>
