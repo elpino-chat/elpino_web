@@ -16,6 +16,48 @@ export type DropdownGroup = {
   sections: NavSection[];
 };
 
+type T = (key: string, defaultValue?: string) => string;
+
+// Group labels and section titles repeat across the header mega-menu,
+// mobile nav and footer, so they're translated once here rather than in
+// each place that renders them. Nav item labels are translated by href
+// (stable across languages, and unique across the whole site), falling
+// back to the English label whenever a locale hasn't got that key yet.
+const GROUP_LABEL_KEYS: Record<string, string> = {
+  Product: 'product',
+  Solutions: 'solutions',
+  Resources: 'resources',
+};
+
+const SECTION_TITLE_KEYS: Record<string, string> = {
+  'Get started': 'getStarted',
+  Capabilities: 'capabilities',
+  Platform: 'platform',
+  'Who it is for': 'whoItIsFor',
+  'Learning & Guides': 'learningGuides',
+  'Trust & Legal': 'trustLegal',
+  Community: 'community',
+  Company: 'company',
+};
+
+export function tGroupLabel(t: T, label: string): string {
+  const key = GROUP_LABEL_KEYS[label];
+  return key ? t(`nav.groups.${key}`, label) : label;
+}
+
+export function tSectionTitle(t: T, title: string): string {
+  const key = SECTION_TITLE_KEYS[title];
+  return key ? t(`nav.sections.${key}`, title) : title;
+}
+
+export function tNavItem(t: T, item: NavItem): string {
+  // Keyed by the English label, not href: /contact is reused with two
+  // different labels ("Talk to Us" vs. "Contact Sales"), so href alone
+  // would collide. Labels are unique across the nav and none contain a
+  // dot, so this is safe with t()'s dot-path traversal.
+  return t(`nav.items.${item.label}`, item.label);
+}
+
 export const navGroups: DropdownGroup[] = [
   {
     label: 'Product',

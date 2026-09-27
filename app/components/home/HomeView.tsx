@@ -8,11 +8,18 @@ import {
 } from "lucide-react";
 import { Rv } from "@/app/components/RevealOnScroll";
 import { ConnectorLogo } from "@/app/components/ConnectorLogo";
+import { useStoredLanguage } from "@/app/hooks/useStoredLanguage";
+import { useTranslation } from "@/app/hooks/useTranslation";
 
 // The home page. Real product screenshot up top, then a short tour of what
 // Elpino actually does (each card links to its page), who it's for, what it
 // plugs into, and how it's priced. Only shipped behaviour is described, and
 // omnichannel is marked as coming in November.
+//
+// i18n: every user-facing string routes through t("home.<section>.<key>", englishDefault).
+// The English default is always the real copy, so a locale file that is
+// missing a key (or a whole section) never breaks the page — it just shows
+// English for that one string. See web/locales/*.json under "home".
 
 const INK = "#11120f";
 const BLUE = "#3784ff";
@@ -26,6 +33,22 @@ const card = "rounded-[22px] border-2 border-[#11120f]";
 const mono = "font-mono text-[11px] font-semibold uppercase tracking-[0.14em]";
 const onDark = (c: string) => (c === YELLOW ? INK : "#fff");
 const dots = { backgroundImage: "radial-gradient(#000 1.2px, transparent 1.2px)", backgroundSize: "14px 14px" };
+
+type T = (key: string, defaultValue?: string) => string;
+
+/**
+ * A translated array at `key` (t()'s underlying JSON traversal returns the
+ * raw value at a path, string or not — t()'s own type signature says
+ * `string`, but at runtime an array-shaped key really does hand back an
+ * array). Falls back to the English array wholesale if the locale is
+ * missing the whole key (a brand-new locale file, or one not yet extended
+ * to this section) — never per-item, since a partial array reads as a bug
+ * rather than a missing translation.
+ */
+function tList<Item>(t: T, key: string, fallback: Item[]): Item[] {
+  const value: unknown = t(key, undefined as unknown as string);
+  return Array.isArray(value) ? (value as Item[]) : fallback;
+}
 
 function useReduced() {
   const [r, setR] = useState(false);
@@ -53,29 +76,29 @@ function Heading({ eyebrow, color, title, sub }: { eyebrow: string; color: strin
 
 // -------------------------------------------------------------------- hero
 
-const CONVO: { from: "you" | "tool" | "ai"; text: string }[] = [
-  { from: "you", text: "Was I charged twice for my upgrade?" },
-  { from: "tool", text: "Checked your payment record" },
-  { from: "ai", text: "You were charged once. The second attempt failed and was never captured." },
-];
-
-function MiniWidget() {
+function MiniWidget({ t }: { t: T }) {
   const reduced = useReduced();
   const [n, setN] = useState(0);
+  const convo: { from: "you" | "tool" | "ai"; text: string }[] = [
+    { from: "you", text: t("home.hero.widget.convo.0", "Was I charged twice for my upgrade?") },
+    { from: "tool", text: t("home.hero.widget.convo.1", "Checked your payment record") },
+    { from: "ai", text: t("home.hero.widget.convo.2", "You were charged once. The second attempt failed and was never captured.") },
+  ];
   useEffect(() => {
-    if (reduced) { setN(CONVO.length); return; }
-    const id = window.setTimeout(() => setN((v) => (v >= CONVO.length ? 0 : v + 1)), n === 0 ? 900 : n >= CONVO.length ? 4200 : 1500);
+    if (reduced) { setN(convo.length); return; }
+    const id = window.setTimeout(() => setN((v) => (v >= convo.length ? 0 : v + 1)), n === 0 ? 900 : n >= convo.length ? 4200 : 1500);
     return () => window.clearTimeout(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [n, reduced]);
   return (
     <div className={`${card} w-[290px] overflow-hidden bg-white`}>
       <div className="flex items-center gap-2.5 border-b-2 border-[#11120f] px-3.5 py-2.5 text-white" style={{ backgroundColor: BLUE }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/icon.png" alt="" className="size-8 rounded-full border-2 border-[#11120f] bg-white object-contain p-0.5" />
-        <div><p className="text-[13px] font-semibold leading-tight">Elpino</p><p className="text-[10.5px] opacity-90">Answers in seconds</p></div>
+        <div><p className="text-[13px] font-semibold leading-tight">{t("home.hero.widget.name", "Elpino")}</p><p className="text-[10.5px] opacity-90">{t("home.hero.widget.subtitle", "Answers in seconds")}</p></div>
       </div>
       <div className="flex h-[188px] flex-col justify-end gap-2 bg-[#fffdf5] p-3 text-[12.5px]">
-        {CONVO.slice(0, n).map((l, i) => l.from === "tool" ? (
+        {convo.slice(0, n).map((l, i) => l.from === "tool" ? (
           <div key={i} className="flex w-fit items-center gap-1.5 rounded-full border-2 border-dashed border-[#7060bd] bg-[#f1eefb] px-2.5 py-1 text-[11px] font-medium text-[#4a3d94]" style={{ animation: "elpino-rv-pop .35s both" }}><Check size={11} strokeWidth={3} />{l.text}</div>
         ) : (
           <div key={i} className={`max-w-[88%] rounded-2xl border-2 border-[#11120f] px-3 py-2 leading-[1.45] ${l.from === "you" ? "ml-auto rounded-br-sm text-white" : "rounded-bl-sm bg-white"}`} style={{ animation: "elpino-rv-pop .35s both", ...(l.from === "you" ? { backgroundColor: PURPLE } : {}) }}>{l.text}</div>
@@ -104,54 +127,55 @@ function Drag({ children, x, y, rot = 0 }: { children: ReactNode; x: string; y: 
   );
 }
 
-const WORDS = ["answers.", "resolves.", "remembers.", "hands off."];
-
-function RotatingWord() {
+function RotatingWord({ words }: { words: string[] }) {
   const reduced = useReduced();
   const [i, setI] = useState(0);
   useEffect(() => {
     if (reduced) return;
-    const id = window.setInterval(() => setI((v) => (v + 1) % WORDS.length), 2300);
+    const id = window.setInterval(() => setI((v) => (v + 1) % words.length), 2300);
     return () => window.clearInterval(id);
-  }, [reduced]);
+  }, [reduced, words.length]);
   return (
     <span className="relative inline-block">
-      <span key={i} className="hl inline-block" style={{ animation: "elpino-rv-drop .5s both" }}>{WORDS[i]}</span>
+      <span key={i} className="hl inline-block" style={{ animation: "elpino-rv-drop .5s both" }}>{words[i]}</span>
     </span>
   );
 }
 
-const CALLOUTS = [
-  { label: "AI badge on every thread", color: PURPLE, style: { left: "2%", top: "-3%" } },
-  { label: "Join to take over", color: YELLOW, style: { right: "2%", top: "-3%" } },
-  { label: "Visitor location & device", color: ORANGE, style: { right: "1%", top: "30%" } },
-] as const;
-
-function Hero() {
+function Hero({ t }: { t: T }) {
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const words = tList(t, "home.hero.words", ["answers.", "resolves.", "remembers.", "hands off."]);
+  const trust = tList(t, "home.hero.trust", ["100 free AI messages a month", "No card required", "Live in an afternoon"]);
+  const stickers = tList(t, "home.hero.stickers", ["Resolved by AI", "Human on standby", "Private by default", "Nothing dropped"]);
+  const callouts = tList(t, "home.hero.callouts", ["AI badge on every thread", "Join to take over", "Visitor location & device"]);
+  const CALLOUTS = [
+    { label: callouts[0], color: PURPLE, style: { left: "2%", top: "-3%" } },
+    { label: callouts[1], color: YELLOW, style: { right: "2%", top: "-3%" } },
+    { label: callouts[2], color: ORANGE, style: { right: "1%", top: "30%" } },
+  ] as const;
   return (
     <section className="relative isolate overflow-hidden bg-white text-[#11120f]">
       <div aria-hidden="true" className="absolute inset-0 -z-10 bg-cover bg-top" style={{ backgroundImage: "url(/piliar-1-grandient.png)", maskImage: "linear-gradient(to bottom, #000 55%, transparent)", WebkitMaskImage: "linear-gradient(to bottom, #000 55%, transparent)" }} />
       <div className="relative mx-auto max-w-6xl px-5 pb-24 pt-[124px] sm:px-8 lg:pt-[140px]">
         {/* stickers you can drag */}
-        <Drag x="1%" y="20%" rot={-8}><Stamp color={GREEN}><Check size={12} strokeWidth={3} />Resolved by AI</Stamp></Drag>
-        <Drag x="80%" y="14%" rot={7}><Stamp color={ORANGE}><Headset size={12} />Human on standby</Stamp></Drag>
-        <Drag x="86%" y="46%" rot={-5}><Stamp color={PURPLE}><Lock size={12} />Private by default</Stamp></Drag>
-        <Drag x="-1%" y="52%" rot={6}><Stamp color={PINK}><Ticket size={12} />Nothing dropped</Stamp></Drag>
+        <Drag x="1%" y="20%" rot={-8}><Stamp color={GREEN}><Check size={12} strokeWidth={3} />{stickers[0]}</Stamp></Drag>
+        <Drag x="80%" y="14%" rot={7}><Stamp color={ORANGE}><Headset size={12} />{stickers[1]}</Stamp></Drag>
+        <Drag x="86%" y="46%" rot={-5}><Stamp color={PURPLE}><Lock size={12} />{stickers[2]}</Stamp></Drag>
+        <Drag x="-1%" y="52%" rot={6}><Stamp color={PINK}><Ticket size={12} />{stickers[3]}</Stamp></Drag>
 
         <div className="mx-auto max-w-4xl text-center">
-          <Rv variant="drop"><Stamp color={YELLOW}><Sparkles size={13} />AI customer support</Stamp></Rv>
+          <Rv variant="drop"><Stamp color={YELLOW}><Sparkles size={13} />{t("home.hero.badge", "AI customer support")}</Stamp></Rv>
           <Rv delay={80}>
-            <h1 className="mt-6 text-[clamp(3rem,7.4vw,6.2rem)] font-semibold leading-[0.95] tracking-[-0.058em]">Support that <RotatingWord /></h1>
+            <h1 className="mt-6 text-[clamp(3rem,7.4vw,6.2rem)] font-semibold leading-[0.95] tracking-[-0.058em]">{t("home.hero.titlePrefix", "Support that")} <RotatingWord words={words} /></h1>
           </Rv>
-          <Rv delay={170}><p className="mx-auto mt-6 max-w-[58ch] text-lg leading-8 text-[#11120f]/70">An AI that answers from your own knowledge, checks real payments and orders, and hands over to your team with the full story when a person is needed.</p></Rv>
+          <Rv delay={170}><p className="mx-auto mt-6 max-w-[58ch] text-lg leading-8 text-[#11120f]/70">{t("home.hero.subtitle", "An AI that answers from your own knowledge, checks real payments and orders, and hands over to your team with the full story when a person is needed.")}</p></Rv>
           <Rv delay={240}>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Link href="/signup" className="inline-flex h-13 items-center gap-2 rounded-full border-2 border-[#11120f] px-7 font-semibold text-white transition hover:-translate-y-0.5" style={{ backgroundColor: BLUE }}>Start free <ArrowRight size={17} /></Link>
-              <Link href="#try-it" className="inline-flex h-13 items-center rounded-full border-2 border-[#11120f] bg-white px-7 font-semibold transition hover:-translate-y-0.5 hover:bg-[#ffd84d]">Try it yourself</Link>
+              <Link href="/signup" className="inline-flex h-13 items-center gap-2 rounded-full border-2 border-[#11120f] px-7 font-semibold text-white transition hover:-translate-y-0.5" style={{ backgroundColor: BLUE }}>{t("home.hero.ctaPrimary", "Start free")} <ArrowRight size={17} /></Link>
+              <Link href="#try-it" className="inline-flex h-13 items-center rounded-full border-2 border-[#11120f] bg-white px-7 font-semibold transition hover:-translate-y-0.5 hover:bg-[#ffd84d]">{t("home.hero.ctaSecondary", "Try it yourself")}</Link>
             </div>
             <p className="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-1 text-sm text-[#11120f]/60">
-              {["100 free AI messages a month", "No card required", "Live in an afternoon"].map((t) => <span key={t} className="inline-flex items-center gap-1.5"><Check size={14} color={GREEN} strokeWidth={3} />{t}</span>)}
+              {trust.map((x) => <span key={x} className="inline-flex items-center gap-1.5"><Check size={14} color={GREEN} strokeWidth={3} />{x}</span>)}
             </p>
           </Rv>
         </div>
@@ -171,7 +195,7 @@ function Hero() {
           {CALLOUTS.map((c, i) => (
             <span key={c.label} className={`${mono} absolute hidden rotate-[-3deg] rounded-full border-2 border-[#11120f] px-3 py-1.5 text-[10px] md:inline-flex`} style={{ ...c.style, backgroundColor: c.color, color: onDark(c.color), animation: `elpino-float ${4 + i * 0.7}s ease-in-out ${-i}s infinite` }}>{c.label}</span>
           ))}
-          <div className="absolute -bottom-10 left-3 z-10 hidden sm:block lg:left-8" style={{ animation: "elpino-float 6s ease-in-out infinite" }}><MiniWidget /></div>
+          <div className="absolute -bottom-10 left-3 z-10 hidden sm:block lg:left-8" style={{ animation: "elpino-float 6s ease-in-out infinite" }}><MiniWidget t={t} /></div>
         </Rv>
       </div>
     </section>
@@ -180,10 +204,12 @@ function Hero() {
 
 // ------------------------------------------------------------------ marquee
 
-const QUESTIONS = ["Where's my invoice?", "How do I reset my password?", "Was I charged twice?", "Can I get a refund?", "Where is my order?", "How do I add a teammate?", "Is my data safe?", "Why did my payment fail?", "Can I speak to someone?"];
-
-function Marquee() {
-  const row = [...QUESTIONS, ...QUESTIONS];
+function Marquee({ t }: { t: T }) {
+  const questions = tList(t, "home.marquee.questions", [
+    "Where's my invoice?", "How do I reset my password?", "Was I charged twice?", "Can I get a refund?",
+    "Where is my order?", "How do I add a teammate?", "Is my data safe?", "Why did my payment fail?", "Can I speak to someone?",
+  ]);
+  const row = [...questions, ...questions];
   const colors = [YELLOW, "#fff", "#c9d9ff", "#d8f3e9", "#ffe6d6"];
   return (
     <div className="mt-16 overflow-hidden border-y-2 border-[#11120f] bg-[#fff8ec] py-5 sm:mt-20" aria-label="Questions Elpino answers every day">
@@ -197,32 +223,33 @@ function Marquee() {
 // -------------------------------------------------------------- try it
 
 type QA = { q: string; steps: string[]; a: string; human?: boolean };
-const QAS: QA[] = [
-  { q: "Was I charged twice?", steps: ["Verified you by email code", "Checked your payment record"], a: "You were charged once. The second attempt failed and was never captured." },
-  { q: "Where is my order?", steps: ["Verified you by email code", "Called your shop over MCP"], a: "It shipped yesterday and arrives Thursday. I've emailed the tracking link." },
-  { q: "How do I reset my password?", steps: ["Searched your knowledge base"], a: "Choose “Forgot password” on the sign-in page and follow the link we email you." },
-  { q: "Can I get a refund?", steps: ["Checked the payment", "Refunds are switched off for this workspace"], a: "I can't refund that myself. Would you like me to connect you with our team?", human: true },
-  { q: "Can I speak to someone?", steps: ["Asked you before handing off", "Alerted every teammate at once"], a: "Priya from our team has joined and has the whole conversation.", human: true },
-  { q: "Do you sell gift cards?", steps: ["Searched your knowledge base", "No match found"], a: "I don't have that information. Would you like me to connect you with our team?", human: true },
-];
 
-function TryIt() {
+function TryIt({ t }: { t: T }) {
   const [sel, setSel] = useState(0);
   const [stage, setStage] = useState(0);
+  const humanFlags = [false, false, false, true, true, true];
+  const QAS: QA[] = tList<{ q: string; steps: string[]; a: string }>(t, "home.tryit.qas", [
+    { q: "Was I charged twice?", steps: ["Verified you by email code", "Checked your payment record"], a: "You were charged once. The second attempt failed and was never captured." },
+    { q: "Where is my order?", steps: ["Verified you by email code", "Called your shop over MCP"], a: "It shipped yesterday and arrives Thursday. I've emailed the tracking link." },
+    { q: "How do I reset my password?", steps: ["Searched your knowledge base"], a: "Choose “Forgot password” on the sign-in page and follow the link we email you." },
+    { q: "Can I get a refund?", steps: ["Checked the payment", "Refunds are switched off for this workspace"], a: "I can't refund that myself. Would you like me to connect you with our team?" },
+    { q: "Can I speak to someone?", steps: ["Asked you before handing off", "Alerted every teammate at once"], a: "Priya from our team has joined and has the whole conversation." },
+    { q: "Do you sell gift cards?", steps: ["Searched your knowledge base", "No match found"], a: "I don't have that information. Would you like me to connect you with our team?" },
+  ]).map((item, i) => ({ ...item, human: humanFlags[i] }));
   const qa = QAS[sel];
   useEffect(() => {
     setStage(0);
     const total = qa.steps.length + 1;
     const ids: number[] = [];
     for (let k = 1; k <= total; k++) ids.push(window.setTimeout(() => setStage(k), 500 + k * 750));
-    return () => ids.forEach((t) => window.clearTimeout(t));
+    return () => ids.forEach((t2) => window.clearTimeout(t2));
   }, [sel, qa.steps.length]);
   const done = stage > qa.steps.length;
 
   return (
     <section id="try-it" className="scroll-mt-20 bg-white px-5 py-24 sm:px-8 sm:py-32">
       <div className="mx-auto max-w-6xl">
-        <Heading eyebrow="Try it" color={PURPLE} title={<>Ask it something. <span className="hl">See what it does.</span></>} sub="Pick a customer question. On the left is the chat, on the right is everything Elpino did before it replied." />
+        <Heading eyebrow={t("home.tryit.eyebrow", "Try it")} color={PURPLE} title={<>{t("home.tryit.titlePrefix", "Ask it something.")} <span className="hl">{t("home.tryit.titleHl", "See what it does.")}</span></>} sub={t("home.tryit.subtitle", "Pick a customer question. On the left is the chat, on the right is everything Elpino did before it replied.")} />
         <div className="mt-10 flex flex-wrap justify-center gap-2">
           {QAS.map((x, i) => <button key={x.q} type="button" onClick={() => setSel(i)} aria-pressed={i === sel} className="rounded-full border-2 border-[#11120f] px-4 py-2 text-[14.5px] font-semibold transition hover:-translate-y-0.5" style={i === sel ? { backgroundColor: YELLOW } : { backgroundColor: "#fff" }}>{x.q}</button>)}
         </div>
@@ -231,7 +258,7 @@ function TryIt() {
             <div className="flex items-center gap-2.5 border-b-2 border-[#11120f] px-4 py-3 text-white" style={{ backgroundColor: BLUE }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/icon.png" alt="" className="size-9 rounded-full border-2 border-[#11120f] bg-white object-contain p-0.5" />
-              <div><p className="text-sm font-semibold leading-tight">Elpino</p><p className="text-[11px] opacity-90">AI support</p></div>
+              <div><p className="text-sm font-semibold leading-tight">{t("home.tryit.widgetName", "Elpino")}</p><p className="text-[11px] opacity-90">{t("home.tryit.widgetSubtitle", "AI support")}</p></div>
             </div>
             <div key={sel} className="flex flex-1 flex-col justify-end gap-2.5 p-4 text-[14px]">
               <div className="ml-auto max-w-[85%] rounded-2xl rounded-br-sm border-2 border-[#11120f] px-3.5 py-2.5 text-white" style={{ backgroundColor: PURPLE, animation: "elpino-rv-pop .35s both" }}>{qa.q}</div>
@@ -240,14 +267,14 @@ function TryIt() {
             </div>
           </div>
           <div className={`${card} flex min-h-[380px] flex-col overflow-hidden bg-[#11120f] text-white`}>
-            <div className="flex items-center justify-between border-b-2 border-white/15 px-4 py-3"><span className={`${mono} text-white/60`}>What Elpino did</span><span className="text-[11px] text-white/60">{done ? "Done" : "Working…"}</span></div>
+            <div className="flex items-center justify-between border-b-2 border-white/15 px-4 py-3"><span className={`${mono} text-white/60`}>{t("home.tryit.whatItDid", "What Elpino did")}</span><span className="text-[11px] text-white/60">{done ? t("home.tryit.done", "Done") : t("home.tryit.working", "Working…")}</span></div>
             <div className="flex-1 space-y-2.5 p-4 font-mono text-[13px]">
               {qa.steps.slice(0, Math.max(0, stage)).map((s, i) => (
-                <div key={sel + s} className="flex items-start gap-2.5" style={{ animation: "elpino-rv-up .4s both" }}><span className="mt-0.5 shrink-0 rounded px-1.5 py-0.5 text-[9px] font-bold uppercase text-[#11120f]" style={{ backgroundColor: i === 0 ? YELLOW : "#c9f5e2" }}>{i === 0 ? "start" : "step"}</span><span className="text-white/90">{s}</span></div>
+                <div key={sel + s} className="flex items-start gap-2.5" style={{ animation: "elpino-rv-up .4s both" }}><span className="mt-0.5 shrink-0 rounded px-1.5 py-0.5 text-[9px] font-bold uppercase text-[#11120f]" style={{ backgroundColor: i === 0 ? YELLOW : "#c9f5e2" }}>{i === 0 ? t("home.tryit.stepStart", "start") : t("home.tryit.stepOther", "step")}</span><span className="text-white/90">{s}</span></div>
               ))}
-              {done && <div className="flex items-start gap-2.5" style={{ animation: "elpino-rv-up .4s both" }}><span className="mt-0.5 shrink-0 rounded px-1.5 py-0.5 text-[9px] font-bold uppercase text-white" style={{ backgroundColor: qa.human ? ORANGE : GREEN }}>{qa.human ? "person" : "resolved"}</span><span style={{ color: qa.human ? "#ffb98a" : "#7dffc5" }}>{qa.human ? "Asked first · a teammate can join, or a ticket is filed" : "Answered and resolved, no human needed"}</span></div>}
+              {done && <div className="flex items-start gap-2.5" style={{ animation: "elpino-rv-up .4s both" }}><span className="mt-0.5 shrink-0 rounded px-1.5 py-0.5 text-[9px] font-bold uppercase text-white" style={{ backgroundColor: qa.human ? ORANGE : GREEN }}>{qa.human ? t("home.tryit.person", "person") : t("home.tryit.resolved", "resolved")}</span><span style={{ color: qa.human ? "#ffb98a" : "#7dffc5" }}>{qa.human ? t("home.tryit.humanNote", "Asked first · a teammate can join, or a ticket is filed") : t("home.tryit.resolvedNote", "Answered and resolved, no human needed")}</span></div>}
             </div>
-            <p className="border-t-2 border-white/15 px-4 py-3 text-[11.5px] text-white/45">Sample answers. The steps shown are the kinds of tools Elpino really uses.</p>
+            <p className="border-t-2 border-white/15 px-4 py-3 text-[11.5px] text-white/45">{t("home.tryit.sampleNote", "Sample answers. The steps shown are the kinds of tools Elpino really uses.")}</p>
           </div>
         </div>
       </div>
@@ -259,15 +286,19 @@ function TryIt() {
 
 const ACCENTS = [BLUE, PURPLE, GREEN, ORANGE, PINK, INK];
 
+// The widget's own demo languages — these represent the multi-language reply
+// feature itself, so they are fixed sample content, not translated with the
+// site chrome (a Spanish sample must stay Spanish no matter what language
+// the visitor reading the marketing page has selected).
 type LangKey = "en" | "es" | "fr" | "hi";
 const LANGS: { k: LangKey; label: string; q: string; a1: string; a0: string }[] = [
   { k: "en", label: "English", q: "Do you have a free plan?", a1: "Yes! Since you're looking at pricing, the Free plan includes 100 AI messages a month.", a0: "Yes, the Free plan includes 100 AI messages a month." },
-  { k: "es", label: "Español", q: "¿Tienen un plan gratuito?", a1: "¡Sí! Como estás viendo los precios, el plan Gratis incluye 50 conversaciones con IA al mes.", a0: "Sí, el plan Gratis incluye 50 conversaciones con IA al mes." },
+  { k: "es", label: "Español", q: "¿Tienen un plan gratuito?", a1: "¡Sí! Como estás viendo los precios, el plan Gratis incluye 100 mensajes de IA al mes.", a0: "Sí, el plan Gratis incluye 100 mensajes de IA al mes." },
   { k: "fr", label: "Français", q: "Avez-vous une offre gratuite ?", a1: "Oui ! Puisque vous consultez les tarifs, l'offre Gratuite comprend 100 messages IA par mois.", a0: "Oui, l'offre Gratuite comprend 100 messages IA par mois." },
   { k: "hi", label: "हिन्दी", q: "क्या आपके पास कोई मुफ़्त प्लान है?", a1: "हाँ! चूँकि आप कीमतें देख रहे हैं, मुफ़्त प्लान में हर महीने 100 AI संदेश शामिल हैं।", a0: "हाँ, मुफ़्त प्लान में हर महीने 100 AI संदेश शामिल हैं।" },
 ];
 
-function Customizer() {
+function Customizer({ t }: { t: T }) {
   const [accent, setAccent] = useState(BLUE);
   const [dark, setDark] = useState(false);
   const [name, setName] = useState("Acme AI");
@@ -281,8 +312,8 @@ function Customizer() {
   useEffect(() => () => { if (logo) URL.revokeObjectURL(logo); }, [logo]);
   const onFile = (f: File | undefined) => {
     if (!f) return;
-    if (!f.type.startsWith("image/") || f.size > 2_000_000) { setFileNote("Use an image under 2 MB."); return; }
-    setFileNote("Shown here only. It's not uploaded anywhere.");
+    if (!f.type.startsWith("image/") || f.size > 2_000_000) { setFileNote(t("home.customizer.fileTooBig", "Use an image under 2 MB.")); return; }
+    setFileNote(t("home.customizer.fileShown", "Shown here only. It's not uploaded anywhere."));
     setLogo(URL.createObjectURL(f));
   };
 
@@ -306,44 +337,44 @@ function Customizer() {
     <section className="bg-[#fff8ec] px-5 py-24 sm:px-8 sm:py-32">
       <div className="mx-auto grid max-w-6xl items-start gap-12 lg:grid-cols-[1.05fr_.95fr]">
         <div>
-          <Rv variant="drop"><Stamp color={PINK}><Palette size={13} />Make it yours</Stamp></Rv>
-          <Rv delay={80}><h2 className="mt-5 text-[clamp(2.2rem,5vw,3.9rem)] font-semibold leading-[1.02] tracking-[-0.045em]">A widget that <span className="hl">looks and speaks like you.</span></h2></Rv>
-          <Rv delay={160}><p className="mt-5 max-w-[50ch] text-lg leading-8 text-[#11120f]/65">Add your logo, name your AI, pick a colour and theme, and choose the language it replies in. Play with the controls and watch the widget change.</p></Rv>
+          <Rv variant="drop"><Stamp color={PINK}><Palette size={13} />{t("home.customizer.eyebrow", "Make it yours")}</Stamp></Rv>
+          <Rv delay={80}><h2 className="mt-5 text-[clamp(2.2rem,5vw,3.9rem)] font-semibold leading-[1.02] tracking-[-0.045em]">{t("home.customizer.titlePrefix", "A widget that")} <span className="hl">{t("home.customizer.titleHl", "looks and speaks like you.")}</span></h2></Rv>
+          <Rv delay={160}><p className="mt-5 max-w-[50ch] text-lg leading-8 text-[#11120f]/65">{t("home.customizer.subtitle", "Add your logo, name your AI, pick a colour and theme, and choose the language it replies in. Play with the controls and watch the widget change.")}</p></Rv>
           <Rv delay={220}>
             <div className={`${card} mt-8 space-y-6 bg-white p-5 sm:p-6`}>
               <div>
-                <p className="text-sm font-semibold">Your logo</p>
+                <p className="text-sm font-semibold">{t("home.customizer.yourLogo", "Your logo")}</p>
                 <div className="mt-2 flex items-center gap-3">
                   <span className="grid size-14 place-items-center overflow-hidden rounded-full border-2 border-[#11120f] bg-white">{avatar}</span>
-                  <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border-2 border-[#11120f] px-4 py-2 text-[14px] font-semibold transition hover:-translate-y-0.5" style={{ backgroundColor: YELLOW }}><Upload size={15} />Upload a logo<input type="file" accept="image/*" className="sr-only" onChange={(e) => onFile(e.target.files?.[0])} /></label>
-                  {logo && <button type="button" onClick={() => { setLogo(null); setFileNote(""); }} className="text-[13.5px] font-medium underline underline-offset-2">Remove</button>}
+                  <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border-2 border-[#11120f] px-4 py-2 text-[14px] font-semibold transition hover:-translate-y-0.5" style={{ backgroundColor: YELLOW }}><Upload size={15} />{t("home.customizer.upload", "Upload a logo")}<input type="file" accept="image/*" className="sr-only" onChange={(e) => onFile(e.target.files?.[0])} /></label>
+                  {logo && <button type="button" onClick={() => { setLogo(null); setFileNote(""); }} className="text-[13.5px] font-medium underline underline-offset-2">{t("home.customizer.remove", "Remove")}</button>}
                 </div>
                 {fileNote && <p className="mt-2 text-[12.5px] text-[#11120f]/55">{fileNote}</p>}
               </div>
 
               <div className="grid gap-5 sm:grid-cols-2">
-                <label className="block text-sm font-semibold">AI name<input value={name} maxLength={24} onChange={(e) => setName(e.target.value)} className={field} /></label>
-                <label className="block text-sm font-semibold">Greeting<input value={greeting} maxLength={60} onChange={(e) => setGreeting(e.target.value)} className={field} /></label>
+                <label className="block text-sm font-semibold">{t("home.customizer.aiName", "AI name")}<input value={name} maxLength={24} onChange={(e) => setName(e.target.value)} className={field} /></label>
+                <label className="block text-sm font-semibold">{t("home.customizer.greeting", "Greeting")}<input value={greeting} maxLength={60} onChange={(e) => setGreeting(e.target.value)} className={field} /></label>
               </div>
 
               <div className="grid gap-5 sm:grid-cols-2">
-                <div><p className="text-sm font-semibold">Accent colour</p><div className="mt-2 flex flex-wrap gap-2.5">{ACCENTS.map((c) => <button key={c} type="button" aria-label={`Accent ${c}`} aria-pressed={accent === c} onClick={() => setAccent(c)} className="size-9 rounded-full border-2 border-[#11120f] transition hover:-translate-y-0.5" style={{ backgroundColor: c, boxShadow: accent === c ? `0 0 0 3px #fff, 0 0 0 5px ${INK}` : "none" }} />)}</div></div>
-                <div><p className="text-sm font-semibold">Theme</p><div className="mt-2 flex w-fit rounded-full border-2 border-[#11120f] bg-[#fff8ec] p-1">{[[false, "Light"], [true, "Dark"]].map(([v, l]) => <button key={String(v)} type="button" aria-pressed={dark === v} onClick={() => setDark(v as boolean)} className="rounded-full px-4 py-1.5 text-[14px] font-semibold" style={dark === v ? { backgroundColor: INK, color: "#fff" } : undefined}>{l as string}</button>)}</div></div>
+                <div><p className="text-sm font-semibold">{t("home.customizer.accentColour", "Accent colour")}</p><div className="mt-2 flex flex-wrap gap-2.5">{ACCENTS.map((c) => <button key={c} type="button" aria-label={`Accent ${c}`} aria-pressed={accent === c} onClick={() => setAccent(c)} className="size-9 rounded-full border-2 border-[#11120f] transition hover:-translate-y-0.5" style={{ backgroundColor: c, boxShadow: accent === c ? `0 0 0 3px #fff, 0 0 0 5px ${INK}` : "none" }} />)}</div></div>
+                <div><p className="text-sm font-semibold">{t("home.customizer.theme", "Theme")}</p><div className="mt-2 flex w-fit rounded-full border-2 border-[#11120f] bg-[#fff8ec] p-1">{[[false, t("home.customizer.light", "Light")], [true, t("home.customizer.dark", "Dark")]].map(([v, l]) => <button key={String(v)} type="button" aria-pressed={dark === v} onClick={() => setDark(v as boolean)} className="rounded-full px-4 py-1.5 text-[14px] font-semibold" style={dark === v ? { backgroundColor: INK, color: "#fff" } : undefined}>{l as string}</button>)}</div></div>
               </div>
 
               <div>
-                <p className="flex items-center gap-2 text-sm font-semibold"><Languages size={15} />Customer writes in</p>
+                <p className="flex items-center gap-2 text-sm font-semibold"><Languages size={15} />{t("home.customizer.customerWritesIn", "Customer writes in")}</p>
                 <div className="mt-2 flex flex-wrap gap-2">{LANGS.map((l) => <button key={l.k} type="button" aria-pressed={asks === l.k} onClick={() => setAsks(l.k)} className="rounded-full border-2 border-[#11120f] px-3.5 py-1.5 text-[13.5px] font-semibold" style={chip(asks === l.k)}>{l.label}</button>)}</div>
               </div>
               <div>
-                <p className="flex items-center gap-2 text-sm font-semibold"><Bot size={15} />{name || "The AI"} replies in</p>
+                <p className="flex items-center gap-2 text-sm font-semibold"><Bot size={15} />{name || t("home.customizer.theAi", "The AI")} {t("home.customizer.repliesIn", "replies in")}</p>
                 <div className="mt-2 flex flex-wrap gap-2">
-                  <button type="button" aria-pressed={reply === "auto"} onClick={() => setReply("auto")} className="rounded-full border-2 border-[#11120f] px-3.5 py-1.5 text-[13.5px] font-semibold" style={chip(reply === "auto")}>Auto: match the customer</button>
+                  <button type="button" aria-pressed={reply === "auto"} onClick={() => setReply("auto")} className="rounded-full border-2 border-[#11120f] px-3.5 py-1.5 text-[13.5px] font-semibold" style={chip(reply === "auto")}>{t("home.customizer.autoMatch", "Auto: match the customer")}</button>
                   {LANGS.map((l) => <button key={l.k} type="button" aria-pressed={reply === l.k} onClick={() => setReply(l.k)} className="rounded-full border-2 border-[#11120f] px-3.5 py-1.5 text-[13.5px] font-semibold" style={chip(reply === l.k)}>{l.label}</button>)}
                 </div>
               </div>
 
-              <button type="button" role="switch" aria-checked={url} onClick={() => setUrl(!url)} className="flex w-full items-center justify-between rounded-xl border-2 border-[#11120f] px-4 py-3 text-left"><span className="flex items-center gap-2 text-[15px] font-semibold"><Eye size={16} />AI can see the page URL</span><span className="relative h-7 w-12 rounded-full border-2 border-[#11120f] transition-colors" style={{ backgroundColor: url ? GREEN : "#e7e2d6" }}><span className="absolute top-0.5 size-5 rounded-full border-2 border-[#11120f] bg-white transition-all" style={{ left: url ? "calc(100% - 22px)" : "2px" }} /></span></button>
+              <button type="button" role="switch" aria-checked={url} onClick={() => setUrl(!url)} className="flex w-full items-center justify-between rounded-xl border-2 border-[#11120f] px-4 py-3 text-left"><span className="flex items-center gap-2 text-[15px] font-semibold"><Eye size={16} />{t("home.customizer.seesUrl", "AI can see the page URL")}</span><span className="relative h-7 w-12 rounded-full border-2 border-[#11120f] transition-colors" style={{ backgroundColor: url ? GREEN : "#e7e2d6" }}><span className="absolute top-0.5 size-5 rounded-full border-2 border-[#11120f] bg-white transition-all" style={{ left: url ? "calc(100% - 22px)" : "2px" }} /></span></button>
             </div>
           </Rv>
         </div>
@@ -352,24 +383,24 @@ function Customizer() {
           <div className={`${card} mx-auto w-full max-w-[400px] overflow-hidden`} style={{ backgroundColor: bg, color: fg }}>
             <div className="flex items-center gap-3 border-b-2 border-[#11120f] px-4 py-3.5 text-white transition-colors duration-500" style={{ backgroundColor: accent }}>
               <span className="grid size-11 shrink-0 place-items-center overflow-hidden rounded-full border-2 border-[#11120f] bg-white">{avatar}</span>
-              <div className="min-w-0"><p className="truncate font-semibold leading-tight">{name || "Support"}</p><p className="text-[12px] opacity-90">We reply in seconds</p></div>
+              <div className="min-w-0"><p className="truncate font-semibold leading-tight">{name || t("home.customizer.support", "Support")}</p><p className="text-[12px] opacity-90">{t("home.customizer.weReplyFast", "We reply in seconds")}</p></div>
             </div>
             <div className="min-h-[360px] space-y-3 p-4 text-[14px]">
               <div className="flex items-end gap-2">
                 <span className="grid size-7 shrink-0 place-items-center overflow-hidden rounded-full border-2 border-[#11120f] bg-white">{avatar}</span>
                 <div className="max-w-[84%] rounded-2xl rounded-bl-sm border-2 border-[#11120f] px-3.5 py-2.5" style={{ backgroundColor: bub }}>{greeting || "Hi there 👋"}</div>
               </div>
-              {url && <div className={`${mono} mx-auto w-fit rounded-full border-2 border-dashed px-2.5 py-1 text-[9px] opacity-60`} style={{ borderColor: fg }}>Visitor is on /pricing</div>}
+              {url && <div className={`${mono} mx-auto w-fit rounded-full border-2 border-dashed px-2.5 py-1 text-[9px] opacity-60`} style={{ borderColor: fg }}>{t("home.customizer.visitorOn", "Visitor is on")} /pricing</div>}
               <div key={asks} className="ml-auto max-w-[80%] rounded-2xl rounded-br-sm border-2 border-[#11120f] px-3.5 py-2.5 text-white transition-colors duration-500" style={{ backgroundColor: accent, animation: "elpino-rv-pop .3s both" }}>{customer.q}</div>
               <div key={`${asks}-${reply}-${url}`} className="flex items-end gap-2" style={{ animation: "elpino-rv-pop .35s .15s both" }}>
                 <span className="grid size-7 shrink-0 place-items-center overflow-hidden rounded-full border-2 border-[#11120f] bg-white">{avatar}</span>
                 <div className="max-w-[84%] rounded-2xl rounded-bl-sm border-2 border-[#11120f] px-3.5 py-2.5 leading-6" style={{ backgroundColor: bub }}>{url ? replyLang.a1 : replyLang.a0}</div>
               </div>
-              <p className={`${mono} pt-1 text-center text-[9px] opacity-50`}>Replying in {replyLang.label}{reply === "auto" ? " (matched)" : ""}</p>
+              <p className={`${mono} pt-1 text-center text-[9px] opacity-50`}>{t("home.customizer.replyingIn", "Replying in")} {replyLang.label}{reply === "auto" ? ` ${t("home.customizer.matched", "(matched)")}` : ""}</p>
             </div>
-            <div className="flex items-center gap-2 border-t-2 border-[#11120f] px-4 py-3 text-[13px] opacity-70" style={{ backgroundColor: bub }}>Write a message…</div>
+            <div className="flex items-center gap-2 border-t-2 border-[#11120f] px-4 py-3 text-[13px] opacity-70" style={{ backgroundColor: bub }}>{t("home.customizer.writeMessage", "Write a message…")}</div>
           </div>
-          <p className="mx-auto mt-3 max-w-[400px] text-center text-xs text-[#11120f]/50">Preview with sample text. Your real widget uses your own logo, colours and greeting.</p>
+          <p className="mx-auto mt-3 max-w-[400px] text-center text-xs text-[#11120f]/50">{t("home.customizer.previewNote", "Preview with sample text. Your real widget uses your own logo, colours and greeting.")}</p>
         </Rv>
       </div>
     </section>
@@ -377,13 +408,6 @@ function Customizer() {
 }
 
 // -------------------------------------------------------------- product tour
-
-const TOUR = [
-  { href: "/product/ai-agent", c: PURPLE, icon: Bot, tag: "AI agent", t: "An agent that knows who it's talking to", d: "Remembers customers, verifies identity, checks payments and calls your tools." },
-  { href: "/product/inbox", c: GREEN, icon: Inbox, tag: "Shared inbox", t: "One inbox for your team and the AI", d: "Clear ownership, Join alerts and the full context on every thread." },
-  { href: "/product/knowledge-hub", c: YELLOW, icon: BookOpen, tag: "Knowledge Hub", t: "Teach it from anything you have", d: "Crawl your site, upload files, write pages. Public and private switches." },
-  { href: "/product/tickets", c: ORANGE, icon: Ticket, tag: "Tickets", t: "Nothing gets dropped", d: "If nobody's free, a ticket is filed and the customer is told." },
-];
 
 function TourVisual({ k }: { k: string }) {
   const chip = "rounded-lg border-2 border-[#11120f] bg-white px-2.5 py-1.5 font-mono text-[11px] font-semibold";
@@ -393,22 +417,31 @@ function TourVisual({ k }: { k: string }) {
   return <div className="rounded-xl border-2 border-dashed border-[#11120f] bg-white p-3"><p className="font-mono text-[10px] text-[#11120f]/50">REF</p><p className="font-mono text-lg font-bold">7F3A9C21</p><div aria-hidden="true" className="elpino-barcode mt-2 h-7 w-full" /></div>;
 }
 
-function Tour() {
+function Tour({ t }: { t: T }) {
   const keys = ["ai", "inbox", "kb", "tickets"];
+  const colors = [PURPLE, GREEN, YELLOW, ORANGE];
+  const icons = [Bot, Inbox, BookOpen, Ticket];
+  const hrefs = ["/product/ai-agent", "/product/inbox", "/product/knowledge-hub", "/product/tickets"];
+  const items = tList(t, "home.tour.items", [
+    { tag: "AI agent", title: "An agent that knows who it's talking to", desc: "Remembers customers, verifies identity, checks payments and calls your tools." },
+    { tag: "Shared inbox", title: "One inbox for your team and the AI", desc: "Clear ownership, Join alerts and the full context on every thread." },
+    { tag: "Knowledge Hub", title: "Teach it from anything you have", desc: "Crawl your site, upload files, write pages. Public and private switches." },
+    { tag: "Tickets", title: "Nothing gets dropped", desc: "If nobody's free, a ticket is filed and the customer is told." },
+  ]).map((item, i) => ({ ...item, href: hrefs[i], c: colors[i], icon: icons[i] }));
   return (
     <section className="bg-white px-5 py-24 sm:px-8 sm:py-32">
       <div className="mx-auto max-w-6xl">
-        <Heading eyebrow="The product" color={ORANGE} title={<>Everything a support desk needs, <span className="hl">in one place.</span></>} />
+        <Heading eyebrow={t("home.tour.eyebrow", "The product")} color={ORANGE} title={<>{t("home.tour.titlePrefix", "Everything a support desk needs,")} <span className="hl">{t("home.tour.titleHl", "in one place.")}</span></>} />
         <div className="mt-14 grid gap-5 md:grid-cols-2">
-          {TOUR.map((t, i) => (
-            <Rv key={t.href} variant="deal" delay={(i % 2) * 100}>
-              <Link href={t.href} className={`${card} group relative flex h-full flex-col overflow-hidden p-6 transition duration-300 hover:-translate-y-2 hover:rotate-[-0.6deg] sm:p-7`} style={{ backgroundColor: t.c, color: onDark(t.c) }}>
+          {items.map((it, i) => (
+            <Rv key={it.href} variant="deal" delay={(i % 2) * 100}>
+              <Link href={it.href} className={`${card} group relative flex h-full flex-col overflow-hidden p-6 transition duration-300 hover:-translate-y-2 hover:rotate-[-0.6deg] sm:p-7`} style={{ backgroundColor: it.c, color: onDark(it.c) }}>
                 <div aria-hidden="true" className="absolute inset-0 opacity-[0.14]" style={dots} />
                 <div className="relative flex items-start justify-between gap-4">
                   <div>
-                    <span className={`${mono} inline-flex items-center gap-1.5 opacity-80`}><t.icon size={13} />{t.tag}</span>
-                    <h3 className="mt-3 max-w-[18ch] text-[clamp(1.6rem,2.6vw,2.2rem)] font-semibold leading-[1.08] tracking-[-0.035em]">{t.t}</h3>
-                    <p className="mt-2 max-w-[38ch] text-[15.5px] leading-7 opacity-90">{t.d}</p>
+                    <span className={`${mono} inline-flex items-center gap-1.5 opacity-80`}><it.icon size={13} />{it.tag}</span>
+                    <h3 className="mt-3 max-w-[18ch] text-[clamp(1.6rem,2.6vw,2.2rem)] font-semibold leading-[1.08] tracking-[-0.035em]">{it.title}</h3>
+                    <p className="mt-2 max-w-[38ch] text-[15.5px] leading-7 opacity-90">{it.desc}</p>
                   </div>
                   <span className="grid size-10 shrink-0 place-items-center rounded-full border-2 border-[#11120f] bg-white transition-transform duration-300 group-hover:rotate-45"><ArrowUpRight size={18} color={INK} /></span>
                 </div>
@@ -424,18 +457,17 @@ function Tour() {
 
 // -------------------------------------------------------------- who
 
-const WHO = [
-  { href: "/solutions/founders", c: BLUE, icon: Rocket, t: "Founders", d: "Ship product, not support replies. Elpino only taps you when it truly needs a founder.", pts: ["Free plan, 100 AI messages a month", "Alerts you only when a person is needed", "Set up in an afternoon"], vis: "founder" },
-  { href: "/solutions/busy-operators", c: GREEN, icon: Users, t: "Busy teams", d: "Rush hour handled: the AI takes repeats, everyone gets the same Join alert, nobody double-replies.", pts: ["One Join alert reaches the whole team", "Ownership badges on every thread", "A ticket when nobody's free"], vis: "team" },
-  { href: "/solutions/developers", c: PURPLE, icon: Code2, t: "Developers", d: "One tag, a signed identity token and MCP servers. You choose what the AI can touch.", pts: ["One script tag for the widget", "Signed, short-lived identity tokens", "MCP servers, approved tool by tool"], vis: "dev" },
-] as const;
-
-function WhoVisual({ k }: { k: string }) {
+function WhoVisual({ k, t }: { k: string; t: T }) {
+  const founderVisual = tList(t, "home.who.founderVisual", [
+    { q: "How do I export data?", ok: true },
+    { q: "Why did my card fail?", ok: true },
+    { q: "Custom contract?", ok: false },
+  ]);
   if (k === "founder")
     return (
       <div className="space-y-2">
-        {[["How do I export data?", true], ["Why did my card fail?", true], ["Custom contract?", false]].map(([q, ok]) => (
-          <div key={q as string} className="flex items-center justify-between gap-2 rounded-xl border-2 border-[#11120f] bg-white px-3 py-2 text-[12.5px] font-semibold"><span className="truncate">{q as string}</span><span className={`${mono} shrink-0 rounded-full px-2 py-0.5 text-[8.5px] ${ok ? "text-white" : ""}`} style={{ backgroundColor: ok ? GREEN : YELLOW }}>{ok ? "Handled" : "Needs you"}</span></div>
+        {founderVisual.map(({ q, ok }) => (
+          <div key={q} className="flex items-center justify-between gap-2 rounded-xl border-2 border-[#11120f] bg-white px-3 py-2 text-[12.5px] font-semibold"><span className="truncate">{q}</span><span className={`${mono} shrink-0 rounded-full px-2 py-0.5 text-[8.5px] ${ok ? "text-white" : ""}`} style={{ backgroundColor: ok ? GREEN : YELLOW }}>{ok ? t("home.who.handled", "Handled") : t("home.who.needsYou", "Needs you")}</span></div>
         ))}
       </div>
     );
@@ -445,35 +477,44 @@ function WhoVisual({ k }: { k: string }) {
         {[["P", GREEN, true], ["S", BLUE, false], ["D", ORANGE, false], ["L", PINK, false]].map(([n, c, on]) => (
           <span key={n as string} className="grid size-11 place-items-center rounded-full border-2 border-[#11120f] text-sm font-bold text-white" style={{ backgroundColor: c as string, opacity: on ? 1 : 0.55, animation: on ? "elpino-ring 1.6s ease-out infinite" : undefined }}>{n as string}</span>
         ))}
-        <span className={`${mono} ml-1 rounded-full border-2 border-[#11120f] bg-white px-2.5 py-1 text-[9px]`}>Priya joined</span>
+        <span className={`${mono} ml-1 rounded-full border-2 border-[#11120f] bg-white px-2.5 py-1 text-[9px]`}>{t("home.who.joined", "Priya joined")}</span>
       </div>
     );
   return <div className="rounded-xl border-2 border-[#11120f] bg-[#11120f] p-3 font-mono text-[11px] leading-5 text-[#c9f5e2]">{'$elpino.push(["identify", {'}<br />{"  token: elpinoToken"}<br />{"}]);"}</div>;
 }
 
-function Who() {
+function Who({ t }: { t: T }) {
   const [a, setA] = useState(0);
+  const colors = [BLUE, GREEN, PURPLE];
+  const icons = [Rocket, Users, Code2];
+  const hrefs = ["/solutions/founders", "/solutions/busy-operators", "/solutions/developers"];
+  const vis = ["founder", "team", "dev"];
+  const items = tList(t, "home.who.items", [
+    { title: "Founders", desc: "Ship product, not support replies. Elpino only taps you when it truly needs a founder.", pts: ["Free plan, 100 AI messages a month", "Alerts you only when a person is needed", "Set up in an afternoon"] },
+    { title: "Busy teams", desc: "Rush hour handled: the AI takes repeats, everyone gets the same Join alert, nobody double-replies.", pts: ["One Join alert reaches the whole team", "Ownership badges on every thread", "A ticket when nobody's free"] },
+    { title: "Developers", desc: "One tag, a signed identity token and MCP servers. You choose what the AI can touch.", pts: ["One script tag for the widget", "Signed, short-lived identity tokens", "MCP servers, approved tool by tool"] },
+  ]).map((item, i) => ({ ...item, href: hrefs[i], c: colors[i], icon: icons[i], vis: vis[i] }));
   return (
     <section className="bg-[#fff8ec] px-5 py-24 sm:px-8 sm:py-32">
       <div className="mx-auto max-w-6xl">
-        <Heading eyebrow="Who it's for" color={GREEN} title={<>Built for the people <span className="hl">doing the support.</span></>} />
+        <Heading eyebrow={t("home.who.eyebrow", "Who it's for")} color={GREEN} title={<>{t("home.who.titlePrefix", "Built for the people")} <span className="hl">{t("home.who.titleHl", "doing the support.")}</span></>} />
 
         {/* wide: expanding panels */}
         <div className="mt-14 hidden h-[430px] gap-3 lg:flex">
-          {WHO.map((w, i) => {
+          {items.map((w, i) => {
             const on = i === a;
             return (
               <Link key={w.href} href={w.href} onMouseEnter={() => setA(i)} onFocus={() => setA(i)} className={`${card} relative flex min-w-0 flex-col overflow-hidden p-6 text-white transition-[flex-grow] duration-500 ease-out`} style={{ backgroundColor: w.c, flexGrow: on ? 3.4 : 1, flexBasis: 0 }}>
                 <div aria-hidden="true" className="absolute inset-0 opacity-[0.14]" style={dots} />
                 <div className="relative flex items-center gap-3"><span className="grid size-12 shrink-0 place-items-center rounded-2xl border-2 border-[#11120f] bg-white"><w.icon size={22} color={INK} /></span><span className={`${mono} text-white/75`}>0{i + 1}</span></div>
-                {!on && <p className="relative mt-auto text-2xl font-semibold tracking-[-0.03em] [writing-mode:vertical-rl] rotate-180">{w.t}</p>}
+                {!on && <p className="relative mt-auto text-2xl font-semibold tracking-[-0.03em] [writing-mode:vertical-rl] rotate-180">{w.title}</p>}
                 {on && (
                   <div className="relative mt-5 flex min-h-0 flex-1 flex-col" style={{ animation: "elpino-rv-up .5s both" }}>
-                    <h3 className="text-4xl font-semibold tracking-[-0.04em]">{w.t}</h3>
-                    <p className="mt-2 max-w-[40ch] text-[16px] leading-7 text-white/90">{w.d}</p>
+                    <h3 className="text-4xl font-semibold tracking-[-0.04em]">{w.title}</h3>
+                    <p className="mt-2 max-w-[40ch] text-[16px] leading-7 text-white/90">{w.desc}</p>
                     <ul className="mt-4 space-y-1.5">{w.pts.map((p) => <li key={p} className="flex items-center gap-2 text-[14.5px]"><Check size={15} strokeWidth={3} className="shrink-0" />{p}</li>)}</ul>
                     <div className="mt-auto flex items-end justify-between gap-4 pt-4">
-                      <div className="w-[230px] rounded-2xl border-2 border-[#11120f] bg-[#fffdf5] p-3 text-[#11120f]"><WhoVisual k={w.vis} /></div>
+                      <div className="w-[230px] rounded-2xl border-2 border-[#11120f] bg-[#fffdf5] p-3 text-[#11120f]"><WhoVisual k={w.vis} t={t} /></div>
                       <span className="grid size-12 shrink-0 place-items-center rounded-full border-2 border-[#11120f] bg-white"><ArrowUpRight size={20} color={INK} /></span>
                     </div>
                   </div>
@@ -485,11 +526,11 @@ function Who() {
 
         {/* narrow: stacked cards */}
         <div className="mt-14 space-y-4 lg:hidden">
-          {WHO.map((w) => (
+          {items.map((w) => (
             <Link key={w.href} href={w.href} className={`${card} relative block overflow-hidden p-6 text-white`} style={{ backgroundColor: w.c }}>
               <div aria-hidden="true" className="absolute inset-0 opacity-[0.14]" style={dots} />
-              <div className="relative flex items-center gap-3"><span className="grid size-12 place-items-center rounded-2xl border-2 border-[#11120f] bg-white"><w.icon size={22} color={INK} /></span><h3 className="text-3xl font-semibold tracking-[-0.03em]">{w.t}</h3></div>
-              <p className="relative mt-3 text-[16px] leading-7 text-white/90">{w.d}</p>
+              <div className="relative flex items-center gap-3"><span className="grid size-12 place-items-center rounded-2xl border-2 border-[#11120f] bg-white"><w.icon size={22} color={INK} /></span><h3 className="text-3xl font-semibold tracking-[-0.03em]">{w.title}</h3></div>
+              <p className="relative mt-3 text-[16px] leading-7 text-white/90">{w.desc}</p>
               <ul className="relative mt-3 space-y-1.5">{w.pts.map((p) => <li key={p} className="flex items-center gap-2 text-[14.5px]"><Check size={15} strokeWidth={3} className="shrink-0" />{p}</li>)}</ul>
             </Link>
           ))}
@@ -501,11 +542,10 @@ function Who() {
 
 // -------------------------------------------------------------- statement
 
-const STATEMENT = "Elpino answers what it knows, does what you allow, and asks a person for the rest.";
-
-function Statement() {
+function Statement({ t }: { t: T }) {
   const ref = useRef<HTMLElement>(null);
   const [p, setP] = useState(0);
+  const statement = t("home.statement", "Elpino answers what it knows, does what you allow, and asks a person for the rest.");
   useEffect(() => {
     const on = () => {
       const el = ref.current;
@@ -519,11 +559,11 @@ function Statement() {
     window.addEventListener("resize", on);
     return () => { window.removeEventListener("scroll", on); window.removeEventListener("resize", on); };
   }, []);
-  const words = STATEMENT.split(" ");
+  const words = statement.split(" ");
   return (
     <section ref={ref} className="border-y-2 border-[#11120f] bg-[#ffd84d] px-5 py-32 sm:px-8 sm:py-44">
       <p className="mx-auto max-w-5xl text-[clamp(2.4rem,6vw,5.2rem)] font-semibold leading-[1.02] tracking-[-0.05em]">
-        {words.map((w, i) => { const t = Math.min(1, Math.max(0, p * (words.length + 3) - i)); return <span key={i} style={{ color: `rgba(17,18,15,${0.2 + t * 0.8})`, transition: "color .2s" }}>{w} </span>; })}
+        {words.map((w, i) => { const t2 = Math.min(1, Math.max(0, p * (words.length + 3) - i)); return <span key={i} style={{ color: `rgba(17,18,15,${0.2 + t2 * 0.8})`, transition: "color .2s" }}>{w} </span>; })}
       </p>
     </section>
   );
@@ -558,19 +598,21 @@ function OrbitNode({ n, i, total, ring }: { n: Node; i: number; total: number; r
   );
 }
 
-function Integrations() {
+function Integrations({ t }: { t: T }) {
+  const tags = tList(t, "home.integrations.tags", ["Payments", "Tickets", "Your systems"]);
+  const tagColors = [BLUE, GREEN, ORANGE];
   return (
     <section className="overflow-hidden bg-white px-5 py-24 sm:px-8 sm:py-32">
       <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1fr_1.05fr]">
         <div>
-          <Rv variant="drop"><Stamp color={PINK}><Plug size={13} />Integrations</Stamp></Rv>
-          <Rv delay={80}><h2 className="mt-5 text-[clamp(2.2rem,5vw,3.9rem)] font-semibold leading-[1.02] tracking-[-0.045em]">Plugs into what <span className="hl">you already use.</span></h2></Rv>
-          <Rv delay={160}><p className="mt-5 max-w-[46ch] text-lg leading-8 text-[#11120f]/65">Payments for lookups and links, project tools for tickets, and MCP for your own systems. Elpino sits in the middle, and everything you connect works with it.</p></Rv>
+          <Rv variant="drop"><Stamp color={PINK}><Plug size={13} />{t("home.integrations.eyebrow", "Integrations")}</Stamp></Rv>
+          <Rv delay={80}><h2 className="mt-5 text-[clamp(2.2rem,5vw,3.9rem)] font-semibold leading-[1.02] tracking-[-0.045em]">{t("home.integrations.titlePrefix", "Plugs into what")} <span className="hl">{t("home.integrations.titleHl", "you already use.")}</span></h2></Rv>
+          <Rv delay={160}><p className="mt-5 max-w-[46ch] text-lg leading-8 text-[#11120f]/65">{t("home.integrations.subtitle", "Payments for lookups and links, project tools for tickets, and MCP for your own systems. Elpino sits in the middle, and everything you connect works with it.")}</p></Rv>
           <Rv delay={220}>
             <div className="mt-7 flex flex-wrap gap-2.5">
-              {[["Payments", BLUE], ["Tickets", GREEN], ["Your systems", ORANGE]].map(([l, c]) => <span key={l} className="inline-flex items-center gap-2 rounded-full border-2 border-[#11120f] bg-[#fffdf5] px-4 py-2 text-[14.5px] font-semibold"><span className="size-3 rounded-full border-2 border-[#11120f]" style={{ backgroundColor: c }} />{l}</span>)}
+              {tags.map((l, i) => <span key={l} className="inline-flex items-center gap-2 rounded-full border-2 border-[#11120f] bg-[#fffdf5] px-4 py-2 text-[14.5px] font-semibold"><span className="size-3 rounded-full border-2 border-[#11120f]" style={{ backgroundColor: tagColors[i] }} />{l}</span>)}
             </div>
-            <Link href="/integrations" className="mt-8 inline-flex items-center gap-2 rounded-full border-2 border-[#11120f] px-6 py-3 font-semibold transition hover:-translate-y-0.5" style={{ backgroundColor: YELLOW }}>See all integrations <ArrowRight size={16} /></Link>
+            <Link href="/integrations" className="mt-8 inline-flex items-center gap-2 rounded-full border-2 border-[#11120f] px-6 py-3 font-semibold transition hover:-translate-y-0.5" style={{ backgroundColor: YELLOW }}>{t("home.integrations.cta", "See all integrations")} <ArrowRight size={16} /></Link>
           </Rv>
         </div>
 
@@ -595,22 +637,22 @@ function Integrations() {
 
 // -------------------------------------------------------------- trust
 
-function Trust() {
+function Trust({ t }: { t: T }) {
   const [refunds, setRefunds] = useState(false);
-  const rules = [
-    { icon: BookOpen, c: BLUE, t: "Answer only from approved knowledge", d: "If it isn't in your knowledge, it says so and offers a person.", lock: true },
-    { icon: Lock, c: PURPLE, t: "Hide names and emails from the AI", d: "The model sees reference codes, not your customers' identities.", lock: true },
-    { icon: KeyRound, c: GREEN, t: "Verify before anything personal", d: "An email code or a signed token comes first.", lock: true },
-    { icon: Plug, c: PINK, t: "Only tools you switched on", d: "Every MCP tool is approved by you, one at a time.", lock: true },
-  ];
+  const rules = tList(t, "home.trust.rules", [
+    { title: "Answer only from approved knowledge", desc: "If it isn't in your knowledge, it says so and offers a person." },
+    { title: "Hide names and emails from the AI", desc: "The model sees reference codes, not your customers' identities." },
+    { title: "Verify before anything personal", desc: "An email code or a signed token comes first." },
+    { title: "Only tools you switched on", desc: "Every MCP tool is approved by you, one at a time." },
+  ]).map((r, i) => ({ ...r, icon: [BookOpen, Lock, KeyRound, Plug][i], c: [BLUE, PURPLE, GREEN, PINK][i] }));
   return (
     <section className="bg-[#11120f] px-5 py-24 text-white sm:px-8 sm:py-32">
       <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[.9fr_1.1fr]">
         <div>
-          <Rv variant="drop"><Stamp color={GREEN}><ShieldCheck size={13} />Trust</Stamp></Rv>
-          <Rv delay={80}><h2 className="mt-5 text-[clamp(2.2rem,5vw,3.9rem)] font-semibold leading-[1.02] tracking-[-0.045em]">Powerful, with <span className="rounded-md px-2" style={{ backgroundColor: YELLOW, color: INK }}>the brakes on.</span></h2></Rv>
-          <Rv delay={160}><p className="mt-5 max-w-[44ch] text-lg leading-8 text-white/65">This is the rulebook Elpino works under. Most of it is always on. The parts that move money are yours to switch on.</p></Rv>
-          <Rv delay={220}><Link href="/security-guide" className="mt-8 inline-flex items-center gap-2 rounded-full border-2 border-white/40 px-6 py-3 font-semibold transition hover:bg-white hover:text-[#11120f]">Read the security guide <ArrowRight size={16} /></Link></Rv>
+          <Rv variant="drop"><Stamp color={GREEN}><ShieldCheck size={13} />{t("home.trust.eyebrow", "Trust")}</Stamp></Rv>
+          <Rv delay={80}><h2 className="mt-5 text-[clamp(2.2rem,5vw,3.9rem)] font-semibold leading-[1.02] tracking-[-0.045em]">{t("home.trust.titlePrefix", "Powerful, with")} <span className="rounded-md px-2" style={{ backgroundColor: YELLOW, color: INK }}>{t("home.trust.titleHl", "the brakes on.")}</span></h2></Rv>
+          <Rv delay={160}><p className="mt-5 max-w-[44ch] text-lg leading-8 text-white/65">{t("home.trust.subtitle", "This is the rulebook Elpino works under. Most of it is always on. The parts that move money are yours to switch on.")}</p></Rv>
+          <Rv delay={220}><Link href="/security-guide" className="mt-8 inline-flex items-center gap-2 rounded-full border-2 border-white/40 px-6 py-3 font-semibold transition hover:bg-white hover:text-[#11120f]">{t("home.trust.cta", "Read the security guide")} <ArrowRight size={16} /></Link></Rv>
         </div>
 
         <Rv variant="deal" delay={100}>
@@ -618,20 +660,20 @@ function Trust() {
             <div className="flex items-center gap-3 border-b-2 border-[#11120f] bg-white px-5 py-4">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/icon.png" alt="" className="size-9 rounded-full border-2 border-[#11120f] bg-white object-contain p-0.5" />
-              <div><p className="font-semibold leading-tight">Elpino&apos;s rulebook</p><p className={`${mono} text-[#11120f]/50`}>Set by you</p></div>
-              <span className={`${mono} ml-auto inline-flex items-center gap-1.5 rounded-full border-2 border-[#11120f] px-2.5 py-1 text-[9px] text-white`} style={{ backgroundColor: GREEN }}><ShieldCheck size={11} />Guardrails on</span>
+              <div><p className="font-semibold leading-tight">{t("home.trust.rulebook", "Elpino's rulebook")}</p><p className={`${mono} text-[#11120f]/50`}>{t("home.trust.setByYou", "Set by you")}</p></div>
+              <span className={`${mono} ml-auto inline-flex items-center gap-1.5 rounded-full border-2 border-[#11120f] px-2.5 py-1 text-[9px] text-white`} style={{ backgroundColor: GREEN }}><ShieldCheck size={11} />{t("home.trust.guardrailsOn", "Guardrails on")}</span>
             </div>
             <div className="divide-y-2 divide-[#11120f]/10">
               {rules.map((r, i) => (
-                <div key={r.t} className="flex items-center gap-4 px-5 py-4" style={{ animation: `elpino-rv-up .5s ${i * 0.08}s both` }}>
+                <div key={r.title} className="flex items-center gap-4 px-5 py-4" style={{ animation: `elpino-rv-up .5s ${i * 0.08}s both` }}>
                   <span className="grid size-11 shrink-0 place-items-center rounded-xl border-2 border-[#11120f]" style={{ backgroundColor: r.c }}><r.icon size={20} color="#fff" /></span>
-                  <div className="min-w-0 flex-1"><p className="text-[16px] font-semibold leading-snug">{r.t}</p><p className="text-[13.5px] leading-5 text-[#11120f]/60">{r.d}</p></div>
-                  <span className={`${mono} inline-flex shrink-0 items-center gap-1 rounded-full border-2 border-[#11120f] bg-[#eafaf3] px-2.5 py-1 text-[9px]`}><Lock size={10} />Always on</span>
+                  <div className="min-w-0 flex-1"><p className="text-[16px] font-semibold leading-snug">{r.title}</p><p className="text-[13.5px] leading-5 text-[#11120f]/60">{r.desc}</p></div>
+                  <span className={`${mono} inline-flex shrink-0 items-center gap-1 rounded-full border-2 border-[#11120f] bg-[#eafaf3] px-2.5 py-1 text-[9px]`}><Lock size={10} />{t("home.trust.alwaysOn", "Always on")}</span>
                 </div>
               ))}
               <div className="flex items-center gap-4 bg-[#fff6cf] px-5 py-4">
                 <span className="grid size-11 shrink-0 place-items-center rounded-xl border-2 border-[#11120f]" style={{ backgroundColor: ORANGE }}><Wallet size={20} color="#fff" /></span>
-                <div className="min-w-0 flex-1"><p className="text-[16px] font-semibold leading-snug">Let the AI issue refunds</p><p className="text-[13.5px] leading-5 text-[#11120f]/60">{refunds ? "On. The AI may refund, using the workspace owner's setting." : "Off by default. Only the workspace owner can turn it on."}</p></div>
+                <div className="min-w-0 flex-1"><p className="text-[16px] font-semibold leading-snug">{t("home.trust.refundTitle", "Let the AI issue refunds")}</p><p className="text-[13.5px] leading-5 text-[#11120f]/60">{refunds ? t("home.trust.refundOn", "On. The AI may refund, using the workspace owner's setting.") : t("home.trust.refundOff", "Off by default. Only the workspace owner can turn it on.")}</p></div>
                 <button type="button" role="switch" aria-checked={refunds} aria-label="Let the AI issue refunds" onClick={() => setRefunds(!refunds)} className="relative h-7 w-12 shrink-0 rounded-full border-2 border-[#11120f] transition-colors" style={{ backgroundColor: refunds ? GREEN : "#e7e2d6" }}><span className="absolute top-0.5 size-5 rounded-full border-2 border-[#11120f] bg-white transition-all" style={{ left: refunds ? "calc(100% - 22px)" : "2px" }} /></button>
               </div>
             </div>
@@ -644,16 +686,16 @@ function Trust() {
 
 // -------------------------------------------------------------- pricing
 
-function Pricing() {
-  const plans = [
-    { name: "Free", big: "$0", note: "100 AI messages a month", pts: ["No card required", "Widget, knowledge and inbox", "Handoffs never cost extra"], c: "#fff" },
-    { name: "Paid plans", big: "Credit-based", note: "A monthly AI credit that fits your volume", pts: ["Payment and account tools", "Room for a bigger team", "Top up any time"], c: YELLOW },
-    { name: "Extra teammates", big: "Seat packs", note: "Add seats that renew with your plan", pts: ["Only when you grow", "Same inbox, more hands", "Cancel any time"], c: "#c9d9ff" },
-  ];
+function Pricing({ t }: { t: T }) {
+  const plans = tList(t, "home.pricing.plans", [
+    { name: "Free", big: "$0", note: "100 AI messages a month", pts: ["No card required", "Widget, knowledge and inbox", "Handoffs never cost extra"] },
+    { name: "Paid plans", big: "Credit-based", note: "A monthly AI credit that fits your volume", pts: ["Payment and account tools", "Room for a bigger team", "Top up any time"] },
+    { name: "Extra teammates", big: "Seat packs", note: "Add seats that renew with your plan", pts: ["Only when you grow", "Same inbox, more hands", "Cancel any time"] },
+  ]).map((p, i) => ({ ...p, c: ["#fff", YELLOW, "#c9d9ff"][i] }));
   return (
     <section className="bg-white px-5 py-24 sm:px-8 sm:py-32">
       <div className="mx-auto max-w-6xl">
-        <Heading eyebrow="Pricing" color={YELLOW} title={<>Pay for the help, <span className="hl">not the headcount.</span></>} sub="Start free. Paid plans are metered by the work the AI does." />
+        <Heading eyebrow={t("home.pricing.eyebrow", "Pricing")} color={YELLOW} title={<>{t("home.pricing.titlePrefix", "Pay for the help,")} <span className="hl">{t("home.pricing.titleHl", "not the headcount.")}</span></>} sub={t("home.pricing.subtitle", "Start free. Paid plans are metered by the work the AI does.")} />
         <div className="mt-14 grid gap-5 md:grid-cols-3">
           {plans.map((p, i) => (
             <Rv key={p.name} variant="deal" delay={i * 100}>
@@ -666,7 +708,7 @@ function Pricing() {
             </Rv>
           ))}
         </div>
-        <Rv delay={150}><div className="mt-10 text-center"><Link href="/pricing" className="inline-flex items-center gap-2 rounded-full border-2 border-[#11120f] bg-[#11120f] px-7 py-3.5 font-semibold text-white transition hover:-translate-y-0.5">See full pricing <ArrowRight size={16} /></Link></div></Rv>
+        <Rv delay={150}><div className="mt-10 text-center"><Link href="/pricing" className="inline-flex items-center gap-2 rounded-full border-2 border-[#11120f] bg-[#11120f] px-7 py-3.5 font-semibold text-white transition hover:-translate-y-0.5">{t("home.pricing.cta", "See full pricing")} <ArrowRight size={16} /></Link></div></Rv>
       </div>
     </section>
   );
@@ -674,23 +716,22 @@ function Pricing() {
 
 // -------------------------------------------------------------- faq + cta
 
-const FAQS: [string, string][] = [
-  ["What is Elpino?", "An AI customer support platform: a website chat widget, an AI agent that answers from your knowledge and checks real payments, a shared team inbox, and tickets when nobody's free."],
-  ["Will the AI make things up?", "It answers from the knowledge you've approved, and a review pass checks drafts against tool results. When it doesn't know, it says so and offers a person."],
-  ["What happens when it can't help?", "It asks the customer first. On a yes, every teammate gets a Join alert and has 90 seconds to jump in. If nobody does, a ticket is filed and the customer is emailed."],
-  ["How long does setup take?", "Most teams are live the same day: add your knowledge, paste the widget snippet and invite your team."],
-  ["Is there a free plan?", "Yes: 100 AI messages a month, no card required."],
-  ["Does it work on other channels?", "Website chat is live today. Omnichannel is coming in November."],
-];
-
-function Faq() {
+function Faq({ t }: { t: T }) {
   const [open, setOpen] = useState(0);
+  const items = tList(t, "home.faq.items", [
+    { q: "What is Elpino?", a: "An AI customer support platform: a website chat widget, an AI agent that answers from your knowledge and checks real payments, a shared team inbox, and tickets when nobody's free." },
+    { q: "Will the AI make things up?", a: "It answers from the knowledge you've approved, and a review pass checks drafts against tool results. When it doesn't know, it says so and offers a person." },
+    { q: "What happens when it can't help?", a: "It asks the customer first. On a yes, every teammate gets a Join alert and has 90 seconds to jump in. If nobody does, a ticket is filed and the customer is emailed." },
+    { q: "How long does setup take?", a: "Most teams are live the same day: add your knowledge, paste the widget snippet and invite your team." },
+    { q: "Is there a free plan?", a: "Yes: 100 AI messages a month, no card required." },
+    { q: "Does it work on other channels?", a: "Website chat is live today. Omnichannel is coming in November." },
+  ]);
   return (
     <section className="bg-[#fff8ec] px-5 py-24 sm:px-8 sm:py-28">
       <div className="mx-auto max-w-3xl">
-        <Heading eyebrow="Questions" color={PURPLE} title={<>Things people <span className="hl">ask first.</span></>} />
+        <Heading eyebrow={t("home.faq.eyebrow", "Questions")} color={PURPLE} title={<>{t("home.faq.titlePrefix", "Things people")} <span className="hl">{t("home.faq.titleHl", "ask first.")}</span></>} />
         <div className="mt-12 space-y-3">
-          {FAQS.map(([q, a], i) => (
+          {items.map(({ q, a }, i) => (
             <Rv key={q} variant="up" delay={i * 50}>
               <div className={`${card} overflow-hidden ${open === i ? "bg-[#fffdf5]" : "bg-white"}`}>
                 <button type="button" aria-expanded={open === i} onClick={() => setOpen(open === i ? -1 : i)} className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left text-[17px] font-semibold">
@@ -709,18 +750,18 @@ function Faq() {
   );
 }
 
-function Closing() {
+function Closing({ t }: { t: T }) {
   return (
     <section className="bg-white px-5 pb-24 sm:px-8">
       <Rv variant="pop">
         <div className={`${card} relative mx-auto max-w-6xl overflow-hidden px-6 py-16 text-center text-white sm:px-12`} style={{ backgroundColor: BLUE }}>
           <div aria-hidden="true" className="absolute inset-0 opacity-[0.16]" style={dots} />
           <Image src="/icon.png" alt="" width={96} height={96} className="relative mx-auto size-24 rounded-full border-2 border-[#11120f] bg-white p-1.5" style={{ animation: "elpino-float 4.5s ease-in-out infinite" }} />
-          <h2 className="relative mx-auto mt-6 max-w-3xl text-[clamp(2.3rem,5.4vw,4.4rem)] font-semibold leading-[1.02] tracking-[-0.05em]">Give your customers the answer before they finish typing.</h2>
-          <p className="relative mx-auto mt-5 max-w-xl text-lg leading-8 text-white/85">Start free, teach it your business, and let it take the repeat questions.</p>
+          <h2 className="relative mx-auto mt-6 max-w-3xl text-[clamp(2.3rem,5.4vw,4.4rem)] font-semibold leading-[1.02] tracking-[-0.05em]">{t("home.closing.title", "Give your customers the answer before they finish typing.")}</h2>
+          <p className="relative mx-auto mt-5 max-w-xl text-lg leading-8 text-white/85">{t("home.closing.subtitle", "Start free, teach it your business, and let it take the repeat questions.")}</p>
           <div className="relative mt-8 flex flex-wrap justify-center gap-3">
-            <Link href="/signup" className="inline-flex h-13 items-center gap-2 rounded-full border-2 border-[#11120f] px-8 font-semibold text-[#11120f] transition hover:-translate-y-0.5" style={{ backgroundColor: YELLOW }}>Start free <ArrowRight size={16} /></Link>
-            <Link href="/contact" className="inline-flex h-13 items-center rounded-full border-2 border-[#11120f] bg-white px-8 font-semibold text-[#11120f] transition hover:-translate-y-0.5">Talk to us</Link>
+            <Link href="/signup" className="inline-flex h-13 items-center gap-2 rounded-full border-2 border-[#11120f] px-8 font-semibold text-[#11120f] transition hover:-translate-y-0.5" style={{ backgroundColor: YELLOW }}>{t("home.closing.ctaPrimary", "Start free")} <ArrowRight size={16} /></Link>
+            <Link href="/contact" className="inline-flex h-13 items-center rounded-full border-2 border-[#11120f] bg-white px-8 font-semibold text-[#11120f] transition hover:-translate-y-0.5">{t("home.closing.ctaSecondary", "Talk to us")}</Link>
           </div>
         </div>
       </Rv>
@@ -729,20 +770,22 @@ function Closing() {
 }
 
 export function HomeView() {
+  const language = useStoredLanguage();
+  const { t } = useTranslation(language as any);
   return (
     <>
-      <Hero />
-      <Marquee />
-      <TryIt />
-      <Customizer />
-      <Tour />
-      <Who />
-      <Statement />
-      <Integrations />
-      <Trust />
-      <Pricing />
-      <Faq />
-      <Closing />
+      <Hero t={t} />
+      <Marquee t={t} />
+      <TryIt t={t} />
+      <Customizer t={t} />
+      <Tour t={t} />
+      <Who t={t} />
+      <Statement t={t} />
+      <Integrations t={t} />
+      <Trust t={t} />
+      <Pricing t={t} />
+      <Faq t={t} />
+      <Closing t={t} />
     </>
   );
 }

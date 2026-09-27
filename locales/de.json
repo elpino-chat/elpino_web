@@ -47,7 +47,95 @@
       "privacy": "Datenschutzerklärung zu",
       "successTitle": "Nachricht gesendet",
       "successBody": "Danke für Ihre Nachricht. Wir melden uns in Kürze bei Ihnen.",
-      "sendAnother": "Weitere Nachricht senden"
+      "sendAnother": "Weitere Nachricht senden",
+      "sentStamp": "Gesendet ✓",
+      "postmarkLabel": "Post",
+      "securityNote": "Sicher gesendet — nie für Training verwendet"
+    },
+    "hero": {
+      "eyebrow": "Kontakt · die Poststelle",
+      "greeting": "Hallo.",
+      "titlePrefix": "Wie können",
+      "titleHl": "wir helfen?",
+      "searchLabel": "Hilfethemen durchsuchen",
+      "searchPlaceholder": "Vertrieb, Support, Abrechnung und mehr durchsuchen",
+      "searchButtonLabel": "Suchen",
+      "noMatch": "Keine genaue Übereinstimmung. Drücken Sie Enter, um uns Ihre Frage zu senden.",
+      "linkGettingStarted": "Erste Schritte",
+      "linkFeaturedGuides": "Empfohlene Anleitungen",
+      "linkPlansBilling": "Pläne & Abrechnung",
+      "linkSendMessage": "Oder senden Sie uns eine Nachricht ↓"
+    },
+    "desks": {
+      "eyebrow": "Weg auswählen",
+      "titlePrefix": "Die richtige ",
+      "titleHl": "Abteilung erreichen.",
+      "subtitle": "Wählen Sie den Kanal, der am besten zu Ihrem Anliegen passt. Jeder Weg führt zu einem echten Mitglied unseres Teams.",
+      "deskLabel": "Schalter {n}",
+      "addressed": "Postkarte adressiert ✓",
+      "actionAddress": "Postkarte adressieren",
+      "emailNote": "Bevorzugen Sie Ihre eigene Mail-App? Jeder Schalter mit einer Adresse funktioniert auch per {link}.",
+      "emailNoteLink": "E-Mail"
+    },
+    "postcard": {
+      "eyebrow": "Senden Sie uns eine Nachricht",
+      "titlePrefix": "Ein echter Mensch ",
+      "titleHl": "liest das.",
+      "addressedTo": "Adressiert an"
+    },
+    "tracking": {
+      "eyebrow": "Ihre Postkarte verfolgen",
+      "titlePrefix": "Was passiert, ",
+      "titleHl": "nachdem Sie senden.",
+      "onlineStatus": "Unser Team ist online",
+      "hours": "Mo–Fr, 9:00–18:00 MEZ",
+      "steps": [
+        {
+          "title": "Gesendet",
+          "body": "Ihre Postkarte verlässt Ihre Hände. Nichts weiter zu tun."
+        },
+        {
+          "title": "Wir lesen jedes Wort",
+          "body": "Ihre Nachricht landet bei einem Menschen im Team — kein Ticket-Labyrinth, keine Bots."
+        },
+        {
+          "title": "Antwort innerhalb eines Werktags",
+          "body": "Echte Antworten von jemandem, der am Produkt arbeitet."
+        },
+        {
+          "title": "Ein Anruf, falls hilfreich",
+          "body": "Für Vertrieb und Unternehmen gehen wir Elpino anhand Ihres tatsächlichen Workflows durch."
+        }
+      ]
+    },
+    "library": {
+      "titlePrefix": "Möchten Sie es lieber ",
+      "titleHl": "selbst finden?",
+      "subtitle": "Die meisten Fragen sind hier bereits beantwortet — und alles unten verlinkt direkt zur Quelle.",
+      "cardLabel": "Karte {n}",
+      "items": [
+        {
+          "title": "Schnelle Antworten",
+          "body": "Einrichtung, Abrechnung, Eskalation und Sicherheit — beantwortet in den FAQ.",
+          "cta": "FAQ durchsuchen"
+        },
+        {
+          "title": "Dokumentation",
+          "body": "Installationsanleitungen, Connector-Einrichtung und Workspace-Konfiguration.",
+          "cta": "Dokumentation öffnen"
+        },
+        {
+          "title": "Sicherheit & Datenschutz",
+          "body": "Wie Ihre Daten verschlüsselt und gespeichert werden, und nie für Training verwendet werden.",
+          "cta": "Richtlinien lesen"
+        }
+      ]
+    },
+    "search": {
+      "plansTitle": "Pläne und Abrechnung",
+      "plansDetail": "Fragen zu Abonnements, Rechnungen oder Preisen",
+      "accountTitle": "Konto und Sicherheit",
+      "accountDetail": "Hilfe bei Zugriff, Datenschutz oder Kontoeinstellungen"
     }
   },
   "auth": {
@@ -105,6 +193,4130 @@
         "lowercase": "Kleinbuchstabe",
         "number": "Zahl"
       }
+    }
+  },
+  "home": {
+    "hero": {
+      "badge": "KI-Kundensupport",
+      "titlePrefix": "Support, der",
+      "words": [
+        "antwortet.",
+        "löst.",
+        "sich erinnert.",
+        "weiterleitet."
+      ],
+      "subtitle": "Eine KI, die aus Ihrem eigenen Wissen antwortet, echte Zahlungen und Bestellungen prüft und mit der vollständigen Vorgeschichte an Ihr Team übergibt, wenn ein Mensch gebraucht wird.",
+      "ctaPrimary": "Kostenlos starten",
+      "ctaSecondary": "Selbst ausprobieren",
+      "trust": [
+        "100 kostenlose KI-Nachrichten pro Monat",
+        "Keine Kreditkarte nötig",
+        "In einem Nachmittag startklar"
+      ],
+      "stickers": [
+        "Von KI gelöst",
+        "Mensch in Bereitschaft",
+        "Standardmäßig privat",
+        "Nichts geht verloren"
+      ],
+      "callouts": [
+        "KI-Badge auf jedem Thread",
+        "Beitreten, um zu übernehmen",
+        "Standort & Gerät des Besuchers"
+      ],
+      "widget": {
+        "name": "Elpino",
+        "subtitle": "Antwortet in Sekunden",
+        "convo": [
+          "Wurde ich für mein Upgrade doppelt belastet?",
+          "Ihre Zahlungshistorie wurde geprüft",
+          "Sie wurden nur einmal belastet. Der zweite Versuch ist fehlgeschlagen und wurde nie abgebucht."
+        ]
+      }
+    },
+    "marquee": {
+      "questions": [
+        "Wo ist meine Rechnung?",
+        "Wie setze ich mein Passwort zurück?",
+        "Wurde ich doppelt belastet?",
+        "Kann ich eine Rückerstattung bekommen?",
+        "Wo ist meine Bestellung?",
+        "Wie füge ich ein Teammitglied hinzu?",
+        "Sind meine Daten sicher?",
+        "Warum ist meine Zahlung fehlgeschlagen?",
+        "Kann ich mit jemandem sprechen?"
+      ]
+    },
+    "tryit": {
+      "eyebrow": "Ausprobieren",
+      "titlePrefix": "Fragen Sie etwas.",
+      "titleHl": "Sehen Sie, was passiert.",
+      "subtitle": "Wählen Sie eine Kundenfrage. Links der Chat, rechts alles, was Elpino getan hat, bevor es geantwortet hat.",
+      "widgetName": "Elpino",
+      "widgetSubtitle": "KI-Support",
+      "whatItDid": "Was Elpino getan hat",
+      "done": "Fertig",
+      "working": "Arbeitet…",
+      "stepStart": "Start",
+      "stepOther": "Schritt",
+      "person": "Mensch",
+      "resolved": "gelöst",
+      "humanNote": "Zuerst gefragt · ein Teammitglied kann beitreten, oder ein Ticket wird erstellt",
+      "resolvedNote": "Beantwortet und gelöst, kein Mensch nötig",
+      "sampleNote": "Beispielantworten. Die gezeigten Schritte sind die Art von Werkzeugen, die Elpino wirklich nutzt.",
+      "qas": [
+        {
+          "q": "Wurde ich doppelt belastet?",
+          "steps": [
+            "Sie per E-Mail-Code verifiziert",
+            "Ihre Zahlungshistorie geprüft"
+          ],
+          "a": "Sie wurden nur einmal belastet. Der zweite Versuch ist fehlgeschlagen und wurde nie abgebucht."
+        },
+        {
+          "q": "Wo ist meine Bestellung?",
+          "steps": [
+            "Sie per E-Mail-Code verifiziert",
+            "Ihren Shop über MCP kontaktiert"
+          ],
+          "a": "Sie wurde gestern versendet und kommt am Donnerstag an. Ich habe Ihnen den Tracking-Link gemailt."
+        },
+        {
+          "q": "Wie setze ich mein Passwort zurück?",
+          "steps": [
+            "Ihre Wissensdatenbank durchsucht"
+          ],
+          "a": "Wählen Sie „Passwort vergessen“ auf der Anmeldeseite und folgen Sie dem Link, den wir Ihnen mailen."
+        },
+        {
+          "q": "Kann ich eine Rückerstattung bekommen?",
+          "steps": [
+            "Die Zahlung geprüft",
+            "Rückerstattungen sind für diesen Arbeitsbereich deaktiviert"
+          ],
+          "a": "Das kann ich nicht selbst erstatten. Möchten Sie, dass ich Sie mit unserem Team verbinde?"
+        },
+        {
+          "q": "Kann ich mit jemandem sprechen?",
+          "steps": [
+            "Vor der Übergabe gefragt",
+            "Das ganze Team gleichzeitig benachrichtigt"
+          ],
+          "a": "Priya aus unserem Team ist beigetreten und hat das ganze Gespräch."
+        },
+        {
+          "q": "Verkaufen Sie Geschenkkarten?",
+          "steps": [
+            "Ihre Wissensdatenbank durchsucht",
+            "Keine Übereinstimmung gefunden"
+          ],
+          "a": "Diese Information habe ich nicht. Möchten Sie, dass ich Sie mit unserem Team verbinde?"
+        }
+      ]
+    },
+    "customizer": {
+      "eyebrow": "Machen Sie es zu Ihrem",
+      "titlePrefix": "Ein Widget, das",
+      "titleHl": "aussieht und klingt wie Sie.",
+      "subtitle": "Fügen Sie Ihr Logo hinzu, benennen Sie Ihre KI, wählen Sie Farbe und Design, und legen Sie die Antwortsprache fest. Spielen Sie mit den Reglern und sehen Sie, wie sich das Widget verändert.",
+      "yourLogo": "Ihr Logo",
+      "upload": "Logo hochladen",
+      "remove": "Entfernen",
+      "fileTooBig": "Verwenden Sie ein Bild unter 2 MB.",
+      "fileShown": "Wird nur hier angezeigt. Es wird nirgendwo hochgeladen.",
+      "aiName": "KI-Name",
+      "greeting": "Begrüßung",
+      "accentColour": "Akzentfarbe",
+      "theme": "Design",
+      "light": "Hell",
+      "dark": "Dunkel",
+      "customerWritesIn": "Kunde schreibt auf",
+      "theAi": "Die KI",
+      "repliesIn": "antwortet auf",
+      "autoMatch": "Automatisch: passt sich dem Kunden an",
+      "seesUrl": "KI kann die Seiten-URL sehen",
+      "visitorOn": "Besucher ist auf",
+      "replyingIn": "Antwortet auf",
+      "matched": "(angepasst)",
+      "writeMessage": "Nachricht schreiben…",
+      "previewNote": "Vorschau mit Beispieltext. Ihr echtes Widget nutzt Ihr eigenes Logo, Ihre Farben und Begrüßung.",
+      "support": "Support",
+      "weReplyFast": "Wir antworten in Sekunden"
+    },
+    "tour": {
+      "eyebrow": "Das Produkt",
+      "titlePrefix": "Alles, was ein Support-Team braucht,",
+      "titleHl": "an einem Ort.",
+      "items": [
+        {
+          "tag": "KI-Agent",
+          "title": "Ein Agent, der weiß, mit wem er spricht",
+          "desc": "Merkt sich Kunden, verifiziert Identitäten, prüft Zahlungen und ruft Ihre Tools auf."
+        },
+        {
+          "tag": "Gemeinsamer Posteingang",
+          "title": "Ein Posteingang für Team und KI",
+          "desc": "Klare Zuständigkeit, Beitreten-Benachrichtigungen und der volle Kontext bei jedem Thread."
+        },
+        {
+          "tag": "Wissensdatenbank",
+          "title": "Bringen Sie ihr alles bei, was Sie haben",
+          "desc": "Crawlen Sie Ihre Website, laden Sie Dateien hoch, schreiben Sie Seiten. Mit öffentlich/privat-Schaltern."
+        },
+        {
+          "tag": "Tickets",
+          "title": "Nichts geht unter",
+          "desc": "Ist niemand verfügbar, wird ein Ticket erstellt und der Kunde informiert."
+        }
+      ]
+    },
+    "who": {
+      "eyebrow": "Für wen",
+      "titlePrefix": "Gebaut für die Menschen,",
+      "titleHl": "die den Support machen.",
+      "items": [
+        {
+          "title": "Gründer",
+          "desc": "Bauen Sie Produkt, keine Support-Antworten. Elpino meldet sich nur, wenn wirklich ein Gründer gebraucht wird.",
+          "pts": [
+            "Kostenloser Plan, 100 KI-Nachrichten pro Monat",
+            "Benachrichtigt Sie nur, wenn ein Mensch nötig ist",
+            "Einrichtung an einem Nachmittag"
+          ]
+        },
+        {
+          "title": "Beschäftigte Teams",
+          "desc": "Stoßzeiten im Griff: Die KI übernimmt Wiederholungen, alle bekommen dieselbe Beitreten-Benachrichtigung, niemand antwortet doppelt.",
+          "pts": [
+            "Eine Beitreten-Benachrichtigung erreicht das ganze Team",
+            "Zuständigkeits-Badges auf jedem Thread",
+            "Ein Ticket, wenn niemand verfügbar ist"
+          ]
+        },
+        {
+          "title": "Entwickler",
+          "desc": "Ein Tag, ein signiertes Identitäts-Token und MCP-Server. Sie entscheiden, was die KI anfassen darf.",
+          "pts": [
+            "Ein Script-Tag für das Widget",
+            "Signierte, kurzlebige Identitäts-Tokens",
+            "MCP-Server, Tool für Tool freigegeben"
+          ]
+        }
+      ],
+      "founderVisual": [
+        {
+          "q": "Wie exportiere ich Daten?",
+          "ok": true
+        },
+        {
+          "q": "Warum ist meine Karte fehlgeschlagen?",
+          "ok": true
+        },
+        {
+          "q": "Individueller Vertrag?",
+          "ok": false
+        }
+      ],
+      "handled": "Erledigt",
+      "needsYou": "Braucht Sie",
+      "joined": "Priya ist beigetreten"
+    },
+    "statement": "Elpino beantwortet, was es weiß, tut, was Sie erlauben, und bittet für den Rest eine Person.",
+    "integrations": {
+      "eyebrow": "Integrationen",
+      "titlePrefix": "Verbindet sich mit dem, was",
+      "titleHl": "Sie bereits nutzen.",
+      "subtitle": "Zahlungsanbieter für Abfragen und Links, Projekttools für Tickets, und MCP für Ihre eigenen Systeme. Elpino sitzt in der Mitte, und alles, was Sie anbinden, funktioniert damit.",
+      "tags": [
+        "Zahlungen",
+        "Tickets",
+        "Ihre Systeme"
+      ],
+      "cta": "Alle Integrationen ansehen"
+    },
+    "trust": {
+      "eyebrow": "Vertrauen",
+      "titlePrefix": "Leistungsstark, mit",
+      "titleHl": "angezogener Handbremse.",
+      "subtitle": "Das ist das Regelwerk, nach dem Elpino arbeitet. Das meiste davon ist immer aktiv. Die Teile, die Geld bewegen, schalten Sie selbst frei.",
+      "cta": "Sicherheitsleitfaden lesen",
+      "rulebook": "Elpinos Regelwerk",
+      "setByYou": "Von Ihnen festgelegt",
+      "guardrailsOn": "Schutzmaßnahmen aktiv",
+      "alwaysOn": "Immer aktiv",
+      "rules": [
+        {
+          "title": "Nur aus freigegebenem Wissen antworten",
+          "desc": "Ist es nicht in Ihrem Wissen, sagt sie das und bietet einen Menschen an."
+        },
+        {
+          "title": "Namen und E-Mails vor der KI verbergen",
+          "desc": "Das Modell sieht Referenzcodes, nicht die Identität Ihrer Kunden."
+        },
+        {
+          "title": "Vor allem Persönlichen verifizieren",
+          "desc": "Zuerst kommt ein E-Mail-Code oder ein signiertes Token."
+        },
+        {
+          "title": "Nur von Ihnen freigeschaltete Tools",
+          "desc": "Jedes MCP-Tool wird von Ihnen einzeln freigegeben."
+        }
+      ],
+      "refundTitle": "KI Rückerstattungen ausführen lassen",
+      "refundOn": "Aktiv. Die KI darf erstatten, gemäß der Einstellung des Arbeitsbereich-Inhabers.",
+      "refundOff": "Standardmäßig deaktiviert. Nur der Arbeitsbereich-Inhaber kann es aktivieren."
+    },
+    "pricing": {
+      "eyebrow": "Preise",
+      "titlePrefix": "Zahlen Sie für die Hilfe,",
+      "titleHl": "nicht für die Kopfzahl.",
+      "subtitle": "Kostenlos starten. Bezahlte Pläne werden nach der Arbeit der KI abgerechnet.",
+      "cta": "Alle Preise ansehen",
+      "plans": [
+        {
+          "name": "Kostenlos",
+          "big": "0 $",
+          "note": "100 KI-Nachrichten pro Monat",
+          "pts": [
+            "Keine Kreditkarte nötig",
+            "Widget, Wissen und Posteingang",
+            "Übergaben kosten nie extra"
+          ]
+        },
+        {
+          "name": "Bezahlte Pläne",
+          "big": "Guthabenbasiert",
+          "note": "Ein monatliches KI-Guthaben passend zu Ihrem Volumen",
+          "pts": [
+            "Zahlungs- und Kontowerkzeuge",
+            "Platz für ein größeres Team",
+            "Jederzeit aufladen"
+          ]
+        },
+        {
+          "name": "Zusätzliche Teammitglieder",
+          "big": "Sitzplatzpakete",
+          "note": "Fügen Sie Sitzplätze hinzu, die sich mit Ihrem Plan erneuern",
+          "pts": [
+            "Nur wenn Sie wachsen",
+            "Derselbe Posteingang, mehr Hände",
+            "Jederzeit kündbar"
+          ]
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Fragen",
+      "titlePrefix": "Was Leute",
+      "titleHl": "zuerst fragen.",
+      "items": [
+        {
+          "q": "Was ist Elpino?",
+          "a": "Eine KI-Kundensupport-Plattform: ein Website-Chat-Widget, ein KI-Agent, der aus Ihrem Wissen antwortet und echte Zahlungen prüft, ein gemeinsamer Team-Posteingang und Tickets, wenn niemand verfügbar ist."
+        },
+        {
+          "q": "Erfindet die KI Dinge?",
+          "a": "Sie antwortet aus dem von Ihnen freigegebenen Wissen, und ein Prüfschritt gleicht Entwürfe mit Tool-Ergebnissen ab. Weiß sie es nicht, sagt sie das und bietet einen Menschen an."
+        },
+        {
+          "q": "Was passiert, wenn sie nicht helfen kann?",
+          "a": "Sie fragt zuerst den Kunden. Bei Ja bekommt jedes Teammitglied eine Beitreten-Benachrichtigung und hat 90 Sekunden, um einzuspringen. Tut das niemand, wird ein Ticket erstellt und der Kunde per E-Mail informiert."
+        },
+        {
+          "q": "Wie lange dauert die Einrichtung?",
+          "a": "Die meisten Teams sind noch am selben Tag live: Wissen hinzufügen, Widget-Snippet einfügen und Ihr Team einladen."
+        },
+        {
+          "q": "Gibt es einen kostenlosen Plan?",
+          "a": "Ja: 100 KI-Nachrichten pro Monat, keine Kreditkarte nötig."
+        },
+        {
+          "q": "Funktioniert es auf anderen Kanälen?",
+          "a": "Website-Chat ist bereits live. Omnichannel kommt im November."
+        }
+      ]
+    },
+    "closing": {
+      "title": "Geben Sie Ihren Kunden die Antwort, bevor sie fertig getippt haben.",
+      "subtitle": "Kostenlos starten, ihm Ihr Geschäft beibringen, und die Wiederholungsfragen abgeben.",
+      "ctaPrimary": "Kostenlos starten",
+      "ctaSecondary": "Sprechen Sie mit uns"
+    }
+  },
+  "pricing": {
+    "hero": {
+      "badge": "Preise",
+      "title": "Kostenlos starten. Wachsen, wenn du bereit bist.",
+      "subtitle": "Jedes neue Konto startet mit KI-Support, einem gemeinsamen Posteingang und Übergabe an Menschen — keine Karte erforderlich. Erkunde Elpino mit deinem Team und wähle einen Plan, wenn du mehr brauchst.",
+      "stickerFree": "Für immer kostenlos ✓",
+      "stickerNoCard": "Keine Karte nötig",
+      "ctaDashboard": "Zum Dashboard",
+      "ctaStart": "Kostenlos starten",
+      "billingPeriodLabel": "Abrechnungszeitraum",
+      "monthly": "Monatlich",
+      "annually": "Jährlich"
+    },
+    "planCards": {
+      "mostPopular": "Am beliebtesten",
+      "save": "spare",
+      "freeForever": "Für immer kostenlos",
+      "discussCustomPlan": "oder individuellen Plan besprechen",
+      "compareAllFeatures": "Alle Funktionen vergleichen",
+      "whatsIncluded": "Was enthalten ist",
+      "builtForTeam": "Gebaut für dein ganzes Team",
+      "builtForTeamDesc": "Geteiltes Wissen, ein Posteingang und Übergabe an Menschen, wann immer nötig."
+    },
+    "comparison": {
+      "eyebrow": "Planvergleich",
+      "titlePrefix": "Finde heraus, was ",
+      "titleHl": "zu deinem Team passt.",
+      "subtitle": "Vergleiche Kapazität, Plätze und Produktzugang über alle Pläne. Upgrade, wann immer dein Support mehr Raum braucht.",
+      "featuresHeader": "Funktionen",
+      "popular": "Beliebt",
+      "billedAnnually": "jährlich abgerechnet",
+      "billedMonthly": "monatlich abgerechnet",
+      "showAll": "Alle Funktionen anzeigen",
+      "showFewer": "Weniger Funktionen anzeigen",
+      "included": "Enthalten",
+      "notIncluded": "Nicht enthalten",
+      "categories": {
+        "aiRules": {
+          "name": "Was die KI tun darf",
+          "rows": {
+            "allowance": {
+              "label": "Monatliches KI-Kontingent",
+              "description": "Free ist auf 100 KI-Nachrichten begrenzt. Bezahlte Pläne enthalten ein monatliches Dollar-Guthaben, das die KI bei der Arbeit ausgibt, geteilt vom ganzen Workspace."
+            },
+            "whenOut": {
+              "label": "Wenn das Kontingent aufgebraucht ist",
+              "description": "Die KI übergibt neue Gespräche an dein Team. Bei bezahlten Plänen kannst du jederzeit Guthaben aufladen oder die automatische Aufladung aktivieren."
+            },
+            "escalations": {
+              "label": "Übergaben an einen Menschen",
+              "description": "Threads, die die KI übergibt, weil sie nicht sicher antworten konnte. Die Übergabe selbst kostet nie extra."
+            }
+          }
+        },
+        "seats": {
+          "name": "Wer sich anmelden kann",
+          "rows": {
+            "included": {
+              "label": "Enthaltene Plätze",
+              "description": "Teammitglieder, die vom Planpreis abgedeckt sind, Workspace-Besitzer eingeschlossen."
+            },
+            "extra": {
+              "label": "Zusätzliche Plätze",
+              "description": "Jedes Teammitglied über die enthaltenen Plätze hinaus, bei jedem Plan."
+            },
+            "ceiling": {
+              "label": "Platzobergrenze",
+              "description": "Der Punkt, an dem du einen größeren Plan statt eines weiteren Platzes brauchst."
+            }
+          }
+        },
+        "product": {
+          "name": "Das Produkt",
+          "rows": {
+            "widget": {
+              "label": "Website-Chat-Widget",
+              "description": "Der einbettbare Chat, mit dem deine Besucher tatsächlich sprechen."
+            },
+            "knowledge": {
+              "label": "Wissensdatenbank & KI-Antworten",
+              "description": "Durchsuche deine Website oder lade Dokumente hoch; die KI antwortet daraus."
+            },
+            "storage": {
+              "label": "Wissensspeicher",
+              "description": "Wie viel gecrawlten und hochgeladenen Inhalt der Workspace fassen kann."
+            },
+            "inbox": {
+              "label": "Gemeinsamer Posteingang & Übergabe",
+              "description": "Ein Posteingang fürs Team, mit KI-Übergabe, wenn es sein sollte."
+            },
+            "audit": {
+              "label": "KI-Prüfprotokoll",
+              "description": "Jede Antwort, mit den Artikeln und Nachschlagen, aus denen sie aufgebaut wurde."
+            },
+            "analytics": {
+              "label": "Besucheranalyse",
+              "description": "Live-Besucher, Quellen, Länder und Seiten."
+            },
+            "profiles": {
+              "label": "Kundenprofile & Verlauf",
+              "description": "Gespeicherte Kundendatensätze und ihre vergangenen Gespräche."
+            },
+            "domain": {
+              "label": "Verbundene Domain",
+              "description": "Ein Workspace, eine Website — brauchst du eine zweite, starte einen zweiten Workspace."
+            },
+            "support": {
+              "label": "Support",
+              "description": "Wie du uns erreichst, wenn etwas einen Menschen auf unserer Seite braucht."
+            }
+          }
+        }
+      }
+    },
+    "values": {
+      "handsOff": "Übergabe an einen Menschen",
+      "topUpOrHandoff": "Aufladen oder übergeben",
+      "noExtraCharge": "Keine zusätzlichen Kosten",
+      "noLimit": "Kein Limit",
+      "standard": "Standard",
+      "priority": "Priorität",
+      "messages": "Nachrichten",
+      "credit": "Guthaben",
+      "seatBundleSummary": "3 Plätze für $2, 5 für $3"
+    },
+    "billing": {
+      "eyebrow": "Klare, einfache Abrechnung",
+      "titleLine1": "Zahle für das, was die KI tut.",
+      "titleLine2": "Nicht für Übergaben.",
+      "subtitle": "Free enthält 100 KI-Nachrichten pro Monat. Bezahlte Pläne enthalten ein monatliches KI-Guthaben, das so viele Gespräche wie möglich abdeckt, sodass eine schnelle Frage weniger kostet als ein langes Hin und Her. Ein Gespräch an dein Team zu übergeben ist immer kostenlos.",
+      "creditCard": {
+        "label": "Monatliches KI-Guthaben",
+        "amount": "Ab $7",
+        "note": "jeden Monat bei Starter",
+        "chatsUseCredit": "Chats verbrauchen Guthaben",
+        "refillsMonthly": "lädt sich monatlich auf",
+        "desc": "Starter enthält $7, Growth $40 und Scale $240 KI-Guthaben pro Monat. Brauchst du mehr? Lade jederzeit auf oder aktiviere die automatische Aufladung.",
+        "cta": "Pläne vergleichen"
+      },
+      "handoffCard": {
+        "stamp": "Übergabe = kostenlos",
+        "label": "Zusatzkosten pro Übergabe",
+        "note": "Bei jedem Plan. Immer."
+      },
+      "inboxCard": {
+        "title": "Deine KI und dein Team, in einem Posteingang.",
+        "desc": "Die KI antwortet aus deinem Wissen. Wenn eine Person nötig ist, macht dein Team mit dem vollständigen, bereits sichtbaren Gespräch weiter.",
+        "cta": "Erfahre, wie es funktioniert"
+      }
+    },
+    "capacity": {
+      "eyebrow": "Kapazität hinzufügen",
+      "title": "Wachse, ohne deine Arbeitsweise zu ändern.",
+      "subtitle": "Füge Personen oder KI-Kapazität nur hinzu, wenn du sie brauchst. Dein Posteingang, dein Wissen und dein Gesprächsverlauf bleiben genau dort, wo sie sind.",
+      "teammatesTitle": "Zusätzliche Teammitglieder",
+      "teammatesDesc": "Gib mehr Personen ihren eigenen Login, während sie denselben Posteingang, Wissen und KI-Guthaben teilen. Sie bleiben jeden Monat in deinem Plan, bis du sie entfernst.",
+      "perMonth": "pro Monat",
+      "seatsWord": "Plätze",
+      "topUpAnytime": "Jederzeit aufladen",
+      "onAnyPaidPlan": "bei jedem bezahlten Plan",
+      "creditTitle": "Zusätzliches KI-Guthaben",
+      "creditDesc": "Lass die KI weiter antworten, nachdem dein monatliches Guthaben aufgebraucht ist. Ein Gespräch an dein Team zu übergeben kostet nie extra.",
+      "creditCards": [
+        {
+          "name": "Monatliches Guthaben",
+          "note": "Setzt sich jeden Monat zurück"
+        },
+        {
+          "name": "Aufladungen",
+          "note": "Verfallen nie"
+        },
+        {
+          "name": "Automatische Aufladung",
+          "note": "Optional"
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Fragen zu den Preisen",
+      "subtitle": "Die Abrechnungsdetails, nach denen am häufigsten gefragt wird. Einrichtung, die KI, Integrationen und Sicherheit werden im vollständigen FAQ behandelt.",
+      "readFull": "Das vollständige FAQ lesen",
+      "items": [
+        {
+          "q": "Was kosten die Pläne?",
+          "a": "Free ist $0. Monatliche Pläne sind Starter für $12 mit $7 KI-Guthaben pro Monat, Growth für $59 mit $40, und Scale für $299 mit $240. Bei jährlicher Abrechnung gibt es zwei Monate kostenlos — du zahlst für zehn Monate und bekommst zwölf: Starter kostet $120 pro Jahr ($10/Monat), Growth $590 ($49.17/Monat), und Scale $2.990 ($249.17/Monat)."
+        },
+        {
+          "q": "Wie funktioniert das KI-Kontingent?",
+          "a": "Free enthält 100 KI-Nachrichten pro Monat. Jede Antwort, die die KI sendet, zählt als eine Nachricht, sodass ein kurzer Chat nur wenige verbraucht und ein langes Hin und Her mehr. Bezahlte Pläne funktionieren anders: Sie enthalten ein monatliches KI-Guthaben, das die KI bei der Arbeit ausgibt, sodass eine schnelle Frage weniger verbraucht als ein langes Hin und Her. Starter enthält $7 Guthaben pro Monat, Growth $40 und Scale $240."
+        },
+        {
+          "q": "Kosten Übergaben etwas?",
+          "a": "Keine zusätzlichen Kosten. Die Übergabe selbst ist bei jedem Plan kostenlos, und die KI stoppt in dem Moment, in dem eine Person übernimmt. Bei Free zählen Nachrichten, die die KI vor der Übergabe schon gesendet hat, weiterhin zu deinen 100; bei bezahlten Plänen gibt die KI nur Guthaben aus, während sie antwortet, und stoppt das Ausgeben von Guthaben in dem Moment, in dem eine Person übernimmt."
+        },
+        {
+          "q": "Kann die KI Rückerstattungen ausstellen?",
+          "a": "Nur, wenn der Workspace-Besitzer Rückerstattungen aktiviert. Sie sind standardmäßig deaktiviert. Auch mit deaktivierten Rückerstattungen kann die KI die Zahlung nachschlagen und anbieten, den Kunden mit deinem Team zu verbinden."
+        },
+        {
+          "q": "Was passiert, wenn ich mein KI-Kontingent aufbrauche?",
+          "a": "Die KI übergibt neue Gespräche direkt an dein Team, statt zu antworten. Bei einem bezahlten Plan kannst du jederzeit Guthaben aufladen oder die automatische Aufladung aktivieren, damit es nie stoppt. Aufladungen verfallen nie. Dein monatliches Guthaben setzt sich jeden Abrechnungszeitraum zurück."
+        },
+        {
+          "q": "Wie viel kostet ein zusätzliches Teammitglied?",
+          "a": "Zusätzliche Plätze gibt es in Paketen bei jedem Plan, auch bei Free: 3 Plätze für $2 pro Monat, oder 5 für $3. Plätze und KI-Guthaben werden völlig getrennt abgerechnet — ein Teammitglied hinzuzufügen rührt niemals dein KI-Kontingent an."
+        },
+        {
+          "q": "Kann ich jederzeit kündigen?",
+          "a": "Ja, über Einstellungen → Abrechnung, ohne Vertragsbindung. Die Kündigung wird am Ende des aktuellen Abrechnungszeitraums wirksam, sodass du behältst, wofür du bis dahin bezahlt hast."
+        },
+        {
+          "q": "Was passiert, wenn ich aufhöre zu zahlen?",
+          "a": "Der Workspace fällt am Ende des Zeitraums auf den Free-Plan zurück. Deine Wissensdatenbank, dein Gesprächsverlauf und deine Einstellungen bleiben vollständig erhalten."
+        }
+      ]
+    },
+    "enterprise": {
+      "badge": "Enterprise",
+      "title": "Support, der mit dir wächst.",
+      "subtitle": "Für Organisationen, die mehr Kunden über mehrere Websites und Teams unterstützen. Lass uns die richtige Kapazität für deinen Support finden.",
+      "features": [
+        "KI-Guthaben weit über den Scale-Plan hinaus",
+        "Mehrere Websites und wachsende Teams",
+        "Geteilter Kundenkontext und Wissen",
+        "Volumenpreise, zugeschnitten auf deine Bedürfnisse"
+      ],
+      "talkTitle": "Lass uns reden",
+      "customPricing": "Individuelle Preise verfügbar",
+      "contactCta": "Vertrieb kontaktieren",
+      "talkPoints": [
+        "Dein Gesprächsvolumen besprechen",
+        "Deinen Workspace und deine Plätze planen",
+        "Wissen über Websites hinweg abstecken",
+        "Onboarding- und SLA-Bedürfnisse erkunden"
+      ]
+    },
+    "plans": {
+      "free": {
+        "name": "Free",
+        "description": "Für einen Gründer, der seinen eigenen Support beantwortet. Echte KI, keine Karte.",
+        "cta": "Jetzt starten",
+        "features": [
+          "Bis zu 100 KI-Nachrichten/Monat",
+          "2 Plätze enthalten",
+          "Platzpakete ab $0.60/Platz",
+          "20 MB Wissensdatenbank",
+          "Website-Chat-Widget",
+          "Gemeinsamer Posteingang mit Übergabe"
+        ]
+      },
+      "starter": {
+        "name": "Starter",
+        "description": "Für ein kleines Team, dessen Support einen Posteingang gesprengt hat.",
+        "cta": "Jetzt starten",
+        "features": [
+          "$7 KI-Guthaben jeden Monat",
+          "5 Plätze enthalten",
+          "Platzpakete ab $0.60/Platz",
+          "200 MB Wissensdatenbank",
+          "Jederzeit Guthaben aufladen",
+          "Besucheranalyse"
+        ]
+      },
+      "growth": {
+        "name": "Growth",
+        "description": "Für Teams, die Support als echte Funktion betreiben, mit den Daten, die es beweisen.",
+        "cta": "Jetzt starten",
+        "features": [
+          "$40 KI-Guthaben jeden Monat",
+          "15 Plätze enthalten",
+          "Platzpakete ab $0.60/Platz",
+          "1 GB Wissensdatenbank",
+          "Jederzeit Guthaben aufladen",
+          "Vollständiges KI-Prüfprotokoll",
+          "Prioritäts-Support"
+        ]
+      },
+      "scale": {
+        "name": "Scale",
+        "description": "Für Support mit hohem Volumen, bei dem die KI die meiste Last trägt.",
+        "cta": "Jetzt starten",
+        "features": [
+          "$240 KI-Guthaben jeden Monat",
+          "40 Plätze enthalten",
+          "Platzpakete ab $0.60/Platz",
+          "5 GB Wissensdatenbank",
+          "Jederzeit Guthaben aufladen",
+          "Integrationen & API-Zugang"
+        ]
+      }
+    }
+  },
+  "about": {
+    "typingLabel": "Elpino schreibt",
+    "hero": {
+      "badge": "Über Elpino",
+      "titlePrefix": "Kundensupport, ",
+      "titleHl": "menschlicher gemacht.",
+      "subtitle": "Elpino gibt Kunden hilfreiche Antworten aus dem Wissen, das du bereits hast, und hält dein Team nah für die Momente, die eine Person brauchen.",
+      "ctaMeet": "Elpino kennenlernen",
+      "ctaReadStory": "Unsere Geschichte lesen ↓",
+      "imageAlt": "Vier Elpino-Faultiere arbeiten zusammen, um Kunden zu unterstützen",
+      "bubble": "Hallo, wie können wir helfen? 👋"
+    },
+    "story": {
+      "eyebrow": "Wo es begann",
+      "titlePrefix": "Unsere Geschichte beginnt mit einer ",
+      "titleHl": "Frage.",
+      "subtitle": "Was, wenn Kundensupport-Software beiden Seiten des Gesprächs helfen würde—nicht nur dem Unternehmen, das es verwaltet?",
+      "chatTitle": "Elpino",
+      "chatSub": "Erzählt unsere Geschichte",
+      "sys1": "Wo es begann",
+      "you1": "Was, wenn Kundensupport-Software beiden Seiten des Gesprächs helfen würde, nicht nur dem Unternehmen, das es verwaltet?",
+      "elpino1": "Niemand öffnet einen Support-Chat zum Spaß.",
+      "elpino2": "Jemand versucht, etwas zu erledigen. Etwas ist ihm in den Weg gekommen. Er will eine klare Antwort und zurück zu seinem Tag.",
+      "elpino3": "Auf der anderen Seite ist ein Team, das vertraute Fragen, verstreute Informationen und mehr Gespräche als Zeit bewältigt. Elpino existiert, um diesen Moment für alle einfacher zu machen.",
+      "sys2": "So sieht das aus",
+      "you2": "Kann ich die E-Mail-Adresse meines Kontos ändern?",
+      "aiLabel": "Elpino KI · aus deinem Wissen",
+      "aiAnswer": "Ja. Öffne Einstellungen, wähle Profil, und aktualisiere dann deine Kontakt-E-Mail.",
+      "aiGuideLabel": "Anleitung zu Kontoeinstellungen",
+      "sys3": "Ein Teammitglied ist immer in der Nähe, wenn nötig"
+    },
+    "roles": {
+      "eyebrow": "Unsere Rollen",
+      "titlePrefix": "Ein Team, gebaut für ",
+      "titleHl": "die Arbeit.",
+      "subtitle": "Hier gibt es keine Mitarbeiterfotos. Stattdessen lerne die Aufgaben kennen, die Elpino erledigen soll—stetig, durchdacht, und mit einem menschlichen Team, das immer im Bilde ist.",
+      "joinedChat": "{name} ist dem Chat beigetreten",
+      "items": [
+        {
+          "title": "Der Zuhörer",
+          "task": "Versteht jede Kundenfrage",
+          "description": "Verwandelt das Wissen, das dein Team bereits hat, in eine klare, hilfreiche erste Antwort."
+        },
+        {
+          "title": "Der Sortierer",
+          "task": "Hält den Posteingang in Bewegung",
+          "description": "Findet das Signal in der Warteschlange, damit die richtigen Gespräche die richtige Aufmerksamkeit erhalten."
+        },
+        {
+          "title": "Der Beschützer",
+          "task": "Weiß, wann eine Person hinzugezogen werden soll",
+          "description": "Erledigt Routinearbeit mit Sorgfalt und übergibt die Momente, die menschliches Urteilsvermögen brauchen."
+        },
+        {
+          "title": "Der Wachser",
+          "task": "Lernt, was Kunden am meisten hilft",
+          "description": "Zeigt die Lücken, Muster und Fragen auf, die deinen Support mit der Zeit verbessern."
+        }
+      ]
+    },
+    "remote": {
+      "eyebrow": "Remote aufgebaut",
+      "titlePrefix": "Wir arbeiten remote seit dem ",
+      "titleHl": "ersten Tag.",
+      "subtitle": "Wir arbeiten durch klares Schreiben, geteilten Kontext und fokussierte Zeit. Wo jemand arbeitet, ist weniger wichtig als die Sorgfalt und das Urteilsvermögen, die er ins Produkt einbringt.",
+      "cta": "Offene Stellen ansehen",
+      "badge": "Remote seit dem ersten Tag",
+      "imageAlt": "Ein verteiltes Team arbeitet mit gemeinsamen KI-Support-Tools zusammen"
+    },
+    "team": {
+      "eyebrow": "Ein kleines Team, vorerst",
+      "titleLine1": "Mit Fokus gebaut.",
+      "titleLine2Prefix": "Geformt mit ",
+      "titleHl": "dir.",
+      "subtitle": "Elpino ist früh dran. Das bedeutet, dass die Menschen, die es nutzen, noch beeinflussen können, was daraus wird. Wir hören genau zu, veröffentlichen sorgfältig, und halten das Problem des Kunden im Zentrum.",
+      "cta": "Sprich mit uns",
+      "card1": "Genau zuhören.",
+      "card2": "Klar bauen.",
+      "card3": "Support für alle einfacher machen."
+    },
+    "faqSection": {
+      "eyebrow": "Etwas mehr über uns",
+      "titlePrefix": "Schön, dass du ",
+      "titleHl": "fragst.",
+      "subtitle": "Ein paar Antworten, bevor du dein eigenes Gespräch beginnst. Tippe unten auf eine Frage, und Elpino antwortet.",
+      "exploreLink": "Die vollständige FAQ erkunden →"
+    },
+    "faqChat": {
+      "title": "Elpino fragen",
+      "sub": "Online · antwortet sofort",
+      "gladYouAsked": "Schön, dass du fragst",
+      "tapQuestion": "Auf eine Frage tippen",
+      "doneText": "Das war's fürs Erste. Möchtest du weitermachen?",
+      "exploreFull": "Die vollständige FAQ erkunden"
+    },
+    "faqs": [
+      [
+        "Was ist Elpino?",
+        "Elpino ist eine KI-Kundensupport-Plattform mit einem Chat-Widget auf der Website, Antworten aus deiner Wissensdatenbank, einem gemeinsamen Team-Posteingang, und Übergabe an Menschen, wenn die KI nicht helfen kann."
+      ],
+      [
+        "Ersetzt Elpino mein Support-Team?",
+        "Elpino bearbeitet alltägliche Fragen aus deinem Wissen und zieht dein Team hinzu, wenn ein Gespräch eine Person braucht. Dein Team bleibt Teil des Support-Erlebnisses."
+      ],
+      [
+        "Wie kann ich anfangen?",
+        "Beginne mit dem kostenlosen Plan, der 100 KI-Nachrichten pro Monat ohne Karte enthält. Füge dein Wissen hinzu, verbinde deine Website, und hole deine Teammitglieder hinzu."
+      ],
+      [
+        "Wie ist die Preisgestaltung aufgebaut?",
+        "Free enthält 100 KI-Nachrichten pro Monat, und bezahlte Pläne enthalten ein monatliches KI-Guthaben. Zusätzliche Teammitglieder kommen in Platzpaketen ab $0.60 pro Platz, und ein Gespräch an einen Menschen zu übergeben kostet nie extra. Die Preisseite erklärt enthaltene Plätze und die Mindestgebühr des kostenlosen Plans."
+      ]
+    ],
+    "closing": {
+      "titleLine1": "Es gibt noch mehr zu bauen.",
+      "titleLine2": "Komm und gestalte, was als Nächstes kommt.",
+      "ctaTry": "Elpino ausprobieren",
+      "ctaCareers": "Offene Stellen ansehen"
+    }
+  },
+  "helpdesk": {
+    "hero": {
+      "badge": "Elpino Helpdesk",
+      "titlePrefix": "Support, der ",
+      "titleHl": "sich selbst beantwortet.",
+      "subtitle": "Ein Desk für eine KI, die löst, ein Team, das sich einschaltet, wenn es wichtig ist, und Tickets, die nie durchrutschen. Sieh zu, wie sie eine Frage beantwortet.",
+      "ctaStart": "Kostenlos starten",
+      "ctaFeatures": "Alle Funktionen ansehen"
+    },
+    "prompt": {
+      "customerLabel": "Kunde",
+      "listening": "Elpino hört zu…",
+      "asks": [
+        {
+          "q": "Wurde ich für mein Upgrade doppelt belastet?",
+          "steps": [
+            "Deinen Zahlungsverlauf geprüft",
+            "Eine Belastung und einen fehlgeschlagenen Versuch gefunden"
+          ],
+          "a": "Du wurdest nur einmal belastet. Der zweite Versuch schlug fehl und wurde nie erfasst."
+        },
+        {
+          "q": "Wo ist meine Bestellung #4821?",
+          "steps": [
+            "Dich per E-Mail-Code verifiziert",
+            "Die Bestellung in deinem Shop nachgeschlagen"
+          ],
+          "a": "Sie wurde gestern versendet und kommt am Donnerstag an. Tracking-Link wurde gesendet."
+        },
+        {
+          "q": "Kann ich mit jemandem über die Abrechnung sprechen?",
+          "steps": [
+            "Kein Tool kann Abrechnungsdetails ändern",
+            "Dich zuerst gefragt, dann das Team benachrichtigt"
+          ],
+          "a": "Priya aus unserem Team ist diesem Chat gerade beigetreten."
+        }
+      ]
+    },
+    "marquee": {
+      "ariaLabel": "Was auf dem Desk ist",
+      "words": [
+        "KI-Agent",
+        "Gemeinsamer Posteingang",
+        "Tickets",
+        "Wissen",
+        "Zahlungen",
+        "MCP-Tools",
+        "Beitritts-Alarme",
+        "Verifizierte Identität",
+        "Omnichannel · November"
+      ]
+    },
+    "story": {
+      "eyebrow": "Ein Gespräch",
+      "titlePrefix": "Verfolge, wie eine Frage ",
+      "titleHl": "den Desk durchläuft.",
+      "stepLabel": "Schritt {n} / 05",
+      "chapters": [
+        {
+          "title": "Ein Kunde schreibt",
+          "body": "Vom Chat-Widget auf deiner Website, mit Standort, Gerät und der Seite, auf der er sich befindet, bereits angehängt."
+        },
+        {
+          "title": "Die KI macht die Arbeit",
+          "body": "Sie antwortet aus deinem Wissen, erinnert sich an den Kunden, verifiziert, wer er ist, und nutzt deine Zahlungen und MCP-Tools, um Dinge tatsächlich zu lösen."
+        },
+        {
+          "title": "Dein Team steigt mit einem Tap ein",
+          "body": "Nur wenn sie nicht helfen kann, und nur nachdem sie den Kunden gefragt hat. Alle erhalten einen Beitritts-Alarm, und die erste Person, die tippt, übernimmt den Chat."
+        },
+        {
+          "title": "Nichts geht verloren",
+          "body": "Wenn innerhalb von 90 Sekunden niemand frei ist, wird ein Ticket mit dem Grund und einer Zusammenfassung angelegt, und der Kunde erhält eine Referenz per E-Mail."
+        },
+        {
+          "title": "Du bringst es ihr einmal bei",
+          "body": "Füge das Fehlende deiner Wissensdatenbank hinzu. Nächstes Mal weiß die KI es einfach."
+        }
+      ],
+      "visuals": {
+        "ask": {
+          "bubble": "Hallo, ich kann meine Rechnung vom letzten Monat nicht finden.",
+          "chips": [
+            "Pune, Indien",
+            "Chrome · macOS",
+            "Auf /rechnung"
+          ]
+        },
+        "ai": {
+          "rows": [
+            [
+              "search_knowledge",
+              "1 Treffer"
+            ],
+            [
+              "send_email_code",
+              "verifiziert"
+            ],
+            [
+              "get_receipt",
+              "gefunden · gesendet"
+            ]
+          ],
+          "bubble": "Hier ist deine Rechnung. Ich habe dir auch eine Kopie per E-Mail geschickt."
+        },
+        "team": {
+          "title": "Ein neuer Chat braucht eine Person",
+          "sub": "Alarm an 4 Teammitglieder gesendet",
+          "join": "Beitreten",
+          "note": "Wer zuerst tippt, übernimmt. Der Alarm verschwindet für alle anderen."
+        },
+        "ticket": {
+          "label": "Ticket",
+          "title": "Support-Eskalation · Aisha Khan",
+          "reason": "Grund: Änderung des Abrechnungslandes erfordert eine Person.",
+          "chips": [
+            "Issues-Seite",
+            "Kunde per E-Mail benachrichtigt"
+          ]
+        },
+        "learn": {
+          "title": "Rechnungs- und Belegleitfaden",
+          "added": "Hinzugefügt",
+          "note": "Der nächste Kunde erhält diese Antwort sofort."
+        }
+      }
+    },
+    "bento": {
+      "eyebrow": "Unter der Haube",
+      "titlePrefix": "Kleine Details, ",
+      "titleHl": "richtig gemacht.",
+      "subtitle": "Die Dinge, die du prüfen würdest, bevor du einer KI deine Kunden anvertraust.",
+      "redact": {
+        "prefix": "Hallo, ich bin",
+        "middle": "erreiche mich unter"
+      },
+      "privacy": {
+        "title": "Das Modell sieht niemals Namen oder E-Mails.",
+        "desc": "Identitäten werden gegen Referenzcodes ausgetauscht, bevor die KI ein Gespräch liest, und Geheimnisse werden entfernt."
+      },
+      "languages": {
+        "title": "Antwortet in der Sprache deines Kunden",
+        "note": "Du wählst die Antwortsprache in den Einstellungen."
+      },
+      "verified": {
+        "title": "Verifiziert, bevor sie handelt",
+        "note": "Ein einmaliger E-Mail-Code oder ein signiertes Token deiner App."
+      },
+      "tools": {
+        "title": "Deine Tools, deine Regeln",
+        "rows": [
+          [
+            "get_order",
+            true
+          ],
+          [
+            "track_shipment",
+            true
+          ],
+          [
+            "delete_customer",
+            false
+          ]
+        ]
+      },
+      "handoff": {
+        "title": "Fragt, bevor sie übergibt",
+        "ask": "Das kann ich nicht selbst ändern. Soll ich dich mit unserem Team verbinden?",
+        "reply": "Ja, gerne"
+      }
+    },
+    "statement": "Elpino antwortet, was es weiß, tut, was du erlaubst, und fragt einen Menschen für alles andere.",
+    "start": {
+      "eyebrow": "Loslegen",
+      "titlePrefix": "Live in ",
+      "titleHl": "einem Nachmittag.",
+      "note": "Website-Chat ist heute live. Omnichannel kommt im November.",
+      "steps": [
+        {
+          "title": "Kostenlos anmelden",
+          "desc": "100 KI-Nachrichten pro Monat. Keine Karte."
+        },
+        {
+          "title": "Bring es ihr bei",
+          "desc": "Füge deine Website, Dateien hinzu oder schreibe Seiten."
+        },
+        {
+          "title": "Füge den Snippet ein",
+          "desc": "Das Widget erscheint auf deiner Website."
+        },
+        {
+          "title": "Lade dein Team ein",
+          "desc": "Damit alle bereit sind, wenn es fragt."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Fragen",
+      "titlePrefix": "Gut zu ",
+      "titleHl": "wissen.",
+      "items": [
+        [
+          "Was ist der Elpino Helpdesk?",
+          "Der gesamte Support-Arbeitsplatz: ein Chat-Widget, ein KI-Agent, ein gemeinsamer Posteingang, Tickets und eine Wissensdatenbank, die alle zusammenarbeiten."
+        ],
+        [
+          "Muss ich meinen alten Helpdesk behalten?",
+          "Nein. Elpino deckt Chat, den KI-Agenten, den gemeinsamen Posteingang und Tickets ab. Tickets können trotzdem an Trello oder Asana gesendet werden, wenn dein Team dort arbeitet."
+        ],
+        [
+          "Gibt es einen kostenlosen Plan?",
+          "Ja: 100 KI-Nachrichten pro Monat, keine Karte erforderlich."
+        ],
+        [
+          "Welche Kanäle werden unterstützt?",
+          "Website-Chat ist heute live. Omnichannel kommt im November."
+        ],
+        [
+          "Kann mein Team es auch nutzen?",
+          "Ja. Lade Teammitglieder ein, füge Plätze hinzu, während du wächst, und sie erhalten Beitritts-Alarme, wenn ein Kunde eine Person braucht."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Gib deinen Kunden eine Antwort, bevor sie fertig geschrieben haben.",
+      "ctaStart": "Kostenlos starten",
+      "ctaFeatures": "Alle Funktionen"
+    }
+  },
+  "nav": {
+    "startFreeTrial": "Kostenlose Testversion starten",
+    "groups": {
+      "product": "Produkt",
+      "solutions": "Lösungen",
+      "resources": "Ressourcen"
+    },
+    "sections": {
+      "getStarted": "Erste Schritte",
+      "capabilities": "Funktionen",
+      "platform": "Plattform",
+      "whoItIsFor": "Für wen",
+      "learningGuides": "Lernen & Leitfäden",
+      "trustLegal": "Vertrauen & Recht",
+      "community": "Community",
+      "company": "Unternehmen"
+    },
+    "items": {
+      "Elpino helpdesk": "Elpino Helpdesk",
+      "Elpino AI Agent": "Elpino KI-Agent",
+      "Inbox": "Posteingang",
+      "Tickets": "Tickets",
+      "Knowledge Hub": "Wissenszentrum",
+      "Integrations": "Integrationen",
+      "Safety & security": "Sicherheit",
+      "All features": "Alle Funktionen",
+      "For Founders": "Für Gründer",
+      "For Busy Teams": "Für vielbeschäftigte Teams",
+      "For Developers": "Für Entwickler",
+      "See Pricing": "Preise ansehen",
+      "Talk to Us": "Sprich mit uns",
+      "Documentation": "Dokumentation",
+      "Help & FAQ": "Hilfe & FAQ",
+      "Trust Center": "Vertrauenszentrum",
+      "Privacy Policy": "Datenschutzrichtlinie",
+      "Terms of Service": "Nutzungsbedingungen",
+      "Blog": "Blog",
+      "Changelog": "Änderungsprotokoll",
+      "Brand Kit": "Marken-Kit",
+      "About Us": "Über uns",
+      "Careers": "Karriere",
+      "Contact Sales": "Vertrieb kontaktieren"
+    },
+    "megaMenu": {
+      "explore": "Entdecken",
+      "seePricing": "Preise ansehen",
+      "seePricingNote": "Kostenlos starten. Bezahle, während dein Team wächst.",
+      "freshFromBlog": "Neues aus dem Blog"
+    },
+    "featured": {
+      "product": {
+        "title": "KI zuerst. Ein Mensch, wenn es zählt.",
+        "text": "Elpino antwortet aus deinem eigenen Wissen und übergibt den Chat dann mit der vollen Geschichte an ein Teammitglied.",
+        "cta": "Den KI-Agenten kennenlernen"
+      },
+      "solutions": {
+        "title": "Gemacht für deine Arbeitsweise",
+        "text": "Gründer, Shops und vielbeschäftigte Teams erhalten jeweils ein passendes Setup, live an einem Nachmittag.",
+        "cta": "Finde deine Lösung"
+      },
+      "resources": {
+        "title": "In drei Schritten live",
+        "text": "Füge eine Zeile ein, bringe ihr deine Dokumente bei, schalte sie ein. Die Leitfäden führen dich durch jeden Schritt.",
+        "cta": "Dokumentation öffnen"
+      }
+    },
+    "pricing": "Preise",
+    "contactSales": "Vertrieb kontaktieren",
+    "login": "Anmelden",
+    "goToDashboard": "Zum Dashboard",
+    "getStarted": "Los geht's"
+  },
+  "privacyPage": {
+    "title": "Datenschutzrichtlinie",
+    "shortTitle": "Datenschutz",
+    "askUs": "Fragen Sie uns",
+    "heroTitle": "Verfolgen Sie eine Nachricht durch Elpino.",
+    "heroDescription": "Ein Kunde fragt nach seiner Rückerstattung. Hier sehen Sie, wohin die Nachricht gelangt, wer sie sehen kann und wie lange sie gespeichert bleibt. Anschließend folgt die vollständige Richtlinie.",
+    "startJourney": "Reise beginnen",
+    "jumpToPolicy": "Zur vollständigen Richtlinie",
+    "updated": "Aktualisiert",
+    "neverSold": "Niemals verkauft",
+    "zeroTraining": "Kein KI-Training",
+    "journey": {
+      "eyebrow": "Der Weg der Nachricht",
+      "title": "Sieben Stationen. Nichts verborgen.",
+      "description": "Scrollen Sie nach unten und verfolgen Sie, wie sich die Nachricht bewegt. Links sehen Sie ihren Zustand, rechts erfahren Sie, was dies für Ihre Daten bedeutet."
+    }
+  },
+  "footer": {
+    "ticker": [
+      "KI-Antworten aus deinem eigenen Wissen",
+      "Menschliche Übergabe, immer kostenlos",
+      "100 kostenlose KI-Nachrichten",
+      "Ein gemeinsamer Posteingang",
+      "Live in einem Nachmittag"
+    ],
+    "cta": {
+      "badge": "Bereit, wenn du es bist",
+      "title": "Gib jedem Kunden eine hilfreiche Antwort.",
+      "subtitle": "Starte kostenlos mit KI-Support, einem gemeinsamen Posteingang und menschlicher Übergabe. Keine Karte nötig.",
+      "ctaStart": "Kostenlos starten",
+      "ctaPricing": "Preise ansehen"
+    },
+    "description": "Elpino hilft Teams, Kunden mit KI zu antworten, die auf ihrem eigenen Wissen basiert, und übergibt Gespräche bei Bedarf an eine Person.",
+    "blog": "Blog",
+    "contact": "Kontakt",
+    "copyright": "© {year} Elpino Inc. Alle Rechte vorbehalten.",
+    "privacy": "Datenschutzrichtlinie",
+    "terms": "Nutzungsbedingungen",
+    "security": "Sicherheit"
+  },
+  "aiAgent": {
+    "hero": {
+      "badge": "KI-Agent",
+      "titlePrefix": "Lerne deine neueste ",
+      "titleHl": "Support-Neueinstellung kennen.",
+      "subtitle": "Elpino startet am ersten Tag bereits mit Kenntnis deines Geschäfts. Es erinnert sich an jeden Kunden, prüft, wer er ist, bevor es handelt, arbeitet über MCP mit deinen Zahlungs- und Bestellsystemen, und fragt, bevor es jemals einen Chat an dein Team übergibt.",
+      "ctaHire": "Elpino einstellen, kostenlos",
+      "ctaFeatures": "Alle Funktionen ansehen"
+    },
+    "badge": {
+      "staffLabel": "Elpino · Mitarbeiter",
+      "subtitle": "KI-Support-Agent",
+      "skills": [
+        "Antwortet aus deinen Dokumenten",
+        "Verifiziert Identität",
+        "Prüft Zahlungen",
+        "Nutzt deine MCP-Tools",
+        "Fragt vor Übergabe"
+      ],
+      "startDateLabel": "Startdatum",
+      "startDateValue": "Heute",
+      "clearanceLabel": "Freigabe",
+      "clearanceValue": "Du entscheidest",
+      "barcodeNote": "EL-0001 · Stempelt niemals aus"
+    },
+    "trace": {
+      "aiAgentLabel": "KI-Agent",
+      "customerMsg": "Hallo, wo ist meine Bestellung #4821?",
+      "agentReply": "Gute Nachrichten, Aishas Bestellung wurde gestern versendet und kommt am Donnerstag an. Ich habe dir auch den Tracking-Link per E-Mail geschickt.",
+      "whatAgentDoing": "Was der Agent gerade tut",
+      "resolved": "Gelöst",
+      "working": "Arbeitet",
+      "idle": "Untätig",
+      "waiting": "Warte auf eine Kundennachricht…",
+      "steps": [
+        {
+          "kind": "route",
+          "text": "Router → Support-Spezialist"
+        },
+        {
+          "kind": "tool",
+          "text": "recall_conversation(“Bestellung 4821”)",
+          "result": "2 frühere Nachrichten"
+        },
+        {
+          "kind": "tool",
+          "text": "get_past_conversations",
+          "result": "1 gelöster Chat letzten Monat"
+        },
+        {
+          "kind": "verify",
+          "text": "send_email_code → check_email_code",
+          "result": "Identität verifiziert"
+        },
+        {
+          "kind": "mcp",
+          "text": "mcp_shop__get_order(“4821”)",
+          "result": "versendet · kommt Donnerstag an"
+        },
+        {
+          "kind": "review",
+          "text": "Prüfung",
+          "result": "Fakten stimmen mit Tool-Ergebnissen überein"
+        },
+        {
+          "kind": "done",
+          "text": "Antwort gesendet · mark_resolved"
+        }
+      ]
+    },
+    "watchIt": {
+      "eyebrow": "Erste Aufgabe",
+      "titlePrefix": "Sieh zu, wie es ",
+      "titleHl": "eine echte Anfrage bearbeitet.",
+      "subtitle": "Ein Kunde fragt, wo seine Bestellung ist. Rechts siehst du alles, was der Agent tut, bevor er antwortet.",
+      "note": "Beispielgespräch. Die gezeigten Tool-Namen sind die, die der Agent wirklich aufruft."
+    },
+    "onboard": {
+      "eyebrow": "Einarbeitung",
+      "titlePrefix": "Sechs Schritte bis zum ",
+      "titleHl": "ersten Tag.",
+      "subtitle": "Hake sie ab. Es gibt keine Einarbeitungszeit, und jeder ist eine Einstellung, die du kontrollierst.",
+      "readyBadge": "Bereit zur Arbeit!",
+      "items": [
+        {
+          "t": "Bring ihm deine Website und Dateien bei",
+          "d": "Seiten crawlen, Dokumente hochladen, eigene schreiben.",
+          "href": "/product/knowledge-hub"
+        },
+        {
+          "t": "Füge den Widget-Snippet ein",
+          "d": "Eine Zeile und der Chat erscheint auf deiner Website."
+        },
+        {
+          "t": "Verbinde Stripe oder Razorpay",
+          "d": "Damit es Zahlungen und Abonnements prüfen kann."
+        },
+        {
+          "t": "Verbinde deine MCP-Tools",
+          "d": "Aktiviere nur die Tools, die es verwenden darf."
+        },
+        {
+          "t": "Entscheide über Rückerstattungen",
+          "d": "Sie sind deaktiviert, bis du sie aktivierst."
+        },
+        {
+          "t": "Lade dein Team ein",
+          "d": "Damit Menschen bereit sind, wenn es sie braucht.",
+          "href": "/product/inbox"
+        }
+      ]
+    },
+    "customerFile": {
+      "eyebrow": "Deinen Kunden kennen",
+      "titlePrefix": "Seine Akte ",
+      "titleHl": "zu jedem Kunden.",
+      "subtitle": "Bevor es antwortet, erstellt der Agent eine Akte über die Person, der es hilft. Tippe auf eine Quelle, um zu sehen, was sie hinzufügt.",
+      "sourcesLabel": "Kundenakte · {n} von {total} Quellen",
+      "sampleNote": "Beispieldaten. In der echten Version sieht die KI Referenzcodes statt Name und E-Mail des Kunden.",
+      "sources": [
+        {
+          "key": "conv",
+          "title": "Dieses Gespräch",
+          "how": "Erinnert sich, was gesagt wurde, und kann bei Bedarf auf Details zurückblicken, selbst in einem langen Chat.",
+          "rows": [
+            [
+              "Gefragt nach",
+              "Bestellung #4821"
+            ],
+            [
+              "Möchte",
+              "Ein Lieferdatum"
+            ]
+          ]
+        },
+        {
+          "key": "hist",
+          "title": "Frühere Gespräche",
+          "how": "Kennt frühere Chats mit derselben Person, sodass sie sich nie wiederholen muss.",
+          "rows": [
+            [
+              "Letzter Chat",
+              "Login-Problem, gelöst"
+            ],
+            [
+              "Kontaktiert",
+              "2 Mal"
+            ]
+          ]
+        },
+        {
+          "key": "id",
+          "title": "Verifizierte Identität",
+          "how": "Bestätigt, wer sie ist, mit einem einmaligen E-Mail-Code oder einem signierten Token aus deiner App, bevor es etwas Persönliches berührt.",
+          "rows": [
+            [
+              "Identität",
+              "Per E-Mail-Code verifiziert"
+            ]
+          ]
+        },
+        {
+          "key": "pay",
+          "title": "Zahlungen",
+          "how": "Sucht echte Zahlungen und Abonnements in Stripe oder Razorpay und kann Belege und Zahlungslinks senden.",
+          "rows": [
+            [
+              "Plan",
+              "Growth · aktiv"
+            ],
+            [
+              "Letzte Zahlung",
+              "Bezahlt, Beleg gesendet"
+            ]
+          ]
+        },
+        {
+          "key": "mcp",
+          "title": "Deine Systeme (MCP)",
+          "how": "Ruft die Tools auf, die du auf deinen eigenen MCP-Servern genehmigst: Bestellungen, Konten, Buchungen, alles, was du freigibst.",
+          "rows": [
+            [
+              "Bestellung #4821",
+              "Versendet · kommt Donnerstag an"
+            ]
+          ]
+        },
+        {
+          "key": "kb",
+          "title": "Dein Wissen",
+          "how": "Durchsucht alles, was du ihm beigebracht hast, und kann eine aktuelle Seite deiner Website für frische Details lesen.",
+          "rows": [
+            [
+              "Lieferrichtlinie",
+              "3–5 Werktage"
+            ]
+          ]
+        }
+      ]
+    },
+    "mcp": {
+      "eyebrow": "MCP-Plugins",
+      "titlePrefix": "Zugriffsanfrage: ",
+      "titleHl": "deine Systeme.",
+      "subtitle": "Verbinde bis zu fünf MCP-Server, sei es dein Shop, dein CRM oder dein Buchungssystem. Elpino entdeckt ihre Tools, und du aktivierst genau die, die der Agent nutzen darf. Probiere das Bedienfeld unten aus.",
+      "serverTitle": "Der MCP-Server deines Shops",
+      "toolsDiscovered": "{n} Tools entdeckt",
+      "verifiedCustomers": "Verifizierte Kunden",
+      "anyVisitor": "Jeder Besucher",
+      "destructive": "Destruktiv",
+      "changesData": "Ändert Daten",
+      "readOnly": "Nur lesen",
+      "needsVerified": "Braucht verifizierten Kunden",
+      "whatAgentSees": "Was der Agent sehen kann",
+      "toolsAvailable": "Tools gerade verfügbar",
+      "tools": [
+        {
+          "name": "get_order",
+          "desc": "Eine Bestellung und ihren Status nachschlagen",
+          "write": false,
+          "on": true
+        },
+        {
+          "name": "track_shipment",
+          "desc": "Live-Tracking für ein Paket",
+          "write": false,
+          "on": true
+        },
+        {
+          "name": "list_products",
+          "desc": "Katalog und Lagerbestände",
+          "write": false,
+          "on": true
+        },
+        {
+          "name": "update_address",
+          "desc": "Eine Lieferadresse ändern",
+          "write": true,
+          "on": true
+        },
+        {
+          "name": "cancel_order",
+          "desc": "Eine noch nicht versendete Bestellung stornieren",
+          "write": true,
+          "on": false
+        },
+        {
+          "name": "delete_customer",
+          "desc": "Einen Kundendatensatz löschen",
+          "write": true,
+          "on": false,
+          "danger": true
+        }
+      ],
+      "bullets": [
+        "Ein deaktiviertes Tool ist für den Agenten unsichtbar",
+        "Jeder Aufruf wird erneut gegen deine Liste auf dem Server geprüft",
+        "Tools, die Daten ändern, brauchen immer einen verifizierten Kunden",
+        "Server-Zugangsdaten werden verschlüsselt gespeichert"
+      ],
+      "features": [
+        {
+          "title": "Zahlungen, integriert",
+          "desc": "Verbinde Stripe oder Razorpay, und der Agent kann Zahlungen und Abonnements nachschlagen, Belege und Zahlungslinks senden und ein Abonnement kündigen."
+        },
+        {
+          "title": "Bring jeden MCP-Server mit",
+          "desc": "Alles, was MCP spricht, funktioniert, also entscheidest du, welche Tools der Agent erhält."
+        },
+        {
+          "title": "Elpinos eigener MCP-Server",
+          "desc": "Die eigenen Tools deiner Kunden können ihren Elpino-Plan, Nutzung und Zahlungen über MCP lesen."
+        }
+      ]
+    },
+    "orgChart": {
+      "eyebrow": "Das Team dahinter",
+      "titlePrefix": "Ein Agent. ",
+      "titleHl": "Ein ganzes Organigramm.",
+      "subtitle": "Jede Nachricht wird an den richtigen Spezialisten geleitet, und nichts geht hinaus, bevor ein Prüfer die Fakten kontrolliert.",
+      "router": "Router",
+      "routerNote": "wählt den Spezialisten",
+      "reviewer": "Prüfer",
+      "reviewerNote": "prüft den Entwurf gegen Tool-Ergebnisse",
+      "polish": "Feinschliff",
+      "polishNote": "dann sieht es der Kunde",
+      "footer": "Schwierige Fälle werden an ein stärkeres Reasoning-Modell eskaliert, und ein Fallback-Modell deckt Anbieterausfälle ab.",
+      "lanes": [
+        {
+          "k": "Vertrieb",
+          "d": "Pläne, Preise, Passung"
+        },
+        {
+          "k": "Support",
+          "d": "Konten, Zahlungen, Anleitungen"
+        },
+        {
+          "k": "Technisch",
+          "d": "Fehler, Einrichtung, Integration"
+        }
+      ]
+    },
+    "shift": {
+      "eyebrow": "Ein Tag im Job",
+      "titlePrefix": "Eine Schicht, ",
+      "titleHl": "von Anfang bis Ende.",
+      "subtitle": "Ein Beispieltag, nur mit Dingen, die der Agent wirklich tut.",
+      "items": [
+        {
+          "time": "2:14 Uhr",
+          "t": "Beantwortet eine Preisfrage",
+          "d": "Dein Team schläft. Elpino antwortet aus deiner Wissensdatenbank."
+        },
+        {
+          "time": "9:05 Uhr",
+          "t": "Verifiziert einen Kunden, behebt eine Zahlung",
+          "d": "Bestätigt ihn per E-Mail-Code, findet die fehlgeschlagene Zahlung, sendet einen neuen Zahlungslink."
+        },
+        {
+          "time": "11:20 Uhr",
+          "t": "Prüft eine Bestellung in deinem Shop",
+          "d": "Ruft deinen MCP-Server auf, liest den Status und teilt das Tracking."
+        },
+        {
+          "time": "13:30 Uhr",
+          "t": "Stößt auf etwas, das es nicht kann",
+          "d": "Sagt es, fragt zuerst den Kunden, benachrichtigt dann das ganze Team."
+        },
+        {
+          "time": "15:42 Uhr",
+          "t": "Niemand frei? Es lässt es nicht fallen",
+          "d": "Sagt dem Kunden ehrlich Bescheid und legt ein Ticket mit E-Mail-Nachfassung an."
+        }
+      ]
+    },
+    "review": {
+      "eyebrow": "Leistungsbeurteilung",
+      "titlePrefix": "Eine ehrliche ",
+      "titleHl": "Bewertung.",
+      "subtitle": "Beispielhafte Bewertungen, inklusive der Schwachstelle.",
+      "employeeBadge": "Mitarbeiter: Elpino",
+      "quote": "„Stark bei Routinefragen und überschreitet nie Grenzen. Halte die Wissensdatenbank aktuell, dann wird es weiter besser.“",
+      "items": [
+        {
+          "k": "Befolgt deine Richtlinie",
+          "n": 5,
+          "note": "Antwortet nur aus dem, was du genehmigt hast."
+        },
+        {
+          "k": "Weiß, wann um Hilfe zu bitten ist",
+          "n": 5,
+          "note": "Fragt zuerst den Kunden, bringt dann dein Team ein."
+        },
+        {
+          "k": "Bleibt innerhalb seiner Berechtigungen",
+          "n": 5,
+          "note": "Nur die Tools, die du aktiviert hast. Rückerstattungen standardmäßig deaktiviert."
+        },
+        {
+          "k": "Weiß, was du ihm nie gesagt hast",
+          "n": 2,
+          "note": "Es kann nicht antworten, was nicht in deinem Wissen steht. Füge mehr hinzu, um das zu verbessern."
+        }
+      ]
+    },
+    "guards": {
+      "eyebrow": "Schutzmaßnahmen",
+      "titlePrefix": "Das Firmen-",
+      "titleHl": "handbuch.",
+      "subtitle": "Die Regeln, nach denen Elpino arbeitet. Jede ist eine Kontrolle, die du besitzt.",
+      "items": [
+        {
+          "t": "Das Modell sieht niemals Namen oder E-Mails",
+          "d": "Identitäten in einem Gespräch werden gegen Referenzcodes ausgetauscht, bevor die KI es liest, und Geheimnisse wie Schlüssel und Tokens werden entfernt."
+        },
+        {
+          "t": "Rückerstattungen sind aus, bis du es sagst",
+          "d": "Geldbewegende Aktionen sind Opt-in und werden vom Workspace-Besitzer kontrolliert."
+        },
+        {
+          "t": "Du genehmigst jedes Tool",
+          "d": "Der Agent sieht nur MCP-Tools, die du aktiviert hast, und Tools, die Daten ändern, brauchen einen verifizierten Kunden."
+        },
+        {
+          "t": "Zuerst fragen, dann übergeben",
+          "d": "Wenn es kein Tool für die Aufgabe hat, sagt es das und fragt, bevor es dein Team einbezieht."
+        },
+        {
+          "t": "Fakten werden geprüft",
+          "d": "Ein Prüfschritt kontrolliert den Entwurf gegen Tool-Ergebnisse, bevor er gesendet wird."
+        },
+        {
+          "t": "Identität vor allem Persönlichen",
+          "d": "Zuerst E-Mail-Code oder signiertes Token, damit es nie mit einem Fremden über ein Konto spricht."
+        }
+      ]
+    },
+    "compare": {
+      "eyebrow": "Kein Chatbot",
+      "titlePrefix": "Chatbot vs. ",
+      "titleHl": "Elpino-Agent.",
+      "headerA": "Ein typischer Chatbot",
+      "headerB": "Elpino KI-Agent",
+      "rows": [
+        [
+          "Sucht Artikel und hört auf",
+          "Sucht, schlägt Datensätze nach und handelt"
+        ],
+        [
+          "Behandelt jeden wie einen Fremden",
+          "Verifiziert Identität, erinnert sich an frühere Chats"
+        ],
+        [
+          "„Bitte kontaktiere den Support“ wenn festgefahren",
+          "Fragt zuerst, benachrichtigt das Team, legt ein Ticket an, wenn niemand frei ist"
+        ],
+        [
+          "Kann deine Systeme nicht sehen",
+          "Ruft die MCP-Tools auf, die du genehmigst"
+        ],
+        [
+          "Antworten sind nicht vertrauenswürdig",
+          "Fakten gegen Tool-Ergebnisse geprüft"
+        ]
+      ]
+    },
+    "faq": {
+      "eyebrow": "Fragen",
+      "titlePrefix": "Gut zu ",
+      "titleHl": "wissen.",
+      "items": [
+        [
+          "Was ist MCP?",
+          "Das Model Context Protocol, eine standardisierte Art für eine KI, Tools auf einem anderen System aufzurufen. Verbinde einen MCP-Server, und Elpino entdeckt seine Tools. Du wählst dann aus, welche der Agent nutzen darf."
+        ],
+        [
+          "Wie viele MCP-Server kann ich verbinden?",
+          "Bis zu fünf, mit bis zu 15 aktivierten Tools pro Server."
+        ],
+        [
+          "Kann der Agent Dinge in meinen Systemen ändern?",
+          "Nur über Tools, die du aktiviert hast, und Tools, die Daten ändern, erfordern immer einen Kunden, dessen E-Mail verifiziert wurde."
+        ],
+        [
+          "Wie weiß es, wer der Kunde ist?",
+          "Aus dem Gespräch, früheren Chats mit ihm und einem Verifizierungsschritt: ein einmaliger E-Mail-Code oder ein signiertes Token aus deiner App."
+        ],
+        [
+          "Kann es Rückerstattungen ausstellen?",
+          "Nur wenn der Workspace-Besitzer Rückerstattungen aktiviert. Standardmäßig sind sie aus."
+        ],
+        [
+          "Was passiert, wenn es etwas nicht lösen kann?",
+          "Es sagt das und fragt den Kunden, ob es ihn mit deinem Team verbinden soll. Jeder im Team bekommt 90 Sekunden lang einen Beitritts-Alarm, und wenn niemand beitritt, wird automatisch ein Ticket erstellt."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Deine neueste Einstellung ist bereit zu starten.",
+      "subtitle": "Bring ihr dein Geschäft bei, verbinde deine Tools, und setze die Grenzen.",
+      "ctaStart": "Kostenlos starten",
+      "ctaKnowledgeHub": "Zum Wissenszentrum"
+    }
+  },
+  "inbox": {
+    "hero": {
+      "badge": "Gemeinsamer Posteingang",
+      "titlePrefix": "Ein Gespräch. ",
+      "titleHl": "Alle, die dabei sein sollten.",
+      "subtitle": "Die KI führt den Chat, bis eine Person gebraucht wird, das ganze Team wird gleichzeitig alarmiert, und wer beitritt, erhält den vollständigen Verlauf. Verfolgen Sie ein echtes Gespräch von der ersten Nachricht bis zur Lösung.",
+      "ctaOpen": "Posteingang öffnen",
+      "ctaPricing": "Preise ansehen"
+    },
+    "filters": [
+      "Alle",
+      "Ungelesen",
+      "Gelesen",
+      "Gelöst"
+    ],
+    "desk": {
+      "stages": [
+        {
+          "key": "ai",
+          "label": "KI antwortet",
+          "badge": "KI",
+          "banner": "Elpino bearbeitet dieses Gespräch"
+        },
+        {
+          "key": "ask",
+          "label": "Braucht einen Menschen",
+          "badge": "Braucht Mensch",
+          "banner": "Jedes Teammitglied hat eine Beitreten-Warnung erhalten. 90 Sekunden zum Einsteigen"
+        },
+        {
+          "key": "join",
+          "label": "Teammitglied tritt bei",
+          "badge": "Priya",
+          "banner": "Priya ist beigetreten. Die Warnung ist für alle verschwunden"
+        },
+        {
+          "key": "back",
+          "label": "Zurückgeben",
+          "badge": "KI",
+          "banner": "Priya hat den Chat an Elpino zurückgegeben"
+        },
+        {
+          "key": "done",
+          "label": "Gelöst",
+          "badge": "Gelöst",
+          "banner": "Gelöst. Jederzeit wieder öffnen, falls der Kunde erneut schreibt"
+        }
+      ],
+      "lines": [
+        {
+          "at": 0,
+          "from": "you",
+          "text": "Hallo, ich bin ins Ausland gezogen. Können Sie das Rechnungsland meines Kontos aktualisieren?"
+        },
+        {
+          "at": 1,
+          "from": "ai",
+          "text": "Ich kann Rechnungsdaten nicht selbst ändern. Möchten Sie, dass ich Sie mit unserem Team verbinde?"
+        },
+        {
+          "at": 1,
+          "from": "you",
+          "text": "Ja, gerne"
+        },
+        {
+          "at": 2,
+          "from": "sys",
+          "text": "Priya ist dem Chat beigetreten"
+        },
+        {
+          "at": 2,
+          "from": "team",
+          "text": "Hallo! Ich übernehme das. Ich habe Ihr Rechnungsland aktualisiert."
+        },
+        {
+          "at": 3,
+          "from": "sys",
+          "text": "Priya hat den Chat an Elpino zurückgegeben"
+        },
+        {
+          "at": 3,
+          "from": "ai",
+          "text": "Erledigt. Kann ich sonst noch helfen?"
+        },
+        {
+          "at": 4,
+          "from": "you",
+          "text": "Das war alles, danke!"
+        },
+        {
+          "at": 4,
+          "from": "sys",
+          "text": "Gespräch gelöst"
+        }
+      ],
+      "rail": [
+        "Space",
+        "Posteingang",
+        "Analytik",
+        "Kontakte",
+        "Wissensdatenbank",
+        "Einstellungen"
+      ],
+      "list": [
+        {
+          "name": "Harnoor Singh",
+          "date": "21. Sept.",
+          "prev": "Ich kann niemandes IP-Adresse weitergeben"
+        },
+        {
+          "name": "Aisha Khan",
+          "date": "Heute",
+          "prev": ""
+        },
+        {
+          "name": "Tom Becker",
+          "date": "19. Sept.",
+          "prev": "Widget lädt beim Checkout nicht"
+        },
+        {
+          "name": "Meera Iyer",
+          "date": "18. Sept.",
+          "prev": "Team auf Jahresabrechnung umstellen?"
+        }
+      ],
+      "teamInbox": "Team-Posteingang",
+      "aiAssist": "KI-Assistenz",
+      "searchPlaceholder": "Gespräche durchsuchen",
+      "verified": "Verifiziert",
+      "joined": "Beigetreten",
+      "join": "Beitreten",
+      "priyaReplying": "Priya antwortet",
+      "resolvedLabel": "Gelöst",
+      "aiReplying": "Elpino antwortet, Sie schauen nur zu",
+      "elpinoAi": "Elpino KI",
+      "priyaTeam": "Priya · Team",
+      "writeReply": "Antwort schreiben…",
+      "send": "Senden",
+      "reopenNote": "Gelöst. Erneut öffnen, falls der Kunde wieder schreibt.",
+      "lockedNote": "Treten Sie dem Gespräch bei, um zu antworten. Bis dahin spricht Elpino weiter mit dem Kunden.",
+      "websiteVisitor": "Website-Besucher",
+      "locationDevice": "Standort & Gerät",
+      "location": "Pune, Indien",
+      "device": "Chrome · macOS",
+      "onPage": "Auf /pricing",
+      "lastSeen": "Zuletzt gerade eben gesehen",
+      "identityVerified": "Identität verifiziert",
+      "signedIn": "Auf der Website angemeldet",
+      "otherConvos": "Weitere Gespräche",
+      "noOtherConvos": "Noch keine weiteren Gespräche mit diesem Besucher."
+    },
+    "realThing": {
+      "eyebrow": "Das echte Ding",
+      "titlePrefix": "Das ist der ",
+      "titleHl": "echte Posteingang.",
+      "subtitle": "Kein Mockup. Jedes Gespräch, die Antworten der KI, die Angaben des Besuchers und der Beitreten-Button, alles auf einem Bildschirm.",
+      "imageAlt": "Der Elpino-Team-Posteingang: eine Gesprächsliste, ein von der KI bearbeiteter Thread und Standort und Gerät des Besuchers",
+      "callouts": [
+        {
+          "label": "Beitreten, um zu übernehmen"
+        },
+        {
+          "label": "Filter: Alle · Ungelesen · Gelesen · Gelöst"
+        },
+        {
+          "label": "Standort & Gerät"
+        },
+        {
+          "label": "Schließt automatisch nach 24h Stille"
+        }
+      ]
+    },
+    "twoTabs": {
+      "eyebrow": "Zwei Ansichten",
+      "titlePrefix": "KI beobachten. ",
+      "titleHl": "Team führen.",
+      "subtitle": "Ihr Posteingang hat einen Tab für das, was Menschen bearbeiten, und einen für das, was Elpino bearbeitet, damit sich nichts verbirgt.",
+      "tabs": [
+        {
+          "label": "Team-Posteingang",
+          "title": "Gespräche, die Ihr Team betreut",
+          "body": "Alles, was eine Person beigetreten, übernommen oder zugewiesen bekommen hat. Hier arbeitet Ihr Team: Antworten, Nachfassungen und gelöste Threads.",
+          "rows": [
+            [
+              "Harnoor Singh",
+              "Können Sie mir die Rechnung erneut schicken?",
+              "Priya"
+            ],
+            [
+              "Meera Iyer",
+              "Team auf Jahresabrechnung umstellen?",
+              "Sam"
+            ],
+            [
+              "Jo Alvarez",
+              "Danke, das hat es behoben!",
+              "Gelöst"
+            ]
+          ]
+        },
+        {
+          "label": "KI-Assistenz",
+          "title": "Gespräche, die Elpino bearbeitet",
+          "body": "Sehen Sie der KI in Echtzeit bei der Arbeit zu. Ein Zähler zeigt, wie viele aktiv sind, und Sie können jedem Thread beitreten, sobald Sie einsteigen möchten.",
+          "rows": [
+            [
+              "Aisha Khan",
+              "Elpino antwortet…",
+              "KI"
+            ],
+            [
+              "Tom Becker",
+              "Prüft Ihre Zahlungsdaten…",
+              "KI"
+            ],
+            [
+              "Ravi Menon",
+              "Hat einen sicheren Zahlungslink gesendet",
+              "KI"
+            ]
+          ]
+        }
+      ]
+    },
+    "holders": {
+      "eyebrow": "Immer klar",
+      "titlePrefix": "Sie wissen immer, ",
+      "titleHl": "wer es hat.",
+      "subtitle": "Jedes Gespräch trägt ein Abzeichen in der Liste, damit niemand doppelt antwortet und nichts durchrutscht.",
+      "items": [
+        {
+          "tag": "KI",
+          "title": "Elpino hat es",
+          "body": "Antwortet mit Ihrer Wissensdatenbank und Tools. Sie können jede Nachricht live mitverfolgen."
+        },
+        {
+          "tag": "Teammitglied",
+          "title": "Eine Person hat es",
+          "body": "Tippen Sie auf Beitreten oder Übernehmen, falls ein Kollege es hat. Die KI tritt zurück."
+        },
+        {
+          "tag": "Gelöst",
+          "title": "Es ist erledigt",
+          "body": "Gelöste Threads bleiben durchsuchbar, und Sie können sie mit einem Tipp wieder öffnen."
+        }
+      ]
+    },
+    "baton": {
+      "eyebrow": "Den Staffelstab übergeben",
+      "titlePrefix": "Beitreten. Übernehmen. ",
+      "titleHl": "Zurückgeben.",
+      "subtitle": "Ein Gespräch wechselt mit einem Tipp zwischen der KI und Ihren Leuten, und der Verlauf reist mit.",
+      "items": [
+        {
+          "who": "Elpino KI",
+          "note": "Antwortet zuerst"
+        },
+        {
+          "who": "Priya",
+          "note": "Hat auf Beitreten getippt"
+        },
+        {
+          "who": "Sam",
+          "note": "Hat von Priya übernommen"
+        },
+        {
+          "who": "Elpino KI",
+          "note": "Zurückgegeben"
+        }
+      ],
+      "holdingNow": "Hat es gerade",
+      "stepLabel": "Schritt {n}"
+    },
+    "teamAlert": {
+      "eyebrow": "Team-weite Warnungen",
+      "titlePrefix": "Das ganze Team alarmieren. ",
+      "titleHl": "Eine Person antwortet.",
+      "subtitle": "Wenn ein Kunde einen Menschen möchte, erhält das gesamte Team gleichzeitig eine Beitreten-Warnung. Wer zuerst auf Beitreten tippt, übernimmt den Chat, die Warnung verschwindet für alle anderen, und der Kunde sieht, wer beigetreten ist.",
+      "bullets": [
+        "Niemand wird herausgegriffen, also ist niemand ein Flaschenhals",
+        "90 Sekunden zum Einsteigen, bevor automatisch ein Ticket erstellt wird",
+        "Versehentlich beigetreten? Mit einem Tipp an die KI zurückgeben"
+      ],
+      "panelLabel": "Posteingang-Warnungen",
+      "joinedStatus": "Beigetreten",
+      "alertCleared": "Warnung gelöscht",
+      "joinChatStatus": "Beitreten",
+      "quietStatus": "Ruhig",
+      "bannerJoined": "Priya ist beigetreten. Der Kunde sieht ihren Namen.",
+      "bannerAlerting": "Alle 4 Teammitglieder werden alarmiert…",
+      "bannerAsked": "Kunde hat nach einer Person gefragt"
+    },
+    "nobodyFree": {
+      "eyebrow": "Nichts geht verloren",
+      "titlePrefix": "Selbst wenn alle ",
+      "titleHl": "beschäftigt sind.",
+      "subtitle": "Wenn niemand rechtzeitig beitritt, bleibt der Kunde nicht vor einem Ladesymbol sitzen.",
+      "marks": [
+        {
+          "t": "0s",
+          "h": "Warnung geht raus",
+          "d": "Jedes Teammitglied sieht eine Beitreten-Warnung."
+        },
+        {
+          "t": "≤ 90s",
+          "h": "Der Erste gewinnt",
+          "d": "Die Warnung verschwindet für alle anderen."
+        },
+        {
+          "t": "90s",
+          "h": "Niemand frei? Ticket",
+          "d": "Ein Ticket wird automatisch erstellt."
+        },
+        {
+          "t": "24h",
+          "h": "E-Mail-Nachfassung",
+          "d": "Dem Kunden wird gesagt, dass er innerhalb von 24 Stunden eine Antwort per E-Mail erhält."
+        }
+      ]
+    },
+    "findAnything": {
+      "eyebrow": "Suche & Filter",
+      "titlePrefix": "Jedes Gespräch ",
+      "titleHl": "in einer Sekunde finden.",
+      "subtitle": "Suchen Sie nach Name oder Nachricht und filtern Sie nach Alle, Ungelesen, Gelesen oder Gelöst. Probieren Sie es rechts aus.",
+      "noMatch": "Keine Treffer. Versuchen Sie ein anderes Wort.",
+      "convos": [
+        {
+          "n": "Harnoor Singh",
+          "p": "Ich kann niemandes IP-Adresse weitergeben",
+          "s": "resolved"
+        },
+        {
+          "n": "Aisha Khan",
+          "p": "Ins Ausland gezogen, Abrechnungsfrage",
+          "s": "unread"
+        },
+        {
+          "n": "Tom Becker",
+          "p": "Widget lädt beim Checkout nicht",
+          "s": "unread"
+        },
+        {
+          "n": "Meera Iyer",
+          "p": "Team auf Jahresabrechnung umstellen?",
+          "s": "read"
+        },
+        {
+          "n": "Ravi Menon",
+          "p": "Wo finde ich meine Quittung?",
+          "s": "resolved"
+        },
+        {
+          "n": "Jo Alvarez",
+          "p": "Kann ich ein weiteres Teammitglied hinzufügen?",
+          "s": "read"
+        }
+      ]
+    },
+    "context": {
+      "eyebrow": "Kontext inklusive",
+      "titlePrefix": "Nie wieder fragen: ",
+      "titleHl": "„Wer waren Sie noch mal?“",
+      "subtitle": "Ihr Team öffnet einen Thread und kennt bereits das Wesentliche.",
+      "items": [
+        {
+          "t": "Wo sie sind",
+          "d": "Standort und lokaler Kontext zu jedem Besucher."
+        },
+        {
+          "t": "Was sie nutzen",
+          "d": "Gerät, Browser und die Seite, auf der sie waren."
+        },
+        {
+          "t": "Wer sie sind",
+          "d": "Ein Verifiziert-Abzeichen, wenn die Identität per signiertem Token oder E-Mail-Code bestätigt ist."
+        },
+        {
+          "t": "Sensible Dinge, sicher",
+          "d": "Private Angaben über eine sichere Einmalanfrage abfragen, nicht im Chat."
+        },
+        {
+          "t": "Der ganze Verlauf",
+          "d": "Frühere Gespräche mit derselben Person, direkt hier."
+        }
+      ],
+      "extraTitle": "Plus Live-Tippanzeige auf beiden Seiten",
+      "extraDesc": "Kunden sehen, wenn Sie antworten, und Sie sehen, wenn sie es tun."
+    },
+    "secureRequest": {
+      "eyebrow": "Sichere Anfragen",
+      "titlePrefix": "Private Angaben ",
+      "titleHl": "bleiben aus dem Chat.",
+      "subtitle": "Fragen Sie sensible Informationen über ein sicheres Einmalformular ab, damit sie nie im Protokoll landen.",
+      "steps": [
+        {
+          "t": "Sie brauchen etwas Privates",
+          "d": "Für Angaben, die nicht in ein Chatfenster gehören."
+        },
+        {
+          "t": "Sichere Anfrage senden",
+          "d": "Der Kunde erhält ein privates Einmalformular statt eines Chatfelds."
+        },
+        {
+          "t": "Zurück im Gespräch",
+          "d": "Er sendet es einmal ab, und Ihr Team führt das Gespräch fort."
+        }
+      ],
+      "stepLabel": "Schritt {n}"
+    },
+    "afterLeave": {
+      "eyebrow": "Nach dem Verlassen",
+      "titlePrefix": "Den Tab zu schließen ",
+      "titleHl": "ist nicht das Ende.",
+      "subtitle": "Elpino sagt Ihnen ehrlich, ob eine Antwort den Kunden noch erreichen kann.",
+      "steps": [
+        {
+          "t": "Besucher geht",
+          "d": "Er schließt den Chat, oder 24 Stunden vergehen ohne Nachricht."
+        },
+        {
+          "t": "Verifizierte E-Mail hinterlegt?",
+          "d": "Wenn er seine Adresse bestätigt hat, kann er noch erreicht werden."
+        },
+        {
+          "t": "Per E-Mail antworten",
+          "d": "Ihre Antwort geht in sein Postfach. Ohne verifizierte E-Mail ist keine Antwort möglich, und das Antwortfeld weist darauf hin."
+        }
+      ],
+      "stepLabel": "Schritt {n}"
+    },
+    "compare": {
+      "eyebrow": "Vorher & nachher",
+      "titlePrefix": "Vom Durcheinander zur ",
+      "titleHl": "Ruhe.",
+      "headerA": "Ohne gemeinsamen Posteingang",
+      "headerB": "Mit Elpino",
+      "rows": [
+        [
+          "Kunden warten, bis jemand frei ist",
+          "Die KI antwortet in Sekunden, dann tritt bei Bedarf eine Person bei"
+        ],
+        [
+          "Niemand weiß, wer antwortet",
+          "Ein Abzeichen zeigt bei jedem Thread KI, Teammitglied oder Gelöst"
+        ],
+        [
+          "Das Team fragt sich gegenseitig nach einem Verantwortlichen",
+          "Eine Beitreten-Warnung erreicht alle, wer zuerst beitritt, übernimmt"
+        ],
+        [
+          "Der Kontext liegt an zehn Orten",
+          "Verlauf, Standort, Gerät und Verifizierung in einem Panel"
+        ],
+        [
+          "Kunden, die den Tab schließen, sind verloren",
+          "Verifizierte Besucher können Ihre Antwort trotzdem per E-Mail erhalten"
+        ]
+      ]
+    },
+    "faq": {
+      "eyebrow": "Fragen",
+      "titlePrefix": "Gut zu ",
+      "titleHl": "wissen.",
+      "items": [
+        [
+          "Wer kann ein Gespräch sehen?",
+          "Ihr gesamtes Team kann den gemeinsamen Posteingang sehen. Jedes Gespräch zeigt, wer es hat: die KI, ein Teammitglied oder gelöst."
+        ],
+        [
+          "Was ist das 90-Sekunden-Fenster?",
+          "Wenn ein Kunde eine Person möchte, erhält jedes Teammitglied eine Beitreten-Warnung. Tritt niemand innerhalb von 90 Sekunden bei, wird der Kunde informiert und automatisch ein Ticket mit E-Mail-Nachfassung erstellt."
+        ],
+        [
+          "Kann ich ein Gespräch an die KI zurückgeben?",
+          "Ja. Wenn Sie beigetreten sind und es sich um eine einfache Nachfrage handelt, geben Sie den Chat mit einem Tipp an Elpino zurück."
+        ],
+        [
+          "Kann ich antworten, nachdem der Besucher gegangen ist?",
+          "Wenn er eine verifizierte E-Mail-Adresse angegeben hat, wird Ihre Antwort per E-Mail gesendet. Ohne diese kann keine Antwort ihn erreichen."
+        ],
+        [
+          "Funktioniert es über den Website-Chat hinaus?",
+          "Das Website-Chat-Widget ist bereits live. Omnichannel kommt im November."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Geben Sie Ihrem Team einen einzigen Ort zum Helfen.",
+      "subtitle": "Starten Sie kostenlos und laden Sie Ihre Kollegen ein, wenn Sie bereit sind.",
+      "ctaStart": "Kostenlos starten",
+      "ctaMeetAgent": "KI-Agent kennenlernen"
+    }
+  },
+  "tickets": {
+    "hero": {
+      "badge": "Tickets",
+      "titlePrefix": "Jede Übergabe hinterlässt ",
+      "titleHl": "einen Beleg.",
+      "subtitle": "Wenn die KI eine Aufgabe nicht abschließen kann und niemand verfügbar ist, zuckt Elpino nicht einfach mit den Schultern. Sie erstellt ein Ticket mit dem Grund und einer Zusammenfassung, schickt es dorthin, wo Ihr Team arbeitet, und gibt dem Kunden eine Referenz, die er angeben kann.",
+      "ctaStart": "Kostenlos starten",
+      "ctaInbox": "Posteingang ansehen"
+    },
+    "printed": {
+      "ticketBadge": "Ticket",
+      "filedAt": "Bei KI-Übergabe erstellt",
+      "printing": "Wird gedruckt…",
+      "referenceLabel": "Referenz",
+      "referenceNote": "Der Kunde kann dies angeben",
+      "fields": [
+        [
+          "Titel",
+          "Support-Eskalation · Aisha Khan"
+        ],
+        [
+          "Grund",
+          "Änderung des Rechnungslands erfordert eine Person"
+        ],
+        [
+          "Zusammenfassung",
+          "Ist umgezogen und möchte das Rechnungsland ihres Kontos aktualisieren lassen."
+        ],
+        [
+          "Kunde",
+          "Aisha Khan · aisha@example.com"
+        ],
+        [
+          "Unterhaltung",
+          "Verknüpft, ein Tipp zum Öffnen"
+        ],
+        [
+          "Weitergeleitet an",
+          "Vorgänge-Seite"
+        ]
+      ]
+    },
+    "origins": {
+      "eyebrow": "Woher Tickets kommen",
+      "titlePrefix": "Drei Wege, wie ein Beleg ",
+      "titleHl": "entsteht.",
+      "subtitle": "Sie müssen sich nie merken, es aufzuschreiben.",
+      "items": [
+        {
+          "tag": "Manuell",
+          "t": "Ein Teammitglied legt es an",
+          "d": "Fällt Ihnen etwas auf, das Nachverfolgung braucht? Wandeln Sie die Unterhaltung selbst in ein Ticket um.",
+          "sample": [
+            "Änderung der Rechnungsadresse",
+            "Meera hat uns gebeten, die Rechnungsadresse auf ihren Rechnungen zu aktualisieren."
+          ]
+        },
+        {
+          "tag": "Bei KI-Übergabe erstellt",
+          "t": "Die KI legt es bei der Übergabe an",
+          "d": "Wenn Elpino einen Chat übergibt und niemand rechtzeitig einsteigt, erstellt sie ein Ticket mit dem Grund und einer Zusammenfassung.",
+          "sample": [
+            "Support-Eskalation · Aisha Khan",
+            "Grund: Änderung des Rechnungslands erfordert eine Person."
+          ]
+        },
+        {
+          "tag": "Von der KI-Überprüfung markiert",
+          "t": "Die KI erkennt, was noch offen ist",
+          "d": "Nachdem eine Unterhaltung geschlossen wurde, überprüft die KI sie. Wenn Ihr Team dem Kunden noch etwas schuldet, markiert sie ein Ticket und nennt den Grund.",
+          "sample": [
+            "Rückerstattungsanfrage nachverfolgen",
+            "Grund: Dem Kunden wurde gesagt, dass es geprüft wird; nichts wurde festgehalten."
+          ]
+        }
+      ]
+    },
+    "anatomy": {
+      "eyebrow": "Anatomie eines Tickets",
+      "titlePrefix": "Alles, was Ihr Team braucht, ",
+      "titleHl": "schon geschrieben.",
+      "subtitle": "Tippen Sie auf eine Zeile, um zu sehen, warum sie da ist.",
+      "fieldLabel": "Feld {n} von {total}",
+      "fields": [
+        {
+          "k": "Titel",
+          "v": "Support-Eskalation · Aisha Khan",
+          "why": "Nach dem Kunden benannt, damit Sie es in einer langen Liste auf einen Blick erkennen."
+        },
+        {
+          "k": "Grund",
+          "v": "Änderung des Rechnungslands erfordert eine Person",
+          "why": "Warum die KI übergeben hat, oder warum ihre Überprüfung es markiert hat. Niemand muss raten, was schiefging."
+        },
+        {
+          "k": "Zusammenfassung",
+          "v": "Ist umgezogen, möchte das Rechnungsland aktualisiert.",
+          "why": "Die KI schreibt eine kurze Zusammenfassung des Chats, damit wer immer es übernimmt, informiert startet."
+        },
+        {
+          "k": "Kunde",
+          "v": "Aisha Khan · aisha@example.com",
+          "why": "Name und E-Mail, falls angegeben, damit Sie wissen, an wen Sie antworten."
+        },
+        {
+          "k": "Unterhaltung",
+          "v": "Verknüpft, öffnet den Chat",
+          "why": "Ein Tipp, um zur vollständigen Unterhaltung mit jeder Nachricht zurückzuspringen."
+        },
+        {
+          "k": "Quelle",
+          "v": "Bei KI-Übergabe erstellt",
+          "why": "Zeigt, ob ein Teammitglied, die KI bei der Übergabe oder die KI-Überprüfung es erstellt hat."
+        },
+        {
+          "k": "Weitergeleitet an",
+          "v": "Trello, Asana oder die Vorgänge-Seite",
+          "why": "Wohin das Ticket geschickt wurde. Ohne verbundenes Projekttool bleibt es auf der Vorgänge-Seite."
+        },
+        {
+          "k": "Referenz",
+          "v": "7F3A9C21",
+          "why": "Ein kurzer Code, den der Kunde angeben kann, falls er sich wieder meldet."
+        }
+      ]
+    },
+    "scrubber": {
+      "eyebrow": "Die 90-Sekunden-Uhr",
+      "titlePrefix": "Zeit ziehen. ",
+      "titleHl": "Sehen, was passiert.",
+      "subtitle": "Steigt jemand zu irgendeinem Zeitpunkt ein, wird kein Ticket benötigt. Läuft die Uhr ab, ist das die Kette.",
+      "seconds": "Sekunden",
+      "dragMe": "Zieh mich",
+      "secondsAriaLabel": "Sekunden seit der Benachrichtigung",
+      "clock": [
+        {
+          "t": "Der Kunde stimmt zu, mit einer Person zu sprechen",
+          "d": "Elpino fragt zuerst und macht nur bei einem Ja weiter."
+        },
+        {
+          "t": "Jedes Teammitglied erhält eine Beitreten-Benachrichtigung",
+          "d": "Das ganze Team wird im selben Moment benachrichtigt."
+        },
+        {
+          "t": "Niemand ist eingestiegen: Ticket erstellt",
+          "d": "Titel, Grund, Zusammenfassung und ein Link zum Chat."
+        },
+        {
+          "t": "Kunde per E-Mail informiert, Team benachrichtigt",
+          "d": "Der Kunde erhält seine Referenz per E-Mail."
+        }
+      ]
+    },
+    "connect": {
+      "eyebrow": "In einer Minute eingerichtet",
+      "titlePrefix": "Verbinden Sie es mit ",
+      "titleHl": "wo Sie arbeiten.",
+      "subtitle": "Optional. Überspringen Sie es, und Tickets bleiben einfach auf der Vorgänge-Seite.",
+      "stepLabel": "Schritt {n}",
+      "steps": [
+        {
+          "t": "Trello oder Asana verbinden",
+          "d": "Fügen Sie Ihr Projekttool über die Einstellungen Ihres Arbeitsbereichs hinzu."
+        },
+        {
+          "t": "Tickets gehen dorthin",
+          "d": "Jedes neue Ticket wird zu einer Karte oder Aufgabe, bereits geschrieben."
+        },
+        {
+          "t": "Weiterhin in Elpino nachverfolgt",
+          "d": "Die Vorgänge-Seite behält die Liste und lässt Sie Dinge abhaken."
+        }
+      ]
+    },
+    "reviewScan": {
+      "badge": "KI-Überprüfung",
+      "titlePrefix": "Nachdem der Chat geschlossen ist, ",
+      "titleHl": "liest Elpino ihn erneut.",
+      "subtitle": "Chats enden höflich, während Versprechen offen bleiben. Wenn eine Unterhaltung geschlossen wird, überprüft die KI sie, und wenn Ihr Team dem Kunden noch etwas schuldet, markiert sie ein Ticket und sagt Ihnen, warum.",
+      "bullets": [
+        "Erkennt Sätze wie „Ich prüfe das und melde mich“",
+        "Erklärt, warum es markiert wurde, damit Sie schnell entscheiden können",
+        "Wird auf der Vorgänge-Seite als von der KI-Überprüfung markiert angezeigt"
+      ],
+      "closedConvo": "Geschlossene Unterhaltung",
+      "statusFlagged": "Markiert",
+      "statusReviewing": "Wird überprüft…",
+      "statusResolved": "Gelöst",
+      "chat": [
+        [
+          "cust",
+          "Hallo, meine Bestellung ist beschädigt angekommen."
+        ],
+        [
+          "agent",
+          "Das tut mir sehr leid! Ich prüfe die Rückerstattung und melde mich."
+        ],
+        [
+          "cust",
+          "Super, danke."
+        ],
+        [
+          "agent",
+          "Kann ich sonst noch helfen?"
+        ],
+        [
+          "cust",
+          "Nein, das war's."
+        ]
+      ],
+      "flaggedTicketLabel": "Ticket · Von der KI-Überprüfung markiert",
+      "flaggedTitle": "Rückerstattungsanfrage nachverfolgen · Tom Becker",
+      "flaggedDesc": "Dem Kunden wurde gesagt, eine Rückerstattung werde geprüft; danach wurde nichts festgehalten."
+    },
+    "destinations": {
+      "eyebrow": "Wo es landet",
+      "titlePrefix": "Gesendet an das Tool, ",
+      "titleHl": "das Ihr Team schon nutzt.",
+      "subtitle": "Verbinden Sie Trello oder Asana, und Tickets gehen direkt dorthin. Verbinden Sie nichts, und sie sind trotzdem sicher auf der Vorgänge-Seite.",
+      "cardTitle": "Support-Eskalation · Aisha Khan",
+      "cardReason": "Grund: Änderung des Rechnungslands erfordert eine Person",
+      "fromElpino": "Von Elpino",
+      "items": [
+        {
+          "key": "trello",
+          "label": "Trello",
+          "note": "Wird zu einer Karte auf Ihrem Trello-Board.",
+          "cols": [
+            "Zu erledigen",
+            "In Arbeit",
+            "Fertig"
+          ]
+        },
+        {
+          "key": "asana",
+          "label": "Asana",
+          "note": "Wird zu einer Aufgabe in Ihrem Asana-Projekt.",
+          "cols": [
+            "Nicht begonnen",
+            "In Bearbeitung",
+            "Abgeschlossen"
+          ]
+        },
+        {
+          "key": "issues",
+          "label": "Vorgänge-Seite",
+          "note": "Kein Projekttool verbunden? Es bleibt auf Ihrer Vorgänge-Seite, ohne jede Einrichtung.",
+          "cols": [
+            "Offen",
+            "",
+            "Gelöst"
+          ]
+        }
+      ]
+    },
+    "customerSide": {
+      "badge": "Der Beleg",
+      "titlePrefix": "Kunden wissen, ",
+      "titleHl": "dass sie nicht vergessen wurden.",
+      "subtitle": "Konnte niemand rechtzeitig einsteigen, sagt Elpino das dem Kunden ehrlich, schickt ihm eine E-Mail, damit nichts verloren geht, und gibt ihm eine kurze Referenz zum Angeben. Ihr ganzes Team wird ebenfalls über das neue Ticket benachrichtigt.",
+      "bullets": [
+        "Dem Kunden wird gesagt, was als Nächstes passiert",
+        "Er erhält eine E-Mail mit seiner Referenz",
+        "Jedes Teammitglied wird über das Ticket benachrichtigt"
+      ],
+      "inChat": "Im Chat",
+      "chatMsgPrefix": "Unser Team ist gerade ausgelastet, deshalb habe ich ein Ticket eröffnet. Ihre Referenz ist ",
+      "chatMsgSuffix": ". Sie hören innerhalb von 24 Stunden per E-Mail von uns.",
+      "inInbox": "In seinem Posteingang",
+      "emailSubject": "Wir haben Ihre Anfrage erhalten",
+      "emailBodyPrefix": "Ticket ",
+      "emailBodySuffix": " liegt bei unserem Team. Antworten Sie auf diese E-Mail, wenn Sie noch etwas hinzufügen möchten.",
+      "teamNotified": "Team benachrichtigt: neues Ticket von Aisha Khan"
+    },
+    "issuesBoard": {
+      "badge": "Die Vorgänge-Seite",
+      "titlePrefix": "Eine Liste. ",
+      "titleHl": "Abhaken.",
+      "subtitle": "Jedes Ticket zeigt, woher es kam und wohin es gesendet wurde. Die KI-Überprüfung sagt Ihnen sogar, warum sie eines markiert hat. Klicken Sie auf das Kästchen, um es als gelöst zu markieren.",
+      "openWord": "offen",
+      "resolvedWord": "gelöst",
+      "panelTitle": "Vorgänge",
+      "panelSubtitle": "Tickets, die aus Support-Unterhaltungen erstellt wurden.",
+      "markResolved": "Als gelöst markieren",
+      "markUnresolved": "Als ungelöst markieren",
+      "rows": [
+        {
+          "t": "Support-Eskalation · Aisha Khan",
+          "who": "Bei KI-Übergabe erstellt",
+          "where": "Nicht an ein Projekttool gesendet",
+          "done": false
+        },
+        {
+          "t": "Rückerstattungsanfrage nachverfolgen · Tom Becker",
+          "who": "Von der KI-Überprüfung markiert",
+          "where": "Trello-Ticket",
+          "reason": "Dem Kunden wurde gesagt, eine Rückerstattung werde geprüft; danach wurde nichts festgehalten.",
+          "done": false
+        },
+        {
+          "t": "Änderung der Rechnungsadresse · Meera Iyer",
+          "where": "Asana-Ticket",
+          "done": false
+        },
+        {
+          "t": "Support-Eskalation · Ravi Menon",
+          "who": "Bei KI-Übergabe erstellt",
+          "where": "Nicht an ein Projekttool gesendet",
+          "done": true
+        }
+      ]
+    },
+    "lifecycle": {
+      "eyebrow": "Lebenszyklus eines Tickets",
+      "titlePrefix": "Von „Kann ich mit jemandem sprechen?“ ",
+      "titleHl": "bis erledigt.",
+      "stepLabel": "Schritt {n}",
+      "items": [
+        {
+          "t": "Der Kunde bittet um eine Person",
+          "d": "Die KI fragt zuerst, dann alarmiert sie das Team."
+        },
+        {
+          "t": "90 Sekunden, niemand steigt ein",
+          "d": "Jeder hatte die Chance, den Chat zu übernehmen."
+        },
+        {
+          "t": "Ticket erstellt",
+          "d": "Titel, Grund, Zusammenfassung und ein Link zurück zum Chat."
+        },
+        {
+          "t": "Kunde per E-Mail informiert",
+          "d": "Mit seiner Referenz, damit sich nichts verloren anfühlt."
+        },
+        {
+          "t": "Bearbeitet und gelöst",
+          "d": "Ihr Team hakt es ab, wenn es fertig ist."
+        }
+      ]
+    },
+    "compare": {
+      "eyebrow": "Vorher & nachher",
+      "titlePrefix": "Keine ",
+      "titleHl": "vergessenen Versprechen mehr.",
+      "headerA": "Ohne Tickets",
+      "headerB": "Mit Elpino",
+      "rows": [
+        [
+          "„Jemand meldet sich bei Ihnen“, und dann Stille",
+          "Ein Ticket mit einer Referenz, die der Kunde angeben kann"
+        ],
+        [
+          "Das Team überträgt Details von Hand in ein anderes Tool",
+          "Grund, Zusammenfassung und Chat-Link kommen bereits geschrieben an"
+        ],
+        [
+          "Im Chat gemachte Versprechen werden vergessen",
+          "Eine KI-Überprüfung markiert, was Ihr Team nach Abschluss eines Chats noch schuldet"
+        ],
+        [
+          "Keine Ahnung, ob sich jemand darum kümmert",
+          "Abhakbarer Lösungsstatus und Zielort, in einer Liste"
+        ]
+      ]
+    },
+    "faq": {
+      "eyebrow": "Fragen",
+      "titlePrefix": "Gut zu ",
+      "titleHl": "wissen.",
+      "items": [
+        [
+          "Wann erstellt Elpino ein Ticket?",
+          "Wenn sie eine Unterhaltung übergibt und niemand innerhalb von 90 Sekunden einsteigt, und wenn ihre Überprüfung einer geschlossenen Unterhaltung etwas findet, das Ihr Team noch schuldet. Teammitglieder können auch manuell eines erstellen."
+        ],
+        [
+          "Wohin gehen Tickets?",
+          "Zu Trello oder Asana, wenn Sie eines davon verbunden haben. Falls nicht, bleiben sie auf Ihrer Vorgänge-Seite, sodass nichts verloren geht."
+        ],
+        [
+          "Was steht in einem Ticket?",
+          "Ein Titel, der Grund, eine kurze Zusammenfassung, die Angaben des Kunden und ein Link zurück zur Unterhaltung."
+        ],
+        [
+          "Erfährt der Kunde davon?",
+          "Ja. Er wird im Chat informiert, erhält eine E-Mail und bekommt eine kurze Referenz, die er angeben kann."
+        ],
+        [
+          "Kann ich ein Ticket als gelöst markieren?",
+          "Ja, haken Sie es auf der Vorgänge-Seite ab."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Lassen Sie nichts mehr durchschlüpfen.",
+      "subtitle": "Starten Sie kostenlos, und Elpino schreibt die Tickets für Sie.",
+      "ctaStart": "Kostenlos starten",
+      "ctaMeetAgent": "Den KI-Agenten kennenlernen"
+    }
+  },
+  "knowledgeHub": {
+    "hero": {
+      "badge": "Wissensdatenbank",
+      "titlePrefix": "Fragen Sie alles. ",
+      "titleHl": "Es prüft Ihre Wissensdatenbank.",
+      "subtitle": "Elpino antwortet nur mit dem Wissen, das Sie ihm geben. Glauben Sie uns nicht einfach. Sehen Sie zu, wie es links in Ihrer Wissensdatenbank sucht und rechts dem Kunden antwortet. Wenn es nichts findet, sagt es das.",
+      "privateNote": "Private Quellen werden nie zur Beantwortung von Kundenfragen verwendet."
+    },
+    "playground": {
+      "yourKnowledge": "Ihre Wissensdatenbank",
+      "customer": "Kunde",
+      "elpinoAi": "Elpino KI",
+      "statusWaiting": "Wartet auf eine Frage",
+      "statusSearching": "Durchsucht Ihre Wissensdatenbank…",
+      "statusFound": "Treffer gefunden",
+      "statusNoMatch": "Kein Treffer gefunden",
+      "privateBadge": "Privat",
+      "matchBadge": "Treffer",
+      "offersHuman": "Bietet einen Mitarbeiter an",
+      "sources": [
+        {
+          "name": "Rückerstattungsrichtlinie.pdf",
+          "kind": "Dokument"
+        },
+        {
+          "name": "Lieferzeiten",
+          "kind": "Geschriebene Seite"
+        },
+        {
+          "name": "Hilfe: Passwort zurücksetzen",
+          "kind": "Webseite"
+        },
+        {
+          "name": "Eskalations-Leitfaden",
+          "kind": "Interne Notizen"
+        }
+      ],
+      "scenes": [
+        {
+          "q": "Wie lange habe ich Zeit, eine Rückerstattung zu beantragen?",
+          "hit": "refund",
+          "a": "Sie können innerhalb von 30 Tagen nach dem Kauf eine Rückerstattung beantragen."
+        },
+        {
+          "q": "Wie setze ich mein Passwort zurück?",
+          "hit": "reset",
+          "a": "Wählen Sie „Passwort vergessen“ auf der Anmeldeseite und folgen Sie dem Link, den wir Ihnen per E-Mail schicken."
+        },
+        {
+          "q": "Bieten Sie Rabatte für gemeinnützige Organisationen an?",
+          "hit": null,
+          "a": "Diese Information habe ich nicht. Möchten Sie, dass ich Sie mit unserem Team verbinde?"
+        },
+        {
+          "q": "Wie lange dauert die Lieferung?",
+          "hit": "ship",
+          "a": "Bestellungen kommen normalerweise innerhalb von 3–5 Werktagen an."
+        }
+      ]
+    },
+    "crawlWeb": {
+      "eyebrow": "Entdecken",
+      "titlePrefix": "Ein Link hinein. ",
+      "titleHl": "Eine ganze Website heraus.",
+      "subtitle": "Geben Sie Elpino Ihre Startseite, und es folgt selbst den Links, bis zu 50 Seiten. Es liest zuerst Hilfe-, Preis- und Richtlinienseiten und überspringt Bilder, Downloads und anderes Rauschen. Mit JavaScript erstellte Seiten werden in einem echten Browser gerendert, damit nichts leer zurückkommt.",
+      "pagesKept": "Behaltene Seiten",
+      "filesSkipped": "Übersprungene Dateien",
+      "svgAlt": "Ein Crawl, der sich von einer Seite zu verlinkten Seiten ausbreitet",
+      "startLabel": "START"
+    },
+    "otherWays": {
+      "eyebrow": "Weitere Wege",
+      "titlePrefix": "Nicht alles steht ",
+      "titleHl": "auf einer Website.",
+      "subtitle": "Drei weitere Wege, Elpino etwas zu lehren – für das Wissen, das nie eine URL hatte.",
+      "items": [
+        {
+          "title": "Sitemap",
+          "big": "20",
+          "note": "Seiten, die in einem Durchgang aus Ihrer Sitemap übernommen werden"
+        },
+        {
+          "title": "Dateien",
+          "big": ".pdf",
+          "note": "auch .docx, .txt und .md. Der Text wird für Sie extrahiert"
+        },
+        {
+          "title": "Selbst schreiben",
+          "big": "Aa",
+          "note": "Richtlinien und „So machen wir das“-Seiten, direkt im Editor geschrieben"
+        }
+      ]
+    },
+    "mill": {
+      "eyebrow": "Was als Nächstes passiert",
+      "titlePrefix": "Jede Seite macht ",
+      "titleHl": "denselben Weg.",
+      "items": [
+        {
+          "t": "Sicher abgerufen",
+          "d": "Als ElpinoBot, mit Schutz gegen den Zugriff auf private Netzwerke."
+        },
+        {
+          "t": "Aufgeräumt",
+          "d": "Menüs und Standardtext raus, nützlicher Text rein."
+        },
+        {
+          "t": "In Abschnitte zerlegt und eingebettet",
+          "d": "In Passagen aufgeteilt und nach Bedeutung indexiert, nicht nur nach Schlüsselwörtern."
+        },
+        {
+          "t": "Bei Bedarf gefunden",
+          "d": "Die passendsten Passagen werden in dem Moment abgerufen, in dem ein Kunde fragt."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Fragen",
+      "titlePrefix": "Gut zu ",
+      "titleHl": "wissen.",
+      "items": [
+        [
+          "Was kann ich hinzufügen?",
+          "Webseiten per URL, eine Sitemap (bis zu 20 Seiten), ein Crawl von einem Link aus (bis zu 50 Seiten), PDF-, Word-, Text- und Markdown-Dateien sowie Seiten, die Sie selbst schreiben."
+        ],
+        [
+          "Liest es mit JavaScript erstellte Seiten?",
+          "Ja. Wenn eine Seite wenig lesbaren Text hat, wird sie zuerst in einem Browser gerendert und das Ergebnis wird gelesen."
+        ],
+        [
+          "Kann ich Inhalte privat halten?",
+          "Ja. Jede Quelle hat einen Sichtbarkeitsschalter, sodass interne Notizen intern bleiben."
+        ],
+        [
+          "Kann ich Notion, Zendesk oder Confluence verbinden?",
+          "Noch nicht. Aktuell fügen Sie Quellen per URL, Sitemap, Datei-Upload oder durch das Schreiben von Seiten hinzu."
+        ],
+        [
+          "Was, wenn die Antwort nicht vorhanden ist?",
+          "Elpino sagt, dass es diese Information nicht hat, und bietet an, den Kunden mit Ihrem Team zu verbinden, anstatt zu raten."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Füllen Sie Ihr echtes Regal.",
+      "subtitle": "Fügen Sie einen Link ein, und Elpino beginnt, darauf basierend zu antworten.",
+      "ctaStart": "Kostenlos starten",
+      "ctaMeetAgent": "KI-Agent kennenlernen"
+    }
+  },
+  "integrations": {
+    "hero": {
+      "badge": "Integrationen",
+      "titlePrefix": "Verbinden. ",
+      "titleHl": "Nächstes Level.",
+      "subtitle": "Verbinde deine Zahlungen, dein Ticket-Tool und deine eigenen Systeme, und sieh zu, wie das, was Elpino kann, wächst. Tippe auf die Steckdosen, um sie anzuschließen."
+    },
+    "board": {
+      "pluggedInCount": "{on} / {total} verbunden",
+      "pluggedIn": "Verbunden",
+      "tapToPlugIn": "Tippen zum Verbinden",
+      "on": "Ein",
+      "off": "Aus",
+      "whatCanDo": "Was Elpino jetzt kann",
+      "empty": "Noch nichts verbunden. Tippe oben auf eine Steckdose."
+    },
+    "conns": [
+      {
+        "name": "Stripe",
+        "blurb": "Die KI prüft echte Zahlungen und Abonnements.",
+        "abilities": [
+          "Zahlungen und Abonnements nachschlagen",
+          "Belege und Zahlungslinks senden",
+          "Ein Abonnement auf Anfrage kündigen",
+          "Rückerstattungen, nur wenn du sie aktivierst"
+        ]
+      },
+      {
+        "name": "Razorpay",
+        "blurb": "Dieselben Zahlungstools, für Razorpay-Konten.",
+        "abilities": [
+          "Zahlungen und Abonnements nachschlagen",
+          "Belege und Zahlungslinks senden",
+          "Ein Abonnement auf Anfrage kündigen",
+          "Rückerstattungen, nur wenn du sie aktivierst"
+        ]
+      },
+      {
+        "name": "Cashfree",
+        "blurb": "Zahlungs- und Auszahlungsverlauf für dein Team.",
+        "abilities": [
+          "Eine Bestellung oder Zahlung aus einem Gespräch finden",
+          "Auszahlungs- und Rückerstattungsstatus einsehen"
+        ]
+      },
+      {
+        "name": "Paystack",
+        "blurb": "Transaktions- und Rückerstattungsstatus für dein Team.",
+        "abilities": [
+          "Eine Transaktion aus einem Gespräch nachschlagen",
+          "Zahlungs- und Rückerstattungsstatus prüfen"
+        ]
+      },
+      {
+        "name": "Trello",
+        "blurb": "Tickets landen als Karten auf deinem Board.",
+        "abilities": [
+          "Tickets werden zu Trello-Karten",
+          "Die Zusammenfassung und ein Link zum Chat werden angehängt"
+        ]
+      },
+      {
+        "name": "Asana",
+        "blurb": "Tickets landen als Aufgaben in deinem Projekt.",
+        "abilities": [
+          "Tickets werden zu Asana-Aufgaben",
+          "Die Zusammenfassung und ein Link zum Chat werden angehängt"
+        ]
+      },
+      {
+        "name": "Deine MCP-Server",
+        "blurb": "Alles, was MCP spricht, mit den Tools, die du genehmigst.",
+        "abilities": [
+          "Tools auf deinen eigenen Servern aufrufen",
+          "Bis zu 5 Server, je 15 aktivierte Tools",
+          "Nur die Tools, die du genehmigst, sind sichtbar",
+          "Tools, die Daten ändern, erfordern einen verifizierten Kunden"
+        ]
+      }
+    ],
+    "how": {
+      "eyebrow": "Verbindung",
+      "titlePrefix": "Jeweils eine Minute. ",
+      "titleHl": "Keine Entwickler nötig.",
+      "stepLabel": "Schritt {n}",
+      "steps": [
+        {
+          "t": "Ein Tool auswählen",
+          "d": "Öffne „Verbinden“ in deinem Dashboard und wähle den gewünschten Connector."
+        },
+        {
+          "t": "Schlüssel einfügen oder autorisieren",
+          "d": "Tools mit API-Schlüssel übernehmen deine Schlüssel. Asana nutzt eine normale Anmeldung und einen Berechtigungsbildschirm."
+        },
+        {
+          "t": "Wir prüfen es zuerst",
+          "d": "Elpino testet deine Schlüssel beim Anbieter, bevor sie gespeichert werden, und speichert sie verschlüsselt."
+        }
+      ]
+    },
+    "families": {
+      "eyebrow": "Der Katalog",
+      "titlePrefix": "Drei Arten von ",
+      "titleHl": "Verbindung.",
+      "tabs": {
+        "payments": "Zahlungen",
+        "tickets": "Tickets",
+        "systems": "Deine Systeme"
+      },
+      "paymentsNote": "Die Zahlungsaktionen der KI funktionieren heute mit Stripe und Razorpay. Cashfree und Paystack liefern deinem Team Zahlungskontext."
+    },
+    "safe": {
+      "badge": "Standardmäßig sicher",
+      "titlePrefix": "Verbunden, ",
+      "titleHl": "nicht exponiert.",
+      "items": [
+        {
+          "t": "Schlüssel bleiben verschlüsselt",
+          "d": "Anmeldedaten werden verschlüsselt gespeichert, und Elpino überprüft sie beim Anbieter, bevor sie gespeichert werden."
+        },
+        {
+          "t": "Lesezugriff reicht für Abfragen aus",
+          "d": "Verwende für Stripe einen eingeschränkten Schlüssel mit Lesezugriff auf Kunden und Zahlungen."
+        },
+        {
+          "t": "Geld bewegt sich nur, wenn du es erlaubst",
+          "d": "Rückerstattungen sind standardmäßig deaktiviert. Der Workspace-Besitzer entscheidet, ob die KI sie ausstellen darf."
+        },
+        {
+          "t": "Du genehmigst jedes MCP-Tool",
+          "d": "Die KI sieht nur die Tools, die du aktiviert hast, und jeder Aufruf wird auf dem Server erneut überprüft."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Fragen",
+      "titlePrefix": "Gut zu ",
+      "titleHl": "wissen.",
+      "items": [
+        [
+          "Welche Tools kann ich verbinden?",
+          "Stripe, Razorpay, Cashfree und Paystack für Zahlungen, Trello und Asana für Tickets, und deine eigenen MCP-Server für alles andere."
+        ],
+        [
+          "Was kann die KI mit Zahlungen tun?",
+          "Mit verbundenem Stripe oder Razorpay kann sie Zahlungen und Abonnements nachschlagen, Belege und Zahlungslinks senden und ein Abonnement auf Anfrage kündigen. Rückerstattungen sind deaktiviert, sofern du sie nicht aktivierst."
+        ],
+        [
+          "Muss ich technisch versiert sein?",
+          "Nicht für Zahlungen oder Tickets. Du fügst einen Schlüssel ein oder meldest dich bei Asana an. Für MCP-Server muss jemand einen erstellt haben."
+        ],
+        [
+          "Wird Shopify, Slack oder HubSpot unterstützt?",
+          "Heute nicht als One-Click-Connector. Wenn dein System einen MCP-Server hat, kannst du ihn verbinden, und du kannst uns sagen, was du dir als Nächstes wünschst."
+        ],
+        [
+          "Wohin gehen Tickets?",
+          "Zu Trello oder Asana, wenn verbunden. Andernfalls bleiben sie auf deiner Issues-Seite."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Fehlt dir etwas, das du brauchst?",
+      "subtitle": "Sag uns, welches Tool du dir als Nächstes wünschst, oder verbinde es selbst über MCP.",
+      "ctaStart": "Kostenlos starten",
+      "ctaRequest": "Integration anfragen"
+    }
+  },
+  "securityGuide": {
+    "sticky": {
+      "securityLabel": "Sicherheit",
+      "reportIssue": "Problem melden"
+    },
+    "hero": {
+      "badge": "Sicherheitsleitfaden",
+      "title1": "Entwickelt, um ",
+      "title2": "Ihre Daten zu schützen.",
+      "subtitle": "Dieser Leitfaden zeigt, was in der Web-App, im Gateway und in den Auth-, Workspace- und KI-Diensten geschützt ist – was wir garantieren und warum Sie sich darauf verlassen können, ohne eine Schritt-für-Schritt-Erklärung der internen Abläufe.",
+      "ctaBlueprint": "Bauplan ansehen",
+      "ctaChapters": "Kapitel lesen",
+      "ctaTrust": "Trust Center",
+      "register": {
+        "label": "Register",
+        "chapters": "Kapitel",
+        "controlsDescribed": "Beschriebene Kontrollen",
+        "componentsCovered": "Abgedeckte Komponenten",
+        "componentsValue": "6",
+        "reviewedAgainst": "Überprüft gegen",
+        "reviewedValue": "das Produkt"
+      }
+    },
+    "blueprint": {
+      "fig": "Abb. 00 · Auf einen Blick",
+      "title": "Was mit einer Anfrage passiert",
+      "subtitle": "Jeder Pfeil ist verschlüsselt oder authentifiziert. Zeigen Sie auf einen beliebigen Teil, um zu sehen, was das in der Praxis bedeutet.",
+      "readChapter": "Kapitel lesen"
+    },
+    "nodes": {
+      "widget": {
+        "label": "Besucher",
+        "sub": "Chat-Widget",
+        "guards": "Gäste bleiben Gäste. Angemeldete Besucher weisen sich mit einem signierten Nachweis oder einem E-Mail-Code aus, der nur im eigenen Speicher des Widgets gehalten wird."
+      },
+      "team": {
+        "label": "Ihr Team",
+        "sub": "Dashboard",
+        "guards": "Passwörter werden nie in lesbarer Form gespeichert, die Google-Anmeldung wird auf unserem Server verifiziert, und Sie können jede Sitzung remote beenden."
+      },
+      "elpino": {
+        "label": "Elpino",
+        "sub": "Prüft, schützt, antwortet",
+        "guards": "Jede Anfrage wird geprüft, bevor irgendetwas ausgeführt wird, private Details werden ausgetauscht, bevor sie ein KI-Modell je zu sehen bekommt, und die KI arbeitet innerhalb von Grenzen, die sie sich nicht herausreden kann."
+      },
+      "google": {
+        "label": "Google",
+        "sub": "Anmeldung",
+        "guards": "Erst vertrauenswürdig, nachdem unser eigener Server sie unabhängig verifiziert hat."
+      },
+      "pay": {
+        "label": "Zahlungen",
+        "sub": "Razorpay · Stripe",
+        "guards": "Zahlungsbenachrichtigungen werden nur mit einer verifizierten Signatur akzeptiert und können nie wiederholt werden, um Ihre Nutzung zurückzusetzen."
+      },
+      "models": {
+        "label": "KI-Anbieter",
+        "sub": "Modelle",
+        "guards": "Sie sehen sichere Platzhalter statt echter Details, niemals Geheimnisse, und Ihre Daten trainieren keine allgemeinen Modelle."
+      }
+    },
+    "chaptersSection": {
+      "label": "Die Kapitel",
+      "title1": "Zwölf Kapitel. ",
+      "title2": "Nichts ausgelassen.",
+      "subtitle": "Jede Kontrolle nennt den Teil des Systems, in dem sie lebt, und die Garantie, die sie Ihnen gibt – nicht den genauen Mechanismus dahinter.",
+      "contents": "Inhalt"
+    },
+    "chapters": {
+      "accounts": {
+        "title": "Konten & Sitzungen",
+        "kicker": "Wer in Ihrem Team ist und wie wir das wissen.",
+        "intro": "Registrierung, Anmeldung und jede Sitzung danach. Passwörter werden nie in lesbarer Form gespeichert, Bestätigungscodes laufen schnell ab, und eine Sitzung kann jederzeit vom Server beendet werden.",
+        "stats": [
+          "Passwörter gehasht, nie gespeichert",
+          "Codes laufen schnell ab",
+          "Sitzungen, die Sie widerrufen können"
+        ],
+        "controls": {
+          "1.1": {
+            "title": "Passwörter werden gehasht, nie gespeichert",
+            "text": "Ihr Passwort wird nirgendwo in einer Form aufbewahrt, die jemand zurücklesen könnte – nicht einmal wir. Die Prüfung kann nicht verraten, wie nah ein falscher Versuch dran war."
+          },
+          "1.2": {
+            "title": "E-Mail-Bestätigungscodes",
+            "text": "Neue Konten bestätigen ihre Adresse mit einem kurzlebigen Code. Nur ein sicherer Hash davon wird gespeichert, er läuft schnell ab, und es sind nur wenige Fehlversuche erlaubt, bevor ein neuer benötigt wird."
+          },
+          "1.3": {
+            "title": "Die Google-Anmeldung wird auf dem Server geprüft",
+            "text": "Das Google-Anmelde-Popup läuft in Ihrem Browser, aber unser Server verifiziert es unabhängig, bevor er ihm vertraut, und meldet Sie immer beim gleichen Konto über Ihre verifizierte E-Mail an – nie bei einem zweiten, nicht verknüpften."
+          },
+          "1.4": {
+            "title": "Signierte Sitzungstoken",
+            "text": "Ihre Sitzung ist ein signiertes Token, das unser Server immer selbst verifizieren kann – es kann nicht gefälscht, verändert oder als etwas anderes wiederholt werden."
+          },
+          "1.5": {
+            "title": "Ein abgesichertes Sitzungscookie",
+            "text": "Ihr Sitzungscookie kann von Seitenskripten nicht gelesen werden und wird nur über eine sichere Verbindung übertragen."
+          },
+          "1.6": {
+            "title": "Überall abmelden",
+            "text": "Das Abmelden macht schnell alle Ihre Sitzungen ungültig. Können wir nicht bestätigen, dass eine Sitzung noch gültig ist, wird sie abgelehnt, statt durchgelassen zu werden."
+          },
+          "1.7": {
+            "title": "Sichere Weiterleitungen",
+            "text": "Nach der Anmeldung werden Sie immer nur zu einer Seite auf unserer eigenen Website geschickt – nie irgendwohin sonst, egal wie der Link gebaut ist."
+          },
+          "1.8": {
+            "title": "Team-Einladungen",
+            "text": "Einladungslinks sind nicht erratbar und laufen automatisch ab, und ein Owner entscheidet, ob Mitglieder überhaupt andere einladen können."
+          }
+        }
+      },
+      "front-door": {
+        "title": "Die Eingangstür",
+        "kicker": "Was die Website tut, bevor eine Anfrage weitergeht.",
+        "intro": "Die Web-App ist das Erste, was ein Browser berührt. Sie härtet den Browser ab, begrenzt Missbrauch und validiert Eingaben, bevor irgendetwas weitergegeben wird.",
+        "stats": [
+          "Kein Framing",
+          "Missbrauch begrenzt",
+          "Schließt sicherheitshalber ab"
+        ],
+        "controls": {
+          "2.1": {
+            "title": "Browser-Hardening-Header",
+            "text": "Jede Seite außer dem Chat-Widget ist gegen Clickjacking geschützt, gegen Content-Type-Sniffing abgesichert und hat sensible Geräteberechtigungen wie Kamera und Standort standardmäßig deaktiviert. Das Widget ist die eine bewusste Ausnahme, da es innerhalb eines iFrames auf Ihrer Website leben muss."
+          },
+          "2.2": {
+            "title": "Geteilte Missbrauchslimits",
+            "text": "Öffentliche Formulare sind durch Rate-Limits geschützt, die über alle von uns betriebenen Server hinweg geteilt werden, damit Missbrauch von einer Stelle nicht einfach durchrutscht, indem er eine andere trifft."
+          },
+          "2.3": {
+            "title": "Sie schließt sicherheitshalber ab",
+            "text": "Ist der Missbrauchsbegrenzer nicht erreichbar, wird die Anfrage abgelehnt statt durchgelassen."
+          },
+          "2.4": {
+            "title": "Validierte, längenbegrenzte Eingabe",
+            "text": "Jedes Formular wird auf dem Server geprüft und größenbegrenzt, bevor irgendetwas verarbeitet wird – nie einfach vertraut, nur weil der Browser es bereits validiert hat."
+          }
+        }
+      },
+      "gateway": {
+        "title": "Das Gateway",
+        "kicker": "Eine Tür für das Backend, standardmäßig geschlossen.",
+        "intro": "Jeder Aufruf des Backends läuft über ein einziges Gateway. Die Regel ist einfach: Ist eine Route nicht explizit öffentlich, muss sie beweisen, dass sie dazugehört.",
+        "stats": [
+          "Standardmäßig geschlossen",
+          "Explizite öffentliche Liste",
+          "Verifizierte Live-Verbindungen"
+        ],
+        "controls": {
+          "3.1": {
+            "title": "Standardmäßig geschlossen",
+            "text": "Jede Route benötigt einen Nachweis, dass es sich um einen autorisierten internen Aufruf handelt, sofern sie nicht explizit als öffentlich markiert ist. Ist diese Prüfung nicht konfiguriert, lehnt das Gateway alles ab, statt offen zu versagen."
+          },
+          "3.2": {
+            "title": "Eine kurze, explizite öffentliche Liste",
+            "text": "Nur Aufrufer, die wirklich keine internen Zugangsdaten halten können, sind öffentlich: das Chat-Widget, die Seitenanalyse, der Zahlungs-Webhook und einmalige sichere Links. Jeder davon ist bewusst markiert, Route für Route."
+          },
+          "3.3": {
+            "title": "Nur explizite Ursprünge",
+            "text": "Die API antwortet Browsern nur von einer bekannten, genehmigten Liste von Ursprüngen – nie von irgendwoher, das zufällig anfragt."
+          },
+          "3.4": {
+            "title": "Verifizierte Live-Verbindungen",
+            "text": "Live-View-Verbindungen benötigen einen verifizierten, workspace-gebundenen Zugangsnachweis mit Ablaufdatum. Alles andere wird sofort verworfen."
+          },
+          "3.5": {
+            "title": "Interne Pushes sind ebenfalls geschützt",
+            "text": "Die Endpunkte, über die Dienste Live-Benachrichtigungen an Dashboards senden, benötigen den gleichen internen Nachweis, damit niemand von außen den Bildschirm eines Teammitglieds klingeln lassen kann."
+          }
+        }
+      },
+      "visitors": {
+        "title": "Besucher & Identität",
+        "kicker": "Einen angemeldeten Kunden von jemandem unterscheiden, der nur eine E-Mail eingetippt hat.",
+        "intro": "Ein Name, eine E-Mail oder eine Bestellnummer ist kein Nachweis, wer jemand ist. Kontohilfe wird nur nach echtem Identitätsnachweis freigeschaltet, und dieser Nachweis läuft schnell ab.",
+        "stats": [
+          "Echter Nachweis erforderlich",
+          "Sitzungen laufen automatisch ab",
+          "Zeitlich begrenzte Verifikation"
+        ],
+        "controls": {
+          "4.1": {
+            "title": "Gäste bleiben Gäste",
+            "text": "Ein eingetippter Name, eine E-Mail, eine Telefonnummer oder eine Zahlungsreferenz zählen nie als Identitätsnachweis. Gäste können chatten und Kontaktdaten hinterlassen, aber das schaltet keine privaten Tools frei und wird nie mit dem Verlauf einer anderen Person zusammengeführt."
+          },
+          "4.2": {
+            "title": "Signierte Identität von Ihrer eigenen Website",
+            "text": "Bei angemeldeten Kunden bürgt Ihr eigener Server für ihre Identität mit einem kurzlebigen signierten Nachweis, den nur Sie und Elpino gemeinsam erstellen können. Kontaktdaten zählen nur als verifiziert, wenn Ihr System es sagt."
+          },
+          "4.3": {
+            "title": "Ein Austausch, eine Sitzung",
+            "text": "Jeder Identitätsnachweis wird einmal verwendet und dann gegen eine eigene neue Sitzung eingetauscht – nichts Wiederverwendbares bleibt liegen, und das Gespeicherte lässt sich nicht in den ursprünglichen Wert zurückverwandeln."
+          },
+          "4.4": {
+            "title": "Kurzlebige Sitzungen",
+            "text": "Eine Sitzung läuft automatisch nach einer Phase der Inaktivität oder einer festen Zeit nach der Anmeldung ab – je nachdem, was zuerst eintritt. Sie wird nur im eigenen Speicher des Widgets gehalten, nie im Browser-Speicher oder einer URL."
+          },
+          "4.5": {
+            "title": "Rotation und Abmeldung",
+            "text": "Das Rotieren Ihres Identitätsnachweises macht sofort jede Sitzung ungültig, die den alten benutzt hat. Das Abmelden widerruft die Sitzung auf unserem Server, und alte Sitzungen werden automatisch aufgeräumt."
+          },
+          "4.6": {
+            "title": "E-Mail-Codes für Gäste",
+            "text": "Ein Besucher kann sich auch per E-Mail mit einem kurzen Einmalcode verifizieren, ratenbegrenzt gegen Missbrauch. Die Verifikation schaltet nur diese eine Konversation frei, und nur für begrenzte Zeit."
+          },
+          "4.7": {
+            "title": "Jede Anfrage wird erneut geprüft",
+            "text": "Jeder authentifizierte Lese- und Schreibzugriff prüft unabhängig erneut, wer fragt, welchem Workspace das zugeordnet ist und ob dieser Zugriff noch gültig ist – nichts wird nur deshalb vertraut, weil es einen Moment zuvor gültig war."
+          }
+        }
+      },
+      "ai": {
+        "title": "Die Leine der KI",
+        "kicker": "Was die KI darf und nicht darf, durchgesetzt vom Backend, nicht durch höfliches Bitten.",
+        "intro": "Das Modell schlägt vor; das Backend entscheidet. Tools, Identität, Limits und Geld liegen alle außerhalb des Modells, wo eine geschickte Nachricht sie sich nicht herausreden kann.",
+        "stats": [
+          "Begrenzte Arbeit",
+          "Backend-gesteuerte Tools",
+          "Unabhängige Prüfung"
+        ],
+        "controls": {
+          "5.1": {
+            "title": "Eine Antwort, ein Besitzer",
+            "text": "Bevor eine KI-Antwort gespeichert wird, bestätigt das System unabhängig, dass die Konversation noch KI-geführt ist und die beantwortete Frage noch die aktuellste ist. Die KI kann nicht über Ihr Team hinweg sprechen oder etwas beantworten, das sich bereits weiterentwickelt hat."
+          },
+          "5.2": {
+            "title": "Begrenzte Arbeit",
+            "text": "Jeder KI-Zug hat eine feste Obergrenze dafür, wie viel er tun kann. Ein festgefahrener oder sich wiederholender Lauf wird automatisch abgebrochen, nie weiterlaufen gelassen."
+          },
+          "5.3": {
+            "title": "Das Backend wählt die Tools",
+            "text": "Welche Tools die KI nutzen kann, entscheidet ausschließlich die Einrichtung Ihres Workspace und die Verifikation des Kunden – das Modell kann sich kein Tool selbst geben, Daten nicht als öffentlich erklären oder in einen anderen Workspace vordringen."
+          },
+          "5.4": {
+            "title": "Kontotools benötigen einen verifizierten Kunden",
+            "text": "Zahlungsabfragen und verbundene Systeme werden erst verfügbar, sobald der Kunde seine Identität nachgewiesen hat, und handeln immer nur nach der bereits erfassten Identität – nie nach dem, was dem Modell mitgeteilt wird."
+          },
+          "5.5": {
+            "title": "Nachrichten sind Daten, keine Anweisungen",
+            "text": "Kundennachrichten, Dokumente und Tool-Ergebnisse erreichen das Modell klar als nicht vertrauenswürdige Informationen gekennzeichnet. Darin versteckte Anweisungen werden nicht befolgt."
+          },
+          "5.6": {
+            "title": "Eine zweite Meinung",
+            "text": "Eine separate, unabhängige Prüfung überprüft jeden Antwortentwurf anhand der Belege, die die KI tatsächlich gesammelt hat. Eine unbelegte Behauptung wird zur Überarbeitung zurückgeschickt, und eine, die immer noch nicht besteht, geht an einen Menschen."
+          },
+          "5.7": {
+            "title": "Geldbewegungen laufen hinter Schranken",
+            "text": "KI-Rückerstattungen sind ausgeschaltet, bis ein Workspace-Owner sie aktiviert, und selbst dann sind sie begrenzt und automatisch gedeckelt. Eine wiederholte Rückerstattung kann nie zweimal ausgestellt werden, und die Kündigung eines Abonnements schneidet nie bereits bezahlte Zeit ab."
+          },
+          "5.8": {
+            "title": "Ein Audit-Trail für jeden Lauf",
+            "text": "Jeder KI-Lauf führt eine Aufzeichnung darüber, was er getan hat und wie. Alles, was mit Geld zu tun hat, wird zusätzlich als Notiz protokolliert, die Ihr Team sehen kann."
+          }
+        }
+      },
+      "private-data": {
+        "title": "Private Daten",
+        "kicker": "Was das Modell tatsächlich sieht.",
+        "intro": "Bevor eine Anfrage ein KI-Modell erreicht, werden identifizierende Details durch sichere Platzhalter ersetzt. Probieren Sie es unten mit Ihrem eigenen Text aus.",
+        "stats": [
+          "Details werden zuerst ersetzt",
+          "Geheimnisse vollständig entfernt",
+          "Gleiche Regeln für jeden Anbieter"
+        ],
+        "controls": {
+          "6.1": {
+            "title": "Echte Details erreichen nie das Modell",
+            "text": "Namen, E-Mails, Telefonnummern, Adressen sowie Bestell- oder Zahlungsdetails werden nie unverändert an das KI-Modell gesendet. Wir tauschen sie zuerst gegen sichere Platzhalter aus und stellen den echten Wert erst danach wieder her, auf unseren eigenen Servern – nie innerhalb von etwas, das das Modell sieht."
+          },
+          "6.2": {
+            "title": "Geheimnisse werden entfernt, nicht nur versteckt",
+            "text": "Passwörter, API-Schlüssel, Token und Einmalcodes werden vollständig entfernt, bevor irgendetwas ein Modell erreicht – nicht getarnt, einfach weg."
+          },
+          "6.3": {
+            "title": "Sensible Links werden bereinigt",
+            "text": "Links mit Zugangstoken oder anderen sensiblen Parametern werden bereinigt, bevor ein Modell sie überhaupt liest."
+          },
+          "6.4": {
+            "title": "Zahlungsfakten, keine Zahlungsdatensätze",
+            "text": "Zahlungstools geben immer nur sichere Zusammenfassungen zurück – Status und Daten – nie rohe Karten- oder Kontodetails, und Fehlerursachen werden vereinfacht statt als Freitext durchgereicht."
+          },
+          "6.5": {
+            "title": "Die gleichen Regeln für jedes Modell",
+            "text": "Der gleiche Schutz gilt unabhängig davon, welcher KI-Anbieter antwortet, auch wenn wir auf einen anderen ausweichen. Ihre Konversationen und Dokumente werden nie zum Training allgemeiner Modelle verwendet."
+          }
+        }
+      },
+      "integrations": {
+        "title": "Integrationen & ausgehende Anfragen",
+        "kicker": "Wenn Elpino eine von Ihnen angegebene URL erreichen muss.",
+        "intro": "Ihre Website zu crawlen, eine Seite zu lesen oder ein verbundenes System aufzurufen bedeutet alles das Abrufen einer URL, die eine Person eingegeben hat. Jede dieser Anfragen ist so abgesichert, dass sie sich nicht gegen unser eigenes Netzwerk – oder Ihres – richten lässt.",
+        "stats": [
+          "Im Ruhezustand verschlüsselt",
+          "Kann private Netzwerke nicht erreichen",
+          "Begrenzt & zeitlich befristet"
+        ],
+        "controls": {
+          "7.1": {
+            "title": "Zugangsdaten sind im Ruhezustand verschlüsselt",
+            "text": "Jeder Schlüssel oder Token, den Sie verbinden – Stripe, Razorpay, Trello und Ähnliches – wird verschlüsselt, bevor er überhaupt gespeichert wird. Eine Datenbankkopie allein kann sie nicht wiederherstellen."
+          },
+          "7.2": {
+            "title": "Ausgehende Anfragen können nicht nach innen gerichtet werden",
+            "text": "Wenn wir im Auftrag von Ihnen eine URL abrufen – Ihre Website crawlen, ein verbundenes System aufrufen – stellen wir sicher, dass sie nicht stattdessen auf ein privates Netzwerk oder interne Infrastruktur umgeleitet werden kann, auch nicht auf unsere eigene."
+          },
+          "7.3": {
+            "title": "Weiterleitungen werden bei jedem Schritt geprüft",
+            "text": "Wir folgen Weiterleitungen sorgfältig, prüfen jeden Zwischenschritt, statt dem finalen Ziel zu vertrauen, und immer nur über standardmäßige, sichere Verbindungen."
+          },
+          "7.4": {
+            "title": "Verbundene Systeme sind begrenzt",
+            "text": "Verbindungen zu Ihren eigenen Tools sind in Größe und Zeit begrenzt, damit sie nicht genutzt werden können, um unbegrenzt Daten abzuziehen oder endlos zu hängen."
+          },
+          "7.5": {
+            "title": "Admins genehmigen jedes Tool",
+            "text": "Verbundene Tools sind ausgeschaltet, bis ein Admin sie genehmigt. Ein Tool, das Daten ändern kann, wird separat markiert und benötigt weiterhin einen verifizierten Kunden, selbst wenn der Server sonst öffentlich ist."
+          },
+          "7.6": {
+            "title": "Trennen bedeutet weg",
+            "text": "Wenn Sie eine Integration trennen, werden ihre gespeicherten Token und Zugangsdaten sofort gelöscht."
+          }
+        }
+      },
+      "secure-links": {
+        "title": "Sichere Übergaben",
+        "kicker": "Wenn ein Kunde etwas Sensibles senden muss.",
+        "intro": "Fügen Sie nie einen Schlüssel in einen Chat ein. Ein Teammitglied kann stattdessen über einen einmaligen Link danach fragen, und der Chat enthält dann nur den Link.",
+        "stats": [
+          "Nicht erratbarer Link",
+          "Läuft automatisch ab",
+          "Separat verschlüsselt"
+        ],
+        "controls": {
+          "8.1": {
+            "title": "Der Chat enthält nie das Geheimnis",
+            "text": "Der Hinweis in der Konversation nennt, was angefragt wurde, und enthält einen Link – nie den Wert selbst."
+          },
+          "8.2": {
+            "title": "Ein nicht erratbarer, kurzlebiger Link",
+            "text": "Der Link selbst ist der gesamte Autorisierungsnachweis des Kunden, daher wird er unerratbar gemacht und läuft automatisch ab, bevor er zu einem bleibenden Risiko werden kann."
+          },
+          "8.3": {
+            "title": "Mit eigenem Schlüssel verschlüsselt",
+            "text": "Was auch immer übermittelt wird, wird mit einem Schlüssel versiegelt, der vollständig getrennt von dem gehalten wird, der Ihre übrigen Zugangsdaten schützt, sodass einer rotiert – oder im schlimmsten Fall offengelegt – werden kann, ohne den anderen zu berühren."
+          },
+          "8.4": {
+            "title": "Begrenzt und regelmäßig bereinigt",
+            "text": "Einreichungen sind größenbegrenzt, und alles Abgelaufene wird automatisch und dauerhaft nach einem festen Zeitplan gelöscht, sodass nur ein Vermerk bleibt, dass etwas passiert ist – nie, was es war."
+          }
+        }
+      },
+      "money": {
+        "title": "Geld & Abrechnung",
+        "kicker": "Zahlungen, Verlängerungen und die damit verbundenen Limits.",
+        "intro": "Alles, was Geld bewegt, wird zweimal verifiziert: einmal, dass die Nachricht wirklich vom Zahlungsanbieter kam, und einmal, dass sie nicht zweimal angewendet werden kann.",
+        "stats": [
+          "Nur verifizierte Signaturen",
+          "Wiederholungssicher",
+          "Kann nicht doppelt abrechnen"
+        ],
+        "controls": {
+          "9.1": {
+            "title": "Signierte Webhooks und Checkouts",
+            "text": "Zahlungsbenachrichtigungen werden nur mit einer gültigen, verifizierten Signatur vom Anbieter akzeptiert – alles andere, einschließlich einer Fast-Übereinstimmung, wird rundweg abgelehnt."
+          },
+          "9.2": {
+            "title": "Wiederholungen können die Nutzung nicht zurücksetzen",
+            "text": "Eine Zahlungsbenachrichtigung, die mehr als einmal eintrifft – wiederholt oder einfach doppelt zugestellt – kann bereits verbrauchte Nutzung nie erneut auf null setzen oder erneut Guthaben gewähren."
+          },
+          "9.3": {
+            "title": "Auto-Aufladung kann nicht doppelt abrechnen",
+            "text": "Die Prüfung, ob eine Aufladung im Limit liegt, und ihre tatsächliche Reservierung erfolgen als ein atomarer Schritt, und Ihr Guthaben wird erst gutgeschrieben, sobald eine Zahlung bestätigt und erfasst wurde."
+          },
+          "9.4": {
+            "title": "Jede Geldbewegung wird protokolliert",
+            "text": "Jedes Zahlungsereignis vom Anbieter wird in ein Audit-Protokoll geschrieben, und jede Zahlungsaktion, die die KI vornimmt, erhält ihr eigenes separates Log."
+          },
+          "9.5": {
+            "title": "Plan-Limits werden serverseitig durchgesetzt",
+            "text": "Plangebundene Funktionen werden im Backend geprüft, nicht nur in der Oberfläche versteckt, und Platzlimits werden anhand der tatsächlichen Mitgliedschaft gezählt – nicht anhand dessen, was der Browser behauptet."
+          }
+        }
+      },
+      "lifecycle": {
+        "title": "Datenlebenszyklus",
+        "kicker": "Wo Daten leben, wie lange, und wie sie verschwinden.",
+        "intro": "Ihre Daten sind an Ihren Workspace gebunden, laufen ab, wenn sie sollen, und können von Ihnen entfernt werden.",
+        "stats": [
+          "Workspace-gebunden",
+          "Automatisch aufgeräumt",
+          "Sie können es löschen"
+        ],
+        "controls": {
+          "10.1": {
+            "title": "An Ihren Workspace gebunden",
+            "text": "Konversationen, Wissen, Kunden und Einstellungen gehören alle zu einem Workspace, und jede Abfrage ist darauf begrenzt – nichts wechselt versehentlich hinüber."
+          },
+          "10.2": {
+            "title": "Nur-fürs-Team bleibt nur fürs Team",
+            "text": "Als nur fürs Team markierte Notizen werden herausgefiltert, bevor eine Konversation überhaupt im Widget des Besuchers angezeigt wird."
+          },
+          "10.3": {
+            "title": "Kurzlebige Dinge laufen ab",
+            "text": "Bestätigungscodes, Sitzungsnachweise und Inhalte sicherer Links laufen alle automatisch ab und werden aufgeräumt – nichts Kurzlebiges wird unbegrenzt aufbewahrt."
+          },
+          "10.4": {
+            "title": "Löschen Sie Ihren Workspace",
+            "text": "Das Löschen eines Workspace kündigt sofort dessen Abonnement und entfernt seine Datensätze, mit einer festen äußersten Frist für die vollständige Entfernung, die in der Datenschutzerklärung festgelegt ist."
+          },
+          "10.5": {
+            "title": "Verlassen oder löschen Sie Ihr Konto",
+            "text": "Personen können einen Workspace verlassen, und ein Konto kann vollständig über die Einstellungen gelöscht werden."
+          }
+        }
+      },
+      "infrastructure": {
+        "title": "Infrastruktur",
+        "kicker": "Wie die Dienste selbst betrieben werden.",
+        "intro": "Schlichte, unglamouröse Hygiene, die verhindert, dass ein interner Dienst zu einem öffentlichen wird.",
+        "stats": [
+          "Nicht öffentlich erreichbar",
+          "Minimaler Fußabdruck",
+          "Überwacht"
+        ],
+        "controls": {
+          "11.1": {
+            "title": "Interne Dienste sind nicht öffentlich erreichbar",
+            "text": "Unsere Backend-Dienste und die Datenbank sind dem öffentlichen Internet überhaupt nicht ausgesetzt – nur ein einziger, gehärteter Eingangspunkt ist es."
+          },
+          "11.2": {
+            "title": "Schlanke Produktions-Builds",
+            "text": "Was tatsächlich in der Produktion läuft, enthält nichts Überflüssiges – keine Entwicklungswerkzeuge, keine ungenutzten Abhängigkeiten."
+          },
+          "11.3": {
+            "title": "Limits, Health-Checks und Log-Rotation",
+            "text": "Jeder Dienst läuft mit Ressourcenlimits, automatischen Health-Checks und einer Neustart-Richtlinie, und Logs werden rotiert, damit sie nicht unbegrenzt wachsen können."
+          },
+          "11.4": {
+            "title": "Geheimnisse bleiben aus dem Quellcode",
+            "text": "Schlüssel und Geheimnisse werden nie in unsere Codebasis eingecheckt – sie werden jedem Dienst separat bereitgestellt, und sensible Zugangsdaten-Dateien werden nur lesbar eingebunden."
+          },
+          "11.5": {
+            "title": "Wiederholbare Deployments",
+            "text": "Jedes Deployment durchläuft die gleichen automatisierten Prüfungen, sodass ein Release niemals ein manueller Einzelfall ist."
+          }
+        }
+      },
+      "verification": {
+        "title": "Wie wir unsere eigene Arbeit prüfen",
+        "kicker": "Die Tests, die versuchen, die obigen Regeln zu brechen.",
+        "intro": "Sicherheitsversprechen sind nur so viel wert, wie Tests sie belegen. Diese sind durch automatisierte Tests in unserer eigenen Codebasis abgedeckt.",
+        "stats": [
+          "Tests gefälschter Zugangsdaten",
+          "Wiederholungstests",
+          "Isolationstests"
+        ],
+        "controls": {
+          "12.1": {
+            "title": "Identitäts-Regressionen",
+            "text": "Automatisierte Tests decken gefälschte Zugangsdaten, abgelaufene und wiederholte Sitzungen, Abmeldung, Zugangsdaten-Rotation und die Tatsache ab, dass ein Workspace nie die Daten eines anderen sehen kann."
+          },
+          "12.2": {
+            "title": "Tests für ausgehende Anfragen",
+            "text": "Die Prüfungen, die verhindern, dass ausgehende Anfragen interne Netzwerke erreichen, haben ihre eigenen dedizierten Tests."
+          },
+          "12.3": {
+            "title": "Tests des Datenschutzfilters",
+            "text": "Das System, das private Details ersetzt, bevor sie ein Modell erreichen, und die Zahlungsfakten-Regeln, die begrenzen, was gezeigt werden kann, werden beide direkt getestet."
+          },
+          "12.4": {
+            "title": "Tests zur Abrechnungskorrektheit",
+            "text": "Wiederholungen von Verlängerungen und Signaturverifikation sind durch Tests abgedeckt, damit eine Abrechnungskorrektur nicht heimlich eine bereits geschlossene Lücke wieder öffnet."
+          }
+        }
+      }
+    },
+    "demo": {
+      "customerLabel": "Was der Kunde eingibt",
+      "resetSample": "Beispiel zurücksetzen",
+      "modelLabel": "Was das Modell liest",
+      "inputAriaLabel": "Zu filternde Nachricht",
+      "caption": "Nur eine Illustration, und sie läuft in Ihrem Browser: Nichts, was Sie hier eingeben, wird irgendwohin gesendet. Der echte Filter läuft auf unseren Servern, und die Zuordnung zurück zu den echten Details erreicht nie einen Prompt."
+    },
+    "about": {
+      "label": "Über diesen Leitfaden",
+      "textBefore": "Dies ist eine Beschreibung, wie die Plattform aufgebaut ist, keine Zertifizierung. Er deckt die Kontrollen ab, die im Produkt heute existieren, und wird sich ändern, wenn sich das Produkt ändert. Wenn Sie einen Sicherheitsfragebogen beantwortet oder eine Datenverarbeitungsvereinbarung unterschrieben brauchen, schreiben Sie eine E-Mail an ",
+      "textAfter": "."
+    },
+    "report": {
+      "label": "Eine Schwachstelle melden",
+      "stamp": "Etwas gefunden?",
+      "title": "Sie glauben, Sie haben eine Schwachstelle gefunden? Wir wollen es als Erste erfahren.",
+      "subtitle": "Schicken Sie uns die Details und wie man es nachstellen kann. Eine Person aus dem Team liest jede Meldung.",
+      "privacy": "Datenschutzerklärung",
+      "terms": "Nutzungsbedingungen",
+      "securityPolicy": "Sicherheitsrichtlinie"
+    }
+  },
+  "features": {
+    "families": {
+      "answer": "Antworten",
+      "team": "Team",
+      "know": "Wissen",
+      "act": "Handeln",
+      "trust": "Vertrauen",
+      "grow": "Wachstum"
+    },
+    "pageNames": {
+      "aiAgent": "KI-Agent",
+      "inbox": "Posteingang",
+      "demo": "Demo",
+      "pricing": "Preise",
+      "knowledgeHub": "Wissensdatenbank",
+      "securityGuide": "Sicherheitsleitfaden"
+    },
+    "tiles": [
+      {
+        "name": "Fundierte Antworten",
+        "body": "Antworten stammen aus dem Wissen, das Sie freigegeben haben. Ist es dort nicht vorhanden, sagt die KI das offen, statt zu raten."
+      },
+      {
+        "name": "Antwortsprache",
+        "body": "Wählen Sie die Sprache, in der der Chatbot Ihren Kunden antwortet."
+      },
+      {
+        "name": "Seitenkontext",
+        "body": "Entscheiden Sie, ob die KI die URL der Seite sieht, auf der sich ein Besucher befindet, und diese für kontextbezogene Antworten nutzt."
+      },
+      {
+        "name": "Widget im eigenen Design",
+        "body": "Ihr Logo und Ihre Farben in einem Chat-Widget, das Sie mit einem einzigen Code-Snippet einbinden."
+      },
+      {
+        "name": "Live-Tippanzeige",
+        "body": "Kunden sehen, wenn ein Teammitglied tippt, und Sie sehen es, wenn Kunden tippen."
+      },
+      {
+        "name": "Anhänge",
+        "body": "Kunden und Ihr Team können direkt in der Konversation Dateien senden."
+      },
+      {
+        "name": "Gemeinsamer Posteingang",
+        "body": "Alle Konversationen und Antworten an einem Ort, mit einem Badge, das zeigt, ob die KI, ein Teammitglied oder niemand zuständig ist."
+      },
+      {
+        "name": "Beitritts-Benachrichtigungen",
+        "body": "Fragt ein Kunde nach einem Menschen, erhält das ganze Team eine Beitritts-Benachrichtigung. Wer als Erster beitritt, übernimmt den Chat, und die Benachrichtigung verschwindet für alle anderen."
+      },
+      {
+        "name": "Übernehmen und zurückgeben",
+        "body": "Übernehmen Sie einen Chat von der KI oder einem Kollegen und geben Sie ihn mit einem Tipp wieder an die KI zurück."
+      },
+      {
+        "name": "Zuweisungen",
+        "body": "Konversationen können einem Teammitglied zugewiesen werden, das eine Benachrichtigung erhält."
+      },
+      {
+        "name": "Team-Einladungen",
+        "body": "Laden Sie Teammitglieder per E-Mail ein und fügen Sie Plätze hinzu, während Ihr Team wächst."
+      },
+      {
+        "name": "Automatische Tickets",
+        "body": "Tritt innerhalb von 90 Sekunden niemand bei, wird der Kunde informiert und automatisch ein Ticket mit E-Mail-Nachfassung erstellt."
+      },
+      {
+        "name": "Website-Crawling",
+        "body": "Richten Sie Elpino auf eine Seite. Seiten, die auf JavaScript basieren, werden zuerst in einem echten Browser gerendert."
+      },
+      {
+        "name": "Sitemap-Import",
+        "body": "Importieren Sie bis zu 20 Seiten aus Ihrer Sitemap in einem Schritt."
+      },
+      {
+        "name": "Entdecken",
+        "body": "Beginnen Sie mit einem Link, und Elpino folgt ihm durch bis zu 50 Seiten, wobei Hilfe- und Richtlinienseiten zuerst kommen."
+      },
+      {
+        "name": "Datei-Upload",
+        "body": "Laden Sie PDF-, Word-, Text- und Markdown-Dateien hoch, der Text wird automatisch für Sie extrahiert."
+      },
+      {
+        "name": "Geschriebene Seiten",
+        "body": "Schreiben Sie eigene Seiten im Editor für Inhalte, die sonst nirgendwo existieren."
+      },
+      {
+        "name": "Öffentlich / privat",
+        "body": "Jede Quelle hat einen Sichtbarkeitsschalter, damit interne Notizen intern bleiben."
+      },
+      {
+        "name": "Zahlungsabfrage",
+        "body": "Prüft echte Zahlungen in Stripe oder Razorpay, damit Antworten Fakten sind, kein Raten."
+      },
+      {
+        "name": "Zahlungslinks",
+        "body": "Erstellt einen neuen, sicheren Zahlungslink, wenn eine Zahlung erneut versucht werden muss."
+      },
+      {
+        "name": "Abonnements",
+        "body": "Prüft den Abonnementstatus und kann ein Abonnement auf Wunsch des Kunden kündigen."
+      },
+      {
+        "name": "Rückerstattungen (optional)",
+        "body": "Standardmäßig deaktiviert. Der Workspace-Inhaber entscheidet, ob die KI überhaupt Rückerstattungen vornehmen darf."
+      },
+      {
+        "name": "Quittungen",
+        "body": "Findet und versendet die Quittung für eine bestimmte Zahlung."
+      },
+      {
+        "name": "MCP-Tools",
+        "body": "Verbinden Sie bis zu fünf MCP-Server und aktivieren Sie genau die Tools, die der Agent nutzen darf."
+      },
+      {
+        "name": "Identitätsprüfung",
+        "body": "Ein einmaliger E-Mail-Code oder ein signiertes Token aus Ihrer App bestätigt, wer der Kunde ist."
+      },
+      {
+        "name": "Filter für private Daten",
+        "body": "Namen und E-Mail-Adressen werden durch Referenzcodes ersetzt, bevor die KI eine Konversation liest, und sensible Daten werden entfernt."
+      },
+      {
+        "name": "Sichere Anfragen",
+        "body": "Fragen Sie sensible Angaben über ein einmaliges privates Formular statt im Chat ab."
+      },
+      {
+        "name": "Verschlüsselte Schlüssel",
+        "body": "Verbundene Zugangsdaten werden verschlüsselt gespeichert."
+      },
+      {
+        "name": "Budgetgrenzen",
+        "body": "Ein monatliches KI-Guthaben bei kostenpflichtigen Plänen hält die KI-Kosten vorhersehbar."
+      },
+      {
+        "name": "Faktenprüfung",
+        "body": "Entwürfe werden gegen Tool-Ergebnisse geprüft, bevor der Kunde sie sieht."
+      },
+      {
+        "name": "Besucherkontext",
+        "body": "Standort, Gerät und die Seite, auf der der Besucher war, jeder Konversation zugeordnet."
+      },
+      {
+        "name": "Analysen",
+        "body": "Sehen Sie, wie sich Konversationen in Ihrem gesamten Workspace entwickeln."
+      },
+      {
+        "name": "Verlauf",
+        "body": "Frühere Konversationen mit demselben Kunden, direkt neben dem Thread."
+      },
+      {
+        "name": "Kostenloser Plan",
+        "body": "Starten Sie mit 100 KI-Nachrichten pro Monat, keine Kreditkarte erforderlich."
+      },
+      {
+        "name": "Guthabenbasierte Pläne",
+        "body": "Kostenpflichtige Pläne enthalten ein monatliches KI-Guthaben, und zusätzliche Plätze sind einfache Add-ons."
+      },
+      {
+        "name": "Antworten per E-Mail",
+        "body": "Verifizierte Besucher, die den Chat verlassen haben, können Ihre Antwort trotzdem per E-Mail erhalten."
+      }
+    ],
+    "table": {
+      "all": "Alle",
+      "readMoreIn": "Mehr dazu in {more}",
+      "hint": "Tippen Sie auf eine Kachel. Jede Funktion hier ist schon heute live."
+    },
+    "hero": {
+      "badge": "Funktionen",
+      "titlePrefix": "Die Elemente ",
+      "titleHl": "großartigen Supports.",
+      "subtitle": "{count} Funktionen, ein Workspace. Filtern Sie nach Kategorie, tippen Sie auf eine Kachel, und sehen Sie genau, was Elpino kann."
+    },
+    "loop": {
+      "eyebrow": "Wie sie zusammenwirken",
+      "titlePrefix": "Es ist ein Kreislauf, ",
+      "titleHl": "keine Liste.",
+      "subtitle": "Jede Funktion speist die nächste, sodass der Support besser wird, je mehr Sie ihn nutzen.",
+      "steps": [
+        {
+          "t": "Lehren",
+          "d": "Durchsuchen Sie Ihre Website, laden Sie Dateien hoch, schreiben Sie Seiten."
+        },
+        {
+          "t": "Antworten",
+          "d": "Die KI antwortet aus Ihrem Wissen, in Ihrer Sprache."
+        },
+        {
+          "t": "Handeln",
+          "d": "Zahlungen, Abonnements und Ihre MCP-Tools."
+        },
+        {
+          "t": "Übergeben",
+          "d": "Erst nachfragen, das Team alarmieren, beitreten oder ein Ticket erstellen."
+        },
+        {
+          "t": "Lernen",
+          "d": "Konversationen überprüfen und Ihr Wissen verbessern."
+        }
+      ],
+      "stepOf": "Schritt {n} von {total}",
+      "explore": "Diesen Schritt erkunden"
+    },
+    "personas": {
+      "eyebrow": "Für wen es gedacht ist",
+      "titlePrefix": "Wählen Sie Ihre Rolle. ",
+      "titleHl": "Sehen Sie Ihre Funktionen.",
+      "items": [
+        {
+          "label": "Gründer",
+          "line": "Sie sind das gesamte Support-Team und wollen Ihre Abende zurück.",
+          "picks": [
+            "Kostenloser Plan, keine Kreditkarte",
+            "Antworten von Ihrer Website in Minuten",
+            "Die KI übernimmt Zahlungen und Quittungen",
+            "Meldet sich nur, wenn es wirklich nötig ist"
+          ]
+        },
+        {
+          "label": "Support-Leiter",
+          "line": "Sie leiten ein Team und brauchen klare Zuständigkeiten und keine verlorenen Chats.",
+          "picks": [
+            "Gemeinsamer Posteingang mit klaren Badges",
+            "Team-weite Beitritts-Benachrichtigungen",
+            "Automatische Tickets, wenn alle beschäftigt sind",
+            "Besucherkontext bei jedem Thread"
+          ]
+        },
+        {
+          "label": "Entwickler",
+          "line": "Sie wollen es mit Ihrem eigenen Produkt und Ihren Daten verbinden.",
+          "picks": [
+            "Identität per signiertem Token aus Ihrer App",
+            "MCP-Server mit Freigabe pro Tool",
+            "Abfragen in Stripe und Razorpay",
+            "Ein einbettbares Widget-Snippet"
+          ]
+        },
+        {
+          "label": "Shop-Inhaber",
+          "line": "Kunden fragen den ganzen Tag nach Bestellungen und Zahlungen.",
+          "picks": [
+            "Bestellabfragen über Ihre MCP-Tools",
+            "Zahlungslinks und Quittungen",
+            "Rückerstattungen nur, wenn Sie sie aktivieren",
+            "Antworten in der Sprache Ihres Kunden"
+          ]
+        }
+      ]
+    },
+    "stack": {
+      "badge": "Ein Tool",
+      "titlePrefix": "Sechs Tools hinein. ",
+      "titleHl": "Ein Workspace heraus.",
+      "subtitle": "Die meisten Teams basteln sich ein Widget, ein Helpdesk, eine Wissensdatenbank und einen Bot zusammen. Elpino ist das alles an einem Ort, mit einem gemeinsamen Gedächtnis für jeden Kunden.",
+      "items": [
+        "Chat-Widget",
+        "Helpdesk-Posteingang",
+        "Wissensdatenbank",
+        "Chatbot-Builder",
+        "Zahlungsabfragen",
+        "Übergaberegeln"
+      ],
+      "cardSubtitle": "Widget · Posteingang · Wissen · KI-Agent · Tools · Übergabe"
+    },
+    "soon": {
+      "badge": "Kommt im November",
+      "title": "Omnichannel ist der nächste Schritt.",
+      "body": "Website-Chat ist schon heute live. Als Nächstes bringen wir weitere Kanäle in denselben Posteingang, und wir kündigen es im Changelog an.",
+      "cta": "Changelog ansehen"
+    },
+    "faq": {
+      "eyebrow": "Fragen",
+      "titlePrefix": "Gut zu ",
+      "titleHl": "wissen.",
+      "items": [
+        {
+          "q": "Ist alles auf dieser Seite schon live?",
+          "a": "Ja. Jede Kachel beschreibt etwas, das Elpino schon heute kann. Omnichannel ist das Einzige, das wir noch entwickeln, und ist als „kommt im November“ gekennzeichnet."
+        },
+        {
+          "q": "Brauche ich alles davon?",
+          "a": "Nein. Starten Sie mit einer Wissensdatenbank und dem Widget im kostenlosen Plan, und schalten Sie Tools, MCP und Teammitglieder ein, wenn Sie sie brauchen."
+        },
+        {
+          "q": "Was ist im kostenlosen Plan enthalten?",
+          "a": "100 KI-Nachrichten pro Monat, keine Kreditkarte erforderlich."
+        },
+        {
+          "q": "Wie funktionieren kostenpflichtige Pläne?",
+          "a": "Kostenpflichtige Pläne enthalten ein monatliches KI-Guthaben, und zusätzliche Plätze sind einfache Add-ons. Details finden Sie auf der Preisseite."
+        }
+      ]
+    },
+    "closing": {
+      "title": "Jedes Element, einsatzbereit.",
+      "subtitle": "Starten Sie mit dem kostenlosen Plan und schalten Sie Funktionen ein, während Sie wachsen.",
+      "ctaStart": "Kostenlos starten",
+      "ctaPricing": "Preise ansehen"
+    }
+  },
+  "founders": {
+    "stream": {
+      "incomingLive": "Eingehend, live",
+      "onDuty": "Elpino im Einsatz",
+      "needsYou": "Braucht dich",
+      "handled": "Erledigt",
+      "askedFirst": "{why}. Elpino hat zuerst gefragt und dich dann benachrichtigt.",
+      "handledWithoutYou": "Erledigt ohne dich",
+      "actuallyNeededYou": "Hat dich wirklich gebraucht",
+      "items": [
+        {
+          "q": "Wie exportiere ich meine Daten?"
+        },
+        {
+          "q": "Warum wurde meine Karte abgelehnt?"
+        },
+        {
+          "q": "Gibt es einen Startup-Rabatt?"
+        },
+        {
+          "q": "Können wir einen individuellen Vertrag bekommen?",
+          "why": "Wollte mit einer Person sprechen"
+        },
+        {
+          "q": "Wo ist meine Rechnung für März?"
+        },
+        {
+          "q": "Wie setze ich mein Passwort zurück?"
+        },
+        {
+          "q": "Kann ich mit dem Gründer sprechen?",
+          "why": "Wollte mit einer Person sprechen"
+        },
+        {
+          "q": "Funktioniert das mit Shopify?"
+        }
+      ]
+    },
+    "hero": {
+      "badge": "Für Gründer",
+      "titlePrefix": "Bau dein Produkt. ",
+      "titleHl": "Nicht Support-Antworten.",
+      "subtitle": "Du hast eine Firma gegründet, um etwas zu bauen, nicht um vierzigmal pro Woche „wie setze ich mein Passwort zurück?“ zu beantworten. Elpino übernimmt die wiederkehrenden Fragen und holt dich nur dazu, wenn es wirklich einen Gründer braucht.",
+      "ctaStart": "Kostenlos starten",
+      "ctaPricing": "Preise ansehen",
+      "freeNote": "Kostenloser Plan: 100 KI-Nachrichten pro Monat. Keine Kreditkarte."
+    },
+    "calculator": {
+      "eyebrow": "Rechne es dir aus",
+      "titlePrefix": "Hol dir deine Nachmittage ",
+      "titleHl": "zurück.",
+      "subtitle": "Gib deine eigenen Zahlen ein. Der KI-Anteil ist deine Schätzung, kein Versprechen, und hängt davon ab, was in deiner Wissensdatenbank steht.",
+      "sliderQuestions": "Kundenfragen pro Tag",
+      "sliderMinutes": "Minuten pro Antwort",
+      "unitMin": "Min",
+      "sliderShare": "Anteil, den die KI deiner Schätzung nach löst",
+      "yourDay": "Dein 8-Stunden-Tag",
+      "today": "Heute",
+      "withElpinoAt": "Mit Elpino bei {pct}%",
+      "backEachWeek": "Zurück, jede Woche",
+      "chatsUntouched": "Chats pro Tag, unberührt",
+      "volumeNote": "Bei diesem Volumen ist Support allein mehr als ein voller Arbeitstag.",
+      "supportLabel": "{h} Std. Support",
+      "buildingLabel": "{h} Std. bauen"
+    },
+    "setup": {
+      "eyebrow": "Einrichtung",
+      "titlePrefix": "Live, bevor dein ",
+      "titleHl": "Kaffee kalt wird.",
+      "subtitle": "Keine Entwickler, keine Einarbeitungszeit. Vier Schritte, der letzte ist optional.",
+      "stepLabel": "Schritt {n}",
+      "steps": [
+        {
+          "t": "Website einfügen",
+          "d": "Elpino durchsucht deine Seiten, auch die mit JavaScript erstellten, und lernt dein Produkt kennen.",
+          "meter": "Liest deine Website"
+        },
+        {
+          "t": "Den Rest hinzufügen",
+          "d": "Lade Dokumente hoch oder schreibe die Richtlinien auf, die nur in deinem Kopf existieren.",
+          "meter": "Wissen wird hinzugefügt"
+        },
+        {
+          "t": "Widget einfügen",
+          "d": "Ein Code-Snippet, und der Chat ist live auf deiner Website.",
+          "meter": "Widget wird installiert"
+        },
+        {
+          "t": "Zahlungen verbinden (optional)",
+          "d": "Stripe oder Razorpay, damit es Rechnungsdaten für dich abrufen kann.",
+          "meter": "Verbindet sich"
+        }
+      ]
+    },
+    "reaches": {
+      "badge": "Der Filter",
+      "titlePrefix": "Nur das ",
+      "titleHl": "Wichtige",
+      "titleSuffix": " erreicht dich.",
+      "subtitle": "Du entscheidest, was die KI darf. Alles andere folgt einer klaren Regel: erst nachfragen, gemeinsam benachrichtigen, und den Kunden niemals im Stich lassen.",
+      "rules": [
+        {
+          "t": "Antworten aus deiner Dokumentation",
+          "d": "Erledigt. Du bekommst es nie zu sehen."
+        },
+        {
+          "t": "Zahlungs- und Kontoabfragen",
+          "d": "Erledigt mit den Tools, die du aktiviert hast."
+        },
+        {
+          "t": "\"Kann ich mit jemandem sprechen?\"",
+          "d": "Fragt zuerst den Kunden, benachrichtigt dann dich und dein Team."
+        },
+        {
+          "t": "Bist du gerade voll konzentriert?",
+          "d": "Nach 90 Sekunden wird ein Ticket angelegt und der Kunde informiert."
+        }
+      ]
+    },
+    "money": {
+      "eyebrow": "Fragen zur Abrechnung",
+      "titlePrefix": "Sie prüft die echte Zahlung. ",
+      "titleHl": "Du behältst die Schlüssel.",
+      "subtitle": "Verbinde Stripe oder Razorpay, und die KI kann Zahlungen und Abonnements abrufen, Belege und Zahlungslinks versenden und auf Anfrage ein Abonnement kündigen. Rückerstattungen bleiben deaktiviert, bis du den Schalter selbst umlegst.",
+      "chatAsk": "Kann ich meine letzte Zahlung erstattet bekommen?",
+      "chatYes": "Ich habe deine Zahlung gefunden und die Rückerstattung gestartet. Sie erreicht dein Konto normalerweise innerhalb von 5 bis 7 Werktagen.",
+      "chatNo": "Ich sehe die Zahlung, kann sie aber nicht selbst erstatten. Möchtest du, dass ich dich mit unserem Team verbinde?",
+      "toggleLabel": "KI Rückerstattungen ausführen lassen",
+      "toggleNote": "Standardmäßig deaktiviert. Probier den Schalter aus."
+    },
+    "grows": {
+      "eyebrow": "Raum zum Wachsen",
+      "titlePrefix": "Beginnt mit dir. ",
+      "titleHl": "Skaliert mit deinem Team.",
+      "stageLabel": "Stufe {n}",
+      "stages": [
+        {
+          "t": "Nur du",
+          "d": "Kostenloser Plan, 100 KI-Nachrichten pro Monat, ein Posteingang, den du selten öffnest."
+        },
+        {
+          "t": "Erste Einstellung",
+          "d": "Lade sie per E-Mail ein. Sie bekommen Beitrittsbenachrichtigungen und übernehmen Chats von der KI."
+        },
+        {
+          "t": "Ein kleines Team",
+          "d": "Konversationen zuweisen, Posteingang teilen, Plätze hinzufügen, wenn du sie brauchst."
+        },
+        {
+          "t": "Wachstum",
+          "d": "Kostenpflichtige Pläne mit monatlichem KI-Guthaben, MCP-Tools für eure eigenen Systeme."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Fragen von Gründern",
+      "titlePrefix": "Klare ",
+      "titleHl": "Antworten.",
+      "items": [
+        {
+          "q": "Wie unterscheidet sich das von einem gewöhnlichen Chatbot-Widget?",
+          "a": "Elpino antwortet nur aus dem Wissen, das du ihm gegeben hast, kann echte Zahlungen abrufen und deine eigenen Tools nutzen, prüft die Identität, bevor es etwas Persönliches berührt, und übergibt mit dem vollständigen Gesprächsverlauf an eine Person, wenn es nicht helfen kann."
+        },
+        {
+          "q": "Wie schnell kann ich es selbst einrichten?",
+          "a": "Die meisten Gründer sind noch am selben Tag live: Website oder Dateien hinzufügen, den Widget-Code einfügen und optional Stripe oder Razorpay verbinden."
+        },
+        {
+          "q": "Wie entscheidet es zwischen selbst antworten und mich benachrichtigen?",
+          "a": "Kann es aus deinem Wissen oder einem Tool antworten, tut es das. Kann es nicht, sagt es das und fragt den Kunden, ob es ihn mit deinem Team verbinden soll. Erst dann werden du und dein Team benachrichtigt."
+        },
+        {
+          "q": "Erfindet es Dinge?",
+          "a": "Es antwortet nur auf Basis dessen, was du freigegeben hast, und ein Prüfschritt vergleicht Entwürfe mit Tool-Ergebnissen. Wenn es etwas nicht weiß, sagt es das."
+        },
+        {
+          "q": "Ist mein Stripe- oder Razorpay-Konto sicher?",
+          "a": "Zugangsdaten werden verschlüsselt gespeichert, und geldbewegende Aktionen wie Rückerstattungen sind deaktiviert, bis du sie aktivierst."
+        },
+        {
+          "q": "Was passiert, wenn ich eine Support-Person einstelle?",
+          "a": "Lade sie ein, sie erhalten Beitrittsbenachrichtigungen, können Chats von der KI übernehmen und sie wieder zurückgeben."
+        }
+      ]
+    },
+    "closing": {
+      "title": "Geh zurück ans Bauen.",
+      "subtitle": "Starte kostenlos, bring Elpino dein Produkt bei und lass es die wiederkehrenden Fragen übernehmen.",
+      "ctaStart": "Kostenlos starten",
+      "ctaMeetAgent": "Lern den KI-Agenten kennen"
+    }
+  },
+  "developers": {
+    "hero": {
+      "badge": "Für Entwickler",
+      "titlePrefix": "Von ",
+      "titleMiddle": " zu ",
+      "titleHl": "gelöst.",
+      "subtitle": "Ein Tag für das Widget, ein signiertes Token, damit Elpino weiß, wer angemeldet ist, ein MCP-Server, damit die KI Ihre Daten lesen kann. Sehen Sie, wie die drei Schritte auf einer Seite ablaufen.",
+      "ctaStart": "Kostenlos starten",
+      "ctaDocs": "Dokumentation lesen"
+    },
+    "ide": {
+      "comment1": "<!-- 1. Tag einfügen -->",
+      "comment2": "<!-- 2. Elpino sagen, wer angemeldet ist -->",
+      "comment3": "  // elpinoToken: von Ihrem Backend signiert",
+      "mcpComment": "// In Ihrem Dashboard: einen MCP-Server verbinden und get_order aktivieren.",
+      "stepEmbed": "Einbetten",
+      "stepIdentify": "Identifizieren",
+      "stepResolve": "Lösen",
+      "previewSupport": "Support",
+      "previewVerified": "Verifiziert",
+      "previewGreeting": "Hi Aisha, wie kann ich helfen?",
+      "previewQuestion": "Wo ist meine Bestellung?",
+      "previewAnswer": "Sie wurde gestern versandt und kommt am Donnerstag an."
+    },
+    "sequence": {
+      "eyebrow": "Anfragefluss",
+      "titlePrefix": "Eine Frage, ",
+      "titleHl": "vier Systeme.",
+      "subtitle": "Wer mit wem spricht, wenn ein angemeldeter Kunde nach seiner Bestellung fragt. Schritt für Schritt durchgehen oder ablaufen lassen.",
+      "actors": [
+        "Browser",
+        "Ihr Server",
+        "Elpino",
+        "Ihr MCP-Server"
+      ],
+      "steps": [
+        {
+          "label": "Kunde meldet sich an"
+        },
+        {
+          "label": "Signiertes JWT",
+          "note": "≤ 5 Min. · einmalig"
+        },
+        {
+          "label": "$elpino identify(token)"
+        },
+        {
+          "label": "Signatur + Claims prüfen ✓"
+        },
+        {
+          "label": "„Wo ist meine Bestellung?“"
+        },
+        {
+          "label": "get_order",
+          "note": "nur verifizierte Kunden"
+        },
+        {
+          "label": "Bestellstatus"
+        },
+        {
+          "label": "Antwort an den Kunden"
+        }
+      ],
+      "stepCounter": "Schritt {n} / {total}",
+      "nextStep": "Nächster Schritt",
+      "replay": "Wiederholen"
+    },
+    "tokenExplorer": {
+      "eyebrow": "Das Identitäts-Token",
+      "titlePrefix": "Anatomie eines Tokens, ",
+      "titleHl": "und wie es scheitert.",
+      "subtitle": "HS256, signiert mit dem Geheimnis Ihres Workspace. Tippen Sie auf einen Claim für seine Regel und brechen Sie dann das Token, um zu sehen, was das Widget meldet.",
+      "payload": "Payload",
+      "optional": "optional",
+      "required": "Erforderlich",
+      "optionalCap": "Optional",
+      "breakIt": "Kaputt machen",
+      "notAccepted": "[Elpino] Identitäts-Token wurde nicht akzeptiert: {code}",
+      "fix": "Lösung:",
+      "claimDescriptions": [
+        "Die stabile Konto-ID dieses Nutzers.",
+        "Genau \"elpino-widget\".",
+        "Eine neue Zufalls-ID pro Token, 16 bis 128 URL-sichere Zeichen. Eine UUID funktioniert.",
+        "Ausstellungszeit in ganzen Sekunden (nicht Millisekunden).",
+        "Ablauf in ganzen Sekunden, höchstens 5 Minuten nach iat.",
+        "Weglassen, wenn keiner existiert. null wird abgelehnt.",
+        "true nur, wenn Ihr Login-System die Inhaberschaft bestätigt hat.",
+        "Anzeigename für Ihr Team."
+      ]
+    },
+    "server": {
+      "eyebrow": "Ihr Backend",
+      "titlePrefix": "Kopieren, einfügen, ",
+      "titleHl": "ausliefern.",
+      "subtitle": "Dieselben Snippets, die Ihr Dashboard zeigt, in der Sprache, die Sie bereits verwenden.",
+      "copy": "Kopieren",
+      "copied": "Kopiert",
+      "codeTitle": "Identitäts-Token"
+    },
+    "mcp": {
+      "badge": "MCP-Server",
+      "titlePrefix": "Geben Sie der KI Werkzeuge. ",
+      "titleHl": "Behalten Sie die Schlüssel.",
+      "subtitle": "Verbinden Sie bis zu fünf MCP-Server, aktivieren Sie bis zu 15 Tools pro Server und legen Sie fest, für wen sie offen sind. Schalten Sie die Regler um, um zu sehen, was der Agent nutzen kann.",
+      "shopServerName": "Ihr Shop-MCP-Server",
+      "toolsDiscovered": "{n} Tools gefunden",
+      "toggleLabel": "Nur-Lese-Tools für jeden Besucher öffnen",
+      "changesData": "Ändert Daten",
+      "readOnly": "Nur lesen",
+      "needsVerified": "Benötigt verifizierten Kunden",
+      "agentCanCall": "Agent kann aufrufen",
+      "toolDescriptions": [
+        "Eine Bestellung und ihren Status nachschlagen",
+        "Live-Sendungsverfolgung für ein Paket",
+        "Eine Lieferadresse ändern",
+        "Eine noch nicht versandte Bestellung stornieren"
+      ],
+      "bullets": [
+        "Jeder Aufruf wird serverseitig erneut gegen Ihre Liste geprüft",
+        "Tools, die Daten ändern, brauchen immer einen verifizierten Kunden",
+        "Zugangsdaten werden verschlüsselt gespeichert"
+      ]
+    },
+    "sees": {
+      "eyebrow": "Datenschutz standardmäßig",
+      "titlePrefix": "Das Modell ",
+      "titleHl": "sieht nie",
+      "titleSuffix": ", wer sie sind.",
+      "subtitle": "Bevor die KI ein Gespräch liest, werden Namen, E-Mails und IDs durch Referenzcodes ersetzt, und Geheimnisse wie Tokens und Schlüssel werden entfernt. Tools erhalten auf Ihrer Seite weiterhin die echten Werte.",
+      "toggleTeam": "Was Ihr Team sieht",
+      "toggleModel": "Was das KI-Modell sieht",
+      "chatRaw1": "Hallo, ich bin Aisha Khan (aisha@example.com). Wo ist meine Bestellung?",
+      "chatMasked1": "Hallo, ich bin ref_name_9f2c (ref_email_41ab). Wo ist meine Bestellung?",
+      "chatRaw2": "Hallo Aisha, Ihre Bestellung wurde gestern versandt.",
+      "chatMasked2": "Hallo, Ihre Bestellung wurde gestern versandt."
+    },
+    "faq": {
+      "eyebrow": "Fragen",
+      "titlePrefix": "Gut zu ",
+      "titleHl": "wissen.",
+      "items": [
+        {
+          "q": "Muss ich die Identitätsprüfung verwenden?",
+          "a": "Nein, aber sie ermöglicht es der KI, private Daten sicher anzuzeigen. Jeder kann eine beliebige E-Mail-Adresse in einen Chat eingeben – ein von Ihrem eigenen Login-System signiertes Token ist der Weg, wie ein Kunde Verifiziert wird."
+        },
+        {
+          "q": "Wie lange gilt ein Token?",
+          "a": "Höchstens fünf Minuten, und es funktioniert nur einmal. Die Chat-Sitzung selbst dauert bis zu 8 Stunden, mit einem 30-minütigen Inaktivitätslimit."
+        },
+        {
+          "q": "Welcher Signaturalgorithmus?",
+          "a": "HS256. Andere Algorithmen, einschließlich none und RS256, werden abgelehnt."
+        },
+        {
+          "q": "Für welche Sprachen gibt es Snippets?",
+          "a": "Node.js, Python, PHP und Ruby, in den Identitätseinstellungen Ihres Dashboards und in der Dokumentation."
+        },
+        {
+          "q": "Was ist ein MCP-Server?",
+          "a": "Ein Dienst, der Tools über das Model Context Protocol bereitstellt. Elpino erkennt dessen Tools, und Sie aktivieren die, die die KI nutzen darf."
+        },
+        {
+          "q": "Kann die KI Daten in meinen Systemen ändern?",
+          "a": "Nur über von Ihnen aktivierte Tools, und Tools, die Daten ändern, brauchen immer einen verifizierten Kunden."
+        },
+        {
+          "q": "Gibt es eine API?",
+          "a": "Das Widget-SDK, Identitäts-Tokens und MCP sind heute die Integrationsfläche."
+        }
+      ],
+      "linkLabels": [
+        "Identitäts-Dokumentation",
+        "Widget-Dokumentation",
+        "KI-Agent",
+        "Sicherheitsleitfaden"
+      ]
+    },
+    "closing": {
+      "title": "An einem Nachmittag live.",
+      "subtitle": "Kostenlos starten, den Tag einfügen und die Identität einrichten, wenn Sie bereit sind.",
+      "ctaStart": "Kostenlos starten",
+      "ctaDocs": "Dokumentation öffnen"
+    }
+  },
+  "busyOperators": {
+    "rush": {
+      "badgeLabel": "Hauptverkehrszeit · anschauliche Simulation",
+      "reset": "Zurücksetzen",
+      "waitingForPerson": "Warten auf eine Person",
+      "levelCalm": "Ruhig",
+      "levelBusy": "Es wird beschäftigt",
+      "levelFire": "Warteschlange in Flammen",
+      "inboxZero": "Posteingang Null. Hübsch.",
+      "chatsWaiting": "Chats warten",
+      "aiToggleLabel": "Elpino KI",
+      "teammatesOnline": "Teamkollegen online",
+      "resolvedByAi": "Von der KI gelöst",
+      "resolvedByTeam": "Vom Team gelöst",
+      "disclaimer": "Ein Spielzeugmodell: Bei jedem Tick kommen 3 Chats an und die KI nimmt einen Beispielanteil. Echte Ergebnisse hängen von Ihrer Wissensbasis und Ihren Tools ab.",
+      "online": "online",
+      "offline": "offline"
+    },
+    "hero": {
+      "badge": "Für vielbeschäftigte Teams",
+      "titlePrefix": "Hauptverkehrszeit, ",
+      "titleHl": "behandelt.",
+      "subtitle": "Wenn die Warteschlange immer größer wird, übernimmt die KI die Wiederholungsfragen, Ihr Team übernimmt den Rest und niemand stolpert übereinander. Legen Sie den Schalter unten um und spüren Sie den Unterschied.",
+      "ctaStart": "Starten Sie kostenlos",
+      "ctaInbox": "Siehe Posteingang"
+    },
+    "race": {
+      "badge": "Keine Doppelantworten",
+      "titlePrefix": "Zwei Leute, ein Chat. ",
+      "titleHl": "Nur einer tritt bei.",
+      "subtitle": "Jeder erhält die gleiche Beitrittsbenachrichtigung. Die erste Person, die tippt, übernimmt das Gespräch, die Benachrichtigung wird für alle anderen gelöscht und im Posteingang wird angezeigt, wer sie hat. Ein Kollege kann später noch gezielt übernehmen.",
+      "askedForPerson": "Aisha Khan fragte nach einer Person",
+      "alertSent": "Benachrichtigung an das gesamte Team gesendet",
+      "waiting": "Warten…",
+      "joined": "Beigetreten",
+      "joinChat": "Dem Chat beitreten",
+      "priyaHasThis": "Priya hat das",
+      "priyaJoinedFirst": "Priya trat zuerst bei. Auf dem Posteingangsabzeichen steht jetzt Priya.",
+      "bothSee": "Beide Teamkollegen sehen die Warnung…",
+      "customerSaidYes": "Der Kunde hat zu einer Person „Ja“ gesagt"
+    },
+    "context": {
+      "eyebrow": "Die Übergabe",
+      "titlePrefix": "Niemand wiederholt ",
+      "titleHl": "selbst.",
+      "subtitle": "Schalten Sie um, um eine kalte Übergabe mit der von Elpino zu vergleichen.",
+      "toggleCold": "Kalte Übergabe",
+      "toggleElpino": "Elpino-Übergabe",
+      "coldGreeting": "Hallo, ich bin Priya. Wie kann ich helfen?",
+      "coldComplaint": "…Das alles habe ich dem Bot bereits erklärt. Ich bin in ein anderes Land umgezogen und muss mein Rechnungsland ändern. Wieder.",
+      "coldNote": "Der Kunde beginnt von vorne und das Teammitglied beginnt blind.",
+      "whatPersonSees": "Was die Person sieht",
+      "reasonLabel": "Grund",
+      "reasonValue": "Für die Änderung des Rechnungslandes ist eine Person erforderlich",
+      "summaryLabel": "Zusammenfassung",
+      "summaryValue": "Länder verschoben, Rechnungsland muss aktualisiert werden. Per E-Mail-Code bestätigt.",
+      "fullThreadLabel": "Vollständiger Thread",
+      "fullThreadValue": "Jede Nachricht bisher, direkt über dem Komponisten",
+      "visitorLabel": "Besucher",
+      "visitorLocation": "Pune, Indien",
+      "visitorPage": "Auf /billing",
+      "identityVerified": "Identität überprüft"
+    },
+    "around": {
+      "eyebrow": "Rund um die Uhr",
+      "titlePrefix": "Jede Stunde abdecken, ",
+      "titleHl": "ohne Verschiebungen.",
+      "subtitle": "Ziehen Sie durch einen Beispieltag. Die Teamstunden sind hier von 9 bis 18 Uhr; Deins wird dein eigenes sein.",
+      "teamOnline": "Team online",
+      "aiOnWatch": "KI auf der Hut",
+      "hourAriaLabel": "Stunde des Tages",
+      "am": "Uhr",
+      "pm": "PM",
+      "dayItems": [
+        {
+          "t": "Die KI antwortet zuerst",
+          "d": "Wiederholte Fragen gelangen nie in die Warteschlange."
+        },
+        {
+          "t": "Das Team erhält Beitrittsbenachrichtigungen",
+          "d": "Der erste, der tippt, übernimmt den Chat."
+        },
+        {
+          "t": "Jederzeit zurückgeben",
+          "d": "Geben Sie der KI einfache Folgemaßnahmen zurück."
+        }
+      ],
+      "nightItems": [
+        {
+          "t": "Die KI antwortet zuerst",
+          "d": "Fragen, die es beantworten kann, werden beantwortet."
+        },
+        {
+          "t": "Niemand frei? Ticket",
+          "d": "Nach 90 Sekunden wird ein Ticket mit dem Grund und einer Zusammenfassung abgelegt."
+        },
+        {
+          "t": "Der Morgen beginnt organisiert",
+          "d": "Der Kunde wurde per E-Mail benachrichtigt und Tickets warten auf Sie."
+        }
+      ]
+    },
+    "toolkit": {
+      "eyebrow": "Von Natur aus ruhig",
+      "titlePrefix": "Die kleinen Dinge, die ",
+      "titleHl": "Halten Sie eine Warteschlange vernünftig.",
+      "items": [
+        {
+          "t": "Eigentumsabzeichen",
+          "d": "KI, Teamkollege oder gelöst, in jedem Thread."
+        },
+        {
+          "t": "Suche und Filter",
+          "d": "Alle, Ungelesen, Gelesen, Gelöst."
+        },
+        {
+          "t": "Live-Tippen",
+          "d": "Sehen Sie, wann der Kunde schreibt, und lassen Sie ihn Sie sehen."
+        },
+        {
+          "t": "Verifiziertes Abzeichen",
+          "d": "Wissen Sie, wer bewiesen hat, wer er ist."
+        },
+        {
+          "t": "Besucherdetails",
+          "d": "Standort, Gerät und die Seite, auf der sie sich befinden."
+        },
+        {
+          "t": "Übernehmen, zurückgeben",
+          "d": "Verschieben Sie einen Chat zwischen der KI und Personen mit einem Fingertipp."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Fragen",
+      "titlePrefix": "Gut ",
+      "titleHl": "wissen.",
+      "items": [
+        {
+          "q": "Wie verhindern Sie, dass zwei Personen demselben Kunden antworten?",
+          "a": "Jeder erhält die gleiche Beitrittsbenachrichtigung und die erste Person, die darauf tippt, nimmt den Chat auf. Die Benachrichtigung wird für alle anderen gelöscht und im Posteingang wird angezeigt, wer sie hat."
+        },
+        {
+          "q": "Wird Elpino mein Team ersetzen?",
+          "a": "Nein. Es kümmert sich um wiederkehrende Fragen und Ihre Mitarbeiter nehmen die Gespräche auf, bei denen ein Urteil erforderlich ist. Sie können jeden Chat auch an die KI zurückgeben."
+        },
+        {
+          "q": "Wovon kann es lernen?",
+          "a": "Ihre Website-Seiten (einschließlich der mit JavaScript erstellten Seiten), hochgeladene PDF-, Word-, Text- und Markdown-Dateien sowie von Ihnen verfasste Seiten. Sie bestimmen, welche öffentlich sind."
+        },
+        {
+          "q": "Was passiert, wenn niemand online ist?",
+          "a": "Die KI antwortet, was sie kann. Wenn ein Kunde nach einer Person fragt und innerhalb von 90 Sekunden niemand beitritt, wird ein Ticket mit dem Grund und einer Zusammenfassung erstellt und dem Kunden eine E-Mail zugesandt."
+        },
+        {
+          "q": "Wie lange dauert der Rollout?",
+          "a": "Die meisten Teams sind noch am selben Tag live: Wissen hinzufügen, Widget einfügen und Teamkollegen einladen."
+        }
+      ],
+      "footNote": "Der Website-Chat ist heute live. Omnichannel kommt im November."
+    },
+    "closing": {
+      "title": "Machen Sie die Warteschlange zum Problem eines anderen.",
+      "subtitle": "Beginnen Sie kostenlos und laden Sie Ihr Team ein, wenn Sie bereit sind.",
+      "ctaStart": "Kostenlos starten",
+      "ctaTickets": "Siehe Tickets"
     }
   }
 }

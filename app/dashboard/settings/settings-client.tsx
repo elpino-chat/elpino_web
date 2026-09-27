@@ -96,6 +96,12 @@ import {
   UserPlus,
   X,
   UsersRound,
+  Link2 as LinkIcon,
+  ToggleLeft,
+  ToggleRight,
+  Filter,
+  ShieldOff,
+  UserMinus,
 } from "lucide-react";
 
 type SettingsUser = { email: string; name?: string };
@@ -170,7 +176,7 @@ const chatbotItems = [
 // Shared workspace configuration, visible the same way to every teammate.
 const workspaceItems = [
   { label: "Information", slug: "information", icon: Info },
-  { label: "Teams", slug: "teams", icon: UserRound },
+  { label: "Members", slug: "teams", icon: UserRound },
   { label: "Presence Log", slug: "presence-log", icon: Radio },
   { label: "Usage", slug: "ai-usage", icon: CircleGauge },
   { label: "Setup & Integration", slug: "setup-integration", icon: Puzzle },
@@ -631,379 +637,501 @@ type CreditsResponse = {
   isOwner?: boolean;
 };
 
-type TeamMemberRow = { id: string; email: string; name: string | null; avatarUrl: string | null };
-type TeamRow = { id: string; name: string; description: string | null; createdAt: string; members: TeamMemberRow[] };
+type SeatMember = { id: string; email: string; name: string | null; avatarUrl: string | null; role?: string; presenceStatus?: string; joinedAt?: string };
 
-function memberInitial(member: TeamMemberRow) {
+function memberInitial(member: { name: string | null; email: string }) {
   return (member.name?.trim().charAt(0) || member.email.charAt(0)).toUpperCase();
 }
 
+const STATUS_DOT: Record<string, { label: string; dot: string }> = {
+  online: { label: "Online", dot: "bg-[#30b978]" },
+  away: { label: "Away", dot: "bg-[#9aa1a6]" },
+  brb: { label: "Be right back", dot: "bg-[#d89831]" },
+};
+
+/**
+ * Members and seats. A shareable join link and per-email invites both add
+ * people; every row (member, pending invite, or empty seat) counts toward
+ * the plan's seat limit, which is bought in the same packs as Billing.
+ */
 function TeamsSettingsPage() {
-  const [teams, setTeams] = useState<TeamRow[]>([]);
-  const [loadingTeams, setLoadingTeams] = useState(true);
-  const [members, setMembers] = useState<TeamMemberRow[]>([]);
-  const [loadingMembers, setLoadingMembers] = useState(true);
-
-  const [formOpen, setFormOpen] = useState(false);
-  const [editingTeam, setEditingTeam] = useState<TeamRow | null>(null);
-  const [formName, setFormName] = useState("");
-  const [formDescription, setFormDescription] = useState("");
-  const [formMemberIds, setFormMemberIds] = useState<string[]>([]);
-  const [saving, setSaving] = useState(false);
-  const [formError, setFormError] = useState<string | null>(null);
-  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
-  const [deleting, setDeleting] = useState(false);
-  const [inviteOpen, setInviteOpen] = useState(false);
+  const myRole = useMyRole();
+  const isOwner = myRole === "owner";
+  const [myId, setMyId] = useState<string | null>(null);
+  const [members, setMembers] = useState<SeatMember[]>([]);
   const [invitations, setInvitations] = useState<PendingInvitation[]>([]);
-  const [loadingInvitations, setLoadingInvitations] = useState(true);
-  const [revokingInvite, setRevokingInvite] = useState<string | null>(null);
-  const [resendingInvite, setResendingInvite] = useState<string | null>(null);
-  const [inviteNotice, setInviteNotice] = useState<{ id: string; ok: boolean; text: string } | null>(null);
+  const [entitlement, setEntitlement] = useState<Entitlement | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Re-inviting the same address renews the link for another 7 days and
-  // emails it again — see AuthService.inviteMembers.
-  async function resendInvite(invite: PendingInvitation) {
-    setResendingInvite(invite.id);
-    setInviteNotice(null);
+  const [joinLink, setJoinLink] = useState<{ enabled: boolean; token: string | null } | null>(null);
+  const [linkBusy, setLinkBusy] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
+  const [emailDraft, setEmailDraft] = useState("");
+
+  const [inviteOpen, setInviteOpen] = useState(false);
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [seatsMenuOpen, setSeatsMenuOpen] = useState(false);
+  const [buying, setBuying] = useState<number | null>(null);
+  const [notice, setNotice] = useState<{ ok: boolean; text: string } | null>(null);
+  const [rowBusy, setRowBusy] = useState<string | null>(null);
+  const [manageOpenFor, setManageOpenFor] = useState<string | null>(null);
+
+  const [search, setSearch] = useState("");
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [roleFilter, setRoleFilter] = useState<"all" | "owner" | "member">("all");
+  const [statusFilter, setStatusFilter] = useState<"all" | "online" | "away" | "brb" | "pending">("all");
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+
+  function load() {
+    return Promise.all([
+      fetch("/api/team-members", { cache: "no-store" }).then((r) => (r.ok ? r.json() : null)).catch(() => null),
+      fetch("/api/invitations", { cache: "no-store" }).then((r) => (r.ok ? r.json() : null)).catch(() => null),
+      fetch("/api/billing/status", { cache: "no-store" }).then((r) => (r.ok ? r.json() : null)).catch(() => null),
+      fetch("/api/account", { cache: "no-store" }).then((r) => (r.ok ? r.json() : null)).catch(() => null),
+    ]).then(([membersData, invitesData, statusData, accountData]: [{ members?: SeatMember[] } | null, { invitations?: PendingInvitation[] } | null, { entitlement?: Entitlement } | null, { account?: { id?: string } } | null]) => {
+      setMembers(membersData?.members ?? []);
+      setInvitations((invitesData?.invitations ?? []).filter((invite) => !invite.expired));
+      setEntitlement(statusData?.entitlement ?? null);
+      setMyId(accountData?.account?.id ?? null);
+    });
+  }
+  useEffect(() => { void load().finally(() => setLoading(false)); }, []);
+
+  function loadJoinLink() {
+    if (!isOwner) return;
+    fetch("/api/organizations/join-link", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data: { enabled?: boolean; token?: string | null } | null) => setJoinLink({ enabled: data?.enabled ?? false, token: data?.token ?? null }))
+      .catch(() => undefined);
+  }
+  useEffect(loadJoinLink, [isOwner]);
+
+  const seatsAllowed = entitlement?.seatsAllowed ?? 0;
+  const seatsUsed = members.length + invitations.length;
+  const emptySeats = Math.max(0, seatsAllowed - seatsUsed);
+  const isFree = entitlement?.planId === "free";
+  const currency = entitlement?.currency ?? "USD";
+  const bundles = entitlement?.seatBundles ?? [];
+  const ownerCount = members.filter((m) => m.role === "owner").length;
+
+  const joinUrl = joinLink?.token && typeof window !== "undefined" ? `${window.location.origin}/join/${joinLink.token}` : "";
+
+  async function toggleJoinLink(enabled: boolean) {
+    setLinkBusy(true);
     try {
-      const response = await fetch("/api/invitations", {
+      const response = await fetch("/api/organizations/join-link", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ emails: [invite.email] }),
+        body: JSON.stringify({ enabled }),
       });
+      const data = (await response.json().catch(() => ({}))) as { enabled?: boolean; token?: string | null; message?: string };
+      if (response.ok) setJoinLink({ enabled: data.enabled ?? false, token: data.token ?? null });
+      else setNotice({ ok: false, text: data.message ?? "Could not update the join link." });
+    } finally {
+      setLinkBusy(false);
+    }
+  }
+
+  async function regenerateJoinLink() {
+    setLinkBusy(true);
+    try {
+      const response = await fetch("/api/organizations/join-link/regenerate", { method: "POST" });
+      const data = (await response.json().catch(() => ({}))) as { enabled?: boolean; token?: string | null; message?: string };
+      if (response.ok) setJoinLink({ enabled: data.enabled ?? true, token: data.token ?? null });
+      else setNotice({ ok: false, text: data.message ?? "Could not regenerate the join link." });
+    } finally {
+      setLinkBusy(false);
+    }
+  }
+
+  function copyJoinLink() {
+    if (!joinUrl) return;
+    void navigator.clipboard?.writeText(joinUrl).then(() => {
+      setLinkCopied(true);
+      window.setTimeout(() => setLinkCopied(false), 1500);
+    });
+  }
+
+  async function sendInviteEmail() {
+    const email = emailDraft.trim();
+    if (!email) return;
+    setNotice(null);
+    try {
+      const response = await fetch("/api/invitations", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ emails: [email] }) });
       const data = (await response.json().catch(() => ({}))) as { invited?: string[]; skipped?: { reason: string }[]; message?: string };
       if (response.ok && data.invited?.length) {
-        setInviteNotice({ id: invite.id, ok: true, text: "Invite sent again" });
-        loadInvitations();
+        setEmailDraft("");
+        setNotice({ ok: true, text: `Invite sent to ${email}.` });
+        await load();
       } else {
-        setInviteNotice({ id: invite.id, ok: false, text: data.skipped?.[0]?.reason ?? data.message ?? "Could not resend the invite" });
+        setNotice({ ok: false, text: data.skipped?.[0]?.reason ?? data.message ?? "Could not send the invite." });
       }
     } catch {
-      setInviteNotice({ id: invite.id, ok: false, text: "Could not resend the invite" });
-    } finally {
-      setResendingInvite(null);
+      setNotice({ ok: false, text: "Could not send the invite." });
     }
   }
 
-  function loadInvitations() {
-    setLoadingInvitations(true);
-    fetch("/api/invitations")
-      .then((response) => (response.ok ? response.json() : null))
-      .then((data: { invitations?: PendingInvitation[] } | null) => setInvitations(data?.invitations ?? []))
-      .catch(() => undefined)
-      .finally(() => setLoadingInvitations(false));
-  }
-  useEffect(loadInvitations, []);
-
-  async function revokeInvite(id: string) {
-    setRevokingInvite(id);
+  async function buySeats(quantity: number) {
+    if (buying !== null) return;
+    setBuying(quantity);
+    setNotice(null);
     try {
-      const response = await fetch("/api/invitations/revoke", {
+      const response = await fetch("/api/billing/seats", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ id }),
+        body: JSON.stringify({ quantity }),
       });
-      if (response.ok) setInvitations((current) => current.filter((item) => item.id !== id));
-    } finally {
-      setRevokingInvite(null);
-    }
-  }
-
-  function loadTeams() {
-    setLoadingTeams(true);
-    fetch("/api/teams")
-      .then((response) => (response.ok ? response.json() : null))
-      .then((data: { teams?: TeamRow[] } | null) => setTeams(data?.teams ?? []))
-      .catch(() => undefined)
-      .finally(() => setLoadingTeams(false));
-  }
-  useEffect(loadTeams, []);
-
-  function loadMembers() {
-    setLoadingMembers(true);
-    return fetch("/api/team-members")
-      .then((response) => (response.ok ? response.json() : null))
-      .then((data: { members?: TeamMemberRow[] } | null) => setMembers(data?.members ?? []))
-      .catch(() => undefined)
-      .finally(() => setLoadingMembers(false));
-  }
-  useEffect(() => { void loadMembers(); }, []);
-
-  function openCreate() {
-    setEditingTeam(null);
-    setFormName("");
-    setFormDescription("");
-    setFormMemberIds([]);
-    setFormError(null);
-    setFormOpen(true);
-  }
-
-  function openEdit(team: TeamRow) {
-    setEditingTeam(team);
-    setFormName(team.name);
-    setFormDescription(team.description ?? "");
-    setFormMemberIds(team.members.map((m) => m.id));
-    setFormError(null);
-    setFormOpen(true);
-  }
-
-  function toggleFormMember(id: string) {
-    setFormMemberIds((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]));
-  }
-
-  async function submitForm() {
-    const name = formName.trim();
-    if (!name || saving) {
-      setFormError("Team name is required.");
-      return;
-    }
-    setSaving(true);
-    setFormError(null);
-    try {
-      if (editingTeam) {
-        const patchResponse = await fetch(`/api/teams/${editingTeam.id}`, {
-          method: "PATCH",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ name, description: formDescription.trim() }),
-        });
-        if (!patchResponse.ok) {
-          const data = (await patchResponse.json().catch(() => ({}))) as { message?: string };
-          setFormError(data.message ?? "Could not update team");
-          return;
-        }
-        const before = new Set(editingTeam.members.map((m) => m.id));
-        const after = new Set(formMemberIds);
-        const toAdd = formMemberIds.filter((id) => !before.has(id));
-        const toRemove = editingTeam.members.map((m) => m.id).filter((id) => !after.has(id));
-        await Promise.all([
-          ...toAdd.map((userId) => fetch(`/api/teams/${editingTeam.id}/members`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ userId }) })),
-          ...toRemove.map((userId) => fetch(`/api/teams/${editingTeam.id}/members?userId=${encodeURIComponent(userId)}`, { method: "DELETE" })),
-        ]);
-      } else {
-        const response = await fetch("/api/teams", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ name, description: formDescription.trim(), memberUserIds: formMemberIds }),
-        });
-        if (!response.ok) {
-          const data = (await response.json().catch(() => ({}))) as { message?: string };
-          setFormError(data.message ?? "Could not create team");
-          return;
-        }
+      const data = (await response.json().catch(() => ({}))) as { message?: string; upgradeRequired?: boolean; orderId?: string; keyId?: string; amountPaise?: number; seatsGranted?: number };
+      if (!response.ok) {
+        setNotice({ ok: false, text: data.upgradeRequired ? `${data.message ?? "This plan can't add more seats."} Upgrade to add more.` : data.message ?? "Could not add seats." });
+        return;
       }
-      setFormOpen(false);
-      loadTeams();
+      if (data.orderId && data.keyId) {
+        await openRazorpayCheckout({ keyId: data.keyId, orderId: data.orderId, amountPaise: data.amountPaise, description: "Extra seats" });
+        setNotice({ ok: true, text: "Payment received. Your seats will be ready in a moment." });
+        window.setTimeout(() => void load(), 2500);
+      } else {
+        setNotice({ ok: true, text: `${data.seatsGranted ?? quantity} seats added. They're billed with your subscription from the next invoice.` });
+      }
+      setSeatsMenuOpen(false);
+      await load();
+    } catch (issue) {
+      setNotice({ ok: false, text: issue instanceof Error ? issue.message : "Could not add seats." });
     } finally {
-      setSaving(false);
+      setBuying(null);
     }
   }
 
-  async function confirmDelete(id: string) {
-    if (confirmDeleteId !== id) {
-      setConfirmDeleteId(id);
-      return;
-    }
-    setDeleting(true);
+  async function revokeInvite(invite: PendingInvitation) {
+    setRowBusy(invite.id);
     try {
-      const response = await fetch(`/api/teams/${id}`, { method: "DELETE" });
-      if (response.ok) setTeams((current) => current.filter((team) => team.id !== id));
+      await fetch("/api/invitations/revoke", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ id: invite.id }) });
+      await load();
     } finally {
-      setDeleting(false);
-      setConfirmDeleteId(null);
+      setRowBusy(null);
+      setManageOpenFor(null);
     }
   }
 
-  const assignedMemberIds = new Set(teams.flatMap((team) => team.members.map((m) => m.id)));
-  const unassignedCount = Math.max(0, members.length - assignedMemberIds.size);
+  async function resendInvite(invite: PendingInvitation) {
+    setRowBusy(invite.id);
+    setNotice(null);
+    try {
+      const response = await fetch("/api/invitations", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ emails: [invite.email] }) });
+      const data = (await response.json().catch(() => ({}))) as { invited?: string[]; skipped?: { reason: string }[]; message?: string };
+      setNotice(response.ok && data.invited?.length ? { ok: true, text: `Invite sent again to ${invite.email}.` } : { ok: false, text: data.skipped?.[0]?.reason ?? data.message ?? "Could not resend the invite." });
+    } finally {
+      setRowBusy(null);
+      setManageOpenFor(null);
+    }
+  }
+
+  async function changeRole(member: SeatMember, role: "owner" | "member") {
+    setRowBusy(member.id);
+    setNotice(null);
+    try {
+      const response = await fetch("/api/organizations/members/role", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ userId: member.id, role }) });
+      const data = (await response.json().catch(() => ({}))) as { message?: string };
+      if (!response.ok) setNotice({ ok: false, text: data.message ?? "Could not change that member's role." });
+      await load();
+    } finally {
+      setRowBusy(null);
+      setManageOpenFor(null);
+    }
+  }
+
+  async function removeMember(member: SeatMember) {
+    setRowBusy(member.id);
+    setNotice(null);
+    try {
+      const response = await fetch("/api/organizations/members/remove", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ userId: member.id }) });
+      const data = (await response.json().catch(() => ({}))) as { message?: string };
+      if (!response.ok) setNotice({ ok: false, text: data.message ?? "Could not remove that member." });
+      setSelected((current) => { const next = new Set(current); next.delete(member.id); return next; });
+      await load();
+    } finally {
+      setRowBusy(null);
+      setManageOpenFor(null);
+    }
+  }
+
+  async function removeSelected() {
+    const ids = [...selected];
+    for (const id of ids) {
+      const member = members.find((m) => m.id === id);
+      if (member) await removeMember(member);
+    }
+    setSelected(new Set());
+  }
+
+  const term = search.trim().toLowerCase();
+  const filteredMembers = members.filter((member) => {
+    if (roleFilter !== "all" && (member.role ?? "member") !== roleFilter) return false;
+    if (statusFilter !== "all" && statusFilter !== "pending" && (member.presenceStatus ?? "online") !== statusFilter) return false;
+    if (statusFilter === "pending") return false;
+    if (!term) return true;
+    return member.email.toLowerCase().includes(term) || (member.name ?? "").toLowerCase().includes(term);
+  });
+  const filteredInvites = statusFilter !== "all" && statusFilter !== "pending" ? [] : invitations.filter((invite) => !term || invite.email.toLowerCase().includes(term));
+  const totalShown = filteredMembers.length + filteredInvites.length;
+
+  function toggleRow(id: string) {
+    setSelected((current) => {
+      const next = new Set(current);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+  function toggleAll() {
+    setSelected((current) => (current.size === filteredMembers.length ? new Set() : new Set(filteredMembers.map((m) => m.id))));
+  }
+
+  const smallBtn = "inline-flex h-8 items-center gap-1.5 rounded-none border border-[var(--b-border)] px-3 text-[12.5px] font-medium transition hover:bg-[var(--b-surface-2)] disabled:opacity-50";
+  const cellClass = "min-w-0 text-[13px]";
+  const gridCols = "grid-cols-[28px_1.7fr_1.6fr_1fr_1fr_0.9fr_36px]";
 
   return (
-    <div className="mx-auto w-full max-w-[1200px] px-6 pb-16 pt-8 text-[#17191b] sm:px-9">
-      <header className="flex flex-wrap items-start justify-between gap-5">
+    <div className="billing-v2 mx-auto w-full max-w-[1120px] px-6 pb-20 pt-8 sm:px-9 lg:px-10">
+      <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h2 className="text-[30px] font-medium tracking-[-0.04em]">Teams</h2>
-          <p className="mt-2 text-[13px] text-[#707980]">Organize workspace members into focused groups for conversation routing.</p>
+          <h2 className="text-[32px] font-semibold tracking-[-0.04em]">Members</h2>
+          <p className="mt-1.5 text-[13px] text-[var(--b-muted)]">Everyone in this workspace shares one inbox. Each person, or pending invite, takes a seat.</p>
         </div>
-        <div className="flex shrink-0 items-center gap-2">
-          <button type="button" onClick={() => setInviteOpen(true)} className="flex h-10 items-center gap-2 rounded-lg border border-[#D8DDE1] px-4 text-[12px] font-semibold transition hover:bg-[#F7F8FA]">
-            <UserPlus size={14} /> Invite team
-          </button>
-          <button type="button" onClick={openCreate} className="flex h-10 items-center gap-2 rounded-lg bg-[#11120f] px-4 text-[12px] font-semibold text-white transition hover:bg-black">
-            <Plus size={14} /> Create team
-          </button>
-        </div>
-      </header>
-
-      <section className="mt-6 flex flex-wrap items-center gap-4 rounded-2xl border border-[#DDE4E8] bg-[#FAFBFB] p-5">
-        <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#11120f] text-white"><UsersRound size={18} /></span>
-        <div>
-          <p className="text-[11px] font-medium text-[#6D7D85]">Teams</p>
-          <p className="mt-0.5 text-[20px] font-semibold tracking-[-0.02em]">{loadingTeams ? "…" : teams.length}</p>
-        </div>
-        <div className="ml-4 border-l border-[#E1E5E8] pl-4">
-          <p className="text-[11px] font-medium text-[#6D7D85]">Workspace members</p>
-          <p className="mt-0.5 text-[16px] font-semibold">{loadingMembers ? "…" : members.length}</p>
-        </div>
-        <div className="ml-4 border-l border-[#E1E5E8] pl-4">
-          <p className="text-[11px] font-medium text-[#6D7D85]">Unassigned</p>
-          <p className="mt-0.5 text-[16px] font-semibold">{loadingTeams || loadingMembers ? "…" : unassignedCount}</p>
-        </div>
-      </section>
-
-      <section className="mt-5">
-        {loadingTeams ? (
-          <div className="flex min-h-[200px] items-center justify-center rounded-xl border border-[#dfe3e6] bg-white text-[13px] text-[#8b9398]"><LoaderCircle size={15} className="mr-2 animate-spin" /> Loading teams</div>
-        ) : teams.length === 0 ? (
-          <div className="flex min-h-[220px] flex-col items-center justify-center rounded-xl border border-[#dfe3e6] bg-white px-6 text-center">
-            <UsersRound size={24} className="text-[#a5acb0]" />
-            <p className="mt-3 text-[14px] font-semibold">No teams yet</p>
-            <p className="mt-1 max-w-sm text-[12.5px] leading-5 text-[#8b9398]">Create a team to group teammates for conversation routing and assignment.</p>
-            <button type="button" onClick={openCreate} className="mt-4 h-9 rounded-lg border border-[#D8DDE1] px-4 text-[12px] font-semibold transition hover:bg-[#F7F8FA]">Create your first team</button>
-          </div>
-        ) : (
-          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-            {teams.map((team) => (
-              <article key={team.id} className="rounded-xl border border-[#dfe3e6] bg-white p-5">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <h3 className="truncate text-[15px] font-semibold">{team.name}</h3>
-                    <p className="mt-1 line-clamp-2 text-[12.5px] leading-5 text-[#7b848a]">{team.description || "No description"}</p>
-                  </div>
-                  <div className="flex shrink-0 items-center gap-1">
-                    <button type="button" onClick={() => openEdit(team)} aria-label="Edit team" className="flex h-8 w-8 items-center justify-center rounded-lg text-[#7b848a] hover:bg-[#f7f8f8] hover:text-black"><Pencil size={14} /></button>
-                    <button
-                      type="button"
-                      onClick={() => confirmDelete(team.id)}
-                      disabled={deleting && confirmDeleteId === team.id}
-                      aria-label="Delete team"
-                      className={`flex h-8 items-center justify-center rounded-lg px-2 text-[11px] font-semibold transition ${confirmDeleteId === team.id ? "bg-[#FFF1F1] text-[#c63f4d]" : "text-[#7b848a] hover:bg-[#f7f8f8] hover:text-black"}`}
-                    >
-                      {confirmDeleteId === team.id ? (deleting ? <LoaderCircle size={13} className="animate-spin" /> : "Confirm?") : <Trash2 size={14} />}
+        {isOwner && (
+          <div className="relative">
+            <button type="button" onClick={() => setSeatsMenuOpen((open) => !open)} className="inline-flex h-10 items-center gap-2 rounded-none border border-[var(--b-border)] px-4 text-[13px] font-medium transition hover:bg-[var(--b-surface-2)]">
+              <Plus size={14} /> Add more seats <ChevronDown size={13} />
+            </button>
+            {seatsMenuOpen && (
+              <div className="absolute right-0 top-12 z-30 w-[240px] rounded-none border border-[var(--b-border)] bg-[var(--b-surface)] p-1.5 shadow-[0_18px_45px_rgba(15,23,42,0.16)]">
+                {bundles.map((bundle) => {
+                  const minor = currency === "INR" ? bundle.inrPaise : bundle.usdCents;
+                  const overCap = entitlement?.seatsMax != null && seatsAllowed + bundle.seats > entitlement.seatsMax;
+                  return (
+                    <button key={bundle.seats} type="button" disabled={buying !== null || overCap} onClick={() => void buySeats(bundle.seats)} className="flex w-full items-center justify-between rounded-none px-3 py-2.5 text-left text-[13px] transition hover:bg-[var(--b-surface-2)] disabled:opacity-45">
+                      <span className="flex items-center gap-2 font-medium">{buying === bundle.seats && <LoaderCircle size={13} className="animate-spin" />}{bundle.seats} seats</span>
+                      <span className="text-[var(--b-muted)]">{formatMoney(minor, currency)}{isFree ? "" : "/mo"}</span>
                     </button>
-                  </div>
-                </div>
-                <div className="mt-4 flex items-center justify-between">
-                  <div className="flex -space-x-2">
-                    {team.members.slice(0, 5).map((member) => (
-                      <span key={member.id} title={member.name ?? member.email} className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-[#eef0f1] text-[10.5px] font-bold text-[#4a5666]">{memberInitial(member)}</span>
-                    ))}
-                    {team.members.length > 5 && <span className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-[#eef0f1] text-[10px] font-bold text-[#4a5666]">+{team.members.length - 5}</span>}
-                    {team.members.length === 0 && <span className="text-[11.5px] text-[#a5acb0]">No members yet</span>}
-                  </div>
-                  <span className="text-[11px] font-medium text-[#92999e]">{team.members.length} {team.members.length === 1 ? "member" : "members"}</span>
-                </div>
-              </article>
-            ))}
+                  );
+                })}
+                <p className="px-3 pb-1.5 pt-1 text-[11.5px] leading-4 text-[var(--b-muted)]">{isFree ? "One-time payment." : "Billed with your subscription."}</p>
+              </div>
+            )}
           </div>
         )}
-      </section>
+      </header>
 
-      <section className="mt-8">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <h3 className="text-[16px] font-semibold">Pending invitations</h3>
-            <p className="mt-1 text-[12.5px] text-[#7b848a]">People you&apos;ve invited who haven&apos;t joined yet.</p>
-          </div>
-          {invitations.length > 0 && <span className="text-[11px] font-medium text-[#92999e]">{invitations.length} {invitations.length === 1 ? "invite" : "invites"}</span>}
-        </div>
-        <div className="mt-3 overflow-hidden rounded-xl border border-[#dfe3e6] bg-white">
-          {loadingInvitations ? (
-            <div className="flex items-center justify-center py-10 text-[13px] text-[#8b9398]"><LoaderCircle size={15} className="mr-2 animate-spin" /> Loading invitations</div>
-          ) : invitations.length === 0 ? (
-            <div className="flex flex-col items-center px-6 py-10 text-center">
-              <Mail size={20} className="text-[#a5acb0]" />
-              <p className="mt-2 text-[13px] font-medium text-[#5b6368]">No pending invitations</p>
-              <p className="mt-1 max-w-sm text-[11.5px] leading-5 text-[#8b9398]">Invited teammates show up here until they accept.</p>
-            </div>
-          ) : (
-            invitations.map((invite, index) => (
-              <div key={invite.id} className={`flex flex-wrap items-center gap-3 px-4 py-3 ${index ? "border-t border-[#eceeef]" : ""}`}>
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#eef0f1] text-[12px] font-bold text-[#4a5666]">{invite.email.charAt(0).toUpperCase()}</span>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-[13px] font-semibold">{invite.email}</p>
-                  <p className="mt-0.5 flex items-center gap-1.5 text-[11px] text-[#8b9398]">
-                    <span className={`inline-flex w-fit items-center gap-1 rounded-full px-1.5 py-0.5 font-semibold ${invite.expired ? "bg-[#FFF1F1] text-[#A64A53]" : "bg-[#FFF4E5] text-[#93651D]"}`}>
-                      <span className={`h-1.5 w-1.5 rounded-full ${invite.expired ? "bg-[#C6555F]" : "bg-[#D89831]"}`} />
-                      {invite.expired ? "Expired" : "Pending"}
-                    </span>
-                    {invite.expired
-                      ? `Link expired ${new Date(invite.expiresAt).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })}`
-                      : `Expires ${new Date(invite.expiresAt).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })}`}
-                  </p>
-                  {inviteNotice?.id === invite.id && (
-                    <p className={`mt-1 text-[11px] ${inviteNotice.ok ? "text-[#2f855a]" : "text-[#c63f4d]"}`}>{inviteNotice.text}</p>
-                  )}
-                </div>
-                <button
-                  type="button"
-                  disabled={resendingInvite === invite.id}
-                  onClick={() => void resendInvite(invite)}
-                  className="shrink-0 rounded-md px-2.5 py-1.5 text-[12px] font-medium text-[#3578C8] transition hover:bg-[#EEF3F5] disabled:opacity-50"
-                >
-                  {resendingInvite === invite.id ? "Sending…" : "Resend"}
-                </button>
-                <button
-                  type="button"
-                  disabled={revokingInvite === invite.id}
-                  onClick={() => void revokeInvite(invite.id)}
-                  className="shrink-0 rounded-md px-2.5 py-1.5 text-[12px] font-medium text-[#c63f4d] transition hover:bg-[#FFF1F1] disabled:opacity-50"
-                >
-                  {revokingInvite === invite.id ? "…" : "Revoke"}
-                </button>
-              </div>
-            ))
-          )}
-        </div>
-      </section>
-
-      {formOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/35 p-4 backdrop-blur-[2px]" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setFormOpen(false); }}>
-          <div role="dialog" aria-modal="true" className="flex max-h-[85vh] w-full max-w-[440px] flex-col overflow-hidden rounded-[24px] border border-black/10 bg-white shadow-[0_28px_80px_rgba(15,23,42,0.24)]">
-            <div className="flex items-start justify-between border-b border-[#E5E9EB] px-6 py-5">
-              <div>
-                <h3 className="text-[16px] font-semibold tracking-[-0.02em]">{editingTeam ? "Edit team" : "Create team"}</h3>
-                <p className="mt-1 text-[12px] text-[#667069]">Group teammates for conversation routing and assignment.</p>
-              </div>
-              <button type="button" onClick={() => setFormOpen(false)} className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg hover:bg-[#F0F2F3]"><X size={16} /></button>
-            </div>
-            <div className="overflow-y-auto p-6">
-              <label className="block text-[12.5px] font-semibold text-[#17233A]">Team name</label>
-              <input value={formName} onChange={(event) => { setFormName(event.target.value); setFormError(null); }} placeholder="Customer Support" className="mt-2 h-11 w-full rounded-xl border border-[#DDE4E8] px-3 text-[13px] outline-none focus:border-[#11120f] focus:ring-2 focus:ring-[#11120f]/8" />
-
-              <label className="mt-4 block text-[12.5px] font-semibold text-[#17233A]">Description <span className="font-normal text-[#8a9298]">(optional)</span></label>
-              <textarea value={formDescription} onChange={(event) => setFormDescription(event.target.value)} placeholder="Default team for incoming customer conversations." rows={2} className="mt-2 w-full resize-none rounded-xl border border-[#DDE4E8] px-3 py-2.5 text-[13px] outline-none focus:border-[#11120f] focus:ring-2 focus:ring-[#11120f]/8" />
-
-              <label className="mt-4 block text-[12.5px] font-semibold text-[#17233A]">Members</label>
-              <div className="mt-2 max-h-[180px] overflow-y-auto rounded-xl border border-[#DDE4E8]">
-                {loadingMembers ? (
-                  <div className="flex items-center justify-center py-6 text-[12px] text-[#8a9298]"><LoaderCircle size={14} className="mr-2 animate-spin" /> Loading members</div>
-                ) : members.length === 0 ? (
-                  <p className="px-3 py-4 text-center text-[12px] text-[#8a9298]">No workspace members yet.</p>
-                ) : (
-                  members.map((member) => {
-                    const checked = formMemberIds.includes(member.id);
-                    return (
-                      <button key={member.id} type="button" onClick={() => toggleFormMember(member.id)} className={`flex h-11 w-full items-center justify-between gap-2.5 border-b border-[#eceeef] px-3 text-left text-[13px] font-medium last:border-b-0 ${checked ? "bg-[#f0f2f3]" : "hover:bg-[#f7f8f8]"}`}>
-                        <span className="flex min-w-0 items-center gap-2.5">
-                          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#eef0f1] text-[10.5px] font-bold text-[#4a5666]">{memberInitial(member)}</span>
-                          <span className="min-w-0 truncate">{member.name || member.email}</span>
-                        </span>
-                        {checked && <Check size={14} className="shrink-0 text-[#11120f]" />}
-                      </button>
-                    );
-                  })
-                )}
-              </div>
-
-              {formError && <p className="mt-3 text-[11.5px] text-[#c63f4d]">{formError}</p>}
-              <button type="button" disabled={saving} onClick={() => void submitForm()} className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#11120f] text-[13px] font-semibold text-white transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-60">
-                {saving ? <LoaderCircle size={14} className="animate-spin" /> : <Check size={14} />} {editingTeam ? "Save changes" : "Create team"}
-              </button>
-            </div>
-          </div>
-        </div>
+      {notice && (
+        <p role={notice.ok ? "status" : "alert"} className={`mt-5 rounded-none px-4 py-3 text-[13px] ${notice.ok ? "bg-[var(--b-good-bg)] text-[var(--b-good)]" : "bg-[var(--b-bad-bg)] text-[var(--b-bad)]"}`}>
+          {notice.text}
+          {!notice.ok && notice.text.includes("Upgrade") && <> <button type="button" onClick={() => setUpgradeOpen(true)} className="font-semibold underline underline-offset-2">See plans</button></>}
+        </p>
       )}
 
-      <InvitePeopleDialog open={inviteOpen} onClose={() => setInviteOpen(false)} onInvited={() => { void loadMembers(); loadInvitations(); }} />
+      {/* -------------------------------------------------------- invite block */}
+      {isOwner && (
+        <section className="mt-6 bg-[var(--b-surface)] p-8">
+          <h3 className="text-[15px] font-semibold">Add people to this workspace</h3>
+          <p className="mt-1 text-[12.5px] text-[var(--b-muted)]">Share this link with anyone you want to join, or invite a specific email. <Link href="/dashboard/settings/security-permissions" className="underline underline-offset-2 hover:text-[var(--b-text)]">Learn more.</Link></p>
+
+          <div className="mt-4 flex flex-col gap-2.5 sm:flex-row sm:items-center">
+            <div className="flex h-11 min-w-0 flex-1 items-center gap-2 rounded-none border border-[var(--b-border)] bg-[var(--b-surface-2)] px-3.5">
+              <LinkIcon size={14} className="shrink-0 text-[var(--b-muted)]" />
+              <span className="min-w-0 flex-1 truncate text-[13px] text-[var(--b-muted)]">
+                {joinLink === null ? "Loading…" : joinLink.enabled && joinUrl ? joinUrl : "Turn on the join link to get a URL"}
+              </span>
+            </div>
+            <button type="button" disabled={!joinLink?.enabled || !joinUrl} onClick={copyJoinLink} className={smallBtn}>
+              <Copy size={13} /> {linkCopied ? "Copied" : "Copy link"}
+            </button>
+            <button type="button" disabled={linkBusy} onClick={() => void toggleJoinLink(!(joinLink?.enabled ?? false))} className={smallBtn}>
+              {linkBusy ? <LoaderCircle size={13} className="animate-spin" /> : joinLink?.enabled ? <ToggleRight size={15} className="text-[var(--b-good)]" /> : <ToggleLeft size={15} />}
+              {joinLink?.enabled ? "On" : "Off"}
+            </button>
+            {joinLink?.enabled && (
+              <button type="button" disabled={linkBusy} onClick={() => void regenerateJoinLink()} className={smallBtn} title="Invalidate the old link and make a new one">
+                <RefreshCw size={13} /> Regenerate
+              </button>
+            )}
+          </div>
+
+          <div className="mt-3 flex flex-col gap-2.5 sm:flex-row sm:items-center">
+            <div className="flex h-11 min-w-0 flex-1 items-center gap-2 rounded-none border border-[var(--b-border)] px-3.5">
+              <Mail size={14} className="shrink-0 text-[var(--b-muted)]" />
+              <input
+                type="email"
+                value={emailDraft}
+                onChange={(event) => setEmailDraft(event.target.value)}
+                onKeyDown={(event) => { if (event.key === "Enter") void sendInviteEmail(); }}
+                placeholder="Enter email to send invite…"
+                className="min-w-0 flex-1 bg-transparent text-[13px] outline-none placeholder:text-[var(--b-muted)]"
+              />
+            </div>
+            <button type="button" onClick={() => void sendInviteEmail()} disabled={!emailDraft.trim()} className="inline-flex h-11 items-center gap-2 rounded-none bg-[var(--b-ink)] px-4 text-[13px] font-semibold text-[var(--b-ink-text)] transition hover:opacity-85 disabled:opacity-50">
+              <Send size={13} /> Send invite
+            </button>
+          </div>
+        </section>
+      )}
+
+      {/* -------------------------------------------------------- members table */}
+      <section className="mt-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h3 className="text-[18px] font-semibold tracking-[-0.02em]">Team members</h3>
+            <p className="mt-0.5 text-[12.5px] text-[var(--b-muted)]">Manage your current team members and their access. {seatsUsed} of {seatsAllowed} seats used{emptySeats > 0 ? `, ${emptySeats} free` : ""}.</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="flex h-9 items-center gap-2 rounded-none border border-[var(--b-border)] px-3">
+              <Search size={13} className="text-[var(--b-muted)]" />
+              <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search" className="w-32 bg-transparent text-[13px] outline-none placeholder:text-[var(--b-muted)] sm:w-44" />
+            </div>
+            <div className="relative">
+              <button type="button" onClick={() => setFilterOpen((open) => !open)} className={smallBtn}><Filter size={13} /> Filter</button>
+              {filterOpen && (
+                <div className="absolute right-0 top-10 z-30 w-[200px] rounded-none border border-[var(--b-border)] bg-[var(--b-surface)] p-3 shadow-[0_18px_45px_rgba(15,23,42,0.16)]">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--b-muted)]">Role</p>
+                  <div className="mt-1.5 flex flex-col gap-1">
+                    {(["all", "owner", "member"] as const).map((value) => (
+                      <button key={value} type="button" onClick={() => setRoleFilter(value)} className={`rounded-none px-2 py-1.5 text-left text-[13px] capitalize transition hover:bg-[var(--b-surface-2)] ${roleFilter === value ? "font-semibold" : ""}`}>{value}</button>
+                    ))}
+                  </div>
+                  <p className="mt-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--b-muted)]">Status</p>
+                  <div className="mt-1.5 flex flex-col gap-1">
+                    {(["all", "online", "away", "brb", "pending"] as const).map((value) => (
+                      <button key={value} type="button" onClick={() => setStatusFilter(value)} className={`rounded-none px-2 py-1.5 text-left text-[13px] capitalize transition hover:bg-[var(--b-surface-2)] ${statusFilter === value ? "font-semibold" : ""}`}>{value === "brb" ? "Be right back" : value}</button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+            {isOwner && selected.size > 0 && (
+              <button type="button" onClick={() => void removeSelected()} className={`${smallBtn} text-[var(--b-bad)]`}><Trash2 size={13} /> Remove selected ({selected.size})</button>
+            )}
+          </div>
+        </div>
+
+        <div className="mt-4 overflow-hidden rounded-none border border-[var(--b-border)] bg-[var(--b-surface)]">
+          <div className="overflow-x-auto">
+            <div className="min-w-[760px]">
+              <div className={`grid ${gridCols} items-center gap-3 border-b border-[var(--b-border)] px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--b-muted)]`}>
+                <input type="checkbox" checked={filteredMembers.length > 0 && selected.size === filteredMembers.length} onChange={toggleAll} disabled={!isOwner || filteredMembers.length === 0} className="h-4 w-4 rounded" aria-label="Select all" />
+                <span>Team member</span>
+                <span>Email</span>
+                <span>Role</span>
+                <span>Joined</span>
+                <span className="flex items-center justify-between">Status <span className="normal-case tracking-normal text-[var(--b-muted)]">Total {seatsUsed} member{seatsUsed === 1 ? "" : "s"}</span></span>
+                <span />
+              </div>
+
+              {loading ? (
+                <div className="flex h-24 items-center justify-center text-[13px] text-[var(--b-muted)]"><LoaderCircle size={15} className="mr-2 animate-spin" /> Loading members</div>
+              ) : totalShown === 0 ? (
+                <div className="px-5 py-10 text-center text-[13px] text-[var(--b-muted)]">No members match this search or filter.</div>
+              ) : (
+                <div>
+                  {filteredMembers.map((member) => {
+                    const status = STATUS_DOT[member.presenceStatus ?? "online"] ?? STATUS_DOT.online;
+                    const isSelf = member.id === myId;
+                    return (
+                      <div key={member.id} className={`grid ${gridCols} items-center gap-3 border-b border-[var(--b-border)] px-5 py-3`}>
+                        <input type="checkbox" checked={selected.has(member.id)} onChange={() => toggleRow(member.id)} disabled={!isOwner || isSelf} className="h-4 w-4 rounded" aria-label={`Select ${member.email}`} />
+                        <div className={`flex items-center gap-2.5 ${cellClass}`}>
+                          <span className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[var(--b-surface-2)] text-[12px] font-semibold">
+                            {member.avatarUrl ? <img src={member.avatarUrl} alt="" className="h-full w-full object-cover" /> : memberInitial(member)}
+                          </span>
+                          <span className="truncate font-medium">{member.name?.trim() || member.email}{isSelf ? " (you)" : ""}</span>
+                        </div>
+                        <span className={`${cellClass} truncate text-[var(--b-muted)]`}>{member.email}</span>
+                        <span className={cellClass}>
+                          {member.role === "owner" ? (
+                            <span className="inline-flex items-center gap-1 rounded-none bg-[var(--b-good-bg)] px-2 py-0.5 text-[11px] font-semibold text-[var(--b-good)]">Owner</span>
+                          ) : (
+                            <span className="text-[var(--b-muted)]">Member</span>
+                          )}
+                        </span>
+                        <span className={`${cellClass} text-[var(--b-muted)]`}>{member.joinedAt ? new Date(member.joinedAt).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" }) : "—"}</span>
+                        <span className="flex items-center gap-1.5 text-[12.5px]"><span className={`h-2 w-2 rounded-full ${status.dot}`} />{status.label}</span>
+                        <div className="relative flex justify-end">
+                          {isOwner && !isSelf && (
+                            <button type="button" onClick={() => setManageOpenFor(manageOpenFor === member.id ? null : member.id)} className="flex h-8 w-8 items-center justify-center rounded-none transition hover:bg-[var(--b-surface-2)]" aria-label={`Manage ${member.email}`}>
+                              {rowBusy === member.id ? <LoaderCircle size={14} className="animate-spin" /> : <MoreHorizontal size={16} />}
+                            </button>
+                          )}
+                          {manageOpenFor === member.id && (
+                            <div className="absolute right-0 top-9 z-30 w-[200px] rounded-none border border-[var(--b-border)] bg-[var(--b-surface)] p-1.5 text-left shadow-[0_18px_45px_rgba(15,23,42,0.16)]">
+                              {member.role === "owner" ? (
+                                <button type="button" disabled={ownerCount <= 1} onClick={() => void changeRole(member, "member")} className="flex w-full items-center gap-2 rounded-none px-3 py-2 text-[13px] transition hover:bg-[var(--b-surface-2)] disabled:opacity-40" title={ownerCount <= 1 ? "A workspace needs at least one owner" : undefined}>
+                                  <ShieldOff size={14} /> Make member
+                                </button>
+                              ) : (
+                                <button type="button" onClick={() => void changeRole(member, "owner")} className="flex w-full items-center gap-2 rounded-none px-3 py-2 text-[13px] transition hover:bg-[var(--b-surface-2)]">
+                                  <ShieldCheck size={14} /> Make owner
+                                </button>
+                              )}
+                              <button type="button" disabled={member.role === "owner" && ownerCount <= 1} onClick={() => void removeMember(member)} className="flex w-full items-center gap-2 rounded-none px-3 py-2 text-[13px] text-[var(--b-bad)] transition hover:bg-[var(--b-bad-bg)] disabled:opacity-40" title={member.role === "owner" && ownerCount <= 1 ? "The last owner can't be removed" : undefined}>
+                                <UserMinus size={14} /> Remove from workspace
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                  {filteredInvites.map((invite) => (
+                    <div key={invite.id} className={`grid ${gridCols} items-center gap-3 border-b border-[var(--b-border)] px-5 py-3 opacity-90`}>
+                      <span />
+                      <div className={`flex items-center gap-2.5 ${cellClass}`}>
+                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-dashed border-[var(--b-border)] text-[var(--b-muted)]"><Mail size={14} /></span>
+                        <span className="truncate font-medium text-[var(--b-muted)]">Invited</span>
+                      </div>
+                      <span className={`${cellClass} truncate text-[var(--b-muted)]`}>{invite.email}</span>
+                      <span className={`${cellClass} text-[var(--b-muted)]`}>Member</span>
+                      <span className={`${cellClass} text-[var(--b-muted)]`}>—</span>
+                      <span className="flex items-center gap-1.5 text-[12.5px] text-[var(--b-muted)]"><span className="h-2 w-2 rounded-full bg-[var(--b-track)]" />Pending</span>
+                      <div className="relative flex justify-end">
+                        {isOwner && (
+                          <button type="button" onClick={() => setManageOpenFor(manageOpenFor === invite.id ? null : invite.id)} className="flex h-8 w-8 items-center justify-center rounded-none transition hover:bg-[var(--b-surface-2)]" aria-label={`Manage invite to ${invite.email}`}>
+                            {rowBusy === invite.id ? <LoaderCircle size={14} className="animate-spin" /> : <MoreHorizontal size={16} />}
+                          </button>
+                        )}
+                        {manageOpenFor === invite.id && (
+                          <div className="absolute right-0 top-9 z-30 w-[160px] rounded-none border border-[var(--b-border)] bg-[var(--b-surface)] p-1.5 text-left shadow-[0_18px_45px_rgba(15,23,42,0.16)]">
+                            <button type="button" onClick={() => void resendInvite(invite)} className="flex w-full items-center gap-2 rounded-none px-3 py-2 text-[13px] transition hover:bg-[var(--b-surface-2)]"><RefreshCw size={14} /> Resend</button>
+                            <button type="button" onClick={() => void revokeInvite(invite)} className="flex w-full items-center gap-2 rounded-none px-3 py-2 text-[13px] text-[var(--b-bad)] transition hover:bg-[var(--b-bad-bg)]"><X size={14} /> Revoke</button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+
+                  {emptySeats > 0 && (!term && roleFilter === "all" && statusFilter === "all") && Array.from({ length: emptySeats }, (_, index) => (
+                    <div key={`empty-${index}`} className={`grid ${gridCols} items-center gap-3 border-b border-[var(--b-border)] px-5 py-3 last:border-b-0`}>
+                      <span />
+                      <div className={`flex items-center gap-2.5 ${cellClass}`}>
+                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-dashed border-[var(--b-border)] text-[var(--b-muted)]"><UserRound size={14} /></span>
+                        <span className="text-[var(--b-muted)]">Empty seat</span>
+                      </div>
+                      <span />
+                      <span />
+                      <span />
+                      <span />
+                      <div className="flex justify-end">
+                        {isOwner && <button type="button" onClick={() => setInviteOpen(true)} className={smallBtn}><UserPlus size={13} /> Add user</button>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <InvitePeopleDialog open={inviteOpen} onClose={() => setInviteOpen(false)} onInvited={() => void load()} />
+      <UpgradeDialog open={upgradeOpen} onClose={() => { setUpgradeOpen(false); void load(); }} />
     </div>
   );
 }
@@ -5149,7 +5277,7 @@ export function SettingsClient({ user, page = "General", auditView = "all" }: { 
           <ChatbotBehaviorSettingsPage />
         ) : currentPage === "People" ? (
           <PeopleSettingsPage />
-        ) : currentPage === "Teams" ? (
+        ) : currentPage === "Members" ? (
           <TeamsSettingsPage />
         ) : currentPage === "Billing" ? (
           <BillingSettingsPage />

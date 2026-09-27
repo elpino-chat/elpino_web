@@ -11,6 +11,7 @@ import MobileBottomNav from "@/app/components/dashboard/MobileBottomNav";
 import DashboardMain from "@/app/components/dashboard/DashboardMain";
 import { MobileDrawerProvider } from "@/app/components/dashboard/mobile-drawer-context";
 import { DashboardShellSkeleton } from "@/app/components/dashboard/DashboardSkeleton";
+import InvitationPrompt from "@/app/components/dashboard/InvitationPrompt";
 
 // The session check is the only thing this layout waits for. It sits inside a
 // Suspense boundary so the frame of the dashboard (sidebar, header) is on screen
@@ -45,5 +46,7 @@ async function AuthedDashboard({ children }: { children: React.ReactNode }) {
         <SetupChecklist />
         <MobileBottomNav />
       </div>
+      {/* Outside .dashboard-shell so the dark-theme colour overrides never reach it. */}
+      <InvitationPrompt />
     </MobileDrawerProvider>;
 }

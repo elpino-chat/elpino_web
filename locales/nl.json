@@ -34,7 +34,7 @@
       "company": "Bedrijf",
       "companyPlaceholder": "Acme Corp",
       "inquiryType": "Type aanvraag *",
-      "inquirySales": "Sales & Enterprise",
+      "inquirySales": "Verkoop en zakelijk",
       "inquiryTechnical": "Technische support",
       "inquiryPartnerships": "Partnerschappen",
       "inquiryOther": "Anders",
@@ -47,7 +47,95 @@
       "privacy": "Privacybeleid",
       "successTitle": "Bericht verzonden",
       "successBody": "Bedankt voor je bericht. We nemen snel contact met je op.",
-      "sendAnother": "Nog een bericht versturen"
+      "sendAnother": "Nog een bericht versturen",
+      "sentStamp": "Verzonden ✓",
+      "postmarkLabel": "mail",
+      "securityNote": "Veilig verzonden — nooit gebruikt voor training"
+    },
+    "hero": {
+      "eyebrow": "Contact · de postkamer",
+      "greeting": "Hallo.",
+      "titlePrefix": "Hoe kan dat",
+      "titleHl": "wij helpen?",
+      "searchLabel": "Help-onderwerpen zoeken",
+      "searchPlaceholder": "Zoekverkoop, ondersteuning, facturering en meer",
+      "searchButtonLabel": "Zoeken",
+      "noMatch": "Geen exacte overeenkomst. Druk op Enter om ons uw vraag te sturen.",
+      "linkGettingStarted": "Aan de slag",
+      "linkFeaturedGuides": "Aanbevolen handleidingen",
+      "linkPlansBilling": "Abonnementen en facturering",
+      "linkSendMessage": "Of stuur ons een bericht ↓"
+    },
+    "desks": {
+      "eyebrow": "Kies een route",
+      "titlePrefix": "Bereik de ",
+      "titleHl": "rechter bureau.",
+      "subtitle": "Kies het kanaal dat het beste aansluit bij wat je nodig hebt. Ieder traject leidt naar een echt lid van ons team.",
+      "deskLabel": "Bureau {n}",
+      "addressed": "Ansichtkaart geadresseerd ✓",
+      "actionAddress": "Adresseer een ansichtkaart",
+      "emailNote": "Liever een eigen mailapp? Elk bureau met een adres werkt ook via {link}.",
+      "emailNoteLink": "e-mail"
+    },
+    "postcard": {
+      "eyebrow": "Stuur ons een berichtje",
+      "titlePrefix": "Een echt mens ",
+      "titleHl": "zal dit lezen.",
+      "addressedTo": "Geadresseerd aan"
+    },
+    "tracking": {
+      "eyebrow": "Volg uw ansichtkaart",
+      "titlePrefix": "Wat gebeurt er ",
+      "titleHl": "nadat je op verzenden hebt gedrukt.",
+      "onlineStatus": "Ons team is online",
+      "hours": "ma–vr, 9:00–18:00 CET",
+      "steps": [
+        {
+          "title": "Verzonden",
+          "body": "Uw ansichtkaart verlaat uw handen. Er is niets anders te doen."
+        },
+        {
+          "title": "We lezen elk woord",
+          "body": "Je briefje komt terecht bij een mens in het team: geen kaartjesdoolhof, geen bots."
+        },
+        {
+          "title": "Binnen één werkdag antwoord",
+          "body": "Echte antwoorden van iemand die aan het product werkt."
+        },
+        {
+          "title": "Een telefoontje, als het nuttig is",
+          "body": "Voor verkoop en ondernemerschap nemen we Elpino door met uw daadwerkelijke workflow."
+        }
+      ]
+    },
+    "library": {
+      "titlePrefix": "Vind het liever ",
+      "titleHl": "jezelf?",
+      "subtitle": "De meeste vragen worden hier al beantwoord — en alles hieronder linkt rechtstreeks naar de bron.",
+      "cardLabel": "Kaart {n}",
+      "items": [
+        {
+          "title": "Snelle antwoorden",
+          "body": "Installatie, facturering, escalatie en beveiliging: beantwoord in de FAQ.",
+          "cta": "Blader door de FAQ"
+        },
+        {
+          "title": "Documentatie",
+          "body": "Installatiehandleidingen, connectorconfiguratie en werkruimteconfiguratie.",
+          "cta": "Open de documenten"
+        },
+        {
+          "title": "Beveiliging en privacy",
+          "body": "Hoe uw gegevens worden gecodeerd, opgeslagen en nooit voor training worden gebruikt.",
+          "cta": "Lees het beleid"
+        }
+      ]
+    },
+    "search": {
+      "plansTitle": "Abonnementen en facturering",
+      "plansDetail": "Vragen over abonnementen, facturen of prijzen",
+      "accountTitle": "Account en beveiliging",
+      "accountDetail": "Hulp bij toegang, privacy of accountinstellingen"
     }
   },
   "auth": {
@@ -105,6 +193,4113 @@
         "lowercase": "Kleine letter",
         "number": "Cijfer"
       }
+    }
+  },
+  "home": {
+    "hero": {
+      "badge": "AI-klantenservice",
+      "titlePrefix": "Support die",
+      "words": [
+        "antwoordt.",
+        "oplost.",
+        "onthoudt.",
+        "doorverwijst."
+      ],
+      "subtitle": "Een AI die antwoordt vanuit uw eigen kennis, echte betalingen en bestellingen controleert, en met het volledige verhaal aan uw team overdraagt wanneer een mens nodig is.",
+      "ctaPrimary": "Start gratis",
+      "ctaSecondary": "Probeer het zelf",
+      "trust": [
+        "100 gratis AI-berichten per maand",
+        "Geen kaart nodig",
+        "Klaar in een middag"
+      ],
+      "stickers": [
+        "Opgelost door AI",
+        "Mens stand-by",
+        "Standaard privé",
+        "Niets gaat verloren"
+      ],
+      "callouts": [
+        "AI-badge op elk gesprek",
+        "Deelnemen om over te nemen",
+        "Locatie en apparaat van bezoeker"
+      ],
+      "widget": {
+        "name": "Elpino",
+        "subtitle": "Antwoordt in seconden",
+        "convo": [
+          "Ben ik twee keer belast voor mijn upgrade?",
+          "Ik heb uw betalingsgeschiedenis gecontroleerd",
+          "U bent maar één keer belast. De tweede poging is mislukt en nooit vastgelegd."
+        ]
+      }
+    },
+    "marquee": {
+      "questions": [
+        "Waar is mijn factuur?",
+        "Hoe reset ik mijn wachtwoord?",
+        "Ben ik dubbel belast?",
+        "Kan ik geld terugkrijgen?",
+        "Waar is mijn bestelling?",
+        "Hoe voeg ik een teamlid toe?",
+        "Zijn mijn gegevens veilig?",
+        "Waarom is mijn betaling mislukt?",
+        "Kan ik met iemand spreken?"
+      ]
+    },
+    "tryit": {
+      "eyebrow": "Probeer het",
+      "titlePrefix": "Vraag het iets.",
+      "titleHl": "Kijk wat het doet.",
+      "subtitle": "Kies een klantvraag. Links het gesprek, rechts alles wat Elpino deed voordat het antwoordde.",
+      "widgetName": "Elpino",
+      "widgetSubtitle": "AI-support",
+      "whatItDid": "Wat Elpino deed",
+      "done": "Klaar",
+      "working": "Bezig…",
+      "stepStart": "start",
+      "stepOther": "stap",
+      "person": "mens",
+      "resolved": "opgelost",
+      "humanNote": "Eerst gevraagd · een teamlid kan deelnemen, of er wordt een ticket aangemaakt",
+      "resolvedNote": "Beantwoord en opgelost, geen mens nodig",
+      "sampleNote": "Voorbeeldantwoorden. De getoonde stappen zijn het soort tools dat Elpino echt gebruikt.",
+      "qas": [
+        {
+          "q": "Ben ik dubbel belast?",
+          "steps": [
+            "U geverifieerd via e-mailcode",
+            "Uw betalingsgeschiedenis gecontroleerd"
+          ],
+          "a": "U bent maar één keer belast. De tweede poging is mislukt en nooit vastgelegd."
+        },
+        {
+          "q": "Waar is mijn bestelling?",
+          "steps": [
+            "U geverifieerd via e-mailcode",
+            "Uw winkel gebeld via MCP"
+          ],
+          "a": "Het is gisteren verzonden en komt donderdag aan. Ik heb u de trackinglink gemaild."
+        },
+        {
+          "q": "Hoe reset ik mijn wachtwoord?",
+          "steps": [
+            "Uw kennisbank doorzocht"
+          ],
+          "a": "Kies “Wachtwoord vergeten” op de inlogpagina en volg de link die we u mailen."
+        },
+        {
+          "q": "Kan ik geld terugkrijgen?",
+          "steps": [
+            "De betaling gecontroleerd",
+            "Terugbetalingen zijn uitgeschakeld voor deze werkruimte"
+          ],
+          "a": "Dat kan ik zelf niet terugbetalen. Wilt u dat ik u met ons team verbind?"
+        },
+        {
+          "q": "Kan ik met iemand spreken?",
+          "steps": [
+            "U gevraagd voordat het werd doorgezet",
+            "Het hele team tegelijk gewaarschuwd"
+          ],
+          "a": "Priya van ons team is aangesloten en heeft het hele gesprek."
+        },
+        {
+          "q": "Verkopen jullie cadeaubonnen?",
+          "steps": [
+            "Uw kennisbank doorzocht",
+            "Geen match gevonden"
+          ],
+          "a": "Die informatie heb ik niet. Wilt u dat ik u met ons team verbind?"
+        }
+      ]
+    },
+    "customizer": {
+      "eyebrow": "Maak het van u",
+      "titlePrefix": "Een widget die",
+      "titleHl": "eruitziet en klinkt zoals u.",
+      "subtitle": "Voeg uw logo toe, geef uw AI een naam, kies een kleur en thema, en kies de taal waarin het antwoordt. Speel met de bediening en zie de widget veranderen.",
+      "yourLogo": "Uw logo",
+      "upload": "Logo uploaden",
+      "remove": "Verwijderen",
+      "fileTooBig": "Gebruik een afbeelding onder 2 MB.",
+      "fileShown": "Alleen hier getoond. Wordt nergens geüpload.",
+      "aiName": "AI-naam",
+      "greeting": "Begroeting",
+      "accentColour": "Accentkleur",
+      "theme": "Thema",
+      "light": "Licht",
+      "dark": "Donker",
+      "customerWritesIn": "Klant schrijft in",
+      "theAi": "De AI",
+      "repliesIn": "antwoordt in",
+      "autoMatch": "Automatisch: past zich aan de klant aan",
+      "seesUrl": "AI kan de pagina-URL zien",
+      "visitorOn": "Bezoeker is op",
+      "replyingIn": "Antwoordt in",
+      "matched": "(afgestemd)",
+      "writeMessage": "Typ een bericht…",
+      "previewNote": "Voorbeeld met voorbeeldtekst. Uw echte widget gebruikt uw eigen logo, kleuren en begroeting.",
+      "support": "Support",
+      "weReplyFast": "Wij antwoorden in seconden"
+    },
+    "tour": {
+      "eyebrow": "Het product",
+      "titlePrefix": "Alles wat een supportteam nodig heeft,",
+      "titleHl": "op één plek.",
+      "items": [
+        {
+          "tag": "AI-agent",
+          "title": "Een agent die weet met wie hij praat",
+          "desc": "Onthoudt klanten, verifieert identiteit, controleert betalingen en roept uw tools aan."
+        },
+        {
+          "tag": "Gedeelde inbox",
+          "title": "Eén inbox voor uw team en de AI",
+          "desc": "Duidelijke eigendom, deelname-meldingen en de volledige context bij elk gesprek."
+        },
+        {
+          "tag": "Kennisbank",
+          "title": "Leer het alles wat u heeft",
+          "desc": "Crawl uw site, upload bestanden, schrijf pagina's. Met openbaar/privé-schakelaars."
+        },
+        {
+          "tag": "Tickets",
+          "title": "Niets valt weg",
+          "desc": "Als niemand vrij is, wordt een ticket aangemaakt en de klant geïnformeerd."
+        }
+      ]
+    },
+    "who": {
+      "eyebrow": "Voor wie",
+      "titlePrefix": "Gemaakt voor de mensen",
+      "titleHl": "die de support doen.",
+      "items": [
+        {
+          "title": "Oprichters",
+          "desc": "Bouw product, geen supportantwoorden. Elpino tikt u alleen aan wanneer een oprichter echt nodig is.",
+          "pts": [
+            "Gratis plan, 100 AI-berichten per maand",
+            "Waarschuwt u alleen als een mens nodig is",
+            "Opzetten in een middag"
+          ]
+        },
+        {
+          "title": "Drukke teams",
+          "desc": "Spitsuur onder controle: de AI neemt herhalingen over, iedereen krijgt dezelfde deelname-melding, niemand antwoordt dubbel.",
+          "pts": [
+            "Eén deelname-melding bereikt het hele team",
+            "Eigendomsbadges op elk gesprek",
+            "Een ticket als niemand vrij is"
+          ]
+        },
+        {
+          "title": "Ontwikkelaars",
+          "desc": "Eén tag, een ondertekend identiteitstoken en MCP-servers. U kiest wat de AI mag aanraken.",
+          "pts": [
+            "Eén scripttag voor de widget",
+            "Ondertekende, kortlevende identiteitstokens",
+            "MCP-servers, tool voor tool goedgekeurd"
+          ]
+        }
+      ],
+      "founderVisual": [
+        {
+          "q": "Hoe exporteer ik data?",
+          "ok": true
+        },
+        {
+          "q": "Waarom mislukte mijn kaart?",
+          "ok": true
+        },
+        {
+          "q": "Aangepast contract?",
+          "ok": false
+        }
+      ],
+      "handled": "Afgehandeld",
+      "needsYou": "Heeft u nodig",
+      "joined": "Priya is aangesloten"
+    },
+    "statement": "Elpino beantwoordt wat het weet, doet wat u toestaat, en vraagt de rest aan een mens.",
+    "integrations": {
+      "eyebrow": "Integraties",
+      "titlePrefix": "Sluit aan op wat",
+      "titleHl": "u al gebruikt.",
+      "subtitle": "Betalingen voor opzoekingen en links, projecttools voor tickets, en MCP voor uw eigen systemen. Elpino zit in het midden, en alles wat u verbindt werkt ermee.",
+      "tags": [
+        "Betalingen",
+        "Tickets",
+        "Uw systemen"
+      ],
+      "cta": "Bekijk alle integraties"
+    },
+    "trust": {
+      "eyebrow": "Vertrouwen",
+      "titlePrefix": "Krachtig, met",
+      "titleHl": "de rem erop.",
+      "subtitle": "Dit is het reglement waaronder Elpino werkt. Het meeste staat altijd aan. De onderdelen die geld verplaatsen, schakelt u zelf in.",
+      "cta": "Lees de beveiligingsgids",
+      "rulebook": "Elpino's reglement",
+      "setByYou": "Door u ingesteld",
+      "guardrailsOn": "Waarborgen actief",
+      "alwaysOn": "Altijd aan",
+      "rules": [
+        {
+          "title": "Alleen antwoorden uit goedgekeurde kennis",
+          "desc": "Staat het niet in uw kennis, dan zegt het dat en biedt een mens aan."
+        },
+        {
+          "title": "Namen en e-mails verbergen voor de AI",
+          "desc": "Het model ziet referentiecodes, niet de identiteit van uw klanten."
+        },
+        {
+          "title": "Verifiëren voordat iets persoonlijks gebeurt",
+          "desc": "Eerst komt een e-mailcode of een ondertekend token."
+        },
+        {
+          "title": "Alleen tools die u heeft ingeschakeld",
+          "desc": "Elke MCP-tool wordt door u goedgekeurd, één voor één."
+        }
+      ],
+      "refundTitle": "AI terugbetalingen laten doen",
+      "refundOn": "Aan. De AI mag terugbetalen, volgens de instelling van de eigenaar van de werkruimte.",
+      "refundOff": "Standaard uit. Alleen de eigenaar van de werkruimte kan het inschakelen."
+    },
+    "pricing": {
+      "eyebrow": "Prijzen",
+      "titlePrefix": "Betaal voor de hulp,",
+      "titleHl": "niet voor het personeelsbestand.",
+      "subtitle": "Start gratis. Betaalde plannen worden gemeten naar het werk dat de AI doet.",
+      "cta": "Bekijk alle prijzen",
+      "plans": [
+        {
+          "name": "Gratis",
+          "big": "$0",
+          "note": "100 AI-berichten per maand",
+          "pts": [
+            "Geen kaart nodig",
+            "Widget, kennis en inbox",
+            "Overdrachten kosten nooit extra"
+          ]
+        },
+        {
+          "name": "Betaalde plannen",
+          "big": "Op basis van tegoed",
+          "note": "Een maandelijks AI-tegoed dat bij uw volume past",
+          "pts": [
+            "Betaal- en accounttools",
+            "Ruimte voor een groter team",
+            "Altijd bij te vullen"
+          ]
+        },
+        {
+          "name": "Extra teamleden",
+          "big": "Zitplaatspakketten",
+          "note": "Voeg zitplaatsen toe die vernieuwen met uw plan",
+          "pts": [
+            "Alleen als u groeit",
+            "Dezelfde inbox, meer handen",
+            "Altijd op te zeggen"
+          ]
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Vragen",
+      "titlePrefix": "Wat mensen",
+      "titleHl": "als eerste vragen.",
+      "items": [
+        {
+          "q": "Wat is Elpino?",
+          "a": "Een AI-klantenserviceplatform: een chatwidget voor uw website, een AI-agent die antwoordt vanuit uw kennis en echte betalingen controleert, een gedeelde teaminbox, en tickets als niemand vrij is."
+        },
+        {
+          "q": "Gaat de AI dingen verzinnen?",
+          "a": "Het antwoordt vanuit de kennis die u heeft goedgekeurd, en een controleronde toetst concepten aan tool-resultaten. Als het het niet weet, zegt het dat en biedt een mens aan."
+        },
+        {
+          "q": "Wat gebeurt er als het niet kan helpen?",
+          "a": "Het vraagt eerst de klant. Bij ja krijgt elk teamlid een deelname-melding en heeft 90 seconden om in te springen. Doet niemand dat, dan wordt een ticket aangemaakt en de klant gemaild."
+        },
+        {
+          "q": "Hoe lang duurt de installatie?",
+          "a": "De meeste teams zijn dezelfde dag live: voeg uw kennis toe, plak het widget-snippet en nodig uw team uit."
+        },
+        {
+          "q": "Is er een gratis plan?",
+          "a": "Ja: 100 AI-berichten per maand, geen kaart nodig."
+        },
+        {
+          "q": "Werkt het op andere kanalen?",
+          "a": "Websitechat is nu al live. Omnichannel komt in november."
+        }
+      ]
+    },
+    "closing": {
+      "title": "Geef uw klanten het antwoord voordat ze klaar zijn met typen.",
+      "subtitle": "Start gratis, leer het uw bedrijf, en laat het de herhaalvragen overnemen.",
+      "ctaPrimary": "Start gratis",
+      "ctaSecondary": "Praat met ons"
+    }
+  },
+  "pricing": {
+    "hero": {
+      "badge": "Prijzen",
+      "title": "Begin gratis. Groei wanneer je er klaar voor bent.",
+      "subtitle": "Elk nieuw account begint met AI-support, een gedeelde inbox en overdracht naar een mens — geen kaart nodig. Ontdek Elpino met je team en kies dan een plan wanneer je meer nodig hebt.",
+      "stickerFree": "Voor altijd gratis ✓",
+      "stickerNoCard": "Geen kaart nodig",
+      "ctaDashboard": "Naar dashboard",
+      "ctaStart": "Start gratis",
+      "billingPeriodLabel": "Factureringsperiode",
+      "monthly": "Maandelijks",
+      "annually": "Jaarlijks"
+    },
+    "planCards": {
+      "mostPopular": "Meest populair",
+      "save": "bespaar",
+      "freeForever": "Voor altijd gratis",
+      "discussCustomPlan": "of bespreek een aangepast plan",
+      "compareAllFeatures": "Vergelijk alle functies",
+      "whatsIncluded": "Wat is inbegrepen",
+      "builtForTeam": "Gemaakt voor je hele team",
+      "builtForTeamDesc": "Gedeelde kennis, één inbox en overdracht naar een mens wanneer nodig."
+    },
+    "comparison": {
+      "eyebrow": "Planvergelijking",
+      "titlePrefix": "Ontdek wat ",
+      "titleHl": "bij je team past.",
+      "subtitle": "Vergelijk capaciteit, plekken en producttoegang bij elk plan. Upgrade wanneer je supportoperatie meer ruimte nodig heeft.",
+      "featuresHeader": "Functies",
+      "popular": "Populair",
+      "billedAnnually": "jaarlijks gefactureerd",
+      "billedMonthly": "maandelijks gefactureerd",
+      "showAll": "Alle functies weergeven",
+      "showFewer": "Minder functies weergeven",
+      "included": "Inbegrepen",
+      "notIncluded": "Niet inbegrepen",
+      "categories": {
+        "aiRules": {
+          "name": "Wat de AI mag doen",
+          "rows": {
+            "allowance": {
+              "label": "Maandelijkse AI-toewijzing",
+              "description": "Free is beperkt tot 100 AI-berichten. Betaalde plannen bevatten een maandelijks dollartegoed dat de AI uitgeeft tijdens het werken, gedeeld door de hele workspace."
+            },
+            "whenOut": {
+              "label": "Wanneer de toewijzing op is",
+              "description": "De AI draagt nieuwe gesprekken over aan je team. Bij betaalde plannen kun je op elk moment tegoed opwaarderen of automatisch opwaarderen inschakelen."
+            },
+            "escalations": {
+              "label": "Overdrachten naar een mens",
+              "description": "Gesprekken die de AI overdraagt omdat het niet zeker kon antwoorden. De overdracht zelf kost nooit extra."
+            }
+          }
+        },
+        "seats": {
+          "name": "Wie kan inloggen",
+          "rows": {
+            "included": {
+              "label": "Inbegrepen plekken",
+              "description": "Teamleden die vallen onder de planprijs, inclusief de eigenaar van de workspace."
+            },
+            "extra": {
+              "label": "Extra plekken",
+              "description": "Elk teamlid boven de inbegrepen plekken, bij elk plan."
+            },
+            "ceiling": {
+              "label": "Plekkenlimiet",
+              "description": "Het punt waarop je een groter plan nodig hebt in plaats van nog een plek."
+            }
+          }
+        },
+        "product": {
+          "name": "Het product",
+          "rows": {
+            "widget": {
+              "label": "Chatwidget op de website",
+              "description": "De insluitbare chat waarmee je bezoekers echt praten."
+            },
+            "knowledge": {
+              "label": "Kennisbank & AI-antwoorden",
+              "description": "Scan je site of upload documenten; de AI antwoordt daaruit."
+            },
+            "storage": {
+              "label": "Kennisopslag",
+              "description": "Hoeveel gescande en geüploade inhoud de workspace kan bevatten."
+            },
+            "inbox": {
+              "label": "Gedeelde inbox & overdracht",
+              "description": "Één inbox voor het team, met AI-overdracht wanneer nodig."
+            },
+            "audit": {
+              "label": "AI-auditlog",
+              "description": "Elk antwoord, met de artikelen en zoekopdrachten waaruit het is opgebouwd."
+            },
+            "analytics": {
+              "label": "Bezoekersanalyse",
+              "description": "Live bezoekers, bronnen, landen en pagina's."
+            },
+            "profiles": {
+              "label": "Klantprofielen & geschiedenis",
+              "description": "Opgeslagen klantgegevens en hun eerdere gesprekken."
+            },
+            "domain": {
+              "label": "Verbonden domein",
+              "description": "Één workspace, één website — nog een nodig? start een tweede workspace."
+            },
+            "support": {
+              "label": "Support",
+              "description": "Hoe je ons bereikt wanneer iets een mens van onze kant nodig heeft."
+            }
+          }
+        }
+      }
+    },
+    "values": {
+      "handsOff": "Draagt over aan een mens",
+      "topUpOrHandoff": "Opwaarderen of overdragen",
+      "noExtraCharge": "Geen extra kosten",
+      "noLimit": "Geen limiet",
+      "standard": "Standaard",
+      "priority": "Prioriteit",
+      "messages": "berichten",
+      "credit": "tegoed",
+      "seatBundleSummary": "3 plekken voor $2, 5 voor $3"
+    },
+    "billing": {
+      "eyebrow": "Duidelijke, eenvoudige facturering",
+      "titleLine1": "Betaal voor wat de AI doet.",
+      "titleLine2": "Niet voor overdrachten.",
+      "subtitle": "Free bevat 100 AI-berichten per maand. Betaalde plannen bevatten een maandelijks AI-tegoed dat zoveel mogelijk gesprekken dekt, zodat een snelle vraag minder kost dan een lang heen-en-weer. Een gesprek overdragen aan je team is altijd gratis.",
+      "creditCard": {
+        "label": "Maandelijks AI-tegoed",
+        "amount": "Vanaf $7",
+        "note": "elke maand bij Starter",
+        "chatsUseCredit": "chats gebruiken tegoed",
+        "refillsMonthly": "wordt maandelijks aangevuld",
+        "desc": "Starter bevat $7, Growth $40 en Scale $240 AI-tegoed per maand. Meer nodig? Waardeer op elk moment op of schakel automatisch opwaarderen in.",
+        "cta": "Vergelijk plannen"
+      },
+      "handoffCard": {
+        "stamp": "Overdracht = gratis",
+        "label": "Extra kosten per overdracht",
+        "note": "Bij elk plan. Altijd."
+      },
+      "inboxCard": {
+        "title": "Jouw AI en je team, in één inbox.",
+        "desc": "De AI antwoordt vanuit je kennis. Wanneer een persoon nodig is, gaat je team verder met het volledige, al zichtbare gesprek.",
+        "cta": "Ontdek hoe het werkt"
+      }
+    },
+    "capacity": {
+      "eyebrow": "Capaciteit toevoegen",
+      "title": "Groei zonder je manier van werken te veranderen.",
+      "subtitle": "Voeg alleen mensen of AI-capaciteit toe wanneer je die nodig hebt. Je inbox, kennis en gespreksgeschiedenis blijven precies waar ze zijn.",
+      "teammatesTitle": "Extra teamleden",
+      "teammatesDesc": "Geef meer mensen hun eigen login terwijl ze dezelfde inbox, kennis en AI-tegoed delen. Ze blijven elke maand op je plan totdat je ze verwijdert.",
+      "perMonth": "per maand",
+      "seatsWord": "plekken",
+      "topUpAnytime": "Waardeer op elk moment op",
+      "onAnyPaidPlan": "bij elk betaald plan",
+      "creditTitle": "Extra AI-tegoed",
+      "creditDesc": "Laat de AI blijven antwoorden nadat je maandelijkse tegoed is gebruikt. Een gesprek overdragen aan je team kost nooit extra.",
+      "creditCards": [
+        {
+          "name": "Maandelijks tegoed",
+          "note": "Reset elke maand"
+        },
+        {
+          "name": "Opwaarderingen",
+          "note": "Verlopen nooit"
+        },
+        {
+          "name": "Automatisch opwaarderen",
+          "note": "Optioneel"
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Vragen over prijzen",
+      "subtitle": "De factureringsdetails waar mensen het meest naar vragen. Instellen, de AI, integraties en beveiliging worden behandeld in de volledige FAQ.",
+      "readFull": "Lees de volledige FAQ",
+      "items": [
+        {
+          "q": "Wat kosten de plannen?",
+          "a": "Free is $0. Maandelijkse plannen zijn Starter voor $12 met $7 AI-tegoed per maand, Growth voor $59 met $40, en Scale voor $299 met $240. Jaarlijkse facturering geeft twee maanden gratis — je betaalt voor tien maanden en krijgt er twaalf: Starter kost $120 per jaar ($10/maand), Growth $590 ($49,17/maand), en Scale $2.990 ($249,17/maand)."
+        },
+        {
+          "q": "Hoe werkt de AI-toewijzing?",
+          "a": "Free bevat 100 AI-berichten per maand. Elk antwoord dat de AI stuurt telt als één bericht, dus een korte chat gebruikt er weinig en een lang heen-en-weer meer. Betaalde plannen werken anders: ze bevatten een maandelijks AI-tegoed dat de AI uitgeeft tijdens het werken, dus een snelle vraag gebruikt minder dan een lang heen-en-weer. Starter bevat $7 tegoed per maand, Growth $40 en Scale $240."
+        },
+        {
+          "q": "Kosten overdrachten iets?",
+          "a": "Geen extra kosten. De overdracht zelf is gratis op elk plan, en de AI stopt op het moment dat een persoon het overneemt. Bij Free tellen berichten die de AI al vóór de overdracht heeft gestuurd nog steeds mee voor je 100; bij betaalde plannen geeft de AI alleen tegoed uit terwijl het antwoordt, en stopt met het uitgeven van tegoed op het moment dat een persoon het overneemt."
+        },
+        {
+          "q": "Kan de AI terugbetalingen doen?",
+          "a": "Alleen als de eigenaar van de workspace terugbetalingen inschakelt. Ze staan standaard uit. Zelfs met terugbetalingen uit kan de AI de betaling opzoeken en aanbieden de klant met je team te verbinden."
+        },
+        {
+          "q": "Wat gebeurt er als ik mijn AI-toewijzing opgebruik?",
+          "a": "De AI draagt nieuwe gesprekken direct over aan je team in plaats van te antwoorden. Bij een betaald plan kun je op elk moment tegoed opwaarderen, of automatisch opwaarderen inschakelen zodat het nooit stopt. Opwaarderingen verlopen nooit. Je maandelijkse tegoed reset elke factureringsperiode."
+        },
+        {
+          "q": "Hoeveel kost een extra teamlid?",
+          "a": "Extra plekken komen in pakketten bij elk plan, inclusief Free: 3 plekken voor $2 per maand, of 5 voor $3. Plekken en AI-tegoed worden volledig gescheiden gefactureerd — een teamlid toevoegen raakt je AI-toewijzing nooit."
+        },
+        {
+          "q": "Kan ik op elk moment opzeggen?",
+          "a": "Ja, via Instellingen → Facturering, zonder verplichting. Opzegging gaat in aan het einde van de huidige factureringsperiode, zodat je behoudt waarvoor je tot dan hebt betaald."
+        },
+        {
+          "q": "Wat gebeurt er als ik stop met betalen?",
+          "a": "De workspace valt terug naar het Free-plan aan het einde van de periode. Je kennisbank, gespreksgeschiedenis en instellingen blijven volledig intact."
+        }
+      ]
+    },
+    "enterprise": {
+      "badge": "Enterprise",
+      "title": "Support dat met je meegroeit.",
+      "subtitle": "Voor organisaties die meer klanten ondersteunen op meerdere websites en teams. Laten we de juiste capaciteit voor je support vinden.",
+      "features": [
+        "AI-tegoed ver boven het Scale-plan",
+        "Meerdere websites en groeiende teams",
+        "Gedeelde klantcontext en kennis",
+        "Volumeprijzen afgestemd op jouw behoeften"
+      ],
+      "talkTitle": "Laten we praten",
+      "customPricing": "Aangepaste prijzen beschikbaar",
+      "contactCta": "Contact met sales",
+      "talkPoints": [
+        "Je gespreksvolume bespreken",
+        "Je workspace en plekken plannen",
+        "Kennis over websites afstemmen",
+        "Onboarding- en SLA-behoeften verkennen"
+      ]
+    },
+    "plans": {
+      "free": {
+        "name": "Free",
+        "description": "Voor een oprichter die zijn eigen support beantwoordt. Echte AI, geen kaart.",
+        "cta": "Aan de slag",
+        "features": [
+          "Tot 100 AI-berichten/maand",
+          "2 plekken inbegrepen",
+          "Plekpakketten vanaf $0,60/plek",
+          "20 MB kennisbank",
+          "Website-chatwidget",
+          "Gedeelde inbox met overdracht"
+        ]
+      },
+      "starter": {
+        "name": "Starter",
+        "description": "Voor een klein team wiens support één inbox is ontgroeid.",
+        "cta": "Aan de slag",
+        "features": [
+          "$7 AI-tegoed elke maand",
+          "5 plekken inbegrepen",
+          "Plekpakketten vanaf $0,60/plek",
+          "200 MB kennisbank",
+          "Waardeer tegoed op elk moment op",
+          "Bezoekersanalyse"
+        ]
+      },
+      "growth": {
+        "name": "Growth",
+        "description": "Voor teams die support als een echte functie runnen, met de data om het te bewijzen.",
+        "cta": "Aan de slag",
+        "features": [
+          "$40 AI-tegoed elke maand",
+          "15 plekken inbegrepen",
+          "Plekpakketten vanaf $0,60/plek",
+          "1 GB kennisbank",
+          "Waardeer tegoed op elk moment op",
+          "Volledig AI-auditlog",
+          "Prioriteitssupport"
+        ]
+      },
+      "scale": {
+        "name": "Scale",
+        "description": "Voor support met hoog volume waar de AI het meeste werk draagt.",
+        "cta": "Aan de slag",
+        "features": [
+          "$240 AI-tegoed elke maand",
+          "40 plekken inbegrepen",
+          "Plekpakketten vanaf $0,60/plek",
+          "5 GB kennisbank",
+          "Waardeer tegoed op elk moment op",
+          "Integraties & API-toegang"
+        ]
+      }
+    }
+  },
+  "about": {
+    "typingLabel": "Elpino is aan het typen",
+    "hero": {
+      "badge": "Over Elpino",
+      "titlePrefix": "Klantenservice, ",
+      "titleHl": "menselijker gemaakt.",
+      "subtitle": "Elpino geeft klanten nuttige antwoorden uit de kennis die je al hebt, en houdt je team dichtbij voor de momenten die een persoon nodig hebben.",
+      "ctaMeet": "Maak kennis met Elpino",
+      "ctaReadStory": "Lees ons verhaal ↓",
+      "imageAlt": "Vier Elpino-luiaards die samenwerken om klanten te helpen",
+      "bubble": "Hoi, hoe kunnen we helpen? 👋"
+    },
+    "story": {
+      "eyebrow": "Waar het begon",
+      "titlePrefix": "Ons verhaal begint met een ",
+      "titleHl": "vraag.",
+      "subtitle": "Wat als klantenservicesoftware beide kanten van het gesprek zou helpen—niet alleen het bedrijf dat het beheert?",
+      "chatTitle": "Elpino",
+      "chatSub": "Vertelt ons verhaal",
+      "sys1": "Waar het begon",
+      "you1": "Wat als klantenservicesoftware beide kanten van het gesprek zou helpen, niet alleen het bedrijf dat het beheert?",
+      "elpino1": "Niemand opent een supportchat voor de lol.",
+      "elpino2": "Iemand probeert iets voor elkaar te krijgen. Iets stond in de weg. Ze willen een duidelijk antwoord en terug naar hun dag.",
+      "elpino3": "Op de andere kant is een team dat vertrouwde vragen, verspreide informatie, en meer gesprekken dan tijd afhandelt. Elpino bestaat om dat moment voor iedereen makkelijker te maken.",
+      "sys2": "Zo ziet dat eruit",
+      "you2": "Kan ik het e-mailadres van mijn account wijzigen?",
+      "aiLabel": "Elpino AI · uit je kennis",
+      "aiAnswer": "Ja. Open Instellingen, kies Profiel, en werk dan je contact-e-mail bij.",
+      "aiGuideLabel": "Gids voor accountinstellingen",
+      "sys3": "Een teamgenoot is altijd in de buurt wanneer nodig"
+    },
+    "roles": {
+      "eyebrow": "Onze rollen",
+      "titlePrefix": "Een team gebouwd voor ",
+      "titleHl": "het werk.",
+      "subtitle": "Hier zijn geen medewerkersfoto's. Maak in plaats daarvan kennis met de taken die Elpino is ontworpen om te doen—gestaag, doordacht, en met een menselijk team altijd betrokken.",
+      "joinedChat": "{name} is toegetreden tot de chat",
+      "items": [
+        {
+          "title": "De Luisteraar",
+          "task": "Begrijpt elke klantvraag",
+          "description": "Zet de kennis die je team al heeft om in een duidelijk, nuttig eerste antwoord."
+        },
+        {
+          "title": "De Sorteerder",
+          "task": "Houdt de inbox in beweging",
+          "description": "Vindt het signaal in de wachtrij, zodat de juiste gesprekken de juiste aandacht krijgen."
+        },
+        {
+          "title": "De Beschermer",
+          "task": "Weet wanneer een persoon nodig is",
+          "description": "Behandelt routinewerk met zorg en draagt de momenten over die menselijk oordeel nodig hebben."
+        },
+        {
+          "title": "De Groeier",
+          "task": "Leert wat klanten het meest helpt",
+          "description": "Brengt de hiaten, patronen en vragen naar boven die je support in de tijd verbeteren."
+        }
+      ]
+    },
+    "remote": {
+      "eyebrow": "Op afstand gebouwd",
+      "titlePrefix": "We werken op afstand sinds ",
+      "titleHl": "dag één.",
+      "subtitle": "We werken door duidelijk schrijven, gedeelde context en gerichte tijd. Waar iemand werkt is minder belangrijk dan de zorg en het oordeel die ze in het product leggen.",
+      "cta": "Bekijk vacatures",
+      "badge": "Op afstand sinds dag één",
+      "imageAlt": "Een verspreid team werkt samen met gedeelde AI-supporttools"
+    },
+    "team": {
+      "eyebrow": "Een klein team, voor nu",
+      "titleLine1": "Gebouwd met focus.",
+      "titleLine2Prefix": "Vormgegeven met ",
+      "titleHl": "jou.",
+      "subtitle": "Elpino is nog jong. Dat betekent dat de mensen die het gebruiken nog invloed kunnen hebben op wat het wordt. We luisteren aandachtig, lanceren zorgvuldig, en houden het probleem van de klant centraal.",
+      "cta": "Praat met ons",
+      "card1": "Aandachtig luisteren.",
+      "card2": "Helder bouwen.",
+      "card3": "Support makkelijker maken voor iedereen."
+    },
+    "faqSection": {
+      "eyebrow": "Iets meer over ons",
+      "titlePrefix": "Blij dat je ",
+      "titleHl": "het vraagt.",
+      "subtitle": "Een paar antwoorden voordat je je eigen gesprek begint. Tik op een vraag hieronder en Elpino reageert.",
+      "exploreLink": "Bekijk de volledige FAQ →"
+    },
+    "faqChat": {
+      "title": "Vraag het Elpino",
+      "sub": "Online · reageert direct",
+      "gladYouAsked": "Blij dat je het vraagt",
+      "tapQuestion": "Tik op een vraag",
+      "doneText": "Dat is alles voor nu. Wil je doorgaan?",
+      "exploreFull": "Bekijk de volledige FAQ"
+    },
+    "faqs": [
+      [
+        "Wat is Elpino?",
+        "Elpino is een AI-klantenserviceplatform met een chatwidget op de website, antwoorden uit je kennisbank, een gedeelde teaminbox, en overdracht naar mensen wanneer de AI niet kan helpen."
+      ],
+      [
+        "Vervangt Elpino mijn supportteam?",
+        "Elpino behandelt alledaagse vragen uit je kennis en betrekt je team wanneer een gesprek een persoon nodig heeft. Je team blijft deel van de supportervaring."
+      ],
+      [
+        "Hoe kan ik beginnen?",
+        "Begin met het gratis plan, dat 100 AI-berichten per maand bevat zonder kaart nodig. Voeg je kennis toe, verbind je website, en betrek je teamgenoten."
+      ],
+      [
+        "Hoe is de prijsstelling opgebouwd?",
+        "Free bevat 100 AI-berichten per maand, en betaalde plannen bevatten een maandelijks AI-tegoed. Extra teamgenoten komen in plekpakketten vanaf $0,60 per plek, en een gesprek overdragen aan een mens kost nooit extra. De prijspagina legt inbegrepen plekken en de minimumkosten van het gratis plan uit."
+      ]
+    ],
+    "closing": {
+      "titleLine1": "Er is meer te bouwen.",
+      "titleLine2": "Kom vormgeven wat er volgt.",
+      "ctaTry": "Probeer Elpino",
+      "ctaCareers": "Bekijk vacatures"
+    }
+  },
+  "helpdesk": {
+    "hero": {
+      "badge": "Elpino helpdesk",
+      "titlePrefix": "Support die ",
+      "titleHl": "zichzelf beantwoordt.",
+      "subtitle": "Één balie voor een AI die oplost, een team dat aansluit wanneer het telt, en tickets die nooit wegglippen. Bekijk hoe het een vraag oppakt.",
+      "ctaStart": "Start gratis",
+      "ctaFeatures": "Bekijk alle functies"
+    },
+    "prompt": {
+      "customerLabel": "Klant",
+      "listening": "Elpino luistert…",
+      "asks": [
+        {
+          "q": "Ben ik dubbel gefactureerd voor mijn upgrade?",
+          "steps": [
+            "Je betaalgeschiedenis gecontroleerd",
+            "Eén afschrijving en één mislukte poging gevonden"
+          ],
+          "a": "Je bent maar één keer belast. De tweede poging is mislukt en er is nooit geld afgeschreven."
+        },
+        {
+          "q": "Waar is mijn bestelling #4821?",
+          "steps": [
+            "Je geverifieerd met een e-mailcode",
+            "De bestelling opgezocht in je winkel"
+          ],
+          "a": "Gisteren verzonden en komt donderdag aan. Trackinglink verzonden."
+        },
+        {
+          "q": "Kan ik met iemand over facturering praten?",
+          "steps": [
+            "Geen tool kan facturatiegegevens wijzigen",
+            "Jou eerst gevraagd, toen het team gewaarschuwd"
+          ],
+          "a": "Priya van ons team is net bij deze chat aangesloten."
+        }
+      ]
+    },
+    "marquee": {
+      "ariaLabel": "Wat er op de balie ligt",
+      "words": [
+        "AI-agent",
+        "Gedeelde inbox",
+        "Tickets",
+        "Kennis",
+        "Betalingen",
+        "MCP-tools",
+        "Deelname-meldingen",
+        "Geverifieerde identiteit",
+        "Omnichannel · november"
+      ]
+    },
+    "story": {
+      "eyebrow": "Één gesprek",
+      "titlePrefix": "Bekijk hoe een vraag ",
+      "titleHl": "de balie doorloopt.",
+      "stepLabel": "Stap {n} / 05",
+      "chapters": [
+        {
+          "title": "Een klant schrijft",
+          "body": "Vanuit de chatwidget op je site, met locatie, apparaat en de pagina waar ze zich al bevinden al bijgevoegd."
+        },
+        {
+          "title": "De AI doet het werk",
+          "body": "Ze antwoordt uit je kennis, herinnert zich de klant, controleert wie ze zijn, en gebruikt je betalingen en MCP-tools om dingen echt op te lossen."
+        },
+        {
+          "title": "Je team sluit aan met één tik",
+          "body": "Alleen wanneer ze niet kan helpen, en alleen na het aan de klant te hebben gevraagd. Iedereen krijgt een deelname-melding, en de eerste persoon die tikt neemt de chat over."
+        },
+        {
+          "title": "Niets valt weg",
+          "body": "Als niemand binnen 90 seconden beschikbaar is, wordt een ticket aangemaakt met de reden en een samenvatting, en krijgt de klant een referentie per e-mail."
+        },
+        {
+          "title": "Je leert het haar één keer",
+          "body": "Voeg toe wat ontbrak aan je kennisbank. Volgende keer weet de AI het gewoon."
+        }
+      ],
+      "visuals": {
+        "ask": {
+          "bubble": "Hoi, ik kan mijn factuur van vorige maand niet vinden.",
+          "chips": [
+            "Pune, India",
+            "Chrome · macOS",
+            "Op /facturering"
+          ]
+        },
+        "ai": {
+          "rows": [
+            [
+              "search_knowledge",
+              "1 match"
+            ],
+            [
+              "send_email_code",
+              "gecontroleerd"
+            ],
+            [
+              "get_receipt",
+              "gevonden · verzonden"
+            ]
+          ],
+          "bubble": "Hier is je factuur. Ik heb je ook een kopie per e-mail gestuurd."
+        },
+        "team": {
+          "title": "Een nieuwe chat heeft een persoon nodig",
+          "sub": "Melding verzonden naar 4 teamgenoten",
+          "join": "Aansluiten",
+          "note": "Wie het eerst tikt, neemt het over. De melding verdwijnt voor de rest."
+        },
+        "ticket": {
+          "label": "Ticket",
+          "title": "Supportescalatie · Aisha Khan",
+          "reason": "Reden: wijziging van factureringsland vereist een persoon.",
+          "chips": [
+            "Issues-pagina",
+            "Klant per e-mail geïnformeerd"
+          ]
+        },
+        "learn": {
+          "title": "Gids voor facturen en bonnen",
+          "added": "Toegevoegd",
+          "note": "De volgende klant krijgt dit antwoord direct."
+        }
+      }
+    },
+    "bento": {
+      "eyebrow": "Onder de motorkap",
+      "titlePrefix": "Kleine details, ",
+      "titleHl": "goed gedaan.",
+      "subtitle": "De dingen die je zou controleren voordat je je klanten aan een AI toevertrouwt.",
+      "redact": {
+        "prefix": "Hoi, ik ben",
+        "middle": "bereik me op"
+      },
+      "privacy": {
+        "title": "Het model ziet nooit namen of e-mails.",
+        "desc": "Identiteiten worden vervangen door referentiecodes voordat de AI een gesprek leest, en geheimen worden verwijderd."
+      },
+      "languages": {
+        "title": "Antwoordt in de taal van je klant",
+        "note": "Je kiest de antwoordtaal in de instellingen."
+      },
+      "verified": {
+        "title": "Gecontroleerd voordat het handelt",
+        "note": "Een eenmalige e-mailcode of een ondertekend token van je app."
+      },
+      "tools": {
+        "title": "Jouw tools, jouw regels",
+        "rows": [
+          [
+            "get_order",
+            true
+          ],
+          [
+            "track_shipment",
+            true
+          ],
+          [
+            "delete_customer",
+            false
+          ]
+        ]
+      },
+      "handoff": {
+        "title": "Vraagt voordat het overdraagt",
+        "ask": "Dat kan ik zelf niet wijzigen. Zal ik je met ons team verbinden?",
+        "reply": "Ja, graag"
+      }
+    },
+    "statement": "Elpino antwoordt wat het weet, doet wat je toestaat, en vraagt een mens voor de rest.",
+    "start": {
+      "eyebrow": "Ga aan de slag",
+      "titlePrefix": "Live in ",
+      "titleHl": "één middag.",
+      "note": "Website-chat is vandaag al live. Omnichannel komt in november.",
+      "steps": [
+        {
+          "title": "Meld je gratis aan",
+          "desc": "100 AI-berichten per maand. Geen kaart."
+        },
+        {
+          "title": "Leer het",
+          "desc": "Voeg je site toe, bestanden, of schrijf pagina's."
+        },
+        {
+          "title": "Plak het snippet",
+          "desc": "De widget verschijnt op je site."
+        },
+        {
+          "title": "Nodig je team uit",
+          "desc": "Zodat mensen klaarstaan wanneer het vraagt."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Vragen",
+      "titlePrefix": "Goed om te ",
+      "titleHl": "weten.",
+      "items": [
+        [
+          "Wat is de Elpino helpdesk?",
+          "De hele supportwerkruimte: een chatwidget, een AI-agent, een gedeelde inbox, tickets en een kennisbank, die allemaal samenwerken."
+        ],
+        [
+          "Moet ik mijn oude helpdesk behouden?",
+          "Nee. Elpino omvat chat, de AI-agent, de gedeelde inbox en tickets. Tickets kunnen nog steeds naar Trello of Asana worden gestuurd als je team daar werkt."
+        ],
+        [
+          "Is er een gratis plan?",
+          "Ja: 100 AI-berichten per maand, geen kaart nodig."
+        ],
+        [
+          "Welke kanalen worden ondersteund?",
+          "Website-chat is vandaag al live. Omnichannel komt in november."
+        ],
+        [
+          "Kan mijn team het ook gebruiken?",
+          "Ja. Nodig teamgenoten uit, voeg plekken toe terwijl je groeit, en ze krijgen deelname-meldingen wanneer een klant een persoon nodig heeft."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Geef je klanten een antwoord voordat ze klaar zijn met typen.",
+      "ctaStart": "Start gratis",
+      "ctaFeatures": "Alle functies"
+    }
+  },
+  "nav": {
+    "startFreeTrial": "Start gratis proefperiode",
+    "groups": {
+      "product": "Product",
+      "solutions": "Oplossingen",
+      "resources": "Bronnen"
+    },
+    "sections": {
+      "getStarted": "Aan de slag",
+      "capabilities": "Mogelijkheden",
+      "platform": "Platform",
+      "whoItIsFor": "Voor wie het is",
+      "learningGuides": "Leren & gidsen",
+      "trustLegal": "Vertrouwen & juridisch",
+      "community": "Community",
+      "company": "Bedrijf"
+    },
+    "items": {
+      "Elpino helpdesk": "Elpino helpdesk",
+      "Elpino AI Agent": "Elpino AI-agent",
+      "Inbox": "Inbox",
+      "Tickets": "Tickets",
+      "Knowledge Hub": "Kennishub",
+      "Integrations": "Integraties",
+      "Safety & security": "Veiligheid",
+      "All features": "Alle functies",
+      "For Founders": "Voor oprichters",
+      "For Busy Teams": "Voor drukke teams",
+      "For Developers": "Voor ontwikkelaars",
+      "See Pricing": "Bekijk prijzen",
+      "Talk to Us": "Praat met ons",
+      "Documentation": "Documentatie",
+      "Help & FAQ": "Help & FAQ",
+      "Trust Center": "Vertrouwenscentrum",
+      "Privacy Policy": "Privacybeleid",
+      "Terms of Service": "Servicevoorwaarden",
+      "Blog": "Blog",
+      "Changelog": "Wijzigingslog",
+      "Brand Kit": "Merkkit",
+      "About Us": "Over ons",
+      "Careers": "Carrières",
+      "Contact Sales": "Neem contact op met sales"
+    },
+    "megaMenu": {
+      "explore": "Ontdekken",
+      "seePricing": "Bekijk prijzen",
+      "seePricingNote": "Begin gratis. Betaal terwijl je team groeit.",
+      "freshFromBlog": "Nieuw van de blog"
+    },
+    "featured": {
+      "product": {
+        "title": "AI eerst. Een mens op het moment dat het telt.",
+        "text": "Elpino antwoordt uit je eigen kennis en draagt de chat dan met het volledige verhaal over aan een teamgenoot.",
+        "cta": "Ontmoet de AI-agent"
+      },
+      "solutions": {
+        "title": "Gemaakt voor hoe jij werkt",
+        "text": "Oprichters, winkels en drukke teams krijgen elk een passende opzet, live binnen een middag.",
+        "cta": "Vind wat bij je past"
+      },
+      "resources": {
+        "title": "Live in drie stappen",
+        "text": "Plak één regel, leer het je documenten, schakel het in. De gidsen begeleiden je bij elke stap.",
+        "cta": "Open de documentatie"
+      }
+    },
+    "pricing": "Prijzen",
+    "contactSales": "Neem contact op met sales",
+    "login": "Inloggen",
+    "goToDashboard": "Naar dashboard",
+    "getStarted": "Beginnen"
+  },
+  "footer": {
+    "ticker": [
+      "AI-antwoorden uit je eigen kennis",
+      "Overdracht aan mensen, altijd gratis",
+      "100 gratis AI-berichten",
+      "Een gedeelde inbox",
+      "Live in één middag"
+    ],
+    "cta": {
+      "badge": "Klaar wanneer jij het bent",
+      "title": "Geef elke klant een nuttig antwoord.",
+      "subtitle": "Begin gratis met AI-support, een gedeelde inbox en overdracht naar mensen. Geen kaart nodig.",
+      "ctaStart": "Start gratis",
+      "ctaPricing": "Bekijk prijzen"
+    },
+    "description": "Elpino helpt teams klanten te antwoorden met AI gebaseerd op hun eigen kennis, en draagt gesprekken over aan een persoon wanneer nodig.",
+    "blog": "Blog",
+    "contact": "Contact",
+    "copyright": "© {year} Elpino Inc. Alle rechten voorbehouden.",
+    "privacy": "Privacybeleid",
+    "terms": "Servicevoorwaarden",
+    "security": "Beveiliging"
+  },
+  "aiAgent": {
+    "hero": {
+      "badge": "AI-agent",
+      "titlePrefix": "Maak kennis met je nieuwste ",
+      "titleHl": "supportmedewerker.",
+      "subtitle": "Elpino begint op dag één al met kennis van je bedrijf. Het onthoudt elke klant, controleert wie ze zijn voordat het handelt, werkt met je betalings- en bestelsystemen via MCP, en vraagt voordat het ooit een chat aan je team overdraagt.",
+      "ctaHire": "Neem Elpino aan, gratis",
+      "ctaFeatures": "Bekijk alle functies"
+    },
+    "badge": {
+      "staffLabel": "Elpino · Personeel",
+      "subtitle": "AI-supportagent",
+      "skills": [
+        "Antwoordt uit je documenten",
+        "Verifieert identiteit",
+        "Controleert betalingen",
+        "Gebruikt je MCP-tools",
+        "Vraagt voor overdracht"
+      ],
+      "startDateLabel": "Startdatum",
+      "startDateValue": "Vandaag",
+      "clearanceLabel": "Toegangsniveau",
+      "clearanceValue": "Jij besluit",
+      "barcodeNote": "EL-0001 · Klokt nooit uit"
+    },
+    "trace": {
+      "aiAgentLabel": "AI-agent",
+      "customerMsg": "Hoi, waar is mijn bestelling #4821?",
+      "agentReply": "Goed nieuws, Aisha's bestelling is gisteren verzonden en komt donderdag aan. Ik heb je ook de trackinglink per e-mail gestuurd.",
+      "whatAgentDoing": "Wat de agent doet",
+      "resolved": "Opgelost",
+      "working": "Aan het werk",
+      "idle": "Inactief",
+      "waiting": "Wachten op een klantbericht…",
+      "steps": [
+        {
+          "kind": "route",
+          "text": "router → supportspecialist"
+        },
+        {
+          "kind": "tool",
+          "text": "recall_conversation(“bestelling 4821”)",
+          "result": "2 eerdere berichten"
+        },
+        {
+          "kind": "tool",
+          "text": "get_past_conversations",
+          "result": "1 opgeloste chat vorige maand"
+        },
+        {
+          "kind": "verify",
+          "text": "send_email_code → check_email_code",
+          "result": "identiteit geverifieerd"
+        },
+        {
+          "kind": "mcp",
+          "text": "mcp_shop__get_order(“4821”)",
+          "result": "verzonden · komt donderdag aan"
+        },
+        {
+          "kind": "review",
+          "text": "controle",
+          "result": "feiten komen overeen met toolresultaten"
+        },
+        {
+          "kind": "done",
+          "text": "antwoord verzonden · mark_resolved"
+        }
+      ]
+    },
+    "watchIt": {
+      "eyebrow": "Eerste taak",
+      "titlePrefix": "Bekijk hoe het ",
+      "titleHl": "een echt verzoek behandelt.",
+      "subtitle": "Een klant vraagt waar zijn bestelling is. Rechts staat alles wat de agent doet voordat het antwoordt.",
+      "note": "Voorbeeldgesprek. De getoonde toolnamen zijn degene die de agent echt aanroept."
+    },
+    "onboard": {
+      "eyebrow": "Onboarding",
+      "titlePrefix": "Zes stappen tot de ",
+      "titleHl": "eerste dag.",
+      "subtitle": "Vink ze af. Er is geen trainingsperiode, en elke stap is een instelling die jij bepaalt.",
+      "readyBadge": "Klaar om te werken!",
+      "items": [
+        {
+          "t": "Leer het je website en bestanden",
+          "d": "Crawl pagina's, upload documenten, schrijf je eigen.",
+          "href": "/product/knowledge-hub"
+        },
+        {
+          "t": "Plak het widget-snippet",
+          "d": "Eén regel en de chat verschijnt op je site."
+        },
+        {
+          "t": "Verbind Stripe of Razorpay",
+          "d": "Zodat het betalingen en abonnementen kan controleren."
+        },
+        {
+          "t": "Sluit je MCP-tools aan",
+          "d": "Schakel alleen de tools in die het mag gebruiken."
+        },
+        {
+          "t": "Besluit over terugbetalingen",
+          "d": "Ze staan uit totdat jij ze aanzet."
+        },
+        {
+          "t": "Nodig je team uit",
+          "d": "Zodat mensen klaarstaan wanneer het erom vraagt.",
+          "href": "/product/inbox"
+        }
+      ]
+    },
+    "customerFile": {
+      "eyebrow": "Je klant leren kennen",
+      "titlePrefix": "Het dossier ",
+      "titleHl": "van elke klant.",
+      "subtitle": "Voordat het antwoordt, stelt de agent een dossier samen over de persoon die het helpt. Tik op een bron om te zien wat die toevoegt.",
+      "sourcesLabel": "Klantdossier · {n} van {total} bronnen",
+      "sampleNote": "Voorbeeldgegevens. In het echte systeem ziet de AI referentiecodes in plaats van de naam en e-mail van de klant.",
+      "sources": [
+        {
+          "key": "conv",
+          "title": "Dit gesprek",
+          "how": "Onthoudt wat er is gezegd en kan terugkijken naar details die het nodig heeft, zelfs in een lange chat.",
+          "rows": [
+            [
+              "Vroeg over",
+              "Bestelling #4821"
+            ],
+            [
+              "Wil",
+              "Een leverdatum"
+            ]
+          ]
+        },
+        {
+          "key": "hist",
+          "title": "Eerdere gesprekken",
+          "how": "Kent eerdere chats met dezelfde persoon, zodat ze zich nooit herhalen.",
+          "rows": [
+            [
+              "Laatste chat",
+              "Inlogprobleem, opgelost"
+            ],
+            [
+              "Aantal keer contact",
+              "2"
+            ]
+          ]
+        },
+        {
+          "key": "id",
+          "title": "Geverifieerde identiteit",
+          "how": "Bevestigt wie ze zijn met een eenmalige e-mailcode of een ondertekend token van je app voordat het iets persoonlijks aanraakt.",
+          "rows": [
+            [
+              "Identiteit",
+              "Geverifieerd via e-mailcode"
+            ]
+          ]
+        },
+        {
+          "key": "pay",
+          "title": "Betalingen",
+          "how": "Zoekt echte betalingen en abonnementen op in Stripe of Razorpay, en kan bonnen en betaallinks versturen.",
+          "rows": [
+            [
+              "Plan",
+              "Growth · actief"
+            ],
+            [
+              "Laatste betaling",
+              "Betaald, bon verzonden"
+            ]
+          ]
+        },
+        {
+          "key": "mcp",
+          "title": "Jouw systemen (MCP)",
+          "how": "Roept de tools aan die je goedkeurt op je eigen MCP-servers: bestellingen, accounts, boekingen, alles wat je blootstelt.",
+          "rows": [
+            [
+              "Bestelling #4821",
+              "Verzonden · komt donderdag aan"
+            ]
+          ]
+        },
+        {
+          "key": "kb",
+          "title": "Jouw kennis",
+          "how": "Doorzoekt alles wat je het hebt geleerd en kan een actuele pagina van je site lezen voor verse details.",
+          "rows": [
+            [
+              "Leveringsbeleid",
+              "3–5 werkdagen"
+            ]
+          ]
+        }
+      ]
+    },
+    "mcp": {
+      "eyebrow": "MCP-plugins",
+      "titlePrefix": "Toegangsverzoek: ",
+      "titleHl": "jouw systemen.",
+      "subtitle": "Verbind tot vijf MCP-servers, of dat je winkel, je CRM of je boekingssysteem is. Elpino ontdekt hun tools, en jij schakelt precies degene in die de agent mag gebruiken. Probeer het bedieningspaneel hieronder.",
+      "serverTitle": "De MCP-server van je winkel",
+      "toolsDiscovered": "{n} tools ontdekt",
+      "verifiedCustomers": "Geverifieerde klanten",
+      "anyVisitor": "Elke bezoeker",
+      "destructive": "Destructief",
+      "changesData": "Wijzigt gegevens",
+      "readOnly": "Alleen-lezen",
+      "needsVerified": "Vereist geverifieerde klant",
+      "whatAgentSees": "Wat de agent kan zien",
+      "toolsAvailable": "tools nu beschikbaar",
+      "tools": [
+        {
+          "name": "get_order",
+          "desc": "Een bestelling en status opzoeken",
+          "write": false,
+          "on": true
+        },
+        {
+          "name": "track_shipment",
+          "desc": "Live tracking voor een pakket",
+          "write": false,
+          "on": true
+        },
+        {
+          "name": "list_products",
+          "desc": "Catalogus en voorraadniveaus",
+          "write": false,
+          "on": true
+        },
+        {
+          "name": "update_address",
+          "desc": "Een afleveradres wijzigen",
+          "write": true,
+          "on": true
+        },
+        {
+          "name": "cancel_order",
+          "desc": "Een nog niet verzonden bestelling annuleren",
+          "write": true,
+          "on": false
+        },
+        {
+          "name": "delete_customer",
+          "desc": "Een klantrecord verwijderen",
+          "write": true,
+          "on": false,
+          "danger": true
+        }
+      ],
+      "bullets": [
+        "Een uitgeschakelde tool is onzichtbaar voor de agent",
+        "Elke aanroep wordt opnieuw gecontroleerd tegen je lijst op de server",
+        "Tools die gegevens wijzigen hebben altijd een geverifieerde klant nodig",
+        "Servercredentials worden versleuteld opgeslagen"
+      ],
+      "features": [
+        {
+          "title": "Betalingen, ingebouwd",
+          "desc": "Verbind Stripe of Razorpay en de agent kan betalingen en abonnementen opzoeken, bonnen en betaallinks versturen, en een abonnement opzeggen."
+        },
+        {
+          "title": "Breng elke MCP-server mee",
+          "desc": "Alles wat MCP spreekt werkt, dus jij bepaalt welke tools de agent krijgt."
+        },
+        {
+          "title": "Elpino's eigen MCP-server",
+          "desc": "De eigen tools van je klanten kunnen hun Elpino-plan, gebruik en betalingen via MCP lezen."
+        }
+      ]
+    },
+    "orgChart": {
+      "eyebrow": "Het team erachter",
+      "titlePrefix": "Één agent. ",
+      "titleHl": "Een heel organigram.",
+      "subtitle": "Elk bericht wordt naar de juiste specialist gerouteerd, en niets gaat naar buiten voordat een controleur de feiten checkt.",
+      "router": "Router",
+      "routerNote": "kiest de specialist",
+      "reviewer": "Controleur",
+      "reviewerNote": "controleert het concept tegen toolresultaten",
+      "polish": "Polijsten",
+      "polishNote": "dan ziet de klant het",
+      "footer": "Moeilijke gevallen worden geëscaleerd naar een sterker redeneermodel, en een terugvalmodel dekt storingen bij providers.",
+      "lanes": [
+        {
+          "k": "Verkoop",
+          "d": "Plannen, prijzen, passendheid"
+        },
+        {
+          "k": "Support",
+          "d": "Accounts, betalingen, handleidingen"
+        },
+        {
+          "k": "Technisch",
+          "d": "Fouten, installatie, integratie"
+        }
+      ]
+    },
+    "shift": {
+      "eyebrow": "Een dag op het werk",
+      "titlePrefix": "Één dienst, ",
+      "titleHl": "van begin tot eind.",
+      "subtitle": "Een voorbeelddag, met alleen dingen die de agent echt doet.",
+      "items": [
+        {
+          "time": "2:14",
+          "t": "Beantwoordt een prijsvraag",
+          "d": "Je team slaapt. Elpino antwoordt vanuit je kennisbank."
+        },
+        {
+          "time": "9:05",
+          "t": "Verifieert een klant, lost een betaling op",
+          "d": "Bevestigt hen via e-mailcode, vindt de mislukte betaling, stuurt een nieuwe betaallink."
+        },
+        {
+          "time": "11:20",
+          "t": "Controleert een bestelling in je winkel",
+          "d": "Roept je MCP-server aan, leest de status en deelt de tracking."
+        },
+        {
+          "time": "13:30",
+          "t": "Komt iets tegen dat het niet kan",
+          "d": "Zegt dat, vraagt eerst de klant, waarschuwt dan het hele team."
+        },
+        {
+          "time": "15:42",
+          "t": "Niemand vrij? Het laat het niet vallen",
+          "d": "Vertelt de klant de waarheid en dient een ticket in met een e-mail-follow-up."
+        }
+      ]
+    },
+    "review": {
+      "eyebrow": "Functioneringsgesprek",
+      "titlePrefix": "Een eerlijk ",
+      "titleHl": "scorekaart.",
+      "subtitle": "Illustratieve beoordelingen, inclusief het zwakke punt.",
+      "employeeBadge": "Medewerker: Elpino",
+      "quote": "“Geweldig met routinevragen en overschrijdt nooit grenzen. Houd de kennisbank actueel en het blijft beter worden.”",
+      "items": [
+        {
+          "k": "Volgt jouw beleid",
+          "n": 5,
+          "note": "Antwoordt alleen vanuit wat jij hebt goedgekeurd."
+        },
+        {
+          "k": "Weet wanneer om hulp te vragen",
+          "n": 5,
+          "note": "Vraagt eerst de klant, brengt dan je team erbij."
+        },
+        {
+          "k": "Blijft binnen zijn machtigingen",
+          "n": 5,
+          "note": "Alleen de tools die jij hebt ingeschakeld. Terugbetalingen standaard uit."
+        },
+        {
+          "k": "Weet wat je het nooit hebt verteld",
+          "n": 2,
+          "note": "Het kan niet antwoorden wat niet in je kennis staat. Voeg meer toe om dit te verhogen."
+        }
+      ]
+    },
+    "guards": {
+      "eyebrow": "Waarborgen",
+      "titlePrefix": "Het bedrijfs-",
+      "titleHl": "handboek.",
+      "subtitle": "De regels waaronder Elpino werkt. Elke is een controle die jij bezit.",
+      "items": [
+        {
+          "t": "Het model ziet nooit namen of e-mails",
+          "d": "Identiteiten in een gesprek worden vervangen door referentiecodes voordat de AI het leest, en geheimen zoals sleutels en tokens worden verwijderd."
+        },
+        {
+          "t": "Terugbetalingen staan uit tot jij het zegt",
+          "d": "Geldbewegende acties zijn opt-in en worden gecontroleerd door de eigenaar van de workspace."
+        },
+        {
+          "t": "Jij keurt elke tool goed",
+          "d": "De agent ziet alleen MCP-tools die jij hebt ingeschakeld, en tools die gegevens wijzigen hebben een geverifieerde klant nodig."
+        },
+        {
+          "t": "Vraag eerst, draag dan over",
+          "d": "Als het geen tool heeft voor de taak, zegt het dat en vraagt het voordat het je team erbij haalt."
+        },
+        {
+          "t": "Feiten worden gecontroleerd",
+          "d": "Een controlestap checkt het concept tegen toolresultaten voordat het wordt verzonden."
+        },
+        {
+          "t": "Identiteit vóór iets persoonlijks",
+          "d": "Eerst e-mailcode of ondertekend token, zodat het nooit een account met een vreemde bespreekt."
+        }
+      ]
+    },
+    "compare": {
+      "eyebrow": "Geen chatbot",
+      "titlePrefix": "Chatbot vs. ",
+      "titleHl": "Elpino-agent.",
+      "headerA": "Een typische chatbot",
+      "headerB": "Elpino AI-agent",
+      "rows": [
+        [
+          "Zoekt artikelen en stopt",
+          "Zoekt, raadpleegt records en handelt"
+        ],
+        [
+          "Behandelt iedereen als een vreemde",
+          "Verifieert identiteit, onthoudt eerdere chats"
+        ],
+        [
+          "“Neem contact op met support” bij vastlopen",
+          "Vraagt eerst, waarschuwt het team, dient een ticket in als niemand vrij is"
+        ],
+        [
+          "Kan je systemen niet zien",
+          "Roept de MCP-tools aan die jij goedkeurt"
+        ],
+        [
+          "Antwoorden zijn niet te vertrouwen",
+          "Feiten gecontroleerd tegen toolresultaten"
+        ]
+      ]
+    },
+    "faq": {
+      "eyebrow": "Vragen",
+      "titlePrefix": "Goed om te ",
+      "titleHl": "weten.",
+      "items": [
+        [
+          "Wat is MCP?",
+          "Het Model Context Protocol, een gestandaardiseerde manier voor een AI om tools op een ander systeem aan te roepen. Verbind een MCP-server en Elpino ontdekt de tools. Jij kiest dan welke de agent mag gebruiken."
+        ],
+        [
+          "Hoeveel MCP-servers kan ik verbinden?",
+          "Tot vijf, met tot 15 ingeschakelde tools per server."
+        ],
+        [
+          "Kan de agent dingen in mijn systemen wijzigen?",
+          "Alleen via tools die jij hebt ingeschakeld, en tools die gegevens wijzigen vereisen altijd een klant met een geverifieerde e-mail."
+        ],
+        [
+          "Hoe weet het wie de klant is?",
+          "Uit het gesprek, eerdere chats met hen, en een verificatiestap: een eenmalige e-mailcode of een ondertekend token van je app."
+        ],
+        [
+          "Kan het terugbetalingen doen?",
+          "Alleen als de eigenaar van de workspace terugbetalingen inschakelt. Ze staan standaard uit."
+        ],
+        [
+          "Wat gebeurt er als het iets niet kan oplossen?",
+          "Het zegt dat en vraagt de klant of hij verbonden wil worden met je team. Iedereen in het team krijgt 90 seconden een deelname-melding, en als niemand meedoet wordt automatisch een ticket aangemaakt."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Je nieuwste medewerker staat klaar om te beginnen.",
+      "subtitle": "Leer het je bedrijf, sluit je tools aan, en stel de grenzen in.",
+      "ctaStart": "Start gratis",
+      "ctaKnowledgeHub": "Bekijk de Kennishub"
+    }
+  },
+  "inbox": {
+    "hero": {
+      "badge": "Gedeelde inbox",
+      "titlePrefix": "Één gesprek. ",
+      "titleHl": "Iedereen die erbij moet zijn.",
+      "subtitle": "De AI houdt het gesprek gaande totdat een persoon nodig is, je hele team wordt gelijk gewaarschuwd, en wie er ook bij komt, krijgt de volledige geschiedenis. Volg één echt gesprek van het eerste bericht tot opgelost.",
+      "ctaOpen": "Open je inbox",
+      "ctaPricing": "Bekijk de prijzen"
+    },
+    "filters": [
+      "Alle",
+      "Ongelezen",
+      "Gelezen",
+      "Opgelost"
+    ],
+    "desk": {
+      "stages": [
+        {
+          "key": "ai",
+          "label": "AI beantwoordt",
+          "badge": "AI",
+          "banner": "Elpino behandelt dit gesprek"
+        },
+        {
+          "key": "ask",
+          "label": "Persoon nodig",
+          "badge": "Mens nodig",
+          "banner": "Elk teamlid kreeg een deelnamemelding. 90 seconden om erbij te springen"
+        },
+        {
+          "key": "join",
+          "label": "Teamlid neemt het over",
+          "badge": "Priya",
+          "banner": "Priya is erbij gekomen. De melding is voor iedereen verdwenen"
+        },
+        {
+          "key": "back",
+          "label": "Terugsturen",
+          "badge": "AI",
+          "banner": "Priya heeft het gesprek terug aan Elpino gegeven"
+        },
+        {
+          "key": "done",
+          "label": "Opgelost",
+          "badge": "Opgelost",
+          "banner": "Opgelost. Heropen op elk moment als ze weer schrijven"
+        }
+      ],
+      "lines": [
+        {
+          "at": 0,
+          "from": "you",
+          "text": "Hoi, ik ben verhuisd naar een ander land. Kun je het factuurland van mijn account bijwerken?"
+        },
+        {
+          "at": 1,
+          "from": "ai",
+          "text": "Ik kan factuurgegevens niet zelf wijzigen. Wil je dat ik je met ons team verbind?"
+        },
+        {
+          "at": 1,
+          "from": "you",
+          "text": "Ja, graag"
+        },
+        {
+          "at": 2,
+          "from": "sys",
+          "text": "Priya is bij het gesprek gekomen"
+        },
+        {
+          "at": 2,
+          "from": "team",
+          "text": "Hoi! Ik neem het over. Ik heb je factuurland bijgewerkt."
+        },
+        {
+          "at": 3,
+          "from": "sys",
+          "text": "Priya heeft het gesprek terug aan Elpino gegeven"
+        },
+        {
+          "at": 3,
+          "from": "ai",
+          "text": "Voor elkaar. Kan ik nog iets voor je doen?"
+        },
+        {
+          "at": 4,
+          "from": "you",
+          "text": "Dat was het, bedankt!"
+        },
+        {
+          "at": 4,
+          "from": "sys",
+          "text": "Gesprek opgelost"
+        }
+      ],
+      "rail": [
+        "Space",
+        "Inbox",
+        "Analytics",
+        "Contacten",
+        "Kennisbank",
+        "Instellingen"
+      ],
+      "list": [
+        {
+          "name": "Harnoor Singh",
+          "date": "21 sep",
+          "prev": "Ik kan niemands IP-adres delen"
+        },
+        {
+          "name": "Aisha Khan",
+          "date": "Vandaag",
+          "prev": ""
+        },
+        {
+          "name": "Tom Becker",
+          "date": "19 sep",
+          "prev": "Widget laadt niet bij het afrekenen"
+        },
+        {
+          "name": "Meera Iyer",
+          "date": "18 sep",
+          "prev": "Het team overzetten naar jaarlijks?"
+        }
+      ],
+      "teamInbox": "Teaminbox",
+      "aiAssist": "AI-assistent",
+      "searchPlaceholder": "Zoek gesprekken",
+      "verified": "Geverifieerd",
+      "joined": "Erbij gekomen",
+      "join": "Deelnemen",
+      "priyaReplying": "Priya is aan het reageren",
+      "resolvedLabel": "Opgelost",
+      "aiReplying": "Elpino reageert, jij kijkt alleen mee",
+      "elpinoAi": "Elpino AI",
+      "priyaTeam": "Priya · team",
+      "writeReply": "Schrijf je antwoord…",
+      "send": "Verstuur",
+      "reopenNote": "Opgelost. Heropen het als ze weer schrijven.",
+      "lockedNote": "Neem deel aan dit gesprek om te reageren. Tot dan blijft Elpino met de klant praten.",
+      "websiteVisitor": "Websitebezoeker",
+      "locationDevice": "Locatie & apparaat",
+      "location": "Pune, India",
+      "device": "Chrome · macOS",
+      "onPage": "Op /pricing",
+      "lastSeen": "Zojuist actief",
+      "identityVerified": "Identiteit geverifieerd",
+      "signedIn": "Ingelogd op de website",
+      "otherConvos": "Andere gesprekken",
+      "noOtherConvos": "Nog geen andere gesprekken van deze bezoeker."
+    },
+    "realThing": {
+      "eyebrow": "Het echte werk",
+      "titlePrefix": "Dit is de ",
+      "titleHl": "echte inbox.",
+      "subtitle": "Geen mock-up. Elk gesprek, de antwoorden van de AI, de gegevens van de bezoeker en de deelnameknop, allemaal op één scherm.",
+      "imageAlt": "De teaminbox van Elpino: een gesprekkenlijst, een door AI behandeld gesprek, en de locatie en het apparaat van de bezoeker",
+      "callouts": [
+        {
+          "label": "Deelnemen om het over te nemen"
+        },
+        {
+          "label": "Filter: Alle · Ongelezen · Gelezen · Opgelost"
+        },
+        {
+          "label": "Locatie & apparaat"
+        },
+        {
+          "label": "Sluit automatisch na 24 uur stilte"
+        }
+      ]
+    },
+    "twoTabs": {
+      "eyebrow": "Twee weergaven",
+      "titlePrefix": "Bekijk de AI. ",
+      "titleHl": "Bestuur het team.",
+      "subtitle": "Je inbox heeft een tab voor wat mensen behandelen en een tab voor wat Elpino behandelt, zodat niets verborgen blijft.",
+      "tabs": [
+        {
+          "label": "Teaminbox",
+          "title": "Gesprekken van je team",
+          "body": "Alles waar een persoon aan deelneemt, heeft overgenomen, of aan is toegewezen. Hier werkt je team: antwoorden, opvolgingen en opgeloste gesprekken.",
+          "rows": [
+            [
+              "Harnoor Singh",
+              "Kun je de factuur nog eens sturen?",
+              "Priya"
+            ],
+            [
+              "Meera Iyer",
+              "Het team overzetten naar jaarlijkse facturering?",
+              "Sam"
+            ],
+            [
+              "Jo Alvarez",
+              "Bedankt, dat heeft het opgelost!",
+              "Opgelost"
+            ]
+          ]
+        },
+        {
+          "label": "AI-assistent",
+          "title": "Gesprekken die Elpino behandelt",
+          "body": "Bekijk de AI live aan het werk. Een teller laat zien hoeveel er actief zijn, en je kunt op elk moment deelnemen aan een gesprek zodra je wilt ingrijpen.",
+          "rows": [
+            [
+              "Aisha Khan",
+              "Elpino reageert…",
+              "AI"
+            ],
+            [
+              "Tom Becker",
+              "Betaalgegevens worden gecontroleerd…",
+              "AI"
+            ],
+            [
+              "Ravi Menon",
+              "Beveiligde betaallink verzonden",
+              "AI"
+            ]
+          ]
+        }
+      ]
+    },
+    "holders": {
+      "eyebrow": "Altijd duidelijk",
+      "titlePrefix": "Je weet altijd ",
+      "titleHl": "wie het behandelt.",
+      "subtitle": "Elk gesprek heeft een label in de lijst, zodat niemand dubbel reageert en niets tussen wal en schip valt.",
+      "items": [
+        {
+          "tag": "AI",
+          "title": "Elpino behandelt het",
+          "body": "Antwoordt vanuit je kennisbank en tools. Je kunt elk bericht live volgen."
+        },
+        {
+          "tag": "Teamlid",
+          "title": "Een persoon behandelt het",
+          "body": "Tik op Deelnemen, of Overnemen als een collega het al behandelt. De AI stapt opzij."
+        },
+        {
+          "tag": "Opgelost",
+          "title": "Het is klaar",
+          "body": "Opgeloste gesprekken blijven doorzoekbaar, en je kunt ze met één tik heropenen."
+        }
+      ]
+    },
+    "baton": {
+      "eyebrow": "Geef het stokje door",
+      "titlePrefix": "Neem deel. Neem het over. ",
+      "titleHl": "Geef het terug.",
+      "subtitle": "Een gesprek beweegt met één tik tussen de AI en je mensen, en de geschiedenis gaat mee.",
+      "items": [
+        {
+          "who": "Elpino AI",
+          "note": "Antwoordt eerst"
+        },
+        {
+          "who": "Priya",
+          "note": "Tikte op Deelnemen"
+        },
+        {
+          "who": "Sam",
+          "note": "Nam het over van Priya"
+        },
+        {
+          "who": "Elpino AI",
+          "note": "Teruggegeven"
+        }
+      ],
+      "holdingNow": "Behandelt het nu",
+      "stepLabel": "Stap {n}"
+    },
+    "teamAlert": {
+      "eyebrow": "Teambrede meldingen",
+      "titlePrefix": "Waarschuw het hele team. ",
+      "titleHl": "Eén persoon antwoordt.",
+      "subtitle": "Wanneer een klant om een persoon vraagt, krijgt elk teamlid tegelijk een deelnamemelding. Wie het eerst op Deelnemen tikt, neemt het gesprek over, de melding verdwijnt voor de rest, en de klant ziet wie erbij is gekomen.",
+      "bullets": [
+        "Niemand wordt aangewezen, dus niemand is een bottleneck",
+        "90 seconden om erbij te springen voordat er een ticket voor je wordt aangemaakt",
+        "Per ongeluk deelgenomen? Geef het met één tik terug aan de AI"
+      ],
+      "panelLabel": "Inboxmeldingen",
+      "joinedStatus": "Erbij gekomen",
+      "alertCleared": "Melding gewist",
+      "joinChatStatus": "Deelnemen",
+      "quietStatus": "Stil",
+      "bannerJoined": "Priya is erbij gekomen. De klant ziet haar naam.",
+      "bannerAlerting": "Alle 4 teamleden worden gewaarschuwd…",
+      "bannerAsked": "Klant vroeg om een persoon"
+    },
+    "nobodyFree": {
+      "eyebrow": "Niets blijft liggen",
+      "titlePrefix": "Ook als iedereen ",
+      "titleHl": "bezet is.",
+      "subtitle": "Als niemand op tijd deelneemt, blijft de klant niet naar een laadanimatie staren.",
+      "marks": [
+        {
+          "t": "0s",
+          "h": "Melding gaat uit",
+          "d": "Elk teamlid ziet een deelnamemelding."
+        },
+        {
+          "t": "≤ 90s",
+          "h": "Eerste die deelneemt wint",
+          "d": "De melding verdwijnt voor de rest."
+        },
+        {
+          "t": "90s",
+          "h": "Niemand vrij? Ticket",
+          "d": "Er wordt automatisch een ticket aangemaakt."
+        },
+        {
+          "t": "24u",
+          "h": "Opvolging per e-mail",
+          "d": "De klant krijgt te horen binnen 24 uur een antwoord per e-mail te verwachten."
+        }
+      ]
+    },
+    "findAnything": {
+      "eyebrow": "Zoeken & filters",
+      "titlePrefix": "Vind elk gesprek ",
+      "titleHl": "in een seconde.",
+      "subtitle": "Zoek op naam of bericht en beperk tot Alle, Ongelezen, Gelezen of Opgelost. Probeer het rechts.",
+      "noMatch": "Niets gevonden. Probeer een ander woord.",
+      "convos": [
+        {
+          "n": "Harnoor Singh",
+          "p": "Ik kan niemands IP-adres delen",
+          "s": "resolved"
+        },
+        {
+          "n": "Aisha Khan",
+          "p": "Verhuisd naar ander land, vraag over facturering",
+          "s": "unread"
+        },
+        {
+          "n": "Tom Becker",
+          "p": "Widget laadt niet bij het afrekenen",
+          "s": "unread"
+        },
+        {
+          "n": "Meera Iyer",
+          "p": "Het team overzetten naar jaarlijkse facturering?",
+          "s": "read"
+        },
+        {
+          "n": "Ravi Menon",
+          "p": "Waar vind ik mijn bon?",
+          "s": "resolved"
+        },
+        {
+          "n": "Jo Alvarez",
+          "p": "Kan ik nog een teamlid toevoegen?",
+          "s": "read"
+        }
+      ]
+    },
+    "context": {
+      "eyebrow": "Context, ingebouwd",
+      "titlePrefix": "Vraag nooit ",
+      "titleHl": "“met wie spreek ik ook alweer?”",
+      "subtitle": "Je team opent een gesprek en weet meteen het belangrijkste.",
+      "items": [
+        {
+          "t": "Waar ze zijn",
+          "d": "Locatie en lokale context van elke bezoeker."
+        },
+        {
+          "t": "Wat ze gebruiken",
+          "d": "Apparaat, browser en de pagina waar ze waren."
+        },
+        {
+          "t": "Wie ze zijn",
+          "d": "Een Geverifieerd-label wanneer de identiteit is bevestigd via een ondertekend token of e-mailcode."
+        },
+        {
+          "t": "Gevoelige zaken, veilig",
+          "d": "Vraag om privégegevens via een beveiligd eenmalig verzoek, niet in de chat."
+        },
+        {
+          "t": "De hele geschiedenis",
+          "d": "Eerdere gesprekken met dezelfde persoon, direct beschikbaar."
+        }
+      ],
+      "extraTitle": "Plus live typen aan beide kanten",
+      "extraDesc": "Klanten zien wanneer jij aan het antwoorden bent, en jij ziet wanneer zij dat doen."
+    },
+    "secureRequest": {
+      "eyebrow": "Beveiligde verzoeken",
+      "titlePrefix": "Privégegevens ",
+      "titleHl": "blijven buiten de chat.",
+      "subtitle": "Vraag om gevoelige informatie via een eenmalig beveiligd formulier, zodat het nooit in het transcript terechtkomt.",
+      "steps": [
+        {
+          "t": "Je hebt iets privé nodig",
+          "d": "Voor gegevens die niet in een chatvenster getypt zouden moeten worden."
+        },
+        {
+          "t": "Stuur een beveiligd verzoek",
+          "d": "De klant krijgt een privé eenmalig formulier in plaats van een chatvak."
+        },
+        {
+          "t": "Terug in het gesprek",
+          "d": "Ze vullen het één keer in, en je team gaat verder met het gesprek."
+        }
+      ],
+      "stepLabel": "Stap {n}"
+    },
+    "afterLeave": {
+      "eyebrow": "Nadat ze weggaan",
+      "titlePrefix": "Het tabblad sluiten ",
+      "titleHl": "is niet het einde.",
+      "subtitle": "Elpino zegt je eerlijk of een antwoord ze nog kan bereiken.",
+      "steps": [
+        {
+          "t": "Bezoeker gaat weg",
+          "d": "Ze sluiten de chat, of er verstrijken 24 uur zonder bericht."
+        },
+        {
+          "t": "Geverifieerd e-mailadres bekend?",
+          "d": "Als ze hun adres hebben bevestigd, kunnen ze nog bereikt worden."
+        },
+        {
+          "t": "Antwoord per e-mail",
+          "d": "Je antwoord komt in hun inbox terecht. Zonder geverifieerd e-mailadres is geen antwoord mogelijk, en het antwoordvak geeft dat aan."
+        }
+      ],
+      "stepLabel": "Stap {n}"
+    },
+    "compare": {
+      "eyebrow": "Voor & na",
+      "titlePrefix": "Van chaos naar ",
+      "titleHl": "rust.",
+      "headerA": "Zonder gedeelde inbox",
+      "headerB": "Met Elpino",
+      "rows": [
+        [
+          "Klanten wachten tot iemand vrij is",
+          "De AI antwoordt binnen seconden, waarna een persoon aansluit als dat nodig is"
+        ],
+        [
+          "Niemand weet wie er antwoordt",
+          "Een label toont AI, teamlid of opgelost op elk gesprek"
+        ],
+        [
+          "Het team appt elkaar om een eigenaar te vinden",
+          "Eén deelnamemelding bereikt iedereen, wie het eerst deelneemt neemt het over"
+        ],
+        [
+          "Context leeft op tien plekken",
+          "Geschiedenis, locatie, apparaat en verificatie in één paneel"
+        ],
+        [
+          "Klanten die het tabblad sluiten zijn kwijt",
+          "Geverifieerde bezoekers kunnen je antwoord nog per e-mail krijgen"
+        ]
+      ]
+    },
+    "faq": {
+      "eyebrow": "Vragen",
+      "titlePrefix": "Goed om te ",
+      "titleHl": "weten.",
+      "items": [
+        [
+          "Wie kan een gesprek zien?",
+          "Iedereen in je team kan de gedeelde inbox zien. Elk gesprek toont wie het behandelt: de AI, een teamlid, of opgelost."
+        ],
+        [
+          "Wat is het venster van 90 seconden?",
+          "Wanneer een klant om een persoon vraagt, krijgt elk teamlid een deelnamemelding. Als niemand binnen 90 seconden deelneemt, wordt de klant geïnformeerd en wordt automatisch een ticket aangemaakt met een opvolging per e-mail."
+        ],
+        [
+          "Kan ik een gesprek teruggeven aan de AI?",
+          "Ja. Als je hebt deelgenomen en het is een simpele opvolging, geef het gesprek met één tik terug aan Elpino."
+        ],
+        [
+          "Kan ik reageren nadat de bezoeker is vertrokken?",
+          "Als ze een geverifieerd e-mailadres hebben opgegeven, wordt je antwoord per e-mail verstuurd. Zonder e-mailadres kan geen antwoord ze bereiken."
+        ],
+        [
+          "Werkt het op meer dan alleen websitechat?",
+          "De websitechat-widget is vandaag al live. Omnichannel komt in november."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Geef je team één plek om vanuit te helpen.",
+      "subtitle": "Begin gratis en nodig je teamleden uit wanneer je er klaar voor bent.",
+      "ctaStart": "Begin gratis",
+      "ctaMeetAgent": "Maak kennis met de AI-agent"
+    }
+  },
+  "tickets": {
+    "hero": {
+      "badge": "Tickets",
+      "titlePrefix": "Elke overdracht laat ",
+      "titleHl": "een stub achter.",
+      "subtitle": "Als de AI een taak niet kan afronden en niemand beschikbaar is, haalt Elpino niet zijn schouders op. Het maakt een ticket met de reden en samenvatting, stuurt het naar waar jouw team werkt en geeft de klant een referentie om naar te verwijzen.",
+      "ctaStart": "Start gratis",
+      "ctaInbox": "Bekijk de inbox"
+    },
+    "printed": {
+      "ticketBadge": "Ticket",
+      "filedAt": "Aangemaakt bij AI-overdracht",
+      "printing": "Bezig met afdrukken…",
+      "referenceLabel": "Referentie",
+      "referenceNote": "De klant kan dit vermelden",
+      "fields": [
+        [
+          "Titel",
+          "Support-escalatie · Aisha Khan"
+        ],
+        [
+          "Reden",
+          "Wijziging factuurland vereist een persoon"
+        ],
+        [
+          "Samenvatting",
+          "Verhuisd naar een ander land en wil dat het factuurland op haar account wordt bijgewerkt."
+        ],
+        [
+          "Klant",
+          "Aisha Khan · aisha@example.com"
+        ],
+        [
+          "Gesprek",
+          "Gekoppeld, één tik om te openen"
+        ],
+        [
+          "Verzonden naar",
+          "Issues-pagina"
+        ]
+      ]
+    },
+    "origins": {
+      "eyebrow": "Waar tickets vandaan komen",
+      "titlePrefix": "Drie manieren waarop een stub ",
+      "titleHl": "wordt aangemaakt.",
+      "subtitle": "Je hoeft nooit te onthouden om er een op te schrijven.",
+      "items": [
+        {
+          "tag": "Handmatig",
+          "t": "Een teamlid maakt het aan",
+          "d": "Zie je iets dat opvolging nodig heeft? Maak zelf een ticket van het gesprek.",
+          "sample": [
+            "Wijziging factuuradres",
+            "Meera heeft ons gevraagd het factuuradres op haar facturen bij te werken."
+          ]
+        },
+        {
+          "tag": "Aangemaakt bij AI-overdracht",
+          "t": "De AI maakt het aan bij overdracht",
+          "d": "Wanneer Elpino een chat overdraagt en niemand op tijd instapt, maakt het een ticket aan met de reden en een samenvatting.",
+          "sample": [
+            "Support-escalatie · Aisha Khan",
+            "Reden: wijziging factuurland vereist een persoon."
+          ]
+        },
+        {
+          "tag": "Gemarkeerd door AI-controle",
+          "t": "De AI merkt wat nog openstaat",
+          "d": "Na afsluiting van een gesprek beoordeelt de AI het. Als jouw team de klant nog iets verschuldigd is, markeert het een ticket en legt uit waarom.",
+          "sample": [
+            "Opvolgen van terugbetalingsverzoek",
+            "Reden: klant is verteld dat het gecontroleerd zou worden; er is niets vastgelegd."
+          ]
+        }
+      ]
+    },
+    "anatomy": {
+      "eyebrow": "Anatomie van een ticket",
+      "titlePrefix": "Alles wat jouw team nodig heeft, ",
+      "titleHl": "al geschreven.",
+      "subtitle": "Tik op een regel om te zien waarom die er staat.",
+      "fieldLabel": "Veld {n} van {total}",
+      "fields": [
+        {
+          "k": "Titel",
+          "v": "Support-escalatie · Aisha Khan",
+          "why": "Genoemd naar de klant, zodat je hem in één oogopslag herkent in een lange lijst."
+        },
+        {
+          "k": "Reden",
+          "v": "Wijziging factuurland vereist een persoon",
+          "why": "Waarom de AI overdroeg, of waarom de controle het markeerde. Niemand hoeft te raden wat er misging."
+        },
+        {
+          "k": "Samenvatting",
+          "v": "Verhuisd naar ander land, wil factuurland bijgewerkt.",
+          "why": "De AI schrijft een korte samenvatting van de chat zodat wie het overneemt goed geïnformeerd begint."
+        },
+        {
+          "k": "Klant",
+          "v": "Aisha Khan · aisha@example.com",
+          "why": "Naam en e-mail, als die zijn opgegeven, zodat je weet aan wie je moet antwoorden."
+        },
+        {
+          "k": "Gesprek",
+          "v": "Gekoppeld, opent de chat",
+          "why": "Één tik om terug te gaan naar het volledige gesprek, met elk bericht."
+        },
+        {
+          "k": "Bron",
+          "v": "Aangemaakt bij AI-overdracht",
+          "why": "Laat zien of een teamlid, de AI bij overdracht, of de AI-controle het heeft aangemaakt."
+        },
+        {
+          "k": "Verzonden naar",
+          "v": "Trello, Asana of Issues-pagina",
+          "why": "Waar het ticket naar is verzonden. Zonder gekoppelde projecttool blijft het op de Issues-pagina."
+        },
+        {
+          "k": "Referentie",
+          "v": "7F3A9C21",
+          "why": "Een korte code die de klant kan vermelden als hij opnieuw contact opneemt."
+        }
+      ]
+    },
+    "scrubber": {
+      "eyebrow": "De 90-secondenklok",
+      "titlePrefix": "Sleep de tijd. ",
+      "titleHl": "Bekijk wat er gebeurt.",
+      "subtitle": "Als iemand op enig moment instapt, is er geen ticket nodig. Als de klok afloopt, is dit de reeks.",
+      "seconds": "seconden",
+      "dragMe": "Sleep mij",
+      "secondsAriaLabel": "Seconden sinds de melding",
+      "clock": [
+        {
+          "t": "Klant zegt ja tegen een persoon",
+          "d": "Elpino vraagt het eerst en gaat alleen door bij een ja."
+        },
+        {
+          "t": "Elk teamlid krijgt een instapmelding",
+          "d": "Het hele team wordt op hetzelfde moment gevraagd."
+        },
+        {
+          "t": "Niemand ingestapt: ticket aangemaakt",
+          "d": "Titel, reden, samenvatting en een link naar de chat."
+        },
+        {
+          "t": "Klant per e-mail geïnformeerd, team gemeld",
+          "d": "De klant krijgt zijn referentie per e-mail."
+        }
+      ]
+    },
+    "connect": {
+      "eyebrow": "In een minuut ingesteld",
+      "titlePrefix": "Koppel het aan ",
+      "titleHl": "waar jij werkt.",
+      "subtitle": "Optioneel. Sla dit over en tickets blijven gewoon op de Issues-pagina staan.",
+      "stepLabel": "Stap {n}",
+      "steps": [
+        {
+          "t": "Koppel Trello of Asana",
+          "d": "Voeg je projecttool toe via je werkruimte-instellingen."
+        },
+        {
+          "t": "Tickets gaan daar naartoe",
+          "d": "Elk nieuw ticket wordt een kaart of taak, al geschreven."
+        },
+        {
+          "t": "Nog steeds bijgehouden in Elpino",
+          "d": "De Issues-pagina houdt de lijst bij en laat je items afvinken."
+        }
+      ]
+    },
+    "reviewScan": {
+      "badge": "AI-controle",
+      "titlePrefix": "Nadat de chat is afgesloten, ",
+      "titleHl": "leest Elpino hem opnieuw.",
+      "subtitle": "Chats eindigen beleefd terwijl toezeggingen openstaan. Wanneer een gesprek wordt afgesloten, beoordeelt de AI het, en als jouw team de klant nog iets verschuldigd is, markeert het een ticket en vertelt waarom.",
+      "bullets": [
+        "Vangt “ik controleer het en kom bij je terug”",
+        "Legt uit waarom het gemarkeerd is, zodat je snel kunt beoordelen",
+        "Gemarkeerd als gemarkeerd door AI-controle op de Issues-pagina"
+      ],
+      "closedConvo": "Afgesloten gesprek",
+      "statusFlagged": "Gemarkeerd",
+      "statusReviewing": "Bezig met beoordelen…",
+      "statusResolved": "Opgelost",
+      "chat": [
+        [
+          "cust",
+          "Hoi, mijn bestelling is beschadigd aangekomen."
+        ],
+        [
+          "agent",
+          "Wat vervelend! Ik controleer de terugbetaling en kom bij je terug."
+        ],
+        [
+          "cust",
+          "Fijn, bedankt."
+        ],
+        [
+          "agent",
+          "Kan ik nog iets anders voor je doen?"
+        ],
+        [
+          "cust",
+          "Nee, dat is alles."
+        ]
+      ],
+      "flaggedTicketLabel": "Ticket · Gemarkeerd door AI-controle",
+      "flaggedTitle": "Opvolgen van terugbetalingsverzoek · Tom Becker",
+      "flaggedDesc": "Klant is verteld dat een terugbetaling gecontroleerd zou worden; daarna is niets vastgelegd."
+    },
+    "destinations": {
+      "eyebrow": "Waar het terechtkomt",
+      "titlePrefix": "Verzonden naar de tool ",
+      "titleHl": "die jouw team al gebruikt.",
+      "subtitle": "Koppel Trello of Asana en tickets gaan er direct naartoe. Koppel niets en ze blijven veilig op de Issues-pagina staan.",
+      "cardTitle": "Support-escalatie · Aisha Khan",
+      "cardReason": "Reden: wijziging factuurland vereist een persoon",
+      "fromElpino": "Van Elpino",
+      "items": [
+        {
+          "key": "trello",
+          "label": "Trello",
+          "note": "Wordt een kaart op je Trello-bord.",
+          "cols": [
+            "Te doen",
+            "Mee bezig",
+            "Klaar"
+          ]
+        },
+        {
+          "key": "asana",
+          "label": "Asana",
+          "note": "Wordt een taak in je Asana-project.",
+          "cols": [
+            "Niet gestart",
+            "Mee bezig",
+            "Voltooid"
+          ]
+        },
+        {
+          "key": "issues",
+          "label": "Issues-pagina",
+          "note": "Geen projecttool gekoppeld? Het blijft op je Issues-pagina, zonder installatie nodig.",
+          "cols": [
+            "Open",
+            "",
+            "Opgelost"
+          ]
+        }
+      ]
+    },
+    "customerSide": {
+      "badge": "Het bewijsbriefje",
+      "titlePrefix": "Klanten weten dat ",
+      "titleHl": "ze niet zijn vergeten.",
+      "subtitle": "Als niemand op tijd kon instappen, vertelt Elpino dit de klant eerlijk, stuurt een e-mail zodat het niet verloren gaat en geeft een korte referentie om te vermelden. Ook je hele team wordt op de hoogte gebracht van het nieuwe ticket.",
+      "bullets": [
+        "De klant wordt vertelt wat er nu gebeurt",
+        "Ze krijgen een e-mail met hun referentie",
+        "Elk teamlid wordt op de hoogte gebracht van het ticket"
+      ],
+      "inChat": "In de chat",
+      "chatMsgPrefix": "Ons team is momenteel druk bezig, dus ik heb een ticket geopend. Je referentie is ",
+      "chatMsgSuffix": ". Je hoort binnen 24 uur per e-mail van ons.",
+      "inInbox": "In hun inbox",
+      "emailSubject": "We hebben je verzoek ontvangen",
+      "emailBodyPrefix": "Ticket ",
+      "emailBodySuffix": " staat bij ons team. Beantwoord deze e-mail als je nog iets wilt toevoegen.",
+      "teamNotified": "Team op de hoogte gebracht: nieuw ticket van Aisha Khan"
+    },
+    "issuesBoard": {
+      "badge": "De Issues-pagina",
+      "titlePrefix": "Eén lijst. ",
+      "titleHl": "Vink het af.",
+      "subtitle": "Elk ticket laat zien waar het vandaan komt en waar het naar is verzonden. De AI-controle vertelt zelfs waarom het een ticket heeft gemarkeerd. Klik op een vakje om het als opgelost te markeren.",
+      "openWord": "open",
+      "resolvedWord": "opgelost",
+      "panelTitle": "Issues",
+      "panelSubtitle": "Tickets aangemaakt vanuit supportgesprekken.",
+      "markResolved": "Markeren als opgelost",
+      "markUnresolved": "Markeren als niet opgelost",
+      "rows": [
+        {
+          "t": "Support-escalatie · Aisha Khan",
+          "who": "Aangemaakt bij AI-overdracht",
+          "where": "Niet verzonden naar een projecttool",
+          "done": false
+        },
+        {
+          "t": "Opvolgen van terugbetalingsverzoek · Tom Becker",
+          "who": "Gemarkeerd door AI-controle",
+          "where": "Trello-ticket",
+          "reason": "Klant is verteld dat een terugbetaling gecontroleerd zou worden; daarna is niets vastgelegd.",
+          "done": false
+        },
+        {
+          "t": "Wijziging factuuradres · Meera Iyer",
+          "where": "Asana-ticket",
+          "done": false
+        },
+        {
+          "t": "Support-escalatie · Ravi Menon",
+          "who": "Aangemaakt bij AI-overdracht",
+          "where": "Niet verzonden naar een projecttool",
+          "done": true
+        }
+      ]
+    },
+    "lifecycle": {
+      "eyebrow": "Leven van een ticket",
+      "titlePrefix": "Van “kan ik met iemand praten?” ",
+      "titleHl": "tot klaar.",
+      "stepLabel": "Stap {n}",
+      "items": [
+        {
+          "t": "Klant vraagt naar een persoon",
+          "d": "De AI vraagt het eerst en meldt het dan aan het team."
+        },
+        {
+          "t": "90 seconden, niemand stapt in",
+          "d": "Iedereen kreeg de kans om de chat over te nemen."
+        },
+        {
+          "t": "Ticket aangemaakt",
+          "d": "Titel, reden, samenvatting en een link terug naar de chat."
+        },
+        {
+          "t": "Klant per e-mail geïnformeerd",
+          "d": "Met hun referentie, zodat niets verloren voelt."
+        },
+        {
+          "t": "Behandeld en opgelost",
+          "d": "Jouw team vinkt het af wanneer het klaar is."
+        }
+      ]
+    },
+    "compare": {
+      "eyebrow": "Voor en na",
+      "titlePrefix": "Geen ",
+      "titleHl": "vergeten toezeggingen meer.",
+      "headerA": "Zonder tickets",
+      "headerB": "Met Elpino",
+      "rows": [
+        [
+          "“Iemand neemt contact met je op”, en dan stilte",
+          "Een ticket met een referentie die de klant kan vermelden"
+        ],
+        [
+          "Het team kopieert details handmatig naar een andere tool",
+          "Reden, samenvatting en chatlink komen al geschreven aan"
+        ],
+        [
+          "Toezeggingen in de chat worden vergeten",
+          "Een AI-controle markeert wat jouw team nog verschuldigd is nadat een chat is afgesloten"
+        ],
+        [
+          "Geen idee of iemand er mee bezig is",
+          "Afvinkbare opgeloste status en waar het naar verzonden is, in één lijst"
+        ]
+      ]
+    },
+    "faq": {
+      "eyebrow": "Vragen",
+      "titlePrefix": "Goed om te ",
+      "titleHl": "weten.",
+      "items": [
+        [
+          "Wanneer maakt Elpino een ticket aan?",
+          "Wanneer het een gesprek overdraagt en niemand binnen 90 seconden instapt, en wanneer de controle van een afgesloten gesprek iets vindt wat jouw team nog verschuldigd is. Teamleden kunnen er ook handmatig een aanmaken."
+        ],
+        [
+          "Waar gaan tickets naartoe?",
+          "Naar Trello of Asana, als je er een hebt gekoppeld. Zo niet, dan blijven ze op je Issues-pagina staan, zodat er niets verloren gaat."
+        ],
+        [
+          "Wat staat er in een ticket?",
+          "Een titel, de reden, een korte samenvatting, de gegevens van de klant en een link terug naar het gesprek."
+        ],
+        [
+          "Komt de klant het te weten?",
+          "Ja. Ze worden geïnformeerd in de chat, krijgen een e-mail en krijgen een korte referentie die ze kunnen vermelden."
+        ],
+        [
+          "Kan ik een ticket als opgelost markeren?",
+          "Ja, vink het af op de Issues-pagina."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Laat niets meer tussendoor glippen.",
+      "subtitle": "Start gratis en Elpino schrijft de tickets voor je.",
+      "ctaStart": "Start gratis",
+      "ctaMeetAgent": "Ontmoet de AI-agent"
+    }
+  },
+  "knowledgeHub": {
+    "hero": {
+      "badge": "Kennisbank",
+      "titlePrefix": "Vraag het maar. ",
+      "titleHl": "Het controleert je kennis.",
+      "subtitle": "Elpino beantwoordt alleen op basis van de kennis die jij het geeft. Neem het niet zomaar van ons aan. Bekijk hoe het links door jouw kennis zoekt en rechts de klant antwoordt. Als het niets vindt, zegt het dat ook.",
+      "privateNote": "Privébronnen worden nooit gebruikt om klanten te antwoorden."
+    },
+    "playground": {
+      "yourKnowledge": "Jouw kennis",
+      "customer": "Klant",
+      "elpinoAi": "Elpino AI",
+      "statusWaiting": "Wacht op een vraag",
+      "statusSearching": "Doorzoekt je kennis…",
+      "statusFound": "Match gevonden",
+      "statusNoMatch": "Geen match gevonden",
+      "privateBadge": "Privé",
+      "matchBadge": "Match",
+      "offersHuman": "Biedt een mens aan",
+      "sources": [
+        {
+          "name": "Terugbetalingsbeleid.pdf",
+          "kind": "Document"
+        },
+        {
+          "name": "Levertijden",
+          "kind": "Geschreven pagina"
+        },
+        {
+          "name": "Hulp: wachtwoord opnieuw instellen",
+          "kind": "Webpagina"
+        },
+        {
+          "name": "Escalatiehandboek",
+          "kind": "Interne notities"
+        }
+      ],
+      "scenes": [
+        {
+          "q": "Hoeveel tijd heb ik om een terugbetaling aan te vragen?",
+          "hit": "refund",
+          "a": "Je kunt binnen 30 dagen na aankoop een terugbetaling aanvragen."
+        },
+        {
+          "q": "Hoe stel ik mijn wachtwoord opnieuw in?",
+          "hit": "reset",
+          "a": "Kies “Wachtwoord vergeten” op de inlogpagina en volg de link die we je mailen."
+        },
+        {
+          "q": "Bieden jullie korting voor goede doelen?",
+          "hit": null,
+          "a": "Die informatie heb ik niet. Wil je dat ik je in contact breng met ons team?"
+        },
+        {
+          "q": "Hoe lang duurt de levering?",
+          "hit": "ship",
+          "a": "Bestellingen komen meestal binnen 3-5 werkdagen aan."
+        }
+      ]
+    },
+    "crawlWeb": {
+      "eyebrow": "Ontdek",
+      "titlePrefix": "Eén link erin. ",
+      "titleHl": "Een hele site eruit.",
+      "subtitle": "Geef Elpino je homepage en het volgt de links zelf, tot 50 pagina's. Het leest eerst help-, prijs- en beleidspagina's en slaat afbeeldingen, downloads en andere ruis over. Pagina's die met JavaScript zijn gebouwd worden in een echte browser weergegeven, zodat er niets leeg terugkomt.",
+      "pagesKept": "Pagina's behouden",
+      "filesSkipped": "Bestanden overgeslagen",
+      "svgAlt": "Een crawl die zich vanaf één pagina verspreidt naar gekoppelde pagina's",
+      "startLabel": "START"
+    },
+    "otherWays": {
+      "eyebrow": "Meer manieren om kennis toe te voegen",
+      "titlePrefix": "Niet alles staat ",
+      "titleHl": "op een website.",
+      "subtitle": "Nog drie manieren om Elpino iets te leren, voor kennis die nooit een URL kreeg.",
+      "items": [
+        {
+          "title": "Sitemap",
+          "big": "20",
+          "note": "pagina's in één keer opgehaald uit je sitemap"
+        },
+        {
+          "title": "Bestanden",
+          "big": ".pdf",
+          "note": "ook .docx, .txt en .md. Tekst wordt voor je geëxtraheerd"
+        },
+        {
+          "title": "Schrijf het",
+          "big": "Aa",
+          "note": "beleid en “zo doen wij het”-pagina's, direct geschreven in de editor"
+        }
+      ]
+    },
+    "mill": {
+      "eyebrow": "Wat er daarna gebeurt",
+      "titlePrefix": "Elke pagina maakt ",
+      "titleHl": "dezelfde reis.",
+      "items": [
+        {
+          "t": "Veilig opgehaald",
+          "d": "Als ElpinoBot, met bescherming tegen toegang tot privénetwerken."
+        },
+        {
+          "t": "Opgeschoond",
+          "d": "Menu's en overbodige tekst eruit, nuttige tekst erin."
+        },
+        {
+          "t": "Opgedeeld en ingebed",
+          "d": "Opgesplitst in fragmenten en geïndexeerd op betekenis, niet alleen op zoekwoorden."
+        },
+        {
+          "t": "Gevonden wanneer nodig",
+          "d": "De relevantste fragmenten worden opgehaald op het moment dat een klant iets vraagt."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Vragen",
+      "titlePrefix": "Goed om te ",
+      "titleHl": "weten.",
+      "items": [
+        [
+          "Wat kan ik toevoegen?",
+          "Webpagina's via URL, een sitemap (tot 20 pagina's), een crawl vanaf één link (tot 50 pagina's), PDF-, Word-, tekst- en Markdown-bestanden, en pagina's die je zelf schrijft."
+        ],
+        [
+          "Leest het pagina's die met JavaScript zijn gebouwd?",
+          "Ja. Als een pagina weinig leesbare tekst heeft, wordt deze eerst in een browser weergegeven en wordt het resultaat gelezen."
+        ],
+        [
+          "Kan ik content privé houden?",
+          "Ja. Elke bron heeft een zichtbaarheidsschakelaar, zodat interne notities intern blijven."
+        ],
+        [
+          "Kan ik Notion, Zendesk of Confluence koppelen?",
+          "Nog niet. Vandaag voeg je bronnen toe via URL, sitemap, bestand uploaden, of door pagina's te schrijven."
+        ],
+        [
+          "Wat als het antwoord er niet is?",
+          "Elpino zegt dat het die informatie niet heeft en biedt aan de klant in contact te brengen met je team, in plaats van te gokken."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Vul je echte plank.",
+      "subtitle": "Plak een link en Elpino begint er meteen mee te antwoorden.",
+      "ctaStart": "Start gratis",
+      "ctaMeetAgent": "Maak kennis met de AI-agent"
+    }
+  },
+  "integrations": {
+    "hero": {
+      "badge": "Integraties",
+      "titlePrefix": "Sluit aan. ",
+      "titleHl": "Level up.",
+      "subtitle": "Verbind je betalingen, je ticketsysteem en je eigen systemen, en zie wat Elpino kan doen groeien. Tik op de stopcontacten om ze aan te sluiten."
+    },
+    "board": {
+      "pluggedInCount": "{on} / {total} aangesloten",
+      "pluggedIn": "Aangesloten",
+      "tapToPlugIn": "Tik om aan te sluiten",
+      "on": "Aan",
+      "off": "Uit",
+      "whatCanDo": "Wat Elpino nu kan doen",
+      "empty": "Nog niets aangesloten. Tik hierboven op een stopcontact."
+    },
+    "conns": [
+      {
+        "name": "Stripe",
+        "blurb": "De AI controleert echte betalingen en abonnementen.",
+        "abilities": [
+          "Betalingen en abonnementen opzoeken",
+          "Bonnen en betaallinks versturen",
+          "Een abonnement opzeggen op verzoek",
+          "Terugbetalingen, alleen als je ze inschakelt"
+        ]
+      },
+      {
+        "name": "Razorpay",
+        "blurb": "Dezelfde betaaltools, voor Razorpay-accounts.",
+        "abilities": [
+          "Betalingen en abonnementen opzoeken",
+          "Bonnen en betaallinks versturen",
+          "Een abonnement opzeggen op verzoek",
+          "Terugbetalingen, alleen als je ze inschakelt"
+        ]
+      },
+      {
+        "name": "Cashfree",
+        "blurb": "Betaal- en afwikkelingsgeschiedenis voor je team.",
+        "abilities": [
+          "Een bestelling of betaling vinden vanuit een gesprek",
+          "Afwikkelings- en terugbetalingsstatus bekijken"
+        ]
+      },
+      {
+        "name": "Paystack",
+        "blurb": "Transactie- en terugbetalingsstatus voor je team.",
+        "abilities": [
+          "Een transactie opzoeken vanuit een gesprek",
+          "Betaal- en terugbetalingsstatus controleren"
+        ]
+      },
+      {
+        "name": "Trello",
+        "blurb": "Tickets komen als kaarten op je board terecht.",
+        "abilities": [
+          "Tickets worden Trello-kaarten",
+          "De samenvatting en een link naar de chat zijn bijgevoegd"
+        ]
+      },
+      {
+        "name": "Asana",
+        "blurb": "Tickets komen als taken in je project terecht.",
+        "abilities": [
+          "Tickets worden Asana-taken",
+          "De samenvatting en een link naar de chat zijn bijgevoegd"
+        ]
+      },
+      {
+        "name": "Jouw MCP-servers",
+        "blurb": "Alles dat MCP spreekt, met tools die jij goedkeurt.",
+        "abilities": [
+          "Tools op je eigen servers aanroepen",
+          "Tot 5 servers, elk met 15 ingeschakelde tools",
+          "Alleen de tools die je goedkeurt zijn zichtbaar",
+          "Tools die gegevens wijzigen vereisen een geverifieerde klant"
+        ]
+      }
+    ],
+    "how": {
+      "eyebrow": "Verbinden",
+      "titlePrefix": "Een minuut per stuk. ",
+      "titleHl": "Geen ontwikkelaars nodig.",
+      "stepLabel": "Stap {n}",
+      "steps": [
+        {
+          "t": "Kies een tool",
+          "d": "Open Verbinden in je dashboard en kies de connector die je wilt."
+        },
+        {
+          "t": "Plak een sleutel of autoriseer",
+          "d": "API-sleuteltools gebruiken je sleutels. Asana gebruikt een normale login en toestemmingsscherm."
+        },
+        {
+          "t": "Wij controleren het eerst",
+          "d": "Elpino test je sleutels bij de provider voordat ze worden opgeslagen, en bewaart ze versleuteld."
+        }
+      ]
+    },
+    "families": {
+      "eyebrow": "De catalogus",
+      "titlePrefix": "Drie soorten ",
+      "titleHl": "verbindingen.",
+      "tabs": {
+        "payments": "Betalingen",
+        "tickets": "Tickets",
+        "systems": "Je systemen"
+      },
+      "paymentsNote": "De betaalacties van de AI werken vandaag met Stripe en Razorpay. Cashfree en Paystack brengen betalingscontext naar je team."
+    },
+    "safe": {
+      "badge": "Standaard veilig",
+      "titlePrefix": "Verbonden, ",
+      "titleHl": "niet blootgesteld.",
+      "items": [
+        {
+          "t": "Sleutels blijven versleuteld",
+          "d": "Inloggegevens worden versleuteld opgeslagen, en Elpino verifieert ze bij de provider voordat ze worden opgeslagen."
+        },
+        {
+          "t": "Leestoegang is genoeg voor opzoekingen",
+          "d": "Gebruik voor Stripe een beperkte sleutel met leestoegang tot klanten en betalingen."
+        },
+        {
+          "t": "Geld beweegt alleen als jij dat toestaat",
+          "d": "Terugbetalingen staan standaard uit. De eigenaar van de workspace bepaalt of de AI ze mag uitgeven."
+        },
+        {
+          "t": "Jij keurt elke MCP-tool goed",
+          "d": "De AI ziet alleen de tools die jij hebt ingeschakeld, en elke aanroep wordt opnieuw gecontroleerd op de server."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Vragen",
+      "titlePrefix": "Goed om te ",
+      "titleHl": "weten.",
+      "items": [
+        [
+          "Welke tools kan ik verbinden?",
+          "Stripe, Razorpay, Cashfree en Paystack voor betalingen, Trello en Asana voor tickets, en je eigen MCP-servers voor al het andere."
+        ],
+        [
+          "Wat kan de AI met betalingen doen?",
+          "Met Stripe of Razorpay verbonden kan hij betalingen en abonnementen opzoeken, bonnen en betaallinks versturen, en een abonnement opzeggen op verzoek. Terugbetalingen staan uit, tenzij je ze inschakelt."
+        ],
+        [
+          "Moet ik technisch onderlegd zijn?",
+          "Niet voor betalingen of tickets. Je plakt een sleutel, of logt in bij Asana. MCP-servers vereisen dat iemand er al een heeft gebouwd."
+        ],
+        [
+          "Wordt Shopify, Slack of HubSpot ondersteund?",
+          "Vandaag niet als one-click connectors. Als jouw systeem een MCP-server heeft, kun je die verbinden, en je kunt ons laten weten wat je graag zou willen."
+        ],
+        [
+          "Waar gaan tickets naartoe?",
+          "Naar Trello of Asana, als die verbonden zijn. Anders staan ze op je Issues-pagina."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Mis je iets dat je nodig hebt?",
+      "subtitle": "Laat ons weten welke tool je graag zou willen, of verbind hem zelf via MCP.",
+      "ctaStart": "Start gratis",
+      "ctaRequest": "Vraag een integratie aan"
+    }
+  },
+  "securityGuide": {
+    "sticky": {
+      "securityLabel": "Beveiliging",
+      "reportIssue": "Probleem melden"
+    },
+    "hero": {
+      "badge": "Beveiligingsgids",
+      "title1": "Gebouwd om ",
+      "title2": "je gegevens te beschermen.",
+      "subtitle": "Deze gids laat zien wat er beschermd is in de webapp, de gateway en de auth-, workspace- en AI-diensten — wat we garanderen en waarom je erop kunt vertrouwen, zonder stap voor stap de interne werking bloot te leggen.",
+      "ctaBlueprint": "Bekijk het overzicht",
+      "ctaChapters": "Lees de hoofdstukken",
+      "ctaTrust": "Trust Center",
+      "register": {
+        "label": "Tekeningregister",
+        "chapters": "Hoofdstukken",
+        "controlsDescribed": "Beschreven controles",
+        "componentsCovered": "Behandelde onderdelen",
+        "componentsValue": "6",
+        "reviewedAgainst": "Getoetst aan",
+        "reviewedValue": "het product"
+      }
+    },
+    "blueprint": {
+      "fig": "Afb. 00 · In één oogopslag",
+      "title": "Wat er gebeurt met een request",
+      "subtitle": "Elke pijl is versleuteld of geverifieerd. Wijs een onderdeel aan om te zien wat dat in de praktijk betekent.",
+      "readChapter": "Lees hoofdstuk"
+    },
+    "nodes": {
+      "widget": {
+        "label": "Bezoeker",
+        "sub": "Chatwidget",
+        "guards": "Gasten blijven gasten. Ingelogde bezoekers bewijzen hun identiteit met een ondertekende credential of een e-mailcode, die alleen in het geheugen van de widget zelf wordt bewaard."
+      },
+      "team": {
+        "label": "Jouw team",
+        "sub": "Dashboard",
+        "guards": "Wachtwoorden worden nooit in leesbare vorm opgeslagen, inloggen met Google wordt op onze server geverifieerd, en je kunt elke sessie op afstand beëindigen."
+      },
+      "elpino": {
+        "label": "Elpino",
+        "sub": "Verifieert, beschermt, beantwoordt",
+        "guards": "Elk request wordt gecontroleerd voordat er iets wordt uitgevoerd, privégegevens worden vervangen voordat een AI-model ze ooit ziet, en de AI werkt binnen grenzen waar het zich niet uit kan praten."
+      },
+      "google": {
+        "label": "Google",
+        "sub": "Inloggen",
+        "guards": "Wordt alleen vertrouwd nadat onze eigen server het onafhankelijk heeft geverifieerd."
+      },
+      "pay": {
+        "label": "Betalingen",
+        "sub": "Razorpay · Stripe",
+        "guards": "Betalingsmeldingen worden alleen geaccepteerd met een geverifieerde handtekening, en kunnen nooit opnieuw worden afgespeeld om je gebruik te resetten."
+      },
+      "models": {
+        "label": "AI-providers",
+        "sub": "Modellen",
+        "guards": "Ze zien veilige placeholders in plaats van echte gegevens, nooit geheimen, en je data wordt niet gebruikt om algemene modellen te trainen."
+      }
+    },
+    "chaptersSection": {
+      "label": "De hoofdstukken",
+      "title1": "Twaalf hoofdstukken. ",
+      "title2": "Niets overgeslagen.",
+      "subtitle": "Elke controle benoemt het deel van het systeem waarin het leeft en de garantie die het je biedt — niet het exacte mechanisme daarachter.",
+      "contents": "Inhoud"
+    },
+    "chapters": {
+      "accounts": {
+        "title": "Accounts & sessies",
+        "kicker": "Wie er in je team zit, en hoe we dat weten.",
+        "intro": "Aanmelden, inloggen en elke sessie daarna. Wachtwoorden worden nooit in leesbare vorm bewaard, verificatiecodes verlopen snel, en een sessie kan op elk moment door de server worden beëindigd.",
+        "stats": [
+          "Wachtwoorden gehasht, nooit opgeslagen",
+          "Codes verlopen snel",
+          "Sessies die je kunt intrekken"
+        ],
+        "controls": {
+          "1.1": {
+            "title": "Wachtwoorden worden gehasht, nooit opgeslagen",
+            "text": "Je wachtwoord wordt nergens bewaard in een vorm die iemand terug kan lezen — ook wij niet. Het controleren ervan kan niet lekken hoe dicht een verkeerde gok bij het juiste antwoord kwam."
+          },
+          "1.2": {
+            "title": "E-mailverificatiecodes",
+            "text": "Nieuwe accounts bevestigen hun adres met een kortlevende code. Alleen een beveiligde hash daarvan wordt opgeslagen, hij verloopt snel, en er zijn maar een paar verkeerde poging toegestaan voordat je een nieuwe nodig hebt."
+          },
+          "1.3": {
+            "title": "Inloggen met Google wordt op de server gecontroleerd",
+            "text": "De Google-inlogpopup draait in je browser, maar onze server verifieert die onafhankelijk voordat hij vertrouwd wordt, en logt je altijd in op hetzelfde account op basis van je geverifieerde e-mailadres — nooit op een tweede, ongekoppeld account."
+          },
+          "1.4": {
+            "title": "Ondertekende sessietokens",
+            "text": "Je sessie is een ondertekend token dat onze server altijd zelf kan verifiëren — het kan niet worden vervalst, aangepast of hergebruikt als iets wat het niet is."
+          },
+          "1.5": {
+            "title": "Een streng beveiligde sessiecookie",
+            "text": "Je sessiecookie kan niet worden gelezen door scripts op de pagina, en gaat alleen ooit over een beveiligde verbinding."
+          },
+          "1.6": {
+            "title": "Overal uitloggen",
+            "text": "Uitloggen maakt al je sessies snel ongeldig. Als we niet kunnen bevestigen dat een sessie nog geldig is, wordt hij geweigerd in plaats van doorgelaten."
+          },
+          "1.7": {
+            "title": "Veilige redirects",
+            "text": "Na het inloggen word je altijd alleen naar een pagina op onze eigen site gestuurd — nooit ergens anders, hoe de link ook is opgebouwd."
+          },
+          "1.8": {
+            "title": "Teamuitnodigingen",
+            "text": "Uitnodigingslinks zijn niet te raden en verlopen automatisch, en een owner bepaalt of leden anderen mogen uitnodigen."
+          }
+        }
+      },
+      "front-door": {
+        "title": "De voordeur",
+        "kicker": "Wat de website doet voordat een request verder gaat.",
+        "intro": "De webapp is het eerste waarmee een browser in aanraking komt. Hij verhardt de browser, beperkt misbruik en valideert input voordat die wordt doorgegeven.",
+        "stats": [
+          "Geen framing",
+          "Misbruik beperkt",
+          "Faalt gesloten"
+        ],
+        "controls": {
+          "2.1": {
+            "title": "Beveiligingsheaders voor de browser",
+            "text": "Elke pagina, behalve de chatwidget, is beschermd tegen clickjacking, beveiligd tegen content-type sniffing, en heeft gevoelige apparaatrechten zoals camera en locatie standaard uitgeschakeld. De widget is de enige bewuste uitzondering, omdat hij in een iframe op jouw site moet leven."
+          },
+          "2.2": {
+            "title": "Gedeelde misbruiklimieten",
+            "text": "Openbare formulieren worden beschermd door rate limits die worden gedeeld over alle servers die we draaien, zodat misbruik vanaf één plek niet zomaar kan doorglippen door simpelweg een andere server te raken."
+          },
+          "2.3": {
+            "title": "Faalt gesloten",
+            "text": "Als de misbruiklimiter niet bereikbaar is, wordt het request geweigerd in plaats van doorgelaten."
+          },
+          "2.4": {
+            "title": "Gevalideerde input met lengtelimiet",
+            "text": "Elk formulier wordt op de server gecontroleerd en qua grootte begrensd voordat er iets wordt verwerkt — nooit vertrouwd alleen omdat de browser het al heeft gevalideerd."
+          }
+        }
+      },
+      "gateway": {
+        "title": "De gateway",
+        "kicker": "Eén deur naar de backend, standaard gesloten.",
+        "intro": "Elke aanroep naar de backend gaat via één gateway. De regel is simpel: als een route niet expliciet als openbaar is gemarkeerd, moet hij bewijzen dat hij daar mag zijn.",
+        "stats": [
+          "Standaard gesloten",
+          "Expliciete openbare lijst",
+          "Geverifieerde live verbindingen"
+        ],
+        "controls": {
+          "3.1": {
+            "title": "Standaard gesloten",
+            "text": "Elke route vereist bewijs dat het een geautoriseerde interne aanroep is, tenzij hij expliciet als openbaar is gemarkeerd. Als die controle niet is ingesteld, weigert de gateway alles in plaats van open te falen."
+          },
+          "3.2": {
+            "title": "Een korte, expliciete openbare lijst",
+            "text": "Alleen aanroepers die echt geen interne credentials kunnen hebben, zijn openbaar: de chatwidget, paginastatistieken, de betalingswebhook en eenmalige beveiligde links. Elke is bewust, route voor route, gemarkeerd."
+          },
+          "3.3": {
+            "title": "Alleen expliciete origins",
+            "text": "De API antwoordt browsers alleen vanuit een bekende, goedgekeurde lijst van origins — nooit vanaf ergens dat toevallig aanklopt."
+          },
+          "3.4": {
+            "title": "Geverifieerde live verbindingen",
+            "text": "Live-view verbindingen vereisen een geverifieerde, aan de workspace gebonden credential met een vervaldatum. Alles anders wordt onmiddellijk verwijderd."
+          },
+          "3.5": {
+            "title": "Interne pushberichten zijn ook beveiligd",
+            "text": "De endpoints die diensten gebruiken om live meldingen naar dashboards te sturen, vereisen hetzelfde interne bewijs, zodat niemand van buitenaf het scherm van een teamgenoot kan laten rinkelen."
+          }
+        }
+      },
+      "visitors": {
+        "title": "Bezoekers & identiteit",
+        "kicker": "Een ingelogde klant onderscheiden van iemand die simpelweg een e-mailadres heeft ingetypt.",
+        "intro": "Een naam, e-mailadres of ordernummer is geen bewijs van wie iemand is. Accounthulp wordt alleen ontgrendeld na echt identiteitsbewijs, en dat bewijs verloopt snel.",
+        "stats": [
+          "Echt bewijs vereist",
+          "Sessies verlopen automatisch",
+          "Tijdgebonden verificatie"
+        ],
+        "controls": {
+          "4.1": {
+            "title": "Gasten blijven gasten",
+            "text": "Een ingetypte naam, e-mailadres, telefoonnummer of betalingsreferentie geldt nooit als identiteitsbewijs. Gasten kunnen chatten en contactgegevens achterlaten, maar dat ontgrendelt geen privétools en wordt nooit samengevoegd met de geschiedenis van iemand anders."
+          },
+          "4.2": {
+            "title": "Ondertekende identiteit vanuit je eigen site",
+            "text": "Voor ingelogde klanten staat je eigen server garant voor wie ze zijn, met een kortlevende ondertekende credential die alleen jij en Elpino samen kunnen creëren. Contactgegevens gelden alleen als geverifieerd wanneer jouw systeem dat zegt."
+          },
+          "4.3": {
+            "title": "Eén uitwisseling, één sessie",
+            "text": "Elk identiteitsbewijs wordt eenmalig gebruikt en dan ingewisseld voor een geheel nieuwe sessie — er blijft niets herbruikbaars rondslingeren, en wat wordt opgeslagen kan niet worden teruggezet naar het origineel."
+          },
+          "4.4": {
+            "title": "Kortlevende sessies",
+            "text": "Een sessie verloopt automatisch na een periode van inactiviteit, of een vaste tijd na het inloggen — wat zich als eerste voordoet. Hij wordt alleen bewaard in het geheugen van de widget zelf, nooit in browseropslag of een URL."
+          },
+          "4.5": {
+            "title": "Rotatie en uitloggen",
+            "text": "Het roteren van je identiteitscredential maakt onmiddellijk elke sessie ongeldig die de oude gebruikte. Uitloggen trekt de sessie op onze server in, en oude sessies worden automatisch opgeruimd."
+          },
+          "4.6": {
+            "title": "E-mailcodes voor gasten",
+            "text": "Een bezoeker kan zich ook verifiëren via e-mail met een korte eenmalige code, met een snelheidslimiet om misbruik te voorkomen. Verifiëren ontgrendelt alleen dat ene gesprek, en slechts voor een beperkte tijd."
+          },
+          "4.7": {
+            "title": "Elk request wordt opnieuw gecontroleerd",
+            "text": "Elke geauthenticeerde lees- en schrijfactie controleert onafhankelijk opnieuw wie erom vraagt, tot welke workspace dat beperkt is, en of die toegang nog geldig is — niets wordt vertrouwd alleen omdat het een moment geleden nog geldig was."
+          }
+        }
+      },
+      "ai": {
+        "title": "De leiband van de AI",
+        "kicker": "Wat de AI wel en niet kan doen, afgedwongen door de backend, niet door het vriendelijk te vragen.",
+        "intro": "Het model stelt voor; de backend beslist. Tools, identiteit, limieten en geld leven allemaal buiten het model, waar een slim bericht zich er niet uit kan praten.",
+        "stats": [
+          "Begrensd werk",
+          "Door backend gecontroleerde tools",
+          "Onafhankelijke controle"
+        ],
+        "controls": {
+          "5.1": {
+            "title": "Eén antwoord, één eigenaar",
+            "text": "Voordat een AI-antwoord wordt opgeslagen, bevestigt het systeem onafhankelijk dat het gesprek nog steeds bij de AI ligt en dat de vraag die wordt beantwoord nog steeds de meest recente is. De AI kan niet dwars door je team heen praten of iets beantwoorden dat al is achterhaald."
+          },
+          "5.2": {
+            "title": "Begrensd werk",
+            "text": "Elke AI-beurt heeft een harde limiet aan hoeveel hij kan doen. Een vastgelopen of loopende run wordt automatisch afgebroken, nooit gewoon laten draaien."
+          },
+          "5.3": {
+            "title": "De backend kiest de tools",
+            "text": "Welke tools de AI kan gebruiken, wordt volledig bepaald door de instellingen van jouw workspace en de verificatiestatus van de klant — het model kan zichzelf geen tool toekennen, gegevens niet als openbaar verklaren, of niet in een andere workspace komen."
+          },
+          "5.4": {
+            "title": "Accounttools vereisen een geverifieerde klant",
+            "text": "Betalingsopzoekingen en gekoppelde systemen worden alleen beschikbaar zodra de klant heeft bewezen wie hij is, en handelen altijd alleen op basis van de identiteit die al is vastgelegd — nooit op basis van wat het model wordt verteld."
+          },
+          "5.5": {
+            "title": "Berichten zijn data, geen instructies",
+            "text": "Berichten van klanten, documenten en toolresultaten bereiken het model duidelijk gelabeld als niet-vertrouwde informatie. Instructies die daarin verborgen zitten, worden niet opgevolgd."
+          },
+          "5.6": {
+            "title": "Een tweede mening",
+            "text": "Een aparte, onafhankelijke controle beoordeelt elk conceptantwoord tegen het bewijs dat de AI daadwerkelijk heeft verzameld. Een onvoldoende onderbouwde claim wordt teruggestuurd voor herschrijving, en een die nog steeds faalt, komt bij een persoon terecht."
+          },
+          "5.7": {
+            "title": "Geld beweegt achter poorten",
+            "text": "AI-terugbetalingen staan uit totdat een workspace-owner ze inschakelt, en zelfs dan zijn ze beperkt en automatisch aan een maximum gebonden. Een herhaalde terugbetaling kan nooit tweemaal worden uitgegeven, en het opzeggen van een abonnement kort nooit tijd af waarvoor je al hebt betaald."
+          },
+          "5.8": {
+            "title": "Een auditspoor voor elke run",
+            "text": "Elke AI-run houdt een record bij van wat hij deed en wat hij daarvoor gebruikte. Alles wat met geld te maken heeft, wordt ook gelogd als notitie die je team kan zien."
+          }
+        }
+      },
+      "private-data": {
+        "title": "Privégegevens",
+        "kicker": "Wat het model daadwerkelijk ziet.",
+        "intro": "Voordat een request een AI-model bereikt, worden identificerende gegevens vervangen door veilige placeholders. Probeer het hieronder met je eigen tekst.",
+        "stats": [
+          "Gegevens eerst vervangen",
+          "Geheimen volledig verwijderd",
+          "Dezelfde regels, elke provider"
+        ],
+        "controls": {
+          "6.1": {
+            "title": "Echte gegevens bereiken het model nooit",
+            "text": "Namen, e-mailadressen, telefoonnummers, adressen en order- of betalingsgegevens worden nooit ongewijzigd naar het AI-model gestuurd. We vervangen ze eerst door veilige placeholders, en herstellen de echte waarde alleen daarna, op onze eigen servers — nooit in iets dat het model ziet."
+          },
+          "6.2": {
+            "title": "Geheimen worden verwijderd, niet alleen verborgen",
+            "text": "Wachtwoorden, API-keys, tokens en eenmalige codes worden volledig verwijderd voordat er iets het model bereikt — niet verhuld, gewoon weg."
+          },
+          "6.3": {
+            "title": "Gevoelige links worden opgeschoond",
+            "text": "Links die toegangstokens of andere gevoelige parameters bevatten, worden opgeschoond voordat een model ze ooit leest."
+          },
+          "6.4": {
+            "title": "Betalingsfeiten, geen betalingsgegevens",
+            "text": "Betaaltools geven alleen veilige samenvattingen terug — status en datums — nooit ruwe kaart- of rekeninggegevens, en foutredenen worden versimpeld in plaats van als vrije tekst doorgegeven."
+          },
+          "6.5": {
+            "title": "Dezelfde regels voor elk model",
+            "text": "Dezelfde bescherming draait ongeacht welke AI-provider antwoordt, ook wanneer we teruggrijpen op een andere. Je gesprekken en documenten worden nooit gebruikt om algemene modellen te trainen."
+          }
+        }
+      },
+      "integrations": {
+        "title": "Integraties & uitgaande requests",
+        "kicker": "Wanneer Elpino een URL moet benaderen die jij hebt opgegeven.",
+        "intro": "Je site crawlen, een pagina lezen, of een gekoppeld systeem aanroepen betekent allemaal dat een URL wordt opgehaald die iemand heeft ingetypt. Elk van die requests is streng afgesloten zodat het niet tegen ons eigen netwerk — of het jouwe — kan worden gebruikt.",
+        "stats": [
+          "Versleuteld in rust",
+          "Kan privénetwerken niet bereiken",
+          "Beperkt & tijdgebonden"
+        ],
+        "controls": {
+          "7.1": {
+            "title": "Credentials zijn versleuteld in rust",
+            "text": "Elke key of token die je koppelt — Stripe, Razorpay, Trello en dergelijke — wordt versleuteld voordat hij ooit wordt opgeslagen. Een kopie van de database alleen kan ze niet herstellen."
+          },
+          "7.2": {
+            "title": "Uitgaande requests kunnen niet naar binnen worden gericht",
+            "text": "Wanneer we namens jou een URL opvragen — je site crawlen, een gekoppeld systeem aanroepen — zorgen we ervoor dat dit niet kan worden omgeleid naar een privénetwerk of interne infrastructuur, inclusief die van ons."
+          },
+          "7.3": {
+            "title": "Redirects worden bij elke stap gecontroleerd",
+            "text": "We volgen redirects zorgvuldig, waarbij elke stap wordt gecontroleerd in plaats van de eindbestemming te vertrouwen, en altijd alleen via standaard, beveiligde verbindingen."
+          },
+          "7.4": {
+            "title": "Gekoppelde systemen zijn beperkt",
+            "text": "Verbindingen naar je eigen tools zijn begrensd in grootte en tijd, zodat ze niet kunnen worden gebruikt om onbeperkte data op te halen of eindeloos te blijven hangen."
+          },
+          "7.5": {
+            "title": "Admins keuren elke tool goed",
+            "text": "Gekoppelde tools staan uit totdat een admin ze goedkeurt. Een tool die gegevens kan wijzigen, wordt apart gemarkeerd en vereist nog steeds een geverifieerde klant, zelfs wanneer de server zelf verder openbaar is."
+          },
+          "7.6": {
+            "title": "Ontkoppelen betekent verdwenen",
+            "text": "Wanneer je een integratie loskoppelt, worden de opgeslagen tokens en credentials onmiddellijk gewist."
+          }
+        }
+      },
+      "secure-links": {
+        "title": "Veilige overdrachten",
+        "kicker": "Wanneer een klant iets gevoeligs moet versturen.",
+        "intro": "Plak nooit een key in een chat. Een teamgenoot kan er in plaats daarvan via een eenmalige link naar vragen, en de chat bevat alleen ooit de link.",
+        "stats": [
+          "Niet te raden link",
+          "Verloopt automatisch",
+          "Apart versleuteld"
+        ],
+        "controls": {
+          "8.1": {
+            "title": "De chat bevat het geheim nooit",
+            "text": "De melding in het gesprek noemt wat er is gevraagd en draagt een link — nooit de waarde zelf."
+          },
+          "8.2": {
+            "title": "Een niet te raden, kortlevende link",
+            "text": "De link zelf is het volledige autorisatiebewijs van de klant, dus hij wordt niet te raden gemaakt, en verloopt automatisch voordat hij een blijvend risico kan worden."
+          },
+          "8.3": {
+            "title": "Versleuteld met zijn eigen key",
+            "text": "Wat wordt ingediend, wordt verzegeld met een key die volledig los staat van de key die je andere credentials beschermt, zodat elke kan worden geroteerd — of, in het slechtste geval, blootgesteld — zonder de andere te raken."
+          },
+          "8.4": {
+            "title": "Begrensd en opgeschoond",
+            "text": "Inzendingen zijn begrensd in grootte, en alles wat is verlopen, wordt automatisch en permanent gewist volgens een regelmatig schema, waarbij alleen een record overblijft dat er iets is gebeurd — nooit wat het was."
+          }
+        }
+      },
+      "money": {
+        "title": "Geld & facturering",
+        "kicker": "Betalingen, verlengingen en de limieten die daaraan verbonden zijn.",
+        "intro": "Alles wat geld verplaatst, wordt twee keer gecontroleerd: eenmaal dat het bericht echt van de betalingsprovider komt, en eenmaal dat het niet dubbel kan worden toegepast.",
+        "stats": [
+          "Alleen geverifieerde handtekeningen",
+          "Bestand tegen replay",
+          "Kan niet dubbel afschrijven"
+        ],
+        "controls": {
+          "9.1": {
+            "title": "Ondertekende webhooks en checkouts",
+            "text": "Betalingsmeldingen worden alleen geaccepteerd met een geldige, geverifieerde handtekening van de provider — alles anders, inclusief een bijna-match, wordt regelrecht afgewezen."
+          },
+          "9.2": {
+            "title": "Replays kunnen het gebruik niet resetten",
+            "text": "Een betalingsmelding die meer dan eens aankomt — opnieuw afgespeeld, of simpelweg tweemaal afgeleverd — kan nooit al besteed gebruik terugzetten naar nul of opnieuw krediet toekennen."
+          },
+          "9.3": {
+            "title": "Auto-opwaarderen kan niet dubbel afschrijven",
+            "text": "Controleren of een opwaardering binnen zijn limiet valt en het daadwerkelijk reserveren daarvan gebeurt als één atomaire stap, en je saldo wordt alleen ooit gecrediteerd zodra een betaling is bevestigd en geïncasseerd."
+          },
+          "9.4": {
+            "title": "Elke geldbeweging staat geregistreerd",
+            "text": "Elke betalingsgebeurtenis van de provider wordt geschreven naar een auditspoor, en elke betalingsactie die de AI uitvoert, krijgt zijn eigen apart logboek."
+          },
+          "9.5": {
+            "title": "Planlimieten worden op de server afgedwongen",
+            "text": "Functies die aan een plan gekoppeld zijn, worden in de backend gecontroleerd, niet alleen verborgen in de interface, en seatlimieten worden geteld op basis van echt lidmaatschap — niet op basis van wat de browser beweert."
+          }
+        }
+      },
+      "lifecycle": {
+        "title": "Levenscyclus van data",
+        "kicker": "Waar data leeft, hoe lang, en hoe het verdwijnt.",
+        "intro": "Je data is beperkt tot je workspace, verloopt wanneer dat moet, en kan door jou worden verwijderd.",
+        "stats": [
+          "Beperkt tot workspace",
+          "Automatisch opgeruimd",
+          "Je kunt het verwijderen"
+        ],
+        "controls": {
+          "10.1": {
+            "title": "Beperkt tot je workspace",
+            "text": "Gesprekken, kennis, klanten en instellingen horen allemaal bij één workspace, en elke opzoeking is daartoe beperkt — niets steekt per ongeluk over."
+          },
+          "10.2": {
+            "title": "Alleen-voor-team blijft alleen voor het team",
+            "text": "Notities die zijn gemarkeerd als alleen-voor-team worden gefilterd voordat een gesprek ooit aan de widget van de bezoeker wordt getoond."
+          },
+          "10.3": {
+            "title": "Kortlevende dingen verlopen",
+            "text": "Verificatiecodes, sessiecredentials en inhoud van beveiligde links verlopen allemaal automatisch en worden opgeruimd — niets kortlevends blijft onbeperkt bestaan."
+          },
+          "10.4": {
+            "title": "Verwijder je workspace",
+            "text": "Het verwijderen van een workspace zegt onmiddellijk het abonnement op en verwijdert de gegevens, met een strikte uiterste termijn voor volledige verwijdering die in het privacybeleid staat."
+          },
+          "10.5": {
+            "title": "Verlaat of verwijder je account",
+            "text": "Mensen kunnen een workspace verlaten, en een account kan volledig worden verwijderd via Instellingen."
+          }
+        }
+      },
+      "infrastructure": {
+        "title": "Infrastructuur",
+        "kicker": "Hoe de diensten zelf worden gedraaid.",
+        "intro": "Simpele, ongeglamoureuze hygiëne die voorkomt dat een interne dienst een openbare wordt.",
+        "stats": [
+          "Niet publiek bereikbaar",
+          "Minimale voetafdruk",
+          "Bewaakt"
+        ],
+        "controls": {
+          "11.1": {
+            "title": "Interne diensten zijn niet publiek bereikbaar",
+            "text": "Onze backend-diensten en database zijn helemaal niet blootgesteld aan het openbare internet — alleen één, verharde toegangspunt is dat wel."
+          },
+          "11.2": {
+            "title": "Lean productiebuilds",
+            "text": "Wat er daadwerkelijk in productie draait, bevat niets extra's — geen ontwikkeltools, geen ongebruikte dependencies."
+          },
+          "11.3": {
+            "title": "Limieten, health checks en logrotatie",
+            "text": "Elke dienst draait met resourcelimieten, automatische health checks en een herstartbeleid, en logs worden geroteerd zodat ze niet onbeperkt kunnen groeien."
+          },
+          "11.4": {
+            "title": "Geheimen blijven buiten de broncode",
+            "text": "Keys en geheimen worden nooit in onze codebase gecommit — ze worden apart aan elke dienst geleverd, en gevoelige credentialbestanden worden alleen-lezen aangekoppeld."
+          },
+          "11.5": {
+            "title": "Herhaalbare deploys",
+            "text": "Elke deployment doorloopt dezelfde geautomatiseerde controles, zodat een release nooit een eenmalig handmatig proces is."
+          }
+        }
+      },
+      "verification": {
+        "title": "Hoe we ons eigen werk controleren",
+        "kicker": "De tests die de regels hierboven proberen te breken.",
+        "intro": "Beveiligingsclaims zijn alleen zoveel waard als de tests die ze onderbouwen. Deze worden gedekt door geautomatiseerde tests in onze eigen codebase.",
+        "stats": [
+          "Tests voor vervalste credentials",
+          "Replay-tests",
+          "Isolatietests"
+        ],
+        "controls": {
+          "12.1": {
+            "title": "Identiteitsregressies",
+            "text": "Geautomatiseerde tests dekken vervalste credentials, verlopen en herhaalde sessies, uitloggen, credentialrotatie, en dat één workspace nooit de data van een andere kan zien."
+          },
+          "12.2": {
+            "title": "Tests voor uitgaande requests",
+            "text": "De controles die voorkomen dat uitgaande requests interne netwerken bereiken, hebben hun eigen dedicated tests."
+          },
+          "12.3": {
+            "title": "Tests voor het privacyfilter",
+            "text": "Het systeem dat privégegevens vervangt voordat ze een model bereiken, en de regels voor betalingsfeiten die beperken wat kan worden getoond, worden beide direct getest."
+          },
+          "12.4": {
+            "title": "Tests voor correctheid van facturering",
+            "text": "Herhaalde verlengingen en handtekeningverificatie worden door tests gedekt, zodat een facturatiefix niet stilletjes een al gedicht gat opnieuw kan openen."
+          }
+        }
+      }
+    },
+    "demo": {
+      "customerLabel": "Wat de klant intypt",
+      "resetSample": "Voorbeeld resetten",
+      "modelLabel": "Wat het model leest",
+      "inputAriaLabel": "Te filteren bericht",
+      "caption": "Alleen ter illustratie, en het draait in je browser: niets wat je hier intypt, wordt ergens naar verstuurd. Het echte filter draait op onze servers, en de terugkoppeling naar de echte gegevens komt nooit in een prompt terecht."
+    },
+    "about": {
+      "label": "Over deze gids",
+      "textBefore": "Dit is een beschrijving van hoe het platform is gebouwd, geen certificering. Het behandelt de controles die vandaag in het product bestaan, en zal veranderen zoals het product verandert. Als je een beveiligingsquestionnaire beantwoord of een verwerkersovereenkomst getekend nodig hebt, mail dan naar ",
+      "textAfter": "."
+    },
+    "report": {
+      "label": "Meld een kwetsbaarheid",
+      "stamp": "Iets gevonden?",
+      "title": "Denk je een kwetsbaarheid te hebben gevonden? Wij willen het als eerste horen.",
+      "subtitle": "Mail de details en hoe je het kunt reproduceren. Iemand van het team leest elk rapport.",
+      "privacy": "Privacybeleid",
+      "terms": "Voorwaarden",
+      "securityPolicy": "Beveiligingsbeleid"
+    }
+  },
+  "features": {
+    "families": {
+      "answer": "Antwoord",
+      "team": "Team",
+      "know": "Kennis",
+      "act": "Actie",
+      "trust": "Vertrouwen",
+      "grow": "Groei"
+    },
+    "pageNames": {
+      "aiAgent": "AI-agent",
+      "inbox": "Inbox",
+      "demo": "Demo",
+      "pricing": "Prijzen",
+      "knowledgeHub": "Kennisbank",
+      "securityGuide": "Beveiligingsgids"
+    },
+    "tiles": [
+      {
+        "name": "Onderbouwde antwoorden",
+        "body": "Antwoorden komen uit de kennis die jij hebt goedgekeurd. Staat het er niet in, dan zegt de AI dat gewoon in plaats van te gokken."
+      },
+      {
+        "name": "Antwoordtaal",
+        "body": "Kies in welke taal de chatbot je klanten beantwoordt."
+      },
+      {
+        "name": "Paginabewustzijn",
+        "body": "Bepaal of de AI de pagina-URL van een bezoeker kan zien, en die context kan gebruiken om gerichter te antwoorden."
+      },
+      {
+        "name": "Widget met huisstijl",
+        "body": "Jouw logo en kleuren op een chatwidget die je met één snippet inbedt."
+      },
+      {
+        "name": "Live typen",
+        "body": "Klanten zien wanneer een teamlid aan het typen is, en jij ziet wanneer zij dat doen."
+      },
+      {
+        "name": "Bijlagen",
+        "body": "Klanten en je team kunnen bestanden rechtstreeks in het gesprek versturen."
+      },
+      {
+        "name": "Gedeelde inbox",
+        "body": "Elk gesprek en elke reactie op één plek, met een badge die laat zien of de AI, een teamlid of niemand ermee bezig is."
+      },
+      {
+        "name": "Join-meldingen",
+        "body": "Als een klant om een medewerker vraagt, krijgt elk teamlid een Join-melding. Wie zich als eerste aansluit, neemt het over en de melding verdwijnt voor iedereen."
+      },
+      {
+        "name": "Overnemen en teruggeven",
+        "body": "Neem een gesprek over van de AI of een collega, en geef het met één tik weer terug aan de AI."
+      },
+      {
+        "name": "Toewijzingen",
+        "body": "Gesprekken kunnen worden toegewezen aan een teamlid, dat daarvan een melding krijgt."
+      },
+      {
+        "name": "Teamuitnodigingen",
+        "body": "Nodig teamleden uit via e-mail en voeg extra plekken toe naarmate je team groeit."
+      },
+      {
+        "name": "Automatische tickets",
+        "body": "Sluit binnen 90 seconden niemand aan, dan wordt de klant geïnformeerd en automatisch een ticket aangemaakt, met een follow-up per e-mail."
+      },
+      {
+        "name": "Website crawlen",
+        "body": "Wijs Elpino naar een pagina. Pagina's die met JavaScript zijn gebouwd, worden eerst in een echte browser gerenderd."
+      },
+      {
+        "name": "Sitemap importeren",
+        "body": "Haal in één keer tot 20 pagina's uit je sitemap binnen."
+      },
+      {
+        "name": "Ontdekken",
+        "body": "Begin bij één link en Elpino volgt die tot 50 pagina's diep, met voorrang voor help- en beleidspagina's."
+      },
+      {
+        "name": "Bestand uploaden",
+        "body": "Upload PDF-, Word-, tekst- en Markdown-bestanden en de tekst wordt automatisch voor je geëxtraheerd."
+      },
+      {
+        "name": "Geschreven pagina's",
+        "body": "Schrijf je eigen pagina's in de editor voor dingen die nergens anders bestaan."
+      },
+      {
+        "name": "Openbaar / privé",
+        "body": "Elke bron heeft een zichtbaarheidsschakelaar, zodat interne notities intern blijven."
+      },
+      {
+        "name": "Betaling opzoeken",
+        "body": "Controleert echte betalingen in Stripe of Razorpay, zodat antwoorden op feiten berusten en niet op gokwerk."
+      },
+      {
+        "name": "Betaallinks",
+        "body": "Maakt een nieuwe, veilige betaallink aan wanneer een betaling opnieuw moet worden geprobeerd."
+      },
+      {
+        "name": "Abonnementen",
+        "body": "Controleert de abonnementsstatus en kan er een opzeggen als de klant dat vraagt."
+      },
+      {
+        "name": "Terugbetalingen (opt-in)",
+        "body": "Standaard uitgeschakeld. De eigenaar van de workspace bepaalt of de AI überhaupt mag terugbetalen."
+      },
+      {
+        "name": "Bonnetjes",
+        "body": "Zoekt het bonnetje voor een specifieke betaling op en verstuurt het."
+      },
+      {
+        "name": "MCP-tools",
+        "body": "Koppel tot vijf MCP-servers en zet precies die tools aan die de agent mag gebruiken."
+      },
+      {
+        "name": "Identiteitscontrole",
+        "body": "Een eenmalige e-mailcode of een ondertekend token uit je app bevestigt wie de klant is."
+      },
+      {
+        "name": "Privégegevensfilter",
+        "body": "Namen en e-mailadressen worden vervangen door referentiecodes voordat de AI het gesprek leest, en gevoelige gegevens worden verwijderd."
+      },
+      {
+        "name": "Veilige aanvragen",
+        "body": "Vraag gevoelige gegevens op via een eenmalig privéformulier in plaats van via de chat."
+      },
+      {
+        "name": "Versleutelde sleutels",
+        "body": "Verbonden inloggegevens worden versleuteld opgeslagen."
+      },
+      {
+        "name": "Budgetgrenzen",
+        "body": "Een maandelijks AI-tegoed op betaalde plannen houdt de AI-uitgaven voorspelbaar."
+      },
+      {
+        "name": "Feitencontrole",
+        "body": "Concepten worden tegen de resultaten van tools gecontroleerd voordat de klant ze ziet."
+      },
+      {
+        "name": "Bezoekerscontext",
+        "body": "Locatie, apparaat en de pagina waar ze waren, toegevoegd aan elk gesprek."
+      },
+      {
+        "name": "Analyses",
+        "body": "Bekijk hoe gesprekken verlopen in je hele workspace."
+      },
+      {
+        "name": "Geschiedenis",
+        "body": "Eerdere gesprekken met dezelfde klant, direct naast de conversatie."
+      },
+      {
+        "name": "Gratis plan",
+        "body": "Begin met 100 AI-berichten per maand, geen kaart nodig."
+      },
+      {
+        "name": "Op tegoed gebaseerde plannen",
+        "body": "Betaalde plannen bevatten een maandelijks AI-tegoed, en extra plekken zijn simpele add-ons."
+      },
+      {
+        "name": "E-mailantwoorden",
+        "body": "Geverifieerde bezoekers die de chat hebben verlaten, kunnen je antwoord toch nog per e-mail ontvangen."
+      }
+    ],
+    "table": {
+      "all": "Alles",
+      "readMoreIn": "Lees meer in {more}",
+      "hint": "Tik op een tegel. Elke functie hier is vandaag al live."
+    },
+    "hero": {
+      "badge": "Functies",
+      "titlePrefix": "De bouwstenen van ",
+      "titleHl": "geweldige support.",
+      "subtitle": "{count} mogelijkheden, één workspace. Filter op categorie, tik op een tegel en zie precies wat Elpino doet."
+    },
+    "loop": {
+      "eyebrow": "Hoe het samenkomt",
+      "titlePrefix": "Het is een kringloop, ",
+      "titleHl": "geen lijstje.",
+      "subtitle": "Elke functie voedt de volgende, zodat support beter wordt naarmate je het meer gebruikt.",
+      "steps": [
+        {
+          "t": "Leer",
+          "d": "Crawl je site, upload bestanden, schrijf pagina's."
+        },
+        {
+          "t": "Beantwoord",
+          "d": "De AI antwoordt vanuit jouw kennis, in jouw taal."
+        },
+        {
+          "t": "Handel",
+          "d": "Betalingen, abonnementen en jouw MCP-tools."
+        },
+        {
+          "t": "Draag over",
+          "d": "Vraagt eerst, waarschuwt het team, sluit aan of maakt een ticket."
+        },
+        {
+          "t": "Leer bij",
+          "d": "Bekijk gesprekken en verbeter je kennis."
+        }
+      ],
+      "stepOf": "Stap {n} van {total}",
+      "explore": "Verkken deze stap"
+    },
+    "personas": {
+      "eyebrow": "Voor wie het is",
+      "titlePrefix": "Kies je rol. ",
+      "titleHl": "Bekijk jouw functies.",
+      "items": [
+        {
+          "label": "Founder",
+          "line": "Jij bent het hele supportteam en wil je avonden terug.",
+          "picks": [
+            "Gratis plan, geen kaart nodig",
+            "Antwoorden vanuit je site in minuten",
+            "AI regelt betalingen en bonnetjes",
+            "Waarschuwt je alleen als het echt nodig is"
+          ]
+        },
+        {
+          "label": "Support lead",
+          "line": "Je runt een team en wilt duidelijk eigenaarschap zonder gemiste chats.",
+          "picks": [
+            "Gedeelde inbox met duidelijke badges",
+            "Join-meldingen voor het hele team",
+            "Automatische tickets als iedereen bezet is",
+            "Bezoekerscontext bij elk gesprek"
+          ]
+        },
+        {
+          "label": "Developer",
+          "line": "Je wilt het koppelen aan je eigen product en data.",
+          "picks": [
+            "Identiteit via ondertekend token uit je app",
+            "MCP-servers met goedkeuring per tool",
+            "Stripe- en Razorpay-opzoekingen",
+            "Één insluitbare widget-snippet"
+          ]
+        },
+        {
+          "label": "Winkeleigenaar",
+          "line": "Klanten stellen de hele dag vragen over bestellingen en betalingen.",
+          "picks": [
+            "Bestelling opzoeken via je MCP-tools",
+            "Betaallinks en bonnetjes",
+            "Terugbetalingen alleen als jij ze aanzet",
+            "Antwoorden in de taal van je klant"
+          ]
+        }
+      ]
+    },
+    "stack": {
+      "badge": "Één tool",
+      "titlePrefix": "Zes tools erin. ",
+      "titleHl": "Eén workspace eruit.",
+      "subtitle": "De meeste teams plakken een widget, een helpdesk, een kennisbank en een bot aan elkaar. Elpino is dat allemaal in één plek, met één geheugen van elke klant.",
+      "items": [
+        "Chatwidget",
+        "Helpdesk-inbox",
+        "Kennisbank",
+        "Chatbot-builder",
+        "Betaling opzoeken",
+        "Overdrachtsregels"
+      ],
+      "cardSubtitle": "Widget · Inbox · Kennis · AI-agent · Tools · Overdracht"
+    },
+    "soon": {
+      "badge": "Komt in november",
+      "title": "Omnichannel is de volgende stap.",
+      "body": "Websitechat is vandaag al live. Meer kanalen samenbrengen in dezelfde inbox is wat we hierna uitbrengen, en we kondigen het aan in de changelog.",
+      "cta": "Bekijk de changelog"
+    },
+    "faq": {
+      "eyebrow": "Vragen",
+      "titlePrefix": "Goed om te ",
+      "titleHl": "weten.",
+      "items": [
+        {
+          "q": "Is alles op deze pagina al live?",
+          "a": "Ja. Elke tegel beschrijft iets wat Elpino vandaag al doet. Omnichannel is het enige dat we nog bouwen, en dat staat aangegeven als komend in november."
+        },
+        {
+          "q": "Heb ik dit allemaal nodig?",
+          "a": "Nee. Begin met een kennisbank en de widget op het gratis plan, en zet daarna tools, MCP en teamleden aan wanneer je ze nodig hebt."
+        },
+        {
+          "q": "Wat is inbegrepen in het gratis plan?",
+          "a": "100 AI-berichten per maand, zonder dat een kaart nodig is."
+        },
+        {
+          "q": "Hoe werken betaalde plannen?",
+          "a": "Betaalde plannen bevatten een maandelijks AI-tegoed, en extra plekken zijn simpele add-ons. Bekijk de prijzenpagina voor details."
+        }
+      ]
+    },
+    "closing": {
+      "title": "Elk element, klaar voor gebruik.",
+      "subtitle": "Begin op het gratis plan en zet functies aan terwijl je groeit.",
+      "ctaStart": "Start gratis",
+      "ctaPricing": "Bekijk prijzen"
+    }
+  },
+  "founders": {
+    "stream": {
+      "incomingLive": "Binnenkomend, live",
+      "onDuty": "Elpino aan het werk",
+      "needsYou": "Heeft jou nodig",
+      "handled": "Afgehandeld",
+      "askedFirst": "{why}. Elpino vroeg eerst, en waarschuwde je daarna.",
+      "handledWithoutYou": "Afgehandeld zonder jou",
+      "actuallyNeededYou": "Had jou echt nodig",
+      "items": [
+        {
+          "q": "Hoe exporteer ik mijn gegevens?"
+        },
+        {
+          "q": "Waarom is mijn kaart geweigerd?"
+        },
+        {
+          "q": "Bieden jullie een startupkorting aan?"
+        },
+        {
+          "q": "Kunnen we een aangepast contract krijgen?",
+          "why": "Vroeg om een persoon"
+        },
+        {
+          "q": "Waar is mijn factuur van maart?"
+        },
+        {
+          "q": "Hoe reset ik mijn wachtwoord?"
+        },
+        {
+          "q": "Kan ik met de founder praten?",
+          "why": "Vroeg om een persoon"
+        },
+        {
+          "q": "Werkt het met Shopify?"
+        }
+      ]
+    },
+    "hero": {
+      "badge": "Voor founders",
+      "titlePrefix": "Bouw je product. ",
+      "titleHl": "Niet supportantwoorden.",
+      "subtitle": "Je begon een bedrijf om iets te bouwen, niet om veertig keer per week te antwoorden op “hoe reset ik mijn wachtwoord?”. Elpino neemt de terugkerende vragen over en schakelt jou alleen in voor de vragen die echt een founder nodig hebben.",
+      "ctaStart": "Start gratis",
+      "ctaPricing": "Bekijk de prijzen",
+      "freeNote": "Gratis plan: 100 AI-berichten per maand. Geen kaart nodig."
+    },
+    "calculator": {
+      "eyebrow": "Reken het uit",
+      "titlePrefix": "Krijg je middagen ",
+      "titleHl": "terug.",
+      "subtitle": "Vul je eigen cijfers in. Het AI-percentage is jouw inschatting, geen belofte, en hangt af van wat er in je kennisbank staat.",
+      "sliderQuestions": "Klantvragen per dag",
+      "sliderMinutes": "Minuten om er één te beantwoorden",
+      "unitMin": "min",
+      "sliderShare": "Aandeel dat je verwacht dat de AI oplost",
+      "yourDay": "Jouw werkdag van 8 uur",
+      "today": "Vandaag",
+      "withElpinoAt": "Met Elpino op {pct}%",
+      "backEachWeek": "Terugverdiend per week",
+      "chatsUntouched": "Chats per dag, onaangeraakt",
+      "volumeNote": "Bij dit volume kost support alleen al meer dan een volledige werkdag.",
+      "supportLabel": "{h}u support",
+      "buildingLabel": "{h}u bouwen"
+    },
+    "setup": {
+      "eyebrow": "Instellen",
+      "titlePrefix": "Live voordat je ",
+      "titleHl": "koffie koud is.",
+      "subtitle": "Geen ontwikkelaars, geen inwerkperiode. Vier stappen, en de laatste is optioneel.",
+      "stepLabel": "Stap {n}",
+      "steps": [
+        {
+          "t": "Plak je site",
+          "d": "Elpino doorzoekt je pagina's, inclusief die opgebouwd met JavaScript, en leert je product kennen.",
+          "meter": "Site wordt gelezen"
+        },
+        {
+          "t": "Voeg de rest toe",
+          "d": "Upload documenten, of schrijf het beleid dat alleen in jouw hoofd bestaat.",
+          "meter": "Kennis wordt toegevoegd"
+        },
+        {
+          "t": "Plaats de widget",
+          "d": "Één snippet, en de chat staat live op je site.",
+          "meter": "Widget wordt geïnstalleerd"
+        },
+        {
+          "t": "Koppel betalingen (optioneel)",
+          "d": "Stripe of Razorpay, zodat facturatiegegevens voor je kunnen worden opgezocht.",
+          "meter": "Wordt gekoppeld"
+        }
+      ]
+    },
+    "reaches": {
+      "badge": "Het filter",
+      "titlePrefix": "Alleen wat ",
+      "titleHl": "echt belangrijk is",
+      "titleSuffix": " bereikt jou.",
+      "subtitle": "Jij bepaalt wat de AI mag doen. Voor de rest geldt een duidelijke regel: eerst vragen, samen waarschuwen, en de klant nooit laten hangen.",
+      "rules": [
+        {
+          "t": "Antwoorden uit je documentatie",
+          "d": "Afgehandeld. Je ziet het nooit."
+        },
+        {
+          "t": "Betaal- en accountgegevens opzoeken",
+          "d": "Afgehandeld met de tools die je hebt ingeschakeld."
+        },
+        {
+          "t": "\"Kan ik met iemand praten?\"",
+          "d": "Vraagt het eerst aan de klant, en waarschuwt daarna jou en je team."
+        },
+        {
+          "t": "Ben je even niet beschikbaar?",
+          "d": "Na 90 seconden wordt een ticket aangemaakt en de klant geïnformeerd."
+        }
+      ]
+    },
+    "money": {
+      "eyebrow": "Vragen over facturatie",
+      "titlePrefix": "Het controleert de echte betaling. ",
+      "titleHl": "Jij houdt de sleutels.",
+      "subtitle": "Koppel Stripe of Razorpay en de AI kan betalingen en abonnementen opzoeken, bonnetjes en betaallinks versturen, en een abonnement opzeggen wanneer daar om wordt gevraagd. Terugbetalingen blijven uitgeschakeld totdat jij de schakelaar omzet.",
+      "chatAsk": "Kan ik mijn laatste betaling terugbetaald krijgen?",
+      "chatYes": "Ik heb je betaling gevonden en de terugbetaling gestart. Dit staat meestal binnen 5 tot 7 werkdagen op je rekening.",
+      "chatNo": "Ik zie de betaling, maar kan die zelf niet terugbetalen. Wil je dat ik je doorverbind met ons team?",
+      "toggleLabel": "Laat de AI terugbetalingen doen",
+      "toggleNote": "Standaard uitgeschakeld. Probeer de schakelaar."
+    },
+    "grows": {
+      "eyebrow": "Ruimte om te groeien",
+      "titlePrefix": "Begint met jou. ",
+      "titleHl": "Groeit mee met je team.",
+      "stageLabel": "Fase {n}",
+      "stages": [
+        {
+          "t": "Alleen jij",
+          "d": "Gratis plan, 100 AI-berichten per maand, één inbox die je zelden opent."
+        },
+        {
+          "t": "Eerste medewerker",
+          "d": "Nodig ze uit via e-mail. Ze krijgen deelnamemeldingen en nemen chats over van de AI."
+        },
+        {
+          "t": "Een klein team",
+          "d": "Wijs gesprekken toe, deel de inbox, voeg zetels toe wanneer nodig."
+        },
+        {
+          "t": "Opschalen",
+          "d": "Betaalde plannen met een maandelijks AI-tegoed, MCP-tools voor je eigen systemen."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Vragen van founders",
+      "titlePrefix": "Directe ",
+      "titleHl": "antwoorden.",
+      "items": [
+        {
+          "q": "Wat is het verschil met een gewone chatbot-widget?",
+          "a": "Elpino antwoordt alleen op basis van de kennis die jij hebt aangeleverd, kan echte betalingen opzoeken en je eigen tools gebruiken, verifieert de identiteit voordat er iets persoonlijks wordt aangeraakt, en draagt het over aan een persoon met het volledige gesprek wanneer het niet kan helpen."
+        },
+        {
+          "q": "Hoe snel kan ik het zelf instellen?",
+          "a": "De meeste founders zijn nog dezelfde dag live: voeg je site of bestanden toe, plak de widgetsnippet, en koppel eventueel Stripe of Razorpay."
+        },
+        {
+          "q": "Hoe bepaalt het of het antwoordt of mij waarschuwt?",
+          "a": "Als het kan antwoorden vanuit je kennis of een tool, doet het dat. Zo niet, dan zegt het dat en vraagt het de klant of die met je team wil worden verbonden. Alleen dan worden jij en je team gewaarschuwd."
+        },
+        {
+          "q": "Verzint het dingen?",
+          "a": "Het antwoordt op basis van wat jij hebt goedgekeurd, en een controlestap toetst conceptantwoorden aan toolresultaten. Als het iets niet weet, zegt het dat."
+        },
+        {
+          "q": "Is mijn Stripe- of Razorpay-account veilig?",
+          "a": "Inloggegevens worden versleuteld opgeslagen, en handelingen waarbij geld beweegt, zoals terugbetalingen, staan uit tot jij ze aanzet."
+        },
+        {
+          "q": "Wat gebeurt er als ik een supportmedewerker aanneem?",
+          "a": "Nodig ze uit en ze krijgen deelnamemeldingen, kunnen chats overnemen van de AI, en kunnen ze weer teruggeven."
+        }
+      ]
+    },
+    "closing": {
+      "title": "Ga terug naar bouwen.",
+      "subtitle": "Start gratis, leer Elpino je product kennen, en laat het de terugkerende vragen overnemen.",
+      "ctaStart": "Start gratis",
+      "ctaMeetAgent": "Maak kennis met de AI-agent"
+    }
+  },
+  "developers": {
+    "hero": {
+      "badge": "Voor ontwikkelaars",
+      "titlePrefix": "Van ",
+      "titleMiddle": " naar ",
+      "titleHl": "opgelost.",
+      "subtitle": "Eén tag voor de widget, één ondertekend token zodat Elpino weet wie is ingelogd, één MCP-server zodat de AI je gegevens kan lezen. Bekijk hoe de drie stappen zich op een pagina afspelen.",
+      "ctaStart": "Gratis starten",
+      "ctaDocs": "Lees de documentatie"
+    },
+    "ide": {
+      "comment1": "<!-- 1. Plak de tag -->",
+      "comment2": "<!-- 2. Vertel Elpino wie is ingelogd -->",
+      "comment3": "  // elpinoToken: ondertekend door je backend",
+      "mcpComment": "// In je dashboard: verbind een MCP-server en schakel get_order in.",
+      "stepEmbed": "Insluiten",
+      "stepIdentify": "Identificeren",
+      "stepResolve": "Oplossen",
+      "previewSupport": "Support",
+      "previewVerified": "Geverifieerd",
+      "previewGreeting": "Hoi Aisha, waarmee kan ik helpen?",
+      "previewQuestion": "Waar is mijn bestelling?",
+      "previewAnswer": "Die is gisteren verstuurd en komt donderdag aan."
+    },
+    "sequence": {
+      "eyebrow": "Aanvraagstroom",
+      "titlePrefix": "Eén vraag, ",
+      "titleHl": "vier systemen.",
+      "subtitle": "Wie met wie praat wanneer een ingelogde klant naar zijn bestelling vraagt. Doorloop het stap voor stap, of laat het afspelen.",
+      "actors": [
+        "Browser",
+        "Je server",
+        "Elpino",
+        "Je MCP-server"
+      ],
+      "steps": [
+        {
+          "label": "Klant logt in"
+        },
+        {
+          "label": "Ondertekende JWT",
+          "note": "≤ 5 min · eenmalig"
+        },
+        {
+          "label": "$elpino identify(token)"
+        },
+        {
+          "label": "Controleert handtekening + claims ✓"
+        },
+        {
+          "label": "“Waar is mijn bestelling?”"
+        },
+        {
+          "label": "get_order",
+          "note": "alleen geverifieerde klanten"
+        },
+        {
+          "label": "Bestelstatus"
+        },
+        {
+          "label": "Antwoordt de klant"
+        }
+      ],
+      "stepCounter": "Stap {n} / {total}",
+      "nextStep": "Volgende stap",
+      "replay": "Herhalen"
+    },
+    "tokenExplorer": {
+      "eyebrow": "Het identiteitstoken",
+      "titlePrefix": "Anatomie van een token, ",
+      "titleHl": "en hoe het stukgaat.",
+      "subtitle": "HS256, ondertekend met het geheim van je workspace. Tik op een claim voor de regel, en breek dan het token om te zien wat de widget meldt.",
+      "payload": "Payload",
+      "optional": "optioneel",
+      "required": "Verplicht",
+      "optionalCap": "Optioneel",
+      "breakIt": "Breek het",
+      "notAccepted": "[Elpino] Identiteitstoken werd niet geaccepteerd: {code}",
+      "fix": "Oplossing:",
+      "claimDescriptions": [
+        "De stabiele account-ID van deze gebruiker.",
+        "Precies \"elpino-widget\".",
+        "Een nieuwe willekeurige ID per token, 16 tot 128 URL-veilige tekens. Een UUID werkt.",
+        "Uitgiftetijd in hele seconden (geen milliseconden).",
+        "Vervaldatum in hele seconden, hoogstens 5 minuten na iat.",
+        "Laat het weg als er geen is. null wordt geweigerd.",
+        "true alleen als je inlogsysteem het eigenaarschap heeft bevestigd.",
+        "Weergavenaam die je team ziet."
+      ]
+    },
+    "server": {
+      "eyebrow": "Je backend",
+      "titlePrefix": "Kopiëren, plakken, ",
+      "titleHl": "publiceren.",
+      "subtitle": "Dezelfde snippets die je dashboard toont, in de taal die je al gebruikt.",
+      "copy": "Kopiëren",
+      "copied": "Gekopieerd",
+      "codeTitle": "identiteitstoken"
+    },
+    "mcp": {
+      "badge": "MCP-servers",
+      "titlePrefix": "Geef de AI tools. ",
+      "titleHl": "Houd de sleutels.",
+      "subtitle": "Verbind tot vijf MCP-servers, schakel tot 15 tools per server in, en kies voor wie ze open staan. Zet de schakelaars om om te zien wat de agent kan gebruiken.",
+      "shopServerName": "Je shop-MCP-server",
+      "toolsDiscovered": "{n} tools gevonden",
+      "toggleLabel": "Alleen-lezen tools openen voor elke bezoeker",
+      "changesData": "Wijzigt gegevens",
+      "readOnly": "Alleen-lezen",
+      "needsVerified": "Vereist geverifieerde klant",
+      "agentCanCall": "Agent kan aanroepen",
+      "toolDescriptions": [
+        "Een bestelling en de status opzoeken",
+        "Live volgen van een pakket",
+        "Een bezorgadres wijzigen",
+        "Een nog niet verzonden bestelling annuleren"
+      ],
+      "bullets": [
+        "Elke aanroep wordt op de server opnieuw tegen je lijst gecontroleerd",
+        "Tools die gegevens wijzigen hebben altijd een geverifieerde klant nodig",
+        "Inloggegevens worden versleuteld opgeslagen"
+      ]
+    },
+    "sees": {
+      "eyebrow": "Privacy standaard",
+      "titlePrefix": "Het model ",
+      "titleHl": "ziet nooit",
+      "titleSuffix": " wie ze zijn.",
+      "subtitle": "Voordat de AI een gesprek leest, worden namen, e-mails en ID's vervangen door referentiecodes, en geheimen zoals tokens en sleutels worden verwijderd. Tools krijgen aan jouw kant nog steeds de echte waarden.",
+      "toggleTeam": "Wat je team ziet",
+      "toggleModel": "Wat het AI-model ziet",
+      "chatRaw1": "Hoi, ik ben Aisha Khan (aisha@example.com). Waar is mijn bestelling?",
+      "chatMasked1": "Hoi, ik ben ref_name_9f2c (ref_email_41ab). Waar is mijn bestelling?",
+      "chatRaw2": "Hoi Aisha, je bestelling is gisteren verstuurd.",
+      "chatMasked2": "Hoi, je bestelling is gisteren verstuurd."
+    },
+    "faq": {
+      "eyebrow": "Vragen",
+      "titlePrefix": "Goed om te ",
+      "titleHl": "weten.",
+      "items": [
+        {
+          "q": "Moet ik identiteitsverificatie gebruiken?",
+          "a": "Nee, maar het is wat de AI in staat stelt om veilig privégegevens te tonen. Iedereen kan elk e-mailadres in een chat typen, dus een token ondertekend door je eigen inlogsysteem is hoe een klant Geverifieerd wordt."
+        },
+        {
+          "q": "Hoe lang is een token geldig?",
+          "a": "Hoogstens vijf minuten, en het werkt eenmalig. De chatsessie zelf duurt tot 8 uur, met een inactiviteitslimiet van 30 minuten."
+        },
+        {
+          "q": "Welk ondertekeningsalgoritme?",
+          "a": "HS256. Andere algoritmes, waaronder none en RS256, worden geweigerd."
+        },
+        {
+          "q": "Voor welke talen zijn er snippets?",
+          "a": "Node.js, Python, PHP en Ruby, in de identiteitsinstellingen van je dashboard en in de documentatie."
+        },
+        {
+          "q": "Wat is een MCP-server?",
+          "a": "Een service die tools blootstelt via het Model Context Protocol. Elpino ontdekt de tools ervan, en jij schakelt de tools in die de AI mag gebruiken."
+        },
+        {
+          "q": "Kan de AI gegevens in mijn systemen wijzigen?",
+          "a": "Alleen via tools die je hebt ingeschakeld, en tools die gegevens wijzigen hebben altijd een geverifieerde klant nodig."
+        },
+        {
+          "q": "Is er een API?",
+          "a": "De widget-SDK, identiteitstokens en MCP vormen vandaag het integratieoppervlak."
+        }
+      ],
+      "linkLabels": [
+        "Identiteitsdocumentatie",
+        "Widgetdocumentatie",
+        "AI-agent",
+        "Beveiligingsgids"
+      ]
+    },
+    "closing": {
+      "title": "Publiceer het in een middag.",
+      "subtitle": "Begin gratis, plak de tag en stel identiteit in wanneer je klaar bent.",
+      "ctaStart": "Gratis starten",
+      "ctaDocs": "Open de documentatie"
+    }
+  },
+  "busyOperators": {
+    "rush": {
+      "badgeLabel": "Spitsuur · illustratieve simulatie",
+      "reset": "Opnieuw instellen",
+      "waitingForPerson": "Wachten op een persoon",
+      "levelCalm": "Kalm",
+      "levelBusy": "Het wordt druk",
+      "levelFire": "Wachtrij staat in brand",
+      "inboxZero": "Postvak IN nul. Leuk.",
+      "chatsWaiting": "chats wachten",
+      "aiToggleLabel": "Elpino AI",
+      "teammatesOnline": "Teamgenoten online",
+      "resolvedByAi": "Opgelost door AI",
+      "resolvedByTeam": "Opgelost door team",
+      "disclaimer": "Een speelgoedmodel: elke tik komen er 3 chats binnen en de AI neemt een voorbeelddeel. Echte resultaten zijn afhankelijk van uw kennisbank en tools.",
+      "online": "online",
+      "offline": "offline"
+    },
+    "hero": {
+      "badge": "Voor drukke teams",
+      "titlePrefix": "Spitsuur, ",
+      "titleHl": "afgehandeld.",
+      "subtitle": "Wanneer de wachtrij toeneemt, beantwoordt de AI de herhaalde vragen, jouw team de rest, en niemand struikelt over elkaar. Zet de schakelaar hieronder om en voel het verschil.",
+      "ctaStart": "Begin gratis",
+      "ctaInbox": "Zie de inbox"
+    },
+    "race": {
+      "badge": "Geen dubbele antwoorden",
+      "titlePrefix": "Twee mensen, één chat. ",
+      "titleHl": "Er doet er maar één mee.",
+      "subtitle": "Iedereen krijgt dezelfde deelnamemelding. De eerste persoon die tikt, neemt het gesprek aan, de melding verdwijnt voor alle anderen en de inbox laat zien wie de melding heeft. Een collega kan het later expres nog overnemen.",
+      "askedForPerson": "Aisha Khan vroeg om een persoon",
+      "alertSent": "Waarschuwing verzonden naar het hele team",
+      "waiting": "Wachten…",
+      "joined": "Geregistreerd",
+      "joinChat": "Neem deel aan de chat",
+      "priyaHasThis": "Priya heeft dit",
+      "priyaJoinedFirst": "Priya sloot zich als eerste aan. Op de inbox-badge staat nu Priya.",
+      "bothSee": "Beide teamgenoten zien de waarschuwing…",
+      "customerSaidYes": "Klant heeft ja gezegd tegen een persoon"
+    },
+    "context": {
+      "eyebrow": "De overdracht",
+      "titlePrefix": "Niemand herhaalt ",
+      "titleHl": "zelf.",
+      "subtitle": "Schakel de schakelaar in om een ​​koude overdracht te vergelijken met die van Elpino.",
+      "toggleCold": "Koude overdracht",
+      "toggleElpino": "Elpino overdracht",
+      "coldGreeting": "Hallo, ik ben Priya. Hoe kan ik helpen?",
+      "coldComplaint": "…Ik heb dit allemaal al aan de bot uitgelegd. Ik ben naar een ander land verhuisd en wil dat mijn factureringsland wordt gewijzigd. Opnieuw.",
+      "coldNote": "De klant begint opnieuw en het teamlid begint blind.",
+      "whatPersonSees": "Wat de persoon ziet",
+      "reasonLabel": "Reden",
+      "reasonValue": "Voor het wijzigen van het factureringsland is een persoon nodig",
+      "summaryLabel": "Samenvatting",
+      "summaryValue": "Verplaatste landen, wil het factureringsland bijwerken. Geverifieerd via e-mailcode.",
+      "fullThreadLabel": "Volledige draad",
+      "fullThreadValue": "Elk bericht tot nu toe, vlak boven de componist",
+      "visitorLabel": "Bezoeker",
+      "visitorLocation": "Poona, India",
+      "visitorPage": "Aan /facturering",
+      "identityVerified": "Identiteit geverifieerd"
+    },
+    "around": {
+      "eyebrow": "De klok rond",
+      "titlePrefix": "Dekking elk uur, ",
+      "titleHl": "zonder ploegendiensten.",
+      "subtitle": "Sleep door een voorbeelddag. De teamuren zijn hier van 9 tot 6; de jouwe zal van jou zijn.",
+      "teamOnline": "Team online",
+      "aiOnWatch": "AI op wacht",
+      "hourAriaLabel": "Uur van de dag",
+      "am": "AM",
+      "pm": "PB",
+      "dayItems": [
+        {
+          "t": "AI antwoordt als eerste",
+          "d": "Herhaalde vragen bereiken nooit de wachtrij."
+        },
+        {
+          "t": "Team ontvangt deelnamemeldingen",
+          "d": "De eerste die tikt, neemt de chat over."
+        },
+        {
+          "t": "Geef het op elk gewenst moment terug",
+          "d": "Geef eenvoudige vervolgacties terug aan de AI."
+        }
+      ],
+      "nightItems": [
+        {
+          "t": "AI antwoordt als eerste",
+          "d": "Vragen die het kan beantwoorden, worden beantwoord."
+        },
+        {
+          "t": "Niemand vrij? Kaartje",
+          "d": "Na 90 seconden wordt er een ticket gearchiveerd met de reden en samenvatting."
+        },
+        {
+          "t": "De ochtend begint georganiseerd",
+          "d": "De klant heeft een e-mail ontvangen en de tickets liggen voor u klaar."
+        }
+      ]
+    },
+    "toolkit": {
+      "eyebrow": "Rust van nature",
+      "titlePrefix": "De kleine dingen die dat doen ",
+      "titleHl": "houd de wachtrij gezond.",
+      "items": [
+        {
+          "t": "Eigendomsbadges",
+          "d": "AI, teamgenoot of opgelost, op elke thread."
+        },
+        {
+          "t": "Zoeken en filteren",
+          "d": "Alles, Ongelezen, Gelezen, Opgelost."
+        },
+        {
+          "t": "Live typen",
+          "d": "Zie wanneer de klant schrijft en laat hem jou zien."
+        },
+        {
+          "t": "Geverifieerde badge",
+          "d": "Weet wie heeft bewezen wie ze zijn."
+        },
+        {
+          "t": "Bezoekersgegevens",
+          "d": "Locatie, apparaat en de pagina waarop ze zich bevinden."
+        },
+        {
+          "t": "Overnemen, teruggeven",
+          "d": "Verplaats een chat tussen de AI en mensen met één tik."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Vragen",
+      "titlePrefix": "Goed gedaan ",
+      "titleHl": "weet het.",
+      "items": [
+        {
+          "q": "Hoe voorkom je dat twee mensen dezelfde klant beantwoorden?",
+          "a": "Iedereen krijgt dezelfde melding voor deelnemen, en de eerste persoon die tikt, neemt de chat. De waarschuwing verdwijnt voor alle anderen en de inbox laat zien wie de waarschuwing heeft."
+        },
+        {
+          "q": "Zal Elpino mijn team vervangen?",
+          "a": "Nee. Het behandelt herhaalde vragen en uw mensen nemen de gesprekken die een oordeel vereisen. Je kunt elke chat ook teruggeven aan de AI."
+        },
+        {
+          "q": "Waar kan het van leren?",
+          "a": "Uw websitepagina's (inclusief in JavaScript gebouwde pagina's), geüploade PDF-, Word-, tekst- en Markdown-bestanden, en pagina's die u schrijft. Jij bepaalt welke openbaar zijn."
+        },
+        {
+          "q": "Wat gebeurt er als niemand online is?",
+          "a": "De AI antwoordt wat hij kan. Als een klant om een ​​persoon vraagt ​​en er komt binnen 90 seconden niemand binnen, dan wordt er een ticket opgeslagen met de reden en samenvatting en wordt de klant gemaild."
+        },
+        {
+          "q": "Hoe lang duurt de uitrol?",
+          "a": "De meeste teams zijn dezelfde dag live: voeg kennis toe, plak de widget en nodig teamgenoten uit."
+        }
+      ],
+      "footNote": "Websitechat is vandaag live. Omnichannel komt in november."
+    },
+    "closing": {
+      "title": "Maak van de wachtrij het probleem van iemand anders.",
+      "subtitle": "Begin gratis en nodig uw team uit wanneer u er klaar voor bent.",
+      "ctaStart": "Begin gratis",
+      "ctaTickets": "Zie kaartjes"
     }
   }
 }

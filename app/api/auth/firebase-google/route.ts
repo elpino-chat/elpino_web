@@ -37,6 +37,14 @@ export async function POST(request: Request) {
   }
   await setAuthCookie(jwt);
 
-  const destination = result.identity.needsOnboarding ? "/onboarding" : sanitizeReturnPath(body.returnTo);
+  const returnTo = sanitizeReturnPath(body.returnTo);
+  // The WordPress connect flow never needs the onboarding wizard — every
+  // account already gets a workspace auto-created lazily on first use (see
+  // ensureDefaultOrganization in auth-service), and /connect/wordpress
+  // itself creates/reuses the real site from the WordPress install's URL.
+  const skipsOnboarding = returnTo.startsWith("/connect/wordpress");
+  const destination = result.identity.needsOnboarding && !skipsOnboarding
+    ? (returnTo !== "/dashboard" ? `/onboarding?next=${encodeURIComponent(returnTo)}` : "/onboarding")
+    : returnTo;
   return Response.json({ destination });
 }

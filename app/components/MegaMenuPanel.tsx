@@ -2,10 +2,12 @@
 
 import Link from 'next/link';
 import { Rocket, ShoppingBag, Users } from 'lucide-react';
+import { tSectionTitle, tNavItem } from './nav-data';
 
 type NavItem = { label: string; href: string };
 type NavSection = { title: string; items: NavItem[] };
 export type MegaGroup = { label: string; sections: NavSection[] };
+type T = (key: string, defaultValue?: string) => string;
 
 // Elpino's own look for the menu: ink outlines and flat
 // sticker colours (the mascot's black-and-white, plus the product blue), with
@@ -145,8 +147,17 @@ function NotebookArt() {
 
 // --------------------------------------------------------------- panel
 
-export function MegaMenuPanel({ group, onNavigate }: { group: MegaGroup; onNavigate: () => void }) {
+const FEATURED_KEYS: Record<string, string> = { Product: 'product', Solutions: 'solutions', Resources: 'resources' };
+const GROUP_LABEL_KEYS: Record<string, string> = { Product: 'product', Solutions: 'solutions', Resources: 'resources' };
+
+export function MegaMenuPanel({ group, onNavigate, t }: { group: MegaGroup; onNavigate: () => void; t: T }) {
   const feature = featured[group.label] ?? featured.Product;
+  const featuredKey = FEATURED_KEYS[group.label] ?? 'product';
+  const featureTitle = t(`nav.featured.${featuredKey}.title`, feature.title);
+  const featureText = t(`nav.featured.${featuredKey}.text`, feature.text);
+  const featureCta = t(`nav.featured.${featuredKey}.cta`, feature.cta);
+  const groupLabelKey = GROUP_LABEL_KEYS[group.label];
+  const groupLabel = groupLabelKey ? t(`nav.groups.${groupLabelKey}`, group.label) : group.label;
 
   return (
     <div
@@ -166,10 +177,10 @@ export function MegaMenuPanel({ group, onNavigate }: { group: MegaGroup; onNavig
             {feature.art === 'notebook' && <NotebookArt />}
           </div>
           <div className="border-t-2 border-[#11120f] bg-[#fffdf5] p-5">
-            <h3 className="text-[23px] font-medium leading-[1.15] tracking-tight text-[#11120f]">{feature.title}</h3>
-            <p className="mt-2 text-[14.5px] leading-6 text-black/60">{feature.text}</p>
+            <h3 className="text-[23px] font-medium leading-[1.15] tracking-tight text-[#11120f]">{featureTitle}</h3>
+            <p className="mt-2 text-[14.5px] leading-6 text-black/60">{featureText}</p>
             <span className="mt-4 inline-flex h-10 items-center gap-2 rounded-full border-2 border-[#11120f] bg-[#ffd84d] px-5 text-[14px] font-semibold text-[#11120f] transition group-hover:-translate-y-0.5 group-hover:">
-              {feature.cta} <span aria-hidden="true">→</span>
+              {featureCta} <span aria-hidden="true">→</span>
             </span>
           </div>
         </Link>
@@ -177,7 +188,7 @@ export function MegaMenuPanel({ group, onNavigate }: { group: MegaGroup; onNavig
         {/* Links, numbered like a table of contents */}
         <div className={`flex flex-col bg-[#fff8ec] p-7 text-[#11120f] ${card}`}>
           <div className="flex items-center gap-3">
-            <span className="rounded-full border-2 border-[#11120f] bg-[#11120f] px-3 py-1 text-[13px] font-semibold text-white">{group.label}</span>
+            <span className="rounded-full border-2 border-[#11120f] bg-[#11120f] px-3 py-1 text-[13px] font-semibold text-white">{groupLabel}</span>
             <span className="h-[2px] flex-1 bg-[repeating-linear-gradient(90deg,#11120f_0_6px,transparent_6px_12px)]" />
           </div>
           <div className="mt-6 grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2">
@@ -185,7 +196,7 @@ export function MegaMenuPanel({ group, onNavigate }: { group: MegaGroup; onNavig
               <div key={section.title} className="flex flex-col">
                 <h4 className="mb-2 flex items-baseline gap-2.5 text-[19px] font-medium tracking-tight">
                   <span className="font-mono text-[12px] font-medium text-[#3784ff]">{String(index + 1).padStart(2, '0')}</span>
-                  {section.title}
+                  {tSectionTitle(t, section.title)}
                 </h4>
                 <div className="flex flex-col">
                   {section.items.map((item) => (
@@ -195,7 +206,7 @@ export function MegaMenuPanel({ group, onNavigate }: { group: MegaGroup; onNavig
                       onClick={onNavigate}
                       className="group/link -mx-2.5 flex items-center justify-between rounded-lg px-2.5 py-[7px] text-[15.5px] transition hover:bg-[#ffd84d]"
                     >
-                      {item.label}
+                      {tNavItem(t, item)}
                       <span className="-translate-x-1 opacity-0 transition group-hover/link:translate-x-0 group-hover/link:opacity-100" aria-hidden="true">↗</span>
                     </Link>
                   ))}
@@ -208,7 +219,7 @@ export function MegaMenuPanel({ group, onNavigate }: { group: MegaGroup; onNavig
         {/* Pricing sticker + blog stubs */}
         <div className="flex min-h-0 flex-col gap-5">
           <Link href="/pricing" onClick={onNavigate} className={`group relative overflow-hidden bg-[#7060bd] p-6 text-white ${card}`}>
-            <p className={`${monoLabel} text-white/75`}>Explore</p>
+            <p className={`${monoLabel} text-white/75`}>{t('nav.megaMenu.explore', 'Explore')}</p>
             {/* a chat bubble that is always "typing" */}
             <div className="mt-4 flex w-fit items-center gap-1.5 rounded-2xl rounded-bl-md border-2 border-[#11120f] bg-white px-4 py-3" aria-hidden="true">
               {[0, 1, 2].map((dot) => (
@@ -217,8 +228,8 @@ export function MegaMenuPanel({ group, onNavigate }: { group: MegaGroup; onNavig
             </div>
             <div className="mt-5 flex items-end justify-between gap-4">
               <div>
-                <h3 className="text-[26px] font-medium leading-none tracking-tight">See pricing</h3>
-                <p className="mt-2 text-[14.5px] text-white/80">Start free. Pay as your team grows.</p>
+                <h3 className="text-[26px] font-medium leading-none tracking-tight">{t('nav.megaMenu.seePricing', 'See pricing')}</h3>
+                <p className="mt-2 text-[14.5px] text-white/80">{t('nav.megaMenu.seePricingNote', 'Start free. Pay as your team grows.')}</p>
               </div>
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-[#11120f] bg-[#ffd84d] text-[18px] font-bold text-[#11120f] transition group-hover:rotate-[-45deg]" aria-hidden="true">→</span>
             </div>
@@ -226,7 +237,7 @@ export function MegaMenuPanel({ group, onNavigate }: { group: MegaGroup; onNavig
           </Link>
 
           <div className={`flex-1 bg-white p-5 text-[#11120f] ${card}`}>
-            <p className={`${monoLabel} text-black/50`}>Fresh from the blog</p>
+            <p className={`${monoLabel} text-black/50`}>{t('nav.megaMenu.freshFromBlog', 'Fresh from the blog')}</p>
             <div className="mt-3 flex flex-col">
               {recentPosts.map((post, index) => (
                 <Link

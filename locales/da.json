@@ -47,7 +47,95 @@
       "privacy": "Privatlivspolitik",
       "successTitle": "Besked sendt",
       "successBody": "Tak fordi du kontaktede os. Vi vender tilbage til dig snart.",
-      "sendAnother": "Send en ny besked"
+      "sendAnother": "Send en ny besked",
+      "sentStamp": "Sendt ✓",
+      "postmarkLabel": "mail",
+      "securityNote": "Sendt sikkert — aldrig brugt til træning"
+    },
+    "hero": {
+      "eyebrow": "Kontakt · postrummet",
+      "greeting": "Hej.",
+      "titlePrefix": "Hvordan kan",
+      "titleHl": "hjælper vi?",
+      "searchLabel": "Søg i hjælpeemner",
+      "searchPlaceholder": "Søg efter salg, support, fakturering og mere",
+      "searchButtonLabel": "Søg",
+      "noMatch": "Ingen nøjagtig match. Tryk på Enter for at sende os dit spørgsmål.",
+      "linkGettingStarted": "Kom godt i gang",
+      "linkFeaturedGuides": "Udvalgte guider",
+      "linkPlansBilling": "Planer og fakturering",
+      "linkSendMessage": "Eller send os en besked ↓"
+    },
+    "desks": {
+      "eyebrow": "Vælg en rute",
+      "titlePrefix": "Nå frem til ",
+      "titleHl": "højre skrivebord.",
+      "subtitle": "Vælg den kanal, der bedst matcher det, du har brug for. Hver rute fører til et rigtigt medlem af vores team.",
+      "deskLabel": "Skrivebord {n}",
+      "addressed": "Postkort adresseret ✓",
+      "actionAddress": "Adresser et postkort",
+      "emailNote": "Foretrækker du din egen mail-app? Hvert skrivebord med en adresse fungerer også med {link}.",
+      "emailNoteLink": "e-mail"
+    },
+    "postcard": {
+      "eyebrow": "Send os en note",
+      "titlePrefix": "Et rigtigt menneske ",
+      "titleHl": "vil læse dette.",
+      "addressedTo": "Adresseret til"
+    },
+    "tracking": {
+      "eyebrow": "Spor dit postkort",
+      "titlePrefix": "Hvad sker der ",
+      "titleHl": "efter du har trykket på send.",
+      "onlineStatus": "Vores team er online",
+      "hours": "man-fre, 9:00–18:00 CET",
+      "steps": [
+        {
+          "title": "Sendt",
+          "body": "Dit postkort forlader dine hænder. Intet andet at gøre."
+        },
+        {
+          "title": "Vi læser hvert ord",
+          "body": "Din note lander med et menneske på holdet — ingen billetlabyrint, ingen bots."
+        },
+        {
+          "title": "Et svar inden for en hverdag",
+          "body": "Rigtige svar fra en, der arbejder på produktet."
+        },
+        {
+          "title": "Et opkald, hvis det er nyttigt",
+          "body": "For salg og virksomhed vil vi gennemgå Elpino om din faktiske arbejdsgang."
+        }
+      ]
+    },
+    "library": {
+      "titlePrefix": "Foretrækker at finde det ",
+      "titleHl": "dig selv?",
+      "subtitle": "De fleste spørgsmål er allerede besvaret her - og alt nedenfor linker direkte til kilden.",
+      "cardLabel": "Kort {n}",
+      "items": [
+        {
+          "title": "Hurtige svar",
+          "body": "Opsætning, fakturering, eskalering og sikkerhed — besvaret i FAQ.",
+          "cta": "Gennemse FAQ"
+        },
+        {
+          "title": "Dokumentation",
+          "body": "Installer vejledninger, konnektoropsætning og arbejdsområdekonfiguration.",
+          "cta": "Åbn dokumenterne"
+        },
+        {
+          "title": "Sikkerhed og privatliv",
+          "body": "Hvordan dine data krypteres, opbevares og aldrig bruges til træning.",
+          "cta": "Læs politikkerne"
+        }
+      ]
+    },
+    "search": {
+      "plansTitle": "Planer og fakturering",
+      "plansDetail": "Spørgsmål om abonnementer, fakturaer eller priser",
+      "accountTitle": "Konto og sikkerhed",
+      "accountDetail": "Hjælp med adgang, privatliv eller kontoindstillinger"
     }
   },
   "auth": {
@@ -105,6 +193,4113 @@
         "lowercase": "Lille bogstav",
         "number": "Tal"
       }
+    }
+  },
+  "home": {
+    "hero": {
+      "badge": "AI-drevet kundesupport",
+      "titlePrefix": "Support, der",
+      "words": [
+        "svarer.",
+        "løser.",
+        "husker.",
+        "eskalerer."
+      ],
+      "subtitle": "AI, der svarer fra din viden, verificerer rigtige betalinger og ordrer, og eskalerer til dit team med fuld kontekst, når et menneske er nødvendigt.",
+      "ctaPrimary": "Start gratis",
+      "ctaSecondary": "Prøv det selv",
+      "trust": [
+        "100 gratis AI-beskeder om måneden",
+        "Intet kort krævet",
+        "Klar på en eftermiddag"
+      ],
+      "stickers": [
+        "Løst af AI",
+        "Menneske klar",
+        "Privat som standard",
+        "Intet går tabt"
+      ],
+      "callouts": [
+        "AI-badge på hver samtale",
+        "Deltag for at overtage",
+        "Besøgendes placering og enhed"
+      ],
+      "widget": {
+        "name": "Elpino",
+        "subtitle": "Svarer inden få sekunder",
+        "convo": [
+          "Blev jeg opkrævet dobbelt for opgraderingen?",
+          "Har tjekket din betalingshistorik",
+          "Du blev kun opkrævet én gang. Det andet forsøg mislykkedes og blev aldrig gennemført."
+        ]
+      }
+    },
+    "marquee": {
+      "questions": [
+        "Hvor er min faktura?",
+        "Hvordan nulstiller jeg min adgangskode?",
+        "Blev jeg opkrævet dobbelt?",
+        "Kan jeg få en tilbagebetaling?",
+        "Hvor er min ordre?",
+        "Hvordan tilføjer jeg et teammedlem?",
+        "Er mine data sikre?",
+        "Hvorfor mislykkedes min betaling?",
+        "Kan jeg tale med et menneske?"
+      ]
+    },
+    "tryit": {
+      "eyebrow": "Prøv det",
+      "titlePrefix": "Spørg om noget.",
+      "titleHl": "Se, hvad den gør.",
+      "subtitle": "Vælg et kundespørgsmål. Chatten til venstre, alt hvad Elpino gjorde før den svarede til højre.",
+      "widgetName": "Elpino",
+      "widgetSubtitle": "AI-support",
+      "whatItDid": "Hvad Elpino gjorde",
+      "done": "Klar",
+      "working": "Arbejder…",
+      "stepStart": "start",
+      "stepOther": "trin",
+      "person": "menneske",
+      "resolved": "løst",
+      "humanNote": "Spurgte først · et teammedlem kan deltage, eller der oprettes en sag",
+      "resolvedNote": "Besvaret og løst, intet menneske nødvendigt",
+      "sampleNote": "Eksempelsvar. De viste trin er den type værktøjer Elpino faktisk bruger.",
+      "qas": [
+        {
+          "q": "Blev jeg opkrævet dobbelt?",
+          "steps": [
+            "Verificerede dig med en e-mailkode",
+            "Tjekkede din betalingshistorik"
+          ],
+          "a": "Du blev kun opkrævet én gang. Det andet forsøg mislykkedes og blev aldrig gennemført."
+        },
+        {
+          "q": "Hvor er min ordre?",
+          "steps": [
+            "Verificerede dig med en e-mailkode",
+            "Kontaktede butikken via MCP"
+          ],
+          "a": "Sendt i går, ankommer torsdag. Har sendt dig et sporingslink via e-mail."
+        },
+        {
+          "q": "Hvordan nulstiller jeg min adgangskode?",
+          "steps": [
+            "Søgte i din videnbase"
+          ],
+          "a": "Vælg 'Glemt adgangskode' på login-siden og brug det link, vi sender via e-mail."
+        },
+        {
+          "q": "Kan jeg få en tilbagebetaling?",
+          "steps": [
+            "Tjekkede betalingen",
+            "Tilbagebetalinger er slået fra for dette arbejdsområde"
+          ],
+          "a": "Jeg kan ikke selv udføre denne tilbagebetaling. Vil du have, at jeg forbinder dig med vores team?"
+        },
+        {
+          "q": "Kan jeg tale med et menneske?",
+          "steps": [
+            "Spurgte inden eskalering",
+            "Underrettede hele teamet på samme tid"
+          ],
+          "a": "Priya fra vores team har deltaget og kan se hele samtalen."
+        },
+        {
+          "q": "Sælger I gavekort?",
+          "steps": [
+            "Søgte i din videnbase",
+            "Ingen match fundet"
+          ],
+          "a": "Jeg har ikke den oplysning. Vil du have, at jeg forbinder dig med vores team?"
+        }
+      ]
+    },
+    "customizer": {
+      "eyebrow": "Gør det til dit eget",
+      "titlePrefix": "En widget, der",
+      "titleHl": "ser ud og taler som dig.",
+      "subtitle": "Tilføj dit logo, navngiv din AI, vælg farve og tema, og svarsprog. Rør ved indstillingerne og se widgeten ændre sig.",
+      "yourLogo": "Dit logo",
+      "upload": "Upload logo",
+      "remove": "Fjern",
+      "fileTooBig": "Brug et billede under 2 MB.",
+      "fileShown": "Vises kun her. Uploades ikke nogen steder.",
+      "aiName": "AI-navn",
+      "greeting": "Velkomst",
+      "accentColour": "Accentfarve",
+      "theme": "Tema",
+      "light": "Lys",
+      "dark": "Mørk",
+      "customerWritesIn": "Kunden skriver på",
+      "theAi": "AI'en",
+      "repliesIn": "svarer på",
+      "autoMatch": "Automatisk: match kunden",
+      "seesUrl": "AI'en ser sidens URL",
+      "visitorOn": "Besøgende på",
+      "replyingIn": "Svarer på",
+      "matched": "(matchet)",
+      "writeMessage": "Skriv en besked…",
+      "previewNote": "Forhåndsvisning med eksempeltekst. Din rigtige widget bruger dit logo, farver og velkomst.",
+      "support": "Support",
+      "weReplyFast": "Vi svarer inden få sekunder"
+    },
+    "tour": {
+      "eyebrow": "Produkt",
+      "titlePrefix": "Alt et supportteam behøver,",
+      "titleHl": "på et sted.",
+      "items": [
+        {
+          "tag": "AI-agent",
+          "title": "En agent, der ved, hvem den taler med",
+          "desc": "Husker kunder, verificerer identitet, tjekker betalinger og kalder dine værktøjer."
+        },
+        {
+          "tag": "Delt indbakke",
+          "title": "En indbakke for team og AI",
+          "desc": "Klart ejerskab, deltagelsesmeddelelser og fuld kontekst for hver samtale."
+        },
+        {
+          "tag": "Videnbase",
+          "title": "Lær den alt, hvad du har",
+          "desc": "Scan dit websted, upload filer, skriv sider. Med offentlig/privat-skift."
+        },
+        {
+          "tag": "Sager",
+          "title": "Intet går tabt",
+          "desc": "Hvis ingen er tilgængelig, oprettes en sag, og kunden bliver informeret."
+        }
+      ]
+    },
+    "who": {
+      "eyebrow": "Hvem det er til",
+      "titlePrefix": "Bygget til folk,",
+      "titleHl": "der laver support.",
+      "items": [
+        {
+          "title": "Grundlæggere",
+          "desc": "Byg produktet, ikke supportsvar. Elpino kontakter dig kun, når en grundlægger virkelig er nødvendig.",
+          "pts": [
+            "Gratis plan, 100 AI-beskeder om måneden",
+            "Underretter dig kun, når et menneske er nødvendigt",
+            "Opsætning på en eftermiddag"
+          ]
+        },
+        {
+          "title": "Travle teams",
+          "desc": "Spidsbelastninger under kontrol: AI'en tager gentagelser, alle får den samme deltagelsesmeddelelse, ingen svarer dobbelt.",
+          "pts": [
+            "En meddelelse rammer hele teamet",
+            "Ejerskabsbadges på hver samtale",
+            "En sag, når ingen er tilgængelig"
+          ]
+        },
+        {
+          "title": "Udviklere",
+          "desc": "Et tag, et signeret identity token og MCP-servere. Du vælger, hvad AI'en kan røre ved.",
+          "pts": [
+            "Et script-tag for widgeten",
+            "Signerede, kortvarige identity tokens",
+            "MCP-servere godkendt værktøj for værktøj"
+          ]
+        }
+      ],
+      "founderVisual": [
+        {
+          "q": "Hvordan eksporterer jeg mine data?",
+          "ok": true
+        },
+        {
+          "q": "Hvorfor blev mit kort afvist?",
+          "ok": true
+        },
+        {
+          "q": "Skræddersyet kontrakt?",
+          "ok": false
+        }
+      ],
+      "handled": "Håndteret",
+      "needsYou": "Har brug for dig",
+      "joined": "Priya har deltaget"
+    },
+    "statement": "Elpino svarer det, den ved, gør det, du tillader, og spørger et menneske om alt andet.",
+    "integrations": {
+      "eyebrow": "Integrationer",
+      "titlePrefix": "Forbinder til det, du",
+      "titleHl": "allerede bruger.",
+      "subtitle": "Betalingssystemer til opslag og links, projektværktøjer til sager og MCP til dine egne systemer. Elpino er i midten, og alt hvad du forbinder, virker med den.",
+      "tags": [
+        "Betalinger",
+        "Sager",
+        "Dine systemer"
+      ],
+      "cta": "Se alle integrationer"
+    },
+    "trust": {
+      "eyebrow": "Tillid",
+      "titlePrefix": "Kraftfuld, med",
+      "titleHl": "bremser på plads.",
+      "subtitle": "Dette er de regler, Elpino kører efter. De fleste er altid slået til. Delene der rører penge, slår du selv til.",
+      "cta": "Læs sikkerhedsguiden",
+      "rulebook": "Elpinos regelbog",
+      "setByYou": "Indstillet af dig",
+      "guardrailsOn": "Sikkerhedsforanstaltninger slået til",
+      "alwaysOn": "Altid slået til",
+      "rules": [
+        {
+          "title": "Kun svar fra godkendt viden",
+          "desc": "Hvis det ikke er i din videnbase, siger den det og tilbyder et menneske."
+        },
+        {
+          "title": "Skjul navne og e-mails for AI'en",
+          "desc": "Modellen ser referencekoder, ikke dine kunders identitet."
+        },
+        {
+          "title": "Verificer inden noget personligt",
+          "desc": "En e-mailkode eller signeret token kommer først."
+        },
+        {
+          "title": "Kun værktøjer, du har slået til",
+          "desc": "Hvert MCP-værktøj godkendes af dig, et for et."
+        }
+      ],
+      "refundTitle": "Lad AI'en udstede tilbagebetalinger",
+      "refundOn": "Slået til. AI'en kan give tilbagebetalinger i henhold til arbejdsområdets ejerindstilling.",
+      "refundOff": "Slået fra som standard. Kun arbejdsområdets ejer kan slå det til."
+    },
+    "pricing": {
+      "eyebrow": "Priser",
+      "titlePrefix": "Betal for hjælp,",
+      "titleHl": "ikke for hoveder.",
+      "subtitle": "Start gratis. Betalte planer måles på den mængde arbejde, AI'en udfører.",
+      "cta": "Se alle priser",
+      "plans": [
+        {
+          "name": "Gratis",
+          "big": "$0",
+          "note": "100 AI-beskeder om måneden",
+          "pts": [
+            "Intet kort krævet",
+            "Widget, viden og indbakke",
+            "Eskaleringer koster aldrig ekstra"
+          ]
+        },
+        {
+          "name": "Betalte planer",
+          "big": "Kreditbaseret",
+          "note": "Månedlig AI-kredit tilpasset dit volumen",
+          "pts": [
+            "Betalings- og kontoværktøjer",
+            "Plads til et større team",
+            "Genopfyld når som helst"
+          ]
+        },
+        {
+          "name": "Ekstra medlemmer",
+          "big": "Pladspakker",
+          "note": "Tilføj pladser, der forlænges med din plan",
+          "pts": [
+            "Kun når du vokser",
+            "Samme indbakke, flere hænder",
+            "Annuller når som helst"
+          ]
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Spørgsmål",
+      "titlePrefix": "Hvad folk spørger",
+      "titleHl": "først.",
+      "items": [
+        {
+          "q": "Hvad er Elpino?",
+          "a": "En AI-drevet kundesupportplatform: en chat-widget på dit websted, en AI-agent, der svarer fra din viden og verificerer rigtige betalinger, en delt team-indbakke og sager, når ingen er tilgængelig."
+        },
+        {
+          "q": "Vil AI'en finde på ting?",
+          "a": "Den svarer fra viden, du har godkendt, og et verifikationstrin tjekker udkast mod værktøjsresultater. Når den ikke ved det, siger den det og tilbyder et menneske."
+        },
+        {
+          "q": "Hvad sker der, når den ikke kan hjælpe?",
+          "a": "Den spørger kunden først. Ved ja får hele teamet en deltagelsesmeddelelse og 90 sekunder til at reagere. Hvis ingen deltager, oprettes en sag, og kunden får en e-mail."
+        },
+        {
+          "q": "Hvor lang tid tager opsætningen?",
+          "a": "De fleste teams er live samme dag: tilføj viden, indsæt widget-koden, og inviter dit team."
+        },
+        {
+          "q": "Er der en gratis plan?",
+          "a": "Ja: 100 AI-beskeder om måneden, intet kort krævet."
+        },
+        {
+          "q": "Virker det på andre kanaler?",
+          "a": "Chat på webstedet virker allerede. Omnichannel kommer i november."
+        }
+      ]
+    },
+    "closing": {
+      "title": "Giv dine kunder svaret, før de er færdige med at skrive.",
+      "subtitle": "Start gratis, lær den din virksomhed, og lad den tage de tilbagevendende spørgsmål.",
+      "ctaPrimary": "Start gratis",
+      "ctaSecondary": "Tal med os"
+    }
+  },
+  "pricing": {
+    "hero": {
+      "badge": "Priser",
+      "title": "Start gratis. Voks når du er klar.",
+      "subtitle": "Hver ny konto starter med AI-support, en delt indbakke og overdragelse til et menneske — intet kort krævet. Udforsk Elpino med dit team, og vælg derefter en plan, når du behøver mere.",
+      "stickerFree": "Gratis for altid ✓",
+      "stickerNoCard": "Intet kort krævet",
+      "ctaDashboard": "Gå til dashboard",
+      "ctaStart": "Start gratis",
+      "billingPeriodLabel": "Betalingsperiode",
+      "monthly": "Månedligt",
+      "annually": "Årligt"
+    },
+    "planCards": {
+      "mostPopular": "Mest populær",
+      "save": "spar",
+      "freeForever": "Gratis for altid",
+      "discussCustomPlan": "eller diskuter en tilpasset plan",
+      "compareAllFeatures": "Sammenlign alle funktioner",
+      "whatsIncluded": "Hvad er inkluderet",
+      "builtForTeam": "Bygget til hele dit team",
+      "builtForTeamDesc": "Delt viden, en indbakke og overdragelse til et menneske, når det er nødvendigt."
+    },
+    "comparison": {
+      "eyebrow": "Plansammenligning",
+      "titlePrefix": "Se, hvad der ",
+      "titleHl": "passer til dit team.",
+      "subtitle": "Sammenlign kapacitet, pladser og produktadgang på tværs af alle planer. Opgrader, når din supportdrift har brug for mere plads.",
+      "featuresHeader": "Funktioner",
+      "popular": "Populær",
+      "billedAnnually": "faktureres årligt",
+      "billedMonthly": "faktureres månedligt",
+      "showAll": "Vis alle funktioner",
+      "showFewer": "Vis færre funktioner",
+      "included": "Inkluderet",
+      "notIncluded": "Ikke inkluderet",
+      "categories": {
+        "aiRules": {
+          "name": "Hvad AI'en må gøre",
+          "rows": {
+            "allowance": {
+              "label": "Månedlig AI-kvote",
+              "description": "Free er begrænset til 100 AI-beskeder. Betalte planer inkluderer en månedlig dollarkredit, som AI'en bruger, mens den arbejder, delt af hele arbejdsområdet."
+            },
+            "whenOut": {
+              "label": "Når kvoten løber tør",
+              "description": "AI'en overdrager nye samtaler til dit team. På betalte planer kan du fylde kredit op til enhver tid eller aktivere automatisk genopfyldning."
+            },
+            "escalations": {
+              "label": "Eskaleringer til et menneske",
+              "description": "Tråde, som AI'en overdrager, fordi den ikke kunne svare sikkert. Selve overdragelsen koster aldrig ekstra."
+            }
+          }
+        },
+        "seats": {
+          "name": "Hvem kan logge ind",
+          "rows": {
+            "included": {
+              "label": "Inkluderede pladser",
+              "description": "Teammedlemmer dækket af planens pris, inklusive arbejdsområdets ejer."
+            },
+            "extra": {
+              "label": "Ekstra pladser",
+              "description": "Hvert teammedlem ud over de inkluderede pladser, på enhver plan."
+            },
+            "ceiling": {
+              "label": "Pladsloft",
+              "description": "Punktet, hvor du behøver en større plan i stedet for en anden plads."
+            }
+          }
+        },
+        "product": {
+          "name": "Produktet",
+          "rows": {
+            "widget": {
+              "label": "Chat-widget på webstedet",
+              "description": "Den indlejrede chat, som dine besøgende rent faktisk taler med."
+            },
+            "knowledge": {
+              "label": "Videnbase og AI-svar",
+              "description": "Scan dit websted eller upload dokumenter; AI'en svarer fra dem."
+            },
+            "storage": {
+              "label": "Vidensopbevaring",
+              "description": "Hvor meget scannet og uploadet indhold arbejdsområdet kan indeholde."
+            },
+            "inbox": {
+              "label": "Delt indbakke og overdragelse",
+              "description": "En indbakke for teamet, med AI-overdragelse, når den bør."
+            },
+            "audit": {
+              "label": "AI-revisionsspor",
+              "description": "Hvert svar, med de artikler og opslag, det blev bygget fra."
+            },
+            "analytics": {
+              "label": "Besøgsanalyse",
+              "description": "Live besøgende, kilder, lande og sider."
+            },
+            "profiles": {
+              "label": "Kundeprofiler og historik",
+              "description": "Lagrede kunderegistreringer og deres tidligere samtaler."
+            },
+            "domain": {
+              "label": "Tilsluttet domæne",
+              "description": "Et arbejdsområde, et websted — behøver du et andet? start et andet arbejdsområde."
+            },
+            "support": {
+              "label": "Support",
+              "description": "Hvordan du kontakter os, når noget behøver et menneske på vores side."
+            }
+          }
+        }
+      }
+    },
+    "values": {
+      "handsOff": "Overdrager til et menneske",
+      "topUpOrHandoff": "Fyld op eller overdrag",
+      "noExtraCharge": "Ingen ekstra omkostning",
+      "noLimit": "Ingen grænse",
+      "standard": "Standard",
+      "priority": "Prioritet",
+      "messages": "beskeder",
+      "credit": "kredit",
+      "seatBundleSummary": "3 pladser for $2, 5 for $3"
+    },
+    "billing": {
+      "eyebrow": "Klar, enkel fakturering",
+      "titleLine1": "Betal for det, AI'en gør.",
+      "titleLine2": "Ikke for overdragelser.",
+      "subtitle": "Free inkluderer 100 AI-beskeder om måneden. Betalte planer inkluderer en månedlig AI-kredit, der dækker så mange samtaler som muligt, så et hurtigt spørgsmål koster mindre end en lang udveksling. At overdrage en samtale til dit team er altid gratis.",
+      "creditCard": {
+        "label": "Månedlig AI-kredit",
+        "amount": "Fra $7",
+        "note": "hver måned på Starter",
+        "chatsUseCredit": "chats bruger kredit",
+        "refillsMonthly": "fyldes op månedligt",
+        "desc": "Starter inkluderer $7, Growth $40 og Scale $240 AI-kredit hver måned. Behøver du mere? Fyld op når som helst, eller aktiver automatisk genopfyldning.",
+        "cta": "Sammenlign planer"
+      },
+      "handoffCard": {
+        "stamp": "Overdragelse = gratis",
+        "label": "Ekstra gebyr pr. overdragelse",
+        "note": "På hver plan. Altid."
+      },
+      "inboxCard": {
+        "title": "Din AI og dit team, i en indbakke.",
+        "desc": "AI'en svarer fra din viden. Når en person er nødvendig, fortsætter dit team med den fulde samtale, der allerede er synlig.",
+        "cta": "Udforsk, hvordan det virker"
+      }
+    },
+    "capacity": {
+      "eyebrow": "Tilføj kapacitet",
+      "title": "Voks uden at ændre din arbejdsmåde.",
+      "subtitle": "Tilføj mennesker eller AI-kapacitet kun, når du behøver det. Din indbakke, viden og samtalehistorik forbliver præcis, hvor de er.",
+      "teammatesTitle": "Yderligere teammedlemmer",
+      "teammatesDesc": "Giv flere mennesker deres egen login, mens de deler den samme indbakke, viden og AI-kredit. De forbliver på din plan hver måned, indtil du fjerner dem.",
+      "perMonth": "om måneden",
+      "seatsWord": "pladser",
+      "topUpAnytime": "Fyld op når som helst",
+      "onAnyPaidPlan": "på enhver betalt plan",
+      "creditTitle": "Yderligere AI-kredit",
+      "creditDesc": "Lad AI'en fortsætte med at svare, efter din månedlige kredit er brugt. At overdrage en samtale til dit team koster aldrig ekstra.",
+      "creditCards": [
+        {
+          "name": "Månedlig kredit",
+          "note": "Nulstilles hver måned"
+        },
+        {
+          "name": "Opfyldninger",
+          "note": "Udløber aldrig"
+        },
+        {
+          "name": "Automatisk genopfyldning",
+          "note": "Valgfrit"
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Spørgsmål",
+      "title": "Spørgsmål om priser",
+      "subtitle": "De faktureringsdetaljer, folk spørger mest om. Opsætning, AI'en, integrationer og sikkerhed er dækket i det fulde FAQ.",
+      "readFull": "Læs det fulde FAQ",
+      "items": [
+        {
+          "q": "Hvad koster planerne?",
+          "a": "Free er $0. Månedlige planer er Starter til $12 med $7 AI-kredit om måneden, Growth til $59 med $40, og Scale til $299 med $240. Årlig fakturering giver to måneder gratis — du betaler for ti måneder og får tolv: Starter er $120 om året ($10/måned), Growth er $590 ($49.17/måned), og Scale er $2.990 ($249.17/måned)."
+        },
+        {
+          "q": "Hvordan fungerer AI-kvoten?",
+          "a": "Free inkluderer 100 AI-beskeder om måneden. Hvert svar, AI'en sender, tæller som en besked, så en kort chat bruger få, og en lang udveksling bruger flere. Betalte planer fungerer anderledes: de inkluderer en månedlig AI-kredit, som AI'en bruger, mens den arbejder, så et hurtigt spørgsmål bruger mindre end en lang udveksling. Starter inkluderer $7 kredit om måneden, Growth $40, og Scale $240."
+        },
+        {
+          "q": "Koster eskaleringer noget?",
+          "a": "Intet ekstra gebyr. Selve overdragelsen er gratis på hver plan, og AI'en stopper i det øjeblik, en person tager over. På Free tæller beskeder, AI'en allerede har sendt før overdragelsen, stadig med i dine 100; på betalte planer bruger AI'en kun kredit, mens den svarer, og stopper med at bruge kredit i det øjeblik, en person tager over."
+        },
+        {
+          "q": "Kan AI'en udstede tilbagebetalinger?",
+          "a": "Kun hvis arbejdsområdets ejer slår tilbagebetalinger til. De er slået fra som standard. Selv med tilbagebetalinger slået fra kan AI'en slå betalingen op og tilbyde at forbinde kunden med dit team."
+        },
+        {
+          "q": "Hvad sker der, når jeg bruger min AI-kvote op?",
+          "a": "AI'en overdrager nye samtaler direkte til dit team i stedet for at svare. På en betalt plan kan du fylde kredit op når som helst, eller aktivere automatisk genopfyldning, så den aldrig stopper. Opfyldninger udløber aldrig. Din månedlige kredit nulstilles hver betalingsperiode."
+        },
+        {
+          "q": "Hvor meget koster et ekstra teammedlem?",
+          "a": "Ekstra pladser kommer i pakker på hver plan, inklusive Free: 3 pladser for $2 om måneden, eller 5 for $3. Pladser og AI-kredit faktureres helt separat — at tilføje et teammedlem påvirker aldrig din AI-kvote."
+        },
+        {
+          "q": "Kan jeg opsige når som helst?",
+          "a": "Ja, fra Indstillinger → Fakturering, uden binding. Opsigelsen træder i kraft ved udgangen af den nuværende betalingsperiode, så du bevarer det, du har betalt for, indtil da."
+        },
+        {
+          "q": "Hvad sker der, hvis jeg stopper med at betale?",
+          "a": "Arbejdsområdet falder tilbage til Free-planen ved udgangen af perioden. Din videnbase, samtalehistorik og indstillinger forbliver helt intakte."
+        }
+      ]
+    },
+    "enterprise": {
+      "badge": "Enterprise",
+      "title": "Support, der vokser med dig.",
+      "subtitle": "For organisationer, der supporterer flere kunder på tværs af flere websteder og teams. Lad os finde den rette kapacitet til din support.",
+      "features": [
+        "AI-kredit langt ud over Scale-planen",
+        "Flere websteder og voksende teams",
+        "Delt kundekontekst og viden",
+        "Volumenpriser skræddersyet til dine behov"
+      ],
+      "talkTitle": "Lad os tale",
+      "customPricing": "Tilpasset prissætning tilgængelig",
+      "contactCta": "Kontakt salg",
+      "talkPoints": [
+        "Diskuter dit samtalevolumen",
+        "Planlæg dit arbejdsområde og pladser",
+        "Definer vidensomfanget på tværs af websteder",
+        "Udforsk onboarding- og SLA-behov"
+      ]
+    },
+    "plans": {
+      "free": {
+        "name": "Free",
+        "description": "For en grundlægger, der besvarer sin egen support. Rigtig AI, intet kort.",
+        "cta": "Kom i gang",
+        "features": [
+          "Op til 100 AI-beskeder/måned",
+          "2 pladser inkluderet",
+          "Pladspakker fra $0.60/plads",
+          "20 MB videnbase",
+          "Chat-widget på webstedet",
+          "Delt indbakke med overdragelse"
+        ]
+      },
+      "starter": {
+        "name": "Starter",
+        "description": "For et lille team, hvis support er vokset ud af en indbakke.",
+        "cta": "Kom i gang",
+        "features": [
+          "$7 AI-kredit hver måned",
+          "5 pladser inkluderet",
+          "Pladspakker fra $0.60/plads",
+          "200 MB videnbase",
+          "Fyld kredit op når som helst",
+          "Besøgsanalyse"
+        ]
+      },
+      "growth": {
+        "name": "Growth",
+        "description": "For teams, der driver support som en rigtig funktion, med data til at bevise det.",
+        "cta": "Kom i gang",
+        "features": [
+          "$40 AI-kredit hver måned",
+          "15 pladser inkluderet",
+          "Pladspakker fra $0.60/plads",
+          "1 GB videnbase",
+          "Fyld kredit op når som helst",
+          "Fuldt AI-revisionsspor",
+          "Prioriteret support"
+        ]
+      },
+      "scale": {
+        "name": "Scale",
+        "description": "For support med højt volumen, hvor AI'en bærer det meste af belastningen.",
+        "cta": "Kom i gang",
+        "features": [
+          "$240 AI-kredit hver måned",
+          "40 pladser inkluderet",
+          "Pladspakker fra $0.60/plads",
+          "5 GB videnbase",
+          "Fyld kredit op når som helst",
+          "Integrationer og API-adgang"
+        ]
+      }
+    }
+  },
+  "about": {
+    "typingLabel": "Elpino skriver",
+    "hero": {
+      "badge": "Om Elpino",
+      "titlePrefix": "Kundesupport, ",
+      "titleHl": "gjort mere menneskelig.",
+      "subtitle": "Elpino giver kunder nyttige svar fra den viden, du allerede har, og holder derefter dit team tæt på til de øjeblikke, der behøver et menneske.",
+      "ctaMeet": "Mød Elpino",
+      "ctaReadStory": "Læs vores historie ↓",
+      "imageAlt": "Fire Elpino-dovendyr, der arbejder sammen for at støtte kunder",
+      "bubble": "Hej, hvordan kan vi hjælpe? 👋"
+    },
+    "story": {
+      "eyebrow": "Hvor det begyndte",
+      "titlePrefix": "Vores historie begynder med et ",
+      "titleHl": "spørgsmål.",
+      "subtitle": "Hvad hvis kundesupport-software hjalp begge sider af samtalen—ikke kun virksomheden, der administrerer den?",
+      "chatTitle": "Elpino",
+      "chatSub": "Fortæller vores historie",
+      "sys1": "Hvor det begyndte",
+      "you1": "Hvad hvis kundesupport-software hjalp begge sider af samtalen, ikke kun virksomheden, der administrerer den?",
+      "elpino1": "Ingen åbner en supportchat for sjov.",
+      "elpino2": "Nogen forsøger at få noget gjort. Noget kom i vejen. De vil have et klart svar og komme tilbage til deres dag.",
+      "elpino3": "På den anden side er et team, der håndterer velkendte spørgsmål, spredt information, og flere samtaler end tid. Elpino eksisterer for at gøre dette øjeblik lettere for alle.",
+      "sys2": "Sådan ser det ud",
+      "you2": "Kan jeg ændre e-mailadressen på min konto?",
+      "aiLabel": "Elpino AI · fra din viden",
+      "aiAnswer": "Ja. Åbn Indstillinger, vælg Profil, og opdater derefter din kontakt-e-mail.",
+      "aiGuideLabel": "Guide til kontoindstillinger",
+      "sys3": "En holdkammerat er altid tæt på, når det er nødvendigt"
+    },
+    "roles": {
+      "eyebrow": "Vores roller",
+      "titlePrefix": "Et team bygget til ",
+      "titleHl": "arbejdet.",
+      "subtitle": "Der er ingen medarbejderfotos her. Mød i stedet de opgaver, Elpino er designet til at udføre—stabilt, omtænksomt, og med et menneskeligt team altid involveret.",
+      "joinedChat": "{name} deltog i chatten",
+      "items": [
+        {
+          "title": "Lytteren",
+          "task": "Forstår hvert kundespørgsmål",
+          "description": "Forvandler den viden, dit team allerede har, til et klart, nyttigt første svar."
+        },
+        {
+          "title": "Sorteren",
+          "task": "Holder indbakken i bevægelse",
+          "description": "Finder signalet i køen, så de rigtige samtaler får den rigtige opmærksomhed."
+        },
+        {
+          "title": "Beskytteren",
+          "task": "Ved, hvornår en person skal involveres",
+          "description": "Håndterer rutinearbejde med omtanke og overdrager de øjeblikke, der behøver menneskelig dømmekraft."
+        },
+        {
+          "title": "Vækstskaberen",
+          "task": "Lærer, hvad hjælper kunder mest",
+          "description": "Fremhæver hullerne, mønstrene og spørgsmålene, der forbedrer din support over tid."
+        }
+      ]
+    },
+    "remote": {
+      "eyebrow": "Bygget fjernt",
+      "titlePrefix": "Vi har arbejdet fjernt siden ",
+      "titleHl": "dag ét.",
+      "subtitle": "Vi arbejder gennem klar skrivning, delt kontekst, og fokuseret tid. Hvor nogen arbejder betyder mindre end den omsorg og dømmekraft, de bringer til produktet.",
+      "cta": "Se åbne stillinger",
+      "badge": "Fjernt siden dag ét",
+      "imageAlt": "Et distribueret team samarbejder med delte AI-supportværktøjer"
+    },
+    "team": {
+      "eyebrow": "Et lille team, for nu",
+      "titleLine1": "Bygget med fokus.",
+      "titleLine2Prefix": "Formet med ",
+      "titleHl": "dig.",
+      "subtitle": "Elpino er tidligt på vej. Det betyder, at de mennesker, der bruger det, stadig kan påvirke, hvad det bliver. Vi lytter nøje, udgiver omhyggeligt, og holder kundens problem i centrum.",
+      "cta": "Tal med os",
+      "card1": "Lytte nøje.",
+      "card2": "Bygge klart.",
+      "card3": "Gøre support lettere for alle."
+    },
+    "faqSection": {
+      "eyebrow": "Lidt mere om os",
+      "titlePrefix": "Glad du ",
+      "titleHl": "spurgte.",
+      "subtitle": "Et par svar, inden du starter din egen samtale. Tryk på et spørgsmål nedenfor, og Elpino svarer.",
+      "exploreLink": "Udforsk hele FAQ'en →"
+    },
+    "faqChat": {
+      "title": "Spørg Elpino",
+      "sub": "Online · svarer med det samme",
+      "gladYouAsked": "Glad du spurgte",
+      "tapQuestion": "Tryk på et spørgsmål",
+      "doneText": "Det var det for nu. Vil du fortsætte?",
+      "exploreFull": "Udforsk hele FAQ'en"
+    },
+    "faqs": [
+      [
+        "Hvad er Elpino?",
+        "Elpino er en AI-drevet kundesupportplatform med en chat-widget på webstedet, svar fra din videnbase, en delt team-indbakke, og overdragelse til mennesker, når AI'en ikke kan hjælpe."
+      ],
+      [
+        "Erstatter Elpino mit supportteam?",
+        "Elpino håndterer hverdagsspørgsmål fra din viden og bringer dit team ind, når en samtale behøver en person. Dit team forbliver en del af supportoplevelsen."
+      ],
+      [
+        "Hvordan kan jeg komme i gang?",
+        "Start med den gratis plan, der inkluderer 100 AI-beskeder hver måned uden kort krævet. Tilføj din viden, forbind dit websted, og bring dine holdkammerater ind."
+      ],
+      [
+        "Hvordan er priserne struktureret?",
+        "Free inkluderer 100 AI-beskeder om måneden, og betalte planer inkluderer en månedlig AI-kredit. Ekstra holdkammerater kommer i pladspakker fra $0.60 pr. plads, og at overdrage en samtale til et menneske koster aldrig ekstra. Prissiden forklarer inkluderede pladser og den gratis plans minimumsgebyr."
+      ]
+    ],
+    "closing": {
+      "titleLine1": "Der er mere at bygge.",
+      "titleLine2": "Kom og form, hvad der kommer næste gang.",
+      "ctaTry": "Prøv Elpino",
+      "ctaCareers": "Se åbne stillinger"
+    }
+  },
+  "helpdesk": {
+    "hero": {
+      "badge": "Elpino helpdesk",
+      "titlePrefix": "Support, der ",
+      "titleHl": "svarer sig selv.",
+      "subtitle": "Et skrivebord til en AI, der løser, et team, der deltager, når det betyder noget, og sager, der aldrig glipper. Se den besvare et spørgsmål.",
+      "ctaStart": "Start gratis",
+      "ctaFeatures": "Se alle funktioner"
+    },
+    "prompt": {
+      "customerLabel": "Kunde",
+      "listening": "Elpino lytter…",
+      "asks": [
+        {
+          "q": "Blev jeg opkrævet dobbelt for min opgradering?",
+          "steps": [
+            "Kontrollerede din betalingshistorik",
+            "Fandt en opkrævning og et mislykket forsøg"
+          ],
+          "a": "Du blev kun opkrævet én gang. Det andet forsøg mislykkedes og blev aldrig gennemført."
+        },
+        {
+          "q": "Hvor er min ordre #4821?",
+          "steps": [
+            "Verificerede dig med en e-mailkode",
+            "Slog ordren op i din butik"
+          ],
+          "a": "Afsendt i går, ankommer torsdag. Sporingslink sendt."
+        },
+        {
+          "q": "Kan jeg tale med nogen om fakturering?",
+          "steps": [
+            "Intet værktøj kan ændre faktureringsoplysninger",
+            "Spurgte dig først, advarede derefter teamet"
+          ],
+          "a": "Priya fra vores team har lige deltaget i denne chat."
+        }
+      ]
+    },
+    "marquee": {
+      "ariaLabel": "Hvad er på skrivebordet",
+      "words": [
+        "AI-agent",
+        "Delt indbakke",
+        "Sager",
+        "Viden",
+        "Betalinger",
+        "MCP-værktøjer",
+        "Deltagelsesmeddelelser",
+        "Verificeret identitet",
+        "Omnichannel · november"
+      ]
+    },
+    "story": {
+      "eyebrow": "En samtale",
+      "titlePrefix": "Se et spørgsmål ",
+      "titleHl": "rejse gennem skrivebordet.",
+      "stepLabel": "Trin {n} / 05",
+      "chapters": [
+        {
+          "title": "En kunde skriver",
+          "body": "Fra chat-widgeten på dit websted, med deres placering, enhed og siden, de er på, allerede vedhæftet."
+        },
+        {
+          "title": "AI'en gør arbejdet",
+          "body": "Den svarer fra din viden, husker kunden, verificerer, hvem de er, og bruger dine betalinger og MCP-værktøjer til rent faktisk at løse tingene."
+        },
+        {
+          "title": "Dit team deltager med et tryk",
+          "body": "Kun når den ikke kan hjælpe, og kun efter at have spurgt kunden. Alle får en deltagelsesmeddelelse, og den første, der trykker, tager chatten."
+        },
+        {
+          "title": "Intet går tabt",
+          "body": "Hvis ingen er ledig inden for 90 sekunder, indgives en sag med årsagen og et resumé, og kunden får en reference via e-mail."
+        },
+        {
+          "title": "Du lærer den det én gang",
+          "body": "Tilføj det, der manglede, til din videnbase. Næste gang ved AI'en det bare."
+        }
+      ],
+      "visuals": {
+        "ask": {
+          "bubble": "Hej, jeg kan ikke finde min faktura fra sidste måned.",
+          "chips": [
+            "Pune, Indien",
+            "Chrome · macOS",
+            "På /billing"
+          ]
+        },
+        "ai": {
+          "rows": [
+            [
+              "search_knowledge",
+              "1 match"
+            ],
+            [
+              "send_email_code",
+              "verificeret"
+            ],
+            [
+              "get_receipt",
+              "fundet · sendt"
+            ]
+          ],
+          "bubble": "Her er din faktura. Jeg har også sendt en kopi via e-mail."
+        },
+        "team": {
+          "title": "Ny chat behøver en person",
+          "sub": "Advarsel sendt til 4 holdkammerater",
+          "join": "Deltag",
+          "note": "Den første, der trykker, tager den. Advarslen forsvinder for de andre."
+        },
+        "ticket": {
+          "label": "Sag",
+          "title": "Support-eskalering · Aisha Khan",
+          "reason": "Årsag: ændring af faktureringsland behøver en person.",
+          "chips": [
+            "Problemside",
+            "Kunde underrettet via e-mail"
+          ]
+        },
+        "learn": {
+          "title": "Guide til fakturaer og kvitteringer",
+          "added": "Tilføjet",
+          "note": "Den næste kunde får dette svar øjeblikkeligt."
+        }
+      }
+    },
+    "bento": {
+      "eyebrow": "Under motorhjelmen",
+      "titlePrefix": "Små detaljer, ",
+      "titleHl": "gjort ordentligt.",
+      "subtitle": "De ting, du ville kontrollere, inden du betroede dine kunder til en AI.",
+      "redact": {
+        "prefix": "Hej, jeg er",
+        "middle": "kontakt mig på"
+      },
+      "privacy": {
+        "title": "Modellen ser aldrig navne eller e-mails.",
+        "desc": "Identiteter udskiftes med referencekoder, inden AI'en læser en samtale, og hemmeligheder fjernes."
+      },
+      "languages": {
+        "title": "Svarer på dit kundes sprog",
+        "note": "Du vælger svarsproget i indstillingerne."
+      },
+      "verified": {
+        "title": "Verificeret, inden den handler",
+        "note": "En engangs-e-mailkode eller et signeret token fra din app."
+      },
+      "tools": {
+        "title": "Dine værktøjer, dine regler",
+        "rows": [
+          [
+            "get_order",
+            true
+          ],
+          [
+            "track_shipment",
+            true
+          ],
+          [
+            "delete_customer",
+            false
+          ]
+        ]
+      },
+      "handoff": {
+        "title": "Spørger, inden den overdrager",
+        "ask": "Det kan jeg ikke selv ændre. Skal jeg forbinde dig med vores team?",
+        "reply": "Ja, gerne"
+      }
+    },
+    "statement": "Elpino svarer det, den ved, gør det, du tillader, og spørger et menneske om alt andet.",
+    "start": {
+      "eyebrow": "Kom i gang",
+      "titlePrefix": "Live på ",
+      "titleHl": "en eftermiddag.",
+      "note": "Chat på webstedet virker allerede i dag. Omnichannel kommer i november.",
+      "steps": [
+        {
+          "title": "Tilmeld dig gratis",
+          "desc": "100 AI-beskeder om måneden. Intet kort."
+        },
+        {
+          "title": "Lær den",
+          "desc": "Tilføj dit websted, filer eller skriv sider."
+        },
+        {
+          "title": "Indsæt uddraget",
+          "desc": "Widgeten vises på dit websted."
+        },
+        {
+          "title": "Inviter dit team",
+          "desc": "Så folk er klar, når den spørger."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Spørgsmål",
+      "titlePrefix": "Godt at ",
+      "titleHl": "vide.",
+      "items": [
+        [
+          "Hvad er Elpino helpdesk?",
+          "Hele supportarbejdsområdet: en chat-widget, en AI-agent, en delt indbakke, sager og en videnbase, der arbejder sammen."
+        ],
+        [
+          "Skal jeg beholde min gamle helpdesk?",
+          "Nej. Elpino dækker chat, AI-agenten, den delte indbakke og sager. Sager kan stadig sendes til Trello eller Asana, hvis dit team arbejder der."
+        ],
+        [
+          "Er der en gratis plan?",
+          "Ja: 100 AI-beskeder om måneden, intet kort krævet."
+        ],
+        [
+          "Hvilke kanaler understøttes?",
+          "Chat på webstedet virker allerede i dag. Omnichannel kommer i november."
+        ],
+        [
+          "Kan mit team også bruge det?",
+          "Ja. Inviter holdkammerater, tilføj pladser, når du vokser, og de får deltagelsesmeddelelser, når en kunde behøver en person."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Giv dine kunder et svar, inden de er færdige med at skrive.",
+      "ctaStart": "Start gratis",
+      "ctaFeatures": "Alle funktioner"
+    }
+  },
+  "nav": {
+    "startFreeTrial": "Start gratis prøveperiode",
+    "groups": {
+      "product": "Produkt",
+      "solutions": "Løsninger",
+      "resources": "Ressourcer"
+    },
+    "sections": {
+      "getStarted": "Kom godt i gang",
+      "capabilities": "Funktioner",
+      "platform": "Platform",
+      "whoItIsFor": "Hvem det er til",
+      "learningGuides": "Læring & guides",
+      "trustLegal": "Tillid & juridisk",
+      "community": "Fællesskab",
+      "company": "Virksomhed"
+    },
+    "items": {
+      "Elpino helpdesk": "Elpino helpdesk",
+      "Elpino AI Agent": "Elpino AI-agent",
+      "Inbox": "Indbakke",
+      "Tickets": "Sager",
+      "Knowledge Hub": "Videnhub",
+      "Integrations": "Integrationer",
+      "Safety & security": "Sikkerhed",
+      "All features": "Alle funktioner",
+      "For Founders": "Til grundlæggere",
+      "For Busy Teams": "Til travle teams",
+      "For Developers": "Til udviklere",
+      "See Pricing": "Se priser",
+      "Talk to Us": "Tal med os",
+      "Documentation": "Dokumentation",
+      "Help & FAQ": "Hjælp & FAQ",
+      "Trust Center": "Tillidscenter",
+      "Privacy Policy": "Privatlivspolitik",
+      "Terms of Service": "Servicevilkår",
+      "Blog": "Blog",
+      "Changelog": "Ændringslog",
+      "Brand Kit": "Brandkit",
+      "About Us": "Om os",
+      "Careers": "Karriere",
+      "Contact Sales": "Kontakt salg"
+    },
+    "megaMenu": {
+      "explore": "Udforsk",
+      "seePricing": "Se priser",
+      "seePricingNote": "Start gratis. Betal i takt med at dit team vokser.",
+      "freshFromBlog": "Nyt fra bloggen"
+    },
+    "featured": {
+      "product": {
+        "title": "AI først. Et menneske, når det betyder noget.",
+        "text": "Elpino svarer fra din viden og overdrager derefter chatten til en holdkammerat med hele historien.",
+        "cta": "Mød AI-agenten"
+      },
+      "solutions": {
+        "title": "Skabt til din måde at arbejde på",
+        "text": "Grundlæggere, butikker og travle teams får hver deres passende opsætning, live på en eftermiddag.",
+        "cta": "Find det, der passer til dig"
+      },
+      "resources": {
+        "title": "Live i tre trin",
+        "text": "Indsæt en linje, lær den dine dokumenter, slå den til. Guiderne følger dig gennem hvert trin.",
+        "cta": "Åbn dokumentationen"
+      }
+    },
+    "pricing": "Priser",
+    "contactSales": "Kontakt salg",
+    "login": "Log ind",
+    "goToDashboard": "Gå til dashboard",
+    "getStarted": "Kom godt i gang"
+  },
+  "footer": {
+    "ticker": [
+      "AI-svar fra din egen viden",
+      "Menneskelig overdragelse, altid gratis",
+      "100 gratis AI-beskeder",
+      "En delt indbakke",
+      "Live på en eftermiddag"
+    ],
+    "cta": {
+      "badge": "Klar, når du er",
+      "title": "Giv hver kunde et hjælpsomt svar.",
+      "subtitle": "Start gratis med AI-support, en delt indbakke og overdragelse til mennesker. Intet kort krævet.",
+      "ctaStart": "Start gratis",
+      "ctaPricing": "Se priser"
+    },
+    "description": "Elpino hjælper teams med at svare kunder med AI baseret på deres egen viden, og overdrager derefter samtaler til en person, når det er nødvendigt.",
+    "blog": "Blog",
+    "contact": "Kontakt",
+    "copyright": "© {year} Elpino Inc. Alle rettigheder forbeholdes.",
+    "privacy": "Privatlivspolitik",
+    "terms": "Servicevilkår",
+    "security": "Sikkerhed"
+  },
+  "aiAgent": {
+    "hero": {
+      "badge": "AI-agent",
+      "titlePrefix": "Mød din nyeste ",
+      "titleHl": "supportmedarbejder.",
+      "subtitle": "Elpino starter på dag ét med allerede at kende din virksomhed. Den husker hver kunde, kontrollerer, hvem de er, inden den handler, arbejder med dine betalings- og bestillingssystemer via MCP, og spørger altid, inden den overdrager en chat til dit team.",
+      "ctaHire": "Ansæt Elpino, gratis",
+      "ctaFeatures": "Se alle funktioner"
+    },
+    "badge": {
+      "staffLabel": "Elpino · Personale",
+      "subtitle": "AI-supportagent",
+      "skills": [
+        "Svarer fra dine dokumenter",
+        "Verificerer identitet",
+        "Kontrollerer betalinger",
+        "Bruger dine MCP-værktøjer",
+        "Spørger inden overdragelse"
+      ],
+      "startDateLabel": "Startdato",
+      "startDateValue": "I dag",
+      "clearanceLabel": "Adgangsniveau",
+      "clearanceValue": "Du bestemmer",
+      "barcodeNote": "EL-0001 · Stempler aldrig ud"
+    },
+    "trace": {
+      "aiAgentLabel": "AI-agent",
+      "customerMsg": "Hej, hvor er min ordre #4821?",
+      "agentReply": "Gode nyheder, Aishas ordre blev sendt i går og ankommer torsdag. Jeg har også sendt dig sporingslinket via e-mail.",
+      "whatAgentDoing": "Hvad agenten gør",
+      "resolved": "Løst",
+      "working": "I gang",
+      "idle": "Ledig",
+      "waiting": "Venter på en kundemeddelelse…",
+      "steps": [
+        {
+          "kind": "route",
+          "text": "router → supportspecialist"
+        },
+        {
+          "kind": "tool",
+          "text": "recall_conversation(“ordre 4821”)",
+          "result": "2 tidligere meddelelser"
+        },
+        {
+          "kind": "tool",
+          "text": "get_past_conversations",
+          "result": "1 løst chat sidste måned"
+        },
+        {
+          "kind": "verify",
+          "text": "send_email_code → check_email_code",
+          "result": "identitet verificeret"
+        },
+        {
+          "kind": "mcp",
+          "text": "mcp_shop__get_order(“4821”)",
+          "result": "sendt · ankommer torsdag"
+        },
+        {
+          "kind": "review",
+          "text": "gennemgang",
+          "result": "fakta matcher værktøjsresultater"
+        },
+        {
+          "kind": "done",
+          "text": "svar sendt · mark_resolved"
+        }
+      ]
+    },
+    "watchIt": {
+      "eyebrow": "Første opgave",
+      "titlePrefix": "Se den håndtere ",
+      "titleHl": "en rigtig anmodning.",
+      "subtitle": "En kunde spørger, hvor deres ordre er. Til højre er alt, hvad agenten gør, inden den svarer.",
+      "note": "Eksempelsamtale. De viste værktøjsnavne er de, agenten faktisk kalder."
+    },
+    "onboard": {
+      "eyebrow": "Onboarding",
+      "titlePrefix": "Seks trin til ",
+      "titleHl": "første dag.",
+      "subtitle": "Kryds dem af. Der er ingen oplæringsperiode, og hver er en indstilling, du kontrollerer.",
+      "readyBadge": "Klar til arbejde!",
+      "items": [
+        {
+          "t": "Lær den dit websted og filer",
+          "d": "Crawl sider, upload dokumenter, skriv dine egne.",
+          "href": "/product/knowledge-hub"
+        },
+        {
+          "t": "Indsæt widget-uddraget",
+          "d": "En linje og chatten vises på dit websted."
+        },
+        {
+          "t": "Forbind Stripe eller Razorpay",
+          "d": "Så den kan kontrollere betalinger og abonnementer."
+        },
+        {
+          "t": "Tilslut dine MCP-værktøjer",
+          "d": "Aktiver kun de værktøjer, den må bruge."
+        },
+        {
+          "t": "Beslut om tilbagebetalinger",
+          "d": "De er slået fra, indtil du slår dem til."
+        },
+        {
+          "t": "Inviter dit team",
+          "d": "Så mennesker er klar, når den spørger om dem.",
+          "href": "/product/inbox"
+        }
+      ]
+    },
+    "customerFile": {
+      "eyebrow": "At kende din kunde",
+      "titlePrefix": "Dens sagsmappe ",
+      "titleHl": "for hver kunde.",
+      "subtitle": "Inden den svarer, opbygger agenten en mappe om personen, den hjælper. Tryk på en kilde for at se, hvad den tilføjer.",
+      "sourcesLabel": "Kundemappe · {n} af {total} kilder",
+      "sampleNote": "Eksempeldata. I virkeligheden ser AI'en referencekoder i stedet for kundens navn og e-mail.",
+      "sources": [
+        {
+          "key": "conv",
+          "title": "Denne samtale",
+          "how": "Husker, hvad der blev sagt, og kan se tilbage på detaljer, den behøver, selv i en lang chat.",
+          "rows": [
+            [
+              "Spurgte om",
+              "Ordre #4821"
+            ],
+            [
+              "Vil have",
+              "En leveringsdato"
+            ]
+          ]
+        },
+        {
+          "key": "hist",
+          "title": "Tidligere samtaler",
+          "how": "Kender tidligere chats med samme person, så de aldrig gentager sig selv.",
+          "rows": [
+            [
+              "Sidste chat",
+              "Loginproblem, løst"
+            ],
+            [
+              "Antal kontakter",
+              "2"
+            ]
+          ]
+        },
+        {
+          "key": "id",
+          "title": "Verificeret identitet",
+          "how": "Bekræfter, hvem de er, med en engangs-e-mailkode eller et signeret token fra din app, inden den rører noget personligt.",
+          "rows": [
+            [
+              "Identitet",
+              "Verificeret via e-mailkode"
+            ]
+          ]
+        },
+        {
+          "key": "pay",
+          "title": "Betalinger",
+          "how": "Slår rigtige betalinger og abonnementer op i Stripe eller Razorpay, og kan sende kvitteringer og betalingslinks.",
+          "rows": [
+            [
+              "Plan",
+              "Growth · aktiv"
+            ],
+            [
+              "Sidste betaling",
+              "Betalt, kvittering sendt"
+            ]
+          ]
+        },
+        {
+          "key": "mcp",
+          "title": "Dine systemer (MCP)",
+          "how": "Kalder de værktøjer, du godkender på dine egne MCP-servere: ordrer, konti, bookinger, alt, hvad du eksponerer.",
+          "rows": [
+            [
+              "Ordre #4821",
+              "Sendt · ankommer torsdag"
+            ]
+          ]
+        },
+        {
+          "key": "kb",
+          "title": "Din viden",
+          "how": "Søger i alt, du har lært den, og kan læse en aktuel side på dit websted for friske detaljer.",
+          "rows": [
+            [
+              "Leveringspolitik",
+              "3–5 hverdage"
+            ]
+          ]
+        }
+      ]
+    },
+    "mcp": {
+      "eyebrow": "MCP-plugins",
+      "titlePrefix": "Adgangsanmodning: ",
+      "titleHl": "dine systemer.",
+      "subtitle": "Tilslut op til fem MCP-servere, uanset om det er din butik, dit CRM eller dit bookingsystem. Elpino opdager deres værktøjer, og du slår præcis dem til, agenten må bruge. Prøv kontrolpanelet nedenfor.",
+      "serverTitle": "Din butiks MCP-server",
+      "toolsDiscovered": "{n} værktøjer opdaget",
+      "verifiedCustomers": "Verificerede kunder",
+      "anyVisitor": "Enhver besøgende",
+      "destructive": "Destruktiv",
+      "changesData": "Ændrer data",
+      "readOnly": "Kun læsning",
+      "needsVerified": "Kræver verificeret kunde",
+      "whatAgentSees": "Hvad agenten kan se",
+      "toolsAvailable": "værktøjer tilgængelige lige nu",
+      "tools": [
+        {
+          "name": "get_order",
+          "desc": "Slå en ordre og dens status op",
+          "write": false,
+          "on": true
+        },
+        {
+          "name": "track_shipment",
+          "desc": "Live sporing af en pakke",
+          "write": false,
+          "on": true
+        },
+        {
+          "name": "list_products",
+          "desc": "Katalog og lagerniveauer",
+          "write": false,
+          "on": true
+        },
+        {
+          "name": "update_address",
+          "desc": "Ændre en leveringsadresse",
+          "write": true,
+          "on": true
+        },
+        {
+          "name": "cancel_order",
+          "desc": "Annullere en ordre, der ikke er sendt",
+          "write": true,
+          "on": false
+        },
+        {
+          "name": "delete_customer",
+          "desc": "Slette en kunderegistrering",
+          "write": true,
+          "on": false,
+          "danger": true
+        }
+      ],
+      "bullets": [
+        "Et deaktiveret værktøj er usynligt for agenten",
+        "Hvert opkald genkontrolleres mod din liste på serveren",
+        "Værktøjer, der ændrer data, kræver altid en verificeret kunde",
+        "Servercredentials opbevares krypteret"
+      ],
+      "features": [
+        {
+          "title": "Betalinger, indbygget",
+          "desc": "Forbind Stripe eller Razorpay, og agenten kan slå betalinger og abonnementer op, sende kvitteringer og betalingslinks, og annullere et abonnement."
+        },
+        {
+          "title": "Medbring enhver MCP-server",
+          "desc": "Alt, der taler MCP, virker, så du bestemmer, hvilke værktøjer agenten får."
+        },
+        {
+          "title": "Elpinos egen MCP-server",
+          "desc": "Dine kunders egne værktøjer kan læse deres Elpino-plan, forbrug og betalinger via MCP."
+        }
+      ]
+    },
+    "orgChart": {
+      "eyebrow": "Teamet bag",
+      "titlePrefix": "En agent. ",
+      "titleHl": "Et helt organisationsdiagram.",
+      "subtitle": "Hver besked routes til den rette specialist, og intet går ud, inden en revisor kontrollerer fakta.",
+      "router": "Router",
+      "routerNote": "vælger specialisten",
+      "reviewer": "Revisor",
+      "reviewerNote": "faktakontrollerer udkastet mod værktøjsresultater",
+      "polish": "Finpudsning",
+      "polishNote": "derefter ser kunden det",
+      "footer": "Svære sager eskaleres til en stærkere ræsonnementsmodel, og en reservemodel dækker udbyderafbrydelser.",
+      "lanes": [
+        {
+          "k": "Salg",
+          "d": "Planer, priser, egnethed"
+        },
+        {
+          "k": "Support",
+          "d": "Konti, betalinger, brugsanvisninger"
+        },
+        {
+          "k": "Teknisk",
+          "d": "Fejl, opsætning, integration"
+        }
+      ]
+    },
+    "shift": {
+      "eyebrow": "En dag på jobbet",
+      "titlePrefix": "En vagt, ",
+      "titleHl": "fra start til slut.",
+      "subtitle": "En eksempeldag, der kun bruger ting, agenten rent faktisk gør.",
+      "items": [
+        {
+          "time": "2:14",
+          "t": "Besvarer et prisspørgsmål",
+          "d": "Dit team sover. Elpino svarer fra din videnbase."
+        },
+        {
+          "time": "9:05",
+          "t": "Verificerer en kunde, ordner en betaling",
+          "d": "Bekræfter dem via e-mailkode, finder den mislykkede betaling, sender et nyt betalingslink."
+        },
+        {
+          "time": "11:20",
+          "t": "Kontrollerer en ordre i din butik",
+          "d": "Kalder din MCP-server, læser status og deler sporingen."
+        },
+        {
+          "time": "13:30",
+          "t": "Møder noget, den ikke kan gøre",
+          "d": "Siger det, spørger kunden først, advarer så hele teamet."
+        },
+        {
+          "time": "15:42",
+          "t": "Ingen ledig? Den lader det ikke falde",
+          "d": "Fortæller kunden ærligt og opretter en sag med en e-mail-opfølgning."
+        }
+      ]
+    },
+    "review": {
+      "eyebrow": "Præstationsvurdering",
+      "titlePrefix": "Et ærligt ",
+      "titleHl": "scorekort.",
+      "subtitle": "Illustrative bedømmelser, med det svage punkt inkluderet.",
+      "employeeBadge": "Medarbejder: Elpino",
+      "quote": "„Fremragende med rutinespørgsmål og overskrider aldrig grænser. Hold videnbasen frisk, og den vil fortsætte med at forbedre sig.“",
+      "items": [
+        {
+          "k": "Følger din politik",
+          "n": 5,
+          "note": "Svarer kun fra det, du har godkendt."
+        },
+        {
+          "k": "Ved, hvornår man skal bede om hjælp",
+          "n": 5,
+          "note": "Spørger kunden først, bringer så dit team ind."
+        },
+        {
+          "k": "Forbliver inden for sine tilladelser",
+          "n": 5,
+          "note": "Kun de værktøjer, du har slået til. Tilbagebetalinger slået fra som standard."
+        },
+        {
+          "k": "Ved, hvad du aldrig har fortalt den",
+          "n": 2,
+          "note": "Den kan ikke svare på, hvad der ikke er i din viden. Tilføj mere for at hæve dette."
+        }
+      ]
+    },
+    "guards": {
+      "eyebrow": "Beskyttelsesforanstaltninger",
+      "titlePrefix": "Firmaets ",
+      "titleHl": "håndbog.",
+      "subtitle": "De regler, Elpino arbejder under. Hver er en kontrol, du ejer.",
+      "items": [
+        {
+          "t": "Modellen ser aldrig navne eller e-mails",
+          "d": "Identiteter i en samtale udskiftes med referencekoder, inden AI'en læser den, og hemmeligheder som nøgler og tokens fjernes."
+        },
+        {
+          "t": "Tilbagebetalinger er slået fra, indtil du siger det",
+          "d": "Handlinger, der flytter penge, er valgfrie og kontrolleret af arbejdsområdets ejer."
+        },
+        {
+          "t": "Du godkender hvert værktøj",
+          "d": "Agenten ser kun MCP-værktøjer, du har slået til, og de, der ændrer data, kræver en verificeret kunde."
+        },
+        {
+          "t": "Spørg først, overdrag derefter",
+          "d": "Når den ikke har et værktøj til opgaven, siger den det og spørger, inden den bringer dit team ind."
+        },
+        {
+          "t": "Fakta bliver gennemgået",
+          "d": "Et gennemgangstrin kontrollerer udkastet mod værktøjsresultater, inden det sendes."
+        },
+        {
+          "t": "Identitet inden noget personligt",
+          "d": "E-mailkode eller signeret token først, så den aldrig diskuterer en konto med en fremmed."
+        }
+      ]
+    },
+    "compare": {
+      "eyebrow": "Ikke en chatbot",
+      "titlePrefix": "Chatbot vs. ",
+      "titleHl": "Elpino-agent.",
+      "headerA": "En typisk chatbot",
+      "headerB": "Elpino AI-agent",
+      "rows": [
+        [
+          "Søger artikler og stopper",
+          "Søger, slår poster op og handler"
+        ],
+        [
+          "Behandler alle som en fremmed",
+          "Verificerer identitet, husker tidligere chats"
+        ],
+        [
+          "„Kontakt venligst support“, når den sidder fast",
+          "Spørger først, advarer teamet, opretter en sag, hvis ingen er ledige"
+        ],
+        [
+          "Kan ikke se dine systemer",
+          "Kalder de MCP-værktøjer, du godkender"
+        ],
+        [
+          "Svar kan ikke stoles på",
+          "Fakta gennemgået mod værktøjsresultater"
+        ]
+      ]
+    },
+    "faq": {
+      "eyebrow": "Spørgsmål",
+      "titlePrefix": "Godt at ",
+      "titleHl": "vide.",
+      "items": [
+        [
+          "Hvad er MCP?",
+          "Model Context Protocol, en standardmåde for en AI at kalde værktøjer på et andet system. Forbind en MCP-server, og Elpino opdager dens værktøjer. Du vælger derefter, hvilke agenten må bruge."
+        ],
+        [
+          "Hvor mange MCP-servere kan jeg forbinde?",
+          "Op til fem, med op til 15 værktøjer aktiveret pr. server."
+        ],
+        [
+          "Kan agenten ændre ting i mine systemer?",
+          "Kun via værktøjer, du har slået til, og de, der ændrer data, kræver altid en kunde, hvis e-mail er verificeret."
+        ],
+        [
+          "Hvordan ved den, hvem kunden er?",
+          "Fra samtalen, tidligere chats med dem, og et verifikationstrin: en engangs-e-mailkode eller et signeret token fra din app."
+        ],
+        [
+          "Kan den udstede tilbagebetalinger?",
+          "Kun hvis arbejdsområdets ejer slår tilbagebetalinger til. De er slået fra som standard."
+        ],
+        [
+          "Hvad sker der, når den ikke kan løse noget?",
+          "Den siger det og spørger kunden, om de vil forbindes med dit team. Hele teamet får en deltagelsesmeddelelse i 90 sekunder, og hvis ingen deltager, oprettes en sag automatisk."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Din nyeste medarbejder er klar til at starte.",
+      "subtitle": "Lær den din virksomhed, tilslut dine værktøjer, og sæt grænserne.",
+      "ctaStart": "Start gratis",
+      "ctaKnowledgeHub": "Se Videnhubben"
+    }
+  },
+  "inbox": {
+    "hero": {
+      "badge": "Delt indbakke",
+      "titlePrefix": "Én samtale. ",
+      "titleHl": "Alle, der skal være med i den.",
+      "subtitle": "AI'en holder tråden, indtil der er brug for en person, hele dit team bliver advaret samtidig, og alle der deltager får hele historikken. Følg én rigtig samtale fra første besked til løst.",
+      "ctaOpen": "Åbn din indbakke",
+      "ctaPricing": "Se priser"
+    },
+    "filters": [
+      "Alle",
+      "Ulæst",
+      "Læst",
+      "Løst"
+    ],
+    "desk": {
+      "stages": [
+        {
+          "key": "ai",
+          "label": "AI svarer",
+          "badge": "AI",
+          "banner": "Elpino håndterer denne samtale"
+        },
+        {
+          "key": "ask",
+          "label": "Kræver en person",
+          "badge": "Kræver person",
+          "banner": "Alle kolleger fik en Deltag-besked. 90 sekunder til at hoppe ind"
+        },
+        {
+          "key": "join",
+          "label": "Kollega deltager",
+          "badge": "Priya",
+          "banner": "Priya deltog. Besked-advarslen forsvandt for alle"
+        },
+        {
+          "key": "back",
+          "label": "Gives tilbage",
+          "badge": "AI",
+          "banner": "Priya gav samtalen tilbage til Elpino"
+        },
+        {
+          "key": "done",
+          "label": "Løst",
+          "badge": "Løst",
+          "banner": "Løst. Genåbn når som helst, hvis de skriver igen"
+        }
+      ],
+      "lines": [
+        {
+          "at": 0,
+          "from": "you",
+          "text": "Hej, jeg er flyttet til et andet land. Kan du opdatere faktureringslandet på min konto?"
+        },
+        {
+          "at": 1,
+          "from": "ai",
+          "text": "Jeg kan ikke selv ændre faktureringsoplysninger. Vil du have, at jeg forbinder dig med vores team?"
+        },
+        {
+          "at": 1,
+          "from": "you",
+          "text": "Ja tak"
+        },
+        {
+          "at": 2,
+          "from": "sys",
+          "text": "Priya deltog i chatten"
+        },
+        {
+          "at": 2,
+          "from": "team",
+          "text": "Hej! Jeg tager over. Jeg har opdateret dit faktureringsland."
+        },
+        {
+          "at": 3,
+          "from": "sys",
+          "text": "Priya gav chatten tilbage til Elpino"
+        },
+        {
+          "at": 3,
+          "from": "ai",
+          "text": "Alt er klar. Er der andet, jeg kan hjælpe med?"
+        },
+        {
+          "at": 4,
+          "from": "you",
+          "text": "Det var alt, tak!"
+        },
+        {
+          "at": 4,
+          "from": "sys",
+          "text": "Samtale løst"
+        }
+      ],
+      "rail": [
+        "Space",
+        "Indbakke",
+        "Analyse",
+        "Kontakter",
+        "Vidensbase",
+        "Indstillinger"
+      ],
+      "list": [
+        {
+          "name": "Harnoor Singh",
+          "date": "21. sep",
+          "prev": "Jeg kan ikke dele andres IP-adresse"
+        },
+        {
+          "name": "Aisha Khan",
+          "date": "I dag",
+          "prev": ""
+        },
+        {
+          "name": "Tom Becker",
+          "date": "19. sep",
+          "prev": "Widget indlæser ikke ved kassen"
+        },
+        {
+          "name": "Meera Iyer",
+          "date": "18. sep",
+          "prev": "Flytte teamet til årlig betaling?"
+        }
+      ],
+      "teamInbox": "Team-indbakke",
+      "aiAssist": "AI-assistent",
+      "searchPlaceholder": "Søg i samtaler",
+      "verified": "Bekræftet",
+      "joined": "Deltaget",
+      "join": "Deltag",
+      "priyaReplying": "Priya svarer",
+      "resolvedLabel": "Løst",
+      "aiReplying": "Elpino svarer, du kigger bare på",
+      "elpinoAi": "Elpino AI",
+      "priyaTeam": "Priya · team",
+      "writeReply": "Skriv dit svar…",
+      "send": "Send",
+      "reopenNote": "Løst. Genåbn, hvis de skriver igen.",
+      "lockedNote": "Deltag i denne samtale for at svare. Indtil da taler Elpino med kunden.",
+      "websiteVisitor": "Besøgende på hjemmesiden",
+      "locationDevice": "Placering og enhed",
+      "location": "Pune, Indien",
+      "device": "Chrome · macOS",
+      "onPage": "På /pricing",
+      "lastSeen": "Sidst set lige nu",
+      "identityVerified": "Identitet bekræftet",
+      "signedIn": "Logget ind på hjemmesiden",
+      "otherConvos": "Andre samtaler",
+      "noOtherConvos": "Ingen andre samtaler fra denne besøgende endnu."
+    },
+    "realThing": {
+      "eyebrow": "Den ægte vare",
+      "titlePrefix": "Dette er ",
+      "titleHl": "den rigtige indbakke.",
+      "subtitle": "Ingen mockup. Hver samtale, AI'ens svar, den besøgendes detaljer og Deltag-knappen, alt sammen på én skærm.",
+      "imageAlt": "Elpinos team-indbakke: en samtaleliste, en AI-håndteret tråd samt den besøgendes placering og enhed",
+      "callouts": [
+        {
+          "label": "Deltag for at tage over"
+        },
+        {
+          "label": "Filter: Alle · Ulæst · Læst · Løst"
+        },
+        {
+          "label": "Placering og enhed"
+        },
+        {
+          "label": "Lukker automatisk efter 24 timers stilhed"
+        }
+      ]
+    },
+    "twoTabs": {
+      "eyebrow": "To visninger",
+      "titlePrefix": "Overvåg AI'en. ",
+      "titleHl": "Styr teamet.",
+      "subtitle": "Din indbakke har en fane for det, folk håndterer, og en fane for det, Elpino håndterer, så intet gemmer sig.",
+      "tabs": [
+        {
+          "label": "Team-indbakke",
+          "title": "Samtaler, dit team ejer",
+          "body": "Alt, som en person har deltaget i, taget over eller er blevet tildelt. Her arbejder dit team: svar, opfølgninger og løste tråde.",
+          "rows": [
+            [
+              "Harnoor Singh",
+              "Kan du sende fakturaen igen?",
+              "Priya"
+            ],
+            [
+              "Meera Iyer",
+              "Flytte teamet til årlig fakturering?",
+              "Sam"
+            ],
+            [
+              "Jo Alvarez",
+              "Tak, det løste det!",
+              "Løst"
+            ]
+          ]
+        },
+        {
+          "label": "AI-assistent",
+          "title": "Samtaler, Elpino håndterer",
+          "body": "Se AI'en arbejde i realtid. En tæller viser, hvor mange der er aktive, og du kan Deltage i enhver tråd, i det øjeblik du ønsker at gribe ind.",
+          "rows": [
+            [
+              "Aisha Khan",
+              "Elpino svarer…",
+              "AI"
+            ],
+            [
+              "Tom Becker",
+              "Tjekker din betalingsoplysninger…",
+              "AI"
+            ],
+            [
+              "Ravi Menon",
+              "Sendte et sikkert betalingslink",
+              "AI"
+            ]
+          ]
+        }
+      ]
+    },
+    "holders": {
+      "eyebrow": "Altid klart",
+      "titlePrefix": "Du ved altid, ",
+      "titleHl": "hvem der har den.",
+      "subtitle": "Hver samtale har et badge på listen, så ingen svarer dobbelt, og intet falder mellem to stole.",
+      "items": [
+        {
+          "tag": "AI",
+          "title": "Elpino har den",
+          "body": "Svarer fra din viden og dine værktøjer. Du kan følge hver besked live."
+        },
+        {
+          "tag": "Kollega",
+          "title": "En person har den",
+          "body": "Tryk på Deltag i chat, eller Tag over, hvis en kollega har den. AI'en træder tilbage."
+        },
+        {
+          "tag": "Løst",
+          "title": "Den er færdig",
+          "body": "Løste tråde er stadig søgbare, og du kan genåbne dem med et enkelt tryk."
+        }
+      ]
+    },
+    "baton": {
+      "eyebrow": "Videregiv stafetten",
+      "titlePrefix": "Deltag i den. Tag den over. ",
+      "titleHl": "Giv den tilbage.",
+      "subtitle": "En samtale flytter sig mellem AI'en og dine folk med et enkelt tryk, og historikken følger med.",
+      "items": [
+        {
+          "who": "Elpino AI",
+          "note": "Svarer først"
+        },
+        {
+          "who": "Priya",
+          "note": "Trykkede på Deltag i chat"
+        },
+        {
+          "who": "Sam",
+          "note": "Tog over fra Priya"
+        },
+        {
+          "who": "Elpino AI",
+          "note": "Gav den tilbage"
+        }
+      ],
+      "holdingNow": "Har den nu",
+      "stepLabel": "Trin {n}"
+    },
+    "teamAlert": {
+      "eyebrow": "Advarsler til hele teamet",
+      "titlePrefix": "Ring til hele teamet. ",
+      "titleHl": "En person svarer.",
+      "subtitle": "Når en kunde spørger efter en person, får alle kolleger en Deltag-besked på samme tid. Den første, der trykker på Deltag, tager samtalen, beskeden forsvinder for alle andre, og kunden ser, hvem der deltog.",
+      "bullets": [
+        "Ingen bliver udpeget, så ingen bliver en flaskehals",
+        "90 sekunder til at hoppe ind, før en sag oprettes for dig",
+        "Deltog ved en fejl? Giv den tilbage til AI'en med et enkelt tryk"
+      ],
+      "panelLabel": "Indbakke-advarsler",
+      "joinedStatus": "Deltaget",
+      "alertCleared": "Advarsel fjernet",
+      "joinChatStatus": "Deltag i chat",
+      "quietStatus": "Stille",
+      "bannerJoined": "Priya deltog. Kunden ser hendes navn.",
+      "bannerAlerting": "Advarer alle 4 kolleger…",
+      "bannerAsked": "Kunden spurgte efter en person"
+    },
+    "nobodyFree": {
+      "eyebrow": "Intet går tabt",
+      "titlePrefix": "Selv når alle er ",
+      "titleHl": "optaget.",
+      "subtitle": "Hvis ingen deltager i tide, bliver kunden ikke stående og stirre på en indlæsningsanimation.",
+      "marks": [
+        {
+          "t": "0 sek.",
+          "h": "Besked sendes",
+          "d": "Alle kolleger ser en Deltag-besked."
+        },
+        {
+          "t": "≤ 90 sek.",
+          "h": "Den første, der deltager, vinder",
+          "d": "Beskeden forsvinder for alle andre."
+        },
+        {
+          "t": "90 sek.",
+          "h": "Ingen ledig? Sag",
+          "d": "En sag oprettes automatisk."
+        },
+        {
+          "t": "24 timer",
+          "h": "Opfølgning pr. e-mail",
+          "d": "Kunden får besked om, at der kan forventes svar via e-mail inden for 24 timer."
+        }
+      ]
+    },
+    "findAnything": {
+      "eyebrow": "Søgning og filtre",
+      "titlePrefix": "Find enhver samtale ",
+      "titleHl": "på et sekund.",
+      "subtitle": "Søg efter navn eller besked og indsnævr til Alle, Ulæst, Læst eller Løst. Prøv det til højre.",
+      "noMatch": "Intet matcher. Prøv et andet ord.",
+      "convos": [
+        {
+          "n": "Harnoor Singh",
+          "p": "Jeg kan ikke dele andres IP-adresse",
+          "s": "resolved"
+        },
+        {
+          "n": "Aisha Khan",
+          "p": "Flyttet til andet land, faktureringsspørgsmål",
+          "s": "unread"
+        },
+        {
+          "n": "Tom Becker",
+          "p": "Widget indlæser ikke ved kassen",
+          "s": "unread"
+        },
+        {
+          "n": "Meera Iyer",
+          "p": "Flytte teamet til årlig fakturering?",
+          "s": "read"
+        },
+        {
+          "n": "Ravi Menon",
+          "p": "Hvor finder jeg min kvittering?",
+          "s": "resolved"
+        },
+        {
+          "n": "Jo Alvarez",
+          "p": "Kan jeg tilføje en kollega mere?",
+          "s": "read"
+        }
+      ]
+    },
+    "context": {
+      "eyebrow": "Kontekst indbygget",
+      "titlePrefix": "Spørg aldrig ",
+      "titleHl": "„hvem er du nu igen?“",
+      "subtitle": "Dit team åbner en tråd og kender allerede det væsentlige.",
+      "items": [
+        {
+          "t": "Hvor de er",
+          "d": "Placering og lokal kontekst for hver besøgende."
+        },
+        {
+          "t": "Hvad de bruger",
+          "d": "Enhed, browser og den side, de var på."
+        },
+        {
+          "t": "Hvem de er",
+          "d": "Et Bekræftet-badge, når identiteten er bekræftet via et signeret token eller en e-mailkode."
+        },
+        {
+          "t": "Følsomme ting, sikkert",
+          "d": "Bed om private oplysninger via en sikker engangsforespørgsel, ikke i chatten."
+        },
+        {
+          "t": "Hele historikken",
+          "d": "Tidligere samtaler med samme person, lige der."
+        }
+      ],
+      "extraTitle": "Plus live skrivning på begge sider",
+      "extraDesc": "Kunder ser, når du svarer, og du ser, når de gør."
+    },
+    "secureRequest": {
+      "eyebrow": "Sikre forespørgsler",
+      "titlePrefix": "Private oplysninger ",
+      "titleHl": "holdes ude af chatten.",
+      "subtitle": "Bed om følsomme oplysninger via en sikker engangsformular, så det aldrig ligger i transskriptet.",
+      "steps": [
+        {
+          "t": "Du skal bruge noget privat",
+          "d": "Til oplysninger, der ikke bør skrives i et chatvindue."
+        },
+        {
+          "t": "Send en sikker forespørgsel",
+          "d": "Kunden får en privat engangsformular i stedet for et chatfelt."
+        },
+        {
+          "t": "Tilbage i samtalen",
+          "d": "De indsender den én gang, og dit team fortsætter samtalen."
+        }
+      ],
+      "stepLabel": "Trin {n}"
+    },
+    "afterLeave": {
+      "eyebrow": "Efter de er gået",
+      "titlePrefix": "At lukke fanen ",
+      "titleHl": "er ikke slutningen.",
+      "subtitle": "Elpino fortæller dig ærligt, om et svar stadig kan nå dem.",
+      "steps": [
+        {
+          "t": "Besøgende går",
+          "d": "De lukker chatten, eller der går 24 timer uden en besked."
+        },
+        {
+          "t": "Bekræftet e-mail registreret?",
+          "d": "Hvis de har bekræftet deres adresse, kan de stadig kontaktes."
+        },
+        {
+          "t": "Svar via e-mail",
+          "d": "Dit svar går til deres indbakke. Uden en bekræftet e-mail er et svar ikke muligt, og skrivefeltet viser det."
+        }
+      ],
+      "stepLabel": "Trin {n}"
+    },
+    "compare": {
+      "eyebrow": "Før og efter",
+      "titlePrefix": "Fra kaos til ",
+      "titleHl": "ro.",
+      "headerA": "Uden en delt indbakke",
+      "headerB": "Med Elpino",
+      "rows": [
+        [
+          "Kunder venter, til nogen er ledig",
+          "AI'en svarer på sekunder, og en person deltager derefter, hvis nødvendigt"
+        ],
+        [
+          "Ingen ved, hvem der svarer",
+          "Et badge viser AI, kollega eller løst på hver tråd"
+        ],
+        [
+          "Teamet skriver til hinanden for at finde en ejer",
+          "En Deltag-besked når alle, den første, der deltager, tager den"
+        ],
+        [
+          "Kontekst findes på ti forskellige steder",
+          "Historik, placering, enhed og bekræftelse i ét panel"
+        ],
+        [
+          "Kunder, der lukker fanen, går tabt",
+          "Bekræftede besøgende kan stadig få dit svar via e-mail"
+        ]
+      ]
+    },
+    "faq": {
+      "eyebrow": "Spørgsmål",
+      "titlePrefix": "Godt at ",
+      "titleHl": "vide.",
+      "items": [
+        [
+          "Hvem kan se en samtale?",
+          "Alle i dit team kan se den delte indbakke. Hver samtale viser, hvem der har den: AI'en, en kollega, eller løst."
+        ],
+        [
+          "Hvad er 90-sekunders vinduet?",
+          "Når en kunde spørger efter en person, får alle kolleger en Deltag-besked. Hvis ingen deltager inden for 90 sekunder, får kunden besked, og en sag oprettes automatisk med en opfølgning via e-mail."
+        ],
+        [
+          "Kan jeg give en samtale tilbage til AI'en?",
+          "Ja. Hvis du deltog og det er en enkel opfølgning, kan du give chatten tilbage til Elpino med et enkelt tryk."
+        ],
+        [
+          "Kan jeg svare, efter den besøgende har gået?",
+          "Hvis de gav en bekræftet e-mailadresse, sendes dit svar via e-mail. Uden en kan intet svar nå dem."
+        ],
+        [
+          "Fungerer det på mere end webchat?",
+          "Chat-widgetten på hjemmesiden er live i dag. Omnichannel kommer i november."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Giv dit team ét sted at hjælpe fra.",
+      "subtitle": "Start gratis, og inviter dine kolleger, når du er klar.",
+      "ctaStart": "Start gratis",
+      "ctaMeetAgent": "Mød AI-agenten"
+    }
+  },
+  "tickets": {
+    "hero": {
+      "badge": "Tickets",
+      "titlePrefix": "Hver overdragelse efterlader ",
+      "titleHl": "en stub.",
+      "subtitle": "Når AI'en ikke kan afslutte en opgave, og ingen er ledige, trækker Elpino ikke bare på skuldrene. Den skriver en ticket med årsag og resumé, sender den hen, hvor dit team arbejder, og giver kunden en reference, de kan henvise til.",
+      "ctaStart": "Start gratis",
+      "ctaInbox": "Se indbakken"
+    },
+    "printed": {
+      "ticketBadge": "Ticket",
+      "filedAt": "Oprettet ved AI-overdragelse",
+      "printing": "Printer…",
+      "referenceLabel": "Reference",
+      "referenceNote": "Kunden kan henvise til denne",
+      "fields": [
+        [
+          "Titel",
+          "Supporteskalering · Aisha Khan"
+        ],
+        [
+          "Årsag",
+          "Ændring af faktureringsland kræver en person"
+        ],
+        [
+          "Resumé",
+          "Er flyttet til et andet land og vil have faktureringslandet på sin konto opdateret."
+        ],
+        [
+          "Kunde",
+          "Aisha Khan · aisha@example.com"
+        ],
+        [
+          "Samtale",
+          "Linket, ét tryk for at åbne"
+        ],
+        [
+          "Sendt til",
+          "Sagssiden"
+        ]
+      ]
+    },
+    "origins": {
+      "eyebrow": "Hvor tickets kommer fra",
+      "titlePrefix": "Tre måder en stub ",
+      "titleHl": "bliver printet.",
+      "subtitle": "Du behøver aldrig huske selv at skrive en.",
+      "items": [
+        {
+          "tag": "Manuelt",
+          "t": "En kollega opretter den",
+          "d": "Bemærker du noget, der kræver opfølgning? Gør selv samtalen til en ticket.",
+          "sample": [
+            "Ændring af fakturaadresse",
+            "Meera bad os om at opdatere faktureringsadressen på sine fakturaer."
+          ]
+        },
+        {
+          "tag": "Oprettet ved AI-overdragelse",
+          "t": "AI'en opretter den ved overdragelse",
+          "d": "Når Elpino overdrager en chat, og ingen når at deltage i tide, oprettes en ticket med årsag og resumé.",
+          "sample": [
+            "Supporteskalering · Aisha Khan",
+            "Årsag: ændring af faktureringsland kræver en person."
+          ]
+        },
+        {
+          "tag": "Markeret ved AI-gennemgang",
+          "t": "AI'en fanger, hvad der skyldes",
+          "d": "Når en samtale er afsluttet, gennemgår AI'en den. Skylder dit team stadig kunden noget, markerer den en ticket og angiver hvorfor.",
+          "sample": [
+            "Følg op på anmodning om refundering",
+            "Årsag: kunden fik at vide, det ville blive undersøgt; intet blev noteret."
+          ]
+        }
+      ]
+    },
+    "anatomy": {
+      "eyebrow": "En tickets anatomi",
+      "titlePrefix": "Alt dit team har brug for, ",
+      "titleHl": "allerede skrevet.",
+      "subtitle": "Tryk på en linje for at se, hvorfor den er der.",
+      "fieldLabel": "Felt {n} af {total}",
+      "fields": [
+        {
+          "k": "Titel",
+          "v": "Supporteskalering · Aisha Khan",
+          "why": "Navngivet efter kunden, så du hurtigt kan finde den i en lang liste."
+        },
+        {
+          "k": "Årsag",
+          "v": "Ændring af faktureringsland kræver en person",
+          "why": "Hvorfor AI'en overdrog samtalen, eller hvorfor dens gennemgang markerede den. Ingen skal gætte, hvad der gik galt."
+        },
+        {
+          "k": "Resumé",
+          "v": "Er flyttet til et nyt land, vil have faktureringslandet opdateret.",
+          "why": "AI'en skriver et kort resumé af samtalen, så den, der tager sagen, starter informeret."
+        },
+        {
+          "k": "Kunde",
+          "v": "Aisha Khan · aisha@example.com",
+          "why": "Navn og e-mail, hvis kunden angav det, så du ved, hvem du skal svare."
+        },
+        {
+          "k": "Samtale",
+          "v": "Linket, åbner chatten",
+          "why": "Ét tryk for at hoppe tilbage til hele samtalen, med alle beskeder."
+        },
+        {
+          "k": "Kilde",
+          "v": "Oprettet ved AI-overdragelse",
+          "why": "Viser om en kollega, AI'en ved overdragelse, eller AI'ens gennemgang oprettede den."
+        },
+        {
+          "k": "Sendt til",
+          "v": "Trello, Asana eller Sagssiden",
+          "why": "Hvor ticketen blev sendt til. Uden et forbundet projektværktøj lever den på Sagssiden."
+        },
+        {
+          "k": "Reference",
+          "v": "7F3A9C21",
+          "why": "En kort kode, kunden kan henvise til, hvis de kontakter jer igen."
+        }
+      ]
+    },
+    "scrubber": {
+      "eyebrow": "90-sekunders-uret",
+      "titlePrefix": "Træk i tiden. ",
+      "titleHl": "Se, hvad der sker.",
+      "subtitle": "Deltager nogen på noget tidspunkt, er der ikke brug for en ticket. Løber tiden ud, er dette rækkefølgen.",
+      "seconds": "sekunder",
+      "dragMe": "Træk mig",
+      "secondsAriaLabel": "Sekunder siden alarmen",
+      "clock": [
+        {
+          "t": "Kunden siger ja til en person",
+          "d": "Elpino spørger altid først og fortsætter kun ved et ja."
+        },
+        {
+          "t": "Alle kolleger får en Deltag-alarm",
+          "d": "Hele teamet spørges på samme tidspunkt."
+        },
+        {
+          "t": "Ingen deltog: ticket oprettet",
+          "d": "Titel, årsag, resumé og et link til chatten."
+        },
+        {
+          "t": "Kunden får en e-mail, teamet notificeres",
+          "d": "Kunden får sin reference via e-mail."
+        }
+      ]
+    },
+    "connect": {
+      "eyebrow": "Sæt op på et minut",
+      "titlePrefix": "Forbind det til ",
+      "titleHl": "der hvor du arbejder.",
+      "subtitle": "Valgfrit. Spring det over, og tickets lever simpelthen på Sagssiden.",
+      "stepLabel": "Trin {n}",
+      "steps": [
+        {
+          "t": "Forbind Trello eller Asana",
+          "d": "Tilføj dit projektværktøj fra dine arbejdsområdeindstillinger."
+        },
+        {
+          "t": "Tickets går derhen",
+          "d": "Hver ny ticket bliver et kort eller en opgave, allerede skrevet."
+        },
+        {
+          "t": "Følges stadig i Elpino",
+          "d": "Sagssiden holder listen og lader dig krydse ting af."
+        }
+      ]
+    },
+    "reviewScan": {
+      "badge": "AI-gennemgang",
+      "titlePrefix": "Når chatten er afsluttet, ",
+      "titleHl": "læser Elpino den igen.",
+      "subtitle": "Chats ender pænt, mens løfter forbliver uafsluttede. Når en samtale afsluttes, gennemgår AI'en den, og skylder dit team stadig kunden noget, markerer den en ticket og fortæller dig hvorfor.",
+      "bullets": [
+        "Fanger „jeg undersøger det og vender tilbage”",
+        "Angiver hvorfor den blev markeret, så du hurtigt kan vurdere",
+        "Markeret som markeret ved AI-gennemgang på Sagssiden"
+      ],
+      "closedConvo": "Afsluttet samtale",
+      "statusFlagged": "Markeret",
+      "statusReviewing": "Gennemgår…",
+      "statusResolved": "Løst",
+      "chat": [
+        [
+          "cust",
+          "Hej, min bestilling ankom beskadiget."
+        ],
+        [
+          "agent",
+          "Det er vi virkelig kede af! Jeg undersøger refunderingen og vender tilbage."
+        ],
+        [
+          "cust",
+          "Godt, tak."
+        ],
+        [
+          "agent",
+          "Er der andet, jeg kan hjælpe med?"
+        ],
+        [
+          "cust",
+          "Nej, det var alt."
+        ]
+      ],
+      "flaggedTicketLabel": "Ticket · Markeret ved AI-gennemgang",
+      "flaggedTitle": "Følg op på anmodning om refundering · Tom Becker",
+      "flaggedDesc": "Kunden fik at vide, en refundering ville blive undersøgt; intet blev noteret bagefter."
+    },
+    "destinations": {
+      "eyebrow": "Hvor den lander",
+      "titlePrefix": "Sendt til det værktøj, ",
+      "titleHl": "dit team allerede bruger.",
+      "subtitle": "Forbind Trello eller Asana, og tickets går direkte derhen. Forbind ingenting, og de er stadig sikre på Sagssiden.",
+      "cardTitle": "Supporteskalering · Aisha Khan",
+      "cardReason": "Årsag: ændring af faktureringsland kræver en person",
+      "fromElpino": "Fra Elpino",
+      "items": [
+        {
+          "key": "trello",
+          "label": "Trello",
+          "note": "Bliver et kort på dit Trello-board.",
+          "cols": [
+            "To do",
+            "Doing",
+            "Done"
+          ]
+        },
+        {
+          "key": "asana",
+          "label": "Asana",
+          "note": "Bliver en opgave i dit Asana-projekt.",
+          "cols": [
+            "Ikke startet",
+            "I gang",
+            "Afsluttet"
+          ]
+        },
+        {
+          "key": "issues",
+          "label": "Sagssiden",
+          "note": "Intet projektværktøj forbundet? Den lever på din Sagsside, uden behov for opsætning.",
+          "cols": [
+            "Åben",
+            "",
+            "Løst"
+          ]
+        }
+      ]
+    },
+    "customerSide": {
+      "badge": "Kvitteringen",
+      "titlePrefix": "Kunder ved, ",
+      "titleHl": "de ikke er blevet glemt.",
+      "subtitle": "Kunne ingen deltage i tide, fortæller Elpino kunden det ærligt, sender en e-mail så det ikke går tabt, og giver dem en kort reference, de kan henvise til. Hele dit team får også besked om den nye ticket.",
+      "bullets": [
+        "Kunden får besked om, hvad der sker næste gang",
+        "De får en e-mail med deres reference",
+        "Alle kolleger får besked om ticketen"
+      ],
+      "inChat": "I chatten",
+      "chatMsgPrefix": "Vores team er optaget lige nu, så jeg har åbnet en ticket. Din reference er ",
+      "chatMsgSuffix": ". Du hører fra os via e-mail inden 24 timer.",
+      "inInbox": "I deres indbakke",
+      "emailSubject": "Vi har din forespørgsel",
+      "emailBodyPrefix": "Ticket ",
+      "emailBodySuffix": " er hos vores team. Svar på denne e-mail, hvis du har noget at tilføje.",
+      "teamNotified": "Team notificeret: ny ticket fra Aisha Khan"
+    },
+    "issuesBoard": {
+      "badge": "Sagssiden",
+      "titlePrefix": "Én liste. ",
+      "titleHl": "Kryds den af.",
+      "subtitle": "Hver ticket viser, hvor den kom fra, og hvor den blev sendt til. AI'ens gennemgang fortæller dig endda, hvorfor den blev markeret. Klik på en boks for at markere den som løst.",
+      "openWord": "åben",
+      "resolvedWord": "løst",
+      "panelTitle": "Sager",
+      "panelSubtitle": "Tickets oprettet fra supportsamtaler.",
+      "markResolved": "Markér som løst",
+      "markUnresolved": "Markér som uløst",
+      "rows": [
+        {
+          "t": "Supporteskalering · Aisha Khan",
+          "who": "Oprettet ved AI-overdragelse",
+          "where": "Ikke sendt til et projektværktøj",
+          "done": false
+        },
+        {
+          "t": "Følg op på anmodning om refundering · Tom Becker",
+          "who": "Markeret ved AI-gennemgang",
+          "where": "Trello-ticket",
+          "reason": "Kunden fik at vide, en refundering ville blive undersøgt; intet blev noteret bagefter.",
+          "done": false
+        },
+        {
+          "t": "Ændring af fakturaadresse · Meera Iyer",
+          "where": "Asana-ticket",
+          "done": false
+        },
+        {
+          "t": "Supporteskalering · Ravi Menon",
+          "who": "Oprettet ved AI-overdragelse",
+          "where": "Ikke sendt til et projektværktøj",
+          "done": true
+        }
+      ]
+    },
+    "lifecycle": {
+      "eyebrow": "En tickets liv",
+      "titlePrefix": "Fra „kan jeg tale med en person?” ",
+      "titleHl": "til færdig.",
+      "stepLabel": "Trin {n}",
+      "items": [
+        {
+          "t": "Kunden beder om en person",
+          "d": "AI'en spørger først, og giver derefter teamet besked."
+        },
+        {
+          "t": "90 sekunder, ingen deltager",
+          "d": "Alle havde en chance for at tage chatten."
+        },
+        {
+          "t": "Ticket oprettet",
+          "d": "Titel, årsag, resumé og et link tilbage til chatten."
+        },
+        {
+          "t": "Kunden får en e-mail",
+          "d": "Med deres reference, så intet føles glemt."
+        },
+        {
+          "t": "Behandlet og løst",
+          "d": "Dit team krydser den af, når den er færdig."
+        }
+      ]
+    },
+    "compare": {
+      "eyebrow": "Før & efter",
+      "titlePrefix": "Ikke flere ",
+      "titleHl": "løfter der falder til jorden.",
+      "headerA": "Uden tickets",
+      "headerB": "Med Elpino",
+      "rows": [
+        [
+          "„Nogen vender tilbage til dig”, og så tavshed",
+          "En ticket med en reference, kunden kan henvise til"
+        ],
+        [
+          "Teamet kopierer detaljer manuelt over i et andet værktøj",
+          "Årsag, resumé og chat-link kommer allerede skrevet"
+        ],
+        [
+          "Løfter givet i chatten bliver glemt",
+          "En AI-gennemgang markerer, hvad dit team stadig skylder efter en afsluttet chat"
+        ],
+        [
+          "Ingen anelse om, om nogen tager sig af det",
+          "Afkrydsbar løst-status og hvor den blev sendt til, i én liste"
+        ]
+      ]
+    },
+    "faq": {
+      "eyebrow": "Spørgsmål",
+      "titlePrefix": "Godt at ",
+      "titleHl": "vide.",
+      "items": [
+        [
+          "Hvornår opretter Elpino en ticket?",
+          "Når den overdrager en samtale, og ingen deltager inden for 90 sekunder, og når dens gennemgang af en afsluttet samtale finder noget, dit team stadig skylder. Kolleger kan også oprette en manuelt."
+        ],
+        [
+          "Hvor går tickets hen?",
+          "Til Trello eller Asana, hvis du har forbundet en af dem. Hvis ikke, lever de på din Sagsside, så intet går tabt."
+        ],
+        [
+          "Hvad står der i en ticket?",
+          "En titel, årsagen, et kort resumé, kundens oplysninger og et link tilbage til samtalen."
+        ],
+        [
+          "Får kunden besked?",
+          "Ja. De får besked i chatten, en e-mail, og en kort reference de kan henvise til."
+        ],
+        [
+          "Kan jeg markere en ticket som løst?",
+          "Ja, kryds den af på Sagssiden."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Lad intet glide igennem.",
+      "subtitle": "Start gratis, og Elpino skriver tickets for dig.",
+      "ctaStart": "Start gratis",
+      "ctaMeetAgent": "Mød AI-agenten"
+    }
+  },
+  "knowledgeHub": {
+    "hero": {
+      "badge": "Knowledge Hub",
+      "titlePrefix": "Spørg om hvad som helst. ",
+      "titleHl": "Elpino tjekker din viden.",
+      "subtitle": "Elpino svarer kun ud fra den viden, du giver den. Du behøver ikke tage vores ord for det. Se den søge i din viden til venstre og svare kunden til højre. Når den ikke kan finde noget, siger den det.",
+      "privateNote": "Private kilder bruges aldrig til at svare kunder."
+    },
+    "playground": {
+      "yourKnowledge": "Din viden",
+      "customer": "Kunde",
+      "elpinoAi": "Elpino AI",
+      "statusWaiting": "Venter på et spørgsmål",
+      "statusSearching": "Søger i din viden…",
+      "statusFound": "Fandt et match",
+      "statusNoMatch": "Intet match fundet",
+      "privateBadge": "Privat",
+      "matchBadge": "Match",
+      "offersHuman": "Tilbyder et menneske",
+      "sources": [
+        {
+          "name": "Refundering.pdf",
+          "kind": "Dokument"
+        },
+        {
+          "name": "Leveringstider",
+          "kind": "Tekstside"
+        },
+        {
+          "name": "Hjælp: nulstil adgangskode",
+          "kind": "Webside"
+        },
+        {
+          "name": "Eskaleringsplaybook",
+          "kind": "Interne noter"
+        }
+      ],
+      "scenes": [
+        {
+          "q": "Hvor lang tid har jeg til at bede om refundering?",
+          "hit": "refund",
+          "a": "Du kan anmode om refundering inden for 30 dage efter købet."
+        },
+        {
+          "q": "Hvordan nulstiller jeg min adgangskode?",
+          "hit": "reset",
+          "a": "Vælg “Glemt adgangskode” på login-siden, og følg det link, vi sender dig på e-mail."
+        },
+        {
+          "q": "Giver I rabat til velgørende organisationer?",
+          "hit": null,
+          "a": "Den oplysning har jeg ikke. Vil du have mig til at sætte dig i forbindelse med vores team?"
+        },
+        {
+          "q": "Hvor lang tid tager levering?",
+          "hit": "ship",
+          "a": "Bestillinger ankommer normalt inden for 3-5 hverdage."
+        }
+      ]
+    },
+    "crawlWeb": {
+      "eyebrow": "Opdag",
+      "titlePrefix": "Ét link ind. ",
+      "titleHl": "En hel hjemmeside ud.",
+      "subtitle": "Giv Elpino din forside, og den følger selv linkene, op til 50 sider. Den læser hjælpe-, pris- og politiksider først og springer billeder, downloads og andre støjkilder over. Sider bygget med JavaScript renderes i en rigtig browser, så intet kommer tilbage tomt.",
+      "pagesKept": "Beholdte sider",
+      "filesSkipped": "Sprungne filer",
+      "svgAlt": "En crawl der breder sig fra én side ud til forbundne sider",
+      "startLabel": "START"
+    },
+    "otherWays": {
+      "eyebrow": "Flere måder ind",
+      "titlePrefix": "Ikke alt findes ",
+      "titleHl": "på en hjemmeside.",
+      "subtitle": "Tre flere måder at lære Elpino op på, til den viden der aldrig fik en URL.",
+      "items": [
+        {
+          "title": "Sitemap",
+          "big": "20",
+          "note": "sider hentet ind fra dit sitemap på én gang"
+        },
+        {
+          "title": "Filer",
+          "big": ".pdf",
+          "note": "også .docx, .txt og .md. Teksten udtrækkes for dig"
+        },
+        {
+          "title": "Skriv det",
+          "big": "Aa",
+          "note": "politikker og “sådan gør vi”-sider, skrevet direkte i editoren"
+        }
+      ]
+    },
+    "mill": {
+      "eyebrow": "Hvad sker der derefter",
+      "titlePrefix": "Hver side tager ",
+      "titleHl": "samme rejse.",
+      "items": [
+        {
+          "t": "Hentet sikkert",
+          "d": "Som ElpinoBot, med beskyttelse mod at nå private netværk."
+        },
+        {
+          "t": "Ryddet op",
+          "d": "Menuer og standardtekst ud, nyttig tekst ind."
+        },
+        {
+          "t": "Opdelt og indekseret",
+          "d": "Delt op i afsnit og indekseret efter betydning, ikke kun søgeord."
+        },
+        {
+          "t": "Fundet efter behov",
+          "d": "De nærmeste afsnit hentes frem, i det øjeblik en kunde spørger."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Spørgsmål",
+      "titlePrefix": "Godt at ",
+      "titleHl": "vide.",
+      "items": [
+        [
+          "Hvad kan jeg tilføje?",
+          "Websider via URL, et sitemap (op til 20 sider), en crawl fra ét link (op til 50 sider), PDF-, Word-, tekst- og Markdown-filer samt sider du selv skriver."
+        ],
+        [
+          "Læser den JavaScript-byggede sider?",
+          "Ja. Hvis en side har lidt læsbar tekst, renderes den først i en browser, og resultatet læses."
+        ],
+        [
+          "Kan jeg holde indhold privat?",
+          "Ja. Hver kilde har en synlighedskontakt, så interne noter forbliver interne."
+        ],
+        [
+          "Kan jeg forbinde Notion, Zendesk eller Confluence?",
+          "Ikke endnu. I dag tilføjer du kilder via URL, sitemap, filupload eller ved at skrive sider."
+        ],
+        [
+          "Hvad hvis svaret ikke findes?",
+          "Elpino siger, at den ikke har den oplysning, og tilbyder at forbinde kunden med dit team i stedet for at gætte."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Fyld din rigtige hylde.",
+      "subtitle": "Indsæt et link, og Elpino begynder at svare ud fra det.",
+      "ctaStart": "Start gratis",
+      "ctaMeetAgent": "Mød AI-agenten"
+    }
+  },
+  "integrations": {
+    "hero": {
+      "badge": "Integrationer",
+      "titlePrefix": "Sæt til. ",
+      "titleHl": "Løft niveauet.",
+      "subtitle": "Forbind dine betalinger, dit ticketsystem og dine egne systemer, og se hvad Elpino kan gøre vokse. Tryk på stikkene for at sætte dem til."
+    },
+    "board": {
+      "pluggedInCount": "{on} / {total} tilsluttet",
+      "pluggedIn": "Tilsluttet",
+      "tapToPlugIn": "Tryk for at tilslutte",
+      "on": "Til",
+      "off": "Fra",
+      "whatCanDo": "Hvad Elpino kan gøre nu",
+      "empty": "Intet er tilsluttet endnu. Tryk på et stik ovenfor."
+    },
+    "conns": [
+      {
+        "name": "Stripe",
+        "blurb": "AI'en tjekker reelle betalinger og abonnementer.",
+        "abilities": [
+          "Slå betalinger og abonnementer op",
+          "Send kvitteringer og betalingslinks",
+          "Opsig et abonnement på anmodning",
+          "Refusioner, kun hvis du slår dem til"
+        ]
+      },
+      {
+        "name": "Razorpay",
+        "blurb": "Samme betalingsværktøjer, til Razorpay-konti.",
+        "abilities": [
+          "Slå betalinger og abonnementer op",
+          "Send kvitteringer og betalingslinks",
+          "Opsig et abonnement på anmodning",
+          "Refusioner, kun hvis du slår dem til"
+        ]
+      },
+      {
+        "name": "Cashfree",
+        "blurb": "Betalings- og afregningshistorik til dit team.",
+        "abilities": [
+          "Find en ordre eller betaling fra en samtale",
+          "Se status for afregning og refusion"
+        ]
+      },
+      {
+        "name": "Paystack",
+        "blurb": "Status for transaktioner og refusioner til dit team.",
+        "abilities": [
+          "Slå en transaktion op fra en samtale",
+          "Tjek status for betaling og refusion"
+        ]
+      },
+      {
+        "name": "Trello",
+        "blurb": "Tickets lander som kort på dit board.",
+        "abilities": [
+          "Tickets bliver til Trello-kort",
+          "Resuméet og et link til chatten følger med"
+        ]
+      },
+      {
+        "name": "Asana",
+        "blurb": "Tickets lander som opgaver i dit projekt.",
+        "abilities": [
+          "Tickets bliver til Asana-opgaver",
+          "Resuméet og et link til chatten følger med"
+        ]
+      },
+      {
+        "name": "Dine MCP-servere",
+        "blurb": "Alt, der taler MCP, med de værktøjer du godkender.",
+        "abilities": [
+          "Kald værktøjer på dine egne servere",
+          "Op til 5 servere, 15 værktøjer aktiveret hver",
+          "Kun de værktøjer, du godkender, er synlige",
+          "Værktøjer der ændrer data kræver en verificeret kunde"
+        ]
+      }
+    ],
+    "how": {
+      "eyebrow": "Tilslutning",
+      "titlePrefix": "Et minut hver. ",
+      "titleHl": "Ingen ingeniører.",
+      "stepLabel": "Trin {n}",
+      "steps": [
+        {
+          "t": "Vælg et værktøj",
+          "d": "Åbn Forbind i dit dashboard og vælg den connector, du vil bruge."
+        },
+        {
+          "t": "Indsæt en nøgle eller godkend",
+          "d": "Værktøjer med API-nøgle tager dine nøgler. Asana bruger en normal login- og tilladelsesskærm."
+        },
+        {
+          "t": "Vi tjekker den først",
+          "d": "Elpino tester dine nøgler mod udbyderen, før de gemmes, og opbevarer dem krypteret."
+        }
+      ]
+    },
+    "families": {
+      "eyebrow": "Kataloget",
+      "titlePrefix": "Tre slags ",
+      "titleHl": "forbindelser.",
+      "tabs": {
+        "payments": "Betalinger",
+        "tickets": "Tickets",
+        "systems": "Dine systemer"
+      },
+      "paymentsNote": "AI'ens betalingshandlinger fungerer i dag med Stripe og Razorpay. Cashfree og Paystack giver dit team betalingskontekst."
+    },
+    "safe": {
+      "badge": "Sikkert som standard",
+      "titlePrefix": "Tilsluttet, ",
+      "titleHl": "ikke eksponeret.",
+      "items": [
+        {
+          "t": "Nøgler forbliver krypterede",
+          "d": "Adgangsoplysninger opbevares krypteret, og Elpino verificerer dem hos udbyderen, før de gemmes."
+        },
+        {
+          "t": "Læseadgang er nok til opslag",
+          "d": "Til Stripe skal du bruge en begrænset nøgle med læseadgang til kunder og betalinger."
+        },
+        {
+          "t": "Penge flytter sig kun, hvis du tillader det",
+          "d": "Refusioner er slået fra som standard. Workspace-ejeren afgør, om AI'en må udstede dem."
+        },
+        {
+          "t": "Du godkender hvert MCP-værktøj",
+          "d": "AI'en ser kun de værktøjer, du har slået til, og hvert kald verificeres igen på serveren."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Spørgsmål",
+      "titlePrefix": "Godt at ",
+      "titleHl": "vide.",
+      "items": [
+        [
+          "Hvilke værktøjer kan jeg forbinde?",
+          "Stripe, Razorpay, Cashfree og Paystack til betalinger, Trello og Asana til tickets, og dine egne MCP-servere til alt andet."
+        ],
+        [
+          "Hvad kan AI'en gøre med betalinger?",
+          "Med Stripe eller Razorpay forbundet kan den slå betalinger og abonnementer op, sende kvitteringer og betalingslinks samt opsige et abonnement på anmodning. Refusioner er slået fra, med mindre du aktiverer dem."
+        ],
+        [
+          "Skal jeg være teknisk?",
+          "Ikke til betalinger eller tickets. Du indsætter en nøgle eller logger ind på Asana. MCP-servere kræver, at nogen har bygget en."
+        ],
+        [
+          "Er Shopify, Slack eller HubSpot understøttet?",
+          "Ikke som et-klik-connectorer i dag. Har dit system en MCP-server, kan du forbinde den, og du kan fortælle os, hvad du gerne vil have næste gang."
+        ],
+        [
+          "Hvor ender tickets?",
+          "I Trello eller Asana, hvis de er forbundet. Ellers ligger de på din Issues-side."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Mangler du noget, du har brug for?",
+      "subtitle": "Fortæl os, hvilket værktøj du vil have næste gang, eller forbind det selv via MCP.",
+      "ctaStart": "Start gratis",
+      "ctaRequest": "Anmod om en integration"
+    }
+  },
+  "securityGuide": {
+    "sticky": {
+      "securityLabel": "Sikkerhed",
+      "reportIssue": "Anmeld et problem"
+    },
+    "hero": {
+      "badge": "Sikkerhedsguide",
+      "title1": "Bygget til at ",
+      "title2": "beskytte dine data.",
+      "subtitle": "Denne guide gennemgår, hvad der er beskyttet i webappen, gatewayen og auth-, workspace- og AI-services – hvad vi garanterer, og hvorfor du kan regne med det, uden en trin-for-trin gennemgang af det interne.",
+      "ctaBlueprint": "Se blueprintet",
+      "ctaChapters": "Læs kapitlerne",
+      "ctaTrust": "Trust Center",
+      "register": {
+        "label": "Register",
+        "chapters": "Kapitler",
+        "controlsDescribed": "Beskrevne kontroller",
+        "componentsCovered": "Dækkede komponenter",
+        "componentsValue": "6",
+        "reviewedAgainst": "Gennemgået mod",
+        "reviewedValue": "produktet"
+      }
+    },
+    "blueprint": {
+      "fig": "Fig. 00 · Et overblik",
+      "title": "Hvad der sker med en forespørgsel",
+      "subtitle": "Hver pil er krypteret eller autentificeret. Peg på en del for at se, hvad det betyder i praksis.",
+      "readChapter": "Læs kapitel"
+    },
+    "nodes": {
+      "widget": {
+        "label": "Besøgende",
+        "sub": "Chat-widget",
+        "guards": "Gæster forbliver gæster. Logget-ind besøgende beviser deres identitet med et signeret bevis eller en e-mailkode, som kun opbevares i widgettens egen hukommelse."
+      },
+      "team": {
+        "label": "Dit team",
+        "sub": "Dashboard",
+        "guards": "Adgangskoder gemmes aldrig i læsbar form, Google-login verificeres på vores server, og du kan afslutte enhver session eksternt."
+      },
+      "elpino": {
+        "label": "Elpino",
+        "sub": "Verificerer, beskytter, svarer",
+        "guards": "Hver forespørgsel kontrolleres, før noget køres, private oplysninger udskiftes, før en AI-model overhovedet ser dem, og AI'en opererer inden for grænser, den ikke kan tale sig ud af."
+      },
+      "google": {
+        "label": "Google",
+        "sub": "Login",
+        "guards": "Kun betroet efter vores egen server uafhængigt har verificeret det."
+      },
+      "pay": {
+        "label": "Betalinger",
+        "sub": "Razorpay · Stripe",
+        "guards": "Betalingsnotifikationer accepteres kun med en verificeret signatur og kan aldrig genafspilles for at nulstille dit forbrug."
+      },
+      "models": {
+        "label": "AI-udbydere",
+        "sub": "Modeller",
+        "guards": "De ser sikre pladsholdere i stedet for rigtige oplysninger, aldrig hemmeligheder, og dine data bruges ikke til at træne generelle modeller."
+      }
+    },
+    "chaptersSection": {
+      "label": "Kapitlerne",
+      "title1": "Tolv kapitler. ",
+      "title2": "Intet springes over.",
+      "subtitle": "Hver kontrol navngiver den del af systemet, den findes i, og den garanti, den giver dig – ikke den præcise mekanisme bag den.",
+      "contents": "Indhold"
+    },
+    "chapters": {
+      "accounts": {
+        "title": "Konti og sessioner",
+        "kicker": "Hvem er i dit team, og hvordan vi ved, det er dem.",
+        "intro": "Oprettelse, login og hver session derefter. Adgangskoder gemmes aldrig i læsbar form, verifikationskoder udløber hurtigt, og en session kan til enhver tid afsluttes fra serveren.",
+        "stats": [
+          "Adgangskoder hashes, gemmes aldrig",
+          "Koder udløber hurtigt",
+          "Sessioner du kan tilbagekalde"
+        ],
+        "controls": {
+          "1.1": {
+            "title": "Adgangskoder hashes, gemmes aldrig",
+            "text": "Din adgangskode opbevares aldrig nogen steder i en form, nogen kunne læse tilbage – ikke engang os. At kontrollere den kan ikke afsløre, hvor tæt et forkert gæt var."
+          },
+          "1.2": {
+            "title": "E-mailverifikationskoder",
+            "text": "Nye konti bekræfter deres adresse med en kortlivet kode. Kun en sikker hash af den gemmes, den udløber hurtigt, og kun et par forkerte forsøg tillades, før du skal have en ny."
+          },
+          "1.3": {
+            "title": "Google-login kontrolleres på serveren",
+            "text": "Google-login-popup'en køres i din browser, men vores server verificerer den uafhængigt, før den tillides, og logger dig altid ind på den samme konto ud fra din verificerede e-mail – aldrig en anden, usammenhængende konto."
+          },
+          "1.4": {
+            "title": "Signerede sessionstokens",
+            "text": "Din session er et signeret token, som vores server altid selv kan verificere – det kan ikke forfalskes, ændres eller genafspilles som noget andet."
+          },
+          "1.5": {
+            "title": "En låst sessions-cookie",
+            "text": "Din sessions-cookie kan ikke læses af scripts på siden og sendes kun over en sikker forbindelse."
+          },
+          "1.6": {
+            "title": "Log ud alle steder",
+            "text": "At logge ud gør hurtigt alle dine sessioner ugyldige. Hvis vi ikke kan bekræfte, at en session stadig er gyldig, afvises den i stedet for at blive tilladt."
+          },
+          "1.7": {
+            "title": "Sikre omdirigeringer",
+            "text": "Efter login sendes du altid kun til en side på vores eget site – aldrig et andet sted, uanset hvordan linket er udformet."
+          },
+          "1.8": {
+            "title": "Teaminvitationer",
+            "text": "Invitationslinks kan ikke gættes og udløber automatisk, og en ejer bestemmer, om medlemmer overhovedet kan invitere andre."
+          }
+        }
+      },
+      "front-door": {
+        "title": "Fordøren",
+        "kicker": "Hvad hjemmesiden gør, før en forespørgsel går videre.",
+        "intro": "Webappen er det første, en browser rører ved. Den hærder browseren, begrænser misbrug og validerer input, før noget videresendes.",
+        "stats": [
+          "Ingen framing",
+          "Begrænset misbrug",
+          "Fejler lukket"
+        ],
+        "controls": {
+          "2.1": {
+            "title": "Hærdende browser-headers",
+            "text": "Hver side, undtagen chat-widgetten, er beskyttet mod clickjacking, beskyttet mod content-type-sniffing og har følsomme enhedstilladelser som kamera og placering slået fra som standard. Widgetten er den ene bevidste undtagelse, da den skal ligge inde i en iframe på dit site."
+          },
+          "2.2": {
+            "title": "Delte misbrugsgrænser",
+            "text": "Offentlige formularer beskyttes af rate-limits, der deles på tværs af alle servere, vi driver, så misbrug fra et sted ikke bare kan slippe igennem ved at ramme et andet."
+          },
+          "2.3": {
+            "title": "Den fejler lukket",
+            "text": "Hvis misbrugsbegrænseren ikke kan nås, afvises forespørgslen i stedet for at blive vinket igennem."
+          },
+          "2.4": {
+            "title": "Valideret input med begrænset længde",
+            "text": "Hver formular kontrolleres og størrelsesbegrænses på serveren, før noget behandles – der stoles aldrig kun på, at browseren allerede har valideret det."
+          }
+        }
+      },
+      "gateway": {
+        "title": "Gatewayen",
+        "kicker": "Én dør til backenden, lukket som standard.",
+        "intro": "Hvert kald til backenden går gennem en enkelt gateway. Reglen er simpel: hvis en rute ikke er explicit offentlig, skal den bevise, at den hører til.",
+        "stats": [
+          "Lukket som standard",
+          "Explicit offentlig liste",
+          "Verificerede live-forbindelser"
+        ],
+        "controls": {
+          "3.1": {
+            "title": "Lukket som standard",
+            "text": "Hver rute kræver bevis for, at det er et autoriseret internt kald, med mindre den er explicit markeret som offentlig. Hvis den kontrol ikke er konfigureret, afviser gatewayen alt i stedet for at fejle åbent."
+          },
+          "3.2": {
+            "title": "En kort, explicit offentlig liste",
+            "text": "Kun kald, der virkelig ikke kan have interne credentials, er offentlige: chat-widgetten, sideanalyse, betalingswebhooken og engangs sikre links. Hver enkelt er markeret med vilje, rute for rute."
+          },
+          "3.3": {
+            "title": "Kun explicitte oprindelser",
+            "text": "API'et svarer kun browsere fra en kendt, godkendt liste af oprindelser – aldrig fra hvor som helst, der tilfældigvis spørger."
+          },
+          "3.4": {
+            "title": "Verificerede live-forbindelser",
+            "text": "Live-view-forbindelser kræver et verificeret credential med workspace-scope og udløb. Alt andet afvises øjeblikkeligt."
+          },
+          "3.5": {
+            "title": "Interne push er også beskyttet",
+            "text": "De endpoints, services bruger til at pushe live-notifikationer til dashboards, kræver det samme interne bevis, så ingen udenfor kan ringe en kollegas skærm op."
+          }
+        }
+      },
+      "visitors": {
+        "title": "Besøgende og identitet",
+        "kicker": "At kende en logget-ind kunde fra en, der bare skrev en e-mail.",
+        "intro": "Et navn, en e-mail eller et ordrenummer er ikke bevis på, hvem nogen er. Kontohjælp låses kun op efter reelt identitetsbevis, og det bevis udløber hurtigt.",
+        "stats": [
+          "Reelt bevis kræves",
+          "Sessioner udløber automatisk",
+          "Tidsbegrænset verifikation"
+        ],
+        "controls": {
+          "4.1": {
+            "title": "Gæster forbliver gæster",
+            "text": "Et indtastet navn, e-mail, telefon eller betalingsreference tæller aldrig som identitetsbevis. Gæster kan chatte og efterlade kontaktoplysninger, men det låser ingen private værktøjer op og bliver aldrig sammenlagt med andres historik."
+          },
+          "4.2": {
+            "title": "Signeret identitet fra dit eget site",
+            "text": "For logget-ind kunder går din egen server i borgen for, hvem de er, med et kortlivet signeret credential, som kun du og Elpino kan skabe sammen. Kontaktoplysninger tæller kun som verificeret, når dit system siger, de er det."
+          },
+          "4.3": {
+            "title": "En udveksling, en session",
+            "text": "Hvert identitetsbevis bruges én gang og udveksles derefter til en helt ny session – intet genanvendeligt ligger og venter, og det, der gemmes, kan ikke omdannes tilbage til den oprindelige værdi."
+          },
+          "4.4": {
+            "title": "Kortlivede sessioner",
+            "text": "En session udløber automatisk efter en periode med inaktivitet eller en fast tid fra login – hvad der kommer først. Den opbevares kun i widgettens egen hukommelse, aldrig i browser-lagring eller en URL."
+          },
+          "4.5": {
+            "title": "Rotation og logout",
+            "text": "At rotere dit identitetscredential gør øjeblikkeligt alle sessioner, der brugte det gamle, ugyldige. At logge ud tilbagekalder sessionen på vores server, og gamle sessioner ryddes op automatisk."
+          },
+          "4.6": {
+            "title": "E-mailkoder til gæster",
+            "text": "En besøgende kan også verificere sig via e-mail med en kort engangskode, rate-begrænset for at forhindre misbrug. Verifikation låser kun den ene konversation op, og kun i en begrænset tid."
+          },
+          "4.7": {
+            "title": "Hver forespørgsel gennemgås igen",
+            "text": "Hver autentificeret læsning og skrivning kontrollerer uafhængigt igen, hvem der spørger, hvilket workspace det er scopet til, og om den adgang stadig er gyldig – intet stoles på, bare fordi det var gyldigt et øjeblik forinden."
+          }
+        }
+      },
+      "ai": {
+        "title": "AI'ens snor",
+        "kicker": "Hvad AI'en kan og ikke kan gøre, håndhævet af backenden, ikke ved høflig anmodning.",
+        "intro": "Modellen foreslår; backenden bestemmer. Værktøjer, identitet, grænser og penge findes alle uden for modellen, hvor en smart besked ikke kan tale sig forbi dem.",
+        "stats": [
+          "Begrænset arbejde",
+          "Backend-styrede værktøjer",
+          "Uafhængig gennemgang"
+        ],
+        "controls": {
+          "5.1": {
+            "title": "Et svar, en ejer",
+            "text": "Før et AI-svar gemmes, bekræfter systemet uafhængigt, at konversationen stadig er AI-ejet, og at spørgsmålet, der besvares, stadig er det seneste. AI'en kan ikke tale over dit team eller svare på noget, der allerede er gået videre."
+          },
+          "5.2": {
+            "title": "Begrænset arbejde",
+            "text": "Hver AI-tur har et hårdt loft over, hvor meget den kan gøre. En fastlåst eller løbende loop-kørsel afbrydes automatisk og efterlades aldrig kørende."
+          },
+          "5.3": {
+            "title": "Backenden vælger værktøjerne",
+            "text": "Hvilke værktøjer AI'en kan bruge, afgøres helt af dit workspaces egen opsætning og kundens verifikation – modellen kan ikke give sig selv et værktøj, erklære data offentlige eller nå ind i et andet workspace."
+          },
+          "5.4": {
+            "title": "Kontoværktøjer kræver en verificeret kunde",
+            "text": "Betalingsopslag og forbundne systemer bliver kun tilgængelige, når kunden har bevist, hvem de er, og handler altid kun på den identitet, der allerede er registreret – aldrig på hvad modellen bliver fortalt."
+          },
+          "5.5": {
+            "title": "Beskeder er data, ikke instruktioner",
+            "text": "Kundebeskeder, dokumenter og værktøjsresultater kommer til modellen klart mærket som ubetroet information. Instruktioner gemt i dem følges ikke."
+          },
+          "5.6": {
+            "title": "En second opinion",
+            "text": "En separat, uafhængig kontrol gennemgår hvert svarudkast mod den evidens, AI'en faktisk har indsamlet. Et ubegrundet udsagn sendes tilbage til omskrivning, og et, der stadig fejler, gives til en person."
+          },
+          "5.7": {
+            "title": "Pengebevægelser sker bag porte",
+            "text": "AI-refunderinger er slået fra, indtil en workspace-ejer aktiverer dem, og selv da er de begrænsede og automatisk capped. En gentaget refundering kan aldrig udstedes to gange, og at annullere et abonnement fjerner aldrig tid, du allerede har betalt for."
+          },
+          "5.8": {
+            "title": "Et audit trail for hver kørsel",
+            "text": "Hver AI-kørsel gemmer en registrering af, hvad den gjorde, og hvad den brugte til det. Alt, der rører penge, logges også som en note, dit team kan se."
+          }
+        }
+      },
+      "private-data": {
+        "title": "Private data",
+        "kicker": "Hvad modellen faktisk ser.",
+        "intro": "Før en forespørgsel når en AI-model, udskiftes identificerende oplysninger med sikre pladsholdere. Prøv det nedenfor med din egen tekst.",
+        "stats": [
+          "Oplysninger udskiftes først",
+          "Hemmeligheder fjernet helt",
+          "Samme regler for alle udbydere"
+        ],
+        "controls": {
+          "6.1": {
+            "title": "Rigtige oplysninger når aldrig modellen",
+            "text": "Navne, e-mails, telefonnumre, adresser og ordre- eller betalingsoplysninger sendes aldrig til AI-modellen, som de er. Vi udskifter dem først med sikre pladsholdere og gendanner kun den rigtige værdi bagefter, på vores egne servere – aldrig inde i noget, modellen ser."
+          },
+          "6.2": {
+            "title": "Hemmeligheder fjernes, ikke bare skjules",
+            "text": "Adgangskoder, API-nøgler, tokens og engangskoder fjernes fuldstændigt, før noget når en model – ikke skjult, bare væk."
+          },
+          "6.3": {
+            "title": "Følsomme links renses",
+            "text": "Links med adgangstokens eller andre følsomme parametre renses, før en model overhovedet læser dem."
+          },
+          "6.4": {
+            "title": "Betalingsfakta, ikke betalingsposter",
+            "text": "Betalingsværktøjer returnerer altid kun sikre sammendrag – status og datoer – aldrig rå kort- eller kontooplysninger, og fejlårsager forenkles i stedet for at blive givet igennem som fri tekst."
+          },
+          "6.5": {
+            "title": "De samme regler for hver model",
+            "text": "Den samme beskyttelse gælder, uanset hvilken AI-udbyder svarer, også når vi falder tilbage til en anden. Dine konversationer og dokumenter bruges aldrig til at træne generelle modeller."
+          }
+        }
+      },
+      "integrations": {
+        "title": "Integrationer og udgående forespørgsler",
+        "kicker": "Når Elpino skal ud til en URL, du har givet os.",
+        "intro": "At crawle dit site, læse en side eller kalde et forbundet system betyder alt sammen at hente en URL, en person har indtastet. Hver af disse forespørgsler er låst ned, så den ikke kan vendes mod vores eget netværk – eller dit.",
+        "stats": [
+          "Krypteret i hvile",
+          "Kan ikke nå private netværk",
+          "Begrænset og tidsbegrænset"
+        ],
+        "controls": {
+          "7.1": {
+            "title": "Credentials er krypteret i hvile",
+            "text": "Enhver nøgle eller token, du forbinder – Stripe, Razorpay, Trello og lignende – krypteres, før den overhovedet gemmes. En kopi af databasen alene kan ikke gendanne dem."
+          },
+          "7.2": {
+            "title": "Udgående forespørgsler kan ikke rettes indad",
+            "text": "Når vi henter en URL på dine vegne – crawler dit site, kalder et forbundet system – sikrer vi, at det ikke kan omdirigeres mod et privat netværk eller intern infrastruktur i stedet, inklusive vores eget."
+          },
+          "7.3": {
+            "title": "Omdirigeringer kontrolleres for hvert skridt",
+            "text": "Vi følger omdirigeringer omhyggeligt, kontrollerer hvert hop i stedet for at stole på den endelige destination, og altid kun over standard, sikre forbindelser."
+          },
+          "7.4": {
+            "title": "Forbundne systemer er begrænsede",
+            "text": "Forbindelser til dine egne værktøjer er begrænset i størrelse og tid, så de ikke kan bruges til at trække ubegrænsede data eller hænge i det uendelige."
+          },
+          "7.5": {
+            "title": "Administratorer godkender hvert værktøj",
+            "text": "Forbundne værktøjer er slået fra, indtil en administrator godkender dem. Et værktøj, der kan ændre data, markeres separat og kræver stadig en verificeret kunde, selv når serveren i øvrigt er offentlig."
+          },
+          "7.6": {
+            "title": "Afbryd betyder væk",
+            "text": "Når du afbryder en integration, slettes dens gemte tokens og credentials øjeblikkeligt."
+          }
+        }
+      },
+      "secure-links": {
+        "title": "Sikre overdragelser",
+        "kicker": "Når en kunde skal sende noget følsomt.",
+        "intro": "Indsæt aldrig en nøgle i en chat. En kollega kan i stedet bede om den via et engangslink, og chatten indeholder kun linket.",
+        "stats": [
+          "Link der ikke kan gættes",
+          "Udløber automatisk",
+          "Separat krypteret"
+        ],
+        "controls": {
+          "8.1": {
+            "title": "Chatten indeholder aldrig hemmeligheden",
+            "text": "Beskeden i konversationen navngiver, hvad der blev bedt om, og indeholder et link – aldrig værdien selv."
+          },
+          "8.2": {
+            "title": "Et link der ikke kan gættes og har kort levetid",
+            "text": "Linket i sig selv er kundens hele bevis på autorisation, så det er gjort umuligt at gætte, og det udløber automatisk, før det kan blive en stående risiko."
+          },
+          "8.3": {
+            "title": "Krypteret med sin egen nøgle",
+            "text": "Hvad der end indsendes, forsegles med en nøgle, der er holdt helt separat fra den, der beskytter dine andre credentials, så den ene kan roteres – eller i værste fald blive kompromitteret – uden at røre den anden."
+          },
+          "8.4": {
+            "title": "Begrænset og fejet",
+            "text": "Indsendelser er størrelsesbegrænsede, og alt, der er udløbet, slettes automatisk og permanent på et fast skema, så kun en registrering af, at noget skete, står tilbage – aldrig hvad det var."
+          }
+        }
+      },
+      "money": {
+        "title": "Penge og fakturering",
+        "kicker": "Betalinger, fornyelser og de grænser, der er knyttet til dem.",
+        "intro": "Alt, der flytter penge, verificeres to gange: én gang for at bekræfte, at beskeden virkelig kom fra betalingsudbyderen, og én gang for at bekræfte, at den ikke kan anvendes to gange.",
+        "stats": [
+          "Kun verificerede signaturer",
+          "Sikker mod genafspilning",
+          "Kan ikke dobbeltopkræve"
+        ],
+        "controls": {
+          "9.1": {
+            "title": "Signerede webhooks og checkouts",
+            "text": "Betalingsnotifikationer accepteres kun med en gyldig, verificeret signatur fra udbyderen – alt andet, inklusive et nær-match, afvises kategorisk."
+          },
+          "9.2": {
+            "title": "Genafspilninger kan ikke nulstille forbrug",
+            "text": "En betalingsnotifikation, der ankommer mere end én gang – genafspillet eller simpelthen leveret to gange – kan aldrig genulstille allerede brugt forbrug eller give kredit igen."
+          },
+          "9.3": {
+            "title": "Auto-genopfyldning kan ikke dobbeltopkræve",
+            "text": "At kontrollere, om en genopfyldning er inden for grænsen, og faktisk reservere den, sker som ét atomisk skridt, og din saldo krediteres først, når en betaling er bekræftet og indfanget."
+          },
+          "9.4": {
+            "title": "Hver pengebevægelse er registreret",
+            "text": "Hver betalingshændelse fra udbyderen skrives til et audit trail, og enhver betalingshandling AI'en foretager, får sin egen separate log."
+          },
+          "9.5": {
+            "title": "Plangrænser håndhæves på serveren",
+            "text": "Funktioner låst til en plan kontrolleres i backenden, ikke bare skjult i interfacet, og pladsgrænser tælles fra reelt medlemskab – ikke fra hvad browseren hævder."
+          }
+        }
+      },
+      "lifecycle": {
+        "title": "Data-livscyklus",
+        "kicker": "Hvor data bor, hvor længe, og hvordan de forsvinder.",
+        "intro": "Dine data er scopet til dit workspace, udløber, når de skal, og kan fjernes af dig.",
+        "stats": [
+          "Workspace-scopet",
+          "Ryddet op automatisk",
+          "Du kan slette det"
+        ],
+        "controls": {
+          "10.1": {
+            "title": "Scopet til dit workspace",
+            "text": "Konversationer, viden, kunder og indstillinger hører alle til et workspace, og hvert opslag er scopet til det – intet krydser over ved en fejl."
+          },
+          "10.2": {
+            "title": "Kun for team forbliver kun for team",
+            "text": "Noter markeret kun for team filtreres ud, før en konversation overhovedet vises i den besøgendes widget."
+          },
+          "10.3": {
+            "title": "Kortlivede ting udløber",
+            "text": "Verifikationskoder, session-credentials og indhold fra sikre links udløber og ryddes alle automatisk op – intet kortlivet opbevares på ubestemt tid."
+          },
+          "10.4": {
+            "title": "Slet dit workspace",
+            "text": "At slette et workspace annullerer øjeblikkeligt dets abonnement og fjerner dets registreringer, med en fast yderste grænse for fuld fjernelse angivet i privatlivspolitikken."
+          },
+          "10.5": {
+            "title": "Forlad eller slet din konto",
+            "text": "Folk kan forlade et workspace, og en konto kan slettes helt fra Indstillinger."
+          }
+        }
+      },
+      "infrastructure": {
+        "title": "Infrastruktur",
+        "kicker": "Hvordan selve services drives.",
+        "intro": "Enkel, ustjerne hygiejne, der forhindrer en intern service i at blive en offentlig en.",
+        "stats": [
+          "Ikke offentligt tilgængelig",
+          "Minimalt fodaftryk",
+          "Overvåget"
+        ],
+        "controls": {
+          "11.1": {
+            "title": "Interne services er ikke offentligt tilgængelige",
+            "text": "Vores backend-services og database er slet ikke eksponeret mod det offentlige internet – kun et enkelt, hærdet indgangspunkt er."
+          },
+          "11.2": {
+            "title": "Slanke produktionsbuilds",
+            "text": "Det, der faktisk køres i produktion, indeholder intet ekstra – ingen udviklingsværktøjer, ingen ubrugte dependencies."
+          },
+          "11.3": {
+            "title": "Grænser, health checks og logrotation",
+            "text": "Hver service køres med ressourcegrænser, automatiske health checks og en genstartspolitik, og logs roteres, så de ikke kan vokse ubegrænset."
+          },
+          "11.4": {
+            "title": "Hemmeligheder holdes ude af kildekoden",
+            "text": "Nøgler og hemmeligheder tjekkes aldrig ind i vores kodebase – de leveres til hver service separat, og følsomme credential-filer mountes kun til læsning."
+          },
+          "11.5": {
+            "title": "Gentagelige deployments",
+            "text": "Hvert deployment går gennem de samme automatiserede kontroller, så en release aldrig er en enkeltstående manuel proces."
+          }
+        }
+      },
+      "verification": {
+        "title": "Hvordan vi kontrollerer vores eget arbejde",
+        "kicker": "De tests, der forsøger at bryde reglerne ovenfor.",
+        "intro": "Sikkerhedspåstande er kun værd, hvad tests kan bevise. Disse er dækket af automatiserede tests i vores egen kodebase.",
+        "stats": [
+          "Tests af forfalskede credentials",
+          "Genafspilningstests",
+          "Isolationstests"
+        ],
+        "controls": {
+          "12.1": {
+            "title": "Identitetsregressioner",
+            "text": "Automatiserede tests dækker forfalskede credentials, udløbne og genafspillede sessioner, logout, credential-rotation, og at et workspace aldrig kan se et andets data."
+          },
+          "12.2": {
+            "title": "Tests af udgående forespørgsler",
+            "text": "De kontroller, der stopper udgående forespørgsler fra at nå interne netværk, har deres egne dedikerede tests."
+          },
+          "12.3": {
+            "title": "Tests af privatlivsfilter",
+            "text": "Systemet, der udskifter private oplysninger, før de når en model, og betalingsfakta-reglerne, der begrænser, hvad det kan vise, er begge direkte testet."
+          },
+          "12.4": {
+            "title": "Tests af faktureringskorrekthed",
+            "text": "Genafspilninger af fornyelser og signaturverifikation er dækket af tests, så en faktureringsrettelse ikke stille kan genåbne et hul, der allerede var lukket."
+          }
+        }
+      }
+    },
+    "demo": {
+      "customerLabel": "Hvad kunden skriver",
+      "resetSample": "Nulstil eksempel",
+      "modelLabel": "Hvad modellen læser",
+      "inputAriaLabel": "Besked der skal filtreres",
+      "caption": "Kun en illustration, og den køres i din browser: intet, du skriver her, sendes nogen steder. Det rigtige filter køres på vores servere, og mapningen tilbage til de rigtige oplysninger kommer aldrig ind i en prompt."
+    },
+    "about": {
+      "label": "Om denne guide",
+      "textBefore": "Dette er en beskrivelse af, hvordan platformen er bygget, ikke en certificering. Den dækker de kontroller, der findes i produktet i dag, og vil ændre sig, som produktet gør. Hvis du skal have besvaret et sikkerhedsspørgeskema eller en databehandleraftale underskrevet, så skriv til ",
+      "textAfter": "."
+    },
+    "report": {
+      "label": "Anmeld en sårbarhed",
+      "stamp": "Fandt du noget?",
+      "title": "Tror du, du har fundet et svagt punkt? Vi vil høre det først.",
+      "subtitle": "Skriv detaljerne og hvordan man genskaber det. En person fra teamet læser hver anmeldelse.",
+      "privacy": "Privatlivspolitik",
+      "terms": "Vilkår",
+      "securityPolicy": "Sikkerhedspolitik"
+    }
+  },
+  "features": {
+    "families": {
+      "answer": "Svar",
+      "team": "Team",
+      "know": "Viden",
+      "act": "Handling",
+      "trust": "Tillid",
+      "grow": "Vækst"
+    },
+    "pageNames": {
+      "aiAgent": "AI-agent",
+      "inbox": "Indbakke",
+      "demo": "Demo",
+      "pricing": "Priser",
+      "knowledgeHub": "Videncenter",
+      "securityGuide": "Sikkerhedsguide"
+    },
+    "tiles": [
+      {
+        "name": "Underbyggede svar",
+        "body": "Svarene kommer fra den viden, du har godkendt. Hvis det ikke findes, siger AI'en det i stedet for at gætte."
+      },
+      {
+        "name": "Svarsprog",
+        "body": "Vælg det sprog, chatbotten svarer dine kunder på."
+      },
+      {
+        "name": "Sideindsigt",
+        "body": "Bestem, om AI'en kan se URL'en på den side, en besøgende er på, og bruge det til at svare i kontekst."
+      },
+      {
+        "name": "Brandet widget",
+        "body": "Dit logo og dine farver på en chatwidget, du indsætter med et enkelt snippet."
+      },
+      {
+        "name": "Live-skrivning",
+        "body": "Kunderne ser, når en kollega skriver, og du ser, når de gør."
+      },
+      {
+        "name": "Vedhæftninger",
+        "body": "Kunder og dit team kan sende filer direkte i samtalen."
+      },
+      {
+        "name": "Delt indbakke",
+        "body": "Alle samtaler og svar på ét sted, med et mærke der viser om AI'en, en kollega eller ingen har den."
+      },
+      {
+        "name": "Deltag-alarmer",
+        "body": "Når en kunde beder om en person, får hele teamet en deltag-alarm. Den første der deltager tager den, og alarmen forsvinder for alle andre."
+      },
+      {
+        "name": "Overtag og send tilbage",
+        "body": "Tag en chat fra AI'en eller en kollega, og send den tilbage til AI'en med et enkelt tryk."
+      },
+      {
+        "name": "Tildelinger",
+        "body": "Samtaler kan tildeles en kollega, der får en notifikation."
+      },
+      {
+        "name": "Teaminvitationer",
+        "body": "Inviter kolleger via e-mail, og tilføj pladser i takt med at teamet vokser."
+      },
+      {
+        "name": "Automatiske tickets",
+        "body": "Hvis ingen deltager inden 90 sekunder, bliver kunden informeret, og en ticket oprettes automatisk med en opfølgende e-mail."
+      },
+      {
+        "name": "Crawling af hjemmeside",
+        "body": "Peg Elpino på en side. JavaScript-baserede sider renderes først i en rigtig browser."
+      },
+      {
+        "name": "Import af sitemap",
+        "body": "Hent op til 20 sider fra dit sitemap i én omgang."
+      },
+      {
+        "name": "Opdag",
+        "body": "Start med ét link, og Elpino følger det gennem op til 50 sider, med hjælpe- og politiksider først."
+      },
+      {
+        "name": "Filupload",
+        "body": "Upload PDF-, Word-, tekst- og Markdown-filer, og teksten trækkes automatisk ud for dig."
+      },
+      {
+        "name": "Skrevne sider",
+        "body": "Skriv dine egne sider i editoren til ting, der ikke findes andre steder."
+      },
+      {
+        "name": "Offentlig / privat",
+        "body": "Hver kilde har en synlighedskontakt, så interne noter forbliver interne."
+      },
+      {
+        "name": "Betalingsopslag",
+        "body": "Tjekker rigtige betalinger i Stripe eller Razorpay, så svarene er fakta, ikke gæt."
+      },
+      {
+        "name": "Betalingslinks",
+        "body": "Opretter et nyt, sikkert betalingslink, når en betaling skal prøves igen."
+      },
+      {
+        "name": "Abonnementer",
+        "body": "Tjekker abonnementsstatus og kan opsige et abonnement, når kunden ber om det."
+      },
+      {
+        "name": "Tilbagebetalinger (valgfrit)",
+        "body": "Slået fra som standard. Workspace-ejeren afgør, om AI'en overhovedet må tilbagebetale."
+      },
+      {
+        "name": "Kvitteringer",
+        "body": "Finder og sender kvitteringen for en bestemt betaling."
+      },
+      {
+        "name": "MCP-værktøjer",
+        "body": "Forbind op til fem MCP-servere, og slå netop de værktøjer til, agenten må bruge."
+      },
+      {
+        "name": "Identitetskontrol",
+        "body": "En engangskode via e-mail eller et signeret token fra din app bekræfter, hvem kunden er."
+      },
+      {
+        "name": "Filter for private data",
+        "body": "Navne og e-mails udskiftes med referencekoder, før AI'en læser en samtale, og følsomme data fjernes."
+      },
+      {
+        "name": "Sikre forespørgsler",
+        "body": "Bed om følsomme oplysninger via en engangs privat formular i stedet for chatten."
+      },
+      {
+        "name": "Krypterede nøgler",
+        "body": "Tilsluttede loginoplysninger opbevares krypteret."
+      },
+      {
+        "name": "Budgetværn",
+        "body": "En månedlig AI-kredit på betalte planer holder AI-forbruget forudsigeligt."
+      },
+      {
+        "name": "Faktakontrol",
+        "body": "Udkast tjekkes mod værktøjsresultater, før kunden ser dem."
+      },
+      {
+        "name": "Besøgskontekst",
+        "body": "Placering, enhed og den side de var på, knyttet til hver samtale."
+      },
+      {
+        "name": "Analyse",
+        "body": "Se hvordan samtalerne går på tværs af dit workspace."
+      },
+      {
+        "name": "Historik",
+        "body": "Tidligere samtaler med samme kunde, lige ved siden af tråden."
+      },
+      {
+        "name": "Gratis plan",
+        "body": "Start med 100 AI-beskeder om måneden, intet kort nødvendigt."
+      },
+      {
+        "name": "Kreditbaserede planer",
+        "body": "Betalte planer inkluderer en månedlig AI-kredit, og ekstra pladser er enkle tilkøb."
+      },
+      {
+        "name": "E-mailsvar",
+        "body": "Bekræftede besøgende, der har forladt chatten, kan stadig få dit svar via e-mail."
+      }
+    ],
+    "table": {
+      "all": "Alle",
+      "readMoreIn": "Læs mere i {more}",
+      "hint": "Tryk på en flise. Alle funktioner her er live allerede i dag."
+    },
+    "hero": {
+      "badge": "Funktioner",
+      "titlePrefix": "Elementerne i ",
+      "titleHl": "fantastisk support.",
+      "subtitle": "{count} funktioner, ét workspace. Filtrer efter kategori, tryk på en flise, og se præcis hvad Elpino gør."
+    },
+    "loop": {
+      "eyebrow": "Sådan hænger det sammen",
+      "titlePrefix": "Det er en cyklus, ",
+      "titleHl": "ikke en liste.",
+      "subtitle": "Hver funktion nærer den næste, så supporten bliver bedre, jo mere du bruger den.",
+      "steps": [
+        {
+          "t": "Lær",
+          "d": "Crawl din hjemmeside, upload filer, skriv sider."
+        },
+        {
+          "t": "Svar",
+          "d": "AI'en svarer med din viden, på dit sprog."
+        },
+        {
+          "t": "Handl",
+          "d": "Betalinger, abonnementer og dine MCP-værktøjer."
+        },
+        {
+          "t": "Overdrag",
+          "d": "Spørg først, alarmer teamet, deltag eller opret ticket."
+        },
+        {
+          "t": "Lær af det",
+          "d": "Gennemgå samtaler, og forbedr din viden."
+        }
+      ],
+      "stepOf": "Trin {n} af {total}",
+      "explore": "Udforsk dette trin"
+    },
+    "personas": {
+      "eyebrow": "Hvem er det for",
+      "titlePrefix": "Vælg din rolle. ",
+      "titleHl": "Se dine funktioner.",
+      "items": [
+        {
+          "label": "Grundlægger",
+          "line": "Du er hele supportteamet og vil have dine aftener tilbage.",
+          "picks": [
+            "Gratis plan, intet kort",
+            "Svar fra din hjemmeside på minutter",
+            "AI'en klarer betalinger og kvitteringer",
+            "Kontakter dig kun, når det virkelig er nødvendigt"
+          ]
+        },
+        {
+          "label": "Support-leder",
+          "line": "Du leder et team og har brug for klart ejerskab og ingen tabte chats.",
+          "picks": [
+            "Delt indbakke med tydelige mærker",
+            "Deltag-alarmer til hele teamet",
+            "Automatiske tickets, når alle er optaget",
+            "Besøgskontekst på hver tråd"
+          ]
+        },
+        {
+          "label": "Udvikler",
+          "line": "Du vil have det kablet ind i dit eget produkt og dine egne data.",
+          "picks": [
+            "Signeret token-identitet fra din app",
+            "MCP-servere med godkendelse pr. værktøj",
+            "Opslag i Stripe og Razorpay",
+            "Ét indlejrbart widget-snippet"
+          ]
+        },
+        {
+          "label": "Butiksejer",
+          "line": "Kunderne spørger om ordrer og betalinger hele dagen.",
+          "picks": [
+            "Ordreopslag via dine MCP-værktøjer",
+            "Betalingslinks og kvitteringer",
+            "Tilbagebetalinger kun hvis du slår dem til",
+            "Svar på din kundes sprog"
+          ]
+        }
+      ]
+    },
+    "stack": {
+      "badge": "Ét værktøj",
+      "titlePrefix": "Seks værktøjer ind. ",
+      "titleHl": "Ét workspace ud.",
+      "subtitle": "De fleste teams stykker en widget, en helpdesk, en videnbase og en bot sammen. Elpino er det hele på ét sted, med én samlet hukommelse om hver kunde.",
+      "items": [
+        "Chatwidget",
+        "Helpdesk-indbakke",
+        "Videnbase",
+        "Chatbot-builder",
+        "Betalingsopslag",
+        "Overdragelsesregler"
+      ],
+      "cardSubtitle": "Widget · Indbakke · Viden · AI-agent · Værktøjer · Overdragelse"
+    },
+    "soon": {
+      "badge": "Kommer i november",
+      "title": "Omnichannel er det næste.",
+      "body": "Chat på hjemmesiden er live i dag. At bringe flere kanaler ind i den samme indbakke er det næste, vi lancerer, og vi annoncerer det i changeloggen.",
+      "cta": "Se changeloggen"
+    },
+    "faq": {
+      "eyebrow": "Spørgsmål",
+      "titlePrefix": "Godt at ",
+      "titleHl": "vide.",
+      "items": [
+        {
+          "q": "Er alt på denne side live allerede?",
+          "a": "Ja. Hver flise beskriver noget, Elpino gør i dag. Omnichannel er det ene, vi stadig bygger, og det er markeret som kommende i november."
+        },
+        {
+          "q": "Skal jeg bruge det hele?",
+          "a": "Nej. Start med en videnbase og widgeten på den gratis plan, og slå så værktøjer, MCP og kolleger til, når du får brug for dem."
+        },
+        {
+          "q": "Hvad er inkluderet i den gratis plan?",
+          "a": "100 AI-beskeder om måneden, intet kort nødvendigt."
+        },
+        {
+          "q": "Hvordan fungerer betalte planer?",
+          "a": "Betalte planer inkluderer en månedlig AI-kredit, og ekstra pladser er enkle tilkøb. Se prissiden for detaljer."
+        }
+      ]
+    },
+    "closing": {
+      "title": "Hvert element, klar til brug.",
+      "subtitle": "Start på den gratis plan, og slå ting til, mens du vokser.",
+      "ctaStart": "Start gratis",
+      "ctaPricing": "Se priser"
+    }
+  },
+  "founders": {
+    "stream": {
+      "incomingLive": "Indkommende, live",
+      "onDuty": "Elpino på vagt",
+      "needsYou": "Har brug for dig",
+      "handled": "Løst",
+      "askedFirst": "{why}. Elpino spurgte først, og gav dig så besked.",
+      "handledWithoutYou": "Løst uden dig",
+      "actuallyNeededYou": "Havde faktisk brug for dig",
+      "items": [
+        {
+          "q": "Hvordan eksporterer jeg mine data?"
+        },
+        {
+          "q": "Hvorfor blev mit kort afvist?"
+        },
+        {
+          "q": "Har I startup-rabat?"
+        },
+        {
+          "q": "Kan vi få en skræddersyet kontrakt?",
+          "why": "Bad om at tale med en person"
+        },
+        {
+          "q": "Hvor er min faktura for marts?"
+        },
+        {
+          "q": "Hvordan nulstiller jeg min adgangskode?"
+        },
+        {
+          "q": "Kan jeg tale med grundlæggeren?",
+          "why": "Bad om at tale med en person"
+        },
+        {
+          "q": "Fungerer det med Shopify?"
+        }
+      ]
+    },
+    "hero": {
+      "badge": "For grundlæggere",
+      "titlePrefix": "Lancer produkt. ",
+      "titleHl": "Ikke supportsvar.",
+      "subtitle": "Du startede en virksomhed for at bygge noget, ikke for at svare på „hvordan nulstiller jeg min adgangskode?“ fyrre gange om ugen. Elpino tager de gentagne spørgsmål og trækker kun på dig, når det virkelig kræver en grundlægger.",
+      "ctaStart": "Start gratis",
+      "ctaPricing": "Se priser",
+      "freeNote": "Gratis plan: 100 AI-beskeder om måneden. Intet kort."
+    },
+    "calculator": {
+      "eyebrow": "Regn på det",
+      "titlePrefix": "Få dine eftermiddage ",
+      "titleHl": "tilbage.",
+      "subtitle": "Indtast dine egne tal. AI-andelen er dit gæt, ikke et løfte, og den afhænger af, hvad der er i din knowledgebase.",
+      "sliderQuestions": "Kundespørgsmål om dagen",
+      "sliderMinutes": "Minutter til at svare på hvert",
+      "unitMin": "min",
+      "sliderShare": "Andel du gætter, AI'en løser",
+      "yourDay": "Din 8-timers arbejdsdag",
+      "today": "I dag",
+      "withElpinoAt": "Med Elpino på {pct}%",
+      "backEachWeek": "Tilbage hver uge",
+      "chatsUntouched": "Samtaler om dagen, uberørte",
+      "volumeNote": "Ved dette volumen tager support alene mere end en hel dag.",
+      "supportLabel": "{h} t. support",
+      "buildingLabel": "{h} t. udvikling"
+    },
+    "setup": {
+      "eyebrow": "Opsætning",
+      "titlePrefix": "I gang før din ",
+      "titleHl": "kaffe bliver kold.",
+      "subtitle": "Ingen udviklere, ingen oplæringsperiode. Fire trin, og det sidste er valgfrit.",
+      "stepLabel": "Trin {n}",
+      "steps": [
+        {
+          "t": "Indsæt dit website",
+          "d": "Elpino gennemgår dine sider, også dem der er bygget med JavaScript, og lærer dit produkt at kende.",
+          "meter": "Læser dit website"
+        },
+        {
+          "t": "Tilføj resten",
+          "d": "Upload dokumenter, eller skriv de retningslinjer, der kun findes i dit hoved.",
+          "meter": "Tilføjer viden"
+        },
+        {
+          "t": "Indsæt widgetten",
+          "d": "Et enkelt kodestykke, og chatten er live på dit website.",
+          "meter": "Installerer widget"
+        },
+        {
+          "t": "Forbind betalinger (valgfrit)",
+          "d": "Stripe eller Razorpay, så den kan slå fakturering op for dig.",
+          "meter": "Forbinder"
+        }
+      ]
+    },
+    "reaches": {
+      "badge": "Filteret",
+      "titlePrefix": "Kun det ",
+      "titleHl": "vigtige",
+      "titleSuffix": " når frem til dig.",
+      "subtitle": "Du bestemmer, hvad AI'en må gøre. Alt andet følger en klar regel: spørg først, giv besked sammen, og lad aldrig kunden hænge.",
+      "rules": [
+        {
+          "t": "Svar fra din dokumentation",
+          "d": "Løst. Du ser det aldrig."
+        },
+        {
+          "t": "Opslag på betalinger og konti",
+          "d": "Løst med de værktøjer, du har aktiveret."
+        },
+        {
+          "t": "\"Kan jeg tale med en person?\"",
+          "d": "Spørger først kunden, giver derefter dig og dit team besked."
+        },
+        {
+          "t": "Er du fordybet i noget andet?",
+          "d": "Efter 90 sekunder oprettes en sag, og kunden bliver informeret."
+        }
+      ]
+    },
+    "money": {
+      "eyebrow": "Betalingsspørgsmål",
+      "titlePrefix": "Den tjekker den faktiske betaling. ",
+      "titleHl": "Du har stadig nøglerne.",
+      "subtitle": "Forbind Stripe eller Razorpay, og AI'en kan slå betalinger og abonnementer op, sende kvitteringer og betalingslinks, og opsige et abonnement på anmodning. Refusioner er slået fra, indtil du selv aktiverer det.",
+      "chatAsk": "Kan jeg få min sidste betaling refunderet?",
+      "chatYes": "Jeg har fundet din betaling og startet refusionen. Den når normalt din konto inden for 5-7 hverdage.",
+      "chatNo": "Jeg kan se betalingen, men jeg kan ikke refundere den selv. Vil du have mig til at sætte dig i forbindelse med vores team?",
+      "toggleLabel": "Lad AI'en udstede refusioner",
+      "toggleNote": "Slået fra som standard. Prøv kontakten."
+    },
+    "grows": {
+      "eyebrow": "Plads til at vokse",
+      "titlePrefix": "Starter med dig. ",
+      "titleHl": "Skalerer med dit team.",
+      "stageLabel": "Fase {n}",
+      "stages": [
+        {
+          "t": "Kun dig",
+          "d": "Gratis plan, 100 AI-beskeder om måneden, én indbakke du sjældent åbner."
+        },
+        {
+          "t": "Første ansatte",
+          "d": "Inviter dem via e-mail. De får besked ved tilmelding og tager samtaler over fra AI'en."
+        },
+        {
+          "t": "Et lille team",
+          "d": "Fordel samtaler, del indbakken, tilføj pladser når du har brug for dem."
+        },
+        {
+          "t": "Skalerer op",
+          "d": "Betalte planer med en månedlig AI-kredit, MCP-værktøjer til jeres egne systemer."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Spørgsmål fra grundlæggere",
+      "titlePrefix": "Klare ",
+      "titleHl": "svar.",
+      "items": [
+        {
+          "q": "Hvordan er det anderledes end en almindelig chatbot-widget?",
+          "a": "Elpino svarer kun fra den viden, du har givet den, kan slå faktiske betalinger op og bruge dine egne værktøjer, verificerer identitet før den rører noget personligt, og giver over til en person med hele samtalen, når den ikke kan hjælpe."
+        },
+        {
+          "q": "Hvor hurtigt kan jeg selv sætte det op?",
+          "a": "De fleste grundlæggere er live samme dag: tilføj dit website eller filer, indsæt widget-koden, og forbind valgfrit Stripe eller Razorpay."
+        },
+        {
+          "q": "Hvordan afgør den, om den skal svare eller give mig besked?",
+          "a": "Kan den svare fra din viden eller et værktøj, gør den det. Kan den ikke, siger den det og spørger kunden, om den skal sætte dem i forbindelse med dit team. Først da bliver du og dit team underrettet."
+        },
+        {
+          "q": "Finder den på ting?",
+          "a": "Den svarer kun ud fra det, du har godkendt, og et gennemgangstjek sammenligner udkast med værktøjsresultater. Når den ikke ved noget, siger den det."
+        },
+        {
+          "q": "Er min Stripe- eller Razorpay-konto sikker?",
+          "a": "Adgangsoplysninger opbevares krypteret, og pengeflyttende handlinger som refusioner er slået fra, indtil du selv aktiverer dem."
+        },
+        {
+          "q": "Hvad sker der, når jeg ansætter en supportmedarbejder?",
+          "a": "Inviter dem, og de får besked ved tilmelding, kan tage samtaler over fra AI'en og give dem tilbage igen."
+        }
+      ]
+    },
+    "closing": {
+      "title": "Gå tilbage til at bygge.",
+      "subtitle": "Start gratis, lær Elpino dit produkt, og lad den tage de gentagne spørgsmål.",
+      "ctaStart": "Start gratis",
+      "ctaMeetAgent": "Mød AI-agenten"
+    }
+  },
+  "developers": {
+    "hero": {
+      "badge": "For udviklere",
+      "titlePrefix": "Fra ",
+      "titleMiddle": " til ",
+      "titleHl": "løst.",
+      "subtitle": "Ét tag til widgetten, én signeret token så Elpino ved, hvem der er logget ind, én MCP-server så AI'en kan læse dine data. Se de tre trin udspille sig på en side.",
+      "ctaStart": "Start gratis",
+      "ctaDocs": "Læs dokumentationen"
+    },
+    "ide": {
+      "comment1": "<!-- 1. Indsæt tagget -->",
+      "comment2": "<!-- 2. Fortæl Elpino, hvem der er logget ind -->",
+      "comment3": "  // elpinoToken: signeret af din backend",
+      "mcpComment": "// I din dashboard: forbind en MCP-server og aktivér get_order.",
+      "stepEmbed": "Indlejr",
+      "stepIdentify": "Identificér",
+      "stepResolve": "Løs",
+      "previewSupport": "Support",
+      "previewVerified": "Verificeret",
+      "previewGreeting": "Hej Aisha, hvordan kan jeg hjælpe?",
+      "previewQuestion": "Hvor er min ordre?",
+      "previewAnswer": "Den blev sendt i går og ankommer torsdag."
+    },
+    "sequence": {
+      "eyebrow": "Forespørgselsflow",
+      "titlePrefix": "Ét spørgsmål, ",
+      "titleHl": "fire systemer.",
+      "subtitle": "Hvem der taler med hvem, når en logget ind kunde spørger om sin ordre. Gå trin for trin igennem, eller lad det afspille.",
+      "actors": [
+        "Browser",
+        "Din server",
+        "Elpino",
+        "Din MCP-server"
+      ],
+      "steps": [
+        {
+          "label": "Kunden logger ind"
+        },
+        {
+          "label": "Signeret JWT",
+          "note": "≤ 5 min · engangsbrug"
+        },
+        {
+          "label": "$elpino identify(token)"
+        },
+        {
+          "label": "Verificerer signatur + claims ✓"
+        },
+        {
+          "label": "“Hvor er min ordre?”"
+        },
+        {
+          "label": "get_order",
+          "note": "kun verificerede kunder"
+        },
+        {
+          "label": "Ordrestatus"
+        },
+        {
+          "label": "Svarer kunden"
+        }
+      ],
+      "stepCounter": "Trin {n} / {total}",
+      "nextStep": "Næste trin",
+      "replay": "Afspil igen"
+    },
+    "tokenExplorer": {
+      "eyebrow": "Identitetstokenet",
+      "titlePrefix": "Anatomien af en token, ",
+      "titleHl": "og hvordan den går i stykker.",
+      "subtitle": "HS256, signeret med din arbejdsplads hemmelighed. Tryk på et claim for dets regel, og bryd derefter tokenet for at se, hvad widgetten fortæller.",
+      "payload": "Payload",
+      "optional": "valgfrit",
+      "required": "Påkrævet",
+      "optionalCap": "Valgfrit",
+      "breakIt": "Bryd den",
+      "notAccepted": "[Elpino] Identitetstoken blev ikke accepteret: {code}",
+      "fix": "Løsning:",
+      "claimDescriptions": [
+        "Denne brugers stabile konto-ID.",
+        "Præcis \"elpino-widget\".",
+        "Et nyt tilfældigt ID pr. token, 16 til 128 URL-sikre tegn. Et UUID virker fint.",
+        "Udstedelsestidspunkt i hele sekunder (ikke millisekunder).",
+        "Udløb i hele sekunder, højst 5 minutter efter iat.",
+        "Udelad det, når der ikke er nogen. null afvises.",
+        "true kun hvis dit login-system har bekræftet ejerskabet.",
+        "Visningsnavn dit team ser."
+      ]
+    },
+    "server": {
+      "eyebrow": "Din backend",
+      "titlePrefix": "Kopiér, indsæt, ",
+      "titleHl": "udgiv.",
+      "subtitle": "De samme snippets som din dashboard viser, på det sprog du allerede bruger.",
+      "copy": "Kopiér",
+      "copied": "Kopieret",
+      "codeTitle": "identitetstoken"
+    },
+    "mcp": {
+      "badge": "MCP-servere",
+      "titlePrefix": "Giv AI'en værktøjer. ",
+      "titleHl": "Behold nøglerne.",
+      "subtitle": "Forbind op til fem MCP-servere, aktivér op til 15 værktøjer på hver, og vælg hvem de er åbne for. Slå kontakterne til for at se, hvad agenten kan bruge.",
+      "shopServerName": "Din shop-MCP-server",
+      "toolsDiscovered": "{n} værktøjer fundet",
+      "toggleLabel": "Åbn skrivebeskyttede værktøjer for enhver besøgende",
+      "changesData": "Ændrer data",
+      "readOnly": "Skrivebeskyttet",
+      "needsVerified": "Kræver verificeret kunde",
+      "agentCanCall": "Agenten kan kalde",
+      "toolDescriptions": [
+        "Slå en ordre og dens status op",
+        "Live sporing af en pakke",
+        "Ændr en leveringsadresse",
+        "Annullér en ordre, der ikke er sendt endnu"
+      ],
+      "bullets": [
+        "Hvert kald tjekkes igen mod din liste på serveren",
+        "Værktøjer, der ændrer data, kræver altid en verificeret kunde",
+        "Adgangsoplysninger gemmes krypteret"
+      ]
+    },
+    "sees": {
+      "eyebrow": "Privatliv som standard",
+      "titlePrefix": "Modellen ",
+      "titleHl": "ser aldrig",
+      "titleSuffix": ", hvem de er.",
+      "subtitle": "Før AI'en læser en samtale, bliver navne, e-mails og ID'er byttet ud med referencekoder, og hemmeligheder som tokens og nøgler fjernes. Værktøjer får stadig de rigtige værdier på din side.",
+      "toggleTeam": "Hvad dit team ser",
+      "toggleModel": "Hvad AI-modellen ser",
+      "chatRaw1": "Hej, jeg er Aisha Khan (aisha@example.com). Hvor er min ordre?",
+      "chatMasked1": "Hej, jeg er ref_name_9f2c (ref_email_41ab). Hvor er min ordre?",
+      "chatRaw2": "Hej Aisha, din ordre blev sendt i går.",
+      "chatMasked2": "Hej, din ordre blev sendt i går."
+    },
+    "faq": {
+      "eyebrow": "Spørgsmål",
+      "titlePrefix": "Godt at ",
+      "titleHl": "vide.",
+      "items": [
+        {
+          "q": "Skal jeg bruge identitetsbekræftelse?",
+          "a": "Nej, men det er det, der lader AI'en trygt vise private data. Hvem som helst kan skrive en hvilken som helst e-mail i en chat, så en token signeret af dit eget login-system er, hvordan en kunde bliver Verificeret."
+        },
+        {
+          "q": "Hvor længe holder en token?",
+          "a": "Højst fem minutter, og den virker kun én gang. Selve chatsessionen varer op til 8 timer, med en 30-minutters inaktivitetsgrænse."
+        },
+        {
+          "q": "Hvilken signeringsalgoritme?",
+          "a": "HS256. Andre algoritmer, inklusive none og RS256, afvises."
+        },
+        {
+          "q": "Hvilke sprog har snippets?",
+          "a": "Node.js, Python, PHP og Ruby, i din dashboards identitetsindstillinger og i dokumentationen."
+        },
+        {
+          "q": "Hvad er en MCP-server?",
+          "a": "En tjeneste, der eksponerer værktøjer via Model Context Protocol. Elpino opdager dens værktøjer, og du aktiverer dem, AI'en må bruge."
+        },
+        {
+          "q": "Kan AI'en ændre data i mine systemer?",
+          "a": "Kun via værktøjer, du har aktiveret, og værktøjer, der ændrer data, kræver altid en verificeret kunde."
+        },
+        {
+          "q": "Findes der et API?",
+          "a": "Widget-SDK'en, identitetstokens og MCP er integrationsfladen i dag."
+        }
+      ],
+      "linkLabels": [
+        "Identitetsdokumentation",
+        "Widgetdokumentation",
+        "AI-agent",
+        "Sikkerhedsguide"
+      ]
+    },
+    "closing": {
+      "title": "Udgiv det på en eftermiddag.",
+      "subtitle": "Start gratis, indsæt tagget, og sæt identitet op, når du er klar.",
+      "ctaStart": "Start gratis",
+      "ctaDocs": "Åbn dokumentationen"
+    }
+  },
+  "busyOperators": {
+    "rush": {
+      "badgeLabel": "Myldretid · illustrativ simulering",
+      "reset": "Nulstil",
+      "waitingForPerson": "Venter på en person",
+      "levelCalm": "Rolig",
+      "levelBusy": "Får travlt",
+      "levelFire": "Kø i brand",
+      "inboxZero": "Indbakke nul. Pæn.",
+      "chatsWaiting": "chats venter",
+      "aiToggleLabel": "Elpino AI",
+      "teammatesOnline": "Holdkammerater online",
+      "resolvedByAi": "Løst af AI",
+      "resolvedByTeam": "Løst af team",
+      "disclaimer": "En legetøjsmodel: 3 chats ankommer hvert flueben, og AI'en tager en eksempelandel. Reelle resultater afhænger af din vidensbase og værktøjer.",
+      "online": "online",
+      "offline": "offline"
+    },
+    "hero": {
+      "badge": "For travle hold",
+      "titlePrefix": "Myldretid, ",
+      "titleHl": "håndteres.",
+      "subtitle": "Når køen stiger, tager AI’en gentagelsesspørgsmålene, dit hold tager resten, og ingen snubler over hinanden. Drej kontakten nedenfor og mærk forskellen.",
+      "ctaStart": "Start gratis",
+      "ctaInbox": "Se indbakken"
+    },
+    "race": {
+      "badge": "Ingen dobbeltsvar",
+      "titlePrefix": "To personer, en chat. ",
+      "titleHl": "Kun én tilslutter sig.",
+      "subtitle": "Alle får den samme Join-alarm. Den første person, der trykker, tager samtalen, advarslen slettes for alle andre, og indbakken viser, hvem der har den. En kollega kan stadig tage over senere, med vilje.",
+      "askedForPerson": "Aisha Khan bad om en person",
+      "alertSent": "Advarsel sendt til hele holdet",
+      "waiting": "Venter...",
+      "joined": "Tiltrådte",
+      "joinChat": "Deltag i chat",
+      "priyaHasThis": "Priya har dette",
+      "priyaJoinedFirst": "Priya kom først. Indbakkemærket siger nu Priya.",
+      "bothSee": "Begge holdkammerater ser alarmen...",
+      "customerSaidYes": "Kunden sagde ja til en person"
+    },
+    "context": {
+      "eyebrow": "Overdragelsen",
+      "titlePrefix": "Ingen gentager ",
+      "titleHl": "sig selv.",
+      "subtitle": "Skift for at sammenligne en kold aflevering med den Elpino laver.",
+      "toggleCold": "Kold aflevering",
+      "toggleElpino": "Elpino aflevering",
+      "coldGreeting": "Hej, jeg hedder Priya. Hvordan kan jeg hjælpe?",
+      "coldComplaint": "…Jeg har allerede forklaret alt dette til botten. Jeg flyttede lande og har brug for, at mit faktureringsland ændres. Igen.",
+      "coldNote": "Kunden starter forfra, og teammedlemmet starter blindt.",
+      "whatPersonSees": "Hvad personen ser",
+      "reasonLabel": "Årsag",
+      "reasonValue": "Ændring af faktureringsland kræver en person",
+      "summaryLabel": "Resumé",
+      "summaryValue": "Flyttede lande, ønsker faktureringsland opdateret. Bekræftet med e-mail-kode.",
+      "fullThreadLabel": "Fuld tråd",
+      "fullThreadValue": "Hver besked indtil videre, lige over komponisten",
+      "visitorLabel": "Besøgende",
+      "visitorLocation": "Pune, Indien",
+      "visitorPage": "På /fakturering",
+      "identityVerified": "Identitet bekræftet"
+    },
+    "around": {
+      "eyebrow": "Døgnet rundt",
+      "titlePrefix": "Dæk hver time, ",
+      "titleHl": "uden skift.",
+      "subtitle": "Træk gennem en eksempeldag. Holdtimerne er 9 til 6 her; din vil være din egen.",
+      "teamOnline": "Hold online",
+      "aiOnWatch": "AI på vagt",
+      "hourAriaLabel": "Time på dagen",
+      "am": "AM",
+      "pm": "PM",
+      "dayItems": [
+        {
+          "t": "AI svarer først",
+          "d": "Gentagende spørgsmål når aldrig i køen."
+        },
+        {
+          "t": "Team får Join-advarsler",
+          "d": "Den første, der trykker, tager chatten."
+        },
+        {
+          "t": "Giv tilbage når som helst",
+          "d": "Giv simple opfølgninger tilbage til AI."
+        }
+      ],
+      "nightItems": [
+        {
+          "t": "AI svarer først",
+          "d": "Spørgsmål den kan besvare besvares."
+        },
+        {
+          "t": "Ingen fri? Billet",
+          "d": "Efter 90 sekunder arkiveres en billet med årsag og resumé."
+        },
+        {
+          "t": "Morgen starter organiseret",
+          "d": "Kunden fik en e-mail, og billetter venter på dig."
+        }
+      ]
+    },
+    "toolkit": {
+      "eyebrow": "Rolig af design",
+      "titlePrefix": "De små ting, der ",
+      "titleHl": "hold køen ved lige.",
+      "items": [
+        {
+          "t": "Ejerskabsmærker",
+          "d": "AI, holdkammerat eller løst, på hver tråd."
+        },
+        {
+          "t": "Søg og filtre",
+          "d": "Alle, ulæst, læst, løst."
+        },
+        {
+          "t": "Live-tastning",
+          "d": "Se, hvornår kunden skriver, og lad dem se dig."
+        },
+        {
+          "t": "Verificeret badge",
+          "d": "Ved, hvem der har bevist, hvem de er."
+        },
+        {
+          "t": "Besøgende detaljer",
+          "d": "Placering, enhed og den side, de er på."
+        },
+        {
+          "t": "Tag over, giv tilbage",
+          "d": "Flyt en chat mellem AI og folk med et tryk."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Spørgsmål",
+      "titlePrefix": "Godt at ",
+      "titleHl": "ved.",
+      "items": [
+        {
+          "q": "Hvordan forhindrer du to personer i at svare den samme kunde?",
+          "a": "Alle får den samme deltagelsesadvarsel, og den første person, der trykker, tager chatten. Advarslen rydder for alle andre, og indbakken viser, hvem der har den."
+        },
+        {
+          "q": "Vil Elpino erstatte mit hold?",
+          "a": "Nej. Den håndterer gentagne spørgsmål, og dine folk tager de samtaler, der kræver bedømmelse. Du kan også give enhver chat tilbage til AI."
+        },
+        {
+          "q": "Hvad kan det lære af?",
+          "a": "Dine hjemmesidesider (inklusive JavaScript-byggede), uploadede PDF-, Word-, tekst- og Markdown-filer og sider, du skriver. Du kontrollerer, hvilke der er offentlige."
+        },
+        {
+          "q": "Hvad sker der, når ingen er online?",
+          "a": "AI'en svarer, hvad den kan. Hvis en kunde spørger efter en person, og ingen tilmelder sig inden for 90 sekunder, bliver en billet indgivet med årsag og resumé, og kunden bliver e-mailet."
+        },
+        {
+          "q": "Hvor lang tid tager udrulningen?",
+          "a": "De fleste hold er live samme dag: Tilføj viden, indsæt widgetten, og inviter holdkammerater."
+        }
+      ],
+      "footNote": "Webstedchatten er live i dag. Omnichannel kommer til november."
+    },
+    "closing": {
+      "title": "Gør køen til en andens problem.",
+      "subtitle": "Start gratis, og inviter dit hold, når du er klar.",
+      "ctaStart": "Start gratis",
+      "ctaTickets": "Se billetter"
     }
   }
 }

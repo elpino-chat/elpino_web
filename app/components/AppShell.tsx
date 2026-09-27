@@ -6,6 +6,7 @@ import posthog from "posthog-js";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { CookieNotice } from "./CookieNotice";
+import { GeoLanguagePrompt } from "./GeoLanguagePrompt";
 import { useStoredLanguage } from "../hooks/useStoredLanguage";
 
 type Session = { email: string; name?: string; userId: string };
@@ -28,7 +29,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const isBareAuthPage =
     pathname === "/forgot-password" || pathname === "/reset-password";
   const isMinimalHeaderAuthPage = pathname === "/login" || pathname === "/signup";
-  const isAppPage = pathname === "/onboarding" || pathname.startsWith("/dashboard");
+  const isAppPage = pathname === "/onboarding" || pathname.startsWith("/dashboard") || pathname.startsWith("/connect");
   const isEmbeddedWidget = pathname.startsWith("/widget");
   const isDocsPage = pathname === "/docs" || pathname.startsWith("/docs/");
   const language = useStoredLanguage();
@@ -69,6 +70,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <main className="flex flex-1 flex-col">{children}</main>
         <Footer />
         <CookieNotice />
+        <GeoLanguagePrompt />
       </>
     );
   }
@@ -83,6 +85,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <main className="flex flex-1 flex-col" style={pathname === '/' || pathname === '/pricing' || pathname === '/privacy' || pathname === '/terms' || pathname === '/careers' || pathname === '/contact' || pathname === '/changelog' || pathname === '/security-guide' || pathname === '/brand-kit' || pathname === '/about' || pathname === '/product/knowledge-hub' || pathname === '/product/inbox' || pathname === '/product/ai-agent' || pathname === '/features' || pathname === '/faq' || pathname === '/blog' || pathname.startsWith('/blog/') || pathname === '/product/tickets' || pathname === '/product/helpdesk' || pathname === '/solutions/founders' || pathname === '/solutions/busy-operators' || pathname === '/solutions/busy' || pathname === '/solutions/developers' || pathname === '/integrations' ? undefined : { paddingTop: 'var(--elpino-header-h, 64px)' }}>{children}</main>
       <Footer editorial={pathname === '/pricing' || pathname === '/about'} />
       <CookieNotice />
+      <GeoLanguagePrompt />
     </>
   );
 }

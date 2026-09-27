@@ -8,6 +8,8 @@ import {
   LayoutGrid, LockKeyhole, Mail, MapPin, MessageCircle, Monitor, Plus, Search, Settings, ShieldCheck, Ticket, Undo2, UserCheck, Users, X,
 } from "lucide-react";
 import { Rv } from "@/app/components/RevealOnScroll";
+import { useStoredLanguage } from "@/app/hooks/useStoredLanguage";
+import { useTranslation } from "@/app/hooks/useTranslation";
 
 // The Inbox page, told as one conversation's journey through the desk:
 // AI answers → the customer asks for a person → the whole team is alerted →
@@ -15,6 +17,19 @@ import { Rv } from "@/app/components/RevealOnScroll";
 // the product (Join / Take over, hand back to the AI, resolve and reopen,
 // visitor location, device and verified badge, secure requests, email replies
 // to visitors who left). No screenshots: the desk is drawn in code.
+
+type T = (key: string, defaultValue?: string) => string;
+
+/**
+ * A translated array at `key` — same convention as the other product
+ * pages: t()'s traversal really does hand back the raw JSON value (array
+ * or not) even though its declared return type is `string`. Falls back to
+ * the English array wholesale when the locale hasn't got this key yet.
+ */
+function tList<Item>(t: T, key: string, fallback: Item[]): Item[] {
+  const value: unknown = t(key, undefined as unknown as string);
+  return Array.isArray(value) ? (value as Item[]) : fallback;
+}
 
 const INK = "#11120f";
 const BLUE = "#3784ff";
@@ -54,16 +69,24 @@ function Heading({ eyebrow, color, title, sub }: { eyebrow: string; color: strin
 
 // -------------------------------------------------------------------- desk
 
-const STAGES = [
-  { key: "ai", label: "AI answers", color: PURPLE, badge: "AI", banner: "Elpino is handling this conversation", icon: Bot },
-  { key: "ask", label: "Needs a person", color: ORANGE, badge: "Needs human", banner: "Every teammate got a Join alert. 90 seconds to jump in", icon: BellRing },
-  { key: "join", label: "Teammate joins", color: GREEN, badge: "Priya", banner: "Priya joined. The alert cleared for everyone", icon: UserCheck },
-  { key: "back", label: "Hand back", color: BLUE, badge: "AI", banner: "Priya handed the chat back to Elpino", icon: Undo2 },
-  { key: "done", label: "Resolved", color: PINK, badge: "Resolved", banner: "Resolved. Reopen any time if they write back", icon: Check },
-] as const;
+type Stage = { key: string; label: string; badge: string; banner: string };
+const STAGES_META = [
+  { color: PURPLE, icon: Bot },
+  { color: ORANGE, icon: BellRing },
+  { color: GREEN, icon: UserCheck },
+  { color: BLUE, icon: Undo2 },
+  { color: PINK, icon: Check },
+];
+const STAGES_EN: Stage[] = [
+  { key: "ai", label: "AI answers", badge: "AI", banner: "Elpino is handling this conversation" },
+  { key: "ask", label: "Needs a person", badge: "Needs human", banner: "Every teammate got a Join alert. 90 seconds to jump in" },
+  { key: "join", label: "Teammate joins", badge: "Priya", banner: "Priya joined. The alert cleared for everyone" },
+  { key: "back", label: "Hand back", badge: "AI", banner: "Priya handed the chat back to Elpino" },
+  { key: "done", label: "Resolved", badge: "Resolved", banner: "Resolved. Reopen any time if they write back" },
+];
 
 type Line = { at: number; from: "you" | "ai" | "team" | "sys"; text: string };
-const LINES: Line[] = [
+const LINES_EN: Line[] = [
   { at: 0, from: "you", text: "Hi, I moved countries. Can you update the billing country on my account?" },
   { at: 1, from: "ai", text: "I can't change billing details myself. Would you like me to connect you with our team?" },
   { at: 1, from: "you", text: "Yes please" },
@@ -75,35 +98,40 @@ const LINES: Line[] = [
   { at: 4, from: "sys", text: "Conversation resolved" },
 ];
 
-const RAIL = [
-  { icon: LayoutGrid, label: "Space" },
-  { icon: Inbox, label: "Inbox", active: true, badge: "5" },
-  { icon: BarChart2, label: "Analytics" },
-  { icon: Users, label: "Contacts" },
-  { icon: FileText, label: "Knowledge" },
-  { icon: Settings, label: "Settings" },
+const RAIL_META = [LayoutGrid, Inbox, BarChart2, Users, FileText, Settings];
+const RAIL_EN = ["Space", "Inbox", "Analytics", "Contacts", "Knowledge", "Settings"];
+
+type ListItem = { name: string; date: string; prev: string; color: string; live?: boolean };
+const LIST_EN: ListItem[] = [
+  { name: "Harnoor Singh", date: "21 Sept", prev: "I can't share anyone's IP address", color: "#3f7fd0" },
+  { name: "Aisha Khan", date: "Today", prev: "", color: "#b8763a", live: true },
+  { name: "Tom Becker", date: "19 Sept", prev: "Widget not loading on checkout", color: "#3f9c7a" },
+  { name: "Meera Iyer", date: "18 Sept", prev: "Move the team to annual?", color: "#5a62b8" },
 ];
 
-const LIST = [
-  { init: "HS", name: "Harnoor Singh", date: "21 Sept", prev: "I can't share anyone's IP address", color: "#3f7fd0" },
-  { init: "AK", name: "Aisha Khan", date: "Today", prev: "", color: "#b8763a", live: true },
-  { init: "TB", name: "Tom Becker", date: "19 Sept", prev: "Widget not loading on checkout", color: "#3f9c7a" },
-  { init: "MI", name: "Meera Iyer", date: "18 Sept", prev: "Move the team to annual?", color: "#5a62b8" },
-];
+function initials(name: string): string {
+  return name.split(" ").map((w) => w[0]).join("").toUpperCase();
+}
 
-function Desk() {
+function Desk({ t }: { t: T }) {
+  const stagesText = tList<Stage>(t, "inbox.desk.stages", STAGES_EN);
+  const stages = STAGES_META.map((meta, i) => ({ ...meta, ...stagesText[i] }));
+  const lines = tList<Line>(t, "inbox.desk.lines", LINES_EN);
+  const rail = tList<string>(t, "inbox.desk.rail", RAIL_EN);
+  const list = tList<ListItem>(t, "inbox.desk.list", LIST_EN);
+
   const reduced = useReduced();
   const [s, setS] = useState(0);
   const [paused, setPaused] = useState(false);
   useEffect(() => {
     if (reduced || paused) return;
-    const id = window.setTimeout(() => setS((v) => (v + 1) % STAGES.length), 3800);
+    const id = window.setTimeout(() => setS((v) => (v + 1) % stages.length), 3800);
     return () => window.clearTimeout(id);
-  }, [s, paused, reduced]);
-  const st = STAGES[s];
-  const lines = LINES.filter((l) => l.at <= s);
-  const preview = [...lines].reverse().find((l) => l.from !== "sys")?.text ?? "";
-  const subtitle = s === 2 ? "Priya is replying" : s === 4 ? "Resolved" : "Elpino is replying, you're just viewing";
+  }, [s, paused, reduced, stages.length]);
+  const st = stages[s];
+  const visibleLines = lines.filter((l) => l.at <= s);
+  const preview = [...visibleLines].reverse().find((l) => l.from !== "sys")?.text ?? "";
+  const subtitle = s === 2 ? t("inbox.desk.priyaReplying", "Priya is replying") : s === 4 ? t("inbox.desk.resolvedLabel", "Resolved") : t("inbox.desk.aiReplying", "Elpino is replying, you're just viewing");
   const scroller = useRef<HTMLDivElement>(null);
   useEffect(() => { const el = scroller.current; if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" }); }, [s]);
   const composer = s === 2 ? "reply" : s === 4 ? "done" : "locked";
@@ -111,7 +139,7 @@ function Desk() {
   return (
     <div onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
       <div className="mb-4 flex flex-wrap justify-center gap-2">
-        {STAGES.map((x, i) => (
+        {stages.map((x, i) => (
           <button key={x.key} type="button" onClick={() => setS(i)} aria-pressed={i === s} className="inline-flex items-center gap-1.5 rounded-full border-2 border-[#11120f] px-3.5 py-2 text-[13px] font-semibold transition hover:-translate-y-0.5" style={{ backgroundColor: i === s ? x.color : "#fff", color: i === s ? onDark(x.color) : INK }}>
             <x.icon size={14} />{i + 1}. {x.label}
           </button>
@@ -122,25 +150,31 @@ function Desk() {
         <div className="grid h-[540px] md:grid-cols-[72px_290px_1fr] lg:grid-cols-[72px_290px_1fr_250px]">
           {/* rail */}
           <div className="hidden flex-col items-center gap-5 border-r border-[#3a3a3a] py-5 md:flex">
-            {RAIL.map((r) => (
-              <div key={r.label} className={`relative flex flex-col items-center gap-1 text-[10px] ${r.active ? "text-white" : "text-white/55"}`}>
-                <r.icon size={19} />
-                {r.badge && <span className="absolute -right-2 -top-1.5 grid size-4 place-items-center rounded-full text-[9px] font-bold text-white" style={{ backgroundColor: GREEN }}>{r.badge}</span>}
-                {r.label}
-              </div>
-            ))}
+            {rail.map((label, i) => {
+              const Icon = RAIL_META[i] ?? LayoutGrid;
+              const active = i === 1;
+              return (
+                <div key={label} className={`relative flex flex-col items-center gap-1 text-[10px] ${active ? "text-white" : "text-white/55"}`}>
+                  <Icon size={19} />
+                  {i === 1 && <span className="absolute -right-2 -top-1.5 grid size-4 place-items-center rounded-full text-[9px] font-bold text-white" style={{ backgroundColor: GREEN }}>5</span>}
+                  {label}
+                </div>
+              );
+            })}
             <span className="mt-auto grid size-9 place-items-center rounded-full text-[11px] font-bold text-[#11120f]" style={{ backgroundColor: "#a9b8ff" }}>JA</span>
           </div>
 
           {/* list */}
           <div className="hidden min-h-0 flex-col border-r border-[#3a3a3a] md:flex">
-            <div className="flex gap-5 px-4 pt-4 text-[13px]"><span className="text-white/55">Team Inbox</span><span className="border-b-2 border-white pb-1.5 font-medium">AI Assist <span className="ml-1 rounded-full px-1.5 py-0.5 text-[9px] font-bold" style={{ backgroundColor: GREEN }}>5</span></span></div>
-            <div className="mx-4 mt-3 flex items-center gap-2 rounded-lg border border-[#4a4a4a] px-3 py-2 text-[12px] text-white/50"><Search size={13} />Search conversations<Filter size={13} className="ml-auto" /></div>
-            <div className="mx-4 mt-3 flex gap-4 border-b border-[#3a3a3a] pb-2.5 text-[12px] text-white/50"><span className="font-semibold text-white">All</span><span>Unread</span><span>Read</span><span>Resolved</span></div>
+            <div className="flex gap-5 px-4 pt-4 text-[13px]"><span className="text-white/55">{t("inbox.desk.teamInbox", "Team Inbox")}</span><span className="border-b-2 border-white pb-1.5 font-medium">{t("inbox.desk.aiAssist", "AI Assist")} <span className="ml-1 rounded-full px-1.5 py-0.5 text-[9px] font-bold" style={{ backgroundColor: GREEN }}>5</span></span></div>
+            <div className="mx-4 mt-3 flex items-center gap-2 rounded-lg border border-[#4a4a4a] px-3 py-2 text-[12px] text-white/50"><Search size={13} />{t("inbox.desk.searchPlaceholder", "Search conversations")}<Filter size={13} className="ml-auto" /></div>
+            <div className="mx-4 mt-3 flex gap-4 border-b border-[#3a3a3a] pb-2.5 text-[12px] text-white/50">
+              {tList<string>(t, "inbox.filters", ["All", "Unread", "Read", "Resolved"]).map((f, i) => <span key={f} className={i === 0 ? "font-semibold text-white" : ""}>{f}</span>)}
+            </div>
             <div className="min-h-0 flex-1 space-y-0.5 overflow-y-auto p-2 [scrollbar-width:thin]">
-              {LIST.map((c) => (
+              {list.map((c) => (
                 <div key={c.name} className={`flex items-center gap-3 rounded-xl px-2.5 py-2.5 transition-colors duration-500 ${c.live ? "bg-[#3a3a3a]" : ""}`}>
-                  <span className="grid size-10 shrink-0 place-items-center rounded-full text-[11px] font-bold" style={{ backgroundColor: c.color }}>{c.init}</span>
+                  <span className="grid size-10 shrink-0 place-items-center rounded-full text-[11px] font-bold" style={{ backgroundColor: c.color }}>{initials(c.name)}</span>
                   <span className="min-w-0 flex-1">
                     <span className="flex items-center justify-between gap-2"><span className="truncate text-[13.5px] font-semibold">{c.name}</span><span className="shrink-0 text-[10px] text-white/45">{c.date}</span></span>
                     <span className="mt-0.5 flex items-center gap-1.5 text-[11.5px] text-white/55">
@@ -158,14 +192,14 @@ function Desk() {
             <div className="flex items-center gap-3 border-b border-[#3a3a3a] px-4 py-3">
               <span className="grid size-10 shrink-0 place-items-center rounded-full text-[11px] font-bold" style={{ backgroundColor: "#b8763a" }}>AK</span>
               <div className="min-w-0 flex-1">
-                <p className="flex items-center gap-2 text-[15px] font-semibold">Aisha Khan <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold" style={{ backgroundColor: "#1aa37a33", color: "#5fe0b4" }}><ShieldCheck size={10} />Verified</span></p>
+                <p className="flex items-center gap-2 text-[15px] font-semibold">Aisha Khan <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold" style={{ backgroundColor: "#1aa37a33", color: "#5fe0b4" }}><ShieldCheck size={10} />{t("inbox.desk.verified", "Verified")}</span></p>
                 <p className="truncate text-[11.5px] text-white/55">{subtitle}</p>
               </div>
-              {s === 2 ? <span className="inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-[12.5px] font-semibold" style={{ backgroundColor: "#1aa37a33", color: "#5fe0b4", animation: "elpino-slam .4s both" }}><Check size={14} />Joined</span>
-                : <span className="inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-[12.5px] font-semibold" style={s === 1 ? { backgroundColor: YELLOW, color: INK, animation: "elpino-ring 1.4s ease-out infinite" } : { backgroundColor: "#3a3a3a" }}><MessageCircle size={14} />Join</span>}
+              {s === 2 ? <span className="inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-[12.5px] font-semibold" style={{ backgroundColor: "#1aa37a33", color: "#5fe0b4", animation: "elpino-slam .4s both" }}><Check size={14} />{t("inbox.desk.joined", "Joined")}</span>
+                : <span className="inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-[12.5px] font-semibold" style={s === 1 ? { backgroundColor: YELLOW, color: INK, animation: "elpino-ring 1.4s ease-out infinite" } : { backgroundColor: "#3a3a3a" }}><MessageCircle size={14} />{t("inbox.desk.join", "Join")}</span>}
             </div>
             <div ref={scroller} className="flex min-h-0 flex-1 flex-col overflow-y-auto px-4 py-4 text-[13.5px] [scrollbar-width:thin]"><div className="mt-auto flex flex-col gap-3">
-              {lines.map((l, i) => l.from === "sys" ? (
+              {visibleLines.map((l, i) => l.from === "sys" ? (
                 <div key={`s${i}`} className="flex items-center gap-3 text-[11.5px] text-white/55" style={{ animation: "elpino-rv-pop .35s both" }}><span className="h-px flex-1 bg-[#3f3f3f]" />{l.text}<span className="h-px flex-1 bg-[#3f3f3f]" /></div>
               ) : l.from === "you" ? (
                 <div key={i} className="flex items-end gap-2" style={{ animation: "elpino-rv-pop .35s both" }}>
@@ -178,16 +212,16 @@ function Desk() {
                     // eslint-disable-next-line @next/next/no-img-element
                     ? <img src="/icon.png" alt="" className="size-7 shrink-0 rounded-full bg-white object-contain p-0.5" />
                     : <span className="grid size-7 shrink-0 place-items-center rounded-full text-[10px] font-bold" style={{ backgroundColor: GREEN }}>P</span>}
-                  <div className="max-w-[80%] rounded-2xl bg-[#363636] px-3.5 py-2.5 leading-[1.5]"><span className="mb-0.5 block text-[10px] font-medium text-white/45">{l.from === "ai" ? "Elpino AI" : "Priya · team"}</span>{l.text}</div>
+                  <div className="max-w-[80%] rounded-2xl bg-[#363636] px-3.5 py-2.5 leading-[1.5]"><span className="mb-0.5 block text-[10px] font-medium text-white/45">{l.from === "ai" ? t("inbox.desk.elpinoAi", "Elpino AI") : t("inbox.desk.priyaTeam", "Priya · team")}</span>{l.text}</div>
                 </div>
               ))}
               </div>
             </div>
             <div className="border-t border-[#3a3a3a] p-3">
               {composer === "reply" ? (
-                <div className="flex items-center justify-between rounded-xl border border-[#4a4a4a] px-4 py-3 text-[12.5px] text-white/50">Write your reply…<span className="rounded-lg px-3 py-1 text-[11.5px] font-semibold text-white" style={{ backgroundColor: BLUE }}>Send</span></div>
+                <div className="flex items-center justify-between rounded-xl border border-[#4a4a4a] px-4 py-3 text-[12.5px] text-white/50">{t("inbox.desk.writeReply", "Write your reply…")}<span className="rounded-lg px-3 py-1 text-[11.5px] font-semibold text-white" style={{ backgroundColor: BLUE }}>{t("inbox.desk.send", "Send")}</span></div>
               ) : (
-                <div className="rounded-xl border border-dashed border-[#4a4a4a] px-4 py-3 text-center text-[12.5px] text-white/50">{composer === "done" ? "Resolved. Reopen it if they write back." : "Join this conversation to reply. Until then, Elpino keeps talking to the customer."}</div>
+                <div className="rounded-xl border border-dashed border-[#4a4a4a] px-4 py-3 text-center text-[12.5px] text-white/50">{composer === "done" ? t("inbox.desk.reopenNote", "Resolved. Reopen it if they write back.") : t("inbox.desk.lockedNote", "Join this conversation to reply. Until then, Elpino keeps talking to the customer.")}</div>
               )}
             </div>
           </div>
@@ -196,19 +230,19 @@ function Desk() {
           <div className="hidden min-h-0 overflow-y-auto border-l border-[#3a3a3a] [scrollbar-width:thin] lg:block">
             <div className="flex items-center gap-3 border-b border-[#3a3a3a] p-4">
               <span className="grid size-12 place-items-center rounded-full text-sm font-bold" style={{ backgroundColor: "#b8763a" }}>AK</span>
-              <div><p className="font-semibold">Aisha Khan</p><p className="text-[11.5px] text-white/55">Website visitor</p></div>
+              <div><p className="font-semibold">Aisha Khan</p><p className="text-[11.5px] text-white/55">{t("inbox.desk.websiteVisitor", "Website visitor")}</p></div>
             </div>
             <div className="border-b border-[#3a3a3a] p-4">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-white/50">Location &amp; device</p>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-white/50">{t("inbox.desk.locationDevice", "Location & device")}</p>
               <div className="mt-3 space-y-2.5 text-[12.5px]">
-                {[[MapPin, "Pune, India"], [Monitor, "Chrome · macOS"], [Globe2, "On /pricing"]].map(([Ic, t]) => { const I = Ic as typeof MapPin; return <p key={t as string} className="flex items-center gap-2.5"><I size={14} className="text-white/55" />{t as string}</p>; })}
-                <p className="text-[11px] text-white/45">Last seen just now</p>
+                {[[MapPin, t("inbox.desk.location", "Pune, India")], [Monitor, t("inbox.desk.device", "Chrome · macOS")], [Globe2, t("inbox.desk.onPage", "On /pricing")]].map(([Ic, txt]) => { const I = Ic as typeof MapPin; return <p key={txt as string} className="flex items-center gap-2.5"><I size={14} className="text-white/55" />{txt as string}</p>; })}
+                <p className="text-[11px] text-white/45">{t("inbox.desk.lastSeen", "Last seen just now")}</p>
               </div>
             </div>
-            <div className="border-b border-[#3a3a3a] p-4 text-[12.5px]"><p className="flex items-center gap-1.5 font-semibold" style={{ color: "#5fe0b4" }}><ShieldCheck size={14} />Identity verified</p><p className="mt-1 text-white/50">Signed in on the website</p></div>
+            <div className="border-b border-[#3a3a3a] p-4 text-[12.5px]"><p className="flex items-center gap-1.5 font-semibold" style={{ color: "#5fe0b4" }}><ShieldCheck size={14} />{t("inbox.desk.identityVerified", "Identity verified")}</p><p className="mt-1 text-white/50">{t("inbox.desk.signedIn", "Signed in on the website")}</p></div>
             <div className="p-4">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-white/50">Other conversations</p>
-              <p className="mt-2 text-[12.5px] text-white/50">No other conversations from this visitor yet.</p>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-white/50">{t("inbox.desk.otherConvos", "Other conversations")}</p>
+              <p className="mt-2 text-[12.5px] text-white/50">{t("inbox.desk.noOtherConvos", "No other conversations from this visitor yet.")}</p>
             </div>
           </div>
         </div>
@@ -220,27 +254,27 @@ function Desk() {
   );
 }
 
-function Hero() {
+function Hero({ t }: { t: T }) {
   return (
     <section className="relative isolate overflow-hidden bg-white text-[#11120f]">
       <div aria-hidden="true" className="absolute inset-0 -z-10 bg-cover bg-top" style={{ backgroundImage: "url(/piliar-1-grandient.png)", maskImage: "linear-gradient(to bottom, #000 50%, transparent)", WebkitMaskImage: "linear-gradient(to bottom, #000 50%, transparent)" }} />
       <div className="mx-auto max-w-6xl px-5 pb-24 pt-[124px] sm:px-8 lg:pt-[140px]">
         <div className="mx-auto max-w-4xl text-center">
-          <Rv variant="drop"><Stamp color={YELLOW}><Inbox size={13} />Shared inbox</Stamp></Rv>
+          <Rv variant="drop"><Stamp color={YELLOW}><Inbox size={13} />{t("inbox.hero.badge", "Shared inbox")}</Stamp></Rv>
           <Rv delay={80}>
             <h1 className="mt-6 text-[clamp(2.7rem,6.4vw,5.2rem)] font-semibold leading-[0.98] tracking-[-0.055em]">
-              One conversation. <span className="hl">Everyone who should be in it.</span>
+              {t("inbox.hero.titlePrefix", "One conversation. ")}<span className="hl">{t("inbox.hero.titleHl", "Everyone who should be in it.")}</span>
             </h1>
           </Rv>
-          <Rv delay={170}><p className="mx-auto mt-6 max-w-[58ch] text-lg leading-8 text-[#11120f]/70">The AI keeps the thread until a person is needed, your whole team is alerted at once, and whoever joins gets the full history. Follow one real conversation from first message to resolved.</p></Rv>
+          <Rv delay={170}><p className="mx-auto mt-6 max-w-[58ch] text-lg leading-8 text-[#11120f]/70">{t("inbox.hero.subtitle", "The AI keeps the thread until a person is needed, your whole team is alerted at once, and whoever joins gets the full history. Follow one real conversation from first message to resolved.")}</p></Rv>
           <Rv delay={250}>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Link href="/signup" className="inline-flex h-13 items-center gap-2 rounded-full border-2 border-[#11120f] px-7 font-semibold text-white transition hover:-translate-y-0.5" style={{ backgroundColor: BLUE }}>Open your inbox <ArrowRight size={17} /></Link>
-              <Link href="/pricing" className="inline-flex h-13 items-center rounded-full border-2 border-[#11120f] bg-white px-7 font-semibold transition hover:-translate-y-0.5 hover:bg-[#ffd84d]">See pricing</Link>
+              <Link href="/signup" className="inline-flex h-13 items-center gap-2 rounded-full border-2 border-[#11120f] px-7 font-semibold text-white transition hover:-translate-y-0.5" style={{ backgroundColor: BLUE }}>{t("inbox.hero.ctaOpen", "Open your inbox")} <ArrowRight size={17} /></Link>
+              <Link href="/pricing" className="inline-flex h-13 items-center rounded-full border-2 border-[#11120f] bg-white px-7 font-semibold transition hover:-translate-y-0.5 hover:bg-[#ffd84d]">{t("inbox.hero.ctaPricing", "See pricing")}</Link>
             </div>
           </Rv>
         </div>
-        <Rv variant="deal" delay={200} className="mt-14"><Desk /></Rv>
+        <Rv variant="deal" delay={200} className="mt-14"><Desk t={t} /></Rv>
       </div>
     </section>
   );
@@ -250,28 +284,37 @@ function Hero() {
 
 // A real screenshot of the dashboard. The two visitor IP addresses in it are
 // covered with bars so no one's address is published.
-const CALLOUTS = [
-  { label: "Join to take over", color: YELLOW, style: { right: "1.5%", top: "-4%" } },
-  { label: "Filter: All · Unread · Read · Resolved", color: GREEN, style: { left: "3%", top: "-4%" } },
-  { label: "Location & device", color: ORANGE, style: { right: "1.5%", top: "27%" } },
-  { label: "Auto-closes after 24h quiet", color: PINK, style: { left: "34%", bottom: "-4%" } },
-] as const;
+type Callout = { label: string };
+const CALLOUTS_META = [
+  { color: YELLOW, style: { right: "1.5%", top: "-4%" } },
+  { color: GREEN, style: { left: "3%", top: "-4%" } },
+  { color: ORANGE, style: { right: "1.5%", top: "27%" } },
+  { color: PINK, style: { left: "34%", bottom: "-4%" } },
+];
+const CALLOUTS_EN: Callout[] = [
+  { label: "Join to take over" },
+  { label: "Filter: All · Unread · Read · Resolved" },
+  { label: "Location & device" },
+  { label: "Auto-closes after 24h quiet" },
+];
 
-function RealThing() {
+function RealThing({ t }: { t: T }) {
+  const callouts = tList<Callout>(t, "inbox.realThing.callouts", CALLOUTS_EN);
   return (
     <section className="bg-[#fff8ec] px-5 py-24 sm:px-8 sm:py-28">
       <div className="mx-auto max-w-6xl">
-        <Heading eyebrow="The real thing" color={ORANGE} title={<>This is the <span className="hl">actual inbox.</span></>} sub="No mock-up. Every conversation, the AI's replies, the visitor's details and the Join button, all on one screen." />
+        <Heading eyebrow={t("inbox.realThing.eyebrow", "The real thing")} color={ORANGE} title={<>{t("inbox.realThing.titlePrefix", "This is the ")}<span className="hl">{t("inbox.realThing.titleHl", "actual inbox.")}</span></>} sub={t("inbox.realThing.subtitle", "No mock-up. Every conversation, the AI's replies, the visitor's details and the Join button, all on one screen.")} />
         <Rv variant="deal" delay={120}>
           <div className="relative mt-16">
             <div className={`${card} relative overflow-hidden bg-[#262626]`}>
-              <Image src="/inbox_prev.png" alt="The Elpino team inbox: a conversation list, an AI-handled thread, and the visitor's location and device" width={1915} height={812} className="h-auto w-full" sizes="(min-width: 1152px) 1100px, 100vw" />
+              <Image src="/inbox_prev.png" alt={t("inbox.realThing.imageAlt", "The Elpino team inbox: a conversation list, an AI-handled thread, and the visitor's location and device")} width={1915} height={812} className="h-auto w-full" sizes="(min-width: 1152px) 1100px, 100vw" />
               <span aria-hidden="true" className="absolute rounded bg-[#262626]" style={{ left: "42.4%", top: "5.4%", width: "15.2%", height: "3%" }} />
               <span aria-hidden="true" className="absolute rounded bg-[#262626]" style={{ left: "82.2%", top: "20%", width: "16.2%", height: "3.4%" }} />
             </div>
-            {CALLOUTS.map((c, i) => (
-              <span key={c.label} className={`${mono} absolute hidden rotate-[-3deg] rounded-full border-2 border-[#11120f] px-3 py-1.5 text-[10px] md:inline-flex`} style={{ ...c.style, backgroundColor: c.color, color: onDark(c.color), animation: `elpino-float ${4 + i * 0.6}s ease-in-out ${-i}s infinite` }}>{c.label}</span>
-            ))}
+            {callouts.map((c, i) => {
+              const meta = CALLOUTS_META[i] ?? CALLOUTS_META[0];
+              return <span key={c.label} className={`${mono} absolute hidden rotate-[-3deg] rounded-full border-2 border-[#11120f] px-3 py-1.5 text-[10px] md:inline-flex`} style={{ ...meta.style, backgroundColor: meta.color, color: onDark(meta.color), animation: `elpino-float ${4 + i * 0.6}s ease-in-out ${-i}s infinite` }}>{c.label}</span>;
+            })}
           </div>
         </Rv>
       </div>
@@ -281,42 +324,50 @@ function RealThing() {
 
 // ----------------------------------------------------------------- two tabs
 
-const TABS = [
+type TabRow = [string, string, string];
+type Tab = { key: string; label: string; title: string; body: string; rows: TabRow[] };
+const TABS_META = [
+  { color: BLUE, icon: Users },
+  { color: PURPLE, icon: Bot },
+];
+const TABS_EN: Tab[] = [
   {
-    key: "team", label: "Team Inbox", color: BLUE, icon: Users,
+    key: "team", label: "Team Inbox",
     title: "Conversations your team owns",
     body: "Everything a person has joined, taken over, or been assigned. This is where your team works: replies, follow-ups and resolved threads.",
     rows: [["Harnoor Singh", "Can you share the invoice again?", "Priya"], ["Meera Iyer", "Move the team to annual billing?", "Sam"], ["Jo Alvarez", "Thanks, that fixed it!", "Resolved"]],
   },
   {
-    key: "ai", label: "AI Assist", color: PURPLE, icon: Bot,
+    key: "ai", label: "AI Assist",
     title: "Conversations Elpino is handling",
     body: "Watch the AI work in real time. A counter shows how many are active, and you can Join any thread the moment you want to step in.",
     rows: [["Aisha Khan", "Elpino is replying…", "AI"], ["Tom Becker", "Checking your payment record…", "AI"], ["Ravi Menon", "Sent a secure payment link", "AI"]],
   },
-] as const;
+];
 
-function TwoTabs() {
+function TwoTabs({ t }: { t: T }) {
+  const tabsText = tList<Tab>(t, "inbox.twoTabs.tabs", TABS_EN);
+  const tabs = TABS_META.map((meta, i) => ({ ...meta, ...tabsText[i] }));
   const [i, setI] = useState(1);
-  const t = TABS[i];
+  const tab = tabs[i];
   return (
     <section className="bg-white px-5 py-24 sm:px-8 sm:py-28">
       <div className="mx-auto max-w-6xl">
-        <Heading eyebrow="Two views" color={BLUE} title={<>Watch the AI. <span className="hl">Run the team.</span></>} sub="Your inbox has a tab for what people are handling and a tab for what Elpino is handling, so nothing hides." />
+        <Heading eyebrow={t("inbox.twoTabs.eyebrow", "Two views")} color={BLUE} title={<>{t("inbox.twoTabs.titlePrefix", "Watch the AI. ")}<span className="hl">{t("inbox.twoTabs.titleHl", "Run the team.")}</span></>} sub={t("inbox.twoTabs.subtitle", "Your inbox has a tab for what people are handling and a tab for what Elpino is handling, so nothing hides.")} />
         <div className="mx-auto mt-12 flex w-fit rounded-full border-2 border-[#11120f] bg-[#fff8ec] p-1">
-          {TABS.map((x, idx) => (
+          {tabs.map((x, idx) => (
             <button key={x.key} type="button" onClick={() => setI(idx)} aria-pressed={idx === i} className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-[15px] font-semibold transition" style={idx === i ? { backgroundColor: x.color, color: "#fff" } : undefined}><x.icon size={16} />{x.label}</button>
           ))}
         </div>
-        <div key={t.key} className="mt-10 grid items-center gap-8 lg:grid-cols-2" style={{ animation: "elpino-rv-deal .5s both" }}>
+        <div key={tab.key} className="mt-10 grid items-center gap-8 lg:grid-cols-2" style={{ animation: "elpino-rv-deal .5s both" }}>
           <div>
-            <h3 className="text-3xl font-semibold tracking-[-0.03em]">{t.title}</h3>
-            <p className="mt-4 max-w-[46ch] text-[17px] leading-8 text-[#11120f]/65">{t.body}</p>
+            <h3 className="text-3xl font-semibold tracking-[-0.03em]">{tab.title}</h3>
+            <p className="mt-4 max-w-[46ch] text-[17px] leading-8 text-[#11120f]/65">{tab.body}</p>
           </div>
           <div className={`${card} bg-[#262626] p-3 text-white`}>
-            {t.rows.map(([n, p, b]) => (
+            {tab.rows.map(([n, p, b]) => (
               <div key={n} className="flex items-center gap-3 rounded-xl px-3 py-3">
-                <span className="grid size-10 shrink-0 place-items-center rounded-full text-[11px] font-bold" style={{ backgroundColor: t.color }}>{n.split(" ").map((w) => w[0]).join("")}</span>
+                <span className="grid size-10 shrink-0 place-items-center rounded-full text-[11px] font-bold" style={{ backgroundColor: tab.color }}>{initials(n)}</span>
                 <span className="min-w-0 flex-1"><span className="block truncate text-[14px] font-semibold">{n}</span><span className="block truncate text-[12px] text-white/55">{p}</span></span>
                 <span className={`${mono} rounded-full border-2 border-[#11120f] px-2 py-0.5 text-[9px]`} style={{ backgroundColor: b === "Resolved" ? PINK : b === "AI" ? PURPLE : GREEN, color: "#fff" }}>{b}</span>
               </div>
@@ -330,29 +381,38 @@ function TwoTabs() {
 
 // ----------------------------------------------------------------- baton
 
-const BATON = [
-  { who: "Elpino AI", note: "Answers first", color: PURPLE, icon: Bot },
-  { who: "Priya", note: "Tapped Join chat", color: GREEN, icon: Headset },
-  { who: "Sam", note: "Took over from Priya", color: BLUE, icon: UserCheck },
-  { who: "Elpino AI", note: "Handed back", color: PURPLE, icon: Undo2 },
+type BatonItem = { who: string; note: string };
+const BATON_META = [
+  { color: PURPLE, icon: Bot },
+  { color: GREEN, icon: Headset },
+  { color: BLUE, icon: UserCheck },
+  { color: PURPLE, icon: Undo2 },
+];
+const BATON_EN: BatonItem[] = [
+  { who: "Elpino AI", note: "Answers first" },
+  { who: "Priya", note: "Tapped Join chat" },
+  { who: "Sam", note: "Took over from Priya" },
+  { who: "Elpino AI", note: "Handed back" },
 ];
 
-function Baton() {
+function Baton({ t }: { t: T }) {
+  const batonText = tList<BatonItem>(t, "inbox.baton.items", BATON_EN);
+  const baton = BATON_META.map((meta, i) => ({ ...meta, ...batonText[i] }));
   const reduced = useReduced();
   const [i, setI] = useState(0);
   useEffect(() => {
     if (reduced) return;
-    const id = window.setInterval(() => setI((v) => (v + 1) % BATON.length), 2200);
+    const id = window.setInterval(() => setI((v) => (v + 1) % baton.length), 2200);
     return () => window.clearInterval(id);
-  }, [reduced]);
+  }, [reduced, baton.length]);
   return (
     <section className="bg-white px-5 py-24 sm:px-8 sm:py-28">
       <div className="mx-auto max-w-6xl">
-        <Heading eyebrow="Pass the baton" color={GREEN} title={<>Join it. Take it over. <span className="hl">Give it back.</span></>} sub="A conversation moves between the AI and your people with one tap, and the history travels with it." />
+        <Heading eyebrow={t("inbox.baton.eyebrow", "Pass the baton")} color={GREEN} title={<>{t("inbox.baton.titlePrefix", "Join it. Take it over. ")}<span className="hl">{t("inbox.baton.titleHl", "Give it back.")}</span></>} sub={t("inbox.baton.subtitle", "A conversation moves between the AI and your people with one tap, and the history travels with it.")} />
         <div className="relative mt-16">
           <div aria-hidden="true" className="absolute left-[12.5%] right-[12.5%] top-[34px] hidden h-0.5 md:block" style={{ backgroundImage: `linear-gradient(90deg, ${INK} 50%, transparent 50%)`, backgroundSize: "12px 2px" }} />
           <div className="grid gap-5 md:grid-cols-4">
-            {BATON.map((b, idx) => {
+            {baton.map((b, idx) => {
               const on = idx === i;
               return (
                 <div key={idx} className="flex flex-col items-center text-center">
@@ -360,7 +420,7 @@ function Baton() {
                   <div className={`${card} mt-4 w-full p-4 transition-all duration-500`} style={{ backgroundColor: on ? "#fffdf5" : "#fff", transform: on ? "translateY(-4px)" : "none", opacity: on ? 1 : 0.6 }}>
                     <p className="text-lg font-semibold tracking-tight">{b.who}</p>
                     <p className="mt-1 text-[14.5px] text-[#11120f]/60">{b.note}</p>
-                    <span className={`${mono} mt-3 inline-block text-[10px]`} style={{ color: b.color }}>{on ? "Holding it now" : `Step ${idx + 1}`}</span>
+                    <span className={`${mono} mt-3 inline-block text-[10px]`} style={{ color: b.color }}>{on ? t("inbox.baton.holdingNow", "Holding it now") : t("inbox.baton.stepLabel", "Step {n}").replace("{n}", String(idx + 1))}</span>
                   </div>
                 </div>
               );
@@ -374,17 +434,27 @@ function Baton() {
 
 // ---------------------------------------------------------- nobody joins
 
-function NobodyFree() {
-  const marks = [
-    { t: "0s", icon: BellRing, c: ORANGE, h: "Alert goes out", d: "Every teammate sees a Join alert." },
-    { t: "≤ 90s", icon: UserCheck, c: GREEN, h: "First to join wins", d: "The alert clears for everyone else." },
-    { t: "90s", icon: Ticket, c: PINK, h: "No one free? Ticket", d: "A ticket is created automatically." },
-    { t: "24h", icon: Mail, c: BLUE, h: "Email follow-up", d: "The customer is told to expect a reply by email within 24 hours." },
-  ];
+type Mark = { t: string; h: string; d: string };
+const MARKS_META = [
+  { icon: BellRing, c: ORANGE },
+  { icon: UserCheck, c: GREEN },
+  { icon: Ticket, c: PINK },
+  { icon: Mail, c: BLUE },
+];
+const MARKS_EN: Mark[] = [
+  { t: "0s", h: "Alert goes out", d: "Every teammate sees a Join alert." },
+  { t: "≤ 90s", h: "First to join wins", d: "The alert clears for everyone else." },
+  { t: "90s", h: "No one free? Ticket", d: "A ticket is created automatically." },
+  { t: "24h", h: "Email follow-up", d: "The customer is told to expect a reply by email within 24 hours." },
+];
+
+function NobodyFree({ t }: { t: T }) {
+  const marksText = tList<Mark>(t, "inbox.nobodyFree.marks", MARKS_EN);
+  const marks = MARKS_META.map((meta, i) => ({ ...meta, ...marksText[i] }));
   return (
     <section className="bg-[#fff8ec] px-5 py-24 sm:px-8 sm:py-28">
       <div className="mx-auto max-w-6xl">
-        <Heading eyebrow="Nothing gets dropped" color={PINK} title={<>Even when everyone&apos;s <span className="hl">busy.</span></>} sub="If nobody joins in time, the customer isn't left staring at a spinner." />
+        <Heading eyebrow={t("inbox.nobodyFree.eyebrow", "Nothing gets dropped")} color={PINK} title={<>{t("inbox.nobodyFree.titlePrefix", "Even when everyone's ")}<span className="hl">{t("inbox.nobodyFree.titleHl", "busy.")}</span></>} sub={t("inbox.nobodyFree.subtitle", "If nobody joins in time, the customer isn't left staring at a spinner.")} />
         <div className="mt-14 grid gap-4 md:grid-cols-4">
           {marks.map((m, i) => (
             <Rv key={m.h} variant="up" delay={i * 90}>
@@ -404,41 +474,44 @@ function NobodyFree() {
 
 // ---------------------------------------------------------- find anything
 
-const CONVOS = [
+type Convo = { n: string; p: string; s: "resolved" | "unread" | "read" };
+const CONVOS_EN: Convo[] = [
   { n: "Harnoor Singh", p: "I can't share anyone's IP address", s: "resolved" },
   { n: "Aisha Khan", p: "Moved countries, billing question", s: "unread" },
   { n: "Tom Becker", p: "Widget not loading on checkout", s: "unread" },
   { n: "Meera Iyer", p: "Move the team to annual billing?", s: "read" },
   { n: "Ravi Menon", p: "Where can I find my receipt?", s: "resolved" },
   { n: "Jo Alvarez", p: "Can I add another teammate?", s: "read" },
-] as const;
+];
 
-function FindAnything() {
-  const filters = ["All", "Unread", "Read", "Resolved"] as const;
-  const [f, setF] = useState<(typeof filters)[number]>("All");
+function FindAnything({ t }: { t: T }) {
+  const filters = tList<string>(t, "inbox.filters", ["All", "Unread", "Read", "Resolved"]);
+  const convos = tList<Convo>(t, "inbox.findAnything.convos", CONVOS_EN);
+  const [f, setF] = useState(0);
   const [q, setQ] = useState("");
-  const rows = CONVOS.filter((c) => (f === "All" || c.s === f.toLowerCase()) && (c.n + c.p).toLowerCase().includes(q.toLowerCase()));
+  const filterKeys = ["all", "unread", "read", "resolved"];
+  const rows = convos.filter((c) => (filterKeys[f] === "all" || c.s === filterKeys[f]) && (c.n + c.p).toLowerCase().includes(q.toLowerCase()));
   return (
     <section className="bg-white px-5 py-24 sm:px-8 sm:py-28">
       <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[.9fr_1.1fr]">
         <div>
-          <Rv variant="drop"><Stamp color={YELLOW}><Search size={13} />Search &amp; filters</Stamp></Rv>
-          <Rv delay={80}><h2 className="mt-5 text-[clamp(2.1rem,4.4vw,3.4rem)] font-semibold leading-[1.03] tracking-[-0.045em]">Find any conversation <span className="hl">in a second.</span></h2></Rv>
-          <Rv delay={160}><p className="mt-5 max-w-[46ch] text-lg leading-8 text-[#11120f]/65">Search by name or message and narrow to All, Unread, Read or Resolved. Give it a try on the right.</p></Rv>
+          <Rv variant="drop"><Stamp color={YELLOW}><Search size={13} />{t("inbox.findAnything.eyebrow", "Search & filters")}</Stamp></Rv>
+          <Rv delay={80}><h2 className="mt-5 text-[clamp(2.1rem,4.4vw,3.4rem)] font-semibold leading-[1.03] tracking-[-0.045em]">{t("inbox.findAnything.titlePrefix", "Find any conversation ")}<span className="hl">{t("inbox.findAnything.titleHl", "in a second.")}</span></h2></Rv>
+          <Rv delay={160}><p className="mt-5 max-w-[46ch] text-lg leading-8 text-[#11120f]/65">{t("inbox.findAnything.subtitle", "Search by name or message and narrow to All, Unread, Read or Resolved. Give it a try on the right.")}</p></Rv>
         </div>
         <Rv variant="deal" delay={100}>
           <div className={`${card} bg-[#262626] p-4 text-white`}>
             <div className="flex items-center gap-2 rounded-lg border border-[#4a4a4a] px-3 py-2.5 text-[13px]"><Search size={14} className="text-white/50" />
-              <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search conversations" aria-label="Search conversations" className="w-full bg-transparent outline-none placeholder:text-white/40" />
+              <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={t("inbox.desk.searchPlaceholder", "Search conversations")} aria-label={t("inbox.desk.searchPlaceholder", "Search conversations")} className="w-full bg-transparent outline-none placeholder:text-white/40" />
             </div>
             <div className="mt-3 flex gap-2 border-b border-[#3a3a3a] pb-3">
-              {filters.map((x) => <button key={x} type="button" onClick={() => setF(x)} aria-pressed={f === x} className="rounded-full px-3.5 py-1.5 text-[12.5px] font-semibold transition" style={f === x ? { backgroundColor: YELLOW, color: INK } : { color: "#ffffff88" }}>{x}</button>)}
+              {filters.map((x, idx) => <button key={x} type="button" onClick={() => setF(idx)} aria-pressed={f === idx} className="rounded-full px-3.5 py-1.5 text-[12.5px] font-semibold transition" style={f === idx ? { backgroundColor: YELLOW, color: INK } : { color: "#ffffff88" }}>{x}</button>)}
             </div>
             <div className="mt-2 min-h-[288px] space-y-0.5">
-              {rows.length === 0 && <p className="py-12 text-center text-sm text-white/45">Nothing matches. Try another word.</p>}
+              {rows.length === 0 && <p className="py-12 text-center text-sm text-white/45">{t("inbox.findAnything.noMatch", "Nothing matches. Try another word.")}</p>}
               {rows.map((c) => (
                 <div key={c.n} className="flex items-center gap-3 rounded-xl px-2.5 py-2.5" style={{ animation: "elpino-rv-pop .3s both" }}>
-                  <span className="grid size-10 shrink-0 place-items-center rounded-full text-[11px] font-bold" style={{ backgroundColor: PURPLE }}>{c.n.split(" ").map((w) => w[0]).join("")}</span>
+                  <span className="grid size-10 shrink-0 place-items-center rounded-full text-[11px] font-bold" style={{ backgroundColor: PURPLE }}>{initials(c.n)}</span>
                   <span className="min-w-0 flex-1"><span className="block truncate text-[14px] font-semibold">{c.n}</span><span className="block truncate text-[12px] text-white/55">{c.p}</span></span>
                   {c.s === "unread" && <span className="size-2.5 rounded-full" style={{ backgroundColor: BLUE }} />}
                   {c.s === "resolved" && <CheckCheck size={15} style={{ color: "#5fe0b4" }} />}
@@ -454,22 +527,31 @@ function FindAnything() {
 
 // ---------------------------------------------------------- secure request
 
-function SecureRequest() {
-  const steps = [
-    { icon: MessageCircle, c: BLUE, t: "You need something private", d: "For details that shouldn't be typed into a chat window." },
-    { icon: LockKeyhole, c: PINK, t: "Send a secure request", d: "The customer gets a private one-time form instead of a chat box." },
-    { icon: Check, c: GREEN, t: "Back in the conversation", d: "They submit it once, and your team continues the conversation." },
-  ];
+type Step = { t: string; d: string };
+const SECURE_STEPS_META = [
+  { icon: MessageCircle, c: BLUE },
+  { icon: LockKeyhole, c: PINK },
+  { icon: Check, c: GREEN },
+];
+const SECURE_STEPS_EN: Step[] = [
+  { t: "You need something private", d: "For details that shouldn't be typed into a chat window." },
+  { t: "Send a secure request", d: "The customer gets a private one-time form instead of a chat box." },
+  { t: "Back in the conversation", d: "They submit it once, and your team continues the conversation." },
+];
+
+function SecureRequest({ t }: { t: T }) {
+  const stepsText = tList<Step>(t, "inbox.secureRequest.steps", SECURE_STEPS_EN);
+  const steps = SECURE_STEPS_META.map((meta, i) => ({ ...meta, ...stepsText[i] }));
   return (
     <section className="bg-white px-5 py-24 sm:px-8 sm:py-28">
       <div className="mx-auto max-w-6xl">
-        <Heading eyebrow="Secure requests" color={PINK} title={<>Private details <span className="hl">stay out of the chat.</span></>} sub="Ask for sensitive information through a one-time secure form, so it never sits in the transcript." />
+        <Heading eyebrow={t("inbox.secureRequest.eyebrow", "Secure requests")} color={PINK} title={<>{t("inbox.secureRequest.titlePrefix", "Private details ")}<span className="hl">{t("inbox.secureRequest.titleHl", "stay out of the chat.")}</span></>} sub={t("inbox.secureRequest.subtitle", "Ask for sensitive information through a one-time secure form, so it never sits in the transcript.")} />
         <div className="mt-14 grid gap-5 md:grid-cols-3">
           {steps.map((s, i) => (
             <Rv key={s.t} variant="deal" delay={i * 100}>
               <div className={`${card} group h-full bg-[#fffdf5] p-6 transition duration-300 hover:-translate-y-1.5`}>
                 <span className="grid size-12 place-items-center rounded-full border-2 border-[#11120f] transition-transform duration-300 group-hover:rotate-12" style={{ backgroundColor: s.c }}><s.icon size={22} color="#fff" /></span>
-                <p className={`${mono} mt-4 text-[#11120f]/45`}>Step {i + 1}</p>
+                <p className={`${mono} mt-4 text-[#11120f]/45`}>{t("inbox.secureRequest.stepLabel", "Step {n}").replace("{n}", String(i + 1))}</p>
                 <p className="mt-1 text-xl font-semibold tracking-tight">{s.t}</p>
                 <p className="mt-2 text-[15.5px] leading-7 text-[#11120f]/65">{s.d}</p>
               </div>
@@ -483,7 +565,7 @@ function SecureRequest() {
 
 // ---------------------------------------------------------------- compare
 
-const COMPARE: [string, string][] = [
+const COMPARE_EN: [string, string][] = [
   ["Customers wait until someone is free", "The AI replies in seconds, then a person joins if needed"],
   ["Nobody knows who is replying", "A badge shows AI, teammate or resolved on every thread"],
   ["The team pings each other to find an owner", "One Join alert reaches everyone, first to join takes it"],
@@ -491,14 +573,15 @@ const COMPARE: [string, string][] = [
   ["Customers who close the tab are lost", "Verified visitors can still get your reply by email"],
 ];
 
-function Compare() {
+function Compare({ t }: { t: T }) {
+  const rows = tList<[string, string]>(t, "inbox.compare.rows", COMPARE_EN);
   return (
     <section className="bg-white px-5 py-24 sm:px-8 sm:py-28">
       <div className="mx-auto max-w-5xl">
-        <Heading eyebrow="Before &amp; after" color={ORANGE} title={<>From scramble to <span className="hl">calm.</span></>} />
+        <Heading eyebrow={t("inbox.compare.eyebrow", "Before & after")} color={ORANGE} title={<>{t("inbox.compare.titlePrefix", "From scramble to ")}<span className="hl">{t("inbox.compare.titleHl", "calm.")}</span></>} />
         <div className="mt-14 space-y-3">
-          <div className="hidden grid-cols-2 gap-4 md:grid"><p className={`${mono} px-2 text-[#11120f]/50`}>Without a shared inbox</p><p className={`${mono} px-2 text-[#11120f]/50`}>With Elpino</p></div>
-          {COMPARE.map(([a, b], i) => (
+          <div className="hidden grid-cols-2 gap-4 md:grid"><p className={`${mono} px-2 text-[#11120f]/50`}>{t("inbox.compare.headerA", "Without a shared inbox")}</p><p className={`${mono} px-2 text-[#11120f]/50`}>{t("inbox.compare.headerB", "With Elpino")}</p></div>
+          {rows.map(([a, b], i) => (
             <Rv key={a} variant="up" delay={i * 60}>
               <div className="grid gap-3 md:grid-cols-2 md:gap-4">
                 <div className={`${card} flex items-center gap-3 bg-[#fff8ec] p-4 text-[#11120f]/60`}><X size={18} color={PINK} strokeWidth={3} className="shrink-0" /><span className="line-through decoration-[#d9508a]/50 decoration-2">{a}</span></div>
@@ -514,19 +597,27 @@ function Compare() {
 
 // --------------------------------------------------------------- who holds it
 
-const HOLDERS = [
-  { icon: Bot, color: PURPLE, tag: "AI", title: "Elpino has it", body: "Answers from your knowledge and tools. You can watch every message live.", tilt: "-rotate-2" },
-  { icon: Headset, color: GREEN, tag: "Teammate", title: "A person has it", body: "Tap Join chat, or Take over if a colleague has it. The AI steps aside.", tilt: "rotate-1" },
-  { icon: Check, color: PINK, tag: "Resolved", title: "It's done", body: "Resolved threads stay searchable, and you can reopen them in one tap.", tilt: "-rotate-1" },
+type Holder = { tag: string; title: string; body: string };
+const HOLDERS_META = [
+  { icon: Bot, color: PURPLE, tilt: "-rotate-2" },
+  { icon: Headset, color: GREEN, tilt: "rotate-1" },
+  { icon: Check, color: PINK, tilt: "-rotate-1" },
+];
+const HOLDERS_EN: Holder[] = [
+  { tag: "AI", title: "Elpino has it", body: "Answers from your knowledge and tools. You can watch every message live." },
+  { tag: "Teammate", title: "A person has it", body: "Tap Join chat, or Take over if a colleague has it. The AI steps aside." },
+  { tag: "Resolved", title: "It's done", body: "Resolved threads stay searchable, and you can reopen them in one tap." },
 ];
 
-function Holders() {
+function Holders({ t }: { t: T }) {
+  const holdersText = tList<Holder>(t, "inbox.holders.items", HOLDERS_EN);
+  const holders = HOLDERS_META.map((meta, i) => ({ ...meta, ...holdersText[i] }));
   return (
     <section className="bg-[#fff8ec] px-5 py-24 sm:px-8 sm:py-28">
       <div className="mx-auto max-w-6xl">
-        <Heading eyebrow="Always clear" color={PURPLE} title={<>You always know <span className="hl">who has it.</span></>} sub="Every conversation carries a badge in the list, so nobody double-replies and nothing falls through." />
+        <Heading eyebrow={t("inbox.holders.eyebrow", "Always clear")} color={PURPLE} title={<>{t("inbox.holders.titlePrefix", "You always know ")}<span className="hl">{t("inbox.holders.titleHl", "who has it.")}</span></>} sub={t("inbox.holders.subtitle", "Every conversation carries a badge in the list, so nobody double-replies and nothing falls through.")} />
         <div className="mt-14 grid gap-7 md:grid-cols-3">
-          {HOLDERS.map((h, i) => (
+          {holders.map((h, i) => (
             <Rv key={h.tag} variant="deal" delay={i * 110}>
               <div className={`${card} ${h.tilt} bg-white p-6 transition duration-300 hover:-translate-y-2 hover:rotate-0`}>
                 <div className="flex items-center justify-between">
@@ -546,37 +637,42 @@ function Holders() {
 
 // ------------------------------------------------------------ team alert
 
-function TeamAlert() {
+function TeamAlert({ t }: { t: T }) {
   const reduced = useReduced();
-  const [t, setT] = useState(0);
+  const [tick, setTick] = useState(0);
   useEffect(() => {
-    if (reduced) { setT(3); return; }
-    const id = window.setInterval(() => setT((v) => (v + 1) % 6), 1300);
+    if (reduced) { setTick(3); return; }
+    const id = window.setInterval(() => setTick((v) => (v + 1) % 6), 1300);
     return () => window.clearInterval(id);
   }, [reduced]);
   const team = [["Priya", GREEN], ["Sam", BLUE], ["Dana", ORANGE], ["Lee", PINK]] as const;
-  const joined = t >= 3;
+  const joined = tick >= 3;
+  const bullets = tList<string>(t, "inbox.teamAlert.bullets", [
+    "No one is singled out, so nobody is a bottleneck",
+    "90 seconds to jump in before a ticket is filed for you",
+    "Joined by mistake? Hand it back to the AI in a tap",
+  ]);
 
   return (
     <section className="bg-[#11120f] px-5 py-24 text-white sm:px-8 sm:py-28">
       <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
         <div>
-          <Rv variant="drop"><Stamp color={ORANGE}><BellRing size={13} />Team-wide alerts</Stamp></Rv>
-          <Rv delay={80}><h2 className="mt-5 text-[clamp(2.1rem,4.6vw,3.6rem)] font-semibold leading-[1.03] tracking-[-0.045em]">Ring the whole team. <span className="rounded-md px-2" style={{ backgroundColor: YELLOW, color: INK }}>One person answers.</span></h2></Rv>
-          <Rv delay={160}><p className="mt-5 max-w-[50ch] text-lg leading-8 text-white/65">When a customer asks for a human, every teammate gets a Join alert at the same time. The first to tap Join takes the chat, the alert disappears for everyone else, and the customer sees who joined.</p></Rv>
+          <Rv variant="drop"><Stamp color={ORANGE}><BellRing size={13} />{t("inbox.teamAlert.eyebrow", "Team-wide alerts")}</Stamp></Rv>
+          <Rv delay={80}><h2 className="mt-5 text-[clamp(2.1rem,4.6vw,3.6rem)] font-semibold leading-[1.03] tracking-[-0.045em]">{t("inbox.teamAlert.titlePrefix", "Ring the whole team. ")}<span className="rounded-md px-2" style={{ backgroundColor: YELLOW, color: INK }}>{t("inbox.teamAlert.titleHl", "One person answers.")}</span></h2></Rv>
+          <Rv delay={160}><p className="mt-5 max-w-[50ch] text-lg leading-8 text-white/65">{t("inbox.teamAlert.subtitle", "When a customer asks for a human, every teammate gets a Join alert at the same time. The first to tap Join takes the chat, the alert disappears for everyone else, and the customer sees who joined.")}</p></Rv>
           <Rv delay={220}>
             <ul className="mt-7 space-y-3 text-[16px]">
-              {["No one is singled out, so nobody is a bottleneck", "90 seconds to jump in before a ticket is filed for you", "Joined by mistake? Hand it back to the AI in a tap"].map((x) => <li key={x} className="flex items-start gap-3"><Check size={18} color={YELLOW} strokeWidth={3} className="mt-1 shrink-0" />{x}</li>)}
+              {bullets.map((x) => <li key={x} className="flex items-start gap-3"><Check size={18} color={YELLOW} strokeWidth={3} className="mt-1 shrink-0" />{x}</li>)}
             </ul>
           </Rv>
         </div>
         <Rv variant="pop" delay={100}>
           <div className={`${card} bg-[#fffdf5] p-6 text-[#11120f]`}>
-            <p className={`${mono} text-[#11120f]/50`}>Inbox alerts</p>
+            <p className={`${mono} text-[#11120f]/50`}>{t("inbox.teamAlert.panelLabel", "Inbox alerts")}</p>
             <div className="mt-4 grid grid-cols-2 gap-3">
               {team.map(([n, c], i) => {
                 const isWinner = i === 0;
-                const alerted = t >= 1;
+                const alerted = tick >= 1;
                 const cleared = joined && !isWinner;
                 return (
                   <div key={n} className="rounded-2xl border-2 border-[#11120f] p-3.5 transition-all duration-500" style={{ backgroundColor: cleared ? "#f1efe7" : "#fff", opacity: cleared ? 0.6 : 1 }}>
@@ -585,17 +681,17 @@ function TeamAlert() {
                       <span className="font-semibold">{n}</span>
                     </div>
                     <div className="mt-3 h-9">
-                      {isWinner && joined ? <span className={`${mono} flex h-full items-center justify-center rounded-lg border-2 border-[#11120f] text-[10px] text-white`} style={{ backgroundColor: GREEN, animation: "elpino-slam .35s both" }}>Joined</span>
-                        : cleared ? <span className={`${mono} flex h-full items-center justify-center text-[10px] text-[#11120f]/50`}>Alert cleared</span>
-                        : alerted ? <span className={`${mono} flex h-full items-center justify-center rounded-lg border-2 border-[#11120f] text-[10px]`} style={{ backgroundColor: YELLOW, animation: "elpino-ring 1.4s ease-out infinite" }}>Join chat</span>
-                        : <span className={`${mono} flex h-full items-center justify-center text-[10px] text-[#11120f]/35`}>Quiet</span>}
+                      {isWinner && joined ? <span className={`${mono} flex h-full items-center justify-center rounded-lg border-2 border-[#11120f] text-[10px] text-white`} style={{ backgroundColor: GREEN, animation: "elpino-slam .35s both" }}>{t("inbox.teamAlert.joinedStatus", "Joined")}</span>
+                        : cleared ? <span className={`${mono} flex h-full items-center justify-center text-[10px] text-[#11120f]/50`}>{t("inbox.teamAlert.alertCleared", "Alert cleared")}</span>
+                        : alerted ? <span className={`${mono} flex h-full items-center justify-center rounded-lg border-2 border-[#11120f] text-[10px]`} style={{ backgroundColor: YELLOW, animation: "elpino-ring 1.4s ease-out infinite" }}>{t("inbox.teamAlert.joinChatStatus", "Join chat")}</span>
+                        : <span className={`${mono} flex h-full items-center justify-center text-[10px] text-[#11120f]/35`}>{t("inbox.teamAlert.quietStatus", "Quiet")}</span>}
                     </div>
                   </div>
                 );
               })}
             </div>
             <div className="mt-4 rounded-xl border-2 border-[#11120f] px-4 py-3 text-sm font-medium" style={{ backgroundColor: joined ? "#d8f3e9" : "#fff1e6" }}>
-              {joined ? "Priya joined. The customer sees her name." : t >= 1 ? "Alerting all 4 teammates…" : "Customer asked for a person"}
+              {joined ? t("inbox.teamAlert.bannerJoined", "Priya joined. The customer sees her name.") : tick >= 1 ? t("inbox.teamAlert.bannerAlerting", "Alerting all 4 teammates…") : t("inbox.teamAlert.bannerAsked", "Customer asked for a person")}
             </div>
           </div>
         </Rv>
@@ -606,21 +702,31 @@ function TeamAlert() {
 
 // ------------------------------------------------------------ visitor context
 
-const CONTEXT = [
-  { icon: MapPin, color: GREEN, t: "Where they are", d: "Location and local context on every visitor." },
-  { icon: Monitor, color: BLUE, t: "What they're using", d: "Device, browser and the page they were on." },
-  { icon: ShieldCheck, color: PURPLE, t: "Who they are", d: "A Verified badge when identity is confirmed by a signed token or email code." },
-  { icon: LockKeyhole, color: PINK, t: "Sensitive things, safely", d: "Ask for private details through a secure one-time request, not in chat." },
-  { icon: Clock3, color: ORANGE, t: "The whole history", d: "Earlier conversations with the same person, right there." },
+type ContextItem = { t: string; d: string };
+const CONTEXT_META = [
+  { icon: MapPin, color: GREEN },
+  { icon: Monitor, color: BLUE },
+  { icon: ShieldCheck, color: PURPLE },
+  { icon: LockKeyhole, color: PINK },
+  { icon: Clock3, color: ORANGE },
+];
+const CONTEXT_EN: ContextItem[] = [
+  { t: "Where they are", d: "Location and local context on every visitor." },
+  { t: "What they're using", d: "Device, browser and the page they were on." },
+  { t: "Who they are", d: "A Verified badge when identity is confirmed by a signed token or email code." },
+  { t: "Sensitive things, safely", d: "Ask for private details through a secure one-time request, not in chat." },
+  { t: "The whole history", d: "Earlier conversations with the same person, right there." },
 ];
 
-function Context() {
+function Context({ t }: { t: T }) {
+  const itemsText = tList<ContextItem>(t, "inbox.context.items", CONTEXT_EN);
+  const items = CONTEXT_META.map((meta, i) => ({ ...meta, ...itemsText[i] }));
   return (
     <section className="bg-[#fff8ec] px-5 py-24 sm:px-8 sm:py-28">
       <div className="mx-auto max-w-6xl">
-        <Heading eyebrow="Context, built in" color={GREEN} title={<>Never ask <span className="hl">&ldquo;who are you again?&rdquo;</span></>} sub="Your team opens a thread and already knows the essentials." />
+        <Heading eyebrow={t("inbox.context.eyebrow", "Context, built in")} color={GREEN} title={<>{t("inbox.context.titlePrefix", "Never ask ")}<span className="hl">{t("inbox.context.titleHl", "“who are you again?”")}</span></>} sub={t("inbox.context.subtitle", "Your team opens a thread and already knows the essentials.")} />
         <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {CONTEXT.map((c, i) => (
+          {items.map((c, i) => (
             <Rv key={c.t} variant="pop" delay={(i % 3) * 80}>
               <div className={`${card} group relative h-full overflow-hidden p-6 transition duration-300 hover:-translate-y-1.5`} style={{ backgroundColor: c.color, color: "#fff" }}>
                 <div aria-hidden="true" className="absolute inset-0 opacity-[0.14]" style={{ backgroundImage: "radial-gradient(#000 1.2px, transparent 1.2px)", backgroundSize: "14px 14px" }} />
@@ -633,8 +739,8 @@ function Context() {
           <Rv variant="pop" delay={160}>
             <div className={`${card} flex h-full flex-col justify-center border-dashed bg-[#fffdf5] p-6 text-center`}>
               <Users className="mx-auto" size={26} aria-hidden="true" />
-              <p className="mt-3 text-lg font-semibold">Plus live typing on both sides</p>
-              <p className="mt-1 text-[15px] text-[#11120f]/60">Customers see when you&apos;re replying, and you see when they are.</p>
+              <p className="mt-3 text-lg font-semibold">{t("inbox.context.extraTitle", "Plus live typing on both sides")}</p>
+              <p className="mt-1 text-[15px] text-[#11120f]/60">{t("inbox.context.extraDesc", "Customers see when you're replying, and you see when they are.")}</p>
             </div>
           </Rv>
         </div>
@@ -645,23 +751,31 @@ function Context() {
 
 // ------------------------------------------------------------- after they leave
 
-function AfterLeave() {
-  const steps = [
-    { icon: Globe2, c: BLUE, t: "Visitor leaves", d: "They close the chat, or 24 hours pass with no message." },
-    { icon: KeyRound, c: PURPLE, t: "Verified email on file?", d: "If they confirmed their address, they can still be reached." },
-    { icon: Mail, c: GREEN, t: "Reply by email", d: "Your reply goes to their inbox. No verified email means no reply is possible, and the composer says so." },
-  ];
+const AFTER_LEAVE_META = [
+  { icon: Globe2, c: BLUE },
+  { icon: KeyRound, c: PURPLE },
+  { icon: Mail, c: GREEN },
+];
+const AFTER_LEAVE_EN: Step[] = [
+  { t: "Visitor leaves", d: "They close the chat, or 24 hours pass with no message." },
+  { t: "Verified email on file?", d: "If they confirmed their address, they can still be reached." },
+  { t: "Reply by email", d: "Your reply goes to their inbox. No verified email means no reply is possible, and the composer says so." },
+];
+
+function AfterLeave({ t }: { t: T }) {
+  const stepsText = tList<Step>(t, "inbox.afterLeave.steps", AFTER_LEAVE_EN);
+  const steps = AFTER_LEAVE_META.map((meta, i) => ({ ...meta, ...stepsText[i] }));
   return (
     <section className="bg-[#fff8ec] px-5 py-24 sm:px-8 sm:py-28">
       <div className="mx-auto max-w-6xl">
-        <Heading eyebrow="After they leave" color={PINK} title={<>Closing the tab <span className="hl">isn&apos;t the end.</span></>} sub="Elpino tells you honestly whether a reply can still reach them." />
+        <Heading eyebrow={t("inbox.afterLeave.eyebrow", "After they leave")} color={PINK} title={<>{t("inbox.afterLeave.titlePrefix", "Closing the tab ")}<span className="hl">{t("inbox.afterLeave.titleHl", "isn't the end.")}</span></>} sub={t("inbox.afterLeave.subtitle", "Elpino tells you honestly whether a reply can still reach them.")} />
         <div className="mt-14 grid items-stretch gap-4 md:grid-cols-[1fr_auto_1fr_auto_1fr]">
           {steps.map((s, i) => (
             <div key={s.t} className="contents">
               <Rv variant="up" delay={i * 120}>
                 <div className={`${card} h-full bg-white p-6`}>
                   <span className="grid size-12 place-items-center rounded-full border-2 border-[#11120f]" style={{ backgroundColor: s.c }}><s.icon size={22} color="#fff" /></span>
-                  <p className={`${mono} mt-4 text-[#11120f]/45`}>Step {i + 1}</p>
+                  <p className={`${mono} mt-4 text-[#11120f]/45`}>{t("inbox.afterLeave.stepLabel", "Step {n}").replace("{n}", String(i + 1))}</p>
                   <p className="mt-1 text-xl font-semibold tracking-tight">{s.t}</p>
                   <p className="mt-2 text-[15.5px] leading-7 text-[#11120f]/65">{s.d}</p>
                 </div>
@@ -677,7 +791,7 @@ function AfterLeave() {
 
 // ------------------------------------------------------------------- faq
 
-const FAQS: [string, string][] = [
+const FAQS_EN: [string, string][] = [
   ["Who can see a conversation?", "Everyone on your team can see the shared inbox. Each conversation shows who has it: the AI, a teammate, or resolved."],
   ["What is the 90-second window?", "When a customer asks for a person, every teammate gets a Join alert. If nobody joins within 90 seconds, the customer is told and a ticket is created automatically with an email follow-up."],
   ["Can I give a conversation back to the AI?", "Yes. If you joined and it's a simple follow-up, hand the chat back to Elpino in one tap."],
@@ -685,14 +799,15 @@ const FAQS: [string, string][] = [
   ["Does it work on more than website chat?", "The website chat widget is live today. Omnichannel is coming in November."],
 ];
 
-function Faq() {
+function Faq({ t }: { t: T }) {
+  const faqs = tList<[string, string]>(t, "inbox.faq.items", FAQS_EN);
   const [open, setOpen] = useState(0);
   return (
     <section className="bg-[#fff8ec] px-5 py-24 sm:px-8 sm:py-28">
       <div className="mx-auto max-w-3xl">
-        <Heading eyebrow="Questions" color={YELLOW} title={<>Good to <span className="hl">know.</span></>} />
+        <Heading eyebrow={t("inbox.faq.eyebrow", "Questions")} color={YELLOW} title={<>{t("inbox.faq.titlePrefix", "Good to ")}<span className="hl">{t("inbox.faq.titleHl", "know.")}</span></>} />
         <div className="mt-12 space-y-3">
-          {FAQS.map(([q, a], i) => (
+          {faqs.map(([q, a], i) => (
             <Rv key={q} variant="up" delay={i * 50}>
               <div className={`${card} overflow-hidden ${open === i ? "bg-[#fffdf5]" : "bg-white"}`}>
                 <button type="button" aria-expanded={open === i} onClick={() => setOpen(open === i ? -1 : i)} className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left text-[17px] font-semibold">
@@ -711,17 +826,17 @@ function Faq() {
   );
 }
 
-function Closing() {
+function Closing({ t }: { t: T }) {
   return (
     <section className="bg-white px-5 pb-24 pt-8 sm:px-8">
       <Rv variant="pop">
         <div className={`${card} relative mx-auto max-w-6xl overflow-hidden px-6 py-16 text-center text-white sm:px-12`} style={{ backgroundColor: BLUE }}>
           <div aria-hidden="true" className="absolute inset-0 opacity-[0.16]" style={{ backgroundImage: "radial-gradient(#000 1.2px, transparent 1.2px)", backgroundSize: "16px 16px" }} />
-          <h2 className="relative mx-auto max-w-2xl text-[clamp(2.1rem,4.6vw,3.6rem)] font-semibold leading-[1.03] tracking-[-0.045em]">Give your team one place to help from.</h2>
-          <p className="relative mx-auto mt-4 max-w-lg text-lg text-white/85">Start free and invite your teammates when you&apos;re ready.</p>
+          <h2 className="relative mx-auto max-w-2xl text-[clamp(2.1rem,4.6vw,3.6rem)] font-semibold leading-[1.03] tracking-[-0.045em]">{t("inbox.closing.title", "Give your team one place to help from.")}</h2>
+          <p className="relative mx-auto mt-4 max-w-lg text-lg text-white/85">{t("inbox.closing.subtitle", "Start free and invite your teammates when you're ready.")}</p>
           <div className="relative mt-8 flex flex-wrap justify-center gap-3">
-            <Link href="/signup" className="inline-flex h-13 items-center gap-2 rounded-full border-2 border-[#11120f] px-8 font-semibold text-[#11120f] transition hover:-translate-y-0.5" style={{ backgroundColor: YELLOW }}>Start free <ArrowRight size={16} /></Link>
-            <Link href="/product/ai-agent" className="inline-flex h-13 items-center rounded-full border-2 border-[#11120f] bg-white px-8 font-semibold text-[#11120f] transition hover:-translate-y-0.5">Meet the AI agent</Link>
+            <Link href="/signup" className="inline-flex h-13 items-center gap-2 rounded-full border-2 border-[#11120f] px-8 font-semibold text-[#11120f] transition hover:-translate-y-0.5" style={{ backgroundColor: YELLOW }}>{t("inbox.closing.ctaStart", "Start free")} <ArrowRight size={16} /></Link>
+            <Link href="/product/ai-agent" className="inline-flex h-13 items-center rounded-full border-2 border-[#11120f] bg-white px-8 font-semibold text-[#11120f] transition hover:-translate-y-0.5">{t("inbox.closing.ctaMeetAgent", "Meet the AI agent")}</Link>
           </div>
         </div>
       </Rv>
@@ -730,22 +845,24 @@ function Closing() {
 }
 
 export function InboxClient() {
+  const language = useStoredLanguage();
+  const { t } = useTranslation(language as any);
   return (
     <main className="font-[family-name:var(--font-rethink-sans)]">
-      <Hero />
-      <RealThing />
-      <TwoTabs />
-      <Holders />
-      <Baton />
-      <TeamAlert />
-      <NobodyFree />
-      <FindAnything />
-      <Context />
-      <SecureRequest />
-      <AfterLeave />
-      <Compare />
-      <Faq />
-      <Closing />
+      <Hero t={t} />
+      <RealThing t={t} />
+      <TwoTabs t={t} />
+      <Holders t={t} />
+      <Baton t={t} />
+      <TeamAlert t={t} />
+      <NobodyFree t={t} />
+      <FindAnything t={t} />
+      <Context t={t} />
+      <SecureRequest t={t} />
+      <AfterLeave t={t} />
+      <Compare t={t} />
+      <Faq t={t} />
+      <Closing t={t} />
     </main>
   );
 }

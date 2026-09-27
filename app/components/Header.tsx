@@ -8,9 +8,10 @@ import { useStoredLanguage, setStoredLanguage } from '@/app/hooks/useStoredLangu
 import { LanguageSwitcher } from '@/app/components/LanguageSwitcher';
 import UpgradeBanner from './dashboard/UpgradeBanner';
 import { MegaMenuPanel } from './MegaMenuPanel';
-import { navGroups, type DropdownGroup } from './nav-data';
+import { navGroups, tGroupLabel, tSectionTitle, tNavItem, type DropdownGroup } from './nav-data';
 
 type Session = { email: string; name?: string; userId: string };
+type T = (key: string, defaultValue?: string) => string;
 
 
 function Chevron({ className = '' }: { className?: string }) {
@@ -32,7 +33,7 @@ function Chevron({ className = '' }: { className?: string }) {
 }
 
 // Clean 4-column dropdown
-function MegaNav({ groups, light = false }: { groups: DropdownGroup[]; light?: boolean }) {
+function MegaNav({ groups, light = false, t }: { groups: DropdownGroup[]; light?: boolean; t: T }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
 
@@ -76,7 +77,7 @@ function MegaNav({ groups, light = false }: { groups: DropdownGroup[]; light?: b
               aria-expanded={isOpen}
               onClick={() => setOpenIndex(isOpen ? null : index)}
             >
-              {group.label}
+              {tGroupLabel(t, group.label)}
               <Chevron className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
             </button>
           );
@@ -93,7 +94,7 @@ function MegaNav({ groups, light = false }: { groups: DropdownGroup[]; light?: b
           }`}
         role="menu"
       >
-        {activeGroup && <MegaMenuPanel group={activeGroup} onNavigate={() => setOpenIndex(null)} />}
+        {activeGroup && <MegaMenuPanel group={activeGroup} onNavigate={() => setOpenIndex(null)} t={t} />}
       </div>
     </div>
   );
@@ -115,6 +116,10 @@ export function Header({
   const [openMobileGroup, setOpenMobileGroup] = useState<string | null>(null);
   const language = useStoredLanguage();
   const [languageOpen, setLanguageOpen] = useState(false);
+  // Separate from languageOpen (the mobile-menu instance below): each
+  // LanguageSwitcher owns whether its own dropdown is open, so opening one
+  // never leaves the other's menu stuck open underneath a hidden element.
+  const [desktopLanguageOpen, setDesktopLanguageOpen] = useState(false);
   const { t } = useTranslation(language as any);
   const light = variant === 'light';
 
@@ -217,7 +222,7 @@ export function Header({
               className="hidden items-center gap-1 lg:flex"
               aria-label="Navigation groups"
             >
-              <MegaNav groups={navGroups} light={light} />
+              <MegaNav groups={navGroups} light={light} t={t} />
               <Link className={navLinkClassName} href="/pricing">
                 {t('nav.pricing', 'Pricing')}
               </Link>
@@ -227,6 +232,13 @@ export function Header({
           {/* Right-Side Actions */}
           <div className="flex items-center gap-1">
             <div className="hidden shrink-0 items-center gap-1 lg:flex">
+              <LanguageSwitcher
+                language={language}
+                onChange={setStoredLanguage}
+                light={light}
+                open={desktopLanguageOpen}
+                onOpenChange={setDesktopLanguageOpen}
+              />
               {session ? (
                 <Link
                   className={signUpPillClassName}
@@ -236,18 +248,15 @@ export function Header({
                 </Link>
               ) : (
                 <>
-                  <Link className={`hidden h-9 items-center px-3 text-sm font-normal transition lg:inline-flex ${light ? 'text-black hover:text-black/70' : 'text-white hover:text-white/70'}`} href="/contact">
-                    Contact sales
-                  </Link>
                   <Link className={loginClassName} href="/login">
-                    Log in
+                    {t('nav.login', 'Log in')}
                   </Link>
                   <div className="ml-2">
                     <Link
                       className={signUpPillClassName}
                       href="/signup"
                     >
-                      Start free trial
+                      {t('nav.startFreeTrial', 'Start free trial')}
                     </Link>
                   </div>
                 </>
@@ -302,7 +311,7 @@ export function Header({
                       onClick={() => setOpenMobileGroup(open ? null : group.label)}
                       className="flex w-full items-center justify-between px-4 py-3.5 text-left text-[17px] font-semibold"
                     >
-                      {group.label}
+                      {tGroupLabel(t, group.label)}
                       <span className="grid size-7 place-items-center rounded-full border-2 border-[#11120f] transition-transform duration-300" style={{ backgroundColor: open ? '#ffd84d' : '#fff', transform: open ? 'rotate(45deg)' : 'none' }}>
                         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 1v10M1 6h10" stroke="#11120f" strokeWidth="2" strokeLinecap="round" /></svg>
                       </span>
@@ -311,7 +320,7 @@ export function Header({
                       <div className="space-y-4 border-t-2 border-dashed border-[#11120f]/25 px-4 pb-4 pt-3">
                         {group.sections.map((sec) => (
                           <div key={sec.title}>
-                            <p className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[#11120f]/45">{sec.title}</p>
+                            <p className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[#11120f]/45">{tSectionTitle(t, sec.title)}</p>
                             <div className="mt-2 flex flex-wrap gap-2">
                               {sec.items.map((item) => (
                                 <Link
@@ -320,7 +329,7 @@ export function Header({
                                   href={item.href}
                                   className="rounded-full border-2 border-[#11120f] bg-[#fffdf5] px-3.5 py-2 text-[14.5px] font-medium transition active:bg-[#ffd84d]"
                                 >
-                                  {item.label}
+                                  {tNavItem(t, item)}
                                 </Link>
                               ))}
                             </div>

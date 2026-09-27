@@ -47,7 +47,95 @@
       "privacy": "Adatvédelmi szabályzatunkat",
       "successTitle": "Üzenet elküldve",
       "successBody": "Köszönjük a megkeresést. Hamarosan válaszolunk.",
-      "sendAnother": "Újabb üzenet küldése"
+      "sendAnother": "Újabb üzenet küldése",
+      "sentStamp": "Elküldve ✓",
+      "postmarkLabel": "mail",
+      "securityNote": "Biztonságosan elküldve – soha nem használták edzésre"
+    },
+    "hero": {
+      "eyebrow": "Kapcsolatfelvétel · a postaszobával",
+      "greeting": "Sziasztok.",
+      "titlePrefix": "Hogyan lehet",
+      "titleHl": "segítünk?",
+      "searchLabel": "Keresés a súgótémák között",
+      "searchPlaceholder": "Keressen értékesítést, támogatást, számlázást és sok mást",
+      "searchButtonLabel": "Keresés",
+      "noMatch": "Nincs pontos egyezés. Nyomja meg az Enter billentyűt a kérdés elküldéséhez.",
+      "linkGettingStarted": "Első lépések",
+      "linkFeaturedGuides": "Kiemelt útmutatók",
+      "linkPlansBilling": "Tervek és számlázás",
+      "linkSendMessage": "Vagy küldjön nekünk üzenetet ↓"
+    },
+    "desks": {
+      "eyebrow": "Válasszon egy útvonalat",
+      "titlePrefix": "Érje el a ",
+      "titleHl": "jobb íróasztal.",
+      "subtitle": "Válassza ki azt a csatornát, amelyik a legjobban megfelel az Ön igényeinek. Minden út csapatunk igazi tagjához vezet.",
+      "deskLabel": "Íróasztal {n}",
+      "addressed": "Képeslap címzett ✓",
+      "actionAddress": "Címezzen meg egy képeslapot",
+      "emailNote": "Inkább saját levelezőalkalmazást szeretne? Minden címmel rendelkező íróasztal a {link} által is működik.",
+      "emailNoteLink": "e-mailben"
+    },
+    "postcard": {
+      "eyebrow": "Küldjön nekünk egy megjegyzést",
+      "titlePrefix": "Egy igazi ember ",
+      "titleHl": "elolvassa ezt.",
+      "addressedTo": "Címzett"
+    },
+    "tracking": {
+      "eyebrow": "Kövesse nyomon a képeslapját",
+      "titlePrefix": "Mi történik ",
+      "titleHl": "a küldés megnyomása után.",
+      "onlineStatus": "Csapatunk online",
+      "hours": "H–P, 9:00–18:00 CET",
+      "steps": [
+        {
+          "title": "Elküldve",
+          "body": "Képeslapod elhagyja a kezed. Nincs más tennivaló."
+        },
+        {
+          "title": "Minden szót elolvasunk",
+          "body": "A jegyzeted egy emberrel érkezik a csapatba – nincs jegylabirintus, nincsenek robotok."
+        },
+        {
+          "title": "Válasz egy munkanapon belül",
+          "body": "Valódi válaszok valakitől, aki a terméken dolgozik."
+        },
+        {
+          "title": "Hívás, ha hasznos",
+          "body": "Értékesítési és vállalkozási szempontból végigvezetjük az Elpinót a tényleges munkafolyamatról."
+        }
+      ]
+    },
+    "library": {
+      "titlePrefix": "Inkább megtalálja ",
+      "titleHl": "magad?",
+      "subtitle": "A legtöbb kérdésre itt már megvan a válasz – és az alábbiakban minden közvetlenül a forrásra mutat.",
+      "cardLabel": "kártya {n}",
+      "items": [
+        {
+          "title": "Gyors válaszok",
+          "body": "Beállítás, számlázás, eszkaláció és biztonság – válasz a GYIK-ben.",
+          "cta": "Böngésszen a GYIK között"
+        },
+        {
+          "title": "Dokumentáció",
+          "body": "Telepítési útmutatók, csatlakozók beállítása és munkaterület-konfiguráció.",
+          "cta": "Nyissa meg a dokumentumokat"
+        },
+        {
+          "title": "Biztonság és adatvédelem",
+          "body": "Hogyan történik az adatok titkosítása, tárolása, és soha nem használható fel edzésre.",
+          "cta": "Olvassa el a szabályzatot"
+        }
+      ]
+    },
+    "search": {
+      "plansTitle": "Tervek és számlázás",
+      "plansDetail": "Kérdések az előfizetésekkel, számlákkal vagy árakkal kapcsolatban",
+      "accountTitle": "Fiók és biztonság",
+      "accountDetail": "Segítség a hozzáféréssel, adatvédelemmel vagy fiókbeállításokkal kapcsolatban"
     }
   },
   "auth": {
@@ -105,6 +193,4113 @@
         "lowercase": "Kisbetű",
         "number": "Szám"
       }
+    }
+  },
+  "home": {
+    "hero": {
+      "badge": "AI-alapú ügyfélszolgálat",
+      "titlePrefix": "Támogatás, amely",
+      "words": [
+        "válaszol.",
+        "megold.",
+        "emlékszik.",
+        "továbbít."
+      ],
+      "subtitle": "AI, amely a tudásbázisod alapján válaszol, ellenőrzi a valódi kifizetéseket és rendeléseket, és teljes kontextussal továbbítja a csapatodnak, ha ember szükséges.",
+      "ctaPrimary": "Kezdd el ingyen",
+      "ctaSecondary": "Próbáld ki magad",
+      "trust": [
+        "100 ingyenes AI üzenet havonta",
+        "Nincs szükség kártyára",
+        "Egy délután alatt kész"
+      ],
+      "stickers": [
+        "AI által megoldva",
+        "Ember készenlétben",
+        "Alapesetben privát",
+        "Semmi nem vész el"
+      ],
+      "callouts": [
+        "AI jelvény minden beszélgetésen",
+        "Csatlakozz az átvételhez",
+        "A látogató helye és eszköze"
+      ],
+      "widget": {
+        "name": "Elpino",
+        "subtitle": "Másodperceken belül válaszol",
+        "convo": [
+          "Kétszer terheltek meg a frissítésért?",
+          "Ellenőriztem a fizetési előzményeidet",
+          "Csak egyszer terheltek meg. A második próbálkozás sikertelen volt, és soha nem lett elszámolva."
+        ]
+      }
+    },
+    "marquee": {
+      "questions": [
+        "Hol van a számlám?",
+        "Hogyan állítom vissza a jelszavamat?",
+        "Kétszer terheltek meg?",
+        "Kaphatok visszatérítést?",
+        "Hol van a rendelésem?",
+        "Hogyan adok hozzá csapattagot?",
+        "Biztonságban vannak az adataim?",
+        "Miért nem sikerült a fizetésem?",
+        "Beszélhetek egy emberrel?"
+      ]
+    },
+    "tryit": {
+      "eyebrow": "Próbáld ki",
+      "titlePrefix": "Kérdezz valamit.",
+      "titleHl": "Nézd, mit csinál.",
+      "subtitle": "Válassz egy ügyfélkérdést. Balra a chat, jobbra minden, amit Elpino a válasz előtt megtett.",
+      "widgetName": "Elpino",
+      "widgetSubtitle": "AI támogatás",
+      "whatItDid": "Mit tett Elpino",
+      "done": "Kész",
+      "working": "Folyamatban…",
+      "stepStart": "kezdés",
+      "stepOther": "lépés",
+      "person": "ember",
+      "resolved": "megoldva",
+      "humanNote": "Először megkérdezte · egy csapattag csatlakozhat, vagy jegy készül",
+      "resolvedNote": "Megválaszolva és megoldva, nincs szükség emberre",
+      "sampleNote": "Minta válaszok. A megjelenített lépések azok az eszközök, amelyeket Elpino valóban használ.",
+      "qas": [
+        {
+          "q": "Kétszer terheltek meg?",
+          "steps": [
+            "Ellenőrzött téged egy e-mail kóddal",
+            "Ellenőrizte a fizetési előzményeidet"
+          ],
+          "a": "Csak egyszer terheltek meg. A második próbálkozás sikertelen volt, és soha nem lett elszámolva."
+        },
+        {
+          "q": "Hol van a rendelésem?",
+          "steps": [
+            "Ellenőrzött téged egy e-mail kóddal",
+            "Kapcsolatba lépett a bolttal MCP-n keresztül"
+          ],
+          "a": "Tegnap elküldve, csütörtökön érkezik. Küldtem egy nyomkövető linket e-mailben."
+        },
+        {
+          "q": "Hogyan állítom vissza a jelszavamat?",
+          "steps": [
+            "Átkutatta a tudásbázisodat"
+          ],
+          "a": "Válaszd az „Elfelejtett jelszó” lehetőséget a bejelentkezési oldalon, és használd az e-mailben küldött linket."
+        },
+        {
+          "q": "Kaphatok visszatérítést?",
+          "steps": [
+            "Ellenőrizte a fizetést",
+            "A visszatérítés ki van kapcsolva ebben a munkaterületben"
+          ],
+          "a": "Ezt a visszatérítést nem tudom magam elvégezni. Szeretnéd, hogy összekapcsoljalak a csapatunkkal?"
+        },
+        {
+          "q": "Beszélhetek egy emberrel?",
+          "steps": [
+            "Megkérdezte az átadás előtt",
+            "Egyszerre értesítette az egész csapatot"
+          ],
+          "a": "Priya a csapatunktól csatlakozott, és látja az egész beszélgetést."
+        },
+        {
+          "q": "Árusítotok ajándékkártyát?",
+          "steps": [
+            "Átkutatta a tudásbázisodat",
+            "Nem talált egyezést"
+          ],
+          "a": "Nincs meg ez az információ. Szeretnéd, hogy összekapcsoljalak a csapatunkkal?"
+        }
+      ]
+    },
+    "customizer": {
+      "eyebrow": "Tedd magadévá",
+      "titlePrefix": "Egy widget, amely",
+      "titleHl": "úgy néz ki és beszél, mint te.",
+      "subtitle": "Add hozzá a logódat, nevezd el az AI-t, válassz színt és témát, valamint válaszadási nyelvet. Játssz a beállításokkal, és nézd, hogyan változik a widget.",
+      "yourLogo": "A logód",
+      "upload": "Logó feltöltése",
+      "remove": "Eltávolítás",
+      "fileTooBig": "Használj 2 MB alatti képet.",
+      "fileShown": "Csak itt látható. Nem kerül feltöltésre semmilyen szerverre.",
+      "aiName": "AI neve",
+      "greeting": "Köszöntés",
+      "accentColour": "Kiemelő szín",
+      "theme": "Téma",
+      "light": "Világos",
+      "dark": "Sötét",
+      "customerWritesIn": "Az ügyfél nyelve",
+      "theAi": "Az AI",
+      "repliesIn": "válaszol",
+      "autoMatch": "Automatikus: illeszkedik az ügyfélhez",
+      "seesUrl": "Az AI látja az oldal URL-jét",
+      "visitorOn": "A látogató itt van",
+      "replyingIn": "Válaszol",
+      "matched": "(egyeztetve)",
+      "writeMessage": "Írj egy üzenetet…",
+      "previewNote": "Előnézet mintaszöveggel. A valódi widgeted a saját logódat, színeidet és köszöntésedet használja.",
+      "support": "Támogatás",
+      "weReplyFast": "Másodperceken belül válaszolunk"
+    },
+    "tour": {
+      "eyebrow": "Termék",
+      "titlePrefix": "Minden, amire egy támogató csapatnak szüksége van,",
+      "titleHl": "egy helyen.",
+      "items": [
+        {
+          "tag": "AI ügynök",
+          "title": "Egy ügynök, aki tudja, kivel beszél",
+          "desc": "Emlékszik az ügyfelekre, ellenőrzi a személyazonosságot, ellenőrzi a fizetéseket, és meghívja az eszközeidet."
+        },
+        {
+          "tag": "Megosztott postafiók",
+          "title": "Egy postafiók a csapatnak és az AI-nak",
+          "desc": "Tiszta felelősségvállalás, csatlakozási értesítések, és teljes kontextus minden beszélgetéshez."
+        },
+        {
+          "tag": "Tudásbázis",
+          "title": "Taníts meg neki mindent, amit tudsz",
+          "desc": "Szkenneld a weboldaladat, tölts fel fájlokat, írj oldalakat. Nyilvános/privát kapcsolókkal."
+        },
+        {
+          "tag": "Jegyek",
+          "title": "Semmi nem vész el",
+          "desc": "Ha senki nem elérhető, jegy készül, és az ügyfél értesítést kap."
+        }
+      ]
+    },
+    "who": {
+      "eyebrow": "Kinek szól ez",
+      "titlePrefix": "Olyan embereknek készült,",
+      "titleHl": "akik támogatást végeznek.",
+      "items": [
+        {
+          "title": "Alapítók",
+          "desc": "Építsd a terméket, ne a támogatási válaszokat. Elpino csak akkor keres meg, ha valóban szükség van egy alapítóra.",
+          "pts": [
+            "Ingyenes csomag, 100 AI üzenet havonta",
+            "Csak akkor értesít, ha ember szükséges",
+            "Beállítás egy délután alatt"
+          ]
+        },
+        {
+          "title": "Elfoglalt csapatok",
+          "desc": "A csúcsidő kézben tartva: az AI kezeli az ismétléseket, mindenki ugyanazt a csatlakozási értesítést kapja, senki nem válaszol duplán.",
+          "pts": [
+            "Egy értesítés eléri az egész csapatot",
+            "Felelősségi jelvények minden beszélgetésen",
+            "Jegy, ha senki nem elérhető"
+          ]
+        },
+        {
+          "title": "Fejlesztők",
+          "desc": "Egy tag, egy aláírt identitás token és MCP szerverek. Te választod ki, mihez érhet hozzá az AI.",
+          "pts": [
+            "Egy script tag a widgethez",
+            "Aláírt, rövid élettartamú identitás tokenek",
+            "MCP szerverek jóváhagyva eszközönként"
+          ]
+        }
+      ],
+      "founderVisual": [
+        {
+          "q": "Hogyan exportálom az adataimat?",
+          "ok": true
+        },
+        {
+          "q": "Miért nem ment át a kártyám?",
+          "ok": true
+        },
+        {
+          "q": "Egyedi szerződés?",
+          "ok": false
+        }
+      ],
+      "handled": "Kezelve",
+      "needsYou": "Rád van szükség",
+      "joined": "Priya csatlakozott"
+    },
+    "statement": "Elpino azt válaszolja, amit tud, azt teszi, amit engedélyezel, és mindent mást megkérdez egy embertől.",
+    "integrations": {
+      "eyebrow": "Integrációk",
+      "titlePrefix": "Csatlakozik ahhoz, amit",
+      "titleHl": "már használsz.",
+      "subtitle": "Fizetési rendszerek ellenőrzésekhez és linkekhez, projekteszközök jegyekhez, és MCP a saját rendszereidhez. Elpino a középpontban van, és bármi, amit csatlakoztatsz, együttműködik vele.",
+      "tags": [
+        "Fizetések",
+        "Jegyek",
+        "A rendszereid"
+      ],
+      "cta": "Nézd meg az összes integrációt"
+    },
+    "trust": {
+      "eyebrow": "Bizalom",
+      "titlePrefix": "Erőteljes, de",
+      "titleHl": "fékekkel a helyén.",
+      "subtitle": "Ezek azok a szabályok, amelyek szerint Elpino működik. A legtöbb mindig aktív. A pénzt érintő részeket te kapcsolod be.",
+      "cta": "Olvasd el a biztonsági útmutatót",
+      "rulebook": "Elpino szabálykönyve",
+      "setByYou": "Általad beállítva",
+      "guardrailsOn": "Védelmek bekapcsolva",
+      "alwaysOn": "Mindig bekapcsolva",
+      "rules": [
+        {
+          "title": "Csak jóváhagyott tudásból válaszol",
+          "desc": "Ha nincs a tudásbázisodban, megmondja, és felajánl egy embert."
+        },
+        {
+          "title": "Elrejti a neveket és e-maileket az AI elől",
+          "desc": "A modell hivatkozási kódokat lát, nem az ügyfeleid személyazonosságát."
+        },
+        {
+          "title": "Ellenőrzés minden személyes dolog előtt",
+          "desc": "Először egy e-mail kód vagy aláírt token jön."
+        },
+        {
+          "title": "Csak a te által engedélyezett eszközök",
+          "desc": "Minden MCP eszközt egyenként hagysz jóvá."
+        }
+      ],
+      "refundTitle": "Engedd, hogy az AI visszatérítést adjon ki",
+      "refundOn": "Bekapcsolva. Az AI visszatérítést adhat a munkaterület tulajdonosának beállítása szerint.",
+      "refundOff": "Alapesetben kikapcsolva. Csak a munkaterület tulajdonosa kapcsolhatja be."
+    },
+    "pricing": {
+      "eyebrow": "Árazás",
+      "titlePrefix": "Fizess a segítségért,",
+      "titleHl": "ne a fejenkénti díjért.",
+      "subtitle": "Kezdd el ingyen. A fizetős csomagok az AI által elvégzett munka mennyisége szerint méretezettek.",
+      "cta": "Nézd meg az összes árat",
+      "plans": [
+        {
+          "name": "Ingyenes",
+          "big": "$0",
+          "note": "100 AI üzenet havonta",
+          "pts": [
+            "Nincs szükség kártyára",
+            "Widget, tudás és postafiók",
+            "Az átadások soha nem kerülnek extra pénzbe"
+          ]
+        },
+        {
+          "name": "Fizetős csomagok",
+          "big": "Kreditalapú",
+          "note": "Havi AI kredit a volumenedhez igazítva",
+          "pts": [
+            "Fizetési és fiókeszközök",
+            "Hely egy nagyobb csapatnak",
+            "Bármikor feltölthető"
+          ]
+        },
+        {
+          "name": "Extra tagok",
+          "big": "Hely csomagok",
+          "note": "Adj hozzá helyeket, amelyek a csomagoddal együtt megújulnak",
+          "pts": [
+            "Csak amikor növekszel",
+            "Ugyanaz a postafiók, több kéz",
+            "Bármikor lemondható"
+          ]
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Kérdések",
+      "titlePrefix": "Amit az emberek először",
+      "titleHl": "kérdeznek.",
+      "items": [
+        {
+          "q": "Mi az Elpino?",
+          "a": "Egy AI-alapú ügyfélszolgálati platform: egy chat widget a weboldaladon, egy AI ügynök, amely a tudásbázisod alapján válaszol és ellenőrzi a valódi kifizetéseket, egy megosztott csapat postafiók, és jegyek, amikor senki nem elérhető."
+        },
+        {
+          "q": "Fog az AI dolgokat kitalálni?",
+          "a": "A te jóváhagyott tudásod alapján válaszol, és egy ellenőrzési lépés a piszkozatokat az eszközök eredményeivel veti össze. Amikor nem tudja, megmondja, és felajánl egy embert."
+        },
+        {
+          "q": "Mi történik, amikor nem tud segíteni?",
+          "a": "Először megkérdezi az ügyfelet. Igen esetén az egész csapat csatlakozási értesítést kap, és 90 másodperc áll rendelkezésre a reagálásra. Ha senki nem csatlakozik, jegy készül, és az ügyfél e-mailt kap."
+        },
+        {
+          "q": "Mennyi ideig tart a beállítás?",
+          "a": "A legtöbb csapat még aznap élővé válik: adj hozzá tudást, illeszd be a widget kódot, és hívd meg a csapatodat."
+        },
+        {
+          "q": "Van ingyenes csomag?",
+          "a": "Igen: 100 AI üzenet havonta, nincs szükség kártyára."
+        },
+        {
+          "q": "Működik más csatornákon?",
+          "a": "A weboldali chat már működik. Az omnicsatorna novemberben érkezik."
+        }
+      ]
+    },
+    "closing": {
+      "title": "Add meg ügyfeleidnek a választ, mielőtt befejeznék az írást.",
+      "subtitle": "Kezdd el ingyen, taníts meg neki a vállalkozásodat, és hagyd, hogy átvegye az ismétlődő kérdéseket.",
+      "ctaPrimary": "Kezdd el ingyen",
+      "ctaSecondary": "Beszélj velünk"
+    }
+  },
+  "pricing": {
+    "hero": {
+      "badge": "Árazás",
+      "title": "Kezdd ingyen. Növekedj, amikor készen állsz.",
+      "subtitle": "Minden új fiók AI-támogatással, megosztott postafiókkal és emberi átadással kezdődik — nincs szükség kártyára. Fedezd fel az Elpinót a csapatoddal, majd válassz csomagot, amikor többre van szükséged.",
+      "stickerFree": "Örökre ingyenes ✓",
+      "stickerNoCard": "Nincs szükség kártyára",
+      "ctaDashboard": "Ugrás az irányítópultra",
+      "ctaStart": "Kezdd ingyen",
+      "billingPeriodLabel": "Számlázási időszak",
+      "monthly": "Havi",
+      "annually": "Éves"
+    },
+    "planCards": {
+      "mostPopular": "Legnépszerűbb",
+      "save": "spórolj",
+      "freeForever": "Örökre ingyenes",
+      "discussCustomPlan": "vagy beszéljünk egyedi csomagról",
+      "compareAllFeatures": "Minden funkció összehasonlítása",
+      "whatsIncluded": "Mi tartozik bele",
+      "builtForTeam": "Az egész csapatod számára készült",
+      "builtForTeamDesc": "Megosztott tudás, egy postafiók és emberi átadás, amikor szükséges."
+    },
+    "comparison": {
+      "eyebrow": "Csomagösszehasonlítás",
+      "titlePrefix": "Nézd meg, mi ",
+      "titleHl": "illik a csapatodhoz.",
+      "subtitle": "Hasonlítsd össze a kapacitást, a helyeket és a termékhez való hozzáférést az összes csomagban. Válts magasabb csomagra, amikor a támogatási működésednek több helyre van szüksége.",
+      "featuresHeader": "Funkciók",
+      "popular": "Népszerű",
+      "billedAnnually": "évente számlázva",
+      "billedMonthly": "havonta számlázva",
+      "showAll": "Minden funkció megjelenítése",
+      "showFewer": "Kevesebb funkció megjelenítése",
+      "included": "Tartalmazza",
+      "notIncluded": "Nem tartalmazza",
+      "categories": {
+        "aiRules": {
+          "name": "Mit engedélyezett az AI-nak",
+          "rows": {
+            "allowance": {
+              "label": "Havi AI-kvóta",
+              "description": "A Free 100 AI-üzenetre korlátozott. A fizetős csomagok havi dolláregyenleget tartalmaznak, amelyet az AI munka közben felhasznál, az egész munkaterület megosztva."
+            },
+            "whenOut": {
+              "label": "Amikor elfogy a kvóta",
+              "description": "Az AI átadja az új beszélgetéseket a csapatodnak. A fizetős csomagoknál bármikor feltölthetsz egyenleget, vagy bekapcsolhatod az automatikus feltöltést."
+            },
+            "escalations": {
+              "label": "Átadások embernek",
+              "description": "Azok a szálak, amelyeket az AI átad, mert nem tudott magabiztosan válaszolni. Az átadás önmagában soha nem kerül extra pénzbe."
+            }
+          }
+        },
+        "seats": {
+          "name": "Ki tud bejelentkezni",
+          "rows": {
+            "included": {
+              "label": "Tartalmazott helyek",
+              "description": "A csomag árában szereplő csapattagok, beleértve a munkaterület tulajdonosát."
+            },
+            "extra": {
+              "label": "Extra helyek",
+              "description": "Minden csapattag a tartalmazott helyeken túl, bármely csomagon."
+            },
+            "ceiling": {
+              "label": "Helyplafon",
+              "description": "Az a pont, ahol nagyobb csomagra van szükséged egy másik hely helyett."
+            }
+          }
+        },
+        "product": {
+          "name": "A termék",
+          "rows": {
+            "widget": {
+              "label": "Weboldal chat widget",
+              "description": "A beágyazható chat, amivel a látogatóid valóban beszélnek."
+            },
+            "knowledge": {
+              "label": "Tudásbázis és AI-válaszok",
+              "description": "Szkenneld be az oldaladat vagy tölts fel dokumentumokat; az AI ezekből válaszol."
+            },
+            "storage": {
+              "label": "Tudástárolás",
+              "description": "Mennyi szkennelt és feltöltött tartalmat képes tárolni a munkaterület."
+            },
+            "inbox": {
+              "label": "Megosztott postafiók és átadás",
+              "description": "Egy postafiók a csapatnak, AI-átadással, amikor szükséges."
+            },
+            "audit": {
+              "label": "AI auditnyomvonal",
+              "description": "Minden válasz, a cikkekkel és keresésekkel, amelyekből felépült."
+            },
+            "analytics": {
+              "label": "Látogatói elemzés",
+              "description": "Élő látogatók, források, országok és oldalak."
+            },
+            "profiles": {
+              "label": "Ügyfélprofilok és előzmények",
+              "description": "Tárolt ügyféladatok és korábbi beszélgetéseik."
+            },
+            "domain": {
+              "label": "Csatlakoztatott domain",
+              "description": "Egy munkaterület, egy weboldal — másikra van szükséged? indíts egy második munkaterületet."
+            },
+            "support": {
+              "label": "Támogatás",
+              "description": "Hogyan érhetsz el minket, amikor valamihez emberi segítségre van szükség a részünkről."
+            }
+          }
+        }
+      }
+    },
+    "values": {
+      "handsOff": "Átadja egy embernek",
+      "topUpOrHandoff": "Feltöltés vagy átadás",
+      "noExtraCharge": "Nincs extra díj",
+      "noLimit": "Nincs limit",
+      "standard": "Standard",
+      "priority": "Prioritásos",
+      "messages": "üzenet",
+      "credit": "egyenleg",
+      "seatBundleSummary": "3 hely $2, 5 hely $3"
+    },
+    "billing": {
+      "eyebrow": "Átlátható, egyszerű számlázás",
+      "titleLine1": "Fizess azért, amit az AI tesz.",
+      "titleLine2": "Nem az átadásokért.",
+      "subtitle": "A Free havi 100 AI-üzenetet tartalmaz. A fizetős csomagok havi AI-egyenleget tartalmaznak, amely a lehető legtöbb beszélgetést fedezi, így egy gyors kérdés kevesebbet kerül, mint egy hosszú oda-vissza váltás. A beszélgetés átadása a csapatodnak mindig ingyenes.",
+      "creditCard": {
+        "label": "Havi AI-egyenleg",
+        "amount": "$7-tól",
+        "note": "havonta a Starterben",
+        "chatsUseCredit": "a csevegések egyenleget használnak",
+        "refillsMonthly": "havonta feltöltődik",
+        "desc": "A Starter $7, a Growth $40, a Scale $240 AI-egyenleget tartalmaz havonta. Több kell? Töltsd fel bármikor, vagy kapcsold be az automatikus feltöltést.",
+        "cta": "Csomagok összehasonlítása"
+      },
+      "handoffCard": {
+        "stamp": "Átadás = ingyenes",
+        "label": "Extra díj átadásonként",
+        "note": "Minden csomagon. Mindig."
+      },
+      "inboxCard": {
+        "title": "Az AI-od és a csapatod, egy postafiókban.",
+        "desc": "Az AI a tudásodból válaszol. Amikor emberre van szükség, a csapatod folytatja a már látható teljes beszélgetéssel.",
+        "cta": "Fedezd fel, hogyan működik"
+      }
+    },
+    "capacity": {
+      "eyebrow": "Kapacitás hozzáadása",
+      "title": "Növekedj anélkül, hogy megváltoztatnád a munkamódodat.",
+      "subtitle": "Csak akkor adj hozzá embereket vagy AI-kapacitást, amikor szükséged van rá. A postafiókod, tudásod és beszélgetési előzményeid pontosan ott maradnak, ahol vannak.",
+      "teammatesTitle": "További csapattagok",
+      "teammatesDesc": "Adj több embernek saját bejelentkezést, amíg megosztják ugyanazt a postafiókot, tudást és AI-egyenleget. Havonta a csomagodon maradnak, amíg el nem távolítod őket.",
+      "perMonth": "havonta",
+      "seatsWord": "hely",
+      "topUpAnytime": "Töltsd fel bármikor",
+      "onAnyPaidPlan": "bármely fizetős csomagon",
+      "creditTitle": "További AI-egyenleg",
+      "creditDesc": "Tartsd az AI-t válaszadásban a havi egyenleg felhasználása után is. A beszélgetés átadása a csapatodnak soha nem kerül extra pénzbe.",
+      "creditCards": [
+        {
+          "name": "Havi egyenleg",
+          "note": "Havonta visszaáll"
+        },
+        {
+          "name": "Feltöltések",
+          "note": "Soha nem járnak le"
+        },
+        {
+          "name": "Automatikus feltöltés",
+          "note": "Opcionális"
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Kérdések",
+      "title": "Árazási kérdések",
+      "subtitle": "A leggyakrabban kérdezett számlázási részletek. A beállítás, az AI, az integrációk és a biztonság a teljes GYIK-ben található.",
+      "readFull": "Olvasd el a teljes GYIK-et",
+      "items": [
+        {
+          "q": "Mennyibe kerülnek a csomagok?",
+          "a": "A Free $0. A havi csomagok: Starter $12, havi $7 AI-egyenleggel, Growth $59, $40-nel, és Scale $299, $240-nel. Az éves számlázásnál két hónap ingyenes — tíz hónapért fizetsz, tizenkettőt kapsz: a Starter $120 évente ($10/hó), a Growth $590 ($49.17/hó), a Scale $2 990 ($249.17/hó)."
+        },
+        {
+          "q": "Hogyan működik az AI-kvóta?",
+          "a": "A Free havi 100 AI-üzenetet tartalmaz. Minden válasz, amelyet az AI küld, egy üzenetnek számít, így egy rövid csevegés kevesebbet, egy hosszú oda-vissza váltás pedig többet használ. A fizetős csomagok másképp működnek: havi AI-egyenleget tartalmaznak, amelyet az AI munka közben felhasznál, így egy gyors kérdés kevesebbet használ, mint egy hosszú oda-vissza váltás. A Starter havi $7 egyenleget, a Growth $40-et, a Scale $240-et tartalmaz."
+        },
+        {
+          "q": "Az átadások kerülnek valamibe?",
+          "a": "Nincs extra díj. Az átadás önmagában minden csomagon ingyenes, és az AI leáll azonnal, amint egy ember átveszi. A Free-nél az átadás előtt már elküldött AI-üzenetek továbbra is beleszámítanak a 100-ba; a fizetős csomagoknál az AI csak válaszadás közben használ egyenleget, és leáll az egyenleg használatával, amint egy ember átveszi."
+        },
+        {
+          "q": "Tud az AI visszatérítést kiadni?",
+          "a": "Csak akkor, ha a munkaterület tulajdonosa engedélyezi a visszatérítéseket. Alapértelmezetten kikapcsolva vannak. Még kikapcsolt visszatérítésekkel is az AI ellenőrizheti a fizetést, és felajánlhatja, hogy összekapcsolja az ügyfelet a csapatoddal."
+        },
+        {
+          "q": "Mi történik, ha felhasználom az AI-kvótámat?",
+          "a": "Az AI válaszadás helyett közvetlenül a csapatodnak adja át az új beszélgetéseket. Fizetős csomagon bármikor feltöltheted az egyenleget, vagy bekapcsolhatod az automatikus feltöltést, hogy soha ne álljon meg. A feltöltések soha nem járnak le. A havi egyenleged minden számlázási időszakban visszaáll."
+        },
+        {
+          "q": "Mennyibe kerül egy extra csapattag?",
+          "a": "Az extra helyek csomagokban érkeznek minden csomagon, beleértve a Free-t is: 3 hely havi $2-ért, vagy 5 hely $3-ért. A helyek és az AI-egyenleg teljesen külön kerülnek számlázásra — egy csapattag hozzáadása soha nem érinti az AI-kvótádat."
+        },
+        {
+          "q": "Bármikor lemondhatom?",
+          "a": "Igen, a Beállítások → Számlázás menüből, kötelezettség nélkül. A lemondás a jelenlegi számlázási időszak végén lép hatályba, így addig megtartod, amiért fizettél."
+        },
+        {
+          "q": "Mi történik, ha leállítom a fizetést?",
+          "a": "A munkaterület a Free csomagra esik vissza az időszak végén. A tudásbázisod, a beszélgetési előzményeid és a beállításaid teljesen érintetlenek maradnak."
+        }
+      ]
+    },
+    "enterprise": {
+      "badge": "Enterprise",
+      "title": "Támogatás, amely veled együtt növekszik.",
+      "subtitle": "Olyan szervezeteknek, amelyek több ügyfelet támogatnak több weboldalon és csapatban. Találjuk meg a megfelelő kapacitást a támogatásodhoz.",
+      "features": [
+        "AI-egyenleg jóval a Scale csomagon túl",
+        "Több weboldal és növekvő csapatok",
+        "Megosztott ügyfélkontextus és tudás",
+        "Az igényeidhez szabott volumenárazás"
+      ],
+      "talkTitle": "Beszéljünk",
+      "customPricing": "Egyedi árazás elérhető",
+      "contactCta": "Kapcsolatfelvétel az értékesítéssel",
+      "talkPoints": [
+        "Beszéljünk a beszélgetési volumenedről",
+        "Tervezd meg a munkaterületedet és a helyeket",
+        "Határozd meg a tudás hatókörét a weboldalak között",
+        "Fedezd fel a bevezetési és SLA igényeket"
+      ]
+    },
+    "plans": {
+      "free": {
+        "name": "Free",
+        "description": "Olyan alapítónak, aki maga válaszol saját támogatására. Valódi AI, nincs kártya.",
+        "cta": "Kezdés",
+        "features": [
+          "Havi 100 AI-üzenetig",
+          "2 hely tartalmazva",
+          "Helypaketek $0.60/helytől",
+          "20 MB tudásbázis",
+          "Weboldal chat widget",
+          "Megosztott postafiók átadással"
+        ]
+      },
+      "starter": {
+        "name": "Starter",
+        "description": "Kis csapatnak, amelynek támogatása kinőtt egy postafiókból.",
+        "cta": "Kezdés",
+        "features": [
+          "$7 AI-egyenleg havonta",
+          "5 hely tartalmazva",
+          "Helypaketek $0.60/helytől",
+          "200 MB tudásbázis",
+          "Töltsd fel az egyenleget bármikor",
+          "Látogatói elemzés"
+        ]
+      },
+      "growth": {
+        "name": "Growth",
+        "description": "Csapatoknak, amelyek valódi funkcióként üzemeltetik a támogatást, adatokkal bizonyítva.",
+        "cta": "Kezdés",
+        "features": [
+          "$40 AI-egyenleg havonta",
+          "15 hely tartalmazva",
+          "Helypaketek $0.60/helytől",
+          "1 GB tudásbázis",
+          "Töltsd fel az egyenleget bármikor",
+          "Teljes AI auditnyomvonal",
+          "Prioritásos támogatás"
+        ]
+      },
+      "scale": {
+        "name": "Scale",
+        "description": "Nagy volumenű támogatáshoz, ahol az AI viseli a terhelés nagy részét.",
+        "cta": "Kezdés",
+        "features": [
+          "$240 AI-egyenleg havonta",
+          "40 hely tartalmazva",
+          "Helypaketek $0.60/helytől",
+          "5 GB tudásbázis",
+          "Töltsd fel az egyenleget bármikor",
+          "Integrációk és API-hozzáférés"
+        ]
+      }
+    }
+  },
+  "about": {
+    "typingLabel": "Elpino ír",
+    "hero": {
+      "badge": "Az Elpinóról",
+      "titlePrefix": "Ügyfélszolgálat, ",
+      "titleHl": "emberibbé téve.",
+      "subtitle": "Az Elpino hasznos válaszokat ad az ügyfeleknek a már meglévő tudásodból, majd közel tartja a csapatodat azokban a pillanatokban, amikor emberre van szükség.",
+      "ctaMeet": "Ismerd meg az Elpinót",
+      "ctaReadStory": "Olvasd el a történetünket ↓",
+      "imageAlt": "Négy Elpino lajhár együtt dolgozik az ügyfelek támogatásán",
+      "bubble": "Szia, miben segíthetünk? 👋"
+    },
+    "story": {
+      "eyebrow": "Ahol elkezdődött",
+      "titlePrefix": "A történetünk egy ",
+      "titleHl": "kérdéssel kezdődik.",
+      "subtitle": "Mi lenne, ha az ügyfélszolgálati szoftver a beszélgetés mindkét oldalának segítene—nem csak a vállalatnak, amely kezeli?",
+      "chatTitle": "Elpino",
+      "chatSub": "Elmeséli történetünket",
+      "sys1": "Ahol elkezdődött",
+      "you1": "Mi lenne, ha az ügyfélszolgálati szoftver a beszélgetés mindkét oldalának segítene, nem csak a vállalatnak, amely kezeli?",
+      "elpino1": "Senki sem nyit meg egy support chatet szórakozásból.",
+      "elpino2": "Valaki próbál elintézni valamit. Valami az útjába állt. Világos választ akar, és vissza akar térni a napjához.",
+      "elpino3": "A másik oldalon egy csapat van, amely ismerős kérdéseket, széttagolt információt, és több beszélgetést kezel, mint amennyi ideje van rá. Az Elpino azért létezik, hogy ezt a pillanatot mindenki számára egyszerűbbé tegye.",
+      "sys2": "Így néz ki",
+      "you2": "Megváltoztathatom a fiókom e-mail címét?",
+      "aiLabel": "Elpino AI · a te tudásodból",
+      "aiAnswer": "Igen. Nyisd meg a Beállításokat, válaszd a Profilt, majd frissítsd a kapcsolattartási e-mailedet.",
+      "aiGuideLabel": "Fiókbeállítási útmutató",
+      "sys3": "Egy csapattárs mindig közel van, ha szükség van rá"
+    },
+    "roles": {
+      "eyebrow": "A szerepeink",
+      "titlePrefix": "Egy csapat, amelyet erre a ",
+      "titleHl": "munkára építettünk.",
+      "subtitle": "Itt nincsenek alkalmazotti fotók. Helyette ismerd meg azokat a feladatokat, amelyeket az Elpino elvégez—állandóan, körültekintően, és egy emberi csapattal, amely mindig figyel.",
+      "joinedChat": "{name} csatlakozott a chathez",
+      "items": [
+        {
+          "title": "A Hallgató",
+          "task": "Megérti minden ügyfélkérdést",
+          "description": "A csapatod már meglévő tudását tiszta, hasznos első válasszá alakítja."
+        },
+        {
+          "title": "A Rendszerező",
+          "task": "Mozgásban tartja a postafiókot",
+          "description": "Megtalálja a jelet a sorban, hogy a megfelelő beszélgetések a megfelelő figyelmet kapják."
+        },
+        {
+          "title": "A Védő",
+          "task": "Tudja, mikor kell bevonni egy embert",
+          "description": "Gondosan kezeli a rutinmunkát, és átadja azokat a pillanatokat, amelyek emberi ítéletet igényelnek."
+        },
+        {
+          "title": "A Fejlesztő",
+          "task": "Megtanulja, mi segít legjobban az ügyfeleknek",
+          "description": "Feltárja azokat a hiányosságokat, mintákat és kérdéseket, amelyek idővel javítják a támogatásodat."
+        }
+      ]
+    },
+    "remote": {
+      "eyebrow": "Távmunkában épült",
+      "titlePrefix": "Az első naptól ",
+      "titleHl": "távmunkában dolgozunk.",
+      "subtitle": "Tiszta írás, közös kontextus, és fókuszált idő révén dolgozunk. Az, hogy ki hol dolgozik, kevésbé fontos, mint a törődés és az ítélet, amit a termékbe visz.",
+      "cta": "Nézd meg a nyitott állásokat",
+      "badge": "Távmunkában az első naptól",
+      "imageAlt": "Egy elosztott csapat közösen dolgozik megosztott AI-támogatási eszközökkel"
+    },
+    "team": {
+      "eyebrow": "Egy kis csapat, egyelőre",
+      "titleLine1": "Fókusszal épült.",
+      "titleLine2Prefix": "Veled közösen ",
+      "titleHl": "alakítva.",
+      "subtitle": "Az Elpino korai szakaszban van. Ez azt jelenti, hogy azok az emberek, akik használják, még befolyásolhatják, mivé válik. Alaposan figyelünk, körültekintően adunk ki, és az ügyfél problémáját tartjuk a középpontban.",
+      "cta": "Beszélj velünk",
+      "card1": "Alaposan figyelni.",
+      "card2": "Tisztán építeni.",
+      "card3": "A támogatást mindenki számára egyszerűbbé tenni."
+    },
+    "faqSection": {
+      "eyebrow": "Egy kicsit többet rólunk",
+      "titlePrefix": "Örülünk, hogy ",
+      "titleHl": "megkérdezted.",
+      "subtitle": "Néhány válasz, mielőtt elkezdenéd saját beszélgetésedet. Koppints egy kérdésre alább, és az Elpino válaszol.",
+      "exploreLink": "Fedezd fel a teljes GYIK-et →"
+    },
+    "faqChat": {
+      "title": "Kérdezd az Elpinót",
+      "sub": "Online · azonnal válaszol",
+      "gladYouAsked": "Örülünk, hogy megkérdezted",
+      "tapQuestion": "Koppints egy kérdésre",
+      "doneText": "Ez minden egyelőre. Szeretnéd folytatni?",
+      "exploreFull": "Fedezd fel a teljes GYIK-et"
+    },
+    "faqs": [
+      [
+        "Mi az Elpino?",
+        "Az Elpino egy AI-alapú ügyfélszolgálati platform, egy weboldalas chat widgettel, a tudásbázisodból származó válaszokkal, egy megosztott csapat postafiókkal, és emberi átadással, amikor az AI nem tud segíteni."
+      ],
+      [
+        "Az Elpino kiváltja a support csapatomat?",
+        "Az Elpino a te tudásodból kezeli a mindennapi kérdéseket, és bevonja a csapatodat, amikor egy beszélgetéshez emberre van szükség. A csapatod továbbra is része a támogatási élménynek."
+      ],
+      [
+        "Hogyan kezdhetem el?",
+        "Kezdd az ingyenes csomaggal, amely havi 100 AI üzenetet tartalmaz, kártya nélkül. Add hozzá a tudásodat, csatlakoztasd a weboldaladat, és vond be a csapattársaidat."
+      ],
+      [
+        "Hogyan épül fel az árazás?",
+        "A Free havi 100 AI üzenetet tartalmaz, a fizetős csomagok havi AI egyenleget tartalmaznak. A további csapattagok $0.60/helytől kezdődő helypaketekben érkeznek, és egy beszélgetés emberhez való átadása soha nem kerül extra pénzbe. Az árazási oldal elmagyarázza a tartalmazott helyeket és az ingyenes csomag minimum díját."
+      ]
+    ],
+    "closing": {
+      "titleLine1": "Még sok mindent kell megépíteni.",
+      "titleLine2": "Gyere, és alakítsd, mi jön legközelebb.",
+      "ctaTry": "Próbáld ki az Elpinót",
+      "ctaCareers": "Nézd meg a nyitott állásokat"
+    }
+  },
+  "helpdesk": {
+    "hero": {
+      "badge": "Elpino ügyfélszolgálat",
+      "titlePrefix": "Támogatás, amely ",
+      "titleHl": "önmagát válaszolja meg.",
+      "subtitle": "Egy asztal egy AI-nak, amely megold, egy csapatnak, amely csatlakozik, amikor fontos, és jegyeknek, amelyek soha nem csúsznak ki. Nézd meg, hogyan válaszol egy kérdésre.",
+      "ctaStart": "Kezdd ingyen",
+      "ctaFeatures": "Nézd meg az összes funkciót"
+    },
+    "prompt": {
+      "customerLabel": "Ügyfél",
+      "listening": "Elpino figyel…",
+      "asks": [
+        {
+          "q": "Kétszer terheltek meg a frissítésért?",
+          "steps": [
+            "Ellenőrizte a fizetési előzményeidet",
+            "Talált egy terhelést és egy sikertelen próbálkozást"
+          ],
+          "a": "Csak egyszer terheltek meg. A második próbálkozás sikertelen volt, és soha nem lett elszámolva."
+        },
+        {
+          "q": "Hol van a #4821 rendelésem?",
+          "steps": [
+            "Ellenőrzött téged egy e-mail kóddal",
+            "Megkereste a rendelést a boltodban"
+          ],
+          "a": "Tegnap elküldve, csütörtökön érkezik. Nyomkövető link elküldve."
+        },
+        {
+          "q": "Beszélhetek valakivel a számlázásról?",
+          "steps": [
+            "Semmilyen eszköz nem tudja megváltoztatni a számlázási adatokat",
+            "Először megkérdezte téged, majd figyelmeztette a csapatot"
+          ],
+          "a": "Priya a csapatunktól most csatlakozott ehhez a chathez."
+        }
+      ]
+    },
+    "marquee": {
+      "ariaLabel": "Mi van az asztalon",
+      "words": [
+        "AI ügynök",
+        "Megosztott postafiók",
+        "Jegyek",
+        "Tudás",
+        "Fizetések",
+        "MCP eszközök",
+        "Csatlakozási értesítések",
+        "Ellenőrzött identitás",
+        "Omnicsatorna · november"
+      ]
+    },
+    "story": {
+      "eyebrow": "Egy beszélgetés",
+      "titlePrefix": "Nézd meg, hogyan halad egy kérdés ",
+      "titleHl": "át az asztalon.",
+      "stepLabel": "{n}. lépés / 05",
+      "chapters": [
+        {
+          "title": "Egy ügyfél ír",
+          "body": "Az oldaladon lévő chat widgetből, már csatolt helyzettel, eszközzel és azzal az oldallal, amelyen éppen tartózkodik."
+        },
+        {
+          "title": "Az AI elvégzi a munkát",
+          "body": "A tudásodból válaszol, emlékszik az ügyfélre, ellenőrzi, ki ő, és a fizetéseidet és MCP eszközeidet használja, hogy tényleg megoldja a dolgokat."
+        },
+        {
+          "title": "A csapatod egy koppintással csatlakozik",
+          "body": "Csak amikor nem tud segíteni, és csak az ügyfél megkérdezése után. Mindenki kap egy csatlakozási értesítést, és az első, aki koppint, veszi át a chatet."
+        },
+        {
+          "title": "Semmi nem marad el",
+          "body": "Ha 90 másodpercen belül senki nem elérhető, egy jegy készül az okkal és egy összefoglalóval, és az ügyfél e-mailben kap egy hivatkozási számot."
+        },
+        {
+          "title": "Egyszer megtanítod neki",
+          "body": "Add hozzá, amit hiányzott, a tudásbázisodhoz. Legközelebb az AI egyszerűen tudni fogja."
+        }
+      ],
+      "visuals": {
+        "ask": {
+          "bubble": "Szia, nem találom a múlt havi számlámat.",
+          "chips": [
+            "Pune, India",
+            "Chrome · macOS",
+            "A /billing oldalon"
+          ]
+        },
+        "ai": {
+          "rows": [
+            [
+              "search_knowledge",
+              "1 egyezés"
+            ],
+            [
+              "send_email_code",
+              "ellenőrzött"
+            ],
+            [
+              "get_receipt",
+              "megtalálva · elküldve"
+            ]
+          ],
+          "bubble": "Itt a számlád. E-mailben is küldtem egy másolatot."
+        },
+        "team": {
+          "title": "Az új chat egy embert igényel",
+          "sub": "Értesítés elküldve 4 csapattagnak",
+          "join": "Csatlakozás",
+          "note": "Az első koppintó veszi át. Az értesítés eltűnik a többiek számára."
+        },
+        "ticket": {
+          "label": "Jegy",
+          "title": "Támogatási eszkaláció · Aisha Khan",
+          "reason": "Ok: a számlázási ország megváltozása embert igényel.",
+          "chips": [
+            "Problémák oldala",
+            "Ügyfél e-mailben értesítve"
+          ]
+        },
+        "learn": {
+          "title": "Számlák és nyugták útmutatója",
+          "added": "Hozzáadva",
+          "note": "A következő ügyfél azonnal megkapja ezt a választ."
+        }
+      }
+    },
+    "bento": {
+      "eyebrow": "A motorháztető alatt",
+      "titlePrefix": "Kis részletek, ",
+      "titleHl": "rendesen elvégezve.",
+      "subtitle": "Amit ellenőriznél, mielőtt az ügyfeleidet egy AI-ra bíznád.",
+      "redact": {
+        "prefix": "Szia, én vagyok",
+        "middle": "érj el itt:"
+      },
+      "privacy": {
+        "title": "A modell soha nem lát neveket vagy e-maileket.",
+        "desc": "A személyazonosságok referenciakódokra cserélődnek, mielőtt az AI elolvasná a beszélgetést, és a titkokat eltávolítják."
+      },
+      "languages": {
+        "title": "Az ügyfeled nyelvén válaszol",
+        "note": "A válasz nyelvét a beállításokban választod ki."
+      },
+      "verified": {
+        "title": "Ellenőrzött, mielőtt cselekszik",
+        "note": "Egyszer használatos e-mail kód vagy aláírt token az appodból."
+      },
+      "tools": {
+        "title": "A te eszközeid, a te szabályaid",
+        "rows": [
+          [
+            "get_order",
+            true
+          ],
+          [
+            "track_shipment",
+            true
+          ],
+          [
+            "delete_customer",
+            false
+          ]
+        ]
+      },
+      "handoff": {
+        "title": "Kérdez, mielőtt átadja",
+        "ask": "Ezt nem tudom magam megváltoztatni. Összekapcsoljalak a csapatunkkal?",
+        "reply": "Igen, kérlek"
+      }
+    },
+    "statement": "Az Elpino azt válaszolja, amit tud, azt teszi, amit engedélyezel, és mindent mást megkérdez egy embertől.",
+    "start": {
+      "eyebrow": "Kezdés",
+      "titlePrefix": "Élőben ",
+      "titleHl": "egy délután alatt.",
+      "note": "A weboldali chat már ma is élő. Az omnicsatorna novemberben érkezik.",
+      "steps": [
+        {
+          "title": "Regisztrálj ingyen",
+          "desc": "Havi 100 AI üzenet. Nincs kártya."
+        },
+        {
+          "title": "Tanítsd meg neki",
+          "desc": "Add hozzá az oldaladat, fájlokat, vagy írj oldalakat."
+        },
+        {
+          "title": "Illeszd be a kódot",
+          "desc": "A widget megjelenik az oldaladon."
+        },
+        {
+          "title": "Hívd meg a csapatodat",
+          "desc": "Hogy készen álljanak, amikor szükség van rájuk."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Kérdések",
+      "titlePrefix": "Jó ",
+      "titleHl": "tudni.",
+      "items": [
+        [
+          "Mi az Elpino ügyfélszolgálat?",
+          "A teljes támogatási munkaterület: egy chat widget, egy AI ügynök, egy megosztott postafiók, jegyek és egy tudásbázis, amelyek együtt működnek."
+        ],
+        [
+          "Meg kell tartanom a régi ügyfélszolgálatomat?",
+          "Nem. Az Elpino lefedi a chatet, az AI ügynököt, a megosztott postafiókot és a jegyeket. A jegyek továbbra is elküldhetők Trello-ba vagy Asana-ba, ha a csapatod ott dolgozik."
+        ],
+        [
+          "Van ingyenes csomag?",
+          "Igen: havi 100 AI üzenet, nincs szükség kártyára."
+        ],
+        [
+          "Milyen csatornákat támogat?",
+          "A weboldali chat már ma is élő. Az omnicsatorna novemberben érkezik."
+        ],
+        [
+          "A csapatom is használhatja?",
+          "Igen. Hívd meg a csapattagjaidat, adj hozzá helyeket, amikor növekszel, és csatlakozási értesítéseket kapnak, amikor egy ügyfélnek emberre van szüksége."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Adj a ügyfeleidnek választ, mielőtt befejeznék az írást.",
+      "ctaStart": "Kezdd ingyen",
+      "ctaFeatures": "Összes funkció"
+    }
+  },
+  "nav": {
+    "startFreeTrial": "Ingyenes próba indítása",
+    "groups": {
+      "product": "Termék",
+      "solutions": "Megoldások",
+      "resources": "Erőforrások"
+    },
+    "sections": {
+      "getStarted": "Kezdés",
+      "capabilities": "Képességek",
+      "platform": "Platform",
+      "whoItIsFor": "Kinek szól",
+      "learningGuides": "Tanulás és útmutatók",
+      "trustLegal": "Bizalom és jogi",
+      "community": "Közösség",
+      "company": "Vállalat"
+    },
+    "items": {
+      "Elpino helpdesk": "Elpino ügyfélszolgálat",
+      "Elpino AI Agent": "Elpino AI ügynök",
+      "Inbox": "Postafiók",
+      "Tickets": "Jegyek",
+      "Knowledge Hub": "Tudáscentrum",
+      "Integrations": "Integrációk",
+      "Safety & security": "Biztonság",
+      "All features": "Összes funkció",
+      "For Founders": "Alapítóknak",
+      "For Busy Teams": "Elfoglalt csapatoknak",
+      "For Developers": "Fejlesztőknek",
+      "See Pricing": "Árak megtekintése",
+      "Talk to Us": "Beszéljünk",
+      "Documentation": "Dokumentáció",
+      "Help & FAQ": "Súgó és GYIK",
+      "Trust Center": "Bizalmi központ",
+      "Privacy Policy": "Adatvédelmi szabályzat",
+      "Terms of Service": "Szolgáltatási feltételek",
+      "Blog": "Blog",
+      "Changelog": "Változásnapló",
+      "Brand Kit": "Márkakészlet",
+      "About Us": "Rólunk",
+      "Careers": "Karrier",
+      "Contact Sales": "Kapcsolatfelvétel az értékesítéssel"
+    },
+    "megaMenu": {
+      "explore": "Fedezd fel",
+      "seePricing": "Árak megtekintése",
+      "seePricingNote": "Kezdd ingyen. Fizess, amikor a csapatod növekszik.",
+      "freshFromBlog": "Friss a blogból"
+    },
+    "featured": {
+      "product": {
+        "title": "Az AI az első. Az ember, amikor számít.",
+        "text": "Az Elpino a tudásodból válaszol, majd a teljes történettel átadja a chatet egy csapattagnak.",
+        "cta": "Ismerd meg az AI ügynököt"
+      },
+      "solutions": {
+        "title": "A munkamódodhoz készült",
+        "text": "Alapítók, üzletek és elfoglalt csapatok mindegyike megkapja a hozzájuk illő beállítást, egy délután alatt élesben.",
+        "cta": "Találd meg, mi illik hozzád"
+      },
+      "resources": {
+        "title": "Élőben három lépésben",
+        "text": "Illessz be egy sort, tanítsd meg neki a dokumentumaidat, kapcsold be. Az útmutatók minden lépésnél segítenek.",
+        "cta": "Nyisd meg a dokumentációt"
+      }
+    },
+    "pricing": "Árak",
+    "contactSales": "Kapcsolatfelvétel az értékesítéssel",
+    "login": "Bejelentkezés",
+    "goToDashboard": "Ugrás az irányítópultra",
+    "getStarted": "Kezdés"
+  },
+  "footer": {
+    "ticker": [
+      "AI-válaszok a saját tudásodból",
+      "Emberi átadás, mindig ingyenes",
+      "100 ingyenes AI üzenet",
+      "Egy megosztott postafiók",
+      "Élőben egy délután alatt"
+    ],
+    "cta": {
+      "badge": "Készen állunk, amikor te is",
+      "title": "Adj minden ügyfélnek hasznos választ.",
+      "subtitle": "Kezdd ingyen AI-támogatással, megosztott postafiókkal és emberi átadással. Nincs szükség kártyára.",
+      "ctaStart": "Kezdd ingyen",
+      "ctaPricing": "Árak megtekintése"
+    },
+    "description": "Az Elpino segít a csapatoknak, hogy a saját tudásukra épülő AI-val válaszoljanak az ügyfeleknek, majd szükség esetén átadják a beszélgetéseket egy embernek.",
+    "blog": "Blog",
+    "contact": "Kapcsolat",
+    "copyright": "© {year} Elpino Inc. Minden jog fenntartva.",
+    "privacy": "Adatvédelmi szabályzat",
+    "terms": "Szolgáltatási feltételek",
+    "security": "Biztonság"
+  },
+  "aiAgent": {
+    "hero": {
+      "badge": "AI ügynök",
+      "titlePrefix": "Ismerd meg legújabb ",
+      "titleHl": "támogatási munkatársadat.",
+      "subtitle": "Az Elpino az első naptól kezdve már ismeri a vállalkozásodat. Emlékszik minden ügyfélre, ellenőrzi, ki ő, mielőtt cselekedne, MCP-n keresztül dolgozik a fizetési és rendelési rendszereiddel, és mindig megkérdez, mielőtt átadna egy chatet a csapatodnak.",
+      "ctaHire": "Vedd fel az Elpinót, ingyen",
+      "ctaFeatures": "Nézd meg az összes funkciót"
+    },
+    "badge": {
+      "staffLabel": "Elpino · Munkatárs",
+      "subtitle": "AI ügyfélszolgálati ügynök",
+      "skills": [
+        "Válaszol a dokumentumaidból",
+        "Ellenőrzi az identitást",
+        "Ellenőrzi a fizetéseket",
+        "Használja az MCP eszközeidet",
+        "Kérdez átadás előtt"
+      ],
+      "startDateLabel": "Kezdés dátuma",
+      "startDateValue": "Ma",
+      "clearanceLabel": "Hozzáférési szint",
+      "clearanceValue": "Te döntöd el",
+      "barcodeNote": "EL-0001 · Soha nem lép ki"
+    },
+    "trace": {
+      "aiAgentLabel": "AI ügynök",
+      "customerMsg": "Szia, hol van a #4821 rendelésem?",
+      "agentReply": "Jó hírem van, Aisha rendelését tegnap elküldték, és csütörtökön érkezik meg. Egyben elküldtem a nyomkövető linket is e-mailben.",
+      "whatAgentDoing": "Mit csinál az ügynök",
+      "resolved": "Megoldva",
+      "working": "Dolgozik",
+      "idle": "Tétlen",
+      "waiting": "Ügyfélüzenetre vár…",
+      "steps": [
+        {
+          "kind": "route",
+          "text": "router → támogatási szakértő"
+        },
+        {
+          "kind": "tool",
+          "text": "recall_conversation(“rendelés 4821”)",
+          "result": "2 korábbi üzenet"
+        },
+        {
+          "kind": "tool",
+          "text": "get_past_conversations",
+          "result": "1 megoldott chat múlt hónapban"
+        },
+        {
+          "kind": "verify",
+          "text": "send_email_code → check_email_code",
+          "result": "identitás ellenőrizve"
+        },
+        {
+          "kind": "mcp",
+          "text": "mcp_shop__get_order(“4821”)",
+          "result": "elküldve · csütörtökön érkezik"
+        },
+        {
+          "kind": "review",
+          "text": "felülvizsgálat",
+          "result": "az adatok egyeznek az eszközök eredményeivel"
+        },
+        {
+          "kind": "done",
+          "text": "válasz elküldve · mark_resolved"
+        }
+      ]
+    },
+    "watchIt": {
+      "eyebrow": "Első feladat",
+      "titlePrefix": "Nézd meg, hogyan kezel ",
+      "titleHl": "egy valódi kérést.",
+      "subtitle": "Egy ügyfél megkérdezi, hol van a rendelése. Jobbra mindent láthatsz, amit az ügynök tesz, mielőtt válaszolna.",
+      "note": "Minta beszélgetés. A megjelenített eszköznevek azok, amelyeket az ügynök valóban meghív."
+    },
+    "onboard": {
+      "eyebrow": "Bevezetés",
+      "titlePrefix": "Hat lépés az ",
+      "titleHl": "első napig.",
+      "subtitle": "Jelöld meg őket. Nincs betanítási időszak, és mindegyik egy olyan beállítás, amit te irányítasz.",
+      "readyBadge": "Készen áll a munkára!",
+      "items": [
+        {
+          "t": "Tanítsd meg neki a weboldaladat és fájljaidat",
+          "d": "Fésüld át az oldalakat, tölts fel dokumentumokat, írj saját tartalmat.",
+          "href": "/product/knowledge-hub"
+        },
+        {
+          "t": "Illeszd be a widget kódrészletét",
+          "d": "Egy sor, és a chat megjelenik az oldaladon."
+        },
+        {
+          "t": "Kapcsold be a Stripe-ot vagy a Razorpay-t",
+          "d": "Hogy ellenőrizhesse a fizetéseket és előfizetéseket."
+        },
+        {
+          "t": "Csatlakoztasd az MCP eszközeidet",
+          "d": "Csak azokat az eszközöket engedélyezd, amelyeket használhat."
+        },
+        {
+          "t": "Dönts a visszatérítésekről",
+          "d": "Kikapcsolva vannak, amíg be nem kapcsolod."
+        },
+        {
+          "t": "Hívd meg a csapatodat",
+          "d": "Hogy az emberek készen álljanak, amikor kéri őket.",
+          "href": "/product/inbox"
+        }
+      ]
+    },
+    "customerFile": {
+      "eyebrow": "Az ügyfeled megismerése",
+      "titlePrefix": "Az esettanulmánya ",
+      "titleHl": "minden ügyfélről.",
+      "subtitle": "Mielőtt válaszol, az ügynök egy esettanulmányt épít a segítségre szoruló emberről. Koppints egy forrásra, hogy lásd, mit ad hozzá.",
+      "sourcesLabel": "Ügyfél esettanulmány · {n} / {total} forrás",
+      "sampleNote": "Minta adatok. A valóságban az AI hivatkozási kódokat lát az ügyfél neve és e-mailje helyett.",
+      "sources": [
+        {
+          "key": "conv",
+          "title": "Ez a beszélgetés",
+          "how": "Emlékszik arra, mi lett elmondva, és visszanézhet a szükséges részletekre, akár egy hosszú chatben is.",
+          "rows": [
+            [
+              "Kérdezett róla",
+              "Rendelés #4821"
+            ],
+            [
+              "Szeretné",
+              "Szállítási dátum"
+            ]
+          ]
+        },
+        {
+          "key": "hist",
+          "title": "Korábbi beszélgetések",
+          "how": "Ismeri a korábbi chateket ugyanazzal a személlyel, így soha nem ismétli önmagát.",
+          "rows": [
+            [
+              "Utolsó chat",
+              "Bejelentkezési probléma, megoldva"
+            ],
+            [
+              "Kapcsolatba lépések",
+              "2"
+            ]
+          ]
+        },
+        {
+          "key": "id",
+          "title": "Ellenőrzött identitás",
+          "how": "Egyszer használatos e-mail kóddal vagy az alkalmazásod aláírt tokenjével megerősíti, ki ő, mielőtt bármi személyeshez érne.",
+          "rows": [
+            [
+              "Identitás",
+              "E-mail kóddal ellenőrizve"
+            ]
+          ]
+        },
+        {
+          "key": "pay",
+          "title": "Fizetések",
+          "how": "Valódi fizetéseket és előfizetéseket keres a Stripe-ban vagy Razorpay-ban, és tud nyugtákat és fizetési linkeket küldeni.",
+          "rows": [
+            [
+              "Csomag",
+              "Growth · aktív"
+            ],
+            [
+              "Utolsó fizetés",
+              "Kifizetve, nyugta elküldve"
+            ]
+          ]
+        },
+        {
+          "key": "mcp",
+          "title": "A rendszereid (MCP)",
+          "how": "Meghívja azokat az eszközöket, amelyeket jóváhagysz a saját MCP szervereiden: rendelések, fiókok, foglalások, bármi, amit felfedsz.",
+          "rows": [
+            [
+              "Rendelés #4821",
+              "Elküldve · csütörtökön érkezik"
+            ]
+          ]
+        },
+        {
+          "key": "kb",
+          "title": "A tudásod",
+          "how": "Átkutat mindent, amit megtanítottál neki, és el tudja olvasni az oldalad aktuális tartalmát friss részletekért.",
+          "rows": [
+            [
+              "Szállítási szabályzat",
+              "3–5 munkanap"
+            ]
+          ]
+        }
+      ]
+    },
+    "mcp": {
+      "eyebrow": "MCP bővítmények",
+      "titlePrefix": "Hozzáférési kérés: ",
+      "titleHl": "a rendszereid.",
+      "subtitle": "Csatlakoztass akár öt MCP szervert, legyen az az üzleted, a CRM-ed vagy a foglalási rendszered. Az Elpino felfedezi az eszközeiket, és te pontosan azokat kapcsolod be, amelyeket az ügynök használhat. Próbáld ki az alábbi vezérlőpultot.",
+      "serverTitle": "Az üzleted MCP szervere",
+      "toolsDiscovered": "{n} eszköz felfedezve",
+      "verifiedCustomers": "Ellenőrzött ügyfelek",
+      "anyVisitor": "Bármely látogató",
+      "destructive": "Romboló",
+      "changesData": "Adatokat módosít",
+      "readOnly": "Csak olvasható",
+      "needsVerified": "Ellenőrzött ügyfelet igényel",
+      "whatAgentSees": "Amit az ügynök láthat",
+      "toolsAvailable": "eszköz elérhető most",
+      "tools": [
+        {
+          "name": "get_order",
+          "desc": "Rendelés és állapotának lekérése",
+          "write": false,
+          "on": true
+        },
+        {
+          "name": "track_shipment",
+          "desc": "Élő csomagkövetés",
+          "write": false,
+          "on": true
+        },
+        {
+          "name": "list_products",
+          "desc": "Katalógus és készletszintek",
+          "write": false,
+          "on": true
+        },
+        {
+          "name": "update_address",
+          "desc": "Szállítási cím megváltoztatása",
+          "write": true,
+          "on": true
+        },
+        {
+          "name": "cancel_order",
+          "desc": "Még nem szállított rendelés lemondása",
+          "write": true,
+          "on": false
+        },
+        {
+          "name": "delete_customer",
+          "desc": "Ügyfél adatainak törlése",
+          "write": true,
+          "on": false,
+          "danger": true
+        }
+      ],
+      "bullets": [
+        "A kikapcsolt eszköz láthatatlan az ügynök számára",
+        "Minden hívást újra ellenőrzünk a szerveren lévő listád alapján",
+        "Az adatokat módosító eszközök mindig ellenőrzött ügyfelet igényelnek",
+        "A szerver hitelesítési adatai titkosítva vannak tárolva"
+      ],
+      "features": [
+        {
+          "title": "Fizetések, beépítve",
+          "desc": "Kapcsold be a Stripe-ot vagy Razorpay-t, és az ügynök lekérheti a fizetéseket és előfizetéseket, nyugtákat és fizetési linkeket küldhet, valamint lemondhat egy előfizetést."
+        },
+        {
+          "title": "Hozz bármilyen MCP szervert",
+          "desc": "Bármi, ami MCP-t beszél, működik, így te döntöd el, milyen eszközöket kap az ügynök."
+        },
+        {
+          "title": "Az Elpino saját MCP szervere",
+          "desc": "Az ügyfeleid saját eszközei MCP-n keresztül olvashatják az Elpino csomagjukat, használatukat és fizetéseiket."
+        }
+      ]
+    },
+    "orgChart": {
+      "eyebrow": "A csapat mögötte",
+      "titlePrefix": "Egy ügynök. ",
+      "titleHl": "Egy teljes szervezeti ábra.",
+      "subtitle": "Minden üzenet a megfelelő szakértőhöz kerül, és semmi nem megy ki, mielőtt egy felülvizsgáló ellenőrzi a tényeket.",
+      "router": "Router",
+      "routerNote": "kiválasztja a szakértőt",
+      "reviewer": "Felülvizsgáló",
+      "reviewerNote": "ellenőrzi a piszkozatot az eszközök eredményeivel",
+      "polish": "Finomítás",
+      "polishNote": "aztán az ügyfél látja",
+      "footer": "A nehéz eseteket erősebb következtetési modellre eszkalálják, és egy visszaeső modell fedezi a szolgáltatói kimaradásokat.",
+      "lanes": [
+        {
+          "k": "Értékesítés",
+          "d": "Csomagok, árak, illeszkedés"
+        },
+        {
+          "k": "Támogatás",
+          "d": "Fiókok, fizetések, hogyan kell"
+        },
+        {
+          "k": "Technikai",
+          "d": "Hibák, beállítás, integráció"
+        }
+      ]
+    },
+    "shift": {
+      "eyebrow": "Egy nap a munkában",
+      "titlePrefix": "Egy műszak, ",
+      "titleHl": "elejétől a végéig.",
+      "subtitle": "Egy mintanap, csak azokkal a dolgokkal, amit az ügynök valóban tesz.",
+      "items": [
+        {
+          "time": "2:14",
+          "t": "Válaszol egy árazási kérdésre",
+          "d": "A csapatod alszik. Az Elpino a tudásbázisodból válaszol."
+        },
+        {
+          "time": "9:05",
+          "t": "Ellenőriz egy ügyfelet, megjavít egy fizetést",
+          "d": "E-mail kóddal megerősíti, megtalálja a sikertelen fizetést, új fizetési linket küld."
+        },
+        {
+          "time": "11:20",
+          "t": "Ellenőriz egy rendelést az üzletedben",
+          "d": "Meghívja az MCP szervered, elolvassa az állapotot, és megosztja a nyomkövetést."
+        },
+        {
+          "time": "13:30",
+          "t": "Olyanba fut, amit nem tud megtenni",
+          "d": "Elmondja ezt, előbb megkérdezi az ügyfelet, majd figyelmezteti az egész csapatot."
+        },
+        {
+          "time": "15:42",
+          "t": "Senki nincs szabad? Nem hagyja abba",
+          "d": "Őszintén elmondja az ügyfélnek, és jegyet nyit e-mail nyomonkövetéssel."
+        }
+      ]
+    },
+    "review": {
+      "eyebrow": "Teljesítményértékelés",
+      "titlePrefix": "Egy őszinte ",
+      "titleHl": "eredménylap.",
+      "subtitle": "Illusztratív értékelések, a gyenge ponttal együtt.",
+      "employeeBadge": "Alkalmazott: Elpino",
+      "quote": "„Kiváló a rutinkérdésekben, és soha nem lépi túl a hatáskörét. Tartsd frissen a tudásbázist, és tovább fog javulni.”",
+      "items": [
+        {
+          "k": "Követi a politikádat",
+          "n": 5,
+          "note": "Csak azt válaszolja, amit jóváhagytál."
+        },
+        {
+          "k": "Tudja, mikor kérjen segítséget",
+          "n": 5,
+          "note": "Előbb megkérdezi az ügyfelet, majd bevonja a csapatodat."
+        },
+        {
+          "k": "A jogosultságain belül marad",
+          "n": 5,
+          "note": "Csak azok az eszközök, amelyeket bekapcsoltál. A visszatérítések alapértelmezetten kikapcsolva."
+        },
+        {
+          "k": "Tudja, mit nem mondtál el neki soha",
+          "n": 2,
+          "note": "Nem tud válaszolni arra, ami nincs a tudásodban. Adj hozzá többet, hogy ezt növeld."
+        }
+      ]
+    },
+    "guards": {
+      "eyebrow": "Védelmi intézkedések",
+      "titlePrefix": "A vállalati ",
+      "titleHl": "kézikönyv.",
+      "subtitle": "A szabályok, amelyek szerint az Elpino működik. Mindegyik egy irányítás, amit birtokolsz.",
+      "items": [
+        {
+          "t": "A modell soha nem lát neveket vagy e-maileket",
+          "d": "A beszélgetésben szereplő identitásokat hivatkozási kódokra cserélik, mielőtt az AI elolvasná, és a titkokat, mint a kulcsokat és tokeneket, eltávolítják."
+        },
+        {
+          "t": "A visszatérítések kikapcsolva vannak, amíg te nem szólsz",
+          "d": "A pénzt mozgató műveletek opcionálisak, és a munkaterület tulajdonosa irányítja őket."
+        },
+        {
+          "t": "Minden eszközt te hagysz jóvá",
+          "d": "Az ügynök csak azokat az MCP eszközöket látja, amelyeket bekapcsoltál, és az adatokat módosítók ellenőrzött ügyfelet igényelnek."
+        },
+        {
+          "t": "Előbb kérdez, majd átad",
+          "d": "Amikor nincs eszköze a feladathoz, elmondja ezt, és megkérdez, mielőtt bevonja a csapatodat."
+        },
+        {
+          "t": "A tényeket felülvizsgálják",
+          "d": "Egy felülvizsgálati lépés ellenőrzi a piszkozatot az eszközök eredményeivel, mielőtt elküldi."
+        },
+        {
+          "t": "Identitás bármi személyes előtt",
+          "d": "Először e-mail kód vagy aláírt token jön, így soha nem beszél egy fiókról idegennel."
+        }
+      ]
+    },
+    "compare": {
+      "eyebrow": "Nem egy chatbot",
+      "titlePrefix": "Chatbot vs. ",
+      "titleHl": "Elpino ügynök.",
+      "headerA": "Egy tipikus chatbot",
+      "headerB": "Elpino AI ügynök",
+      "rows": [
+        [
+          "Cikkeket keres és megáll",
+          "Keres, ellenőrzi a nyilvántartásokat és cselekszik"
+        ],
+        [
+          "Mindenkit idegenként kezel",
+          "Ellenőrzi az identitást, emlékszik a korábbi chatekre"
+        ],
+        [
+          "„Kérjük, keresse fel a támogatást” amikor elakad",
+          "Előbb kérdez, figyelmezteti a csapatot, jegyet nyit, ha senki sincs szabad"
+        ],
+        [
+          "Nem látja a rendszereidet",
+          "Meghívja az MCP eszközöket, amelyeket jóváhagysz"
+        ],
+        [
+          "A válaszokban nem lehet bízni",
+          "A tényeket az eszközök eredményeivel ellenőrzik"
+        ]
+      ]
+    },
+    "faq": {
+      "eyebrow": "Kérdések",
+      "titlePrefix": "Jó ",
+      "titleHl": "tudni.",
+      "items": [
+        [
+          "Mi az MCP?",
+          "A Model Context Protocol, egy szabványos módja annak, hogy egy AI eszközöket hívjon egy másik rendszeren. Csatlakoztass egy MCP szervert, és az Elpino felfedezi az eszközeit. Aztán te választod ki, melyiket használhatja az ügynök."
+        ],
+        [
+          "Hány MCP szervert csatlakoztathatok?",
+          "Akár öt, szerverenként akár 15 engedélyezett eszközzel."
+        ],
+        [
+          "Meg tudja változtatni az ügynök a rendszereimben lévő dolgokat?",
+          "Csak azokon az eszközökön keresztül, amelyeket bekapcsoltál, és az adatokat módosítók mindig olyan ügyfelet igényelnek, akinek az e-mailjét ellenőrizték."
+        ],
+        [
+          "Hogyan tudja, ki az ügyfél?",
+          "A beszélgetésből, a vele folytatott korábbi chatekből, és egy ellenőrzési lépésből: egyszer használatos e-mail kód vagy az alkalmazásod aláírt tokenje."
+        ],
+        [
+          "Ki tud adni visszatérítéseket?",
+          "Csak ha a munkaterület tulajdonosa bekapcsolja a visszatérítéseket. Alapértelmezetten kikapcsolva vannak."
+        ],
+        [
+          "Mi történik, amikor nem tud megoldani valamit?",
+          "Elmondja ezt, és megkérdezi az ügyfelet, hogy szeretné-e, hogy összekapcsolja a csapatoddal. A csapat minden tagja 90 másodpercig csatlakozási értesítést kap, és ha senki nem csatlakozik, automatikusan létrejön egy jegy."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "A legújabb munkatársad készen áll a kezdésre.",
+      "subtitle": "Tanítsd meg neki a vállalkozásodat, csatlakoztasd az eszközeidet, és állítsd be a korlátokat.",
+      "ctaStart": "Kezdd ingyen",
+      "ctaKnowledgeHub": "Nézd meg a Tudásközpontot"
+    }
+  },
+  "inbox": {
+    "hero": {
+      "badge": "Megosztott postafiók",
+      "titlePrefix": "Egy beszélgetés. ",
+      "titleHl": "Mindenki, akinek benne kell lennie.",
+      "subtitle": "Az AI kezeli a szálat, amíg emberre nincs szükség, az egész csapatod egyszerre kap értesítést, és aki csatlakozik, megkapja a teljes előzményt. Kövess egy valódi beszélgetést az első üzenettől a megoldásig.",
+      "ctaOpen": "Nyisd meg a postafiókod",
+      "ctaPricing": "Nézd meg az árakat"
+    },
+    "filters": [
+      "Összes",
+      "Olvasatlan",
+      "Olvasott",
+      "Megoldva"
+    ],
+    "desk": {
+      "stages": [
+        {
+          "key": "ai",
+          "label": "AI válaszol",
+          "badge": "AI",
+          "banner": "Az Elpino kezeli ezt a beszélgetést"
+        },
+        {
+          "key": "ask",
+          "label": "Emberre van szükség",
+          "badge": "Ember kell",
+          "banner": "Minden csapattag kapott egy Csatlakozás értesítést. 90 másodperc a beugráshoz"
+        },
+        {
+          "key": "join",
+          "label": "Csapattag csatlakozik",
+          "badge": "Priya",
+          "banner": "Priya csatlakozott. Az értesítés mindenkinél megszűnt"
+        },
+        {
+          "key": "back",
+          "label": "Visszaadás",
+          "badge": "AI",
+          "banner": "Priya visszaadta a csevegést az Elpinónak"
+        },
+        {
+          "key": "done",
+          "label": "Megoldva",
+          "badge": "Megoldva",
+          "banner": "Megoldva. Bármikor újranyitható, ha visszaírnak"
+        }
+      ],
+      "lines": [
+        {
+          "at": 0,
+          "from": "you",
+          "text": "Szia! Elköltöztem egy másik országba. Frissítenétek a fiókomon a számlázási országot?"
+        },
+        {
+          "at": 1,
+          "from": "ai",
+          "text": "Én magam nem tudom módosítani a számlázási adatokat. Szeretnéd, hogy összekapcsoljalak a csapatunkkal?"
+        },
+        {
+          "at": 1,
+          "from": "you",
+          "text": "Igen, kérlek"
+        },
+        {
+          "at": 2,
+          "from": "sys",
+          "text": "Priya csatlakozott a csevegéshez"
+        },
+        {
+          "at": 2,
+          "from": "team",
+          "text": "Szia! Ezt már intézem. Frissítettem a számlázási országodat."
+        },
+        {
+          "at": 3,
+          "from": "sys",
+          "text": "Priya visszaadta a csevegést az Elpinónak"
+        },
+        {
+          "at": 3,
+          "from": "ai",
+          "text": "Minden rendben. Van még valami, amiben segíthetek?"
+        },
+        {
+          "at": 4,
+          "from": "you",
+          "text": "Ennyi volt, köszönöm!"
+        },
+        {
+          "at": 4,
+          "from": "sys",
+          "text": "A beszélgetés megoldva"
+        }
+      ],
+      "rail": [
+        "Munkaterület",
+        "Postafiók",
+        "Analitika",
+        "Kapcsolatok",
+        "Tudásbázis",
+        "Beállítások"
+      ],
+      "list": [
+        {
+          "name": "Harnoor Singh",
+          "date": "szept. 21.",
+          "prev": "Senkinek az IP-címét nem adhatom ki"
+        },
+        {
+          "name": "Aisha Khan",
+          "date": "Ma",
+          "prev": ""
+        },
+        {
+          "name": "Tom Becker",
+          "date": "szept. 19.",
+          "prev": "A widget nem töltődik be a fizetésnél"
+        },
+        {
+          "name": "Meera Iyer",
+          "date": "szept. 18.",
+          "prev": "Áttérnénk éves csomagra?"
+        }
+      ],
+      "teamInbox": "Csapat postafiók",
+      "aiAssist": "AI Asszisztens",
+      "searchPlaceholder": "Beszélgetések keresése",
+      "verified": "Ellenőrizve",
+      "joined": "Csatlakozott",
+      "join": "Csatlakozás",
+      "priyaReplying": "Priya válaszol",
+      "resolvedLabel": "Megoldva",
+      "aiReplying": "Az Elpino válaszol, te csak megtekintés módban vagy",
+      "elpinoAi": "Elpino AI",
+      "priyaTeam": "Priya · csapat",
+      "writeReply": "Írd meg a válaszod…",
+      "send": "Küldés",
+      "reopenNote": "Megoldva. Nyisd újra, ha visszaírnak.",
+      "lockedNote": "Csatlakozz a beszélgetéshez, hogy válaszolhass. Addig az Elpino folytatja a beszélgetést az ügyféllel.",
+      "websiteVisitor": "Weboldal látogató",
+      "locationDevice": "Helyszín és eszköz",
+      "location": "Pune, India",
+      "device": "Chrome · macOS",
+      "onPage": "A /pricing oldalon",
+      "lastSeen": "Legutóbb most látott",
+      "identityVerified": "Azonosítás ellenőrizve",
+      "signedIn": "Bejelentkezve a weboldalon",
+      "otherConvos": "Egyéb beszélgetések",
+      "noOtherConvos": "Ettől a látogatótól még nincs más beszélgetés."
+    },
+    "realThing": {
+      "eyebrow": "Az igazi",
+      "titlePrefix": "Ez a ",
+      "titleHl": "valódi postafiók.",
+      "subtitle": "Nincs makett. Minden beszélgetés, az AI válaszai, a látogató adatai és a Csatlakozás gomb, mind egy képernyőn.",
+      "imageAlt": "Az Elpino csapat postafiók: egy beszélgetéslista, egy AI által kezelt szál, valamint a látogató helyszíne és eszköze",
+      "callouts": [
+        {
+          "label": "Csatlakozz az átvételhez"
+        },
+        {
+          "label": "Szűrő: Összes · Olvasatlan · Olvasott · Megoldva"
+        },
+        {
+          "label": "Helyszín és eszköz"
+        },
+        {
+          "label": "Automatikusan lezárul 24 óra csend után"
+        }
+      ]
+    },
+    "twoTabs": {
+      "eyebrow": "Két nézet",
+      "titlePrefix": "Nézd az AI-t. ",
+      "titleHl": "Vezesd a csapatot.",
+      "subtitle": "A postafiókodnak van egy füle azokra, amiket az emberek kezelnek, és egy füle azokra, amiket az Elpino kezel, így semmi nem marad rejtve.",
+      "tabs": [
+        {
+          "label": "Csapat postafiók",
+          "title": "Beszélgetések, amelyeket a csapatod kezel",
+          "body": "Minden, amihez egy ember csatlakozott, amit átvett, vagy amit hozzá rendeltek. Itt dolgozik a csapatod: válaszok, utókövetések és megoldott szálak.",
+          "rows": [
+            [
+              "Harnoor Singh",
+              "Elküldenéd újra a számlát?",
+              "Priya"
+            ],
+            [
+              "Meera Iyer",
+              "Áttérnénk éves számlázásra?",
+              "Sam"
+            ],
+            [
+              "Jo Alvarez",
+              "Köszi, ez megoldotta!",
+              "Megoldva"
+            ]
+          ]
+        },
+        {
+          "label": "AI Asszisztens",
+          "title": "Beszélgetések, amelyeket az Elpino kezel",
+          "body": "Nézd, hogyan dolgozik az AI valós időben. Egy számláló megmutatja, hány aktív van, és bármikor csatlakozhatsz egy szálhoz, amikor be akarsz lépni.",
+          "rows": [
+            [
+              "Aisha Khan",
+              "Az Elpino válaszol…",
+              "AI"
+            ],
+            [
+              "Tom Becker",
+              "Ellenőrzi a fizetési előzményedet…",
+              "AI"
+            ],
+            [
+              "Ravi Menon",
+              "Elküldött egy biztonságos fizetési linket",
+              "AI"
+            ]
+          ]
+        }
+      ]
+    },
+    "holders": {
+      "eyebrow": "Mindig egyértelmű",
+      "titlePrefix": "Mindig tudod, ",
+      "titleHl": "kinél van.",
+      "subtitle": "Minden beszélgetés jelvényt visel a listában, így senki nem válaszol duplán, és semmi nem marad ki.",
+      "items": [
+        {
+          "tag": "AI",
+          "title": "Az Elpino kezeli",
+          "body": "Válaszol a tudásbázisod és eszközeid alapján. Minden üzenetet élőben követhetsz."
+        },
+        {
+          "tag": "Csapattag",
+          "title": "Egy ember kezeli",
+          "body": "Koppints a Csatlakozás gombra, vagy az Átvételre, ha egy kollégádnál van. Az AI félreáll."
+        },
+        {
+          "tag": "Megoldva",
+          "title": "Kész van",
+          "body": "A megoldott szálak kereshetők maradnak, és egy koppintással újranyithatók."
+        }
+      ]
+    },
+    "baton": {
+      "eyebrow": "Add tovább a stafétabotot",
+      "titlePrefix": "Csatlakozz. Vedd át. ",
+      "titleHl": "Add vissza.",
+      "subtitle": "Egy beszélgetés egy koppintással mozog az AI és az embereid között, és az előzmény vele együtt utazik.",
+      "items": [
+        {
+          "who": "Elpino AI",
+          "note": "Elsőként válaszol"
+        },
+        {
+          "who": "Priya",
+          "note": "Rákoppintott a Csatlakozásra"
+        },
+        {
+          "who": "Sam",
+          "note": "Átvette Priyától"
+        },
+        {
+          "who": "Elpino AI",
+          "note": "Visszaadva"
+        }
+      ],
+      "holdingNow": "Most nála van",
+      "stepLabel": "{n}. lépés"
+    },
+    "teamAlert": {
+      "eyebrow": "Csapatszintű értesítések",
+      "titlePrefix": "Riasztsd az egész csapatot. ",
+      "titleHl": "Egy ember válaszol.",
+      "subtitle": "Amikor egy ügyfél embert kér, minden csapattag egyszerre kap egy Csatlakozás értesítést. Aki elsőként koppint a Csatlakozásra, átveszi a csevegést, az értesítés a többieknél eltűnik, és az ügyfél látja, ki csatlakozott.",
+      "bullets": [
+        "Senki nincs kiemelve, így senki nem szűk keresztmetszet",
+        "90 másodperc a beugráshoz, mielőtt automatikusan jegy készül",
+        "Véletlenül csatlakoztál? Egy koppintással add vissza az AI-nak"
+      ],
+      "panelLabel": "Postafiók-értesítések",
+      "joinedStatus": "Csatlakozott",
+      "alertCleared": "Az értesítés megszűnt",
+      "joinChatStatus": "Csatlakozás a csevegéshez",
+      "quietStatus": "Csend",
+      "bannerJoined": "Priya csatlakozott. Az ügyfél látja a nevét.",
+      "bannerAlerting": "Értesítés mind a 4 csapattagnak…",
+      "bannerAsked": "Az ügyfél embert kért"
+    },
+    "nobodyFree": {
+      "eyebrow": "Semmi nem marad kimaradva",
+      "titlePrefix": "Még akkor is, ha mindenki ",
+      "titleHl": "elfoglalt.",
+      "subtitle": "Ha senki nem csatlakozik időben, az ügyfél nem marad egy pörgő ikonra bámulva.",
+      "marks": [
+        {
+          "t": "0s",
+          "h": "Kimegy az értesítés",
+          "d": "Minden csapattag lát egy Csatlakozás értesítést."
+        },
+        {
+          "t": "≤ 90s",
+          "h": "Aki elsőnek csatlakozik, az nyer",
+          "d": "Az értesítés megszűnik mindenki másnál."
+        },
+        {
+          "t": "90s",
+          "h": "Senki nem szabad? Jegy",
+          "d": "Automatikusan létrejön egy jegy."
+        },
+        {
+          "t": "24h",
+          "h": "E-mail utókövetés",
+          "d": "Az ügyfél értesítést kap, hogy 24 órán belül e-mailben választ várhat."
+        }
+      ]
+    },
+    "findAnything": {
+      "eyebrow": "Keresés és szűrők",
+      "titlePrefix": "Találj meg bármely beszélgetést ",
+      "titleHl": "egy pillanat alatt.",
+      "subtitle": "Keress név vagy üzenet szerint, és szűkíts Összes, Olvasatlan, Olvasott vagy Megoldva közül. Próbáld ki jobbra.",
+      "noMatch": "Nincs egyezés. Próbálj egy másik szót.",
+      "convos": [
+        {
+          "n": "Harnoor Singh",
+          "p": "Senkinek az IP-címét nem adhatom ki",
+          "s": "resolved"
+        },
+        {
+          "n": "Aisha Khan",
+          "p": "Elköltözött másik országba, számlázási kérdés",
+          "s": "unread"
+        },
+        {
+          "n": "Tom Becker",
+          "p": "A widget nem töltődik be a fizetésnél",
+          "s": "unread"
+        },
+        {
+          "n": "Meera Iyer",
+          "p": "Áttérnénk éves számlázásra?",
+          "s": "read"
+        },
+        {
+          "n": "Ravi Menon",
+          "p": "Hol találom a nyugtámat?",
+          "s": "resolved"
+        },
+        {
+          "n": "Jo Alvarez",
+          "p": "Hozzáadhatok még egy csapattagot?",
+          "s": "read"
+        }
+      ]
+    },
+    "context": {
+      "eyebrow": "Kontextus, beépítve",
+      "titlePrefix": "Sose kérdezd ",
+      "titleHl": "„ki is vagy te?”",
+      "subtitle": "A csapatod megnyit egy szálat, és már ismeri a legfontosabb adatokat.",
+      "items": [
+        {
+          "t": "Hol vannak",
+          "d": "Helyszín és helyi kontextus minden látogatóról."
+        },
+        {
+          "t": "Mit használnak",
+          "d": "Eszköz, böngésző és az oldal, amelyen épp voltak."
+        },
+        {
+          "t": "Kik ők",
+          "d": "Egy Ellenőrizve jelvény, amikor az azonosságot aláírt token vagy e-mail kód igazolja."
+        },
+        {
+          "t": "Érzékeny dolgok, biztonságosan",
+          "d": "Kérj privát adatokat egy biztonságos, egyszeri kérésen keresztül, ne csevegésben."
+        },
+        {
+          "t": "A teljes előzmény",
+          "d": "A korábbi beszélgetések ugyanazzal a személlyel, rögtön ott."
+        }
+      ],
+      "extraTitle": "Plusz élő gépelés mindkét oldalon",
+      "extraDesc": "Az ügyfelek látják, amikor válaszolsz, és te is látod, amikor ők."
+    },
+    "secureRequest": {
+      "eyebrow": "Biztonságos kérések",
+      "titlePrefix": "A privát adatok ",
+      "titleHl": "nem kerülnek a csevegésbe.",
+      "subtitle": "Kérj érzékeny adatokat egy egyszeri, biztonságos űrlapon keresztül, így soha nem kerül be az átiratba.",
+      "steps": [
+        {
+          "t": "Valami privátra van szükséged",
+          "d": "Olyan adatokhoz, amelyeket nem szabad beírni egy csevegőablakba."
+        },
+        {
+          "t": "Küldj egy biztonságos kérést",
+          "d": "Az ügyfél egy privát, egyszeri űrlapot kap, csevegő mező helyett."
+        },
+        {
+          "t": "Vissza a beszélgetésbe",
+          "d": "Egyszer beküldik, és a csapatod folytatja a beszélgetést."
+        }
+      ],
+      "stepLabel": "{n}. lépés"
+    },
+    "afterLeave": {
+      "eyebrow": "Miután távoznak",
+      "titlePrefix": "A fül bezárása ",
+      "titleHl": "nem a vég.",
+      "subtitle": "Az Elpino őszintén megmondja, hogy egy válasz még elérheti-e őket.",
+      "steps": [
+        {
+          "t": "A látogató távozik",
+          "d": "Bezárják a csevegést, vagy 24 óra telik el üzenet nélkül."
+        },
+        {
+          "t": "Van ellenőrzött e-mail rögzítve?",
+          "d": "Ha megerősítették a címüket, még elérhetők."
+        },
+        {
+          "t": "Válasz e-mailben",
+          "d": "A válaszod az ő postafiókjukba kerül. Ellenőrzött e-mail nélkül nincs lehetőség válaszra, és a szövegszerkesztő ezt jelzi."
+        }
+      ],
+      "stepLabel": "{n}. lépés"
+    },
+    "compare": {
+      "eyebrow": "Előtte és utána",
+      "titlePrefix": "A kapkodástól a ",
+      "titleHl": "nyugalomig.",
+      "headerA": "Megosztott postafiók nélkül",
+      "headerB": "Az Elpinóval",
+      "rows": [
+        [
+          "Az ügyfelek várnak, amíg valaki szabad lesz",
+          "Az AI másodperceken belül válaszol, majd egy ember csatlakozik, ha szükséges"
+        ],
+        [
+          "Senki nem tudja, ki válaszol",
+          "Egy jelvény minden szálon megmutatja: AI, csapattag vagy megoldva"
+        ],
+        [
+          "A csapat egymást pingeli, hogy megtalálja a felelőst",
+          "Egy Csatlakozás értesítés mindenkihez elér, aki elsőnek csatlakozik, azé lesz"
+        ],
+        [
+          "A kontextus tíz helyen él",
+          "Előzmény, helyszín, eszköz és ellenőrzés egy panelen"
+        ],
+        [
+          "Az ügyfelek, akik bezárják a fület, elvesznek",
+          "Az ellenőrzött látogatók még e-mailben megkaphatják a válaszodat"
+        ]
+      ]
+    },
+    "faq": {
+      "eyebrow": "Kérdések",
+      "titlePrefix": "Jó ",
+      "titleHl": "tudni.",
+      "items": [
+        [
+          "Ki láthat egy beszélgetést?",
+          "A csapatod minden tagja láthatja a megosztott postafiókot. Minden beszélgetés megmutatja, kinél van: az AI-nál, egy csapattagnál, vagy megoldva."
+        ],
+        [
+          "Mi az a 90 másodperces időkeret?",
+          "Amikor egy ügyfél embert kér, minden csapattag kap egy Csatlakozás értesítést. Ha senki nem csatlakozik 90 másodpercen belül, az ügyfél értesítést kap, és automatikusan létrejön egy jegy e-mailes utókövetéssel."
+        ],
+        [
+          "Visszaadhatom a beszélgetést az AI-nak?",
+          "Igen. Ha csatlakoztál, és egyszerű utókövetésről van szó, egy koppintással add vissza a csevegést az Elpinónak."
+        ],
+        [
+          "Válaszolhatok, miután a látogató távozott?",
+          "Ha megadtak egy ellenőrzött e-mail-címet, a válaszod e-mailben kerül elküldésre. Ha nem, semmilyen válasz nem érheti el őket."
+        ],
+        [
+          "Működik ez másban is, nem csak a weboldalas csevegésben?",
+          "A weboldal csevegő widget már most is elérhető. Az omnichannel novemberben érkezik."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Adj a csapatodnak egy helyet, ahonnan segíthetnek.",
+      "subtitle": "Kezdd ingyen, és hívd meg a csapattagjaidat, amikor készen állsz.",
+      "ctaStart": "Kezdd ingyen",
+      "ctaMeetAgent": "Ismerd meg az AI ügynököt"
+    }
+  },
+  "tickets": {
+    "hero": {
+      "badge": "Jegyek",
+      "titlePrefix": "Minden átadás hagy ",
+      "titleHl": "egy jegyet.",
+      "subtitle": "Amikor az AI nem tudja befejezni a feladatot, és senki sem elérhető, az Elpino nem hagyja annyiban. Jegyet nyit az indokkal és az összefoglalóval, elküldi oda, ahol a csapatod dolgozik, és az ügyfélnek ad egy hivatkozási számot, amit megadhat.",
+      "ctaStart": "Ingyenes kezdés",
+      "ctaInbox": "Postafiók megtekintése"
+    },
+    "printed": {
+      "ticketBadge": "Jegy",
+      "filedAt": "Az AI átadásakor nyitva",
+      "printing": "Nyomtatás…",
+      "referenceLabel": "Hivatkozás",
+      "referenceNote": "Az ügyfél ezt tudja megadni",
+      "fields": [
+        [
+          "Cím",
+          "Ügyfélszolgálati eszkaláció · Aisha Khan"
+        ],
+        [
+          "Indok",
+          "A számlázási ország módosításához ember kell"
+        ],
+        [
+          "Összefoglaló",
+          "Országot váltott, és szeretné frissíteni a számlázási országot a fiókjában."
+        ],
+        [
+          "Ügyfél",
+          "Aisha Khan · aisha@example.com"
+        ],
+        [
+          "Beszélgetés",
+          "Hivatkozva, egy koppintással megnyitható"
+        ],
+        [
+          "Elküldve ide",
+          "Problémák oldal"
+        ]
+      ]
+    },
+    "origins": {
+      "eyebrow": "Honnan érkeznek a jegyek",
+      "titlePrefix": "Három módon ",
+      "titleHl": "készül el egy jegy.",
+      "subtitle": "Soha nem kell emlékezned arra, hogy feljegyezd.",
+      "items": [
+        {
+          "tag": "Kézi",
+          "t": "Egy csapattag nyitja",
+          "d": "Észreveszel valamit, amit nyomon kell követni? Alakítsd magad a beszélgetést jeggyé.",
+          "sample": [
+            "Számlázási cím módosítása",
+            "Meera arra kért minket, hogy frissítsük a számlázási címet a számláin."
+          ]
+        },
+        {
+          "tag": "Az AI átadásnál nyitja",
+          "t": "Az AI átadáskor nyitja",
+          "d": "Amikor az Elpino átadja a beszélgetést, és senki nem csatlakozik időben, jegyet nyit az indokkal és egy összefoglalóval.",
+          "sample": [
+            "Ügyfélszolgálati eszkaláció · Aisha Khan",
+            "Indok: a számlázási ország módosításához ember kell."
+          ]
+        },
+        {
+          "tag": "Az AI ellenőrzése jelölte",
+          "t": "Az AI észreveszi, mi maradt függőben",
+          "d": "A beszélgetés lezárása után az AI átnézi azt. Ha a csapatod még tartozik valamivel az ügyfélnek, jelöl egy jegyet, és megírja, miért.",
+          "sample": [
+            "Visszatérés a visszatérítési kérelemhez",
+            "Indok: az ügyfélnek azt mondták, hogy ellenőrzik; semmi nem lett rögzítve."
+          ]
+        }
+      ]
+    },
+    "anatomy": {
+      "eyebrow": "Egy jegy felépítése",
+      "titlePrefix": "Minden, amire a csapatodnak szüksége van, ",
+      "titleHl": "már megírva.",
+      "subtitle": "Koppints egy sorra, hogy lásd, miért van ott.",
+      "fieldLabel": "Mező: {n}/{total}",
+      "fields": [
+        {
+          "k": "Cím",
+          "v": "Ügyfélszolgálati eszkaláció · Aisha Khan",
+          "why": "Az ügyfél nevét viseli, hogy egy hosszú listában is rögtön felismerd."
+        },
+        {
+          "k": "Indok",
+          "v": "A számlázási ország módosításához ember kell",
+          "why": "Miért adta át az AI, vagy miért jelölte az ellenőrzése. Senkinek nem kell kitalálnia, mi történt."
+        },
+        {
+          "k": "Összefoglaló",
+          "v": "Országot váltott, szeretné frissíteni a számlázási országot.",
+          "why": "Az AI rövid összefoglalót ír a beszélgetésről, hogy aki átveszi, tájékozottan kezdje."
+        },
+        {
+          "k": "Ügyfél",
+          "v": "Aisha Khan · aisha@example.com",
+          "why": "Név és e-mail, ha megadta, hogy tudd, kinek válaszolj."
+        },
+        {
+          "k": "Beszélgetés",
+          "v": "Hivatkozva, megnyitja a csevegést",
+          "why": "Egy koppintással visszaugorhatsz a teljes beszélgetéshez, minden üzenettel."
+        },
+        {
+          "k": "Forrás",
+          "v": "Az AI átadásnál nyitva",
+          "why": "Megmutatja, hogy egy csapattag, az AI átadáskor, vagy az AI ellenőrzése hozta létre."
+        },
+        {
+          "k": "Elküldve ide",
+          "v": "Trello, Asana vagy Problémák oldal",
+          "why": "Hova küldték a jegyet. Ha nincs csatlakoztatott projektkezelő eszköz, a Problémák oldalon marad."
+        },
+        {
+          "k": "Hivatkozás",
+          "v": "7F3A9C21",
+          "why": "Egy rövid kód, amit az ügyfél megadhat, ha ismét kapcsolatba lép."
+        }
+      ]
+    },
+    "scrubber": {
+      "eyebrow": "A 90 másodperces óra",
+      "titlePrefix": "Húzd az időt. ",
+      "titleHl": "Nézd meg, mi történik.",
+      "subtitle": "Ha valaki bármikor csatlakozik, nincs szükség jegyre. Ha lejár az idő, ez a láncolat.",
+      "seconds": "másodperc",
+      "dragMe": "Húzz engem",
+      "secondsAriaLabel": "Másodpercek a riasztás óta",
+      "clock": [
+        {
+          "t": "Az ügyfél igent mond egy emberre",
+          "d": "Az Elpino először megkérdezi, és csak igen válasz esetén folytatja."
+        },
+        {
+          "t": "Minden csapattag Csatlakozás riasztást kap",
+          "d": "Az egész csapatot egyszerre kérdezik."
+        },
+        {
+          "t": "Senki nem csatlakozott: jegy nyitva",
+          "d": "Cím, indok, összefoglaló és egy link a beszélgetéshez."
+        },
+        {
+          "t": "Az ügyfél e-mailt kap, a csapat értesül",
+          "d": "Az ügyfél e-mailben kapja meg a hivatkozását."
+        }
+      ]
+    },
+    "connect": {
+      "eyebrow": "Egy perc alatt beállítható",
+      "titlePrefix": "Kapcsold össze azzal, ",
+      "titleHl": "amivel dolgozol.",
+      "subtitle": "Nem kötelező. Hagyd ki, és a jegyek egyszerűen a Problémák oldalon élnek.",
+      "stepLabel": "{n}. lépés",
+      "steps": [
+        {
+          "t": "Kapcsold össze a Trello-t vagy az Asanát",
+          "d": "Add hozzá a projektkezelő eszközödet a munkaterület beállításaiból."
+        },
+        {
+          "t": "A jegyek odakerülnek",
+          "d": "Minden új jegy kártyává vagy feladattá válik, már megírva."
+        },
+        {
+          "t": "Az Elpino-ban is nyomon követhető",
+          "d": "A Problémák oldal megőrzi a listát, és lehetővé teszi, hogy kijelöld a kész elemeket."
+        }
+      ]
+    },
+    "reviewScan": {
+      "badge": "AI ellenőrzés",
+      "titlePrefix": "A beszélgetés lezárása után ",
+      "titleHl": "az Elpino újraolvassa.",
+      "subtitle": "A beszélgetések kedvesen zárulnak, míg az ígéretek nyitva maradnak. Amikor egy beszélgetés lezárul, az AI átnézi azt, és ha a csapatod még tartozik valamivel az ügyfélnek, jelöl egy jegyet, és megírja, miért.",
+      "bullets": [
+        "Elkapja az „ellenőrzöm és jelzem” típusú mondatokat",
+        "Megírja, miért jelölte, hogy gyorsan dönthess",
+        "Az AI ellenőrzése jelölteként szerepel a Problémák oldalon"
+      ],
+      "closedConvo": "Lezárt beszélgetés",
+      "statusFlagged": "Jelölve",
+      "statusReviewing": "Ellenőrzés alatt…",
+      "statusResolved": "Megoldva",
+      "chat": [
+        [
+          "cust",
+          "Szia, sérülten érkezett a rendelésem."
+        ],
+        [
+          "agent",
+          "Nagyon sajnálom! Ellenőrzöm a visszatérítést, és jelzem."
+        ],
+        [
+          "cust",
+          "Remek, köszönöm."
+        ],
+        [
+          "agent",
+          "Segíthetek még valamiben?"
+        ],
+        [
+          "cust",
+          "Nem, ez minden."
+        ]
+      ],
+      "flaggedTicketLabel": "Jegy · Az AI ellenőrzése jelölte",
+      "flaggedTitle": "Visszatérés a visszatérítési kérelemhez · Tom Becker",
+      "flaggedDesc": "Az ügyfélnek azt mondták, hogy ellenőrzik a visszatérítést; utána semmi nem lett rögzítve."
+    },
+    "destinations": {
+      "eyebrow": "Hova kerül",
+      "titlePrefix": "Elküldve az eszközbe, ",
+      "titleHl": "amit a csapatod már használ.",
+      "subtitle": "Kapcsold össze a Trello-t vagy az Asanát, és a jegyek egyenesen odakerülnek. Ha semmit nem kapcsolsz össze, akkor is biztonságban vannak a Problémák oldalon.",
+      "cardTitle": "Ügyfélszolgálati eszkaláció · Aisha Khan",
+      "cardReason": "Indok: a számlázási ország módosításához ember kell",
+      "fromElpino": "Az Elpino-tól",
+      "items": [
+        {
+          "key": "trello",
+          "label": "Trello",
+          "note": "Kártyává válik a Trello tábládon.",
+          "cols": [
+            "Elvégzendő",
+            "Folyamatban",
+            "Kész"
+          ]
+        },
+        {
+          "key": "asana",
+          "label": "Asana",
+          "note": "Feladattá válik az Asana projektedben.",
+          "cols": [
+            "Nem kezdődött el",
+            "Folyamatban",
+            "Befejezve"
+          ]
+        },
+        {
+          "key": "issues",
+          "label": "Problémák oldal",
+          "note": "Nincs csatlakoztatott projektkezelő eszköz? A Problémák oldalon marad, beállítás nélkül.",
+          "cols": [
+            "Nyitott",
+            "",
+            "Megoldva"
+          ]
+        }
+      ]
+    },
+    "customerSide": {
+      "badge": "A jegyszám",
+      "titlePrefix": "Az ügyfelek tudják, ",
+      "titleHl": "hogy nem felejtették el őket.",
+      "subtitle": "Ha senki nem tudott időben csatlakozni, az Elpino őszintén elmondja az ügyfélnek, e-mailt küld, hogy ne vesszen el, és ad egy rövid hivatkozást, amit megadhat. Az egész csapatod is értesül az új jegyről.",
+      "bullets": [
+        "Az ügyfél megtudja, mi történik ezután",
+        "E-mailt kap a hivatkozásával",
+        "Minden csapattag értesül a jegyről"
+      ],
+      "inChat": "A beszélgetésben",
+      "chatMsgPrefix": "A csapatunk most éppen elfoglalt, ezért nyitottam egy jegyet. A hivatkozásod: ",
+      "chatMsgSuffix": ". 24 órán belül e-mailben jelzünk.",
+      "inInbox": "A postafiókjukban",
+      "emailSubject": "Megkaptuk a kérésedet",
+      "emailBodyPrefix": "A ",
+      "emailBodySuffix": " jegy a csapatunknál van. Válaszolj ezen az e-mailen, ha van még hozzátenni valód.",
+      "teamNotified": "Csapat értesítve: új jegy Aisha Khan-tól"
+    },
+    "issuesBoard": {
+      "badge": "A Problémák oldal",
+      "titlePrefix": "Egy lista. ",
+      "titleHl": "Jelöld ki.",
+      "subtitle": "Minden jegy megmutatja, honnan érkezett, és hova küldték. Az AI ellenőrzése még azt is elmondja, miért jelölt egyet. Kattints a négyzetre, hogy megoldottnak jelöld.",
+      "openWord": "nyitott",
+      "resolvedWord": "megoldva",
+      "panelTitle": "Problémák",
+      "panelSubtitle": "Ügyfélszolgálati beszélgetésekből létrehozott jegyek.",
+      "markResolved": "Jelölés megoldottként",
+      "markUnresolved": "Jelölés megoldatlanként",
+      "rows": [
+        {
+          "t": "Ügyfélszolgálati eszkaláció · Aisha Khan",
+          "who": "Az AI átadásnál nyitva",
+          "where": "Nincs elküldve projektkezelő eszközbe",
+          "done": false
+        },
+        {
+          "t": "Visszatérés a visszatérítési kérelemhez · Tom Becker",
+          "who": "Az AI ellenőrzése jelölte",
+          "where": "Trello jegy",
+          "reason": "Az ügyfélnek azt mondták, hogy ellenőrzik a visszatérítést; utána semmi nem lett rögzítve.",
+          "done": false
+        },
+        {
+          "t": "Számlázási cím módosítása · Meera Iyer",
+          "where": "Asana jegy",
+          "done": false
+        },
+        {
+          "t": "Ügyfélszolgálati eszkaláció · Ravi Menon",
+          "who": "Az AI átadásnál nyitva",
+          "where": "Nincs elküldve projektkezelő eszközbe",
+          "done": true
+        }
+      ]
+    },
+    "lifecycle": {
+      "eyebrow": "Egy jegy életciklusa",
+      "titlePrefix": "A „beszélhetek valakivel?”-től ",
+      "titleHl": "a kész állapotig.",
+      "stepLabel": "{n}. lépés",
+      "items": [
+        {
+          "t": "Az ügyfél emberi segítséget kér",
+          "d": "Az AI először megkérdezi, majd értesíti a csapatot."
+        },
+        {
+          "t": "90 másodperc, senki nem csatlakozik",
+          "d": "Mindenkinek volt lehetősége átvenni a beszélgetést."
+        },
+        {
+          "t": "Jegy nyitva",
+          "d": "Cím, indok, összefoglaló és egy link vissza a beszélgetéshez."
+        },
+        {
+          "t": "Az ügyfél e-mailt kap",
+          "d": "A hivatkozásával, hogy semmi ne érződjön elveszettnek."
+        },
+        {
+          "t": "Feldolgozva és megoldva",
+          "d": "A csapatod kijelöli, amikor elkészült."
+        }
+      ]
+    },
+    "compare": {
+      "eyebrow": "Előtte és utána",
+      "titlePrefix": "Nincs többé ",
+      "titleHl": "elveszett ígéret.",
+      "headerA": "Jegyek nélkül",
+      "headerB": "Elpino-val",
+      "rows": [
+        [
+          "„Valaki jelentkezik nálad”, majd csend",
+          "Egy jegy hivatkozással, amit az ügyfél megadhat"
+        ],
+        [
+          "A csapat kézzel másolja át az adatokat egy másik eszközbe",
+          "Indok, összefoglaló és beszélgetés-link már megírva érkezik"
+        ],
+        [
+          "A csevegésben tett ígéretek feledésbe merülnek",
+          "Egy AI ellenőrzés jelöli, mivel tartozik még a csapatod a beszélgetés lezárása után"
+        ],
+        [
+          "Nincs ötlet arról, hogy foglalkozik-e vele valaki",
+          "Kijelölhető megoldott állapot és hogy hova küldték, egyetlen listában"
+        ]
+      ]
+    },
+    "faq": {
+      "eyebrow": "Kérdések",
+      "titlePrefix": "Jó ",
+      "titleHl": "tudni.",
+      "items": [
+        [
+          "Mikor nyit az Elpino jegyet?",
+          "Amikor átadja a beszélgetést, és senki nem csatlakozik 90 másodpercen belül, és amikor egy lezárt beszélgetés ellenőrzése olyat talál, amivel a csapatod még tartozik. A csapattagok is nyithatnak jegyet kézzel."
+        ],
+        [
+          "Hova kerülnek a jegyek?",
+          "Trello-ba vagy Asanába, ha csatlakoztattál egyet. Ha nem, a Problémák oldalon élnek, hogy semmi ne vesszen el."
+        ],
+        [
+          "Mi található egy jegyben?",
+          "Egy cím, az indok, egy rövid összefoglaló, az ügyfél adatai, és egy link vissza a beszélgetéshez."
+        ],
+        [
+          "Az ügyfél megtudja?",
+          "Igen. Elmondják neki a beszélgetésben, e-mailt kap, és egy rövid hivatkozást ad, amit megadhat."
+        ],
+        [
+          "Megoldottként jelölhetem a jegyet?",
+          "Igen, jelöld ki a Problémák oldalon."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Ne csússzon el semmi.",
+      "subtitle": "Kezdj ingyen, és az Elpino megírja helyetted a jegyeket.",
+      "ctaStart": "Ingyenes kezdés",
+      "ctaMeetAgent": "Ismerd meg az AI ügynököt"
+    }
+  },
+  "knowledgeHub": {
+    "hero": {
+      "badge": "Tudásközpont",
+      "titlePrefix": "Kérdezz bármit. ",
+      "titleHl": "Ellenőrzi a tudásbázisodat.",
+      "subtitle": "Az Elpino csak a neki átadott tudásból válaszol. Ne csak a szavunkat fogadd el. Nézd meg, hogyan keres a tudásbázisodban balra, és hogyan válaszol az ügyfélnek jobbra. Ha nem talál semmit, azt is megmondja.",
+      "privateNote": "A privát forrásokat sosem használja az ügyfelek megválaszolásához."
+    },
+    "playground": {
+      "yourKnowledge": "A tudásbázisod",
+      "customer": "Ügyfél",
+      "elpinoAi": "Elpino AI",
+      "statusWaiting": "Kérdésre vár",
+      "statusSearching": "Keresés a tudásbázisodban…",
+      "statusFound": "Egyezés található",
+      "statusNoMatch": "Nincs egyezés",
+      "privateBadge": "Privát",
+      "matchBadge": "Egyezés",
+      "offersHuman": "Embert javasol",
+      "sources": [
+        {
+          "name": "Visszatérítési szabályzat.pdf",
+          "kind": "Dokumentum"
+        },
+        {
+          "name": "Szállítási idők",
+          "kind": "Írott oldal"
+        },
+        {
+          "name": "Segítség: jelszó visszaállítása",
+          "kind": "Weboldal"
+        },
+        {
+          "name": "Eszkalációs útmutató",
+          "kind": "Belső jegyzetek"
+        }
+      ],
+      "scenes": [
+        {
+          "q": "Mennyi időn belül kérhetek visszatérítést?",
+          "hit": "refund",
+          "a": "A vásárlástól számított 30 napon belül kérhetsz visszatérítést."
+        },
+        {
+          "q": "Hogyan állítsam vissza a jelszavamat?",
+          "hit": "reset",
+          "a": "Válaszd az „Elfelejtett jelszó” lehetőséget a bejelentkezési oldalon, és kövesd az e-mailben küldött linket."
+        },
+        {
+          "q": "Adtok kedvezményt jótékonysági szervezeteknek?",
+          "hit": null,
+          "a": "Ez az információ nincs a birtokomban. Szeretnéd, hogy összekapcsoljalak a csapatunkkal?"
+        },
+        {
+          "q": "Mennyi ideig tart a kiszállítás?",
+          "hit": "ship",
+          "a": "A rendelések általában 3–5 munkanapon belül megérkeznek."
+        }
+      ]
+    },
+    "crawlWeb": {
+      "eyebrow": "Felderítés",
+      "titlePrefix": "Egy link be. ",
+      "titleHl": "Egy teljes weboldal ki.",
+      "subtitle": "Add meg az Elpinónak a kezdőlapodat, és önállóan követi a linkeket, akár 50 oldalig. Elsőként a súgó-, ár- és szabályzati oldalakat olvassa el, a képeket, letöltéseket és egyéb zajt pedig kihagyja. A JavaScripttel épített oldalakat valódi böngészőben rendereli, így semmi nem marad üres.",
+      "pagesKept": "Megtartott oldalak",
+      "filesSkipped": "Kihagyott fájlok",
+      "svgAlt": "Egy bejárás, amely egy oldalról indul és a hivatkozott oldalakra terjed",
+      "startLabel": "START"
+    },
+    "otherWays": {
+      "eyebrow": "További módok",
+      "titlePrefix": "Nem minden található ",
+      "titleHl": "egy weboldalon.",
+      "subtitle": "Három további módja annak, hogy taníts az Elpinónak – azon tudás számára, amihez sosem volt URL.",
+      "items": [
+        {
+          "title": "Webtérkép",
+          "big": "20",
+          "note": "oldal egyszerre behúzva a webtérképedből"
+        },
+        {
+          "title": "Fájlok",
+          "big": ".pdf",
+          "note": "valamint .docx, .txt és .md. A szöveget mi kinyerjük helyetted"
+        },
+        {
+          "title": "Írd meg",
+          "big": "Aa",
+          "note": "szabályzatok és „hogyan csináljuk” oldalak, közvetlenül a szerkesztőben megírva"
+        }
+      ]
+    },
+    "mill": {
+      "eyebrow": "Mi történik ezután",
+      "titlePrefix": "Minden oldal ",
+      "titleHl": "ugyanazt az utat járja végig.",
+      "items": [
+        {
+          "t": "Biztonságosan letöltve",
+          "d": "ElpinoBotként, védelemmel a privát hálózatok elérése ellen."
+        },
+        {
+          "t": "Megtisztítva",
+          "d": "Menük és sablonszövegek ki, a hasznos szöveg be."
+        },
+        {
+          "t": "Darabolva és beágyazva",
+          "d": "Szakaszokra bontva, és jelentés szerint indexelve, nem csak kulcsszavak alapján."
+        },
+        {
+          "t": "Igény szerint megtalálva",
+          "d": "A legközelebbi szakaszok azonnal előkerülnek, amint az ügyfél kérdez."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Kérdések",
+      "titlePrefix": "Jó ",
+      "titleHl": "tudni.",
+      "items": [
+        [
+          "Mit adhatok hozzá?",
+          "Weboldalakat URL alapján, egy webtérképet (akár 20 oldal), egy bejárást egyetlen linkből (akár 50 oldal), PDF, Word, szöveges és Markdown fájlokat, valamint saját magad által írt oldalakat."
+        ],
+        [
+          "Elolvassa a JavaScripttel épített oldalakat?",
+          "Igen. Ha egy oldalon kevés olvasható szöveg van, először böngészőben rendereli, és az eredményt olvassa el."
+        ],
+        [
+          "Megtarthatom privátnak a tartalmat?",
+          "Igen. Minden forráshoz tartozik egy láthatóság-kapcsoló, így a belső jegyzetek belsők maradnak."
+        ],
+        [
+          "Csatlakoztathatom a Notiont, a Zendesket vagy a Confluence-t?",
+          "Még nem. Jelenleg forrásokat URL, webtérkép, fájlfeltöltés vagy oldalak megírása útján adhatsz hozzá."
+        ],
+        [
+          "Mi történik, ha a válasz nincs ott?",
+          "Az Elpino megmondja, hogy nincs meg az információ, és felajánlja, hogy összekapcsolja az ügyfelet a csapatoddal, találgatás helyett."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Töltsd fel a valódi polcodat.",
+      "subtitle": "Illessz be egy linket, és az Elpino máris válaszol belőle.",
+      "ctaStart": "Ingyenes indítás",
+      "ctaMeetAgent": "Ismerd meg az AI ügynököt"
+    }
+  },
+  "integrations": {
+    "hero": {
+      "badge": "Integrációk",
+      "titlePrefix": "Csatlakozz. ",
+      "titleHl": "Lépj szintet.",
+      "subtitle": "Kapcsold össze a fizetéseidet, a jegykezelődet és a saját rendszereidet, és nézd, hogyan bővül az, amit az Elpino tud. Koppints a foglalatokra, hogy csatlakoztasd őket."
+    },
+    "board": {
+      "pluggedInCount": "{on} / {total} csatlakoztatva",
+      "pluggedIn": "Csatlakoztatva",
+      "tapToPlugIn": "Koppints a csatlakoztatáshoz",
+      "on": "Be",
+      "off": "Ki",
+      "whatCanDo": "Mit tud most az Elpino",
+      "empty": "Még semmi sincs csatlakoztatva. Koppints egy foglalatra fent."
+    },
+    "conns": [
+      {
+        "name": "Stripe",
+        "blurb": "Az AI valós fizetéseket és előfizetéseket ellenőriz.",
+        "abilities": [
+          "Fizetések és előfizetések keresése",
+          "Nyugták és fizetési linkek küldése",
+          "Előfizetés lemondása kérésre",
+          "Visszatérítések, csak ha bekapcsolod"
+        ]
+      },
+      {
+        "name": "Razorpay",
+        "blurb": "Ugyanazok a fizetési eszközök, Razorpay-fiókokhoz.",
+        "abilities": [
+          "Fizetések és előfizetések keresése",
+          "Nyugták és fizetési linkek küldése",
+          "Előfizetés lemondása kérésre",
+          "Visszatérítések, csak ha bekapcsolod"
+        ]
+      },
+      {
+        "name": "Cashfree",
+        "blurb": "Fizetési és elszámolási előzmények a csapatod számára.",
+        "abilities": [
+          "Rendelés vagy fizetés megtalálása egy beszélgetésből",
+          "Elszámolási és visszatérítési státusz megtekintése"
+        ]
+      },
+      {
+        "name": "Paystack",
+        "blurb": "Tranzakció- és visszatérítés-státusz a csapatod számára.",
+        "abilities": [
+          "Tranzakció keresése egy beszélgetésből",
+          "Fizetési és visszatérítési státusz ellenőrzése"
+        ]
+      },
+      {
+        "name": "Trello",
+        "blurb": "A jegyek kártyaként landolnak a tábládon.",
+        "abilities": [
+          "A jegyekből Trello-kártyák lesznek",
+          "Az összefoglaló és a beszélgetés linkje is csatolva van"
+        ]
+      },
+      {
+        "name": "Asana",
+        "blurb": "A jegyek feladatként landolnak a projektedben.",
+        "abilities": [
+          "A jegyekből Asana-feladatok lesznek",
+          "Az összefoglaló és a beszélgetés linkje is csatolva van"
+        ]
+      },
+      {
+        "name": "A saját MCP szervereid",
+        "blurb": "Bármi, ami MCP-t beszél, az általad jóváhagyott eszközökkel.",
+        "abilities": [
+          "Eszközök meghívása a saját szervereiden",
+          "Legfeljebb 5 szerver, egyenként 15 engedélyezett eszközzel",
+          "Csak az általad jóváhagyott eszközök láthatók",
+          "Az adatokat módosító eszközökhöz ellenőrzött ügyfél szükséges"
+        ]
+      }
+    ],
+    "how": {
+      "eyebrow": "Csatlakozás",
+      "titlePrefix": "Egy perc mindegyik. ",
+      "titleHl": "Mérnökök nélkül.",
+      "stepLabel": "{n}. lépés",
+      "steps": [
+        {
+          "t": "Válassz egy eszközt",
+          "d": "Nyisd meg a Csatlakoztatás menüt az irányítópulton, és válaszd ki a kívánt csatlakozót."
+        },
+        {
+          "t": "Illessz be egy kulcsot, vagy engedélyezz",
+          "d": "Az API-kulcsos eszközök a kulcsaidat kérik. Az Asana normál bejelentkezést és engedélyezési képernyőt használ."
+        },
+        {
+          "t": "Előbb ellenőrizzük",
+          "d": "Az Elpino a mentés előtt teszteli a kulcsaidat a szolgáltatónál, és titkosítva tárolja azokat."
+        }
+      ]
+    },
+    "families": {
+      "eyebrow": "A katalógus",
+      "titlePrefix": "Háromféle ",
+      "titleHl": "kapcsolat.",
+      "tabs": {
+        "payments": "Fizetések",
+        "tickets": "Jegyek",
+        "systems": "Saját rendszereid"
+      },
+      "paymentsNote": "Az AI fizetési műveletei ma a Stripe-pal és a Razorpay-jel működnek. A Cashfree és a Paystack fizetési kontextust hoz a csapatodnak."
+    },
+    "safe": {
+      "badge": "Alapból biztonságos",
+      "titlePrefix": "Csatlakoztatva, ",
+      "titleHl": "nem kitéve.",
+      "items": [
+        {
+          "t": "A kulcsok titkosítva maradnak",
+          "d": "A hitelesítő adatok titkosítva tárolódnak, és az Elpino a mentés előtt ellenőrzi őket a szolgáltatónál."
+        },
+        {
+          "t": "Kereséshez az olvasási jogosultság is elég",
+          "d": "A Stripe-hoz használj korlátozott kulcsot, amely csak ügyfelekhez és fizetésekhez fér olvasási joggal."
+        },
+        {
+          "t": "Pénz csak akkor mozog, ha engedélyezed",
+          "d": "A visszatérítések alapból ki vannak kapcsolva. A munkaterület tulajdonosa dönti el, hogy az AI kiadhat-e ilyet."
+        },
+        {
+          "t": "Minden MCP-eszközt te hagysz jóvá",
+          "d": "Az AI csak az általad bekapcsolt eszközöket látja, és minden hívást újra ellenőrzünk a szerveren."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Kérdések",
+      "titlePrefix": "Jó ",
+      "titleHl": "tudni.",
+      "items": [
+        [
+          "Milyen eszközöket csatlakoztathatok?",
+          "Stripe, Razorpay, Cashfree és Paystack a fizetésekhez, Trello és Asana a jegyekhez, valamint a saját MCP szervereid bármi máshoz."
+        ],
+        [
+          "Mit tud az AI a fizetésekkel?",
+          "Stripe vagy Razorpay csatlakoztatásával kereshet fizetéseket és előfizetéseket, küldhet nyugtákat és fizetési linkeket, és kérésre lemondhat egy előfizetést. A visszatérítések ki vannak kapcsolva, hacsak nem engedélyezed őket."
+        ],
+        [
+          "Technikai tudás szükséges?",
+          "Fizetésekhez és jegyekhez nem. Beillesztesz egy kulcsot, vagy bejelentkezel az Asanába. Az MCP szerverekhez valakinek meg kell építenie egyet."
+        ],
+        [
+          "Támogatott a Shopify, a Slack vagy a HubSpot?",
+          "Ma még nem egykattintásos csatlakozóként. Ha a rendszeredhez van MCP szerver, azt csatlakoztathatod, és elmondhatod nekünk, mit szeretnél legközelebb."
+        ],
+        [
+          "Hova kerülnek a jegyek?",
+          "A Trellóba vagy az Asanába, ha csatlakoztatva vannak. Egyébként az Issues oldaladon élnek."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Hiányzik valami, amire szükséged van?",
+      "subtitle": "Mondd el, melyik eszközt szeretnéd legközelebb, vagy csatlakoztasd magad MCP-n keresztül.",
+      "ctaStart": "Ingyenes indítás",
+      "ctaRequest": "Integráció kérése"
+    }
+  },
+  "securityGuide": {
+    "sticky": {
+      "securityLabel": "Biztonság",
+      "reportIssue": "Probléma jelentése"
+    },
+    "hero": {
+      "badge": "Biztonsági útmutató",
+      "title1": "Úgy épült, hogy ",
+      "title2": "megvédje az adataidat.",
+      "subtitle": "Ez az útmutató végigveszi, mi védett a webalkalmazásban, a gatewayben, valamint az auth-, workspace- és AI-szolgáltatásokban — mit garantálunk, és miért bízhatsz benne, anélkül hogy lépésről lépésre feltárnánk a belső működést.",
+      "ctaBlueprint": "Nézd meg az áttekintő ábrát",
+      "ctaChapters": "Olvasd el a fejezeteket",
+      "ctaTrust": "Trust Center",
+      "register": {
+        "label": "Regiszter",
+        "chapters": "Fejezetek",
+        "controlsDescribed": "Bemutatott kontrollok",
+        "componentsCovered": "Érintett komponensek",
+        "componentsValue": "6",
+        "reviewedAgainst": "Ellenőrizve",
+        "reviewedValue": "a termékkel szemben"
+      }
+    },
+    "blueprint": {
+      "fig": "1. ábra · Áttekintés",
+      "title": "Mi történik egy kéréssel",
+      "subtitle": "Minden nyíl titkosított vagy hitelesített. Mutass rá bármelyik részre, hogy megtudd, mit jelent ez a gyakorlatban.",
+      "readChapter": "Fejezet elolvasása"
+    },
+    "nodes": {
+      "widget": {
+        "label": "Látogató",
+        "sub": "Chat widget",
+        "guards": "A vendégek vendégek maradnak. A bejelentkezett látogatók egy aláírt hitelesítő adattal vagy egy e-mailes kóddal igazolják magukat, amit csak a widget saját memóriája tárol."
+      },
+      "team": {
+        "label": "A csapatod",
+        "sub": "Irányítópult",
+        "guards": "A jelszavakat soha nem tároljuk olvasható formában, a Google-bejelentkezést a szerverünk ellenőrzi, és bármelyik sessiont bármikor távolról lezárhatod."
+      },
+      "elpino": {
+        "label": "Elpino",
+        "sub": "Ellenőriz, védelmez, válaszol",
+        "guards": "Minden kérést ellenőrzünk, mielőtt bármi lefutna, a privát adatokat kicseréljük, mielőtt egy AI-modell egyáltalán látná őket, és az AI olyan korlátok között működik, amelyeken nem tud kibeszélni magát."
+      },
+      "google": {
+        "label": "Google",
+        "sub": "Bejelentkezés",
+        "guards": "Csak azután megbízható, hogy a saját szerverünk önállóan ellenőrizte."
+      },
+      "pay": {
+        "label": "Fizetések",
+        "sub": "Razorpay · Stripe",
+        "guards": "Fizetési értesítéseket csak érvényesített aláírással fogadunk el, és ezek soha nem ismételhetők meg a felhasználásod visszaállítására."
+      },
+      "models": {
+        "label": "AI-szolgáltatók",
+        "sub": "Modellek",
+        "guards": "Biztonságos helyettesítő adatokat látnak a valódiak helyett, soha titkokat, és az adataid nem tanítanak általános modelleket."
+      }
+    },
+    "chaptersSection": {
+      "label": "A fejezetek",
+      "title1": "Tizenkét fejezet. ",
+      "title2": "Semmi nem maradt ki.",
+      "subtitle": "Minden kontroll megnevezi, hogy a rendszer melyik részéhez tartozik, és milyen garanciát ad — nem a mögötte álló pontos mechanizmust.",
+      "contents": "Tartalom"
+    },
+    "chapters": {
+      "accounts": {
+        "title": "Fiókok és sessionök",
+        "kicker": "Ki van a csapatodban, és honnan tudjuk, hogy ő az.",
+        "intro": "Regisztráció, bejelentkezés és minden utána következő session. A jelszavakat soha nem tároljuk olvasható formában, az ellenőrző kódok gyorsan lejárnak, és egy session bármikor lezárható a szerver oldaláról.",
+        "stats": [
+          "A jelszavak hash-elve vannak, soha nem tároltak",
+          "A kódok gyorsan lejárnak",
+          "A sessionöket visszavonhatod"
+        ],
+        "controls": {
+          "1.1": {
+            "title": "A jelszavak hash-elve vannak, soha nem tároltak",
+            "text": "A jelszavad soha, semmilyen olvasható formában nincs tárolva — még nálunk sem. Az ellenőrzés nem szivárogtathatja ki, hogy egy rossz próbálkozás mennyire volt közel."
+          },
+          "1.2": {
+            "title": "E-mailes ellenőrző kódok",
+            "text": "Az új fiókok rövid élettartamú kóddal igazolják az e-mail-címüket. Csak a kód biztonságos hash-e van tárolva, gyorsan lejár, és csak néhány sikertelen próbálkozás után kell újat kérni."
+          },
+          "1.3": {
+            "title": "A Google-bejelentkezést a szerver ellenőrzi",
+            "text": "A Google-bejelentkezési felugró ablak a böngésződben fut, de a szerverünk önállóan ellenőrzi, mielőtt megbízna benne, és mindig a verifikált e-mail-címed alapján jelentkeztet be ugyanabba a fiókba — soha egy másik, nem összekapcsolt fiókba."
+          },
+          "1.4": {
+            "title": "Aláírt session tokenek",
+            "text": "A sessiond egy aláírt token, amit a szerverünk mindig önállóan ellenőrizni tud — nem hamisítható, nem szerkeszthető, és nem játszható vissza másnak, mint aminek lennie kellene."
+          },
+          "1.5": {
+            "title": "Lezárt session cookie",
+            "text": "A session cookie-dat a lapon futó szkriptek nem tudják kiolvasni, és mindig csak biztonságos kapcsolaton keresztül utazik."
+          },
+          "1.6": {
+            "title": "Kijelentkezés mindenhonnan",
+            "text": "A kijelentkezés gyorsan érvényteleníti az összes sessionödet. Ha nem tudjuk megerősíteni, hogy egy session még érvényes, inkább visszautasítjuk, mint hogy átengedjük."
+          },
+          "1.7": {
+            "title": "Biztonságos átirányítások",
+            "text": "Bejelentkezés után mindig csak a saját oldalunkon belüli lapra irányítunk — soha máshová, függetlenül attól, hogyan van a link megszerkesztve."
+          },
+          "1.8": {
+            "title": "Csapatmeghívók",
+            "text": "A meghívólinkek kitalálhatatlanok és automatikusan lejárnak, és a tulajdonos döntheti el, hogy a tagok meghívhatnak-e másokat."
+          }
+        }
+      },
+      "front-door": {
+        "title": "A bejárat",
+        "kicker": "Mit tesz a weboldal, mielőtt egy kérés továbbmegy.",
+        "intro": "A webalkalmazás az első dolog, amivel a böngésző érintkezik. Megkeményíti a böngészőt, korlátozza a visszaéléseket, és ellenőrzi a bemenetet, mielőtt továbbadná.",
+        "stats": [
+          "Nincs keretezés",
+          "Korlátozott visszaélés",
+          "Zárva hibázik"
+        ],
+        "controls": {
+          "2.1": {
+            "title": "Böngésző-megkeményítő fejlécek",
+            "text": "Minden lap, a chat widget kivételével, védett a clickjacking ellen, védett a tartalomtípus-felismerés ellen, és az érzékeny eszközjogosultságok, mint a kamera és a helymeghatározás, alapértelmezetten kikapcsolva vannak. A widget az egyetlen szándékos kivétel, mivel egy iframe-ben kell élnie a te oldaladon."
+          },
+          "2.2": {
+            "title": "Megosztott visszaélés-korlátok",
+            "text": "A nyilvános formokat az összes szerverünk között megosztott sebességkorlátok védik, így egy helyről érkező visszaélés nem csúszhat át egyszerűen egy másik szerveren."
+          },
+          "2.3": {
+            "title": "Zárva hibázik",
+            "text": "Ha a visszaélés-korlátozó nem elérhető, a kérést visszautasítjuk, nem pedig átengedjük."
+          },
+          "2.4": {
+            "title": "Ellenőrzött, hosszkorlátos bemenet",
+            "text": "Minden formot a szerveren ellenőrzünk és méretkorlátozunk, mielőtt bármi feldolgozásra kerülne — soha nem bízunk meg benne csak azért, hogy a böngésző már ellenőrizte."
+          }
+        }
+      },
+      "gateway": {
+        "title": "A gateway",
+        "kicker": "Egy ajtó a backend felé, alapértelmezetten zárva.",
+        "intro": "Minden hívás a backend felé egyetlen gatewayn megy keresztül. A szabály egyszerű: ha egy útvonal nincs kifejezetten nyilvánosnak jelölve, bizonyítania kell, hogy jogosult.",
+        "stats": [
+          "Alapértelmezetten zárva",
+          "Kifejezett nyilvános lista",
+          "Ellenőrzött élő kapcsolatok"
+        ],
+        "controls": {
+          "3.1": {
+            "title": "Alapértelmezetten zárva",
+            "text": "Minden útvonal bizonyítékot kér arra, hogy jogosult belső hívás, kivéve, ha kifejezetten nyilvánosnak van jelölve. Ha ez az ellenőrzés nincs beállítva, a gateway mindent visszautasít, helyette nem nyit meg semmit."
+          },
+          "3.2": {
+            "title": "Egy rövid, kifejezett nyilvános lista",
+            "text": "Csak azok a hívók nyilvánosak, akik valóban nem tudnak belső hitelesítő adatokat kezelni: a chat widget, az oldalanalitika, a fizetési webhook, és az egyszeri, biztonságos linkek. Mindegyik szándékosan, útvonalanként van jelölve."
+          },
+          "3.3": {
+            "title": "Csak kifejezett eredetek",
+            "text": "Az API csak egy ismert, jóváhagyott eredetlistáról válaszol böngészőknek — soha nem onnan, ahonnan éppen érkezik a kérés."
+          },
+          "3.4": {
+            "title": "Ellenőrzött élő kapcsolatok",
+            "text": "A live-view kapcsolatok egy ellenőrzött, workspace-hez kötött, lejárati idővel rendelkező hitelesítő adatot igényelnek. Minden mást azonnal elutasítunk."
+          },
+          "3.5": {
+            "title": "A belső pushok is védettek",
+            "text": "Azok a végpontok, amelyeket a szolgáltatások élő értesítések küldésére használnak az irányítópultokra, ugyanazt a belső bizonyítékot igénylik, így senki kívülálló nem tud egy csapattárs képernyőjén csörögni."
+          }
+        }
+      },
+      "visitors": {
+        "title": "Látogatók és azonosítás",
+        "kicker": "Megkülönbözteni egy bejelentkezett ügyfelet attól, aki csak beírt egy e-mail-címet.",
+        "intro": "Egy név, egy e-mail-cím vagy egy rendelésszám nem bizonyíték arra, hogy ki az illető. A fiókkal kapcsolatos segítség csak valódi azonossági bizonyíték után válik elérhetővé, és ez a bizonyíték gyorsan lejár.",
+        "stats": [
+          "Valódi bizonyíték szükséges",
+          "A sessionök automatikusan lejárnak",
+          "Időkorlátos ellenőrzés"
+        ],
+        "controls": {
+          "4.1": {
+            "title": "A vendégek vendégek maradnak",
+            "text": "Egy beírt név, e-mail-cím, telefonszám vagy fizetési referencia soha nem számít azonossági bizonyítéknak. A vendégek csevegjenek és hagyhatnak elérhetőségi adatokat, de ez semmilyen privát eszközt nem nyit meg, és soha nem kerül összevonásra senki más előzményével."
+          },
+          "4.2": {
+            "title": "Aláírt azonosság a saját oldaladról",
+            "text": "A bejelentkezett ügyfelek esetében a saját szervered szavatolja, hogy ki az illető, egy rövid élettartamú, aláírt hitelesítő adattal, amelyet csak te és az Elpino tudtok együtt létrehozni. Az elérhetőségi adatok csak akkor számítanak ellenőrzöttnek, ha a rendszered ezt mondja."
+          },
+          "4.3": {
+            "title": "Egy csere, egy session",
+            "text": "Minden azonossági bizonyítékot egyszer használunk fel, majd egy saját, friss sessionre cseréljük — semmi újrafelhasználható nem marad, és a tárolt adat nem alakítható vissza az eredetivé."
+          },
+          "4.4": {
+            "title": "Rövid élettartamú sessionök",
+            "text": "Egy session automatikusan lejár egy inaktivitási időszak után, vagy egy fix idő elteltével a bejelentkezéstől számítva — amelyik előbb bekövetkezik. Csak a widget saját memóriájában tárolódik, soha böngészőtárolóban vagy URL-ben."
+          },
+          "4.5": {
+            "title": "Rotáció és kijelentkezés",
+            "text": "Az azonossági hitelesítő adat rotálása azonnal érvényteleníti az összes sessiont, amely a régit használta. A kijelentkezés visszavonja a sessiont a szerverünkön, és a régi sessionök automatikusan törlődnek."
+          },
+          "4.6": {
+            "title": "E-mailes kódok vendégeknek",
+            "text": "Egy látogató e-mailben is ellenőrizheti magát egy rövid, egyszeri kóddal, amely visszaélés ellen sebességkorlátozott. Az ellenőrzés csak azt az egy beszélgetést nyitja meg, és csak korlátozott ideig."
+          },
+          "4.7": {
+            "title": "Minden kérés újra ellenőrzött",
+            "text": "Minden hitelesített olvasás és írás önállóan újra ellenőrzi, ki kér, milyen workspace-hez van kötve, és hogy a hozzáférés még érvényes-e — semmit nem fogadunk el csak azért, hogy egy pillanattal korábban érvényes volt."
+          }
+        }
+      },
+      "ai": {
+        "title": "Az AI pórázon van",
+        "kicker": "Mit tehet és mit nem az AI, amit a backend érvényesít, nem pedig szép kérésre.",
+        "intro": "A modell javasol; a backend dönt. Az eszközök, az azonosság, a korlátok és a pénz mind a modellen kívül élnek, ahol egy ügyes üzenet nem tudja kibeszélni magát rajtuk.",
+        "stats": [
+          "Korlátozott munka",
+          "Backend által vezérelt eszközök",
+          "Független felülvizsgálat"
+        ],
+        "controls": {
+          "5.1": {
+            "title": "Egy válasz, egy tulajdonos",
+            "text": "Mielőtt egy AI-válasz elmentődik, a rendszer önállóan megerősíti, hogy a beszélgetés még AI-tulajdonban van, és a megválaszolt kérdés még a legutolsó. Az AI nem beszélhet a csapatod szavába, és nem válaszolhat valamire, ami már túlhaladott."
+          },
+          "5.2": {
+            "title": "Korlátozott munka",
+            "text": "Minden AI-fordulónak szigorú felső korlátja van arra, mennyit tehet. Egy elakadt vagy ismétlődő futást automatikusan megszakítunk, soha nem hagyjuk futni."
+          },
+          "5.3": {
+            "title": "A backend választja az eszközöket",
+            "text": "Hogy az AI melyik eszközöket használhatja, teljesen a workspace saját beállításai és az ügyfél ellenőrzöttsége dönti el — a modell nem adhat magának eszközt, nem nyilváníthat adatot nyilvánosnak, és nem érhet el másik workspace-t."
+          },
+          "5.4": {
+            "title": "A fiókkezelő eszközök ellenőrzött ügyfelet igényelnek",
+            "text": "A fizetési lekérdezések és a kapcsolt rendszerek csak azután válnak elérhetővé, hogy az ügyfél igazolta, ki ő, és mindig csak a már rögzített azonosságon alapulva cselekednek — soha nem azon, amit a modellnek mondanak."
+          },
+          "5.5": {
+            "title": "Az üzenetek adatok, nem utasítások",
+            "text": "Az ügyfélüzenetek, dokumentumok és eszközeredmények a modellhez világosan megjelölt, nem megbízható információként érkeznek. A bennük elrejtett utasításokat nem követjük."
+          },
+          "5.6": {
+            "title": "Egy második vélemény",
+            "text": "Egy külön, független ellenőrzés minden válaszvázlatot felülvizsgál az AI által valóban összegyűjtött bizonyítékok alapján. Egy alá nem támasztott állítást visszaküldünk átíráshoz, és ha az is elbukik, egy ember kezébe kerül."
+          },
+          "5.7": {
+            "title": "A pénz mozgása kapukon keresztül történik",
+            "text": "Az AI-visszatérítések alapértelmezetten ki vannak kapcsolva, amíg egy workspace-tulajdonos be nem kapcsolja őket, és akkor is korlátozottak és automatikusan felső határhoz kötöttek. Egy megismételt visszatérítés soha nem adható ki kétszer, és egy előfizetés lemondása soha nem szünteti meg azt az időt, amiért már fizettél."
+          },
+          "5.8": {
+            "title": "Auditnyom minden futáshoz",
+            "text": "Minden AI-futás nyilvántartja, mit tett, és mivel tette. Amit pénz mozgásához kapcsolódik, azt egy, a csapatod számára is látható jegyzetként is naplózzuk."
+          }
+        }
+      },
+      "private-data": {
+        "title": "Privát adatok",
+        "kicker": "Mit lát valójában a modell.",
+        "intro": "Mielőtt egy kérés eléri egy AI-modellt, az azonosító adatokat biztonságos helyettesítőkkel váltjuk fel. Próbáld ki lentebb a saját szöveggeddel.",
+        "stats": [
+          "Az adatok előbb cserélődnek",
+          "A titkok teljesen eltávolítva",
+          "Ugyanazok a szabályok, minden szolgáltatónál"
+        ],
+        "controls": {
+          "6.1": {
+            "title": "A valódi adatok soha nem érik el a modellt",
+            "text": "A neveket, e-mail-címeket, telefonszámokat, címeket és rendelési vagy fizetési adatokat soha nem küldjük a modellnek úgy, ahogy vannak. Először biztonságos helyettesítőkre cseréljük, és csak utólag állítjuk vissza a valódi értéket, a saját szervereinken — soha semmiben, amit a modell lát."
+          },
+          "6.2": {
+            "title": "A titkokat eltávolítjuk, nem csak elrejtjük",
+            "text": "A jelszavakat, API-kulcsokat, tokeneket és egyszeri kódokat teljesen kivesszük, mielőtt bármi eléri a modellt — nem álcázva, egyszerűen eltávolítva."
+          },
+          "6.3": {
+            "title": "Az érzékeny linkeket megtisztítjuk",
+            "text": "A hozzáférési tokeneket vagy más érzékeny paramétereket hordozó linkeket megtisztítjuk, mielőtt egy modell egyáltalán elolvasná őket."
+          },
+          "6.4": {
+            "title": "Fizetési tények, nem fizetési nyilvántartás",
+            "text": "A fizetési eszközök csak biztonságos összefoglalókat adnak vissza — státuszt és dátumokat — soha nyers kártya- vagy számlaadatot, és a hibaokok egyszerűsítve vannak, nem szabad szövegként átadva."
+          },
+          "6.5": {
+            "title": "Ugyanazok a szabályok minden modellnél",
+            "text": "Ugyanaz a védelem fut, függetlenül attól, melyik AI-szolgáltató válaszol, beleértve, amikor egy másikra váltunk vissza. A beszélgetéseidet és dokumentumaidat soha nem használjuk általános célú modellek betanítására."
+          }
+        }
+      },
+      "integrations": {
+        "title": "Integrációk és kimenő kérések",
+        "kicker": "Amikor az Elpinónak el kell érnie egy URL-t, amit megadtál.",
+        "intro": "Az oldalad feltérképezése, egy lap kiolvasása, vagy egy kapcsolt rendszer hívása egyaránt azt jelenti, hogy lekérünk egy URL-t, amelyet valaki begépelt. Ezek a kérések mind le vannak zárva, hogy ne lehessen fordítani a saját hálózatunk — vagy a tiéd — ellen.",
+        "stats": [
+          "Nyugalmi állapotban titkosítva",
+          "Privát hálózatot nem érhet el",
+          "Korlátozott és időkorlátos"
+        ],
+        "controls": {
+          "7.1": {
+            "title": "A hitelesítő adatok nyugalmi állapotban titkosítottak",
+            "text": "Bármely kulcs vagy token, amit összekapcsolsz — Stripe, Razorpay, Trello és hasonlók — titkosítva van, mielőtt bármikor tárolásra kerülne. Egy önmagában lévő adatbázis-másolat nem tudja visszaállítani ezeket."
+          },
+          "7.2": {
+            "title": "A kimenő kérések nem irányíthatók befelé",
+            "text": "Amikor a nevedben lekérünk egy URL-t — feltérképezve az oldaladat, hívva egy kapcsolt rendszert — biztosítjuk, hogy ne lehessen egy privát hálózat vagy belső infrastruktúra felé átirányítani, beleértve a mienket is."
+          },
+          "7.3": {
+            "title": "Az átirányításokat minden lépésnél ellenőrizzük",
+            "text": "Az átirányításokat óvatosan követjük, minden lépést ellenőrizve, nem pedig a végső célban megbízva, és mindig csak szabványos, biztonságos kapcsolaton keresztül."
+          },
+          "7.4": {
+            "title": "A kapcsolt rendszerek korlátozottak",
+            "text": "A saját eszközeidhez való kapcsolatok mérete és időtartama korlátozott, így nem használhatók korlátlan adatlekérésre vagy határozatlan ideig tartó függésre."
+          },
+          "7.5": {
+            "title": "Az adminok jóváhagynak minden eszközt",
+            "text": "A kapcsolt eszközök ki vannak kapcsolva, amíg egy admin jóvá nem hagyja őket. Egy adatot módosítani képes eszköz külön van megjelölve, és még akkor is ellenőrzött ügyfelet igényel, ha a szerver egyébként nyilvános."
+          },
+          "7.6": {
+            "title": "A leválasztás valóban eltávolítást jelent",
+            "text": "Amikor leválasztasz egy integrációt, a tárolt tokenjei és hitelesítő adatai azonnal törlődnek."
+          }
+        }
+      },
+      "secure-links": {
+        "title": "Biztonságos átadások",
+        "kicker": "Amikor egy ügyfélnek valami érzékenyet kell elküldenie.",
+        "intro": "Soha ne illessz be egy kulcsot a chatbe. Egy csapattárs helyette egy egyszer használatos linken keresztül kérheti el, és a chat mindig csak a linket tartalmazza.",
+        "stats": [
+          "Kitalálhatatlan link",
+          "Automatikusan lejár",
+          "Külön titkosítva"
+        ],
+        "controls": {
+          "8.1": {
+            "title": "A chat soha nem tartalmazza a titkot",
+            "text": "A beszélgetésben lévő értesítés megnevezi, mit kértek, és tartalmaz egy linket — soha nem magát az értéket."
+          },
+          "8.2": {
+            "title": "Egy kitalálhatatlan, rövid élettartamú link",
+            "text": "A link maga az ügyfél teljes felhatalmazási bizonyítéka, ezért kitalálhatatlanná tesszük, és automatikusan lejár, mielőtt tartós kockázattá válhatna."
+          },
+          "8.3": {
+            "title": "Saját kulccsal titkosítva",
+            "text": "Amit beküldenek, egy olyan kulccsal zárjuk le, amely teljesen elkülönül attól, amelyik a többi hitelesítő adatodat védi, így bármelyik rotálható — vagy legrosszabb esetben kompromittálódhat — anélkül, hogy a másikat érintené."
+          },
+          "8.4": {
+            "title": "Korlátozott és rendszeresen letisztított",
+            "text": "A beküldések méretkorlátozottak, és minden lejárt tartalmat automatikusan és véglegesen letörlünk egy rendszeres ütemterv szerint, csak egy nyomot hagyva arról, hogy valami történt — soha nem azt, hogy mi volt."
+          }
+        }
+      },
+      "money": {
+        "title": "Pénz és számlázás",
+        "kicker": "Fizetések, megújítások és a hozzájuk kötött korlátok.",
+        "intro": "Minden, ami pénzt mozgat, kétszer ellenőrzött: egyszer, hogy az üzenet valóban a fizetési szolgáltatótól érkezett, és egyszer, hogy nem alkalmazható kétszer.",
+        "stats": [
+          "Csak ellenőrzött aláírások",
+          "Ismétlésbiztos",
+          "Nem duplázhat terhelést"
+        ],
+        "controls": {
+          "9.1": {
+            "title": "Aláírt webhookok és fizetési folyamatok",
+            "text": "A fizetési értesítéseket csak a szolgáltatótól érkező érvényes, ellenőrzött aláírással fogadjuk el — minden más, egy közel-hibát is beleértve, kategorikusan elutasított."
+          },
+          "9.2": {
+            "title": "Az ismétlések nem állíthatják vissza a felhasználást",
+            "text": "Egy fizetési értesítés, amely egynél többször érkezik — visszajátszva, vagy egyszerűen kétszer kézbesítve — soha nem nullázhatja vissza a már elköltött felhasználást, és nem adhat újra jóváírást."
+          },
+          "9.3": {
+            "title": "Az automatikus feltöltés nem duplázhat terhelést",
+            "text": "Annak ellenőrzése, hogy egy feltöltés a korlátain belül van, és a tényleges lefoglalása egyetlen atomi lépésként történik, és az egyenleged csak akkor kerül jóváírásra, amikor egy fizetést megerősítettek és lehívtak."
+          },
+          "9.4": {
+            "title": "Minden pénzmozgás rögzítve van",
+            "text": "Minden fizetési esemény a szolgáltatótól egy auditnyomba kerül, és bármely fizetési műveletet, amelyet az AI végez, saját külön naplóba is bekerül."
+          },
+          "9.5": {
+            "title": "A csomaghatárokat a szerver érvényesíti",
+            "text": "A csomaghoz kötött funkciókat a backend ellenőrzi, nem csak a felületen rejtjük el, és a férőhely-korlátokat a valódi tagságból számoljuk — nem abból, amit a böngésző állít."
+          }
+        }
+      },
+      "lifecycle": {
+        "title": "Adat életciklus",
+        "kicker": "Hol él az adat, mennyi ideig, és hogyan tűnik el.",
+        "intro": "Az adataid a workspace-edhez vannak kötve, akkor lejárnak, amikor kell, és te törölheted őket.",
+        "stats": [
+          "Workspace-hez kötött",
+          "Automatikusan letisztított",
+          "Törölheted"
+        ],
+        "controls": {
+          "10.1": {
+            "title": "A workspace-edhez kötött",
+            "text": "A beszélgetések, a tudásbázis, az ügyfelek és a beállítások mind egy workspace-hez tartoznak, és minden lekérdezés ehhez van kötve — semmi nem kerül át véletlenül."
+          },
+          "10.2": {
+            "title": "A csak-csapatnak jelöltek csak a csapatnak maradnak",
+            "text": "A csak-csapatnak jelölt jegyzeteket kiszűrjük, mielőtt a beszélgetés bármikor megjelenne a látogató widgetjében."
+          },
+          "10.3": {
+            "title": "A rövid élettartamú dolgok lejárnak",
+            "text": "Az ellenőrző kódok, a session hitelesítő adatok és a biztonságos link tartalma mind automatikusan lejár és letisztításra kerül — semmi rövid élettartamú nem marad a végtelenségig."
+          },
+          "10.4": {
+            "title": "Töröld a workspace-edet",
+            "text": "Egy workspace törlése azonnal lemondja az előfizetését, és eltávolítja a nyilvántartásait, egy szigorú felső korláttal a teljes eltávolításra, ami az adatvédelmi szabályzatban szerepel."
+          },
+          "10.5": {
+            "title": "Hagyd el vagy töröld a fiókodat",
+            "text": "A tagok elhagyhatnak egy workspace-t, és egy fiók teljesen törölhető a Beállításokból."
+          }
+        }
+      },
+      "infrastructure": {
+        "title": "Infrastruktúra",
+        "kicker": "Hogyan üzemelnek maguk a szolgáltatások.",
+        "intro": "Egyszerű, dicstelen higiénia, amely megakadályozza, hogy egy belső szolgáltatás nyilvánossá váljon.",
+        "stats": [
+          "Nem elérhető nyilvánosan",
+          "Minimális lábnyom",
+          "Felügyelt"
+        ],
+        "controls": {
+          "11.1": {
+            "title": "A belső szolgáltatások nem érhetők el nyilvánosan",
+            "text": "A backend szolgáltatásaink és az adatbázisunk egyáltalán nincsenek kitéve a nyilvános internetnek — csak egyetlen, megerősített belépési pont az."
+          },
+          "11.2": {
+            "title": "Karcsú produkciós buildek",
+            "text": "Amit tényleg futtatunk produkcióban, semmi extrát nem tartalmaz — nincs fejlesztői eszköz, nincs nem használt függőség."
+          },
+          "11.3": {
+            "title": "Korlátok, állapotellenőrzések és naplórotáció",
+            "text": "Minden szolgáltatás erőforrás-korlátokkal, automatikus állapotellenőrzésekkel és újraindítási szabályzattal fut, és a naplók rotálva vannak, hogy ne nőhessenek korlátlanul."
+          },
+          "11.4": {
+            "title": "A titkok kimaradnak a forráskódból",
+            "text": "A kulcsok és titkok soha nincsenek belefoglalva a kódbázisunkba — minden szolgáltatásnak külön adjuk át őket, és az érzékeny hitelesítő fájlok csak olvashatóként vannak csatolva."
+          },
+          "11.5": {
+            "title": "Megismételhető telepítések",
+            "text": "Minden telepítés ugyanazokon az automatizált ellenőrzéseken megy keresztül, így egy kiadás soha nem egyszeri, manuális folyamat."
+          }
+        }
+      },
+      "verification": {
+        "title": "Hogyan ellenőrizzük a saját munkánkat",
+        "kicker": "A tesztek, amelyek próbálják megszegni a fenti szabályokat.",
+        "intro": "A biztonsági állítások csak annyit érnek, amennyit a tesztek alátámasztanak. Ezeket automatizált tesztek fedik le a saját kódbázisunkban.",
+        "stats": [
+          "Hamisított hitelesítő adat tesztek",
+          "Ismétlési tesztek",
+          "Izolációs tesztek"
+        ],
+        "controls": {
+          "12.1": {
+            "title": "Azonossági regressziók",
+            "text": "Az automatizált tesztek lefedik a hamisított hitelesítő adatokat, a lejárt és visszajátszott sessionöket, a kijelentkezést, a hitelesítő adat rotációját, és hogy egy workspace soha ne láthassa egy másik adatait."
+          },
+          "12.2": {
+            "title": "Kimenő kérés tesztek",
+            "text": "Azok az ellenőrzések, amelyek megakadályozzák, hogy a kimenő kérések elérjék a belső hálózatokat, saját dedikált tesztekkel rendelkeznek."
+          },
+          "12.3": {
+            "title": "Adatvédelmi szűrő tesztek",
+            "text": "A rendszer, amely a privát adatokat lecseréli, mielőtt elérnék a modellt, és a fizetési tényekre vonatkozó szabályok, amelyek korlátozzák, mi jeleníthető meg, mindkettő közvetlenül tesztelt."
+          },
+          "12.4": {
+            "title": "Számlázási helyesség tesztek",
+            "text": "A megújítási ismétléseket és az aláírás-ellenőrzést tesztek fedik le, így egy számlázási javítás nem nyithat vissza csendben egy már bezárt rést."
+          }
+        }
+      }
+    },
+    "demo": {
+      "customerLabel": "Amit az ügyfél beír",
+      "resetSample": "Minta visszaállítása",
+      "modelLabel": "Amit a modell olvas",
+      "inputAriaLabel": "Szűrendő üzenet",
+      "caption": "Csak illusztráció, és a böngésződben fut: semmi, amit itt beírsz, nem kerül elküldésre. A valódi szűrő a szervereinken fut, és a valódi adatokra visszavezető leképezés soha nem kerül be egy promptba."
+    },
+    "about": {
+      "label": "Az útmutatóról",
+      "textBefore": "Ez a platform felépítésének leírása, nem tanúsítvány. Azokat a kontrollokat fedi le, amelyek jelenleg léteznek a termékben, és a termékkel együtt fog változni. Ha egy biztonsági kérdőívre kell válaszolni, vagy egy adatkezelési szerződést kell aláírni, írj e-mailt a ",
+      "textAfter": " címre."
+    },
+    "report": {
+      "label": "Sebezhetőség jelentése",
+      "stamp": "Találtál valamit?",
+      "title": "Szerinted találtál egy gyenge pontot? Előbb mi szeretnénk hallani.",
+      "subtitle": "E-mailben küldd el a részleteket és a reprodukálás módját. A csapatunk egy tagja minden jelentést elolvas.",
+      "privacy": "Adatvédelmi szabályzat",
+      "terms": "Feltételek",
+      "securityPolicy": "Biztonsági szabályzat"
+    }
+  },
+  "features": {
+    "families": {
+      "answer": "Válasz",
+      "team": "Csapat",
+      "know": "Tudás",
+      "act": "Cselekvés",
+      "trust": "Bizalom",
+      "grow": "Növekedés"
+    },
+    "pageNames": {
+      "aiAgent": "AI ügynök",
+      "inbox": "Beérkező üzenetek",
+      "demo": "Demó",
+      "pricing": "Árazás",
+      "knowledgeHub": "Tudástár",
+      "securityGuide": "Biztonsági útmutató"
+    },
+    "tiles": [
+      {
+        "name": "Megalapozott válaszok",
+        "body": "A válaszok az általad jóváhagyott tudásból származnak. Ha valami nincs benne, az AI ezt megmondja, helyette nem tippel."
+      },
+      {
+        "name": "Válasznyelv",
+        "body": "Válaszd ki, milyen nyelven válaszoljon a chatbot az ügyfeleidnek."
+      },
+      {
+        "name": "Oldal-ismeret",
+        "body": "Döntsd el, hogy az AI lássa-e, melyik oldalon jár a látogató, és ezt felhasználja-e a kontextushoz illő válaszhoz."
+      },
+      {
+        "name": "Márkázott widget",
+        "body": "A logód és a színeid egy chat widgeten, amelyet egy kódrészlettel ágyazol be."
+      },
+      {
+        "name": "Élő gépelés",
+        "body": "Az ügyfelek látják, amikor egy csapattag válaszol, és te is látod, amikor ők."
+      },
+      {
+        "name": "Mellékletek",
+        "body": "Az ügyfelek és a csapatod is küldhet fájlokat közvetlenül a beszélgetésben."
+      },
+      {
+        "name": "Közös beérkező üzenetek",
+        "body": "Minden beszélgetés és válasz egy helyen, jelvénnyel, amely megmutatja, hogy az AI, egy csapattag vagy senki nem foglalkozik vele."
+      },
+      {
+        "name": "Csatlakozási riasztások",
+        "body": "Ha egy ügyfél embert kér, minden csapattag Csatlakozási riasztást kap. Aki elsőként csatlakozik, átveszi, és a riasztás mindenki másnál törlődik."
+      },
+      {
+        "name": "Átvétel és visszaadás",
+        "body": "Vedd át a beszélgetést az AI-tól vagy egy kollégától, és egy koppintással add vissza az AI-nak."
+      },
+      {
+        "name": "Hozzárendelések",
+        "body": "A beszélgetések hozzárendelhetők egy csapattaghoz, aki erről értesítést kap."
+      },
+      {
+        "name": "Csapatmeghívók",
+        "body": "Hívj meg csapattagokat e-mailben, és adj hozzá helyeket, amint a csapatod növekszik."
+      },
+      {
+        "name": "Automatikus jegyek",
+        "body": "Ha 90 másodpercen belül senki nem csatlakozik, az ügyfél értesítést kap, és automatikusan létrejön egy jegy, e-mailes követéssel."
+      },
+      {
+        "name": "Weboldal bejárás",
+        "body": "Irányítsd az Elpinót egy oldalra. A JavaScript-alapú oldalakat előbb valódi böngészőben rendereli."
+      },
+      {
+        "name": "Webtérkép importálás",
+        "body": "Húzz be egyszerre akár 20 oldalt a webtérképedből."
+      },
+      {
+        "name": "Felfedezés",
+        "body": "Kezdd egy linknél, és az Elpino követi azt akár 50 oldalon keresztül, elsőként a súgó- és irányelvoldalakat."
+      },
+      {
+        "name": "Fájlfeltöltés",
+        "body": "Tölts fel PDF-, Word-, szöveg- és Markdown-fájlokat, a szöveget kinyerjük neked."
+      },
+      {
+        "name": "Írt oldalak",
+        "body": "Írd meg saját oldalaidat a szerkesztőben azokhoz a dolgokhoz, amelyek máshol nem léteznek."
+      },
+      {
+        "name": "Nyilvános / privát",
+        "body": "Minden forrásnak van egy láthatóság-kapcsolója, így a belső feljegyzések belsők maradnak."
+      },
+      {
+        "name": "Fizetés-lekérés",
+        "body": "Ellenőrzi a valós Stripe- vagy Razorpay-fizetéseket, így a válaszok tényeken, nem tippeken alapulnak."
+      },
+      {
+        "name": "Fizetési linkek",
+        "body": "Új, biztonságos fizetési linket hoz létre, amikor egy fizetést újra meg kell próbálni."
+      },
+      {
+        "name": "Előfizetések",
+        "body": "Ellenőrzi az előfizetés státuszát, és le is mondhatja, ha az ügyfél kéri."
+      },
+      {
+        "name": "Visszatérítések (bekapcsolható)",
+        "body": "Alapból ki van kapcsolva. A munkaterület tulajdonosa dönti el, hogy az AI végezhet-e egyáltalán visszatérítést."
+      },
+      {
+        "name": "Nyugták",
+        "body": "Megkeresi és elküldi egy adott fizetés nyugtáját."
+      },
+      {
+        "name": "MCP eszközök",
+        "body": "Csatlakoztass akár öt MCP szervert, és kapcsold be pontosan azokat az eszközöket, amelyeket az ügynök használhat."
+      },
+      {
+        "name": "Azonosság-ellenőrzés",
+        "body": "Egy egyszeri e-mail kód vagy az alkalmazásodból származó aláírt token igazolja, ki az ügyfél."
+      },
+      {
+        "name": "Privát adat szűrő",
+        "body": "A neveket és e-mail címeket referenciakódokra cseréli, mielőtt az AI elolvasná a beszélgetést, és a titkokat kiszűri."
+      },
+      {
+        "name": "Biztonságos kérések",
+        "body": "Kérj érzékeny adatokat egy egyszeri privát űrlapon a chat helyett."
+      },
+      {
+        "name": "Titkosított kulcsok",
+        "body": "A csatlakoztatott hitelesítő adatok titkosítva vannak tárolva."
+      },
+      {
+        "name": "Költségvédelem",
+        "body": "A fizetős csomagok havi AI kreditje kiszámíthatóvá teszi az AI-kiadásokat."
+      },
+      {
+        "name": "Ténykontroll",
+        "body": "A vázlatokat az eszközök eredményeivel vetjük össze, mielőtt az ügyfél látná."
+      },
+      {
+        "name": "Látogatói kontextus",
+        "body": "Helyszín, eszköz és az oldal, ahol jártak — minden beszélgetéshez csatolva."
+      },
+      {
+        "name": "Elemzések",
+        "body": "Lásd, hogyan alakulnak a beszélgetések a munkaterületeden."
+      },
+      {
+        "name": "Előzmények",
+        "body": "A korábbi beszélgetések ugyanazzal az ügyféllel, közvetlenül a szál mellett."
+      },
+      {
+        "name": "Ingyenes csomag",
+        "body": "Kezdj 100 AI üzenettel havonta, bankkártya nélkül."
+      },
+      {
+        "name": "Kreditalapú csomagok",
+        "body": "A fizetős csomagok havi AI kreditet tartalmaznak, és az extra helyek egyszerű kiegészítők."
+      },
+      {
+        "name": "E-mail válaszok",
+        "body": "A hitelesített látogatók, akik elhagyták a chatet, e-mailben is megkapják a válaszodat."
+      }
+    ],
+    "table": {
+      "all": "Mind",
+      "readMoreIn": "Tudj meg többet itt: {more}",
+      "hint": "Koppints egy csempére. Minden itt látott funkció ma élőben működik."
+    },
+    "hero": {
+      "badge": "Funkciók",
+      "titlePrefix": "A ",
+      "titleHl": "kiváló ügyfélszolgálat elemei.",
+      "subtitle": "{count} képesség, egy munkaterület. Szűrj család szerint, koppints egy csempére, és lásd pontosan, mit csinál az Elpino."
+    },
+    "loop": {
+      "eyebrow": "Hogyan kapcsolódnak",
+      "titlePrefix": "Ez egy hurok, ",
+      "titleHl": "nem egy lista.",
+      "subtitle": "Minden funkció a következőt táplálja, így a támogatás annál jobb, minél többet használod.",
+      "steps": [
+        {
+          "t": "Tanítás",
+          "d": "Bejárja az oldaladat, feltöltöd a fájlokat, megírod az oldalakat."
+        },
+        {
+          "t": "Válasz",
+          "d": "Az AI a tudásodból válaszol, a nyelveden."
+        },
+        {
+          "t": "Cselekvés",
+          "d": "Fizetések, előfizetések és az MCP eszközeid."
+        },
+        {
+          "t": "Átadás",
+          "d": "Előbb kérdez, riasztja a csapatot, csatlakozik vagy jegyet nyit."
+        },
+        {
+          "t": "Tanulás",
+          "d": "Átnézed a beszélgetéseket, és fejleszted a tudásbázisodat."
+        }
+      ],
+      "stepOf": "{n}. lépés / {total}",
+      "explore": "Fedezd fel ezt a lépést"
+    },
+    "personas": {
+      "eyebrow": "Kinek szól",
+      "titlePrefix": "Válaszd ki a helyed. ",
+      "titleHl": "Nézd meg a funkcióidat.",
+      "items": [
+        {
+          "label": "Alapító",
+          "line": "Te vagy az egész ügyfélszolgálati csapat, és szeretnéd visszakapni az estéidet.",
+          "picks": [
+            "Ingyenes csomag, bankkártya nélkül",
+            "Válaszok az oldaladról percek alatt",
+            "Az AI kezeli a fizetéseket és a nyugtákat",
+            "Csak akkor szól, ha valóban szükség van rád"
+          ]
+        },
+        {
+          "label": "Ügyfélszolgálati vezető",
+          "line": "Csapatot vezetsz, és tiszta felelősségre, elveszett beszélgetések nélküli működésre van szükséged.",
+          "picks": [
+            "Közös beérkező üzenetek egyértelmű jelvényekkel",
+            "Csapatszintű csatlakozási riasztások",
+            "Automatikus jegyek, amikor mindenki foglalt",
+            "Látogatói kontextus minden szálon"
+          ]
+        },
+        {
+          "label": "Fejlesztő",
+          "line": "Be szeretnéd kötni a saját termékedbe és adataidba.",
+          "picks": [
+            "Aláírt tokenes azonosítás az alkalmazásodból",
+            "MCP szerverek eszközönkénti jóváhagyással",
+            "Stripe- és Razorpay-lekérések",
+            "Egy beágyazható widget-kódrészlet"
+          ]
+        },
+        {
+          "label": "Boltos",
+          "line": "Az ügyfelek egész nap rendelésekről és fizetésekről kérdeznek.",
+          "picks": [
+            "Rendeléslekérés az MCP eszközeiden keresztül",
+            "Fizetési linkek és nyugták",
+            "Visszatérítés csak akkor, ha bekapcsolod",
+            "Válaszok az ügyfeled nyelvén"
+          ]
+        }
+      ]
+    },
+    "stack": {
+      "badge": "Egy eszköz",
+      "titlePrefix": "Hat eszköz be. ",
+      "titleHl": "Egy munkaterület ki.",
+      "subtitle": "A legtöbb csapat egy widgetet, egy helpdesket, egy tudásbázist és egy botot varr össze. Az Elpino mindezt egy helyen adja, egyetlen memóriával minden ügyfélről.",
+      "items": [
+        "Chat widget",
+        "Helpdesk beérkező üzenetek",
+        "Tudásbázis",
+        "Chatbot-építő",
+        "Fizetés-lekérések",
+        "Átadási szabályok"
+      ],
+      "cardSubtitle": "Widget · Beérkező üzenetek · Tudás · AI ügynök · Eszközök · Átadás"
+    },
+    "soon": {
+      "badge": "Novemberben érkezik",
+      "title": "Az omnichannel a következő.",
+      "body": "A weboldalas chat már ma élőben működik. A következő lépésben több csatornát hozunk be ugyanabba a beérkező üzenetekbe, és ezt a changelogban jelentjük be.",
+      "cta": "Nézd meg a changelogot"
+    },
+    "faq": {
+      "eyebrow": "Kérdések",
+      "titlePrefix": "Jó ",
+      "titleHl": "tudni.",
+      "items": [
+        {
+          "q": "Minden ezen az oldalon élőben működik?",
+          "a": "Igen. Minden csempe olyasmit ír le, amit az Elpino már ma megtesz. Az omnichannel az egyetlen dolog, amin még dolgozunk, és novemberre van jelölve."
+        },
+        {
+          "q": "Mindegyikre szükségem van?",
+          "a": "Nem. Kezdd egy tudásbázissal és a widgettel az ingyenes csomagon, majd kapcsold be az eszközöket, az MCP-t és a csapattagokat, amikor szükséged van rájuk."
+        },
+        {
+          "q": "Mi tartozik az ingyenes csomaghoz?",
+          "a": "Havi 100 AI üzenet, bankkártya nélkül."
+        },
+        {
+          "q": "Hogyan működnek a fizetős csomagok?",
+          "a": "A fizetős csomagok havi AI kreditet tartalmaznak, és az extra helyek egyszerű kiegészítők. A részletekért nézd meg az árazási oldalt."
+        }
+      ]
+    },
+    "closing": {
+      "title": "Minden elem készen áll a használatra.",
+      "subtitle": "Kezdd az ingyenes csomaggal, és kapcsolj be újakat, amint növekszel.",
+      "ctaStart": "Kezdd ingyen",
+      "ctaPricing": "Nézd meg az árakat"
+    }
+  },
+  "founders": {
+    "stream": {
+      "incomingLive": "Beérkező, élőben",
+      "onDuty": "Elpino szolgálatban",
+      "needsYou": "Rád van szükség",
+      "handled": "Elintézve",
+      "askedFirst": "{why}. Elpino előbb rákérdezett, majd értesített téged.",
+      "handledWithoutYou": "Elintézve nélküled",
+      "actuallyNeededYou": "Valóban rád volt szükség",
+      "items": [
+        {
+          "q": "Hogyan exportálhatom az adataimat?"
+        },
+        {
+          "q": "Miért nem sikerült a kártyás fizetés?"
+        },
+        {
+          "q": "Van kedvezmény induló vállalkozásoknak?"
+        },
+        {
+          "q": "Kaphatunk egyedi szerződést?",
+          "why": "Élő ügyintézőt kért"
+        },
+        {
+          "q": "Hol van a márciusi számlám?"
+        },
+        {
+          "q": "Hogyan állítsam vissza a jelszavamat?"
+        },
+        {
+          "q": "Beszélhetek az alapítóval?",
+          "why": "Élő ügyintézőt kért"
+        },
+        {
+          "q": "Működik Shopify-jal?"
+        }
+      ]
+    },
+    "hero": {
+      "badge": "Alapítóknak",
+      "titlePrefix": "Fejlesszd a terméket. ",
+      "titleHl": "Ne ügyfélkérdésekre válaszolj.",
+      "subtitle": "Nem azért indítottál céget, hogy hetente negyvenszer megválaszold: „hogyan állítsam vissza a jelszavamat?”. Elpino átveszi az ismétlődő kérdéseket, és csak akkor szól neked, ha valóban alapítói döntés kell.",
+      "ctaStart": "Kezdd el ingyen",
+      "ctaPricing": "Nézd meg az árakat",
+      "freeNote": "Ingyenes csomag: havi 100 AI üzenet. Bankkártya nem szükséges."
+    },
+    "calculator": {
+      "eyebrow": "Számold ki",
+      "titlePrefix": "Szerezd vissza a ",
+      "titleHl": "délutánjaidat.",
+      "subtitle": "Írd be a saját számaidat. Az AI-arány csak a becslésed, nem ígéret, és attól függ, mi van a tudásbázisodban.",
+      "sliderQuestions": "Ügyfélkérdés naponta",
+      "sliderMinutes": "Válaszidő percben",
+      "unitMin": "perc",
+      "sliderShare": "Becsült arány, amit az AI old meg",
+      "yourDay": "A te 8 órás munkanapod",
+      "today": "Most",
+      "withElpinoAt": "Elpinóval {pct}%-on",
+      "backEachWeek": "Visszakapott idő hetente",
+      "chatsUntouched": "Érintetlen chat naponta",
+      "volumeNote": "Ekkora mennyiségnél az ügyfélszolgálat önmagában több mint egy teljes munkanap.",
+      "supportLabel": "{h} óra ügyfélszolgálat",
+      "buildingLabel": "{h} óra fejlesztés"
+    },
+    "setup": {
+      "eyebrow": "Beállítás",
+      "titlePrefix": "Élesben lesz, mire ",
+      "titleHl": "kihűl a kávéd.",
+      "subtitle": "Nincs szükség fejlesztőre vagy betanulási időre. Négy lépés, és az utolsó opcionális.",
+      "stepLabel": "{n}. lépés",
+      "steps": [
+        {
+          "t": "Illeszd be a weboldaladat",
+          "d": "Elpino feltérképezi az oldalaidat, a JavaScript-alapúakat is, és megismeri a termékedet.",
+          "meter": "Weboldal beolvasása"
+        },
+        {
+          "t": "Add hozzá a többit",
+          "d": "Tölts fel dokumentumokat, vagy írd le azokat a szabályokat, amik csak a fejedben léteznek.",
+          "meter": "Tudás hozzáadása"
+        },
+        {
+          "t": "Illeszd be a widgetet",
+          "d": "Egy kódrészlet, és a chat élesben fut a weboldaladon.",
+          "meter": "Widget telepítése"
+        },
+        {
+          "t": "Kapcsold össze a fizetéssel (opcionális)",
+          "d": "Stripe vagy Razorpay, hogy a számlázási adatokat is elő tudja keresni.",
+          "meter": "Kapcsolódás"
+        }
+      ]
+    },
+    "reaches": {
+      "badge": "A szűrő",
+      "titlePrefix": "Csak a ",
+      "titleHl": "valóban fontos ügyek",
+      "titleSuffix": " jutnak el hozzád.",
+      "subtitle": "Te döntöd el, mit tehet meg az AI. Minden más egyértelmű szabály: kérdezzen rá először, értesítsen közösen, és soha ne hagyja válasz nélkül az ügyfelet.",
+      "rules": [
+        {
+          "t": "Válaszok a dokumentációdból",
+          "d": "Elintézve. Soha nem is látod."
+        },
+        {
+          "t": "Fizetési és fiókadatok lekérdezése",
+          "d": "Elintézve a bekapcsolt eszközökkel."
+        },
+        {
+          "t": "„Beszélhetek valakivel?”",
+          "d": "Előbb rákérdez az ügyfélnél, majd értesít téged és a csapatodat."
+        },
+        {
+          "t": "Éppen nem érsz rá?",
+          "d": "90 másodperc után jegy nyílik, és az ügyfél is értesítést kap róla."
+        }
+      ]
+    },
+    "money": {
+      "eyebrow": "Számlázási kérdések",
+      "titlePrefix": "Ellenőrzi a valódi fizetést. ",
+      "titleHl": "A kulcsok nálad maradnak.",
+      "subtitle": "Kapcsold össze a Stripe-ot vagy a Razorpay-t, és az AI le tudja kérni a fizetéseket és előfizetéseket, elküldi a nyugtákat és fizetési linkeket, és kérésre lemondja az előfizetést. A visszatérítések kikapcsolva maradnak, amíg te nem engedélyezed.",
+      "chatAsk": "Visszakaphatom a legutóbbi fizetésemet?",
+      "chatYes": "Megtaláltam a fizetésedet, és elindítottam a visszatérítést. Ez általában 5–7 munkanapon belül megérkezik a fiókodra.",
+      "chatNo": "Látom a fizetést, de magam nem tudom visszatéríteni. Szeretnéd, hogy összekössünk a csapatunkkal?",
+      "toggleLabel": "Az AI adhat ki visszatérítést",
+      "toggleNote": "Alapértelmezetten kikapcsolva. Próbáld ki a kapcsolót."
+    },
+    "grows": {
+      "eyebrow": "Van hova növekedni",
+      "titlePrefix": "Veled indul. ",
+      "titleHl": "A csapatoddal skálázódik.",
+      "stageLabel": "{n}. szakasz",
+      "stages": [
+        {
+          "t": "Csak te",
+          "d": "Ingyenes csomag, havi 100 AI üzenet, egy postaláda, amit ritkán nyitsz meg."
+        },
+        {
+          "t": "Az első alkalmazott",
+          "d": "Hívd meg emailben. Belépési értesítést kap, és átveheti a chateket az AI-tól."
+        },
+        {
+          "t": "Kis csapat",
+          "d": "Osszd ki a beszélgetéseket, ossz meg egy postaládát, adj hozzá helyeket, amikor szükséges."
+        },
+        {
+          "t": "Növekedés",
+          "d": "Fizetős csomagok havi AI kerettel, MCP eszközök a saját rendszereidhez."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Alapítói kérdések",
+      "titlePrefix": "Egyenes ",
+      "titleHl": "válaszok.",
+      "items": [
+        {
+          "q": "Miben más ez, mint egy szokásos chatbot widget?",
+          "a": "Elpino csak a neki átadott tudás alapján válaszol, valódi fizetéseket tud lekérni és a saját eszközeidet tudja használni, ellenőrzi a személyazonosságot, mielőtt bármi személyeshez hozzáér, és ha nem tud segíteni, átadja a teljes beszélgetést egy embernek."
+        },
+        {
+          "q": "Milyen gyorsan tudom saját magam beállítani?",
+          "a": "A legtöbb alapító már aznap élesbe teszi: add hozzá a weboldaladat vagy fájljaidat, illeszd be a widget kódot, és opcionálisan kapcsold össze a Stripe-ot vagy a Razorpay-t."
+        },
+        {
+          "q": "Hogyan dönti el, hogy válaszol vagy engem értesít?",
+          "a": "Ha tud válaszolni a tudásbázisból vagy egy eszközből, megteszi. Ha nem tud, ezt megmondja, és megkérdezi az ügyfelet, hogy összekapcsolja-e a csapatoddal. Csak ekkor kapsz értesítést te és a csapatod."
+        },
+        {
+          "q": "Fog kitalálni dolgokat?",
+          "a": "Csak az általad jóváhagyott tartalom alapján válaszol, és egy ellenőrző lépés összeveti a fogalmazványokat az eszközök eredményeivel. Ha nem tudja a választ, ezt megmondja."
+        },
+        {
+          "q": "Biztonságban van a Stripe vagy Razorpay fiókom?",
+          "a": "A hitelesítő adatok titkosítva vannak tárolva, és a pénzmozgással kapcsolatos műveletek, mint a visszatérítés, kikapcsolva maradnak, amíg te nem engedélyezed."
+        },
+        {
+          "q": "Mi történik, ha felveszek egy ügyfélszolgálati munkatársat?",
+          "a": "Hívd meg, és belépési értesítést kap, átveheti a beszélgetéseket az AI-tól, és vissza is adhatja azokat."
+        }
+      ]
+    },
+    "closing": {
+      "title": "Térj vissza a fejlesztéshez.",
+      "subtitle": "Kezdd el ingyen, taníts meg Elpinónak a termékedről, és hagyd, hogy átvegye az ismétlődő kérdéseket.",
+      "ctaStart": "Kezdd el ingyen",
+      "ctaMeetAgent": "Ismerd meg az AI ügynököt"
+    }
+  },
+  "developers": {
+    "hero": {
+      "badge": "Fejlesztőknek",
+      "titlePrefix": "A ",
+      "titleMiddle": " tól a ",
+      "titleHl": "megoldásig.",
+      "subtitle": "Egy tag a widgethez, egy aláírt token, hogy az Elpino tudja, ki jelentkezett be, egy MCP szerver, hogy az AI olvashassa az adataidat. Nézd meg, ahogy a három lépés lezajlik egy oldalon.",
+      "ctaStart": "Ingyenes indítás",
+      "ctaDocs": "Dokumentáció olvasása"
+    },
+    "ide": {
+      "comment1": "<!-- 1. Illeszd be a taget -->",
+      "comment2": "<!-- 2. Mondd meg az Elpinónak, ki jelentkezett be -->",
+      "comment3": "  // elpinoToken: a backended írja alá",
+      "mcpComment": "// A vezérlőpultodon: csatlakoztass egy MCP szervert, és engedélyezd a get_order-t.",
+      "stepEmbed": "Beágyazás",
+      "stepIdentify": "Azonosítás",
+      "stepResolve": "Megoldás",
+      "previewSupport": "Támogatás",
+      "previewVerified": "Ellenőrizve",
+      "previewGreeting": "Szia Aisha, miben segíthetek?",
+      "previewQuestion": "Hol van a rendelésem?",
+      "previewAnswer": "Tegnap feladtuk, csütörtökön érkezik."
+    },
+    "sequence": {
+      "eyebrow": "Kérésfolyamat",
+      "titlePrefix": "Egy kérdés, ",
+      "titleHl": "négy rendszer.",
+      "subtitle": "Ki kivel beszél, amikor egy bejelentkezett ügyfél a rendeléséről kérdez. Lépésről lépésre haladj végig, vagy hagyd lejátszani.",
+      "actors": [
+        "Böngésző",
+        "A szervered",
+        "Elpino",
+        "Az MCP szervered"
+      ],
+      "steps": [
+        {
+          "label": "Az ügyfél bejelentkezik"
+        },
+        {
+          "label": "Aláírt JWT",
+          "note": "≤ 5 perc · egyszer használatos"
+        },
+        {
+          "label": "$elpino identify(token)"
+        },
+        {
+          "label": "Aláírás + claimek ellenőrzése ✓"
+        },
+        {
+          "label": "„Hol van a rendelésem?”"
+        },
+        {
+          "label": "get_order",
+          "note": "csak ellenőrzött ügyfelek"
+        },
+        {
+          "label": "Rendelés státusza"
+        },
+        {
+          "label": "Válaszol az ügyfélnek"
+        }
+      ],
+      "stepCounter": "{n}. / {total} lépés",
+      "nextStep": "Következő lépés",
+      "replay": "Újrajátszás"
+    },
+    "tokenExplorer": {
+      "eyebrow": "Az identitástoken",
+      "titlePrefix": "Egy token anatómiája, ",
+      "titleHl": "és hogyan törik el.",
+      "subtitle": "HS256, a munkaterületed titkával aláírva. Koppints egy claimre a szabályáért, majd törd el a tokent, hogy lásd, mit jelez a widget.",
+      "payload": "Payload",
+      "optional": "opcionális",
+      "required": "Kötelező",
+      "optionalCap": "Opcionális",
+      "breakIt": "Törd el",
+      "notAccepted": "[Elpino] Az identitástokent nem fogadták el: {code}",
+      "fix": "Javítás:",
+      "claimDescriptions": [
+        "Ennek a felhasználónak a stabil fiókazonosítója.",
+        "Pontosan \"elpino-widget\".",
+        "Tokenenként egy friss, véletlenszerű azonosító, 16–128 URL-biztos karakter. Egy UUID megfelel.",
+        "Kiállítás ideje egész másodpercben (nem ezredmásodpercben).",
+        "Lejárat egész másodpercben, legfeljebb 5 perccel az iat után.",
+        "Hagyd ki, ha nincs. A null-t elutasítja.",
+        "true csak akkor, ha a bejelentkezési rendszered megerősítette a tulajdonjogot.",
+        "A csapatod által látott megjelenített név."
+      ]
+    },
+    "server": {
+      "eyebrow": "A backended",
+      "titlePrefix": "Másold, illeszd be, ",
+      "titleHl": "indítsd el.",
+      "subtitle": "Ugyanazok a kódrészletek, amelyeket a vezérlőpultod mutat, azon a nyelven, amit már használsz.",
+      "copy": "Másolás",
+      "copied": "Másolva",
+      "codeTitle": "identitástoken"
+    },
+    "mcp": {
+      "badge": "MCP szerverek",
+      "titlePrefix": "Adj eszközöket az AI-nak. ",
+      "titleHl": "Tartsd meg a kulcsokat.",
+      "subtitle": "Csatlakoztass akár öt MCP szervert, engedélyezz akár 15 eszközt mindegyiken, és válaszd ki, ki számára nyitottak. Kapcsolgasd a kapcsolókat, hogy lásd, mit használhat az ügynök.",
+      "shopServerName": "A boltod MCP szervere",
+      "toolsDiscovered": "{n} eszköz található",
+      "toggleLabel": "Csak olvasható eszközök megnyitása bármely látogató számára",
+      "changesData": "Adatokat módosít",
+      "readOnly": "Csak olvasható",
+      "needsVerified": "Ellenőrzött ügyfelet igényel",
+      "agentCanCall": "Az ügynök hívhatja",
+      "toolDescriptions": [
+        "Rendelés és állapotának lekérdezése",
+        "Élő csomagkövetés",
+        "Szállítási cím módosítása",
+        "Még el nem küldött rendelés lemondása"
+      ],
+      "bullets": [
+        "Minden hívást a szerveren újra ellenőriznek a listád alapján",
+        "Az adatokat módosító eszközök mindig ellenőrzött ügyfelet igényelnek",
+        "A hitelesítő adatok titkosítva tárolódnak"
+      ]
+    },
+    "sees": {
+      "eyebrow": "Alapértelmezett adatvédelem",
+      "titlePrefix": "A modell ",
+      "titleHl": "sosem látja",
+      "titleSuffix": ", kik ők.",
+      "subtitle": "Mielőtt az AI elolvasná a beszélgetést, a neveket, e-maileket és azonosítókat referenciakódokra cserélik, a titkokat, például tokeneket és kulcsokat pedig eltávolítják. Az eszközök a te oldaladon továbbra is a valódi értékeket kapják.",
+      "toggleTeam": "Amit a csapatod lát",
+      "toggleModel": "Amit az AI modell lát",
+      "chatRaw1": "Szia, Aisha Khan vagyok (aisha@example.com). Hol van a rendelésem?",
+      "chatMasked1": "Szia, ref_name_9f2c vagyok (ref_email_41ab). Hol van a rendelésem?",
+      "chatRaw2": "Szia Aisha, a rendelésed tegnap feladtuk.",
+      "chatMasked2": "Szia, a rendelésedet tegnap feladtuk."
+    },
+    "faq": {
+      "eyebrow": "Kérdések",
+      "titlePrefix": "Jó ",
+      "titleHl": "tudni.",
+      "items": [
+        {
+          "q": "Kötelező identitásellenőrzést használnom?",
+          "a": "Nem, de ez teszi lehetővé, hogy az AI biztonságosan mutasson privát adatokat. Bárki beírhat bármilyen e-mail-címet egy csevegésbe, így a saját bejelentkezési rendszered által aláírt token az, amitől az ügyfél Ellenőrzötté válik."
+        },
+        {
+          "q": "Meddig érvényes egy token?",
+          "a": "Legfeljebb öt percig, és egyszer használható. Maga a csevegési munkamenet legfeljebb 8 óráig tart, 30 perces inaktivitási korláttal."
+        },
+        {
+          "q": "Milyen aláírási algoritmus?",
+          "a": "HS256. Más algoritmusokat, köztük a none-t és az RS256-ot, elutasítja."
+        },
+        {
+          "q": "Mely nyelvekhez vannak kódrészletek?",
+          "a": "Node.js, Python, PHP és Ruby, a vezérlőpultod identitásbeállításaiban és a dokumentációban."
+        },
+        {
+          "q": "Mi az az MCP szerver?",
+          "a": "Egy szolgáltatás, amely eszközöket tesz elérhetővé a Model Context Protocolon keresztül. Az Elpino felfedezi az eszközeit, te pedig engedélyezed azokat, amelyeket az AI használhat."
+        },
+        {
+          "q": "Módosíthat az AI adatokat a rendszereimben?",
+          "a": "Csak az általad engedélyezett eszközökön keresztül, és az adatokat módosító eszközök mindig ellenőrzött ügyfelet igényelnek."
+        },
+        {
+          "q": "Van API?",
+          "a": "A widget SDK, az identitástokenek és az MCP alkotják ma az integrációs felületet."
+        }
+      ],
+      "linkLabels": [
+        "Identitás dokumentáció",
+        "Widget dokumentáció",
+        "AI ügynök",
+        "Biztonsági útmutató"
+      ]
+    },
+    "closing": {
+      "title": "Indítsd el egy délután alatt.",
+      "subtitle": "Kezdd ingyen, illeszd be a taget, és állítsd be az identitást, ha készen állsz.",
+      "ctaStart": "Ingyenes indítás",
+      "ctaDocs": "Dokumentáció megnyitása"
+    }
+  },
+  "busyOperators": {
+    "rush": {
+      "badgeLabel": "Csúcsidő · szemléltető szimuláció",
+      "reset": "Visszaállítás",
+      "waitingForPerson": "Egy személyre várva",
+      "levelCalm": "Nyugalom",
+      "levelBusy": "Elfoglaltság",
+      "levelFire": "Ég a sor",
+      "inboxZero": "Beérkező levelek nulla. Szép.",
+      "chatsWaiting": "chat vár",
+      "aiToggleLabel": "Elpino AI",
+      "teammatesOnline": "Csapattársak online",
+      "resolvedByAi": "Az AI megoldotta",
+      "resolvedByTeam": "Csapat oldotta meg",
+      "disclaimer": "Egy játékmodell: 3 csevegés érkezik minden kullancshoz, és a mesterséges intelligencia megosztja a példát. A valódi eredmények tudásbázisától és eszközeitől függenek.",
+      "online": "online",
+      "offline": "offline"
+    },
+    "hero": {
+      "badge": "Elfoglalt csapatoknak",
+      "titlePrefix": "Csúcsidő, ",
+      "titleHl": "kezelt.",
+      "subtitle": "Amikor megugrik a sor, az AI felveszi az ismétlődő kérdéseket, a csapat a többit, és senki sem botlik meg egymásban. Fordítsa el az alábbi kapcsolót, és érezze a különbséget.",
+      "ctaStart": "Kezdje ingyen",
+      "ctaInbox": "Lásd a beérkező leveleket"
+    },
+    "race": {
+      "badge": "Nincs kettős válasz",
+      "titlePrefix": "Két ember, egy chat. ",
+      "titleHl": "Csak egy csatlakozik.",
+      "subtitle": "Mindenki ugyanazt a csatlakozási figyelmeztetést kapja. Az első ember, aki megérinti, átveszi a beszélgetést, a figyelmeztetés mindenki más számára törlődik, a beérkező levelek pedig megmutatják, hogy kinél van. Egy kolléga később is átveheti szándékosan.",
+      "askedForPerson": "Aisha Khan személyt kért",
+      "alertSent": "Figyelmeztetést küldtek az egész csapatnak",
+      "waiting": "Várakozás…",
+      "joined": "Csatlakozott",
+      "joinChat": "Csatlakozz a csevegéshez",
+      "priyaHasThis": "Priya rendelkezik ezzel",
+      "priyaJoinedFirst": "Priya csatlakozott először. A beérkező levelek jelvényén most a Priya felirat szerepel.",
+      "bothSee": "Mindkét csapattárs látja a figyelmeztetést…",
+      "customerSaidYes": "Az ügyfél igent mondott egy személynek"
+    },
+    "context": {
+      "eyebrow": "Az átadás",
+      "titlePrefix": "Senki sem ismétli ",
+      "titleHl": "magukat.",
+      "subtitle": "Váltás a hideg átadás és az Elpino által végzett átadás összehasonlításához.",
+      "toggleCold": "Hideg átadás",
+      "toggleElpino": "Elpino átadás",
+      "coldGreeting": "Szia, Priya vagyok. Hogyan segíthetek?",
+      "coldComplaint": "…ezt már elmagyaráztam a botnak. Országot költöztem, és módosítani kell a számlázási országomat. Újra.",
+      "coldNote": "Az ügyfél újrakezdi, a csapattag pedig vakon kezdi.",
+      "whatPersonSees": "Amit az ember lát",
+      "reasonLabel": "Ok",
+      "reasonValue": "A számlázási ország módosításához személyre van szükség",
+      "summaryLabel": "Összegzés",
+      "summaryValue": "Elköltözött országok, frissíteni szeretné a számlázási országot. E-mail kóddal igazolva.",
+      "fullThreadLabel": "Teljes szál",
+      "fullThreadValue": "Minden eddigi üzenet, közvetlenül a zeneszerző fölött",
+      "visitorLabel": "Látogató",
+      "visitorLocation": "Pune, India",
+      "visitorPage": "A /számlázáson",
+      "identityVerified": "A személyazonosság igazolva"
+    },
+    "around": {
+      "eyebrow": "Éjjel-nappal",
+      "titlePrefix": "Boríts minden órában, ",
+      "titleHl": "műszakok nélkül.",
+      "subtitle": "Húzzon végig egy példanapot. A csapatmunkaidő 9-től 6-ig van itt; a tiéd a sajátod lesz.",
+      "teamOnline": "Csapat online",
+      "aiOnWatch": "AI figyel",
+      "hourAriaLabel": "A nap órája",
+      "am": "AM",
+      "pm": "PM",
+      "dayItems": [
+        {
+          "t": "Az MI válaszol először",
+          "d": "Az ismétlődő kérdések soha nem jutnak el a sorba."
+        },
+        {
+          "t": "A csapat csatlakozási figyelmeztetéseket kap",
+          "d": "Az elsőként koppintó folytatja a csevegést."
+        },
+        {
+          "t": "Bármikor visszaadhatja",
+          "d": "Adjon egyszerű nyomon követést az MI-nek."
+        }
+      ],
+      "nightItems": [
+        {
+          "t": "Az MI válaszol először",
+          "d": "Megválaszolják azokat a kérdéseket, amelyeket meg tud válaszolni."
+        },
+        {
+          "t": "Senki sem szabad? Jegy",
+          "d": "90 másodperc elteltével a rendszer egy jegyet iktat az indoklással és az összegzéssel."
+        },
+        {
+          "t": "A reggeli kezdések szervezetten",
+          "d": "Az ügyfélnek e-mailt küldtek, és a jegyek várnak rád."
+        }
+      ]
+    },
+    "toolkit": {
+      "eyebrow": "Nyugodt tervezés",
+      "titlePrefix": "Az apró dolgok, amelyek ",
+      "titleHl": "józan sorban tartani.",
+      "items": [
+        {
+          "t": "Tulajdonosi jelvények",
+          "d": "AI, csapattárs vagy megoldott, minden szálon."
+        },
+        {
+          "t": "Keresés és szűrők",
+          "d": "Mind, olvasatlan, olvasott, megoldva."
+        },
+        {
+          "t": "Élő gépelés",
+          "d": "Nézze meg, mikor ír az ügyfél, és engedje meg, hogy lássanak."
+        },
+        {
+          "t": "Ellenőrzött jelvény",
+          "d": "Tudd, ki bizonyította, kik ők."
+        },
+        {
+          "t": "Látogatói adatok",
+          "d": "Hely, eszköz és oldal, amelyen vannak."
+        },
+        {
+          "t": "Vegye át, adja vissza",
+          "d": "Egy koppintással cseveghet az AI és az emberek között."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Kérdések",
+      "titlePrefix": "Jó ",
+      "titleHl": "tudja.",
+      "items": [
+        {
+          "q": "Hogyan lehet megakadályozni, hogy két ember ugyanannak az ügyfélnek válaszoljon?",
+          "a": "Mindenki ugyanazt a csatlakozási figyelmeztetést kapja, és aki először koppint, az folytatja a csevegést. A figyelmeztetés mindenki más számára törlődik, a beérkező levelek pedig megmutatják, kinél van."
+        },
+        {
+          "q": "Elpino váltja a csapatomat?",
+          "a": "Nem. Az ismétlődő kérdéseket kezeli, és az emberei elfogadják azokat a beszélgetéseket, amelyek megítélést igényelnek. Bármilyen csevegést visszaadhat az AI-nak."
+        },
+        {
+          "q": "Miből tanulhat?",
+          "a": "Az Ön webhelyének oldalai (beleértve a JavaScript-alapúakat is), feltöltött PDF-, Word-, szöveg- és Markdown-fájlok, valamint az Ön által írt oldalak. Ön szabályozza, hogy melyek nyilvánosak."
+        },
+        {
+          "q": "Mi történik, ha senki sincs online?",
+          "a": "Az AI arra válaszol, amit tud. Ha egy ügyfél személyt kér, és 90 másodpercen belül senki sem csatlakozik, akkor a rendszer jegyet iktat az indoklással és az összegzéssel, és e-mailt küld az ügyfélnek."
+        },
+        {
+          "q": "Mennyi ideig tart a közzététel?",
+          "a": "A legtöbb csapat ugyanazon a napon él: adjon hozzá tudást, illessze be a widgetet, és hívjon meg csapattársakat."
+        }
+      ],
+      "footNote": "A webhelyen ma élő csevegés. Az Omnichannel novemberben érkezik."
+    },
+    "closing": {
+      "title": "Legyen valaki más problémája a várólista.",
+      "subtitle": "Kezdje ingyenesen, és hívja meg csapatát, ha készen áll.",
+      "ctaStart": "Kezdje ingyen",
+      "ctaTickets": "Lásd a jegyeket"
     }
   }
 }

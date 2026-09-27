@@ -47,7 +47,95 @@
       "privacy": "Chính sách quyền riêng tư của chúng tôi",
       "successTitle": "Đã gửi tin nhắn",
       "successBody": "Cảm ơn bạn đã liên hệ. Chúng tôi sẽ phản hồi sớm.",
-      "sendAnother": "Gửi tin nhắn khác"
+      "sendAnother": "Gửi tin nhắn khác",
+      "sentStamp": "Đã gửi ✓",
+      "postmarkLabel": "thư",
+      "securityNote": "Được gửi an toàn — không bao giờ được sử dụng cho mục đích đào tạo"
+    },
+    "hero": {
+      "eyebrow": "Liên hệ · phòng thư",
+      "greeting": "Xin chào.",
+      "titlePrefix": "Sao có thể",
+      "titleHl": "chúng tôi giúp gì?",
+      "searchLabel": "Tìm kiếm chủ đề trợ giúp",
+      "searchPlaceholder": "Tìm kiếm doanh số, hỗ trợ, thanh toán và hơn thế nữa",
+      "searchButtonLabel": "Tìm kiếm",
+      "noMatch": "Không có kết quả trùng khớp chính xác. Nhấn Enter để gửi cho chúng tôi câu hỏi của bạn.",
+      "linkGettingStarted": "Bắt đầu",
+      "linkFeaturedGuides": "Hướng dẫn nổi bật",
+      "linkPlansBilling": "Gói và thanh toán",
+      "linkSendMessage": "Hoặc gửi tin nhắn cho chúng tôi ↓"
+    },
+    "desks": {
+      "eyebrow": "Chọn tuyến đường",
+      "titlePrefix": "Tiếp cận ",
+      "titleHl": "bàn bên phải.",
+      "subtitle": "Hãy chọn kênh phù hợp nhất với những gì bạn cần. Mọi tuyến đường đều dẫn đến một thành viên thực sự trong nhóm của chúng tôi.",
+      "deskLabel": "Bàn làm việc {n}",
+      "addressed": "Bưu thiếp đã được ghi địa chỉ ✓",
+      "actionAddress": "Địa chỉ bưu thiếp",
+      "emailNote": "Bạn thích ứng dụng thư của riêng mình hơn? Mỗi bàn có địa chỉ cũng hoạt động theo {link}.",
+      "emailNoteLink": "email"
+    },
+    "postcard": {
+      "eyebrow": "Gửi cho chúng tôi một ghi chú",
+      "titlePrefix": "Một con người thực sự ",
+      "titleHl": "sẽ đọc cái này.",
+      "addressedTo": "Được gửi tới"
+    },
+    "tracking": {
+      "eyebrow": "Theo dõi bưu thiếp của bạn",
+      "titlePrefix": "Chuyện gì xảy ra vậy ",
+      "titleHl": "sau khi bạn nhấn gửi.",
+      "onlineStatus": "Nhóm của chúng tôi đang trực tuyến",
+      "hours": "Thứ Hai–Thứ Sáu, 9:00–18:00 CET",
+      "steps": [
+        {
+          "title": "Đã gửi",
+          "body": "Bưu thiếp của bạn sẽ rời khỏi tay bạn. Không có gì khác để làm."
+        },
+        {
+          "title": "Chúng tôi đọc từng chữ",
+          "body": "Ghi chú của bạn sẽ có một con người trong nhóm — không có mê cung vé, không có bot."
+        },
+        {
+          "title": "Trả lời trong vòng một ngày làm việc",
+          "body": "Câu trả lời thực sự từ người làm việc trên sản phẩm."
+        },
+        {
+          "title": "Một cuộc gọi, nếu nó hữu ích",
+          "body": "Đối với hoạt động bán hàng và doanh nghiệp, chúng tôi sẽ hướng dẫn Elpino về quy trình làm việc thực tế của bạn."
+        }
+      ]
+    },
+    "library": {
+      "titlePrefix": "Thích tìm nó hơn ",
+      "titleHl": "chính bạn?",
+      "subtitle": "Hầu hết các câu hỏi đều đã được trả lời ở đây — và mọi thứ bên dưới đều liên kết thẳng đến nguồn.",
+      "cardLabel": "Thẻ {n}",
+      "items": [
+        {
+          "title": "Trả lời nhanh",
+          "body": "Thiết lập, thanh toán, chuyển cấp và bảo mật — đã được trả lời trong Câu hỏi thường gặp.",
+          "cta": "Duyệt qua Câu hỏi thường gặp"
+        },
+        {
+          "title": "Tài liệu",
+          "body": "Hướng dẫn cài đặt, thiết lập trình kết nối và cấu hình không gian làm việc.",
+          "cta": "Mở tài liệu"
+        },
+        {
+          "title": "Bảo mật và quyền riêng tư",
+          "body": "Cách dữ liệu của bạn được mã hóa, lưu trữ và không bao giờ được sử dụng cho mục đích đào tạo.",
+          "cta": "Đọc chính sách"
+        }
+      ]
+    },
+    "search": {
+      "plansTitle": "Gói và thanh toán",
+      "plansDetail": "Các câu hỏi về đăng ký, hóa đơn hoặc giá cả",
+      "accountTitle": "Tài khoản và bảo mật",
+      "accountDetail": "Trợ giúp về quyền truy cập, quyền riêng tư hoặc cài đặt tài khoản"
     }
   },
   "auth": {
@@ -105,6 +193,4113 @@
         "lowercase": "Chữ thường",
         "number": "Số"
       }
+    }
+  },
+  "home": {
+    "hero": {
+      "badge": "Hỗ trợ khách hàng bằng AI",
+      "titlePrefix": "Hỗ trợ có thể",
+      "words": [
+        "trả lời.",
+        "giải quyết.",
+        "ghi nhớ.",
+        "chuyển tiếp."
+      ],
+      "subtitle": "Một AI trả lời dựa trên kiến thức của riêng bạn, kiểm tra thanh toán và đơn hàng thực tế, và chuyển giao cho đội ngũ của bạn với đầy đủ bối cảnh khi cần đến con người.",
+      "ctaPrimary": "Bắt đầu miễn phí",
+      "ctaSecondary": "Tự mình trải nghiệm",
+      "trust": [
+        "100 tin nhắn AI miễn phí mỗi tháng",
+        "Không cần thẻ",
+        "Sẵn sàng trong một buổi chiều"
+      ],
+      "stickers": [
+        "Được AI giải quyết",
+        "Nhân viên sẵn sàng hỗ trợ",
+        "Riêng tư theo mặc định",
+        "Không bỏ sót"
+      ],
+      "callouts": [
+        "Huy hiệu AI trên mọi cuộc trò chuyện",
+        "Tham gia để tiếp quản",
+        "Vị trí & thiết bị của khách truy cập"
+      ],
+      "widget": {
+        "name": "Elpino",
+        "subtitle": "Trả lời trong vài giây",
+        "convo": [
+          "Tôi có bị tính phí hai lần cho gói nâng cấp không?",
+          "Đã kiểm tra lịch sử thanh toán của bạn",
+          "Bạn chỉ bị tính phí một lần. Lần thử thứ hai đã thất bại và không được ghi nhận."
+        ]
+      }
+    },
+    "marquee": {
+      "questions": [
+        "Hóa đơn của tôi ở đâu?",
+        "Làm sao để đặt lại mật khẩu?",
+        "Tôi có bị tính phí hai lần không?",
+        "Tôi có thể được hoàn tiền không?",
+        "Đơn hàng của tôi ở đâu?",
+        "Làm sao để thêm thành viên nhóm?",
+        "Dữ liệu của tôi có an toàn không?",
+        "Vì sao thanh toán của tôi thất bại?",
+        "Tôi có thể nói chuyện với người thật không?"
+      ]
+    },
+    "tryit": {
+      "eyebrow": "Thử ngay",
+      "titlePrefix": "Hãy hỏi nó điều gì đó.",
+      "titleHl": "Xem nó xử lý ra sao.",
+      "subtitle": "Chọn một câu hỏi của khách hàng. Bên trái là cuộc trò chuyện, bên phải là mọi việc Elpino đã làm trước khi trả lời.",
+      "widgetName": "Elpino",
+      "widgetSubtitle": "Hỗ trợ AI",
+      "whatItDid": "Những gì Elpino đã làm",
+      "done": "Hoàn tất",
+      "working": "Đang xử lý…",
+      "stepStart": "bắt đầu",
+      "stepOther": "bước",
+      "person": "người thật",
+      "resolved": "đã giải quyết",
+      "humanNote": "Đã hỏi trước · một thành viên có thể tham gia, hoặc một yêu cầu hỗ trợ sẽ được tạo",
+      "resolvedNote": "Đã trả lời và giải quyết, không cần người thật",
+      "sampleNote": "Đây là câu trả lời mẫu. Các bước hiển thị là loại công cụ mà Elpino thực sự sử dụng.",
+      "qas": [
+        {
+          "q": "Tôi có bị tính phí hai lần không?",
+          "steps": [
+            "Xác minh bạn bằng mã email",
+            "Kiểm tra lịch sử thanh toán của bạn"
+          ],
+          "a": "Bạn chỉ bị tính phí một lần. Lần thử thứ hai đã thất bại và không được ghi nhận."
+        },
+        {
+          "q": "Đơn hàng của tôi ở đâu?",
+          "steps": [
+            "Xác minh bạn bằng mã email",
+            "Liên hệ cửa hàng của bạn qua MCP"
+          ],
+          "a": "Đơn hàng đã được gửi hôm qua và sẽ đến vào thứ Năm. Tôi đã gửi liên kết theo dõi qua email."
+        },
+        {
+          "q": "Làm sao để đặt lại mật khẩu?",
+          "steps": [
+            "Tìm kiếm trong kho kiến thức của bạn"
+          ],
+          "a": "Chọn “Quên mật khẩu” trên trang đăng nhập và làm theo liên kết chúng tôi gửi qua email."
+        },
+        {
+          "q": "Tôi có thể được hoàn tiền không?",
+          "steps": [
+            "Kiểm tra khoản thanh toán",
+            "Hoàn tiền đã bị tắt cho không gian làm việc này"
+          ],
+          "a": "Tôi không thể tự hoàn tiền khoản đó. Bạn có muốn tôi kết nối bạn với đội ngũ của chúng tôi không?"
+        },
+        {
+          "q": "Tôi có thể nói chuyện với người thật không?",
+          "steps": [
+            "Hỏi bạn trước khi chuyển tiếp",
+            "Thông báo cho toàn bộ đội ngũ cùng lúc"
+          ],
+          "a": "Priya từ đội ngũ của chúng tôi đã tham gia và nắm rõ toàn bộ cuộc trò chuyện."
+        },
+        {
+          "q": "Bạn có bán thẻ quà tặng không?",
+          "steps": [
+            "Tìm kiếm trong kho kiến thức của bạn",
+            "Không tìm thấy kết quả phù hợp"
+          ],
+          "a": "Tôi không có thông tin đó. Bạn có muốn tôi kết nối bạn với đội ngũ của chúng tôi không?"
+        }
+      ]
+    },
+    "customizer": {
+      "eyebrow": "Tùy chỉnh theo ý bạn",
+      "titlePrefix": "Một widget",
+      "titleHl": "trông và nói giống bạn.",
+      "subtitle": "Thêm logo của bạn, đặt tên cho AI, chọn màu sắc và giao diện, và chọn ngôn ngữ trả lời. Hãy thử các tùy chọn và xem widget thay đổi.",
+      "yourLogo": "Logo của bạn",
+      "upload": "Tải lên logo",
+      "remove": "Xóa",
+      "fileTooBig": "Sử dụng ảnh dưới 2 MB.",
+      "fileShown": "Chỉ hiển thị ở đây. Không được tải lên bất kỳ đâu.",
+      "aiName": "Tên AI",
+      "greeting": "Lời chào",
+      "accentColour": "Màu nhấn",
+      "theme": "Giao diện",
+      "light": "Sáng",
+      "dark": "Tối",
+      "customerWritesIn": "Khách hàng viết bằng",
+      "theAi": "AI",
+      "repliesIn": "trả lời bằng",
+      "autoMatch": "Tự động: khớp với khách hàng",
+      "seesUrl": "AI có thể thấy URL trang",
+      "visitorOn": "Khách truy cập đang ở",
+      "replyingIn": "Đang trả lời bằng",
+      "matched": "(đã khớp)",
+      "writeMessage": "Nhập tin nhắn…",
+      "previewNote": "Bản xem trước với nội dung mẫu. Widget thực tế của bạn sẽ dùng logo, màu sắc và lời chào riêng.",
+      "support": "Hỗ trợ",
+      "weReplyFast": "Chúng tôi trả lời trong vài giây"
+    },
+    "tour": {
+      "eyebrow": "Sản phẩm",
+      "titlePrefix": "Mọi thứ đội ngũ hỗ trợ cần,",
+      "titleHl": "ở cùng một nơi.",
+      "items": [
+        {
+          "tag": "Trợ lý AI",
+          "title": "Một trợ lý biết mình đang nói chuyện với ai",
+          "desc": "Ghi nhớ khách hàng, xác minh danh tính, kiểm tra thanh toán và gọi các công cụ của bạn."
+        },
+        {
+          "tag": "Hộp thư chung",
+          "title": "Một hộp thư cho cả đội ngũ và AI",
+          "desc": "Phân công rõ ràng, thông báo tham gia và đầy đủ bối cảnh trên mọi cuộc trò chuyện."
+        },
+        {
+          "tag": "Trung tâm kiến thức",
+          "title": "Dạy nó bằng mọi tài liệu bạn có",
+          "desc": "Thu thập dữ liệu từ trang web, tải lên tệp, viết trang mới. Có tùy chọn công khai và riêng tư."
+        },
+        {
+          "tag": "Yêu cầu hỗ trợ",
+          "title": "Không bỏ sót bất cứ điều gì",
+          "desc": "Nếu không ai rảnh, một yêu cầu hỗ trợ sẽ được tạo và khách hàng sẽ được thông báo."
+        }
+      ]
+    },
+    "who": {
+      "eyebrow": "Dành cho ai",
+      "titlePrefix": "Được xây dựng cho những người",
+      "titleHl": "thực hiện công việc hỗ trợ.",
+      "items": [
+        {
+          "title": "Nhà sáng lập",
+          "desc": "Tập trung xây dựng sản phẩm, không phải trả lời hỗ trợ. Elpino chỉ liên hệ bạn khi thực sự cần đến nhà sáng lập.",
+          "pts": [
+            "Gói miễn phí, 100 tin nhắn AI mỗi tháng",
+            "Chỉ thông báo khi cần con người",
+            "Thiết lập trong một buổi chiều"
+          ]
+        },
+        {
+          "title": "Đội ngũ bận rộn",
+          "desc": "Xử lý tốt giờ cao điểm: AI đảm nhận các câu hỏi lặp lại, mọi người nhận cùng một thông báo tham gia, không ai trả lời trùng lặp.",
+          "pts": [
+            "Một thông báo tham gia đến toàn bộ đội ngũ",
+            "Huy hiệu phân công trên mọi cuộc trò chuyện",
+            "Tạo yêu cầu hỗ trợ khi không ai rảnh"
+          ]
+        },
+        {
+          "title": "Lập trình viên",
+          "desc": "Một thẻ script, một mã định danh đã ký, và các máy chủ MCP. Bạn quyết định AI được phép truy cập gì.",
+          "pts": [
+            "Chỉ một thẻ script cho widget",
+            "Mã định danh đã ký, có thời hạn ngắn",
+            "Máy chủ MCP, được phê duyệt từng công cụ"
+          ]
+        }
+      ],
+      "founderVisual": [
+        {
+          "q": "Làm sao để xuất dữ liệu?",
+          "ok": true
+        },
+        {
+          "q": "Vì sao thẻ của tôi bị từ chối?",
+          "ok": true
+        },
+        {
+          "q": "Hợp đồng tùy chỉnh?",
+          "ok": false
+        }
+      ],
+      "handled": "Đã xử lý",
+      "needsYou": "Cần bạn",
+      "joined": "Priya đã tham gia"
+    },
+    "statement": "Elpino trả lời những gì nó biết, làm những gì bạn cho phép, và nhờ con người xử lý phần còn lại.",
+    "integrations": {
+      "eyebrow": "Tích hợp",
+      "titlePrefix": "Kết nối với những gì",
+      "titleHl": "bạn đang sử dụng.",
+      "subtitle": "Dịch vụ thanh toán để tra cứu và liên kết, công cụ dự án cho yêu cầu hỗ trợ, và MCP cho hệ thống riêng của bạn. Elpino nằm ở trung tâm, và mọi thứ bạn kết nối đều hoạt động cùng nó.",
+      "tags": [
+        "Thanh toán",
+        "Yêu cầu hỗ trợ",
+        "Hệ thống của bạn"
+      ],
+      "cta": "Xem tất cả tích hợp"
+    },
+    "trust": {
+      "eyebrow": "Tin cậy",
+      "titlePrefix": "Mạnh mẽ, với",
+      "titleHl": "phanh an toàn đã sẵn sàng.",
+      "subtitle": "Đây là bộ quy tắc mà Elpino tuân theo. Hầu hết luôn được bật. Những phần liên quan đến tiền bạc do bạn tự quyết định bật hay không.",
+      "cta": "Đọc hướng dẫn bảo mật",
+      "rulebook": "Bộ quy tắc của Elpino",
+      "setByYou": "Do bạn thiết lập",
+      "guardrailsOn": "Đã bật biện pháp bảo vệ",
+      "alwaysOn": "Luôn bật",
+      "rules": [
+        {
+          "title": "Chỉ trả lời từ kiến thức đã được duyệt",
+          "desc": "Nếu không có trong kiến thức của bạn, nó sẽ nói rõ điều đó và đề xuất kết nối với người thật."
+        },
+        {
+          "title": "Ẩn tên và email khỏi AI",
+          "desc": "Mô hình chỉ thấy mã tham chiếu, không thấy danh tính khách hàng của bạn."
+        },
+        {
+          "title": "Xác minh trước khi xử lý thông tin cá nhân",
+          "desc": "Mã xác minh qua email hoặc mã định danh đã ký sẽ được yêu cầu trước."
+        },
+        {
+          "title": "Chỉ những công cụ bạn đã bật",
+          "desc": "Mỗi công cụ MCP đều được bạn phê duyệt riêng lẻ."
+        }
+      ],
+      "refundTitle": "Cho phép AI thực hiện hoàn tiền",
+      "refundOn": "Đã bật. AI có thể hoàn tiền, theo thiết lập của chủ không gian làm việc.",
+      "refundOff": "Tắt theo mặc định. Chỉ chủ không gian làm việc mới có thể bật."
+    },
+    "pricing": {
+      "eyebrow": "Bảng giá",
+      "titlePrefix": "Trả tiền cho sự trợ giúp,",
+      "titleHl": "không phải cho số lượng nhân sự.",
+      "subtitle": "Bắt đầu miễn phí. Các gói trả phí được tính dựa trên khối lượng công việc AI đã thực hiện.",
+      "cta": "Xem toàn bộ bảng giá",
+      "plans": [
+        {
+          "name": "Miễn phí",
+          "big": "$0",
+          "note": "100 tin nhắn AI mỗi tháng",
+          "pts": [
+            "Không cần thẻ",
+            "Widget, kiến thức và hộp thư",
+            "Chuyển tiếp không bao giờ tốn thêm phí"
+          ]
+        },
+        {
+          "name": "Gói trả phí",
+          "big": "Tính theo hạn mức",
+          "note": "Hạn mức AI hàng tháng phù hợp với khối lượng của bạn",
+          "pts": [
+            "Công cụ thanh toán và tài khoản",
+            "Không gian cho đội ngũ lớn hơn",
+            "Nạp thêm bất cứ lúc nào"
+          ]
+        },
+        {
+          "name": "Thành viên bổ sung",
+          "big": "Gói ghế",
+          "note": "Thêm ghế được gia hạn cùng gói của bạn",
+          "pts": [
+            "Chỉ khi bạn phát triển",
+            "Cùng một hộp thư, thêm nhân lực",
+            "Hủy bất cứ lúc nào"
+          ]
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Câu hỏi",
+      "titlePrefix": "Những điều mọi người",
+      "titleHl": "hỏi trước tiên.",
+      "items": [
+        {
+          "q": "Elpino là gì?",
+          "a": "Một nền tảng hỗ trợ khách hàng bằng AI: widget trò chuyện cho trang web, trợ lý AI trả lời dựa trên kiến thức của bạn và kiểm tra thanh toán thực tế, hộp thư nhóm dùng chung, và yêu cầu hỗ trợ khi không ai rảnh."
+        },
+        {
+          "q": "AI có bịa đặt thông tin không?",
+          "a": "AI trả lời dựa trên kiến thức bạn đã duyệt, và một bước rà soát sẽ đối chiếu bản nháp với kết quả từ các công cụ. Khi không biết, nó sẽ nói rõ và đề xuất kết nối với người thật."
+        },
+        {
+          "q": "Điều gì xảy ra khi AI không thể giúp?",
+          "a": "AI sẽ hỏi khách hàng trước. Nếu đồng ý, toàn bộ đội ngũ sẽ nhận thông báo tham gia và có 90 giây để can thiệp. Nếu không ai phản hồi, một yêu cầu hỗ trợ sẽ được tạo và khách hàng sẽ được thông báo qua email."
+        },
+        {
+          "q": "Việc thiết lập mất bao lâu?",
+          "a": "Hầu hết các đội ngũ đều hoạt động ngay trong ngày: thêm kiến thức, dán đoạn mã widget và mời đội ngũ của bạn."
+        },
+        {
+          "q": "Có gói miễn phí không?",
+          "a": "Có: 100 tin nhắn AI mỗi tháng, không cần thẻ."
+        },
+        {
+          "q": "Nó có hoạt động trên các kênh khác không?",
+          "a": "Trò chuyện trên trang web đã hoạt động ngay bây giờ. Đa kênh sẽ ra mắt vào tháng 11."
+        }
+      ]
+    },
+    "closing": {
+      "title": "Đưa ra câu trả lời cho khách hàng trước khi họ gõ xong.",
+      "subtitle": "Bắt đầu miễn phí, dạy nó về doanh nghiệp của bạn, và để nó đảm nhận những câu hỏi lặp lại.",
+      "ctaPrimary": "Bắt đầu miễn phí",
+      "ctaSecondary": "Liên hệ với chúng tôi"
+    }
+  },
+  "pricing": {
+    "hero": {
+      "badge": "Giá cả",
+      "title": "Bắt đầu miễn phí. Phát triển khi bạn đã sẵn sàng.",
+      "subtitle": "Mỗi tài khoản mới bắt đầu với hỗ trợ AI, hộp thư chung và chuyển tiếp cho con người—không cần thẻ. Khám phá Elpino cùng nhóm của bạn, sau đó chọn gói khi bạn cần nhiều hơn.",
+      "stickerFree": "Miễn phí vĩnh viễn ✓",
+      "stickerNoCard": "Không cần thẻ",
+      "ctaDashboard": "Đến bảng điều khiển",
+      "ctaStart": "Bắt đầu miễn phí",
+      "billingPeriodLabel": "Kỳ thanh toán",
+      "monthly": "Hàng tháng",
+      "annually": "Hàng năm"
+    },
+    "planCards": {
+      "mostPopular": "Phổ biến nhất",
+      "save": "tiết kiệm",
+      "freeForever": "Miễn phí vĩnh viễn",
+      "discussCustomPlan": "hoặc thảo luận về gói tùy chỉnh",
+      "compareAllFeatures": "So sánh tất cả tính năng",
+      "whatsIncluded": "Bao gồm",
+      "builtForTeam": "Được xây dựng cho toàn bộ nhóm của bạn",
+      "builtForTeamDesc": "Kiến thức chung, một hộp thư và chuyển tiếp cho con người khi cần."
+    },
+    "comparison": {
+      "eyebrow": "So sánh gói",
+      "titlePrefix": "Xem gói nào ",
+      "titleHl": "phù hợp với nhóm của bạn.",
+      "subtitle": "So sánh dung lượng, số ghế và quyền truy cập sản phẩm trên mọi gói. Nâng cấp bất cứ khi nào hoạt động hỗ trợ của bạn cần thêm không gian.",
+      "featuresHeader": "Tính năng",
+      "popular": "Phổ biến",
+      "billedAnnually": "thanh toán hàng năm",
+      "billedMonthly": "thanh toán hàng tháng",
+      "showAll": "Hiện tất cả tính năng",
+      "showFewer": "Hiện ít tính năng hơn",
+      "included": "Bao gồm",
+      "notIncluded": "Không bao gồm",
+      "categories": {
+        "aiRules": {
+          "name": "AI được phép làm gì",
+          "rows": {
+            "allowance": {
+              "label": "Hạn mức AI hàng tháng",
+              "description": "Free bị giới hạn ở 100 tin nhắn AI. Các gói trả phí bao gồm khoản tín dụng đô la hàng tháng mà AI sử dụng khi làm việc, được chia sẻ bởi toàn bộ không gian làm việc."
+            },
+            "whenOut": {
+              "label": "Khi hết hạn mức",
+              "description": "AI chuyển các cuộc hội thoại mới cho nhóm của bạn. Trên các gói trả phí, bạn có thể nạp thêm tín dụng bất cứ lúc nào, hoặc bật tự động nạp lại."
+            },
+            "escalations": {
+              "label": "Chuyển tiếp cho con người",
+              "description": "Các luồng hội thoại mà AI chuyển tiếp vì không thể trả lời một cách chắc chắn. Việc chuyển tiếp không bao giờ tốn thêm phí."
+            }
+          }
+        },
+        "seats": {
+          "name": "Ai có thể đăng nhập",
+          "rows": {
+            "included": {
+              "label": "Số ghế bao gồm",
+              "description": "Đồng nghiệp được bao gồm trong giá gói, kể cả chủ sở hữu không gian làm việc."
+            },
+            "extra": {
+              "label": "Ghế bổ sung",
+              "description": "Mỗi đồng nghiệp vượt quá số ghế bao gồm, trên bất kỳ gói nào."
+            },
+            "ceiling": {
+              "label": "Giới hạn ghế",
+              "description": "Điểm mà bạn cần một gói lớn hơn thay vì thêm một ghế khác."
+            }
+          }
+        },
+        "product": {
+          "name": "Sản phẩm",
+          "rows": {
+            "widget": {
+              "label": "Tiện ích chat trên website",
+              "description": "Cuộc trò chuyện có thể nhúng mà khách truy cập của bạn thực sự trò chuyện."
+            },
+            "knowledge": {
+              "label": "Cơ sở kiến thức & câu trả lời AI",
+              "description": "Quét trang web của bạn hoặc tải lên tài liệu; AI trả lời dựa trên đó."
+            },
+            "storage": {
+              "label": "Lưu trữ kiến thức",
+              "description": "Không gian làm việc có thể chứa bao nhiêu nội dung đã quét và tải lên."
+            },
+            "inbox": {
+              "label": "Hộp thư chung & chuyển tiếp",
+              "description": "Một hộp thư cho nhóm, với AI chuyển tiếp khi cần."
+            },
+            "audit": {
+              "label": "Nhật ký kiểm tra AI",
+              "description": "Mọi câu trả lời, cùng với các bài viết và tra cứu đã dùng để xây dựng nó."
+            },
+            "analytics": {
+              "label": "Phân tích khách truy cập",
+              "description": "Khách truy cập trực tiếp, nguồn, quốc gia và trang."
+            },
+            "profiles": {
+              "label": "Hồ sơ & lịch sử khách hàng",
+              "description": "Hồ sơ khách hàng đã lưu và các cuộc hội thoại trước đó của họ."
+            },
+            "domain": {
+              "label": "Miền được kết nối",
+              "description": "Một không gian làm việc, một trang web — cần thêm cái thứ hai? bắt đầu không gian làm việc thứ hai."
+            },
+            "support": {
+              "label": "Hỗ trợ",
+              "description": "Cách liên hệ với chúng tôi khi cần con người từ phía chúng tôi."
+            }
+          }
+        }
+      }
+    },
+    "values": {
+      "handsOff": "Chuyển tiếp cho con người",
+      "topUpOrHandoff": "Nạp thêm hoặc chuyển tiếp",
+      "noExtraCharge": "Không phí thêm",
+      "noLimit": "Không giới hạn",
+      "standard": "Tiêu chuẩn",
+      "priority": "Ưu tiên",
+      "messages": "tin nhắn",
+      "credit": "tín dụng",
+      "seatBundleSummary": "3 ghế $2, 5 ghế $3"
+    },
+    "billing": {
+      "eyebrow": "Thanh toán rõ ràng, đơn giản",
+      "titleLine1": "Trả tiền cho những gì AI làm.",
+      "titleLine2": "Không phải cho việc chuyển tiếp.",
+      "subtitle": "Free bao gồm 100 tin nhắn AI mỗi tháng. Các gói trả phí bao gồm tín dụng AI hàng tháng để chi trả càng nhiều cuộc hội thoại càng tốt, nên một câu hỏi nhanh tốn ít hơn một cuộc trao đổi dài. Chuyển tiếp cuộc hội thoại cho nhóm của bạn luôn miễn phí.",
+      "creditCard": {
+        "label": "Tín dụng AI hàng tháng",
+        "amount": "Từ $7",
+        "note": "mỗi tháng trên Starter",
+        "chatsUseCredit": "cuộc chat dùng tín dụng",
+        "refillsMonthly": "nạp lại hàng tháng",
+        "desc": "Starter bao gồm $7, Growth $40 và Scale $240 tín dụng AI mỗi tháng. Cần nhiều hơn? Nạp thêm bất cứ lúc nào hoặc bật tự động nạp lại.",
+        "cta": "So sánh các gói"
+      },
+      "handoffCard": {
+        "stamp": "Chuyển tiếp = miễn phí",
+        "label": "Phí thêm cho mỗi lần chuyển tiếp",
+        "note": "Trên mọi gói. Luôn luôn."
+      },
+      "inboxCard": {
+        "title": "AI và nhóm của bạn, trong một hộp thư.",
+        "desc": "AI trả lời dựa trên kiến thức của bạn. Khi cần con người, nhóm của bạn tiếp tục với cuộc hội thoại đầy đủ đã hiển thị.",
+        "cta": "Khám phá cách hoạt động"
+      }
+    },
+    "capacity": {
+      "eyebrow": "Thêm dung lượng",
+      "title": "Phát triển mà không thay đổi cách bạn làm việc.",
+      "subtitle": "Chỉ thêm người hoặc dung lượng AI khi bạn cần. Hộp thư, kiến thức và lịch sử hội thoại của bạn vẫn giữ nguyên như hiện tại.",
+      "teammatesTitle": "Đồng nghiệp bổ sung",
+      "teammatesDesc": "Cho nhiều người quyền đăng nhập riêng khi vẫn chia sẻ cùng hộp thư, kiến thức và tín dụng AI. Họ vẫn ở trong gói của bạn mỗi tháng cho đến khi bạn xóa họ.",
+      "perMonth": "mỗi tháng",
+      "seatsWord": "ghế",
+      "topUpAnytime": "Nạp thêm bất cứ lúc nào",
+      "onAnyPaidPlan": "trên bất kỳ gói trả phí nào",
+      "creditTitle": "Tín dụng AI bổ sung",
+      "creditDesc": "Giữ cho AI tiếp tục trả lời sau khi dùng hết tín dụng hàng tháng. Chuyển tiếp cuộc hội thoại cho nhóm của bạn không bao giờ tốn thêm phí.",
+      "creditCards": [
+        {
+          "name": "Tín dụng hàng tháng",
+          "note": "Đặt lại mỗi tháng"
+        },
+        {
+          "name": "Nạp thêm",
+          "note": "Không bao giờ hết hạn"
+        },
+        {
+          "name": "Tự động nạp lại",
+          "note": "Tùy chọn"
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Câu hỏi thường gặp",
+      "title": "Câu hỏi về giá cả",
+      "subtitle": "Các chi tiết thanh toán được hỏi nhiều nhất. Thiết lập, AI, tích hợp và an ninh được trình bày trong FAQ đầy đủ.",
+      "readFull": "Đọc toàn bộ FAQ",
+      "items": [
+        {
+          "q": "Các gói có giá bao nhiêu?",
+          "a": "Free là $0. Các gói hàng tháng là Starter $12 với $7 tín dụng AI mỗi tháng, Growth $59 với $40, và Scale $299 với $240. Thanh toán hàng năm được miễn phí hai tháng—bạn trả cho mười tháng và nhận mười hai: Starter là $120 mỗi năm ($10/tháng), Growth là $590 ($49.17/tháng), và Scale là $2,990 ($249.17/tháng)."
+        },
+        {
+          "q": "Hạn mức AI hoạt động như thế nào?",
+          "a": "Free bao gồm 100 tin nhắn AI mỗi tháng. Mỗi phản hồi AI gửi được tính là một tin nhắn, vì vậy một cuộc chat ngắn dùng ít và một cuộc trao đổi dài dùng nhiều hơn. Các gói trả phí hoạt động khác: chúng bao gồm tín dụng AI hàng tháng mà AI chi tiêu khi làm việc, vì vậy một câu hỏi nhanh dùng ít hơn một cuộc trao đổi dài. Starter bao gồm $7 tín dụng mỗi tháng, Growth $40 và Scale $240."
+        },
+        {
+          "q": "Chuyển tiếp có tốn phí không?",
+          "a": "Không phí thêm. Việc chuyển tiếp tự nó miễn phí trên mọi gói, và AI dừng ngay khi con người tiếp quản. Trên Free, các tin nhắn AI đã gửi trước khi chuyển tiếp vẫn tính vào 100 tin nhắn của bạn; trên các gói trả phí, AI chỉ dùng tín dụng khi đang trả lời, và dừng dùng tín dụng ngay khi con người tiếp quản."
+        },
+        {
+          "q": "AI có thể xử lý hoàn tiền không?",
+          "a": "Chỉ khi chủ sở hữu không gian làm việc bật hoàn tiền. Mặc định là tắt. Ngay cả khi hoàn tiền bị tắt, AI vẫn có thể tra cứu thanh toán và đề xuất kết nối khách hàng với nhóm của bạn."
+        },
+        {
+          "q": "Điều gì xảy ra khi tôi dùng hết hạn mức AI?",
+          "a": "AI chuyển các cuộc hội thoại mới trực tiếp cho nhóm của bạn thay vì trả lời. Trên gói trả phí bạn có thể nạp thêm tín dụng bất cứ lúc nào, hoặc bật tự động nạp lại để không bao giờ dừng. Các lần nạp thêm không bao giờ hết hạn. Tín dụng hàng tháng của bạn đặt lại mỗi kỳ thanh toán."
+        },
+        {
+          "q": "Thêm một đồng nghiệp tốn bao nhiêu?",
+          "a": "Ghế bổ sung có sẵn theo gói trên mọi kế hoạch bao gồm Free: 3 ghế với $2 mỗi tháng, hoặc 5 ghế với $3. Ghế và tín dụng AI được thanh toán hoàn toàn riêng biệt—thêm một đồng nghiệp không bao giờ ảnh hưởng đến hạn mức AI của bạn."
+        },
+        {
+          "q": "Tôi có thể hủy bất cứ lúc nào không?",
+          "a": "Có, từ Cài đặt → Thanh toán, không ràng buộc. Việc hủy có hiệu lực vào cuối kỳ thanh toán hiện tại, vì vậy bạn vẫn giữ được những gì đã trả cho đến lúc đó."
+        },
+        {
+          "q": "Điều gì xảy ra nếu tôi ngừng thanh toán?",
+          "a": "Không gian làm việc sẽ chuyển về gói Free vào cuối kỳ. Cơ sở kiến thức, lịch sử hội thoại và cài đặt của bạn vẫn được giữ nguyên."
+        }
+      ]
+    },
+    "enterprise": {
+      "badge": "Doanh nghiệp",
+      "title": "Hỗ trợ phát triển cùng bạn.",
+      "subtitle": "Dành cho các tổ chức hỗ trợ nhiều khách hàng hơn trên nhiều trang web và nhóm. Hãy cùng tìm dung lượng phù hợp cho hỗ trợ của bạn.",
+      "features": [
+        "Tín dụng AI vượt xa gói Scale",
+        "Nhiều trang web và nhóm đang phát triển",
+        "Ngữ cảnh và kiến thức khách hàng chung",
+        "Giá theo khối lượng phù hợp với nhu cầu của bạn"
+      ],
+      "talkTitle": "Hãy nói chuyện",
+      "customPricing": "Có giá tùy chỉnh",
+      "contactCta": "Liên hệ bán hàng",
+      "talkPoints": [
+        "Thảo luận về khối lượng hội thoại của bạn",
+        "Lập kế hoạch không gian làm việc và ghế của bạn",
+        "Xác định phạm vi kiến thức trên các trang web",
+        "Khám phá nhu cầu triển khai và SLA"
+      ]
+    },
+    "plans": {
+      "free": {
+        "name": "Free",
+        "description": "Dành cho người sáng lập tự trả lời hỗ trợ của riêng mình. AI thực sự, không cần thẻ.",
+        "cta": "Bắt đầu",
+        "features": [
+          "Tối đa 100 tin nhắn AI/tháng",
+          "Bao gồm 2 ghế",
+          "Gói ghế từ $0.60/ghế",
+          "Cơ sở kiến thức 20 MB",
+          "Tiện ích chat website",
+          "Hộp thư chung với chuyển tiếp"
+        ]
+      },
+      "starter": {
+        "name": "Starter",
+        "description": "Dành cho nhóm nhỏ có hỗ trợ đã vượt quá một hộp thư.",
+        "cta": "Bắt đầu",
+        "features": [
+          "$7 tín dụng AI mỗi tháng",
+          "Bao gồm 5 ghế",
+          "Gói ghế từ $0.60/ghế",
+          "Cơ sở kiến thức 200 MB",
+          "Nạp thêm tín dụng bất cứ lúc nào",
+          "Phân tích khách truy cập"
+        ]
+      },
+      "growth": {
+        "name": "Growth",
+        "description": "Dành cho các nhóm điều hành hỗ trợ như một chức năng thực sự, với dữ liệu để chứng minh điều đó.",
+        "cta": "Bắt đầu",
+        "features": [
+          "$40 tín dụng AI mỗi tháng",
+          "Bao gồm 15 ghế",
+          "Gói ghế từ $0.60/ghế",
+          "Cơ sở kiến thức 1 GB",
+          "Nạp thêm tín dụng bất cứ lúc nào",
+          "Nhật ký kiểm tra AI đầy đủ",
+          "Hỗ trợ ưu tiên"
+        ]
+      },
+      "scale": {
+        "name": "Scale",
+        "description": "Dành cho hỗ trợ khối lượng lớn nơi AI đảm nhận phần lớn tải trọng.",
+        "cta": "Bắt đầu",
+        "features": [
+          "$240 tín dụng AI mỗi tháng",
+          "Bao gồm 40 ghế",
+          "Gói ghế từ $0.60/ghế",
+          "Cơ sở kiến thức 5 GB",
+          "Nạp thêm tín dụng bất cứ lúc nào",
+          "Tích hợp & truy cập API"
+        ]
+      }
+    }
+  },
+  "about": {
+    "typingLabel": "Elpino đang nhập",
+    "hero": {
+      "badge": "Về Elpino",
+      "titlePrefix": "Hỗ trợ khách hàng, ",
+      "titleHl": "được làm cho nhân văn hơn.",
+      "subtitle": "Elpino cung cấp cho khách hàng những câu trả lời hữu ích từ kiến thức bạn đã có, sau đó giữ nhóm của bạn gần gũi cho những khoảnh khắc cần một con người.",
+      "ctaMeet": "Gặp Elpino",
+      "ctaReadStory": "Đọc câu chuyện của chúng tôi ↓",
+      "imageAlt": "Bốn con lười Elpino làm việc cùng nhau để hỗ trợ khách hàng",
+      "bubble": "Xin chào, chúng tôi có thể giúp gì? 👋"
+    },
+    "story": {
+      "eyebrow": "Nơi mọi thứ bắt đầu",
+      "titlePrefix": "Câu chuyện của chúng tôi bắt đầu với một ",
+      "titleHl": "câu hỏi.",
+      "subtitle": "Điều gì sẽ xảy ra nếu phần mềm hỗ trợ khách hàng giúp cả hai phía của cuộc hội thoại—không chỉ công ty quản lý nó?",
+      "chatTitle": "Elpino",
+      "chatSub": "Kể câu chuyện của chúng tôi",
+      "sys1": "Nơi mọi thứ bắt đầu",
+      "you1": "Điều gì sẽ xảy ra nếu phần mềm hỗ trợ khách hàng giúp cả hai phía của cuộc hội thoại, không chỉ công ty quản lý nó?",
+      "elpino1": "Không ai mở chat hỗ trợ để giải trí.",
+      "elpino2": "Ai đó đang cố gắng hoàn thành điều gì. Có gì đó cản đường. Họ muốn một câu trả lời rõ ràng và trở lại ngày của họ.",
+      "elpino3": "Ở phía bên kia là một nhóm xử lý các câu hỏi quen thuộc, thông tin rải rác, và nhiều cuộc hội thoại hơn thời gian. Elpino tồn tại để làm cho khoảnh khắc đó dễ dàng hơn cho tất cả mọi người.",
+      "sys2": "Đây là những gì nó trông giống như",
+      "you2": "Tôi có thể thay đổi địa chỉ email trên tài khoản của mình không?",
+      "aiLabel": "AI Elpino · từ kiến thức của bạn",
+      "aiAnswer": "Được. Mở Cài đặt, chọn Hồ sơ, sau đó cập nhật email liên hệ của bạn.",
+      "aiGuideLabel": "Hướng dẫn cài đặt tài khoản",
+      "sys3": "Một đồng nghiệp luôn gần đó khi cần"
+    },
+    "roles": {
+      "eyebrow": "Vai trò của chúng tôi",
+      "titlePrefix": "Một nhóm được xây dựng cho ",
+      "titleHl": "công việc.",
+      "subtitle": "Không có ảnh nhân viên ở đây. Thay vào đó, hãy gặp những công việc mà Elpino được thiết kế để làm—đều đặn, chu đáo, và với một nhóm con người luôn tham gia.",
+      "joinedChat": "{name} đã tham gia cuộc chat",
+      "items": [
+        {
+          "title": "Người Lắng Nghe",
+          "task": "Hiểu mọi câu hỏi của khách hàng",
+          "description": "Biến kiến thức mà nhóm của bạn đã có thành câu trả lời đầu tiên rõ ràng, hữu ích."
+        },
+        {
+          "title": "Người Sắp Xếp",
+          "task": "Giữ hộp thư luôn hoạt động",
+          "description": "Tìm tín hiệu trong hàng đợi, để các cuộc hội thoại đúng nhận được sự chú ý đúng."
+        },
+        {
+          "title": "Người Bảo Vệ",
+          "task": "Biết khi nào cần đưa con người vào",
+          "description": "Xử lý công việc thường ngày một cách cẩn thận và chuyển giao những khoảnh khắc cần đến sự đánh giá của con người."
+        },
+        {
+          "title": "Người Phát Triển",
+          "task": "Học điều gì giúp khách hàng nhiều nhất",
+          "description": "Hiển thị những khoảng trống, mẫu hình, và câu hỏi giúp cải thiện hỗ trợ của bạn theo thời gian."
+        }
+      ]
+    },
+    "remote": {
+      "eyebrow": "Được xây dựng từ xa",
+      "titlePrefix": "Chúng tôi đã làm việc từ xa từ ",
+      "titleHl": "ngày đầu tiên.",
+      "subtitle": "Chúng tôi làm việc qua việc viết rõ ràng, ngữ cảnh chung, và thời gian tập trung. Nơi ai đó làm việc ít quan trọng hơn sự quan tâm và đánh giá mà họ mang đến cho sản phẩm.",
+      "cta": "Xem các vị trí đang mở",
+      "badge": "Từ xa từ ngày đầu tiên",
+      "imageAlt": "Một nhóm phân bố hợp tác với các công cụ hỗ trợ AI chung"
+    },
+    "team": {
+      "eyebrow": "Một nhóm nhỏ, hiện tại",
+      "titleLine1": "Được xây dựng với sự tập trung.",
+      "titleLine2Prefix": "Được định hình cùng ",
+      "titleHl": "bạn.",
+      "subtitle": "Elpino còn sớm. Điều đó có nghĩa là những người sử dụng nó vẫn có thể ảnh hưởng đến những gì nó trở thành. Chúng tôi lắng nghe kỹ, phát hành cẩn thận, và giữ vấn đề của khách hàng ở trung tâm.",
+      "cta": "Nói chuyện với chúng tôi",
+      "card1": "Lắng nghe kỹ.",
+      "card2": "Xây dựng rõ ràng.",
+      "card3": "Làm cho hỗ trợ dễ dàng hơn cho mọi người."
+    },
+    "faqSection": {
+      "eyebrow": "Thêm một chút về chúng tôi",
+      "titlePrefix": "Rất vui bạn ",
+      "titleHl": "đã hỏi.",
+      "subtitle": "Một vài câu trả lời trước khi bạn bắt đầu cuộc hội thoại của riêng mình. Nhấn vào một câu hỏi dưới đây và Elpino sẽ trả lời.",
+      "exploreLink": "Khám phá FAQ đầy đủ →"
+    },
+    "faqChat": {
+      "title": "Hỏi Elpino",
+      "sub": "Trực tuyến · trả lời ngay lập tức",
+      "gladYouAsked": "Rất vui bạn đã hỏi",
+      "tapQuestion": "Nhấn vào một câu hỏi",
+      "doneText": "Đó là tất cả cho hiện tại. Bạn muốn tiếp tục?",
+      "exploreFull": "Khám phá FAQ đầy đủ"
+    },
+    "faqs": [
+      [
+        "Elpino là gì?",
+        "Elpino là một nền tảng hỗ trợ khách hàng AI với tiện ích chat trên website, câu trả lời từ cơ sở kiến thức của bạn, hộp thư nhóm chung, và chuyển tiếp cho con người khi AI không thể giúp."
+      ],
+      [
+        "Elpino có thay thế nhóm hỗ trợ của tôi không?",
+        "Elpino xử lý các câu hỏi hàng ngày từ kiến thức của bạn và đưa nhóm của bạn vào khi một cuộc hội thoại cần một con người. Nhóm của bạn vẫn là một phần của trải nghiệm hỗ trợ."
+      ],
+      [
+        "Làm thế nào tôi có thể bắt đầu?",
+        "Bắt đầu với gói miễn phí, bao gồm 100 tin nhắn AI mỗi tháng không cần thẻ. Thêm kiến thức của bạn, kết nối website của bạn, và đưa các đồng nghiệp của bạn vào."
+      ],
+      [
+        "Giá cả được cấu trúc như thế nào?",
+        "Free bao gồm 100 tin nhắn AI mỗi tháng, và các gói trả phí bao gồm tín dụng AI hàng tháng. Đồng nghiệp bổ sung có sẵn theo gói ghế từ $0.60 một ghế, và chuyển tiếp một cuộc hội thoại cho con người không bao giờ tốn thêm phí. Trang giá cả giải thích số ghế bao gồm và phí tối thiểu của gói miễn phí."
+      ]
+    ],
+    "closing": {
+      "titleLine1": "Còn nhiều điều để xây dựng.",
+      "titleLine2": "Hãy đến định hình những gì tiếp theo.",
+      "ctaTry": "Thử Elpino",
+      "ctaCareers": "Xem các vị trí đang mở"
+    }
+  },
+  "helpdesk": {
+    "hero": {
+      "badge": "Bàn hỗ trợ Elpino",
+      "titlePrefix": "Hỗ trợ tự ",
+      "titleHl": "trả lời chính nó.",
+      "subtitle": "Một bàn duy nhất cho AI giải quyết vấn đề, một nhóm tham gia khi cần thiết, và các phiếu hỗ trợ không bao giờ bị bỏ sót. Xem nó trả lời một câu hỏi.",
+      "ctaStart": "Bắt đầu miễn phí",
+      "ctaFeatures": "Xem tất cả tính năng"
+    },
+    "prompt": {
+      "customerLabel": "Khách hàng",
+      "listening": "Elpino đang lắng nghe…",
+      "asks": [
+        {
+          "q": "Tôi có bị tính phí hai lần cho việc nâng cấp không?",
+          "steps": [
+            "Đã kiểm tra lịch sử thanh toán của bạn",
+            "Tìm thấy một lần tính phí và một lần thử thất bại"
+          ],
+          "a": "Bạn chỉ bị tính phí một lần. Lần thử thứ hai đã thất bại và không bao giờ được thu."
+        },
+        {
+          "q": "Đơn hàng #4821 của tôi ở đâu?",
+          "steps": [
+            "Đã xác minh bạn bằng mã email",
+            "Tra cứu đơn hàng trong cửa hàng của bạn"
+          ],
+          "a": "Đã giao hôm qua và sẽ đến vào thứ Năm. Liên kết theo dõi đã được gửi."
+        },
+        {
+          "q": "Tôi có thể nói chuyện với ai đó về thanh toán không?",
+          "steps": [
+            "Không có công cụ nào có thể thay đổi chi tiết thanh toán",
+            "Đã hỏi bạn trước, sau đó thông báo cho nhóm"
+          ],
+          "a": "Priya từ nhóm của chúng tôi vừa tham gia cuộc chat này."
+        }
+      ]
+    },
+    "marquee": {
+      "ariaLabel": "Những gì có trên bàn",
+      "words": [
+        "Đại lý AI",
+        "Hộp thư chung",
+        "Phiếu hỗ trợ",
+        "Kiến thức",
+        "Thanh toán",
+        "Công cụ MCP",
+        "Cảnh báo tham gia",
+        "Danh tính đã xác minh",
+        "Đa kênh · tháng 11"
+      ]
+    },
+    "story": {
+      "eyebrow": "Một cuộc hội thoại",
+      "titlePrefix": "Xem một câu hỏi ",
+      "titleHl": "di chuyển qua bàn.",
+      "stepLabel": "Bước {n} / 05",
+      "chapters": [
+        {
+          "title": "Khách hàng viết vào",
+          "body": "Từ tiện ích chat trên trang web của bạn, với vị trí, thiết bị và trang mà họ đang xem đã được đính kèm sẵn."
+        },
+        {
+          "title": "AI thực hiện công việc",
+          "body": "Nó trả lời từ kiến thức của bạn, nhớ khách hàng, xác minh danh tính của họ, và sử dụng thanh toán và công cụ MCP của bạn để thực sự giải quyết vấn đề."
+        },
+        {
+          "title": "Nhóm của bạn tham gia bằng một lần nhấn",
+          "body": "Chỉ khi nó không thể giúp, và chỉ sau khi hỏi khách hàng. Mọi người đều nhận được cảnh báo tham gia, và người đầu tiên nhấn sẽ nhận cuộc chat."
+        },
+        {
+          "title": "Không có gì bị bỏ sót",
+          "body": "Nếu không ai sẵn sàng trong 90 giây, một phiếu hỗ trợ sẽ được tạo với lý do và tóm tắt, và khách hàng nhận được mã tham chiếu qua email."
+        },
+        {
+          "title": "Bạn dạy nó một lần",
+          "body": "Thêm những gì còn thiếu vào cơ sở kiến thức của bạn. Lần sau, AI đơn giản là biết."
+        }
+      ],
+      "visuals": {
+        "ask": {
+          "bubble": "Xin chào, tôi không tìm thấy hóa đơn tháng trước của mình.",
+          "chips": [
+            "Pune, Ấn Độ",
+            "Chrome · macOS",
+            "Trên /billing"
+          ]
+        },
+        "ai": {
+          "rows": [
+            [
+              "search_knowledge",
+              "1 kết quả khớp"
+            ],
+            [
+              "send_email_code",
+              "đã xác minh"
+            ],
+            [
+              "get_receipt",
+              "đã tìm thấy · đã gửi"
+            ]
+          ],
+          "bubble": "Đây là hóa đơn của bạn. Tôi cũng đã gửi một bản sao qua email."
+        },
+        "team": {
+          "title": "Cuộc chat mới cần một người",
+          "sub": "Cảnh báo đã gửi đến 4 đồng nghiệp",
+          "join": "Tham gia",
+          "note": "Người đầu tiên nhấn sẽ nhận nó. Cảnh báo sẽ biến mất với những người khác."
+        },
+        "ticket": {
+          "label": "Phiếu hỗ trợ",
+          "title": "Chuyển tiếp hỗ trợ · Aisha Khan",
+          "reason": "Lý do: thay đổi quốc gia thanh toán cần một người.",
+          "chips": [
+            "Trang vấn đề",
+            "Đã thông báo khách hàng qua email"
+          ]
+        },
+        "learn": {
+          "title": "Hướng dẫn hóa đơn và biên lai",
+          "added": "Đã thêm",
+          "note": "Khách hàng tiếp theo nhận được câu trả lời này ngay lập tức."
+        }
+      }
+    },
+    "bento": {
+      "eyebrow": "Bên trong",
+      "titlePrefix": "Những chi tiết nhỏ, ",
+      "titleHl": "được thực hiện đúng cách.",
+      "subtitle": "Những điều bạn sẽ kiểm tra trước khi tin tưởng giao khách hàng của mình cho AI.",
+      "redact": {
+        "prefix": "Xin chào, tôi là",
+        "middle": "liên hệ với tôi tại"
+      },
+      "privacy": {
+        "title": "Mô hình không bao giờ thấy tên hoặc email.",
+        "desc": "Danh tính được thay thế bằng mã tham chiếu trước khi AI đọc một cuộc hội thoại, và các thông tin bí mật bị loại bỏ."
+      },
+      "languages": {
+        "title": "Trả lời bằng ngôn ngữ của khách hàng của bạn",
+        "note": "Bạn chọn ngôn ngữ trả lời trong cài đặt."
+      },
+      "verified": {
+        "title": "Được xác minh trước khi hành động",
+        "note": "Một mã email dùng một lần hoặc mã thông báo đã ký từ ứng dụng của bạn."
+      },
+      "tools": {
+        "title": "Công cụ của bạn, quy tắc của bạn",
+        "rows": [
+          [
+            "get_order",
+            true
+          ],
+          [
+            "track_shipment",
+            true
+          ],
+          [
+            "delete_customer",
+            false
+          ]
+        ]
+      },
+      "handoff": {
+        "title": "Hỏi trước khi chuyển tiếp",
+        "ask": "Tôi không thể tự thay đổi điều đó. Kết nối bạn với nhóm của chúng tôi chứ?",
+        "reply": "Vâng, làm ơn"
+      }
+    },
+    "statement": "Elpino trả lời những gì nó biết, làm những gì bạn cho phép, và hỏi một người về mọi thứ khác.",
+    "start": {
+      "eyebrow": "Bắt đầu",
+      "titlePrefix": "Hoạt động trong ",
+      "titleHl": "một buổi chiều.",
+      "note": "Chat trên trang web đã hoạt động ngay hôm nay. Đa kênh sẽ ra mắt vào tháng 11.",
+      "steps": [
+        {
+          "title": "Đăng ký miễn phí",
+          "desc": "100 tin nhắn AI mỗi tháng. Không cần thẻ."
+        },
+        {
+          "title": "Dạy nó",
+          "desc": "Thêm trang web, tệp của bạn hoặc viết trang."
+        },
+        {
+          "title": "Dán đoạn mã",
+          "desc": "Tiện ích sẽ xuất hiện trên trang web của bạn."
+        },
+        {
+          "title": "Mời nhóm của bạn",
+          "desc": "Để mọi người sẵn sàng khi nó cần."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Câu hỏi",
+      "titlePrefix": "Nên biết",
+      "titleHl": "điều này.",
+      "items": [
+        [
+          "Bàn hỗ trợ Elpino là gì?",
+          "Toàn bộ không gian làm việc hỗ trợ: tiện ích chat, đại lý AI, hộp thư chung, phiếu hỗ trợ và cơ sở kiến thức, tất cả hoạt động cùng nhau."
+        ],
+        [
+          "Tôi có cần giữ bàn hỗ trợ cũ của mình không?",
+          "Không. Elpino bao gồm chat, đại lý AI, hộp thư chung và phiếu hỗ trợ. Phiếu hỗ trợ vẫn có thể được gửi đến Trello hoặc Asana nếu nhóm của bạn làm việc ở đó."
+        ],
+        [
+          "Có gói miễn phí không?",
+          "Có: 100 tin nhắn AI mỗi tháng, không cần thẻ."
+        ],
+        [
+          "Những kênh nào được hỗ trợ?",
+          "Chat trên trang web đã hoạt động ngay hôm nay. Đa kênh sẽ ra mắt vào tháng 11."
+        ],
+        [
+          "Nhóm của tôi cũng có thể sử dụng nó không?",
+          "Có. Mời đồng nghiệp, thêm ghế khi bạn phát triển, và họ sẽ nhận được cảnh báo tham gia khi khách hàng cần một người."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Cung cấp câu trả lời cho khách hàng của bạn trước khi họ gõ xong.",
+      "ctaStart": "Bắt đầu miễn phí",
+      "ctaFeatures": "Tất cả tính năng"
+    }
+  },
+  "nav": {
+    "startFreeTrial": "Bắt đầu dùng thử miễn phí",
+    "groups": {
+      "product": "Sản phẩm",
+      "solutions": "Giải pháp",
+      "resources": "Tài nguyên"
+    },
+    "sections": {
+      "getStarted": "Bắt đầu",
+      "capabilities": "Khả năng",
+      "platform": "Nền tảng",
+      "whoItIsFor": "Dành cho ai",
+      "learningGuides": "Học tập & Hướng dẫn",
+      "trustLegal": "Tin cậy & Pháp lý",
+      "community": "Cộng đồng",
+      "company": "Công ty"
+    },
+    "items": {
+      "Elpino helpdesk": "Bàn hỗ trợ Elpino",
+      "Elpino AI Agent": "Đại lý AI Elpino",
+      "Inbox": "Hộp thư",
+      "Tickets": "Phiếu hỗ trợ",
+      "Knowledge Hub": "Trung tâm kiến thức",
+      "Integrations": "Tích hợp",
+      "Safety & security": "An toàn & bảo mật",
+      "All features": "Tất cả tính năng",
+      "For Founders": "Cho người sáng lập",
+      "For Busy Teams": "Cho nhóm bận rộn",
+      "For Developers": "Cho nhà phát triển",
+      "See Pricing": "Xem giá",
+      "Talk to Us": "Nói chuyện với chúng tôi",
+      "Documentation": "Tài liệu",
+      "Help & FAQ": "Trợ giúp & FAQ",
+      "Trust Center": "Trung tâm tin cậy",
+      "Privacy Policy": "Chính sách bảo mật",
+      "Terms of Service": "Điều khoản dịch vụ",
+      "Blog": "Blog",
+      "Changelog": "Lịch sử thay đổi",
+      "Brand Kit": "Bộ nhận diện thương hiệu",
+      "About Us": "Về chúng tôi",
+      "Careers": "Tuyển dụng",
+      "Contact Sales": "Liên hệ bán hàng"
+    },
+    "megaMenu": {
+      "explore": "Khám phá",
+      "seePricing": "Xem giá",
+      "seePricingNote": "Bắt đầu miễn phí. Thanh toán khi nhóm của bạn phát triển.",
+      "freshFromBlog": "Mới từ blog"
+    },
+    "featured": {
+      "product": {
+        "title": "AI trước tiên. Con người khi quan trọng.",
+        "text": "Elpino trả lời từ kiến thức của bạn, sau đó chuyển cuộc trò chuyện cho đồng nghiệp với toàn bộ câu chuyện.",
+        "cta": "Gặp gỡ đại lý AI"
+      },
+      "solutions": {
+        "title": "Được tạo ra cho cách bạn làm việc",
+        "text": "Người sáng lập, cửa hàng và nhóm bận rộn đều có được thiết lập phù hợp, hoạt động trong một buổi chiều.",
+        "cta": "Tìm sự phù hợp của bạn"
+      },
+      "resources": {
+        "title": "Hoạt động trong ba bước",
+        "text": "Dán một dòng, dạy nó tài liệu của bạn, kích hoạt. Các hướng dẫn sẽ đưa bạn qua từng bước.",
+        "cta": "Mở tài liệu"
+      }
+    },
+    "pricing": "Giá",
+    "contactSales": "Liên hệ bán hàng",
+    "login": "Đăng nhập",
+    "goToDashboard": "Đến bảng điều khiển",
+    "getStarted": "Bắt đầu"
+  },
+  "footer": {
+    "ticker": [
+      "Câu trả lời AI từ kiến thức của riêng bạn",
+      "Chuyển tiếp con người, luôn miễn phí",
+      "100 tin nhắn AI miễn phí",
+      "Một hộp thư chung",
+      "Hoạt động trong một buổi chiều"
+    ],
+    "cta": {
+      "badge": "Sẵn sàng khi bạn sẵn sàng",
+      "title": "Cung cấp cho mọi khách hàng câu trả lời hữu ích.",
+      "subtitle": "Bắt đầu miễn phí với hỗ trợ AI, hộp thư chung và chuyển tiếp con người. Không cần thẻ.",
+      "ctaStart": "Bắt đầu miễn phí",
+      "ctaPricing": "Xem giá"
+    },
+    "description": "Elpino giúp các nhóm trả lời khách hàng bằng AI dựa trên kiến thức của riêng họ, sau đó chuyển tiếp các cuộc hội thoại cho một người khi cần.",
+    "blog": "Blog",
+    "contact": "Liên hệ",
+    "copyright": "© {year} Elpino Inc. Đã đăng ký bản quyền.",
+    "privacy": "Chính sách bảo mật",
+    "terms": "Điều khoản dịch vụ",
+    "security": "Bảo mật"
+  },
+  "aiAgent": {
+    "hero": {
+      "badge": "Đại lý AI",
+      "titlePrefix": "Gặp gỡ nhân viên hỗ trợ ",
+      "titleHl": "mới nhất của bạn.",
+      "subtitle": "Elpino bắt đầu ngày đầu tiên đã biết về doanh nghiệp của bạn. Nó nhớ mọi khách hàng, kiểm tra danh tính họ trước khi hành động, làm việc với hệ thống thanh toán và đơn hàng của bạn qua MCP, và hỏi trước khi chuyển một cuộc chat cho nhóm của bạn.",
+      "ctaHire": "Thuê Elpino, miễn phí",
+      "ctaFeatures": "Xem tất cả tính năng"
+    },
+    "badge": {
+      "staffLabel": "Elpino · Nhân viên",
+      "subtitle": "Đại lý hỗ trợ AI",
+      "skills": [
+        "Trả lời từ tài liệu của bạn",
+        "Xác minh danh tính",
+        "Kiểm tra thanh toán",
+        "Sử dụng công cụ MCP của bạn",
+        "Hỏi trước khi chuyển tiếp"
+      ],
+      "startDateLabel": "Ngày bắt đầu",
+      "startDateValue": "Hôm nay",
+      "clearanceLabel": "Quyền truy cập",
+      "clearanceValue": "Bạn quyết định",
+      "barcodeNote": "EL-0001 · Không bao giờ nghỉ"
+    },
+    "trace": {
+      "aiAgentLabel": "Đại lý AI",
+      "customerMsg": "Chào, đơn hàng #4821 của tôi ở đâu?",
+      "agentReply": "Tin tốt, đơn hàng của Aisha đã được gửi hôm qua và sẽ đến vào thứ Năm. Tôi cũng đã gửi cho bạn liên kết theo dõi qua email.",
+      "whatAgentDoing": "Đại lý đang làm gì",
+      "resolved": "Đã giải quyết",
+      "working": "Đang xử lý",
+      "idle": "Chờ",
+      "waiting": "Đang chờ tin nhắn từ khách hàng…",
+      "steps": [
+        {
+          "kind": "route",
+          "text": "bộ định tuyến → chuyên viên hỗ trợ"
+        },
+        {
+          "kind": "tool",
+          "text": "recall_conversation(“đơn hàng 4821”)",
+          "result": "2 tin nhắn trước đó"
+        },
+        {
+          "kind": "tool",
+          "text": "get_past_conversations",
+          "result": "1 cuộc chat đã giải quyết tháng trước"
+        },
+        {
+          "kind": "verify",
+          "text": "send_email_code → check_email_code",
+          "result": "danh tính đã xác minh"
+        },
+        {
+          "kind": "mcp",
+          "text": "mcp_shop__get_order(“4821”)",
+          "result": "đã gửi · đến thứ Năm"
+        },
+        {
+          "kind": "review",
+          "text": "đánh giá",
+          "result": "thông tin khớp với kết quả công cụ"
+        },
+        {
+          "kind": "done",
+          "text": "đã gửi phản hồi · mark_resolved"
+        }
+      ]
+    },
+    "watchIt": {
+      "eyebrow": "Nhiệm vụ đầu tiên",
+      "titlePrefix": "Xem nó xử lý ",
+      "titleHl": "một yêu cầu thực tế.",
+      "subtitle": "Một khách hàng hỏi đơn hàng của họ ở đâu. Bên phải là mọi thứ đại lý làm trước khi trả lời.",
+      "note": "Cuộc hội thoại mẫu. Tên công cụ hiển thị là những công cụ đại lý thực sự gọi."
+    },
+    "onboard": {
+      "eyebrow": "Onboarding",
+      "titlePrefix": "Sáu bước đến ",
+      "titleHl": "ngày đầu tiên.",
+      "subtitle": "Đánh dấu từng bước. Không có thời gian đào tạo, và mỗi bước là một cài đặt bạn kiểm soát.",
+      "readyBadge": "Sẵn sàng làm việc!",
+      "items": [
+        {
+          "t": "Dạy nó trang web và tệp của bạn",
+          "d": "Thu thập trang, tải lên tài liệu, viết của riêng bạn.",
+          "href": "/product/knowledge-hub"
+        },
+        {
+          "t": "Dán đoạn mã tiện ích",
+          "d": "Một dòng và chat sẽ xuất hiện trên trang web của bạn."
+        },
+        {
+          "t": "Kết nối Stripe hoặc Razorpay",
+          "d": "Để nó có thể kiểm tra thanh toán và đăng ký."
+        },
+        {
+          "t": "Kết nối công cụ MCP của bạn",
+          "d": "Chỉ bật các công cụ nó được phép sử dụng."
+        },
+        {
+          "t": "Quyết định về hoàn tiền",
+          "d": "Chúng bị tắt cho đến khi bạn bật lên."
+        },
+        {
+          "t": "Mời nhóm của bạn",
+          "d": "Để con người sẵn sàng khi nó cần.",
+          "href": "/product/inbox"
+        }
+      ]
+    },
+    "customerFile": {
+      "eyebrow": "Hiểu khách hàng của bạn",
+      "titlePrefix": "Hồ sơ vụ việc ",
+      "titleHl": "cho mọi khách hàng.",
+      "subtitle": "Trước khi trả lời, đại lý xây dựng hồ sơ về người mà nó đang hỗ trợ. Nhấn vào một nguồn để xem nó thêm gì.",
+      "sourcesLabel": "Hồ sơ khách hàng · {n} trong {total} nguồn",
+      "sampleNote": "Dữ liệu mẫu. Trong thực tế, AI thấy mã tham chiếu thay vì tên và email của khách hàng.",
+      "sources": [
+        {
+          "key": "conv",
+          "title": "Cuộc hội thoại này",
+          "how": "Nhớ những gì đã nói và có thể xem lại chi tiết cần thiết, ngay cả trong cuộc chat dài.",
+          "rows": [
+            [
+              "Hỏi về",
+              "Đơn hàng #4821"
+            ],
+            [
+              "Muốn",
+              "Ngày giao hàng"
+            ]
+          ]
+        },
+        {
+          "key": "hist",
+          "title": "Các cuộc hội thoại trước",
+          "how": "Biết các cuộc chat trước với cùng một người, để họ không bao giờ phải lặp lại.",
+          "rows": [
+            [
+              "Chat gần nhất",
+              "Vấn đề đăng nhập, đã giải quyết"
+            ],
+            [
+              "Số lần liên hệ",
+              "2"
+            ]
+          ]
+        },
+        {
+          "key": "id",
+          "title": "Danh tính đã xác minh",
+          "how": "Xác nhận họ là ai bằng mã email một lần hoặc mã thông báo đã ký từ ứng dụng của bạn trước khi chạm vào bất cứ điều gì cá nhân.",
+          "rows": [
+            [
+              "Danh tính",
+              "Đã xác minh qua mã email"
+            ]
+          ]
+        },
+        {
+          "key": "pay",
+          "title": "Thanh toán",
+          "how": "Tra cứu các khoản thanh toán và đăng ký thực tế trong Stripe hoặc Razorpay, và có thể gửi biên nhận và liên kết thanh toán.",
+          "rows": [
+            [
+              "Gói",
+              "Growth · đang hoạt động"
+            ],
+            [
+              "Thanh toán gần nhất",
+              "Đã thanh toán, biên nhận đã gửi"
+            ]
+          ]
+        },
+        {
+          "key": "mcp",
+          "title": "Hệ thống của bạn (MCP)",
+          "how": "Gọi các công cụ bạn phê duyệt trên máy chủ MCP riêng của bạn: đơn hàng, tài khoản, đặt chỗ, bất cứ điều gì bạn công khai.",
+          "rows": [
+            [
+              "Đơn hàng #4821",
+              "Đã gửi · đến thứ Năm"
+            ]
+          ]
+        },
+        {
+          "key": "kb",
+          "title": "Kiến thức của bạn",
+          "how": "Tìm kiếm trong mọi thứ bạn đã dạy nó và có thể đọc một trang hiện tại trên trang web của bạn để có chi tiết mới.",
+          "rows": [
+            [
+              "Chính sách giao hàng",
+              "3–5 ngày làm việc"
+            ]
+          ]
+        }
+      ]
+    },
+    "mcp": {
+      "eyebrow": "Plugin MCP",
+      "titlePrefix": "Yêu cầu truy cập: ",
+      "titleHl": "hệ thống của bạn.",
+      "subtitle": "Kết nối tối đa năm máy chủ MCP, có thể là cửa hàng, CRM, hoặc hệ thống đặt chỗ của bạn. Elpino phát hiện các công cụ của họ, và bạn bật chính xác những công cụ đại lý được phép sử dụng. Hãy thử bảng điều khiển dưới đây.",
+      "serverTitle": "Máy chủ MCP cửa hàng của bạn",
+      "toolsDiscovered": "Đã phát hiện {n} công cụ",
+      "verifiedCustomers": "Khách hàng đã xác minh",
+      "anyVisitor": "Bất kỳ khách nào",
+      "destructive": "Có tính phá hủy",
+      "changesData": "Thay đổi dữ liệu",
+      "readOnly": "Chỉ đọc",
+      "needsVerified": "Cần khách hàng đã xác minh",
+      "whatAgentSees": "Những gì đại lý có thể thấy",
+      "toolsAvailable": "công cụ hiện có sẵn",
+      "tools": [
+        {
+          "name": "get_order",
+          "desc": "Tra cứu một đơn hàng và trạng thái của nó",
+          "write": false,
+          "on": true
+        },
+        {
+          "name": "track_shipment",
+          "desc": "Theo dõi trực tiếp một gói hàng",
+          "write": false,
+          "on": true
+        },
+        {
+          "name": "list_products",
+          "desc": "Danh mục và mức tồn kho",
+          "write": false,
+          "on": true
+        },
+        {
+          "name": "update_address",
+          "desc": "Thay đổi địa chỉ giao hàng",
+          "write": true,
+          "on": true
+        },
+        {
+          "name": "cancel_order",
+          "desc": "Hủy một đơn hàng chưa được gửi",
+          "write": true,
+          "on": false
+        },
+        {
+          "name": "delete_customer",
+          "desc": "Xóa hồ sơ khách hàng",
+          "write": true,
+          "on": false,
+          "danger": true
+        }
+      ],
+      "bullets": [
+        "Một công cụ bị tắt sẽ vô hình với đại lý",
+        "Mỗi lệnh gọi được kiểm tra lại theo danh sách của bạn trên máy chủ",
+        "Các công cụ thay đổi dữ liệu luôn cần khách hàng đã xác minh",
+        "Thông tin xác thực máy chủ được lưu trữ mã hóa"
+      ],
+      "features": [
+        {
+          "title": "Thanh toán, được tích hợp",
+          "desc": "Kết nối Stripe hoặc Razorpay và đại lý có thể tra cứu thanh toán và đăng ký, gửi biên nhận và liên kết thanh toán, và hủy đăng ký."
+        },
+        {
+          "title": "Mang bất kỳ máy chủ MCP nào",
+          "desc": "Bất cứ thứ gì hỗ trợ MCP đều hoạt động, vì vậy bạn quyết định công cụ nào đại lý nhận được."
+        },
+        {
+          "title": "Máy chủ MCP riêng của Elpino",
+          "desc": "Các công cụ riêng của khách hàng của bạn có thể đọc gói, mức sử dụng và thanh toán Elpino của họ qua MCP."
+        }
+      ]
+    },
+    "orgChart": {
+      "eyebrow": "Nhóm phía sau",
+      "titlePrefix": "Một đại lý. ",
+      "titleHl": "Toàn bộ sơ đồ tổ chức.",
+      "subtitle": "Mỗi tin nhắn được định tuyến đến chuyên viên phù hợp, và không có gì được gửi ra trước khi người đánh giá kiểm tra thông tin.",
+      "router": "Bộ định tuyến",
+      "routerNote": "chọn chuyên viên",
+      "reviewer": "Người đánh giá",
+      "reviewerNote": "kiểm tra bản dự thảo với kết quả công cụ",
+      "polish": "Hoàn thiện",
+      "polishNote": "sau đó khách hàng thấy nó",
+      "footer": "Các trường hợp khó được chuyển lên mô hình suy luận mạnh hơn, và một mô hình dự phòng bao quát các sự cố nhà cung cấp.",
+      "lanes": [
+        {
+          "k": "Bán hàng",
+          "d": "Gói, giá cả, phù hợp"
+        },
+        {
+          "k": "Hỗ trợ",
+          "d": "Tài khoản, thanh toán, hướng dẫn"
+        },
+        {
+          "k": "Kỹ thuật",
+          "d": "Lỗi, cài đặt, tích hợp"
+        }
+      ]
+    },
+    "shift": {
+      "eyebrow": "Một ngày làm việc",
+      "titlePrefix": "Một ca làm, ",
+      "titleHl": "từ đầu đến cuối.",
+      "subtitle": "Một ngày mẫu, chỉ sử dụng những việc đại lý thực sự làm.",
+      "items": [
+        {
+          "time": "2:14 sáng",
+          "t": "Trả lời câu hỏi về giá",
+          "d": "Nhóm của bạn đang ngủ. Elpino trả lời từ cơ sở kiến thức của bạn."
+        },
+        {
+          "time": "9:05 sáng",
+          "t": "Xác minh khách hàng, khắc phục thanh toán",
+          "d": "Xác nhận họ bằng mã email, tìm khoản thanh toán thất bại, gửi liên kết thanh toán mới."
+        },
+        {
+          "time": "11:20 sáng",
+          "t": "Kiểm tra đơn hàng trong cửa hàng của bạn",
+          "d": "Gọi máy chủ MCP của bạn, đọc trạng thái và chia sẻ theo dõi."
+        },
+        {
+          "time": "1:30 chiều",
+          "t": "Gặp phải điều nó không thể làm",
+          "d": "Nói rõ điều đó, hỏi khách hàng trước, sau đó thông báo cho toàn nhóm."
+        },
+        {
+          "time": "3:42 chiều",
+          "t": "Không ai có thời gian? Nó không bỏ qua",
+          "d": "Nói thật với khách hàng và tạo phiếu hỗ trợ với theo dõi email."
+        }
+      ]
+    },
+    "review": {
+      "eyebrow": "Đánh giá hiệu suất",
+      "titlePrefix": "Một bảng điểm ",
+      "titleHl": "trung thực.",
+      "subtitle": "Đánh giá minh họa, bao gồm cả điểm yếu.",
+      "employeeBadge": "Nhân viên: Elpino",
+      "quote": "“Rất tốt với các câu hỏi thường gặp và không bao giờ vượt quá giới hạn. Giữ cơ sở kiến thức luôn mới và nó sẽ tiếp tục cải thiện.”",
+      "items": [
+        {
+          "k": "Tuân theo chính sách của bạn",
+          "n": 5,
+          "note": "Chỉ trả lời từ những gì bạn đã phê duyệt."
+        },
+        {
+          "k": "Biết khi nào cần yêu cầu giúp đỡ",
+          "n": 5,
+          "note": "Hỏi khách hàng trước, sau đó đưa nhóm của bạn vào."
+        },
+        {
+          "k": "Ở trong phạm vi quyền hạn của nó",
+          "n": 5,
+          "note": "Chỉ các công cụ bạn đã bật. Hoàn tiền tắt theo mặc định."
+        },
+        {
+          "k": "Biết những gì bạn chưa bao giờ nói với nó",
+          "n": 2,
+          "note": "Nó không thể trả lời những gì không có trong kiến thức của bạn. Thêm nhiều hơn để nâng cao điều này."
+        }
+      ]
+    },
+    "guards": {
+      "eyebrow": "Rào chắn bảo vệ",
+      "titlePrefix": "Sổ tay ",
+      "titleHl": "công ty.",
+      "subtitle": "Các quy tắc Elpino hoạt động theo. Mỗi quy tắc là một quyền kiểm soát bạn sở hữu.",
+      "items": [
+        {
+          "t": "Mô hình không bao giờ thấy tên hoặc email",
+          "d": "Danh tính trong cuộc hội thoại được thay thế bằng mã tham chiếu trước khi AI đọc nó, và các thông tin bí mật như khóa và mã thông báo bị loại bỏ."
+        },
+        {
+          "t": "Hoàn tiền bị tắt cho đến khi bạn nói",
+          "d": "Các hành động di chuyển tiền là tùy chọn và được kiểm soát bởi chủ sở hữu không gian làm việc."
+        },
+        {
+          "t": "Bạn phê duyệt mọi công cụ",
+          "d": "Đại lý chỉ thấy các công cụ MCP bạn đã bật, và những công cụ thay đổi dữ liệu cần khách hàng đã xác minh."
+        },
+        {
+          "t": "Hỏi trước, sau đó chuyển tiếp",
+          "d": "Khi không có công cụ cho nhiệm vụ, nó nói rõ điều đó và hỏi trước khi đưa nhóm của bạn vào."
+        },
+        {
+          "t": "Thông tin được xem xét lại",
+          "d": "Một bước đánh giá kiểm tra bản dự thảo với kết quả công cụ trước khi gửi."
+        },
+        {
+          "t": "Xác minh danh tính trước bất cứ điều gì cá nhân",
+          "d": "Mã email hoặc mã thông báo đã ký trước, để nó không bao giờ thảo luận về tài khoản với người lạ."
+        }
+      ]
+    },
+    "compare": {
+      "eyebrow": "Không phải chatbot",
+      "titlePrefix": "Chatbot so với ",
+      "titleHl": "đại lý Elpino.",
+      "headerA": "Một chatbot điển hình",
+      "headerB": "Đại lý AI Elpino",
+      "rows": [
+        [
+          "Tìm kiếm bài viết và dừng lại",
+          "Tìm kiếm, tra cứu hồ sơ và hành động"
+        ],
+        [
+          "Coi mọi người như người lạ",
+          "Xác minh danh tính, nhớ các cuộc chat trước"
+        ],
+        [
+          "“Vui lòng liên hệ hỗ trợ” khi bị kẹt",
+          "Hỏi trước, thông báo nhóm, tạo phiếu hỗ trợ nếu không ai có thời gian"
+        ],
+        [
+          "Không thể thấy hệ thống của bạn",
+          "Gọi các công cụ MCP bạn phê duyệt"
+        ],
+        [
+          "Câu trả lời không thể tin tưởng",
+          "Thông tin được xem xét lại với kết quả công cụ"
+        ]
+      ]
+    },
+    "faq": {
+      "eyebrow": "Câu hỏi",
+      "titlePrefix": "Nên biết",
+      "titleHl": "điều này.",
+      "items": [
+        [
+          "MCP là gì?",
+          "Model Context Protocol, một cách chuẩn để AI gọi công cụ trên hệ thống khác. Kết nối một máy chủ MCP và Elpino phát hiện các công cụ của nó. Sau đó bạn chọn công cụ nào đại lý được sử dụng."
+        ],
+        [
+          "Tôi có thể kết nối bao nhiêu máy chủ MCP?",
+          "Tối đa năm, với tối đa 15 công cụ được bật mỗi máy chủ."
+        ],
+        [
+          "Đại lý có thể thay đổi mọi thứ trong hệ thống của tôi không?",
+          "Chỉ qua các công cụ bạn đã bật, và các công cụ thay đổi dữ liệu luôn yêu cầu khách hàng có email đã được xác minh."
+        ],
+        [
+          "Nó biết ai là khách hàng như thế nào?",
+          "Từ cuộc hội thoại, các cuộc chat trước với họ, và một bước xác minh: mã email một lần hoặc mã thông báo đã ký từ ứng dụng của bạn."
+        ],
+        [
+          "Nó có thể phát hành hoàn tiền không?",
+          "Chỉ khi chủ sở hữu không gian làm việc bật hoàn tiền. Chúng bị tắt theo mặc định."
+        ],
+        [
+          "Điều gì xảy ra khi nó không thể giải quyết điều gì đó?",
+          "Nó nói rõ điều đó và hỏi khách hàng có muốn kết nối với nhóm của bạn không. Mọi người trong nhóm nhận được cảnh báo tham gia trong 90 giây, và nếu không ai tham gia, phiếu hỗ trợ được tạo tự động."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Nhân viên mới nhất của bạn đã sẵn sàng bắt đầu.",
+      "subtitle": "Dạy nó về doanh nghiệp của bạn, kết nối công cụ của bạn, và đặt giới hạn.",
+      "ctaStart": "Bắt đầu miễn phí",
+      "ctaKnowledgeHub": "Xem Trung tâm Kiến thức"
+    }
+  },
+  "inbox": {
+    "hero": {
+      "badge": "Hộp thư chung",
+      "titlePrefix": "Một cuộc trò chuyện. ",
+      "titleHl": "Tất cả những người cần có mặt.",
+      "subtitle": "AI duy trì cuộc trò chuyện cho đến khi cần một người thật, cả nhóm của bạn được thông báo cùng lúc, và ai tham gia cũng nắm được toàn bộ lịch sử. Theo dõi một cuộc trò chuyện thật từ tin nhắn đầu tiên đến khi được xử lý xong.",
+      "ctaOpen": "Mở hộp thư của bạn",
+      "ctaPricing": "Xem bảng giá"
+    },
+    "filters": [
+      "Tất cả",
+      "Chưa đọc",
+      "Đã đọc",
+      "Đã xử lý"
+    ],
+    "desk": {
+      "stages": [
+        {
+          "key": "ai",
+          "label": "AI trả lời",
+          "badge": "AI",
+          "banner": "Elpino đang xử lý cuộc trò chuyện này"
+        },
+        {
+          "key": "ask",
+          "label": "Cần một người thật",
+          "badge": "Cần người hỗ trợ",
+          "banner": "Mọi thành viên đều nhận được cảnh báo Tham gia. 90 giây để vào hỗ trợ"
+        },
+        {
+          "key": "join",
+          "label": "Thành viên tham gia",
+          "badge": "Priya",
+          "banner": "Priya đã tham gia. Cảnh báo đã biến mất với mọi người khác"
+        },
+        {
+          "key": "back",
+          "label": "Trả lại",
+          "badge": "AI",
+          "banner": "Priya đã trả cuộc trò chuyện lại cho Elpino"
+        },
+        {
+          "key": "done",
+          "label": "Đã xử lý",
+          "badge": "Đã xử lý",
+          "banner": "Đã xử lý. Mở lại bất cứ lúc nào nếu họ nhắn lại"
+        }
+      ],
+      "lines": [
+        {
+          "at": 0,
+          "from": "you",
+          "text": "Chào bạn, tôi vừa chuyển sang nước khác. Bạn có thể cập nhật quốc gia thanh toán trên tài khoản của tôi không?"
+        },
+        {
+          "at": 1,
+          "from": "ai",
+          "text": "Tôi không thể tự thay đổi thông tin thanh toán. Bạn có muốn tôi kết nối bạn với nhóm hỗ trợ của chúng tôi không?"
+        },
+        {
+          "at": 1,
+          "from": "you",
+          "text": "Có, vui lòng"
+        },
+        {
+          "at": 2,
+          "from": "sys",
+          "text": "Priya đã tham gia cuộc trò chuyện"
+        },
+        {
+          "at": 2,
+          "from": "team",
+          "text": "Chào bạn! Tôi sẽ xử lý việc này. Tôi đã cập nhật quốc gia thanh toán của bạn."
+        },
+        {
+          "at": 3,
+          "from": "sys",
+          "text": "Priya đã trả cuộc trò chuyện lại cho Elpino"
+        },
+        {
+          "at": 3,
+          "from": "ai",
+          "text": "Đã xong. Bạn cần tôi hỗ trợ gì thêm không?"
+        },
+        {
+          "at": 4,
+          "from": "you",
+          "text": "Vậy là đủ rồi, cảm ơn bạn!"
+        },
+        {
+          "at": 4,
+          "from": "sys",
+          "text": "Cuộc trò chuyện đã được xử lý xong"
+        }
+      ],
+      "rail": [
+        "Không gian",
+        "Hộp thư",
+        "Phân tích",
+        "Danh bạ",
+        "Kiến thức",
+        "Cài đặt"
+      ],
+      "list": [
+        {
+          "name": "Harnoor Singh",
+          "date": "21 Th9",
+          "prev": "Tôi không thể chia sẻ địa chỉ IP của bất kỳ ai"
+        },
+        {
+          "name": "Aisha Khan",
+          "date": "Hôm nay",
+          "prev": ""
+        },
+        {
+          "name": "Tom Becker",
+          "date": "19 Th9",
+          "prev": "Widget không tải được ở trang thanh toán"
+        },
+        {
+          "name": "Meera Iyer",
+          "date": "18 Th9",
+          "prev": "Chuyển nhóm sang gói thanh toán năm?"
+        }
+      ],
+      "teamInbox": "Hộp thư nhóm",
+      "aiAssist": "Hỗ trợ AI",
+      "searchPlaceholder": "Tìm cuộc trò chuyện",
+      "verified": "Đã xác minh",
+      "joined": "Đã tham gia",
+      "join": "Tham gia",
+      "priyaReplying": "Priya đang trả lời",
+      "resolvedLabel": "Đã xử lý",
+      "aiReplying": "Elpino đang trả lời, bạn chỉ đang xem",
+      "elpinoAi": "Elpino AI",
+      "priyaTeam": "Priya · nhóm",
+      "writeReply": "Viết phản hồi của bạn…",
+      "send": "Gửi",
+      "reopenNote": "Đã xử lý. Mở lại nếu họ nhắn lại.",
+      "lockedNote": "Tham gia cuộc trò chuyện này để trả lời. Trước đó, Elpino vẫn tiếp tục trò chuyện với khách hàng.",
+      "websiteVisitor": "Khách truy cập website",
+      "locationDevice": "Vị trí & thiết bị",
+      "location": "Pune, Ấn Độ",
+      "device": "Chrome · macOS",
+      "onPage": "Đang ở /pricing",
+      "lastSeen": "Vừa hoạt động",
+      "identityVerified": "Danh tính đã xác minh",
+      "signedIn": "Đã đăng nhập trên website",
+      "otherConvos": "Các cuộc trò chuyện khác",
+      "noOtherConvos": "Chưa có cuộc trò chuyện khác từ khách truy cập này."
+    },
+    "realThing": {
+      "eyebrow": "Điều thật sự",
+      "titlePrefix": "Đây chính là ",
+      "titleHl": "hộp thư thật.",
+      "subtitle": "Không phải bản dựng mô phỏng. Mọi cuộc trò chuyện, phản hồi của AI, thông tin khách truy cập và nút Tham gia, tất cả trên một màn hình.",
+      "imageAlt": "Hộp thư nhóm của Elpino: danh sách cuộc trò chuyện, một luồng do AI xử lý, và vị trí, thiết bị của khách truy cập",
+      "callouts": [
+        {
+          "label": "Tham gia để tiếp quản"
+        },
+        {
+          "label": "Bộ lọc: Tất cả · Chưa đọc · Đã đọc · Đã xử lý"
+        },
+        {
+          "label": "Vị trí & thiết bị"
+        },
+        {
+          "label": "Tự đóng sau 24 giờ im lặng"
+        }
+      ]
+    },
+    "twoTabs": {
+      "eyebrow": "Hai chế độ xem",
+      "titlePrefix": "Theo dõi AI. ",
+      "titleHl": "Điều hành cả nhóm.",
+      "subtitle": "Hộp thư của bạn có một tab cho những gì con người đang xử lý và một tab cho những gì Elpino đang xử lý, để không có gì bị che lấp.",
+      "tabs": [
+        {
+          "label": "Hộp thư nhóm",
+          "title": "Cuộc trò chuyện do nhóm bạn quản lý",
+          "body": "Mọi thứ mà một người đã tham gia, tiếp quản, hoặc được giao. Đây là nơi nhóm của bạn làm việc: phản hồi, theo dõi tiếp và các luồng đã xử lý xong.",
+          "rows": [
+            [
+              "Harnoor Singh",
+              "Bạn có thể gửi lại hoá đơn không?",
+              "Priya"
+            ],
+            [
+              "Meera Iyer",
+              "Chuyển nhóm sang thanh toán theo năm?",
+              "Sam"
+            ],
+            [
+              "Jo Alvarez",
+              "Cảm ơn, vậy là đã khắc phục được rồi!",
+              "Đã xử lý"
+            ]
+          ]
+        },
+        {
+          "label": "Hỗ trợ AI",
+          "title": "Cuộc trò chuyện do Elpino xử lý",
+          "body": "Theo dõi AI làm việc theo thời gian thực. Một bộ đếm cho biết bao nhiêu luồng đang hoạt động, và bạn có thể Tham gia bất kỳ luồng nào ngay khi muốn can thiệp.",
+          "rows": [
+            [
+              "Aisha Khan",
+              "Elpino đang trả lời…",
+              "AI"
+            ],
+            [
+              "Tom Becker",
+              "Đang kiểm tra hồ sơ thanh toán của bạn…",
+              "AI"
+            ],
+            [
+              "Ravi Menon",
+              "Đã gửi liên kết thanh toán an toàn",
+              "AI"
+            ]
+          ]
+        }
+      ]
+    },
+    "holders": {
+      "eyebrow": "Luôn rõ ràng",
+      "titlePrefix": "Bạn luôn biết ",
+      "titleHl": "ai đang giữ nó.",
+      "subtitle": "Mỗi cuộc trò chuyện mang một nhãn trong danh sách, để không ai trả lời trùng lặp và không gì bị bỏ sót.",
+      "items": [
+        {
+          "tag": "AI",
+          "title": "Elpino đang giữ",
+          "body": "Trả lời dựa trên kiến thức và công cụ của bạn. Bạn có thể theo dõi từng tin nhắn theo thời gian thực."
+        },
+        {
+          "tag": "Thành viên",
+          "title": "Một người đang giữ",
+          "body": "Chạm Tham gia trò chuyện, hoặc Tiếp quản nếu một đồng nghiệp đang giữ. AI sẽ nhường lại."
+        },
+        {
+          "tag": "Đã xử lý",
+          "title": "Đã hoàn tất",
+          "body": "Các luồng đã xử lý vẫn có thể tìm kiếm được, và bạn có thể mở lại chỉ trong một lần chạm."
+        }
+      ]
+    },
+    "baton": {
+      "eyebrow": "Chuyền tay",
+      "titlePrefix": "Tham gia nó. Tiếp quản nó. ",
+      "titleHl": "Trả nó lại.",
+      "subtitle": "Một cuộc trò chuyện di chuyển giữa AI và nhân viên của bạn chỉ với một lần chạm, và lịch sử luôn đi theo nó.",
+      "items": [
+        {
+          "who": "Elpino AI",
+          "note": "Trả lời trước"
+        },
+        {
+          "who": "Priya",
+          "note": "Đã chạm Tham gia trò chuyện"
+        },
+        {
+          "who": "Sam",
+          "note": "Đã tiếp quản từ Priya"
+        },
+        {
+          "who": "Elpino AI",
+          "note": "Đã được trả lại"
+        }
+      ],
+      "holdingNow": "Đang giữ hiện tại",
+      "stepLabel": "Bước {n}"
+    },
+    "teamAlert": {
+      "eyebrow": "Cảnh báo toàn nhóm",
+      "titlePrefix": "Báo cho cả nhóm. ",
+      "titleHl": "Một người trả lời.",
+      "subtitle": "Khi khách hàng yêu cầu một người thật, mọi thành viên trong nhóm đều nhận được cảnh báo Tham gia cùng lúc. Người đầu tiên chạm Tham gia sẽ nhận cuộc trò chuyện, cảnh báo biến mất với những người còn lại, và khách hàng sẽ thấy ai đã tham gia.",
+      "bullets": [
+        "Không ai bị chỉ định riêng, nên không ai trở thành điểm nghẽn",
+        "90 giây để vào hỗ trợ trước khi một ticket được tạo thay cho bạn",
+        "Tham gia nhầm? Trả lại cho AI chỉ trong một lần chạm"
+      ],
+      "panelLabel": "Cảnh báo hộp thư",
+      "joinedStatus": "Đã tham gia",
+      "alertCleared": "Cảnh báo đã xoá",
+      "joinChatStatus": "Tham gia trò chuyện",
+      "quietStatus": "Im lặng",
+      "bannerJoined": "Priya đã tham gia. Khách hàng thấy tên của cô ấy.",
+      "bannerAlerting": "Đang cảnh báo cả 4 thành viên…",
+      "bannerAsked": "Khách hàng yêu cầu một người thật"
+    },
+    "nobodyFree": {
+      "eyebrow": "Không gì bị bỏ sót",
+      "titlePrefix": "Ngay cả khi mọi người đều đang ",
+      "titleHl": "bận.",
+      "subtitle": "Nếu không ai tham gia kịp lúc, khách hàng cũng không phải nhìn vào một biểu tượng chờ vô định.",
+      "marks": [
+        {
+          "t": "0 giây",
+          "h": "Cảnh báo được gửi",
+          "d": "Mọi thành viên đều thấy một cảnh báo Tham gia."
+        },
+        {
+          "t": "≤ 90 giây",
+          "h": "Ai tham gia trước sẽ nhận",
+          "d": "Cảnh báo biến mất với tất cả những người còn lại."
+        },
+        {
+          "t": "90 giây",
+          "h": "Không ai rảnh? Ticket",
+          "d": "Một ticket được tạo tự động."
+        },
+        {
+          "t": "24 giờ",
+          "h": "Theo dõi bằng email",
+          "d": "Khách hàng được thông báo sẽ nhận phản hồi qua email trong vòng 24 giờ."
+        }
+      ]
+    },
+    "findAnything": {
+      "eyebrow": "Tìm kiếm & bộ lọc",
+      "titlePrefix": "Tìm mọi cuộc trò chuyện ",
+      "titleHl": "trong một giây.",
+      "subtitle": "Tìm theo tên hoặc nội dung tin nhắn và thu hẹp theo Tất cả, Chưa đọc, Đã đọc hoặc Đã xử lý. Hãy thử ngay bên phải.",
+      "noMatch": "Không có kết quả phù hợp. Hãy thử từ khác.",
+      "convos": [
+        {
+          "n": "Harnoor Singh",
+          "p": "Tôi không thể chia sẻ địa chỉ IP của bất kỳ ai",
+          "s": "resolved"
+        },
+        {
+          "n": "Aisha Khan",
+          "p": "Chuyển nước, câu hỏi về thanh toán",
+          "s": "unread"
+        },
+        {
+          "n": "Tom Becker",
+          "p": "Widget không tải được ở trang thanh toán",
+          "s": "unread"
+        },
+        {
+          "n": "Meera Iyer",
+          "p": "Chuyển nhóm sang gói thanh toán năm?",
+          "s": "read"
+        },
+        {
+          "n": "Ravi Menon",
+          "p": "Tôi có thể tìm biên nhận ở đâu?",
+          "s": "resolved"
+        },
+        {
+          "n": "Jo Alvarez",
+          "p": "Tôi có thể thêm một thành viên khác không?",
+          "s": "read"
+        }
+      ]
+    },
+    "context": {
+      "eyebrow": "Ngữ cảnh có sẵn",
+      "titlePrefix": "Không bao giờ hỏi ",
+      "titleHl": "“bạn là ai vậy nhỉ?”",
+      "subtitle": "Nhóm của bạn mở một luồng và đã biết ngay những thông tin cần thiết.",
+      "items": [
+        {
+          "t": "Họ đang ở đâu",
+          "d": "Vị trí và bối cảnh địa phương của mọi khách truy cập."
+        },
+        {
+          "t": "Họ đang dùng gì",
+          "d": "Thiết bị, trình duyệt và trang họ đang xem."
+        },
+        {
+          "t": "Họ là ai",
+          "d": "Một nhãn Đã xác minh khi danh tính được xác nhận bằng token đã ký hoặc mã email."
+        },
+        {
+          "t": "Thông tin nhạy cảm, một cách an toàn",
+          "d": "Yêu cầu thông tin riêng tư qua một yêu cầu an toàn dùng một lần, không phải trong khung chat."
+        },
+        {
+          "t": "Toàn bộ lịch sử",
+          "d": "Các cuộc trò chuyện trước đó với cùng người đó, ngay tại đây."
+        }
+      ],
+      "extraTitle": "Cộng thêm hiển thị đang gõ trực tiếp ở cả hai phía",
+      "extraDesc": "Khách hàng thấy khi bạn đang trả lời, và bạn thấy khi họ đang trả lời."
+    },
+    "secureRequest": {
+      "eyebrow": "Yêu cầu an toàn",
+      "titlePrefix": "Thông tin riêng tư ",
+      "titleHl": "không xuất hiện trong đoạn chat.",
+      "subtitle": "Yêu cầu thông tin nhạy cảm qua một biểu mẫu an toàn dùng một lần, để nó không bao giờ nằm trong bản ghi trò chuyện.",
+      "steps": [
+        {
+          "t": "Bạn cần một thông tin riêng tư",
+          "d": "Cho những thông tin không nên được gõ vào khung chat."
+        },
+        {
+          "t": "Gửi một yêu cầu an toàn",
+          "d": "Khách hàng nhận một biểu mẫu riêng tư dùng một lần thay vì một khung chat."
+        },
+        {
+          "t": "Trở lại cuộc trò chuyện",
+          "d": "Họ gửi thông tin một lần, và nhóm của bạn tiếp tục cuộc trò chuyện."
+        }
+      ],
+      "stepLabel": "Bước {n}"
+    },
+    "afterLeave": {
+      "eyebrow": "Sau khi họ rời đi",
+      "titlePrefix": "Đóng tab ",
+      "titleHl": "không phải là kết thúc.",
+      "subtitle": "Elpino cho bạn biết thật lòng liệu một phản hồi có còn đến được với họ hay không.",
+      "steps": [
+        {
+          "t": "Khách truy cập rời đi",
+          "d": "Họ đóng khung chat, hoặc 24 giờ trôi qua mà không có tin nhắn nào."
+        },
+        {
+          "t": "Có email đã xác minh không?",
+          "d": "Nếu họ đã xác nhận địa chỉ email, họ vẫn có thể được liên hệ."
+        },
+        {
+          "t": "Trả lời qua email",
+          "d": "Phản hồi của bạn sẽ đến hộp thư của họ. Không có email đã xác minh nghĩa là không thể trả lời, và khung soạn tin sẽ báo rõ điều đó."
+        }
+      ],
+      "stepLabel": "Bước {n}"
+    },
+    "compare": {
+      "eyebrow": "Trước & sau",
+      "titlePrefix": "Từ hỗn loạn đến ",
+      "titleHl": "bình yên.",
+      "headerA": "Không có hộp thư chung",
+      "headerB": "Với Elpino",
+      "rows": [
+        [
+          "Khách hàng phải chờ đến khi có ai đó rảnh",
+          "AI trả lời trong vài giây, sau đó một người tham gia nếu cần"
+        ],
+        [
+          "Không ai biết ai đang trả lời",
+          "Một nhãn hiển thị AI, thành viên hay đã xử lý trên mỗi luồng"
+        ],
+        [
+          "Nhóm phải nhắn nhau để tìm người phụ trách",
+          "Một cảnh báo Tham gia đến với mọi người, ai tham gia trước sẽ nhận"
+        ],
+        [
+          "Ngữ cảnh nằm rải rác ở mười nơi",
+          "Lịch sử, vị trí, thiết bị và xác minh gộp trong một bảng"
+        ],
+        [
+          "Khách hàng đóng tab là mất luôn",
+          "Khách truy cập đã xác minh vẫn có thể nhận phản hồi của bạn qua email"
+        ]
+      ]
+    },
+    "faq": {
+      "eyebrow": "Câu hỏi",
+      "titlePrefix": "Điều nên ",
+      "titleHl": "biết.",
+      "items": [
+        [
+          "Ai có thể xem một cuộc trò chuyện?",
+          "Mọi người trong nhóm của bạn đều có thể xem hộp thư chung. Mỗi cuộc trò chuyện hiển thị ai đang giữ nó: AI, một thành viên, hoặc đã xử lý."
+        ],
+        [
+          "Cửa sổ 90 giây là gì?",
+          "Khi khách hàng yêu cầu một người thật, mọi thành viên đều nhận cảnh báo Tham gia. Nếu không ai tham gia trong 90 giây, khách hàng được thông báo và một ticket được tạo tự động kèm theo dõi qua email."
+        ],
+        [
+          "Tôi có thể trả lại một cuộc trò chuyện cho AI không?",
+          "Có. Nếu bạn đã tham gia và đó là một câu hỏi tiếp theo đơn giản, hãy trả cuộc trò chuyện lại cho Elpino chỉ trong một lần chạm."
+        ],
+        [
+          "Tôi có thể trả lời sau khi khách truy cập rời đi không?",
+          "Nếu họ cung cấp một địa chỉ email đã xác minh, phản hồi của bạn sẽ được gửi qua email. Nếu không có, không thể liên hệ được với họ."
+        ],
+        [
+          "Có hoạt động trên nhiều hơn khung chat website không?",
+          "Widget chat trên website đã hoạt động ngay từ hôm nay. Đa kênh sẽ ra mắt vào tháng 11."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Cho nhóm của bạn một nơi duy nhất để hỗ trợ.",
+      "subtitle": "Bắt đầu miễn phí và mời thành viên nhóm khi bạn đã sẵn sàng.",
+      "ctaStart": "Bắt đầu miễn phí",
+      "ctaMeetAgent": "Gặp gỡ AI agent"
+    }
+  },
+  "tickets": {
+    "hero": {
+      "badge": "Yêu cầu hỗ trợ",
+      "titlePrefix": "Mỗi lần chuyển tiếp đều để lại ",
+      "titleHl": "một biên nhận.",
+      "subtitle": "Khi AI không thể hoàn thành công việc và không ai rảnh, Elpino không bỏ qua. Nó lập một yêu cầu hỗ trợ với lý do và tóm tắt, gửi đến nơi nhóm của bạn làm việc, và cung cấp cho khách hàng một mã tham chiếu để trích dẫn.",
+      "ctaStart": "Bắt đầu miễn phí",
+      "ctaInbox": "Xem hộp thư đến"
+    },
+    "printed": {
+      "ticketBadge": "Yêu cầu hỗ trợ",
+      "filedAt": "Được lập khi AI chuyển tiếp",
+      "printing": "Đang in…",
+      "referenceLabel": "Mã tham chiếu",
+      "referenceNote": "Khách hàng có thể trích dẫn mã này",
+      "fields": [
+        [
+          "Tiêu đề",
+          "Chuyển tiếp hỗ trợ · Aisha Khan"
+        ],
+        [
+          "Lý do",
+          "Thay đổi quốc gia thanh toán cần một người xử lý"
+        ],
+        [
+          "Tóm tắt",
+          "Đã chuyển sang quốc gia khác và muốn cập nhật quốc gia thanh toán trên tài khoản của cô."
+        ],
+        [
+          "Khách hàng",
+          "Aisha Khan · aisha@example.com"
+        ],
+        [
+          "Cuộc trò chuyện",
+          "Đã liên kết, chỉ cần một lần chạm để mở"
+        ],
+        [
+          "Đã gửi đến",
+          "Trang Vấn đề"
+        ]
+      ]
+    },
+    "origins": {
+      "eyebrow": "Yêu cầu hỗ trợ đến từ đâu",
+      "titlePrefix": "Ba cách một biên nhận ",
+      "titleHl": "được lập ra.",
+      "subtitle": "Bạn không bao giờ phải nhớ để tự ghi lại.",
+      "items": [
+        {
+          "tag": "Thủ công",
+          "t": "Một thành viên trong nhóm tự lập",
+          "d": "Phát hiện điều gì đó cần theo dõi thêm? Tự mình biến cuộc trò chuyện thành một yêu cầu hỗ trợ.",
+          "sample": [
+            "Thay đổi địa chỉ hóa đơn",
+            "Meera yêu cầu chúng tôi cập nhật địa chỉ thanh toán trên hóa đơn của cô."
+          ]
+        },
+        {
+          "tag": "Được lập khi AI chuyển tiếp",
+          "t": "AI lập khi chuyển tiếp",
+          "d": "Khi Elpino chuyển giao một cuộc trò chuyện và không ai tham gia kịp thời, nó sẽ lập một yêu cầu hỗ trợ kèm lý do và tóm tắt.",
+          "sample": [
+            "Chuyển tiếp hỗ trợ · Aisha Khan",
+            "Lý do: thay đổi quốc gia thanh toán cần một người xử lý."
+          ]
+        },
+        {
+          "tag": "Được đánh dấu bởi AI xem lại",
+          "t": "AI phát hiện điều còn nợ khách hàng",
+          "d": "Sau khi một cuộc trò chuyện kết thúc, AI sẽ xem lại nó. Nếu nhóm của bạn vẫn còn nợ khách hàng điều gì, nó sẽ đánh dấu một yêu cầu hỗ trợ và nêu rõ lý do.",
+          "sample": [
+            "Theo dõi yêu cầu hoàn tiền",
+            "Lý do: khách hàng được thông báo sẽ kiểm tra; nhưng không có gì được ghi lại."
+          ]
+        }
+      ]
+    },
+    "anatomy": {
+      "eyebrow": "Cấu trúc của một yêu cầu hỗ trợ",
+      "titlePrefix": "Mọi thứ nhóm của bạn cần, ",
+      "titleHl": "đã được viết sẵn.",
+      "subtitle": "Nhấn vào một dòng để xem tại sao nó xuất hiện.",
+      "fieldLabel": "Trường {n} / {total}",
+      "fields": [
+        {
+          "k": "Tiêu đề",
+          "v": "Chuyển tiếp hỗ trợ · Aisha Khan",
+          "why": "Được đặt tên theo khách hàng, để bạn có thể nhận ra ngay trong một danh sách dài."
+        },
+        {
+          "k": "Lý do",
+          "v": "Thay đổi quốc gia thanh toán cần một người xử lý",
+          "why": "Vì sao AI chuyển tiếp, hoặc vì sao AI xem lại đã đánh dấu nó. Không ai phải đoán xem đã xảy ra chuyện gì."
+        },
+        {
+          "k": "Tóm tắt",
+          "v": "Đã chuyển quốc gia, muốn cập nhật quốc gia thanh toán.",
+          "why": "AI viết một bản tóm tắt ngắn của cuộc trò chuyện để bất kỳ ai xử lý cũng bắt đầu với đầy đủ thông tin."
+        },
+        {
+          "k": "Khách hàng",
+          "v": "Aisha Khan · aisha@example.com",
+          "why": "Tên và email nếu họ cung cấp, để bạn biết nên trả lời ai."
+        },
+        {
+          "k": "Cuộc trò chuyện",
+          "v": "Đã liên kết, mở ra cuộc trò chuyện",
+          "why": "Một lần chạm để quay lại toàn bộ cuộc trò chuyện, với mọi tin nhắn."
+        },
+        {
+          "k": "Nguồn",
+          "v": "Được lập khi AI chuyển tiếp",
+          "why": "Cho biết liệu một thành viên trong nhóm, AI khi chuyển tiếp, hay AI xem lại đã tạo ra nó."
+        },
+        {
+          "k": "Đã gửi đến",
+          "v": "Trello, Asana hoặc trang Vấn đề",
+          "why": "Nơi yêu cầu hỗ trợ được gửi đến. Nếu không kết nối công cụ quản lý dự án nào, nó sẽ nằm trên trang Vấn đề."
+        },
+        {
+          "k": "Mã tham chiếu",
+          "v": "7F3A9C21",
+          "why": "Một mã ngắn khách hàng có thể trích dẫn nếu họ liên hệ lại."
+        }
+      ]
+    },
+    "scrubber": {
+      "eyebrow": "Đồng hồ 90 giây",
+      "titlePrefix": "Kéo thời gian. ",
+      "titleHl": "Xem điều gì xảy ra.",
+      "subtitle": "Nếu ai đó tham gia vào bất kỳ lúc nào, không cần lập yêu cầu hỗ trợ. Nếu hết thời gian, đây là chuỗi sự kiện tiếp theo.",
+      "seconds": "giây",
+      "dragMe": "Kéo tôi",
+      "secondsAriaLabel": "Số giây kể từ khi có cảnh báo",
+      "clock": [
+        {
+          "t": "Khách hàng đồng ý gặp một người",
+          "d": "Elpino hỏi trước, và chỉ tiếp tục khi được đồng ý."
+        },
+        {
+          "t": "Mọi thành viên đều nhận được cảnh báo Tham gia",
+          "d": "Cả nhóm được thông báo cùng một lúc."
+        },
+        {
+          "t": "Không ai tham gia: yêu cầu hỗ trợ được lập",
+          "d": "Tiêu đề, lý do, tóm tắt và liên kết đến cuộc trò chuyện."
+        },
+        {
+          "t": "Khách hàng được gửi email, nhóm được thông báo",
+          "d": "Khách hàng nhận được mã tham chiếu qua email."
+        }
+      ]
+    },
+    "connect": {
+      "eyebrow": "Thiết lập trong một phút",
+      "titlePrefix": "Kết nối với ",
+      "titleHl": "nơi bạn làm việc.",
+      "subtitle": "Không bắt buộc. Bỏ qua bước này và các yêu cầu hỗ trợ sẽ nằm ngay trên trang Vấn đề.",
+      "stepLabel": "Bước {n}",
+      "steps": [
+        {
+          "t": "Kết nối Trello hoặc Asana",
+          "d": "Thêm công cụ quản lý dự án của bạn từ phần thiết lập không gian làm việc."
+        },
+        {
+          "t": "Yêu cầu hỗ trợ được gửi đến đó",
+          "d": "Mỗi yêu cầu hỗ trợ mới trở thành một thẻ hoặc công việc, đã được viết sẵn."
+        },
+        {
+          "t": "Vẫn được theo dõi trong Elpino",
+          "d": "Trang Vấn đề vẫn giữ danh sách và cho phép bạn đánh dấu hoàn thành."
+        }
+      ]
+    },
+    "reviewScan": {
+      "badge": "AI xem lại",
+      "titlePrefix": "Sau khi cuộc trò chuyện kết thúc, ",
+      "titleHl": "Elpino đọc lại nó.",
+      "subtitle": "Các cuộc trò chuyện kết thúc lịch sự trong khi những lời hứa vẫn còn dang dở. Khi một cuộc trò chuyện kết thúc, AI sẽ xem lại nó, và nếu nhóm của bạn vẫn còn nợ khách hàng điều gì, nó sẽ đánh dấu một yêu cầu hỗ trợ và cho bạn biết lý do.",
+      "bullets": [
+        "Phát hiện câu “Tôi sẽ kiểm tra và phản hồi lại bạn”",
+        "Nêu rõ lý do đánh dấu, để bạn có thể đánh giá nhanh",
+        "Được đánh dấu là được đánh dấu bởi AI xem lại trên trang Vấn đề"
+      ],
+      "closedConvo": "Cuộc trò chuyện đã kết thúc",
+      "statusFlagged": "Đã đánh dấu",
+      "statusReviewing": "Đang xem lại…",
+      "statusResolved": "Đã giải quyết",
+      "chat": [
+        [
+          "cust",
+          "Chào, đơn hàng của tôi bị hư hỏng khi nhận."
+        ],
+        [
+          "agent",
+          "Chúng tôi rất xin lỗi về điều đó! Tôi sẽ kiểm tra về việc hoàn tiền và phản hồi lại bạn."
+        ],
+        [
+          "cust",
+          "Tuyệt, cảm ơn bạn."
+        ],
+        [
+          "agent",
+          "Còn điều gì khác tôi có thể giúp không?"
+        ],
+        [
+          "cust",
+          "Không, vậy là đủ rồi."
+        ]
+      ],
+      "flaggedTicketLabel": "Yêu cầu hỗ trợ · Được đánh dấu bởi AI xem lại",
+      "flaggedTitle": "Theo dõi yêu cầu hoàn tiền · Tom Becker",
+      "flaggedDesc": "Khách hàng được thông báo rằng việc hoàn tiền sẽ được kiểm tra; nhưng sau đó không có gì được ghi lại."
+    },
+    "destinations": {
+      "eyebrow": "Nơi nó được gửi đến",
+      "titlePrefix": "Được gửi đến công cụ ",
+      "titleHl": "mà nhóm của bạn đã sử dụng.",
+      "subtitle": "Kết nối Trello hoặc Asana và các yêu cầu hỗ trợ sẽ được gửi thẳng đến đó. Không kết nối gì cả và chúng vẫn an toàn trên trang Vấn đề.",
+      "cardTitle": "Chuyển tiếp hỗ trợ · Aisha Khan",
+      "cardReason": "Lý do: thay đổi quốc gia thanh toán cần một người xử lý",
+      "fromElpino": "Từ Elpino",
+      "items": [
+        {
+          "key": "trello",
+          "label": "Trello",
+          "note": "Trở thành một thẻ trong bảng Trello của bạn.",
+          "cols": [
+            "Cần làm",
+            "Đang làm",
+            "Hoàn thành"
+          ]
+        },
+        {
+          "key": "asana",
+          "label": "Asana",
+          "note": "Trở thành một công việc trong dự án Asana của bạn.",
+          "cols": [
+            "Chưa bắt đầu",
+            "Đang thực hiện",
+            "Hoàn tất"
+          ]
+        },
+        {
+          "key": "issues",
+          "label": "Trang Vấn đề",
+          "note": "Chưa kết nối công cụ quản lý dự án? Nó sẽ nằm trên trang Vấn đề của bạn, không cần thiết lập gì.",
+          "cols": [
+            "Đang mở",
+            "",
+            "Đã giải quyết"
+          ]
+        }
+      ]
+    },
+    "customerSide": {
+      "badge": "Biên nhận cho khách hàng",
+      "titlePrefix": "Khách hàng biết rằng ",
+      "titleHl": "họ không bị bỏ quên.",
+      "subtitle": "Nếu không ai có thể tham gia kịp thời, Elpino sẽ thông báo trung thực với khách hàng, gửi email để không bị bỏ sót, và cung cấp một mã tham chiếu ngắn để họ trích dẫn. Toàn bộ nhóm của bạn cũng được thông báo về yêu cầu hỗ trợ mới này.",
+      "bullets": [
+        "Khách hàng được thông báo về bước tiếp theo",
+        "Họ nhận được email kèm mã tham chiếu của mình",
+        "Mọi thành viên trong nhóm đều được thông báo về yêu cầu hỗ trợ"
+      ],
+      "inChat": "Trong cuộc trò chuyện",
+      "chatMsgPrefix": "Nhóm của chúng tôi đang bận, vì vậy tôi đã mở một yêu cầu hỗ trợ. Mã tham chiếu của bạn là ",
+      "chatMsgSuffix": ". Bạn sẽ nhận được phản hồi qua email trong vòng 24 giờ.",
+      "inInbox": "Trong hộp thư đến của họ",
+      "emailSubject": "Chúng tôi đã nhận được yêu cầu của bạn",
+      "emailBodyPrefix": "Yêu cầu hỗ trợ ",
+      "emailBodySuffix": " đang được nhóm của chúng tôi xử lý. Trả lời email này nếu bạn có điều gì muốn bổ sung.",
+      "teamNotified": "Nhóm đã được thông báo: yêu cầu hỗ trợ mới từ Aisha Khan"
+    },
+    "issuesBoard": {
+      "badge": "Trang Vấn đề",
+      "titlePrefix": "Một danh sách. ",
+      "titleHl": "Đánh dấu hoàn thành.",
+      "subtitle": "Mỗi yêu cầu hỗ trợ đều hiển thị nó đến từ đâu và được gửi đi đâu. AI xem lại còn cho bạn biết lý do nó đánh dấu một yêu cầu. Nhấp vào ô để đánh dấu đã giải quyết.",
+      "openWord": "đang mở",
+      "resolvedWord": "đã giải quyết",
+      "panelTitle": "Vấn đề",
+      "panelSubtitle": "Các yêu cầu hỗ trợ được tạo từ những cuộc trò chuyện hỗ trợ.",
+      "markResolved": "Đánh dấu đã giải quyết",
+      "markUnresolved": "Đánh dấu chưa giải quyết",
+      "rows": [
+        {
+          "t": "Chuyển tiếp hỗ trợ · Aisha Khan",
+          "who": "Được lập khi AI chuyển tiếp",
+          "where": "Chưa gửi đến công cụ quản lý dự án",
+          "done": false
+        },
+        {
+          "t": "Theo dõi yêu cầu hoàn tiền · Tom Becker",
+          "who": "Được đánh dấu bởi AI xem lại",
+          "where": "Yêu cầu hỗ trợ trên Trello",
+          "reason": "Khách hàng được thông báo rằng việc hoàn tiền sẽ được kiểm tra; nhưng sau đó không có gì được ghi lại.",
+          "done": false
+        },
+        {
+          "t": "Thay đổi địa chỉ hóa đơn · Meera Iyer",
+          "where": "Yêu cầu hỗ trợ trên Asana",
+          "done": false
+        },
+        {
+          "t": "Chuyển tiếp hỗ trợ · Ravi Menon",
+          "who": "Được lập khi AI chuyển tiếp",
+          "where": "Chưa gửi đến công cụ quản lý dự án",
+          "done": true
+        }
+      ]
+    },
+    "lifecycle": {
+      "eyebrow": "Vòng đời của một yêu cầu hỗ trợ",
+      "titlePrefix": "Từ “tôi có thể nói chuyện với một người không?” ",
+      "titleHl": "đến hoàn tất.",
+      "stepLabel": "Bước {n}",
+      "items": [
+        {
+          "t": "Khách hàng yêu cầu gặp một người",
+          "d": "AI hỏi trước, sau đó cảnh báo cả nhóm."
+        },
+        {
+          "t": "90 giây, không ai tham gia",
+          "d": "Mọi người đều có cơ hội tiếp nhận cuộc trò chuyện."
+        },
+        {
+          "t": "Yêu cầu hỗ trợ được lập",
+          "d": "Tiêu đề, lý do, tóm tắt và liên kết quay lại cuộc trò chuyện."
+        },
+        {
+          "t": "Khách hàng được gửi email",
+          "d": "Kèm mã tham chiếu của họ, để không có gì cảm thấy bị bỏ sót."
+        },
+        {
+          "t": "Được xử lý và giải quyết",
+          "d": "Nhóm của bạn đánh dấu hoàn thành khi xong."
+        }
+      ]
+    },
+    "compare": {
+      "eyebrow": "Trước & sau",
+      "titlePrefix": "Không còn ",
+      "titleHl": "những lời hứa bị bỏ quên.",
+      "headerA": "Không có yêu cầu hỗ trợ",
+      "headerB": "Với Elpino",
+      "rows": [
+        [
+          "“Ai đó sẽ phản hồi lại bạn”, rồi im lặng",
+          "Một yêu cầu hỗ trợ với mã tham chiếu khách hàng có thể trích dẫn"
+        ],
+        [
+          "Nhóm phải chép tay chi tiết sang một công cụ khác",
+          "Lý do, tóm tắt và liên kết cuộc trò chuyện đến sẵn đã được viết"
+        ],
+        [
+          "Những lời hứa trong cuộc trò chuyện bị quên lãng",
+          "AI xem lại đánh dấu những gì nhóm của bạn còn nợ sau khi cuộc trò chuyện kết thúc"
+        ],
+        [
+          "Không biết liệu có ai đang xử lý hay không",
+          "Trạng thái đã giải quyết dạng ô đánh dấu và nơi nó được gửi đến, trong một danh sách"
+        ]
+      ]
+    },
+    "faq": {
+      "eyebrow": "Câu hỏi",
+      "titlePrefix": "Nên ",
+      "titleHl": "biết.",
+      "items": [
+        [
+          "Khi nào Elpino tạo một yêu cầu hỗ trợ?",
+          "Khi nó chuyển giao một cuộc trò chuyện và không ai tham gia trong vòng 90 giây, và khi AI xem lại một cuộc trò chuyện đã kết thúc phát hiện điều gì đó nhóm của bạn vẫn còn nợ. Các thành viên trong nhóm cũng có thể tự lập một yêu cầu hỗ trợ."
+        ],
+        [
+          "Yêu cầu hỗ trợ được gửi đến đâu?",
+          "Đến Trello hoặc Asana nếu bạn đã kết nối một trong hai. Nếu không, chúng sẽ nằm trên trang Vấn đề của bạn, để không có gì bị mất."
+        ],
+        [
+          "Trong một yêu cầu hỗ trợ có gì?",
+          "Một tiêu đề, lý do, một bản tóm tắt ngắn, thông tin của khách hàng, và một liên kết quay lại cuộc trò chuyện."
+        ],
+        [
+          "Khách hàng có được biết không?",
+          "Có. Họ được thông báo trong cuộc trò chuyện, nhận được một email, và được cung cấp một mã tham chiếu ngắn để trích dẫn."
+        ],
+        [
+          "Tôi có thể đánh dấu một yêu cầu hỗ trợ là đã giải quyết không?",
+          "Có, hãy đánh dấu nó từ trang Vấn đề."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Không để điều gì trôi qua.",
+      "subtitle": "Bắt đầu miễn phí và Elpino sẽ viết các yêu cầu hỗ trợ cho bạn.",
+      "ctaStart": "Bắt đầu miễn phí",
+      "ctaMeetAgent": "Gặp gỡ AI agent"
+    }
+  },
+  "knowledgeHub": {
+    "hero": {
+      "badge": "Trung tâm kiến thức",
+      "titlePrefix": "Hỏi bất cứ điều gì. ",
+      "titleHl": "Nó kiểm tra kiến thức của bạn.",
+      "subtitle": "Elpino chỉ trả lời dựa trên kiến thức bạn cung cấp. Đừng chỉ tin lời chúng tôi. Hãy xem nó tìm kiếm trong kiến thức của bạn ở bên trái và trả lời khách hàng ở bên phải. Khi không tìm thấy gì, nó sẽ nói như vậy.",
+      "privateNote": "Các nguồn riêng tư không bao giờ được dùng để trả lời khách hàng."
+    },
+    "playground": {
+      "yourKnowledge": "Kiến thức của bạn",
+      "customer": "Khách hàng",
+      "elpinoAi": "Elpino AI",
+      "statusWaiting": "Đang chờ câu hỏi",
+      "statusSearching": "Đang tìm kiếm kiến thức của bạn…",
+      "statusFound": "Đã tìm thấy kết quả phù hợp",
+      "statusNoMatch": "Không tìm thấy kết quả phù hợp",
+      "privateBadge": "Riêng tư",
+      "matchBadge": "Khớp",
+      "offersHuman": "Đề xuất kết nối với người thật",
+      "sources": [
+        {
+          "name": "Chính sách hoàn tiền.pdf",
+          "kind": "Tài liệu"
+        },
+        {
+          "name": "Thời gian giao hàng",
+          "kind": "Trang tự viết"
+        },
+        {
+          "name": "Trợ giúp: đặt lại mật khẩu",
+          "kind": "Trang web"
+        },
+        {
+          "name": "Sổ tay xử lý leo thang",
+          "kind": "Ghi chú nội bộ"
+        }
+      ],
+      "scenes": [
+        {
+          "q": "Tôi có bao nhiêu thời gian để yêu cầu hoàn tiền?",
+          "hit": "refund",
+          "a": "Bạn có thể yêu cầu hoàn tiền trong vòng 30 ngày kể từ khi mua hàng."
+        },
+        {
+          "q": "Làm thế nào để đặt lại mật khẩu của tôi?",
+          "hit": "reset",
+          "a": "Chọn “Quên mật khẩu” trên trang đăng nhập và làm theo đường liên kết chúng tôi gửi qua email cho bạn."
+        },
+        {
+          "q": "Bạn có ưu đãi giảm giá cho các tổ chức từ thiện không?",
+          "hit": null,
+          "a": "Tôi không có thông tin đó. Bạn có muốn tôi kết nối bạn với đội ngũ của chúng tôi không?"
+        },
+        {
+          "q": "Giao hàng mất bao lâu?",
+          "hit": "ship",
+          "a": "Đơn hàng thường được giao trong 3–5 ngày làm việc."
+        }
+      ]
+    },
+    "crawlWeb": {
+      "eyebrow": "Khám phá",
+      "titlePrefix": "Một liên kết vào. ",
+      "titleHl": "Cả một trang web ra.",
+      "subtitle": "Đưa cho Elpino trang chủ của bạn và nó sẽ tự động theo các liên kết, tối đa 50 trang. Nó đọc các trang trợ giúp, giá cả và chính sách trước, đồng thời bỏ qua hình ảnh, tệp tải xuống và các nội dung gây nhiễu khác. Các trang được xây dựng bằng JavaScript sẽ được hiển thị trong một trình duyệt thật để không có gì bị bỏ trống.",
+      "pagesKept": "Trang đã lưu",
+      "filesSkipped": "Tệp đã bỏ qua",
+      "svgAlt": "Một quá trình thu thập lan rộng từ một trang ra các trang được liên kết",
+      "startLabel": "START"
+    },
+    "otherWays": {
+      "eyebrow": "Thêm nhiều cách khác",
+      "titlePrefix": "Không phải mọi thứ đều nằm ",
+      "titleHl": "trên một trang web.",
+      "subtitle": "Ba cách khác để dạy Elpino, dành cho kiến thức chưa từng có URL.",
+      "items": [
+        {
+          "title": "Sơ đồ trang",
+          "big": "20",
+          "note": "trang được lấy từ sơ đồ trang của bạn trong một lần"
+        },
+        {
+          "title": "Tệp",
+          "big": ".pdf",
+          "note": "cùng với .docx, .txt và .md. Văn bản được trích xuất tự động cho bạn"
+        },
+        {
+          "title": "Viết trực tiếp",
+          "big": "Aa",
+          "note": "các trang chính sách và “cách chúng tôi làm việc”, được viết ngay trong trình soạn thảo"
+        }
+      ]
+    },
+    "mill": {
+      "eyebrow": "Điều gì xảy ra tiếp theo",
+      "titlePrefix": "Mỗi trang đều trải qua ",
+      "titleHl": "cùng một hành trình.",
+      "items": [
+        {
+          "t": "Được tải về an toàn",
+          "d": "Với tên ElpinoBot, có bảo vệ để không truy cập vào các mạng riêng tư."
+        },
+        {
+          "t": "Được làm sạch",
+          "d": "Loại bỏ menu và nội dung lặp lại, giữ lại văn bản hữu ích."
+        },
+        {
+          "t": "Được chia nhỏ và mã hóa",
+          "d": "Được tách thành các đoạn và lập chỉ mục theo ý nghĩa, không chỉ theo từ khóa."
+        },
+        {
+          "t": "Được tìm thấy khi cần",
+          "d": "Các đoạn liên quan nhất được lấy ra ngay khi khách hàng hỏi."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Câu hỏi",
+      "titlePrefix": "Nên ",
+      "titleHl": "biết.",
+      "items": [
+        [
+          "Tôi có thể thêm gì?",
+          "Các trang web theo URL, một sơ đồ trang (tối đa 20 trang), thu thập dữ liệu từ một liên kết (tối đa 50 trang), tệp PDF, Word, văn bản và Markdown, cùng các trang do bạn tự viết."
+        ],
+        [
+          "Nó có đọc được các trang xây dựng bằng JavaScript không?",
+          "Có. Nếu một trang có ít văn bản có thể đọc được, nó sẽ được hiển thị trong trình duyệt trước, sau đó kết quả mới được đọc."
+        ],
+        [
+          "Tôi có thể giữ nội dung ở chế độ riêng tư không?",
+          "Có. Mỗi nguồn có một công cụ chuyển đổi hiển thị, để các ghi chú nội bộ luôn được giữ nội bộ."
+        ],
+        [
+          "Tôi có thể kết nối Notion, Zendesk hoặc Confluence không?",
+          "Chưa được. Hiện tại bạn thêm nguồn bằng URL, sơ đồ trang, tải lên tệp, hoặc viết trang trực tiếp."
+        ],
+        [
+          "Nếu câu trả lời không có ở đó thì sao?",
+          "Elpino sẽ nói rằng nó không có thông tin đó và đề xuất kết nối khách hàng với đội ngũ của bạn, thay vì đoán bừa."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Lấp đầy kệ hàng thật của bạn.",
+      "subtitle": "Dán một liên kết và Elpino sẽ bắt đầu trả lời dựa trên đó.",
+      "ctaStart": "Bắt đầu miễn phí",
+      "ctaMeetAgent": "Gặp gỡ trợ lý AI"
+    }
+  },
+  "integrations": {
+    "hero": {
+      "badge": "Tích hợp",
+      "titlePrefix": "Kết nối. ",
+      "titleHl": "Nâng cấp.",
+      "subtitle": "Kết nối thanh toán, hệ thống theo dõi yêu cầu hỗ trợ và các hệ thống riêng của bạn, rồi xem khả năng của Elpino ngày càng phát triển. Nhấn vào các ổ cắm để kết nối."
+    },
+    "board": {
+      "pluggedInCount": "{on} / {total} đã kết nối",
+      "pluggedIn": "Đã kết nối",
+      "tapToPlugIn": "Nhấn để kết nối",
+      "on": "Bật",
+      "off": "Tắt",
+      "whatCanDo": "Elpino có thể làm gì ngay bây giờ",
+      "empty": "Chưa có gì được kết nối. Nhấn vào một ổ cắm ở trên."
+    },
+    "conns": [
+      {
+        "name": "Stripe",
+        "blurb": "AI kiểm tra các khoản thanh toán và đăng ký thực tế.",
+        "abilities": [
+          "Tra cứu thanh toán và đăng ký",
+          "Gửi biên nhận và liên kết thanh toán",
+          "Hủy đăng ký khi được yêu cầu",
+          "Hoàn tiền, chỉ khi bạn bật tính năng này"
+        ]
+      },
+      {
+        "name": "Razorpay",
+        "blurb": "Các công cụ thanh toán tương tự, dành cho tài khoản Razorpay.",
+        "abilities": [
+          "Tra cứu thanh toán và đăng ký",
+          "Gửi biên nhận và liên kết thanh toán",
+          "Hủy đăng ký khi được yêu cầu",
+          "Hoàn tiền, chỉ khi bạn bật tính năng này"
+        ]
+      },
+      {
+        "name": "Cashfree",
+        "blurb": "Lịch sử thanh toán và thanh toán bù trừ cho nhóm của bạn.",
+        "abilities": [
+          "Tìm một đơn hàng hoặc khoản thanh toán từ cuộc trò chuyện",
+          "Xem trạng thái thanh toán bù trừ và hoàn tiền"
+        ]
+      },
+      {
+        "name": "Paystack",
+        "blurb": "Trạng thái giao dịch và hoàn tiền cho nhóm của bạn.",
+        "abilities": [
+          "Tra cứu một giao dịch từ cuộc trò chuyện",
+          "Kiểm tra trạng thái thanh toán và hoàn tiền"
+        ]
+      },
+      {
+        "name": "Trello",
+        "blurb": "Yêu cầu hỗ trợ trở thành thẻ trên bảng của bạn.",
+        "abilities": [
+          "Yêu cầu hỗ trợ trở thành thẻ Trello",
+          "Kèm theo bản tóm tắt và liên kết đến cuộc trò chuyện"
+        ]
+      },
+      {
+        "name": "Asana",
+        "blurb": "Yêu cầu hỗ trợ trở thành công việc trong dự án của bạn.",
+        "abilities": [
+          "Yêu cầu hỗ trợ trở thành công việc Asana",
+          "Kèm theo bản tóm tắt và liên kết đến cuộc trò chuyện"
+        ]
+      },
+      {
+        "name": "Máy chủ MCP của bạn",
+        "blurb": "Bất cứ thứ gì hỗ trợ MCP, với các công cụ bạn phê duyệt.",
+        "abilities": [
+          "Gọi công cụ trên máy chủ riêng của bạn",
+          "Tối đa 5 máy chủ, mỗi máy chủ bật 15 công cụ",
+          "Chỉ những công cụ bạn phê duyệt mới hiển thị",
+          "Công cụ thay đổi dữ liệu cần khách hàng đã xác minh"
+        ]
+      }
+    ],
+    "how": {
+      "eyebrow": "Kết nối",
+      "titlePrefix": "Chỉ một phút. ",
+      "titleHl": "Không cần kỹ sư.",
+      "stepLabel": "Bước {n}",
+      "steps": [
+        {
+          "t": "Chọn một công cụ",
+          "d": "Mở mục Kết nối trong trang tổng quan của bạn và chọn bộ kết nối bạn muốn."
+        },
+        {
+          "t": "Dán khóa hoặc cấp quyền",
+          "d": "Các công cụ dùng khóa API sẽ nhận khóa của bạn. Asana dùng màn hình đăng nhập và cấp quyền thông thường."
+        },
+        {
+          "t": "Chúng tôi kiểm tra trước",
+          "d": "Elpino kiểm tra khóa của bạn với nhà cung cấp trước khi lưu, và lưu trữ chúng ở dạng mã hóa."
+        }
+      ]
+    },
+    "families": {
+      "eyebrow": "Danh mục",
+      "titlePrefix": "Ba loại ",
+      "titleHl": "kết nối.",
+      "tabs": {
+        "payments": "Thanh toán",
+        "tickets": "Yêu cầu hỗ trợ",
+        "systems": "Hệ thống của bạn"
+      },
+      "paymentsNote": "Các hành động thanh toán của AI hiện hoạt động với Stripe và Razorpay. Cashfree và Paystack mang lại thông tin thanh toán cho nhóm của bạn."
+    },
+    "safe": {
+      "badge": "An toàn theo mặc định",
+      "titlePrefix": "Đã kết nối, ",
+      "titleHl": "không bị lộ.",
+      "items": [
+        {
+          "t": "Khóa luôn được mã hóa",
+          "d": "Thông tin xác thực được lưu trữ ở dạng mã hóa, và Elpino xác minh chúng với nhà cung cấp trước khi lưu."
+        },
+        {
+          "t": "Quyền đọc là đủ để tra cứu",
+          "d": "Với Stripe, hãy dùng khóa hạn chế chỉ có quyền đọc khách hàng và thanh toán."
+        },
+        {
+          "t": "Tiền chỉ di chuyển khi bạn cho phép",
+          "d": "Hoàn tiền bị tắt theo mặc định. Chủ sở hữu không gian làm việc quyết định liệu AI có được phép thực hiện hoàn tiền hay không."
+        },
+        {
+          "t": "Bạn phê duyệt mọi công cụ MCP",
+          "d": "AI chỉ thấy các công cụ bạn đã bật, và mỗi lệnh gọi đều được kiểm tra lại trên máy chủ."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Câu hỏi",
+      "titlePrefix": "Những điều nên ",
+      "titleHl": "biết.",
+      "items": [
+        [
+          "Tôi có thể kết nối những công cụ nào?",
+          "Stripe, Razorpay, Cashfree và Paystack cho thanh toán, Trello và Asana cho yêu cầu hỗ trợ, và máy chủ MCP riêng của bạn cho mọi thứ khác."
+        ],
+        [
+          "AI có thể làm gì với thanh toán?",
+          "Khi kết nối Stripe hoặc Razorpay, AI có thể tra cứu thanh toán và đăng ký, gửi biên nhận và liên kết thanh toán, và hủy đăng ký khi được yêu cầu. Hoàn tiền bị tắt trừ khi bạn bật tính năng này."
+        ],
+        [
+          "Tôi có cần biết kỹ thuật không?",
+          "Không cần cho thanh toán hoặc yêu cầu hỗ trợ. Bạn chỉ cần dán một khóa, hoặc đăng nhập vào Asana. Máy chủ MCP cần có người đã xây dựng sẵn."
+        ],
+        [
+          "Shopify, Slack hoặc HubSpot có được hỗ trợ không?",
+          "Hiện chưa có bộ kết nối một chạm. Nếu hệ thống của bạn có máy chủ MCP, bạn có thể kết nối nó, và bạn có thể cho chúng tôi biết bạn muốn có gì tiếp theo."
+        ],
+        [
+          "Yêu cầu hỗ trợ sẽ đi đâu?",
+          "Đến Trello hoặc Asana nếu đã kết nối. Nếu không, chúng sẽ nằm trên trang Vấn đề của bạn."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Thiếu thứ gì bạn cần?",
+      "subtitle": "Cho chúng tôi biết bạn muốn công cụ nào tiếp theo, hoặc tự kết nối nó qua MCP.",
+      "ctaStart": "Bắt đầu miễn phí",
+      "ctaRequest": "Yêu cầu một tích hợp"
+    }
+  },
+  "securityGuide": {
+    "sticky": {
+      "securityLabel": "An ninh",
+      "reportIssue": "Báo cáo sự cố"
+    },
+    "hero": {
+      "badge": "Hướng dẫn an ninh",
+      "title1": "Được xây dựng để ",
+      "title2": "bảo vệ dữ liệu của bạn.",
+      "subtitle": "Hướng dẫn này trình bày những gì được bảo vệ trên ứng dụng web, gateway và các dịch vụ xác thực, workspace, AI — những gì chúng tôi đảm bảo và vì sao bạn có thể tin tưởng, mà không đi vào chi tiết từng bước nội bộ.",
+      "ctaBlueprint": "Xem bản đồ tổng quan",
+      "ctaChapters": "Đọc các chương",
+      "ctaTrust": "Trung tâm Tin cậy",
+      "register": {
+        "label": "Bảng chú giải",
+        "chapters": "Chương",
+        "controlsDescribed": "Biện pháp kiểm soát được mô tả",
+        "componentsCovered": "Thành phần được đề cập",
+        "componentsValue": "6",
+        "reviewedAgainst": "Được đối chiếu với",
+        "reviewedValue": "sản phẩm"
+      }
+    },
+    "blueprint": {
+      "fig": "Hình 00 · Nhìn tổng quan",
+      "title": "Chuyện gì xảy ra với một yêu cầu",
+      "subtitle": "Mỗi mũi tên đều được mã hóa hoặc xác thực. Trỏ vào bất kỳ phần nào để xem điều đó có nghĩa gì trên thực tế.",
+      "readChapter": "Đọc chương"
+    },
+    "nodes": {
+      "widget": {
+        "label": "Khách truy cập",
+        "sub": "Widget chat",
+        "guards": "Khách vẫn là khách. Khách đã đăng nhập tự xác minh bằng một thông tin xác thực đã ký hoặc một mã email, chỉ được lưu trong bộ nhớ riêng của widget."
+      },
+      "team": {
+        "label": "Đội của bạn",
+        "sub": "Bảng điều khiển",
+        "guards": "Mật khẩu không bao giờ được lưu ở dạng đọc được, đăng nhập Google được xác minh trên máy chủ của chúng tôi, và bạn có thể kết thúc bất kỳ phiên nào từ xa."
+      },
+      "elpino": {
+        "label": "Elpino",
+        "sub": "Xác minh, bảo vệ, trả lời",
+        "guards": "Mọi yêu cầu đều được kiểm tra trước khi thực thi, thông tin riêng tư được thay thế trước khi một mô hình AI nhìn thấy, và AI hoạt động trong giới hạn mà nó không thể lách qua bằng lời nói."
+      },
+      "google": {
+        "label": "Google",
+        "sub": "Đăng nhập",
+        "guards": "Chỉ được tin tưởng sau khi máy chủ của chúng tôi tự xác minh độc lập."
+      },
+      "pay": {
+        "label": "Thanh toán",
+        "sub": "Razorpay · Stripe",
+        "guards": "Thông báo thanh toán chỉ được chấp nhận khi có chữ ký đã xác minh, và không thể bị phát lại để đặt lại mức sử dụng của bạn."
+      },
+      "models": {
+        "label": "Nhà cung cấp AI",
+        "sub": "Mô hình",
+        "guards": "Họ chỉ thấy các giá trị thay thế an toàn thay cho thông tin thật, không bao giờ thấy bí mật, và dữ liệu của bạn không dùng để huấn luyện các mô hình đại chúng."
+      }
+    },
+    "chaptersSection": {
+      "label": "Các chương",
+      "title1": "Mười hai chương. ",
+      "title2": "Không bỏ sót điều gì.",
+      "subtitle": "Mỗi biện pháp kiểm soát nêu rõ nó thuộc phần nào của hệ thống và đảm bảo nào nó mang lại cho bạn — không phải cơ chế chính xác đằng sau nó.",
+      "contents": "Mục lục"
+    },
+    "chapters": {
+      "accounts": {
+        "title": "Tài khoản & phiên đăng nhập",
+        "kicker": "Ai đang ở trong đội của bạn, và làm sao chúng tôi biết đó chính là họ.",
+        "intro": "Đăng ký, đăng nhập và mọi phiên sau đó. Mật khẩu không bao giờ được lưu ở dạng đọc được, mã xác minh hết hạn nhanh, và một phiên có thể bị kết thúc từ máy chủ vào bất kỳ lúc nào.",
+        "stats": [
+          "Mật khẩu được hash, không lưu trữ",
+          "Mã hết hạn nhanh",
+          "Phiên bạn có thể thu hồi"
+        ],
+        "controls": {
+          "1.1": {
+            "title": "Mật khẩu được hash, không lưu trữ",
+            "text": "Mật khẩu của bạn không bao giờ được giữ ở bất cứ đâu dưới dạng mà ai đó có thể đọc lại được — kể cả chúng tôi. Việc kiểm tra nó không thể để lộ một lần đoán sai đã gần đúng đến mức nào."
+          },
+          "1.2": {
+            "title": "Mã xác minh email",
+            "text": "Tài khoản mới xác nhận địa chỉ email bằng một mã ngắn hạn. Chỉ một bản hash an toàn của mã đó được lưu lại, mã hết hạn nhanh, và chỉ cho phép vài lần thử sai trước khi bạn cần một mã mới."
+          },
+          "1.3": {
+            "title": "Đăng nhập Google được kiểm tra trên máy chủ",
+            "text": "Cửa sổ đăng nhập Google chạy trong trình duyệt của bạn, nhưng máy chủ của chúng tôi tự xác minh độc lập trước khi tin tưởng, và luôn đăng nhập bạn vào cùng một tài khoản theo email đã xác minh — không bao giờ vào một tài khoản thứ hai, không liên kết."
+          },
+          "1.4": {
+            "title": "Token phiên đã ký",
+            "text": "Phiên của bạn là một token đã ký mà máy chủ của chúng tôi luôn tự xác minh được — nó không thể bị giả mạo, chỉnh sửa hay phát lại như một thứ khác."
+          },
+          "1.5": {
+            "title": "Cookie phiên bị khóa chặt",
+            "text": "Cookie phiên của bạn không thể bị đọc bởi script trên trang, và chỉ di chuyển qua một kết nối an toàn."
+          },
+          "1.6": {
+            "title": "Đăng xuất ở mọi nơi",
+            "text": "Đăng xuất làm mọi phiên của bạn vô hiệu nhanh chóng. Nếu chúng tôi không thể xác nhận một phiên vẫn còn hợp lệ, nó bị từ chối thay vì được cho qua."
+          },
+          "1.7": {
+            "title": "Chuyển hướng an toàn",
+            "text": "Sau khi đăng nhập, bạn chỉ được đưa đến một trang trên chính trang web của chúng tôi — không bao giờ đến nơi khác, bất kể liên kết được tạo ra thế nào."
+          },
+          "1.8": {
+            "title": "Lời mời tham gia nhóm",
+            "text": "Liên kết mời không thể đoán được và tự động hết hạn, và chủ sở hữu quyết định liệu thành viên có thể mời người khác hay không."
+          }
+        }
+      },
+      "front-door": {
+        "title": "Cửa trước",
+        "kicker": "Trang web làm gì trước khi một yêu cầu đi xa hơn.",
+        "intro": "Ứng dụng web là thứ đầu tiên trình duyệt tiếp xúc. Nó tăng cường bảo mật cho trình duyệt, hạn chế lạm dụng, và xác thực đầu vào trước khi chuyển tiếp bất cứ điều gì.",
+        "stats": [
+          "Không cho phép đặt trong iframe",
+          "Lạm dụng bị hạn chế",
+          "Thất bại theo hướng an toàn"
+        ],
+        "controls": {
+          "2.1": {
+            "title": "Tiêu đề tăng cường bảo mật trình duyệt",
+            "text": "Mọi trang trừ widget chat được bảo vệ khỏi clickjacking, chống lại việc dò loại nội dung, và các quyền thiết bị nhạy cảm như camera và vị trí bị tắt theo mặc định. Widget là ngoại lệ duy nhất có chủ ý, vì nó phải tồn tại trong một iframe trên trang web của bạn."
+          },
+          "2.2": {
+            "title": "Giới hạn lạm dụng chung",
+            "text": "Các form công khai được bảo vệ bởi giới hạn tốc độ chung trên mọi máy chủ chúng tôi vận hành, vì vậy lạm dụng từ một nơi không thể lách qua bằng cách chuyển sang nơi khác."
+          },
+          "2.3": {
+            "title": "Thất bại theo hướng an toàn",
+            "text": "Nếu bộ giới hạn lạm dụng không thể truy cập được, yêu cầu bị từ chối thay vì được cho qua."
+          },
+          "2.4": {
+            "title": "Đầu vào được xác thực, giới hạn độ dài",
+            "text": "Mọi form đều được kiểm tra và giới hạn kích thước trên máy chủ trước khi xử lý — không bao giờ chỉ tin tưởng vì trình duyệt đã xác thực rồi."
+          }
+        }
+      },
+      "gateway": {
+        "title": "Gateway",
+        "kicker": "Một cửa duy nhất cho backend, khép kín theo mặc định.",
+        "intro": "Mọi lệnh gọi đến backend đều đi qua một gateway duy nhất. Quy tắc rất đơn giản: nếu một route không được đánh dấu công khai rõ ràng, nó phải chứng minh mình thuộc về hệ thống.",
+        "stats": [
+          "Khép kín theo mặc định",
+          "Danh sách công khai rõ ràng",
+          "Kết nối trực tiếp đã xác minh"
+        ],
+        "controls": {
+          "3.1": {
+            "title": "Khép kín theo mặc định",
+            "text": "Mọi route đều yêu cầu chứng minh đó là một lệnh gọi nội bộ được ủy quyền, trừ khi được đánh dấu công khai rõ ràng. Nếu việc kiểm tra đó chưa được cấu hình, gateway sẽ từ chối tất cả thay vì mở toang."
+          },
+          "3.2": {
+            "title": "Một danh sách công khai ngắn, rõ ràng",
+            "text": "Chỉ những bên gọi thực sự không thể giữ thông tin xác thực nội bộ mới được công khai: widget chat, phân tích trang, webhook thanh toán, và các liên kết bảo mật dùng một lần. Mỗi cái được đánh dấu có chủ đích, theo từng route."
+          },
+          "3.3": {
+            "title": "Chỉ các nguồn gốc rõ ràng",
+            "text": "API chỉ trả lời trình duyệt từ một danh sách nguồn gốc được biết và phê duyệt — không bao giờ từ bất kỳ nơi nào chỉ đơn giản là yêu cầu."
+          },
+          "3.4": {
+            "title": "Kết nối trực tiếp đã xác minh",
+            "text": "Kết nối xem trực tiếp yêu cầu một thông tin xác thực đã xác minh, có giới hạn theo workspace, có thời hạn. Bất cứ thứ gì khác sẽ bị loại bỏ ngay lập tức."
+          },
+          "3.5": {
+            "title": "Đẩy dữ liệu nội bộ cũng được bảo vệ",
+            "text": "Các endpoint mà dịch vụ dùng để đẩy thông báo trực tiếp đến bảng điều khiển đòi hỏi cùng loại chứng minh nội bộ, vì vậy không ai từ bên ngoài có thể làm reo màn hình của một đồng nghiệp."
+          }
+        }
+      },
+      "visitors": {
+        "title": "Khách truy cập & danh tính",
+        "kicker": "Phân biệt một khách hàng đã đăng nhập với một người chỉ vừa gõ một email.",
+        "intro": "Một cái tên, một email hay một mã số đơn hàng không phải là chứng minh danh tính. Hỗ trợ tài khoản chỉ mở ra sau khi có chứng minh danh tính thật, và chứng minh đó hết hạn nhanh.",
+        "stats": [
+          "Yêu cầu chứng minh thật",
+          "Phiên tự động hết hạn",
+          "Xác minh có thời hạn"
+        ],
+        "controls": {
+          "4.1": {
+            "title": "Khách vẫn là khách",
+            "text": "Một cái tên, email, số điện thoại hay mã tham chiếu thanh toán được gõ vào không bao giờ tính là chứng minh danh tính. Khách có thể chat và để lại thông tin liên hệ, nhưng điều đó không mở khóa công cụ riêng tư nào và không bao giờ được hợp nhất vào lịch sử của người khác."
+          },
+          "4.2": {
+            "title": "Danh tính đã ký từ trang web của chính bạn",
+            "text": "Đối với khách hàng đã đăng nhập, máy chủ của riêng bạn xác nhận họ là ai bằng một thông tin xác thực đã ký, ngắn hạn, chỉ có bạn và Elpino mới tạo ra được cùng nhau. Thông tin liên hệ chỉ được tính là đã xác minh khi hệ thống của bạn xác nhận điều đó."
+          },
+          "4.3": {
+            "title": "Một lần trao đổi, một phiên",
+            "text": "Mỗi chứng minh danh tính chỉ được dùng một lần, sau đó đổi lấy một phiên hoàn toàn mới của riêng nó — không có gì có thể dùng lại được để lại xung quanh, và thứ được lưu trữ không thể biến ngược lại thành giá trị gốc."
+          },
+          "4.4": {
+            "title": "Phiên ngắn hạn",
+            "text": "Một phiên tự động hết hạn sau một khoảng thời gian không hoạt động, hoặc một thời gian cố định từ lúc đăng nhập — tùy điều nào đến trước. Nó chỉ được giữ trong bộ nhớ riêng của widget, không bao giờ trong bộ nhớ trình duyệt hay một URL."
+          },
+          "4.5": {
+            "title": "Xoay khóa và đăng xuất",
+            "text": "Xoay thông tin xác thực danh tính của bạn làm vô hiệu ngay lập tức mọi phiên đã dùng khóa cũ. Đăng xuất thu hồi phiên trên máy chủ của chúng tôi, và các phiên cũ được tự động dọn dẹp."
+          },
+          "4.6": {
+            "title": "Mã email cho khách",
+            "text": "Một khách truy cập cũng có thể xác minh qua email bằng một mã dùng một lần ngắn, được giới hạn tốc độ để ngăn lạm dụng. Xác minh chỉ mở khóa cuộc trò chuyện đó, và chỉ trong một thời gian giới hạn."
+          },
+          "4.7": {
+            "title": "Mọi yêu cầu đều được kiểm tra lại",
+            "text": "Mỗi lần đọc và viết đã xác thực đều tự kiểm tra lại độc lập ai đang hỏi, thuộc workspace nào, và liệu quyền truy cập đó còn hợp lệ hay không — không có gì được tin tưởng chỉ vì nó đã hợp lệ một khoảnh khắc trước."
+          }
+        }
+      },
+      "ai": {
+        "title": "Dây cương của AI",
+        "kicker": "AI có thể và không thể làm gì, được thực thi bởi backend, không phải bằng cách nhờ vả lịch sự.",
+        "intro": "Mô hình đề xuất; backend quyết định. Công cụ, danh tính, giới hạn và tiền bạc đều tồn tại ngoài mô hình, nơi một tin nhắn khôn khéo không thể lách qua bằng lời nói.",
+        "stats": [
+          "Công việc có giới hạn",
+          "Công cụ do backend kiểm soát",
+          "Rà soát độc lập"
+        ],
+        "controls": {
+          "5.1": {
+            "title": "Một câu trả lời, một chủ sở hữu",
+            "text": "Trước khi một câu trả lời AI được lưu, hệ thống tự xác nhận độc lập rằng cuộc trò chuyện vẫn thuộc AI và câu hỏi đang được trả lời vẫn là câu hỏi mới nhất. AI không thể chen ngang lời của đội bạn hay trả lời một điều đã lỗi thời."
+          },
+          "5.2": {
+            "title": "Công việc có giới hạn",
+            "text": "Mỗi lượt AI có một giới hạn cứng về khối lượng công việc nó có thể làm. Một tiến trình bị kẹt hoặc lặp vô hạn sẽ bị dừng tự động, không bao giờ để tiếp tục chạy."
+          },
+          "5.3": {
+            "title": "Backend chọn công cụ",
+            "text": "Công cụ nào AI có thể dùng hoàn toàn do cấu hình riêng của workspace bạn và việc xác minh khách hàng quyết định — mô hình không thể tự cấp cho mình một công cụ, tự khai báo dữ liệu là công khai, hay chạm vào một workspace khác."
+          },
+          "5.4": {
+            "title": "Công cụ tài khoản cần khách hàng đã xác minh",
+            "text": "Tra cứu thanh toán và các hệ thống kết nối chỉ khả dụng sau khi khách hàng đã chứng minh mình là ai, và luôn chỉ hành động trên danh tính đã lưu sẵn — không bao giờ trên bất cứ điều gì mô hình được nói."
+          },
+          "5.5": {
+            "title": "Tin nhắn là dữ liệu, không phải chỉ thị",
+            "text": "Tin nhắn của khách hàng, tài liệu và kết quả công cụ đến với mô hình được đánh dấu rõ là thông tin không đáng tin. Các chỉ thị ẩn trong đó không được tuân theo."
+          },
+          "5.6": {
+            "title": "Một ý kiến thứ hai",
+            "text": "Một kiểm tra riêng, độc lập rà soát từng bản trả lời dựa trên bằng chứng AI thực sự đã thu thập. Một tuyên bố không có căn cứ bị gửi lại để viết lại, và một tuyên bố vẫn thất bại sẽ được chuyển cho con người."
+          },
+          "5.7": {
+            "title": "Dòng tiền di chuyển qua các cổng chặn",
+            "text": "Hoàn tiền do AI thực hiện bị tắt cho đến khi chủ workspace mở nó, và ngay cả khi đó vẫn bị giới hạn và tự động khống chế mức tối đa. Một lần hoàn tiền được thử lại không bao giờ có thể được cấp hai lần, và hủy một đăng ký không bao giờ cắt mất thời gian bạn đã trả tiền."
+          },
+          "5.8": {
+            "title": "Nhật ký kiểm toán cho mỗi lượt chạy",
+            "text": "Mỗi lượt chạy AI lưu lại một bản ghi về những gì nó đã làm và những gì nó đã dùng để làm điều đó. Bất cứ điều gì liên quan đến tiền cũng được ghi lại thành một ghi chú đội bạn có thể xem."
+          }
+        }
+      },
+      "private-data": {
+        "title": "Dữ liệu riêng tư",
+        "kicker": "Những gì mô hình thực sự thấy.",
+        "intro": "Trước khi bất kỳ yêu cầu nào đến được một mô hình AI, thông tin định danh được thay bằng các giá trị thay thế an toàn. Hãy thử ngay dưới đây với văn bản của riêng bạn.",
+        "stats": [
+          "Thông tin được thay trước",
+          "Bí mật được loại bỏ hoàn toàn",
+          "Cùng quy tắc cho mọi nhà cung cấp"
+        ],
+        "controls": {
+          "6.1": {
+            "title": "Thông tin thật không bao giờ đến được mô hình",
+            "text": "Tên, email, số điện thoại, địa chỉ và thông tin đơn hàng hay thanh toán không bao giờ được gửi đến mô hình AI ở dạng nguyên gốc. Chúng tôi thay thế bằng các giá trị an toàn trước, và chỉ khôi phục giá trị thật sau đó, trên máy chủ của riêng chúng tôi — không bao giờ trong bất cứ thứ gì mô hình nhìn thấy."
+          },
+          "6.2": {
+            "title": "Bí mật bị loại bỏ, không chỉ ẩn đi",
+            "text": "Mật khẩu, API key, token và mã dùng một lần đều bị loại bỏ hoàn toàn trước khi bất cứ điều gì đến được một mô hình — không phải được che giấu, mà là biến mất hẳn."
+          },
+          "6.3": {
+            "title": "Liên kết nhạy cảm được làm sạch",
+            "text": "Các liên kết mang token truy cập hoặc tham số nhạy cảm khác được làm sạch trước khi một mô hình đọc chúng."
+          },
+          "6.4": {
+            "title": "Thông tin thanh toán tổng quát, không phải hồ sơ thanh toán",
+            "text": "Công cụ thanh toán chỉ trả về các tóm tắt an toàn — trạng thái và ngày — không bao giờ là thông tin thẻ hay tài khoản thô, và lý do thất bại được đơn giản hóa thay vì truyền qua dưới dạng văn bản tự do."
+          },
+          "6.5": {
+            "title": "Cùng quy tắc cho mọi mô hình",
+            "text": "Sự bảo vệ giống nhau này áp dụng bất kể nhà cung cấp AI nào trả lời, kể cả khi chúng tôi chuyển sang một nhà cung cấp khác. Cuộc trò chuyện và tài liệu của bạn không bao giờ được dùng để huấn luyện các mô hình đại chúng."
+          }
+        }
+      },
+      "integrations": {
+        "title": "Tích hợp & yêu cầu đi ra ngoài",
+        "kicker": "Khi Elpino phải liên hệ đến một URL bạn đã cung cấp cho chúng tôi.",
+        "intro": "Thu thập trang web của bạn, đọc một trang, hay gọi đến một hệ thống đã kết nối đều có nghĩa là truy xuất một URL mà một người đã nhập vào. Mỗi yêu cầu đó đều được khóa chặt để không thể bị lợi dụng chống lại chính mạng của chúng tôi — hay của bạn.",
+        "stats": [
+          "Mã hóa khi lưu trữ",
+          "Không thể chạm tới mạng riêng tư",
+          "Giới hạn & có thời hạn"
+        ],
+        "controls": {
+          "7.1": {
+            "title": "Thông tin xác thực được mã hóa khi lưu trữ",
+            "text": "Bất kỳ khóa hay token bạn kết nối — Stripe, Razorpay, Trello và tương tự — đều được mã hóa trước khi được lưu trữ. Chỉ một bản sao cơ sở dữ liệu thì không thể khôi phục lại chúng."
+          },
+          "7.2": {
+            "title": "Yêu cầu đi ra ngoài không thể bị hướng vào trong",
+            "text": "Khi chúng tôi truy xuất một URL thay bạn — thu thập trang web của bạn, gọi đến một hệ thống đã kết nối — chúng tôi đảm bảo nó không thể bị chuyển hướng vào một mạng riêng tư hay hạ tầng nội bộ nào, kể cả của chúng tôi."
+          },
+          "7.3": {
+            "title": "Chuyển hướng được kiểm tra ở mỗi bước",
+            "text": "Chúng tôi theo dõi các chuyển hướng một cách cẩn thận, kiểm tra từng bước nhảy thay vì tin vào điểm đến cuối cùng, và chỉ qua các kết nối chuẩn, an toàn."
+          },
+          "7.4": {
+            "title": "Hệ thống đã kết nối bị giới hạn",
+            "text": "Kết nối đến các công cụ riêng của bạn bị giới hạn về dung lượng và thời gian, vì vậy chúng không thể bị dùng để kéo dữ liệu vô hạn hay treo mãi."
+          },
+          "7.5": {
+            "title": "Quản trị viên phê duyệt từng công cụ",
+            "text": "Các công cụ đã kết nối bị tắt cho đến khi một quản trị viên phê duyệt. Một công cụ có thể thay đổi dữ liệu được đánh dấu riêng, và vẫn cần một khách hàng đã xác minh dù cho máy chủ đó nói chung là công khai."
+          },
+          "7.6": {
+            "title": "Ngắt kết nối là biến mất",
+            "text": "Khi bạn ngắt kết nối một tích hợp, các token và thông tin xác thực đã lưu của nó bị xóa ngay lập tức."
+          }
+        }
+      },
+      "secure-links": {
+        "title": "Chuyển giao an toàn",
+        "kicker": "Khi một khách hàng cần gửi thứ gì nhạy cảm.",
+        "intro": "Không bao giờ dán một khóa vào cuộc trò chuyện. Thay vào đó, một thành viên đội có thể yêu cầu nó qua một liên kết dùng một lần, và cuộc trò chuyện chỉ giữ liên kết đó.",
+        "stats": [
+          "Liên kết không thể đoán được",
+          "Tự động hết hạn",
+          "Được mã hóa riêng"
+        ],
+        "controls": {
+          "8.1": {
+            "title": "Cuộc trò chuyện không bao giờ giữ bí mật",
+            "text": "Thông báo trong cuộc trò chuyện nêu tên điều được yêu cầu và mang một liên kết — không bao giờ là giá trị thật."
+          },
+          "8.2": {
+            "title": "Một liên kết không thể đoán được, ngắn hạn",
+            "text": "Bản thân liên kết là toàn bộ chứng minh ủy quyền của khách hàng, vì vậy nó được tạo ra không thể đoán được, và tự động hết hạn trước khi có thể trở thành một rủi ro lâu dài."
+          },
+          "8.3": {
+            "title": "Được mã hóa bằng khóa riêng của nó",
+            "text": "Bất cứ điều gì được gửi lên đều được đóng gói kín bằng một khóa được giữ hoàn toàn tách biệt với khóa bảo vệ các thông tin xác thực khác của bạn, vì vậy khóa này có thể được xoay — hoặc, trong trường hợp xấu nhất, bị lộ — mà không ảnh hưởng đến khóa kia."
+          },
+          "8.4": {
+            "title": "Bị giới hạn và được quét dọn",
+            "text": "Nội dung gửi lên bị giới hạn kích thước, và bất cứ thứ gì hết hạn đều bị xóa tự động và vĩnh viễn theo một lịch trình định kỳ, chỉ để lại một bản ghi rằng có điều gì đã xảy ra — không bao giờ là điều gì."
+          }
+        }
+      },
+      "money": {
+        "title": "Tiền & thanh toán",
+        "kicker": "Thanh toán, gia hạn và các giới hạn gắn với chúng.",
+        "intro": "Bất cứ thứ gì di chuyển tiền đều được xác minh hai lần: một lần rằng thông báo thực sự đến từ nhà cung cấp thanh toán, và một lần rằng nó không thể được áp dụng hai lần.",
+        "stats": [
+          "Chỉ chấp nhận chữ ký đã xác minh",
+          "An toàn trước phát lại",
+          "Không thể tính tiền hai lần"
+        ],
+        "controls": {
+          "9.1": {
+            "title": "Webhook và trang thanh toán đã ký",
+            "text": "Thông báo thanh toán chỉ được chấp nhận với một chữ ký hợp lệ, đã xác minh từ nhà cung cấp — bất cứ điều gì khác, kể cả một sai lệch nhỏ, đều bị từ chối thẳng."
+          },
+          "9.2": {
+            "title": "Phát lại không thể đặt lại mức sử dụng",
+            "text": "Một thông báo thanh toán đến hơn một lần — bị phát lại, hoặc đơn giản là được gửi hai lần — không bao giờ có thể đặt lại mức sử dụng đã tiêu hay cấp lại tín dụng."
+          },
+          "9.3": {
+            "title": "Tự động nạp tiền không thể tính tiền hai lần",
+            "text": "Việc kiểm tra một lần nạp tiền có trong giới hạn hay không và việc thực sự giữ chỗ cho nó xảy ra như một bước nguyên tử duy nhất, và số dư của bạn chỉ được cộng vào một lần khi một khoản thanh toán đã được xác nhận và ghi nhận."
+          },
+          "9.4": {
+            "title": "Mọi giao dịch tiền đều được ghi nhận",
+            "text": "Mỗi sự kiện thanh toán từ nhà cung cấp được ghi vào một nhật ký kiểm toán, và bất kỳ hành động thanh toán nào AI thực hiện có nhật ký riêng của nó."
+          },
+          "9.5": {
+            "title": "Giới hạn gói được thực thi trên máy chủ",
+            "text": "Các tính năng bị giới hạn theo gói được kiểm tra trong backend, không chỉ bị ẩn trong giao diện, và giới hạn số ghế được tính từ số thành viên thật — không phải từ điều trình duyệt tự khai."
+          }
+        }
+      },
+      "lifecycle": {
+        "title": "Chu kỳ sống của dữ liệu",
+        "kicker": "Dữ liệu nằm ở đâu, trong bao lâu, và biến mất như thế nào.",
+        "intro": "Dữ liệu của bạn được giới hạn trong workspace của bạn, hết hạn khi cần, và có thể bị bạn xóa đi.",
+        "stats": [
+          "Giới hạn theo workspace",
+          "Tự động được dọn dẹp",
+          "Bạn có thể xóa nó"
+        ],
+        "controls": {
+          "10.1": {
+            "title": "Giới hạn theo workspace của bạn",
+            "text": "Cuộc trò chuyện, kiến thức, khách hàng và cài đặt đều thuộc về một workspace, và mọi truy vấn đều giới hạn trong đó — không có gì lọt sang nơi khác một cách vô tình."
+          },
+          "10.2": {
+            "title": "Chỉ dành cho đội thì mãi chỉ dành cho đội",
+            "text": "Các ghi chú được đánh dấu chỉ dành cho đội bị lọc ra trước khi một cuộc trò chuyện được hiển thị cho widget của khách."
+          },
+          "10.3": {
+            "title": "Những thứ ngắn hạn sẽ hết hạn",
+            "text": "Mã xác minh, thông tin xác thực phiên và nội dung liên kết bảo mật đều tự động hết hạn và được dọn dẹp — không có gì ngắn hạn bị giữ lại vô thời hạn."
+          },
+          "10.4": {
+            "title": "Xóa workspace của bạn",
+            "text": "Xóa một workspace hủy đăng ký của nó ngay lập tức và xóa các bản ghi của nó, với một giới hạn ngoài cứng được đặt trong chính sách quyền riêng tư cho việc xóa hoàn toàn."
+          },
+          "10.5": {
+            "title": "Rời hoặc xóa tài khoản của bạn",
+            "text": "Mọi người có thể rời khỏi một workspace, và một tài khoản có thể bị xóa hoàn toàn từ trang Cài đặt."
+          }
+        }
+      },
+      "infrastructure": {
+        "title": "Hạ tầng",
+        "kicker": "Các dịch vụ được vận hành như thế nào.",
+        "intro": "Sự sạch sẽ đơn giản, không hào nhoáng giúp một dịch vụ nội bộ không biến thành một dịch vụ công khai.",
+        "stats": [
+          "Không thể truy cập công khai",
+          "Dấu chân tối thiểu",
+          "Được giám sát"
+        ],
+        "controls": {
+          "11.1": {
+            "title": "Dịch vụ nội bộ không thể truy cập công khai",
+            "text": "Các dịch vụ backend và cơ sở dữ liệu của chúng tôi hoàn toàn không lộ ra internet công khai — chỉ có một điểm vào duy nhất, đã được tăng cường bảo mật."
+          },
+          "11.2": {
+            "title": "Bản build sản xuất tinh gọn",
+            "text": "Những gì thực sự chạy trong môi trường sản xuất không mang theo bất cứ thứ gì thừa — không công cụ phát triển, không thư viện phụ thuộc không dùng đến."
+          },
+          "11.3": {
+            "title": "Giới hạn, kiểm tra sức khỏe và xoay vòng log",
+            "text": "Mỗi dịch vụ chạy với giới hạn tài nguyên, kiểm tra sức khỏe tự động và một chính sách khởi động lại, và log được xoay vòng để không thể phình to vô hạn."
+          },
+          "11.4": {
+            "title": "Bí mật không nằm trong mã nguồn",
+            "text": "Khóa và bí mật không bao giờ được đưa vào mã nguồn của chúng tôi — chúng được cung cấp riêng cho từng dịch vụ, và các tệp thông tin xác thực nhạy cảm được gắn ở chế độ chỉ đọc."
+          },
+          "11.5": {
+            "title": "Triển khai lặp lại được",
+            "text": "Mỗi lần triển khai đều đi qua cùng những kiểm tra tự động, vì vậy một phiên bản phát hành không bao giờ là một quy trình thủ công đơn lẻ."
+          }
+        }
+      },
+      "verification": {
+        "title": "Cách chúng tôi kiểm tra công việc của chính mình",
+        "kicker": "Các bài kiểm thử cố gắng phá vỡ những quy tắc trên.",
+        "intro": "Các cam kết an ninh chỉ có giá trị bằng những gì các bài kiểm thử chứng minh được. Những điều này được các bài kiểm thử tự động trong mã nguồn của chúng tôi bao quát.",
+        "stats": [
+          "Kiểm thử thông tin xác thực giả",
+          "Kiểm thử phát lại",
+          "Kiểm thử cách ly"
+        ],
+        "controls": {
+          "12.1": {
+            "title": "Kiểm thử hồi quy về danh tính",
+            "text": "Các bài kiểm thử tự động bao quát thông tin xác thực giả mạo, phiên hết hạn và bị phát lại, đăng xuất, xoay khóa xác thực, và việc một workspace không bao giờ có thể thấy dữ liệu của workspace khác."
+          },
+          "12.2": {
+            "title": "Kiểm thử yêu cầu đi ra ngoài",
+            "text": "Các cơ chế ngăn yêu cầu đi ra ngoài chạm tới mạng nội bộ có các bài kiểm thử riêng dành cho chúng."
+          },
+          "12.3": {
+            "title": "Kiểm thử bộ lọc quyền riêng tư",
+            "text": "Hệ thống thay thế thông tin riêng tư trước khi chúng đến được một mô hình, và các quy tắc thông tin thanh toán giới hạn những gì có thể hiển thị cho mô hình, đều được kiểm thử trực tiếp."
+          },
+          "12.4": {
+            "title": "Kiểm thử tính chính xác trong thanh toán",
+            "text": "Việc phát lại gia hạn và xác minh chữ ký được bao quát bởi các bài kiểm thử, vì vậy một bản sửa lỗi thanh toán không thể vô tình mở lại một lỗ hổng đã được đóng."
+          }
+        }
+      }
+    },
+    "demo": {
+      "customerLabel": "Những gì khách hàng gõ vào",
+      "resetSample": "Đặt lại mẫu",
+      "modelLabel": "Những gì mô hình đọc được",
+      "inputAriaLabel": "Tin nhắn cần lọc",
+      "caption": "Chỉ mang tính minh họa, và chạy ngay trong trình duyệt của bạn: không có gì bạn gõ ở đây được gửi đi bất cứ đâu. Bộ lọc thật chạy trên máy chủ của chúng tôi, và việc ánh xạ ngược lại thông tin thật không bao giờ đi vào một prompt."
+    },
+    "about": {
+      "label": "Về hướng dẫn này",
+      "textBefore": "Đây là một mô tả về cách nền tảng được xây dựng, không phải một chứng nhận. Nó bao quát các biện pháp kiểm soát hiện có trong sản phẩm ngày nay, và sẽ thay đổi khi sản phẩm thay đổi. Nếu bạn cần trả lời một bảng câu hỏi an ninh hay ký một thỏa thuận xử lý dữ liệu, hãy gửi email tới ",
+      "textAfter": "."
+    },
+    "report": {
+      "label": "Báo cáo một lỗ hổng",
+      "stamp": "Đã tìm thấy điều gì?",
+      "title": "Bạn nghĩ mình đã tìm ra một điểm yếu? Chúng tôi muốn nghe điều đó trước tiên.",
+      "subtitle": "Gửi email với chi tiết và cách tái hiện lại nó. Một người trong đội sẽ đọc mọi báo cáo.",
+      "privacy": "Chính sách quyền riêng tư",
+      "terms": "Điều khoản",
+      "securityPolicy": "Chính sách an ninh"
+    }
+  },
+  "features": {
+    "families": {
+      "answer": "Trả lời",
+      "team": "Nhóm",
+      "know": "Kiến thức",
+      "act": "Hành động",
+      "trust": "Tin cậy",
+      "grow": "Phát triển"
+    },
+    "pageNames": {
+      "aiAgent": "Trợ lý AI",
+      "inbox": "Hộp thư",
+      "demo": "Bản demo",
+      "pricing": "Giá",
+      "knowledgeHub": "Trung tâm kiến thức",
+      "securityGuide": "Hướng dẫn bảo mật"
+    },
+    "tiles": [
+      {
+        "name": "Câu trả lời có căn cứ",
+        "body": "Câu trả lời được lấy từ kiến thức bạn đã phê duyệt. Nếu không có thông tin đó, AI sẽ nói thẳng thay vì đoán bừa."
+      },
+      {
+        "name": "Ngôn ngữ trả lời",
+        "body": "Chọn ngôn ngữ mà chatbot dùng để trả lời khách hàng của bạn."
+      },
+      {
+        "name": "Nhận biết trang",
+        "body": "Quyết định xem AI có thể thấy URL trang mà khách đang xem hay không, và dùng thông tin đó để trả lời đúng ngữ cảnh."
+      },
+      {
+        "name": "Widget thương hiệu",
+        "body": "Logo và màu sắc của bạn trên một widget chat, nhúng chỉ bằng một đoạn mã."
+      },
+      {
+        "name": "Hiển thị đang nhập",
+        "body": "Khách hàng thấy khi nào một thành viên trong nhóm đang trả lời, và bạn cũng thấy khi nào họ đang nhập."
+      },
+      {
+        "name": "Tệp đính kèm",
+        "body": "Khách hàng và nhóm của bạn có thể gửi tệp trực tiếp trong cuộc trò chuyện."
+      },
+      {
+        "name": "Hộp thư chung",
+        "body": "Mọi cuộc trò chuyện và phản hồi ở một nơi, kèm nhãn cho biết AI, một thành viên hay chưa ai xử lý."
+      },
+      {
+        "name": "Cảnh báo tham gia",
+        "body": "Khi khách hàng muốn nói chuyện với người thật, mọi thành viên trong nhóm sẽ nhận được cảnh báo tham gia. Người tham gia đầu tiên sẽ nhận cuộc trò chuyện đó và cảnh báo biến mất với mọi người khác."
+      },
+      {
+        "name": "Tiếp quản và trả lại",
+        "body": "Tiếp quản một cuộc chat từ AI hoặc đồng nghiệp, và trả lại cho AI chỉ bằng một lần chạm."
+      },
+      {
+        "name": "Phân công",
+        "body": "Cuộc trò chuyện có thể được giao cho một thành viên trong nhóm, người đó sẽ nhận được thông báo."
+      },
+      {
+        "name": "Mời thành viên nhóm",
+        "body": "Mời thành viên qua email và thêm chỗ ngồi khi nhóm của bạn phát triển."
+      },
+      {
+        "name": "Ticket tự động",
+        "body": "Nếu không ai tham gia trong vòng 90 giây, khách hàng sẽ được thông báo và một ticket sẽ được tạo tự động, kèm theo email theo dõi."
+      },
+      {
+        "name": "Thu thập dữ liệu trang web",
+        "body": "Chỉ cho Elpino một trang. Các trang được dựng bằng JavaScript sẽ được hiển thị trong một trình duyệt thật trước."
+      },
+      {
+        "name": "Nhập sitemap",
+        "body": "Lấy tối đa 20 trang từ sitemap của bạn trong một lần."
+      },
+      {
+        "name": "Khám phá",
+        "body": "Bắt đầu từ một liên kết, Elpino sẽ theo đó lần lượt qua tối đa 50 trang, ưu tiên các trang trợ giúp và chính sách trước."
+      },
+      {
+        "name": "Tải tệp lên",
+        "body": "Tải lên tệp PDF, Word, văn bản và Markdown, nội dung sẽ được trích xuất tự động cho bạn."
+      },
+      {
+        "name": "Trang tự viết",
+        "body": "Viết trang của riêng bạn trong bộ soạn thảo cho những nội dung không có ở nơi nào khác."
+      },
+      {
+        "name": "Công khai / riêng tư",
+        "body": "Mỗi nguồn có một công cụ chuyển đổi khả năng hiển thị, để ghi chú nội bộ luôn được giữ nội bộ."
+      },
+      {
+        "name": "Tra cứu thanh toán",
+        "body": "Kiểm tra các giao dịch thanh toán thực tế trong Stripe hoặc Razorpay để câu trả lời dựa trên sự thật, không phải đoán mò."
+      },
+      {
+        "name": "Liên kết thanh toán",
+        "body": "Tạo một liên kết thanh toán mới, an toàn khi cần thử thanh toán lại."
+      },
+      {
+        "name": "Đăng ký",
+        "body": "Kiểm tra trạng thái đăng ký và có thể hủy khi khách hàng yêu cầu."
+      },
+      {
+        "name": "Hoàn tiền (tùy chọn)",
+        "body": "Tắt theo mặc định. Chủ sở hữu không gian làm việc quyết định AI có được phép hoàn tiền hay không."
+      },
+      {
+        "name": "Biên nhận",
+        "body": "Tìm và gửi biên nhận cho một giao dịch thanh toán cụ thể."
+      },
+      {
+        "name": "Công cụ MCP",
+        "body": "Kết nối tối đa năm máy chủ MCP và chỉ bật đúng những công cụ mà trợ lý được phép sử dụng."
+      },
+      {
+        "name": "Xác minh danh tính",
+        "body": "Một mã email dùng một lần hoặc một token đã ký từ ứng dụng của bạn xác nhận danh tính khách hàng."
+      },
+      {
+        "name": "Bộ lọc dữ liệu riêng tư",
+        "body": "Tên và email được thay bằng mã tham chiếu trước khi AI đọc cuộc trò chuyện, và các thông tin bí mật sẽ bị loại bỏ."
+      },
+      {
+        "name": "Yêu cầu an toàn",
+        "body": "Hỏi các thông tin nhạy cảm qua một biểu mẫu riêng tư dùng một lần, thay vì qua khung chat."
+      },
+      {
+        "name": "Khóa được mã hóa",
+        "body": "Thông tin xác thực đã kết nối được lưu trữ dưới dạng mã hóa."
+      },
+      {
+        "name": "Kiểm soát ngân sách",
+        "body": "Một khoản tín dụng AI hằng tháng trên các gói trả phí giúp chi phí AI luôn có thể dự đoán được."
+      },
+      {
+        "name": "Kiểm tra sự thật",
+        "body": "Bản dự thảo được đối chiếu với kết quả từ các công cụ trước khi khách hàng nhìn thấy."
+      },
+      {
+        "name": "Bối cảnh khách truy cập",
+        "body": "Vị trí, thiết bị và trang họ đang xem được gắn kèm vào mọi cuộc trò chuyện."
+      },
+      {
+        "name": "Phân tích",
+        "body": "Xem cuộc trò chuyện diễn ra thế nào trên toàn không gian làm việc của bạn."
+      },
+      {
+        "name": "Lịch sử",
+        "body": "Các cuộc trò chuyện trước đó với cùng một khách hàng, hiển thị ngay bên cạnh luồng hiện tại."
+      },
+      {
+        "name": "Gói miễn phí",
+        "body": "Bắt đầu với 100 tin nhắn AI mỗi tháng, không cần thẻ."
+      },
+      {
+        "name": "Gói dựa trên tín dụng",
+        "body": "Các gói trả phí bao gồm một khoản tín dụng AI hằng tháng, và chỗ ngồi thêm chỉ là các gói bổ sung đơn giản."
+      },
+      {
+        "name": "Trả lời qua email",
+        "body": "Khách truy cập đã xác minh nhưng rời khỏi khung chat vẫn có thể nhận được câu trả lời của bạn qua email."
+      }
+    ],
+    "table": {
+      "all": "Tất cả",
+      "readMoreIn": "Đọc thêm trong {more}",
+      "hint": "Nhấn vào bất kỳ ô nào. Mọi tính năng ở đây đều đang hoạt động thật ngay hôm nay."
+    },
+    "hero": {
+      "badge": "Tính năng",
+      "titlePrefix": "Những yếu tố của",
+      "titleHl": "dịch vụ hỗ trợ tuyệt vời.",
+      "subtitle": "{count} khả năng, một không gian làm việc. Lọc theo nhóm, nhấn vào một ô và xem chính xác Elpino làm được gì."
+    },
+    "loop": {
+      "eyebrow": "Cách chúng kết hợp",
+      "titlePrefix": "Đây là một vòng lặp,",
+      "titleHl": "không phải một danh sách.",
+      "subtitle": "Mỗi tính năng tiếp nối tính năng kế tiếp, nên hỗ trợ khách hàng càng tốt hơn khi bạn dùng càng nhiều.",
+      "steps": [
+        {
+          "t": "Dạy",
+          "d": "Thu thập dữ liệu trang web, tải tệp lên, viết trang nội dung."
+        },
+        {
+          "t": "Trả lời",
+          "d": "AI trả lời dựa trên kiến thức của bạn, bằng ngôn ngữ của bạn."
+        },
+        {
+          "t": "Hành động",
+          "d": "Thanh toán, đăng ký và các công cụ MCP của bạn."
+        },
+        {
+          "t": "Chuyển giao",
+          "d": "Hỏi trước, cảnh báo nhóm, tham gia hoặc tạo ticket."
+        },
+        {
+          "t": "Học hỏi",
+          "d": "Xem lại các cuộc trò chuyện và cải thiện kiến thức của bạn."
+        }
+      ],
+      "stepOf": "Bước {n} trong {total}",
+      "explore": "Khám phá bước này"
+    },
+    "personas": {
+      "eyebrow": "Dành cho ai",
+      "titlePrefix": "Chọn vai trò của bạn.",
+      "titleHl": "Xem tính năng dành cho bạn.",
+      "items": [
+        {
+          "label": "Người sáng lập",
+          "line": "Bạn chính là cả nhóm hỗ trợ và muốn có lại những buổi tối của mình.",
+          "picks": [
+            "Gói miễn phí, không cần thẻ",
+            "Câu trả lời từ trang web của bạn trong vài phút",
+            "AI xử lý thanh toán và biên nhận",
+            "Chỉ báo cho bạn khi thực sự cần thiết"
+          ]
+        },
+        {
+          "label": "Trưởng nhóm hỗ trợ",
+          "line": "Bạn quản lý một nhóm và cần sự phân công rõ ràng, không bỏ sót cuộc trò chuyện nào.",
+          "picks": [
+            "Hộp thư chung với nhãn rõ ràng",
+            "Cảnh báo tham gia cho toàn nhóm",
+            "Ticket tự động khi mọi người đều đang bận",
+            "Bối cảnh khách truy cập trên mọi luồng"
+          ]
+        },
+        {
+          "label": "Nhà phát triển",
+          "line": "Bạn muốn tích hợp nó vào sản phẩm và dữ liệu của riêng mình.",
+          "picks": [
+            "Xác thực danh tính bằng token đã ký từ ứng dụng của bạn",
+            "Máy chủ MCP với phê duyệt theo từng công cụ",
+            "Tra cứu Stripe và Razorpay",
+            "Một đoạn mã widget duy nhất có thể nhúng"
+          ]
+        },
+        {
+          "label": "Chủ cửa hàng",
+          "line": "Khách hàng hỏi về đơn hàng và thanh toán suốt cả ngày.",
+          "picks": [
+            "Tra cứu đơn hàng qua các công cụ MCP của bạn",
+            "Liên kết thanh toán và biên nhận",
+            "Hoàn tiền chỉ khi bạn bật tính năng này",
+            "Trả lời bằng ngôn ngữ của khách hàng bạn"
+          ]
+        }
+      ]
+    },
+    "stack": {
+      "badge": "Một công cụ",
+      "titlePrefix": "Sáu công cụ hợp lại.",
+      "titleHl": "Một không gian làm việc duy nhất.",
+      "subtitle": "Hầu hết các nhóm phải ghép nối một widget, một hệ thống hỗ trợ, một cơ sở kiến thức và một chatbot lại với nhau. Elpino gộp tất cả vào một nơi, với một bộ nhớ duy nhất cho mỗi khách hàng.",
+      "items": [
+        "Widget chat",
+        "Hộp thư hệ thống hỗ trợ",
+        "Cơ sở kiến thức",
+        "Công cụ tạo chatbot",
+        "Tra cứu thanh toán",
+        "Quy tắc chuyển giao"
+      ],
+      "cardSubtitle": "Widget · Hộp thư · Kiến thức · Trợ lý AI · Công cụ · Chuyển giao"
+    },
+    "soon": {
+      "badge": "Sắp có vào tháng 11",
+      "title": "Đa kênh là bước tiếp theo.",
+      "body": "Chat trên website đang hoạt động ngay hôm nay. Đưa thêm nhiều kênh khác vào cùng một hộp thư là điều chúng tôi sẽ triển khai tiếp theo, và chúng tôi sẽ thông báo trên trang nhật ký thay đổi.",
+      "cta": "Xem nhật ký thay đổi"
+    },
+    "faq": {
+      "eyebrow": "Câu hỏi",
+      "titlePrefix": "Điều nên",
+      "titleHl": "biết.",
+      "items": [
+        {
+          "q": "Mọi thứ trên trang này có đang hoạt động thật không?",
+          "a": "Có. Mỗi ô mô tả một điều mà Elpino đang làm ngay hôm nay. Đa kênh là điều duy nhất chúng tôi vẫn đang xây dựng, và được đánh dấu là sắp có vào tháng 11."
+        },
+        {
+          "q": "Tôi có cần dùng tất cả không?",
+          "a": "Không. Hãy bắt đầu với một cơ sở kiến thức và widget trên gói miễn phí, sau đó bật công cụ, MCP và thành viên nhóm khi bạn cần."
+        },
+        {
+          "q": "Gói miễn phí bao gồm những gì?",
+          "a": "100 tin nhắn AI mỗi tháng, không cần thẻ."
+        },
+        {
+          "q": "Các gói trả phí hoạt động như thế nào?",
+          "a": "Các gói trả phí bao gồm một khoản tín dụng AI hằng tháng, và chỗ ngồi thêm chỉ là các gói bổ sung đơn giản. Xem trang giá để biết chi tiết."
+        }
+      ]
+    },
+    "closing": {
+      "title": "Mọi yếu tố, sẵn sàng để dùng.",
+      "subtitle": "Bắt đầu với gói miễn phí và bật thêm tính năng khi bạn phát triển.",
+      "ctaStart": "Bắt đầu miễn phí",
+      "ctaPricing": "Xem giá"
+    }
+  },
+  "founders": {
+    "stream": {
+      "incomingLive": "Đang đến, trực tiếp",
+      "onDuty": "Elpino đang trực",
+      "needsYou": "Cần bạn",
+      "handled": "Đã xử lý",
+      "askedFirst": "{why}. Elpino đã hỏi trước, rồi mới báo cho bạn.",
+      "handledWithoutYou": "Đã xử lý mà không cần bạn",
+      "actuallyNeededYou": "Thực sự cần đến bạn",
+      "items": [
+        {
+          "q": "Làm sao để tôi xuất dữ liệu của mình?"
+        },
+        {
+          "q": "Vì sao thẻ của tôi bị từ chối?"
+        },
+        {
+          "q": "Có ưu đãi cho startup không?"
+        },
+        {
+          "q": "Chúng tôi có thể có hợp đồng riêng không?",
+          "why": "Yêu cầu gặp người thật"
+        },
+        {
+          "q": "Hóa đơn tháng Ba của tôi ở đâu?"
+        },
+        {
+          "q": "Làm sao để đặt lại mật khẩu?"
+        },
+        {
+          "q": "Tôi có thể nói chuyện với người sáng lập không?",
+          "why": "Yêu cầu gặp người thật"
+        },
+        {
+          "q": "Có hoạt động được với Shopify không?"
+        }
+      ]
+    },
+    "hero": {
+      "badge": "Dành cho người sáng lập",
+      "titlePrefix": "Ra mắt sản phẩm. ",
+      "titleHl": "Không phải trả lời hỗ trợ.",
+      "subtitle": "Bạn khởi nghiệp để xây dựng điều gì đó, không phải để trả lời “làm sao để đặt lại mật khẩu?” bốn mươi lần một tuần. Elpino tiếp nhận những câu hỏi lặp lại và chỉ liên hệ bạn khi thực sự cần đến người sáng lập.",
+      "ctaStart": "Bắt đầu miễn phí",
+      "ctaPricing": "Xem giá",
+      "freeNote": "Gói miễn phí: 100 tin nhắn AI mỗi tháng. Không cần thẻ."
+    },
+    "calculator": {
+      "eyebrow": "Thử làm phép tính",
+      "titlePrefix": "Lấy lại buổi chiều ",
+      "titleHl": "của bạn.",
+      "subtitle": "Nhập số liệu của riêng bạn. Tỷ lệ AI xử lý là ước tính của bạn, không phải lời hứa, và phụ thuộc vào nội dung trong cơ sở kiến thức của bạn.",
+      "sliderQuestions": "Số câu hỏi của khách mỗi ngày",
+      "sliderMinutes": "Số phút để trả lời mỗi câu",
+      "unitMin": "phút",
+      "sliderShare": "Tỷ lệ bạn dự đoán AI xử lý được",
+      "yourDay": "Ngày làm việc 8 giờ của bạn",
+      "today": "Hôm nay",
+      "withElpinoAt": "Với Elpino ở mức {pct}%",
+      "backEachWeek": "Lấy lại mỗi tuần",
+      "chatsUntouched": "Số cuộc chat mỗi ngày không cần chạm tới",
+      "volumeNote": "Với khối lượng này, riêng việc hỗ trợ đã tốn hơn một ngày làm việc đầy đủ.",
+      "supportLabel": "{h} giờ hỗ trợ",
+      "buildingLabel": "{h} giờ xây dựng sản phẩm"
+    },
+    "setup": {
+      "eyebrow": "Thiết lập",
+      "titlePrefix": "Hoạt động trước khi ",
+      "titleHl": "cà phê của bạn nguội.",
+      "subtitle": "Không cần kỹ sư, không cần thời gian đào tạo. Bốn bước, và bước cuối là tùy chọn.",
+      "stepLabel": "Bước {n}",
+      "steps": [
+        {
+          "t": "Dán liên kết trang web của bạn",
+          "d": "Elpino thu thập các trang của bạn, kể cả những trang được dựng bằng JavaScript, và học về sản phẩm của bạn.",
+          "meter": "Đang đọc trang web của bạn"
+        },
+        {
+          "t": "Thêm phần còn lại",
+          "d": "Tải lên tài liệu, hoặc viết ra các chính sách chỉ có trong đầu bạn.",
+          "meter": "Đang thêm kiến thức"
+        },
+        {
+          "t": "Chèn widget",
+          "d": "Chỉ một đoạn mã, và khung chat đã hoạt động trên trang web của bạn.",
+          "meter": "Đang cài đặt widget"
+        },
+        {
+          "t": "Kết nối thanh toán (không bắt buộc)",
+          "d": "Stripe hoặc Razorpay, để hệ thống có thể tra cứu hóa đơn thay bạn.",
+          "meter": "Đang kết nối"
+        }
+      ]
+    },
+    "reaches": {
+      "badge": "Bộ lọc",
+      "titlePrefix": "Chỉ những ",
+      "titleHl": "việc quan trọng",
+      "titleSuffix": " mới đến tay bạn.",
+      "subtitle": "Bạn quyết định AI được làm gì. Mọi thứ khác đều theo một quy tắc rõ ràng: hỏi trước, báo cùng lúc, và không bao giờ để khách hàng chờ vô ích.",
+      "rules": [
+        {
+          "t": "Trả lời từ tài liệu của bạn",
+          "d": "Đã xử lý. Bạn không bao giờ phải thấy nó."
+        },
+        {
+          "t": "Tra cứu thanh toán và tài khoản",
+          "d": "Được xử lý bằng các công cụ bạn đã kích hoạt."
+        },
+        {
+          "t": "\"Tôi có thể nói chuyện với ai đó không?\"",
+          "d": "Hỏi khách hàng trước, sau đó báo cho bạn và nhóm của bạn."
+        },
+        {
+          "t": "Bạn đang bận tối mắt tối mũi?",
+          "d": "Sau 90 giây, một yêu cầu hỗ trợ sẽ được tạo và khách hàng sẽ được thông báo."
+        }
+      ]
+    },
+    "money": {
+      "eyebrow": "Câu hỏi về thanh toán",
+      "titlePrefix": "Kiểm tra khoản thanh toán thật. ",
+      "titleHl": "Chìa khóa vẫn ở trong tay bạn.",
+      "subtitle": "Kết nối Stripe hoặc Razorpay và AI có thể tra cứu thanh toán, gói đăng ký, gửi biên nhận và liên kết thanh toán, cũng như hủy gói đăng ký khi được yêu cầu. Hoàn tiền sẽ tắt cho đến khi bạn mở công tắc.",
+      "chatAsk": "Tôi có thể được hoàn tiền cho lần thanh toán gần nhất không?",
+      "chatYes": "Tôi đã tìm thấy khoản thanh toán của bạn và bắt đầu hoàn tiền. Thường thì tiền sẽ về tài khoản của bạn trong 5 đến 7 ngày làm việc.",
+      "chatNo": "Tôi thấy khoản thanh toán này, nhưng tôi không thể tự hoàn tiền. Bạn có muốn tôi kết nối bạn với nhóm của chúng tôi không?",
+      "toggleLabel": "Cho phép AI thực hiện hoàn tiền",
+      "toggleNote": "Mặc định là tắt. Hãy thử công tắc này."
+    },
+    "grows": {
+      "eyebrow": "Không gian để phát triển",
+      "titlePrefix": "Bắt đầu với bạn. ",
+      "titleHl": "Mở rộng cùng nhóm của bạn.",
+      "stageLabel": "Giai đoạn {n}",
+      "stages": [
+        {
+          "t": "Chỉ có bạn",
+          "d": "Gói miễn phí, 100 tin nhắn AI mỗi tháng, một hộp thư mà bạn hiếm khi mở."
+        },
+        {
+          "t": "Nhân viên đầu tiên",
+          "d": "Mời họ qua email. Họ sẽ nhận thông báo tham gia và có thể tiếp nhận các cuộc chat từ AI."
+        },
+        {
+          "t": "Một nhóm nhỏ",
+          "d": "Phân công cuộc trò chuyện, chia sẻ hộp thư, thêm chỗ ngồi khi cần."
+        },
+        {
+          "t": "Mở rộng quy mô",
+          "d": "Các gói trả phí có hạn mức AI hàng tháng, công cụ MCP cho hệ thống riêng của bạn."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Câu hỏi từ người sáng lập",
+      "titlePrefix": "Câu trả lời ",
+      "titleHl": "thẳng thắn.",
+      "items": [
+        {
+          "q": "Cái này khác gì so với một widget chatbot thông thường?",
+          "a": "Elpino chỉ trả lời dựa trên kiến thức bạn đã cung cấp, có thể tra cứu các khoản thanh toán thật và dùng công cụ riêng của bạn, xác minh danh tính trước khi động đến bất kỳ thông tin cá nhân nào, và chuyển cho người thật kèm toàn bộ cuộc trò chuyện khi không thể giúp được."
+        },
+        {
+          "q": "Tôi có thể tự thiết lập nhanh đến mức nào?",
+          "a": "Hầu hết người sáng lập đưa vào hoạt động ngay trong ngày: thêm trang web hoặc tệp của bạn, dán đoạn mã widget, và kết nối Stripe hoặc Razorpay nếu muốn."
+        },
+        {
+          "q": "Nó quyết định giữa việc tự trả lời và báo cho tôi như thế nào?",
+          "a": "Nếu có thể trả lời từ kiến thức hoặc công cụ của bạn, nó sẽ trả lời. Nếu không thể, nó sẽ nói rõ và hỏi khách hàng có muốn được kết nối với nhóm của bạn không. Chỉ khi đó bạn và nhóm của bạn mới được thông báo."
+        },
+        {
+          "q": "Nó có tự bịa ra thông tin không?",
+          "a": "Nó trả lời dựa trên những gì bạn đã phê duyệt, và một bước rà soát sẽ kiểm tra bản trả lời với kết quả từ các công cụ. Khi không biết, nó sẽ nói rõ là không biết."
+        },
+        {
+          "q": "Tài khoản Stripe hoặc Razorpay của tôi có an toàn không?",
+          "a": "Thông tin xác thực được lưu trữ ở dạng mã hóa, và các hành động liên quan đến tiền như hoàn tiền sẽ tắt cho đến khi bạn tự bật lên."
+        },
+        {
+          "q": "Điều gì xảy ra khi tôi thuê một nhân viên hỗ trợ?",
+          "a": "Hãy mời họ, họ sẽ nhận thông báo tham gia, có thể tiếp nhận các cuộc chat từ AI, và có thể trả lại cho AI."
+        }
+      ]
+    },
+    "closing": {
+      "title": "Trở lại việc xây dựng sản phẩm.",
+      "subtitle": "Bắt đầu miễn phí, hướng dẫn cho Elpino về sản phẩm của bạn, và để nó tiếp nhận các câu hỏi lặp lại.",
+      "ctaStart": "Bắt đầu miễn phí",
+      "ctaMeetAgent": "Gặp gỡ AI agent"
+    }
+  },
+  "developers": {
+    "hero": {
+      "badge": "Dành cho nhà phát triển",
+      "titlePrefix": "Từ ",
+      "titleMiddle": " đến ",
+      "titleHl": "giải quyết.",
+      "subtitle": "Một thẻ cho widget, một token đã ký để Elpino biết ai đã đăng nhập, một máy chủ MCP để AI có thể đọc dữ liệu của bạn. Xem ba bước diễn ra trên một trang.",
+      "ctaStart": "Bắt đầu miễn phí",
+      "ctaDocs": "Đọc tài liệu"
+    },
+    "ide": {
+      "comment1": "<!-- 1. Dán thẻ -->",
+      "comment2": "<!-- 2. Cho Elpino biết ai đã đăng nhập -->",
+      "comment3": "  // elpinoToken: được ký bởi backend của bạn",
+      "mcpComment": "// Trong bảng điều khiển của bạn: kết nối máy chủ MCP và bật get_order.",
+      "stepEmbed": "Nhúng",
+      "stepIdentify": "Xác định",
+      "stepResolve": "Giải quyết",
+      "previewSupport": "Hỗ trợ",
+      "previewVerified": "Đã xác minh",
+      "previewGreeting": "Chào Aisha, tôi có thể giúp gì?",
+      "previewQuestion": "Đơn hàng của tôi đâu rồi?",
+      "previewAnswer": "Đơn hàng đã gửi hôm qua và sẽ đến vào thứ Năm."
+    },
+    "sequence": {
+      "eyebrow": "Luồng yêu cầu",
+      "titlePrefix": "Một câu hỏi, ",
+      "titleHl": "bốn hệ thống.",
+      "subtitle": "Ai nói chuyện với ai khi một khách hàng đã đăng nhập hỏi về đơn hàng của họ. Xem từng bước, hoặc để nó tự phát.",
+      "actors": [
+        "Trình duyệt",
+        "Máy chủ của bạn",
+        "Elpino",
+        "Máy chủ MCP của bạn"
+      ],
+      "steps": [
+        {
+          "label": "Khách hàng đăng nhập"
+        },
+        {
+          "label": "JWT đã ký",
+          "note": "≤ 5 phút · dùng một lần"
+        },
+        {
+          "label": "$elpino identify(token)"
+        },
+        {
+          "label": "Xác minh chữ ký + claim ✓"
+        },
+        {
+          "label": "“Đơn hàng của tôi đâu rồi?”"
+        },
+        {
+          "label": "get_order",
+          "note": "chỉ khách hàng đã xác minh"
+        },
+        {
+          "label": "Trạng thái đơn hàng"
+        },
+        {
+          "label": "Trả lời khách hàng"
+        }
+      ],
+      "stepCounter": "Bước {n} / {total}",
+      "nextStep": "Bước tiếp theo",
+      "replay": "Phát lại"
+    },
+    "tokenExplorer": {
+      "eyebrow": "Token danh tính",
+      "titlePrefix": "Cấu tạo của một token, ",
+      "titleHl": "và cách nó bị lỗi.",
+      "subtitle": "HS256, được ký bằng bí mật của workspace bạn. Chạm vào một claim để xem quy tắc của nó, sau đó làm hỏng token để xem widget báo gì.",
+      "payload": "Payload",
+      "optional": "tùy chọn",
+      "required": "Bắt buộc",
+      "optionalCap": "Tùy chọn",
+      "breakIt": "Làm hỏng nó",
+      "notAccepted": "[Elpino] Token danh tính không được chấp nhận: {code}",
+      "fix": "Khắc phục:",
+      "claimDescriptions": [
+        "ID tài khoản ổn định của người dùng này.",
+        "Chính xác là \"elpino-widget\".",
+        "Một ID ngẫu nhiên mới cho mỗi token, từ 16 đến 128 ký tự an toàn cho URL. Một UUID là phù hợp.",
+        "Thời điểm phát hành tính bằng giây nguyên (không phải mili giây).",
+        "Hết hạn tính bằng giây nguyên, tối đa 5 phút sau iat.",
+        "Bỏ qua khi không có. null sẽ bị từ chối.",
+        "true chỉ khi hệ thống đăng nhập của bạn đã xác nhận quyền sở hữu.",
+        "Tên hiển thị mà nhóm của bạn thấy."
+      ]
+    },
+    "server": {
+      "eyebrow": "Backend của bạn",
+      "titlePrefix": "Sao chép, dán, ",
+      "titleHl": "triển khai.",
+      "subtitle": "Cùng những đoạn mã mà bảng điều khiển của bạn hiển thị, bằng ngôn ngữ bạn đã dùng.",
+      "copy": "Sao chép",
+      "copied": "Đã sao chép",
+      "codeTitle": "token danh tính"
+    },
+    "mcp": {
+      "badge": "Máy chủ MCP",
+      "titlePrefix": "Cung cấp công cụ cho AI. ",
+      "titleHl": "Giữ lại chìa khóa.",
+      "subtitle": "Kết nối tối đa năm máy chủ MCP, bật tối đa 15 công cụ trên mỗi máy chủ, và chọn ai được phép dùng. Bật/tắt để xem agent có thể dùng gì.",
+      "shopServerName": "Máy chủ MCP cửa hàng của bạn",
+      "toolsDiscovered": "Đã tìm thấy {n} công cụ",
+      "toggleLabel": "Mở công cụ chỉ đọc cho mọi khách truy cập",
+      "changesData": "Thay đổi dữ liệu",
+      "readOnly": "Chỉ đọc",
+      "needsVerified": "Cần khách hàng đã xác minh",
+      "agentCanCall": "Agent có thể gọi",
+      "toolDescriptions": [
+        "Tra cứu một đơn hàng và trạng thái của nó",
+        "Theo dõi trực tiếp một gói hàng",
+        "Thay đổi địa chỉ giao hàng",
+        "Hủy một đơn hàng chưa được gửi"
+      ],
+      "bullets": [
+        "Mỗi lệnh gọi được kiểm tra lại theo danh sách của bạn trên máy chủ",
+        "Các công cụ thay đổi dữ liệu luôn cần khách hàng đã xác minh",
+        "Thông tin xác thực được lưu trữ ở dạng mã hóa"
+      ]
+    },
+    "sees": {
+      "eyebrow": "Quyền riêng tư theo mặc định",
+      "titlePrefix": "Mô hình ",
+      "titleHl": "không bao giờ thấy",
+      "titleSuffix": " họ là ai.",
+      "subtitle": "Trước khi AI đọc một cuộc trò chuyện, tên, email và ID được thay bằng mã tham chiếu, và các bí mật như token và khóa bị loại bỏ. Các công cụ vẫn nhận được giá trị thật ở phía bạn.",
+      "toggleTeam": "Những gì nhóm của bạn thấy",
+      "toggleModel": "Những gì mô hình AI thấy",
+      "chatRaw1": "Chào, tôi là Aisha Khan (aisha@example.com). Đơn hàng của tôi đâu rồi?",
+      "chatMasked1": "Chào, tôi là ref_name_9f2c (ref_email_41ab). Đơn hàng của tôi đâu rồi?",
+      "chatRaw2": "Chào Aisha, đơn hàng của bạn đã được gửi hôm qua.",
+      "chatMasked2": "Chào, đơn hàng của bạn đã được gửi hôm qua."
+    },
+    "faq": {
+      "eyebrow": "Câu hỏi",
+      "titlePrefix": "Nên ",
+      "titleHl": "biết.",
+      "items": [
+        {
+          "q": "Tôi có phải dùng xác minh danh tính không?",
+          "a": "Không, nhưng đó là điều cho phép AI hiển thị dữ liệu riêng tư một cách an toàn. Ai cũng có thể nhập bất kỳ email nào vào một cuộc trò chuyện, vì vậy một token được ký bởi chính hệ thống đăng nhập của bạn là cách một khách hàng trở thành Đã xác minh."
+        },
+        {
+          "q": "Một token tồn tại bao lâu?",
+          "a": "Tối đa năm phút, và chỉ dùng được một lần. Bản thân phiên trò chuyện kéo dài tới 8 giờ, với giới hạn không hoạt động 30 phút."
+        },
+        {
+          "q": "Thuật toán ký nào?",
+          "a": "HS256. Các thuật toán khác, bao gồm none và RS256, đều bị từ chối."
+        },
+        {
+          "q": "Ngôn ngữ nào có đoạn mã mẫu?",
+          "a": "Node.js, Python, PHP và Ruby, trong phần cài đặt danh tính của bảng điều khiển và trong tài liệu."
+        },
+        {
+          "q": "Máy chủ MCP là gì?",
+          "a": "Một dịch vụ cung cấp công cụ qua Model Context Protocol. Elpino khám phá các công cụ của nó, và bạn bật những công cụ mà AI được phép dùng."
+        },
+        {
+          "q": "AI có thể thay đổi dữ liệu trong hệ thống của tôi không?",
+          "a": "Chỉ thông qua các công cụ bạn đã bật, và các công cụ thay đổi dữ liệu luôn cần khách hàng đã xác minh."
+        },
+        {
+          "q": "Có API không?",
+          "a": "SDK widget, token danh tính và MCP là bề mặt tích hợp hiện nay."
+        }
+      ],
+      "linkLabels": [
+        "Tài liệu danh tính",
+        "Tài liệu widget",
+        "Agent AI",
+        "Hướng dẫn bảo mật"
+      ]
+    },
+    "closing": {
+      "title": "Triển khai trong một buổi chiều.",
+      "subtitle": "Bắt đầu miễn phí, dán thẻ, và thiết lập danh tính khi bạn sẵn sàng.",
+      "ctaStart": "Bắt đầu miễn phí",
+      "ctaDocs": "Mở tài liệu"
+    }
+  },
+  "busyOperators": {
+    "rush": {
+      "badgeLabel": "Giờ cao điểm · mô phỏng minh họa",
+      "reset": "Đặt lại",
+      "waitingForPerson": "Chờ một người",
+      "levelCalm": "Bình tĩnh",
+      "levelBusy": "Đang bận rộn",
+      "levelFire": "Hàng đợi bốc cháy",
+      "inboxZero": "Hộp thư đến số 0. Đẹp.",
+      "chatsWaiting": "cuộc trò chuyện đang chờ",
+      "aiToggleLabel": "Elpino AI",
+      "teammatesOnline": "Đồng đội trực tuyến",
+      "resolvedByAi": "Được giải quyết bởi AI",
+      "resolvedByTeam": "Đã được nhóm giải quyết",
+      "disclaimer": "Một mô hình đồ chơi: mỗi tích tắc sẽ có 3 cuộc trò chuyện và AI sẽ lấy một ví dụ để chia sẻ. Kết quả thực sự phụ thuộc vào nền tảng kiến ​​thức và công cụ của bạn.",
+      "online": "trực tuyến",
+      "offline": "ngoại tuyến"
+    },
+    "hero": {
+      "badge": "Dành cho những nhóm bận rộn",
+      "titlePrefix": "Giờ cao điểm, ",
+      "titleHl": "đã xử lý.",
+      "subtitle": "Khi hàng đợi tăng đột biến, AI sẽ xử lý các câu hỏi lặp lại, nhóm của bạn sẽ thực hiện phần còn lại và không ai vấp phải nhau. Lật công tắc bên dưới và cảm nhận sự khác biệt.",
+      "ctaStart": "Bắt đầu miễn phí",
+      "ctaInbox": "Xem hộp thư đến"
+    },
+    "race": {
+      "badge": "Không được trả lời hai lần",
+      "titlePrefix": "Hai người, một cuộc trò chuyện. ",
+      "titleHl": "Chỉ có một người tham gia.",
+      "subtitle": "Mọi người đều nhận được thông báo Tham gia như nhau. Người đầu tiên nhấn sẽ tiếp tục cuộc trò chuyện, cảnh báo sẽ được xóa đối với những người khác và hộp thư đến hiển thị ai có cuộc trò chuyện đó. Một đồng nghiệp vẫn có thể tiếp quản sau này một cách có mục đích.",
+      "askedForPerson": "Aisha Khan yêu cầu một người",
+      "alertSent": "Đã gửi thông báo tới toàn đội",
+      "waiting": "Đang chờ…",
+      "joined": "Đã tham gia",
+      "joinChat": "Tham gia trò chuyện",
+      "priyaHasThis": "Priya có cái này",
+      "priyaJoinedFirst": "Priya tham gia đầu tiên. Huy hiệu hộp thư đến hiện có chữ Priya.",
+      "bothSee": "Cả hai đồng đội đều nhìn thấy cảnh báo…",
+      "customerSaidYes": "Khách hàng đồng ý với một người"
+    },
+    "context": {
+      "eyebrow": "Sự chuyển giao",
+      "titlePrefix": "Không ai lặp lại ",
+      "titleHl": "của chính họ.",
+      "subtitle": "Chuyển đổi để so sánh giao dịch nguội với giao dịch mà Elpino thực hiện.",
+      "toggleCold": "Chuyển giao lạnh lùng",
+      "toggleElpino": "Chuyển giao Elpino",
+      "coldGreeting": "Xin chào, tôi là Priya. Tôi có thể giúp gì?",
+      "coldComplaint": "…Tôi đã giải thích tất cả điều này với bot rồi. Tôi đã chuyển quốc gia và cần thay đổi quốc gia thanh toán của mình. Lại.",
+      "coldNote": "Khách hàng bắt đầu lại và thành viên trong nhóm bắt đầu bị mù.",
+      "whatPersonSees": "Những gì người đó nhìn thấy",
+      "reasonLabel": "Lý do",
+      "reasonValue": "Thay đổi quốc gia thanh toán cần một người",
+      "summaryLabel": "Tóm tắt",
+      "summaryValue": "Đã chuyển quốc gia, muốn cập nhật quốc gia thanh toán. Đã xác minh bằng mã email.",
+      "fullThreadLabel": "Toàn bộ chủ đề",
+      "fullThreadValue": "Mọi tin nhắn cho đến nay, ngay phía trên trình soạn thảo",
+      "visitorLabel": "Khách truy cập",
+      "visitorLocation": "Pune, Ấn Độ",
+      "visitorPage": "Bật /thanh toán",
+      "identityVerified": "Đã xác minh danh tính"
+    },
+    "around": {
+      "eyebrow": "Làm việc suốt ngày đêm",
+      "titlePrefix": "Bao phủ mỗi giờ, ",
+      "titleHl": "không có ca.",
+      "subtitle": "Kéo qua một ngày ví dụ. Giờ làm việc của nhóm ở đây là từ 9 đến 6 giờ; của bạn sẽ là của riêng bạn.",
+      "teamOnline": "Đội trực tuyến",
+      "aiOnWatch": "AI trên đồng hồ",
+      "hourAriaLabel": "Giờ trong ngày",
+      "am": "Sáng",
+      "pm": "CH",
+      "dayItems": [
+        {
+          "t": "AI trả lời trước",
+          "d": "Các câu hỏi lặp lại không bao giờ lọt vào hàng đợi."
+        },
+        {
+          "t": "Nhóm nhận được thông báo Tham gia",
+          "d": "Người chạm đầu tiên sẽ bắt đầu cuộc trò chuyện."
+        },
+        {
+          "t": "Hãy quay lại bất cứ lúc nào",
+          "d": "Cung cấp các thông tin theo dõi đơn giản cho AI."
+        }
+      ],
+      "nightItems": [
+        {
+          "t": "AI trả lời trước",
+          "d": "Những câu hỏi nó có thể trả lời đều được trả lời."
+        },
+        {
+          "t": "Không ai rảnh à? Vé",
+          "d": "Sau 90 giây, một phiếu sẽ được gửi kèm lý do và tóm tắt."
+        },
+        {
+          "t": "Buổi sáng bắt đầu được tổ chức",
+          "d": "Khách hàng đã được gửi email và vé đang chờ bạn."
+        }
+      ]
+    },
+    "toolkit": {
+      "eyebrow": "Bình tĩnh theo thiết kế",
+      "titlePrefix": "Những điều nhỏ nhặt mà ",
+      "titleHl": "giữ cho hàng đợi được lành mạnh.",
+      "items": [
+        {
+          "t": "Huy hiệu sở hữu",
+          "d": "AI, đồng đội hoặc giải quyết, trên mọi chủ đề."
+        },
+        {
+          "t": "Tìm kiếm và lọc",
+          "d": "Tất cả, Chưa đọc, Đã đọc, Đã giải quyết."
+        },
+        {
+          "t": "Gõ trực tiếp",
+          "d": "Xem thời điểm khách hàng viết thư và cho họ thấy bạn."
+        },
+        {
+          "t": "Huy hiệu đã được xác minh",
+          "d": "Biết ai đã chứng tỏ họ là ai."
+        },
+        {
+          "t": "Thông tin chi tiết về khách truy cập",
+          "d": "Vị trí, thiết bị và trang họ đang truy cập."
+        },
+        {
+          "t": "Tiếp quản, trao lại",
+          "d": "Di chuyển cuộc trò chuyện giữa AI và mọi người chỉ bằng một lần nhấn."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Câu hỏi",
+      "titlePrefix": "Tốt quá ",
+      "titleHl": "biết rồi.",
+      "items": [
+        {
+          "q": "Làm cách nào để ngăn hai người trả lời cùng một khách hàng?",
+          "a": "Mọi người đều nhận được thông báo Tham gia giống nhau và người đầu tiên nhấn vào sẽ trò chuyện. Thông báo sẽ được xóa đối với những người khác và hộp thư đến hiển thị ai có thông báo đó."
+        },
+        {
+          "q": "Elpino sẽ thay thế đội của tôi chứ?",
+          "a": "Không. Nó xử lý các câu hỏi lặp lại và người của bạn sẽ thực hiện các cuộc trò chuyện cần phán xét. Bạn cũng có thể chuyển lại bất kỳ cuộc trò chuyện nào cho AI."
+        },
+        {
+          "q": "Nó có thể học được gì từ đó?",
+          "a": "Các trang trên trang web của bạn (bao gồm cả các trang được xây dựng bằng JavaScript), đã tải lên các tệp PDF, Word, văn bản và Markdown cũng như các trang bạn viết. Bạn kiểm soát những gì được công khai."
+        },
+        {
+          "q": "Điều gì xảy ra khi không có ai trực tuyến?",
+          "a": "AI sẽ trả lời những gì nó có thể. Nếu khách hàng yêu cầu một người và không có ai tham gia trong vòng 90 giây, một yêu cầu sẽ được gửi cùng với lý do và bản tóm tắt, sau đó khách hàng sẽ được gửi qua email."
+        },
+        {
+          "q": "Quá trình triển khai mất bao lâu?",
+          "a": "Hầu hết các đội đều phát trực tiếp trong cùng một ngày: bổ sung kiến ​​thức, dán tiện ích và mời đồng đội."
+        }
+      ],
+      "footNote": "Trò chuyện trên trang web đã hoạt động hôm nay. Bán hàng đa kênh sẽ ra mắt vào tháng 11."
+    },
+    "closing": {
+      "title": "Khiến việc xếp hàng trở thành vấn đề của người khác.",
+      "subtitle": "Bắt đầu miễn phí và mời nhóm của bạn khi bạn sẵn sàng.",
+      "ctaStart": "Bắt đầu miễn phí",
+      "ctaTickets": "Xem vé"
     }
   }
 }

@@ -1,6 +1,10 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import { navGroups } from "./nav-data";
+import { navGroups, tGroupLabel, tSectionTitle, tNavItem } from "./nav-data";
+import { useStoredLanguage } from "../hooks/useStoredLanguage";
+import { useTranslation } from "../hooks/useTranslation";
 
 // Built from the same data as the header menus (nav-data.ts), so the footer
 // can't drift from them.
@@ -15,7 +19,7 @@ const columns = [
 ];
 
 // The strip that scrolls across the band above the links.
-const ticker = ["AI answers from your own knowledge", "Human handoff, always free", "100 free AI messages", "One shared inbox", "Live in an afternoon"];
+const tickerEn = ["AI answers from your own knowledge", "Human handoff, always free", "100 free AI messages", "One shared inbox", "Live in an afternoon"];
 
 const wordmark = "elpino".split("");
 
@@ -23,7 +27,26 @@ const wordmark = "elpino".split("");
 const linkClass =
   "inline-block bg-[linear-gradient(#3784ff,#3784ff)] bg-[length:0%_2px] bg-left-bottom bg-no-repeat pb-0.5 text-[15px] leading-6 text-black/70 transition-[background-size,color] duration-300 hover:bg-[length:100%_2px] hover:text-black";
 
+type T = (key: string, defaultValue?: string) => string;
+
+function tList<Item>(t: T, key: string, fallback: Item[]): Item[] {
+  const value: unknown = t(key, undefined as unknown as string);
+  return Array.isArray(value) ? (value as Item[]) : fallback;
+}
+
+// The footer's fourth column is titled "Company" — that's a section title
+// (see nav-data.ts), not one of the three top-level group labels, so try
+// the group map first and fall back to the section map.
+function tColumnTitle(t: T, title: string): string {
+  const viaGroup = tGroupLabel(t, title);
+  return viaGroup !== title ? viaGroup : tSectionTitle(t, title);
+}
+
 export function Footer({ editorial = false }: { editorial?: boolean }) {
+  const language = useStoredLanguage();
+  const { t } = useTranslation(language as any);
+  const ticker = tList<string>(t, "footer.ticker", tickerEn);
+
   return (
     <footer className={`w-full bg-white text-[#11120f] ${editorial ? "font-[family-name:var(--font-rethink-sans)]" : ""}`}>
       {/* Call to action, with the mascot peeking up from the bottom edge */}
@@ -34,14 +57,14 @@ export function Footer({ editorial = false }: { editorial?: boolean }) {
             className="absolute inset-0 -z-10 opacity-25"
             style={{ backgroundImage: "radial-gradient(#fff 1.4px, transparent 1.4px)", backgroundSize: "22px 22px" }}
           />
-          <p className="w-fit rounded-full border-2 border-[#11120f] bg-white px-3 py-1 font-mono text-[12px] font-medium uppercase tracking-[0.12em] text-[#11120f]">Ready when you are</p>
-          <h2 className="mt-5 max-w-2xl text-4xl font-normal leading-[1.05] tracking-[-0.045em] sm:text-6xl">Give every customer a helpful answer.</h2>
-          <p className="mt-4 max-w-lg text-base leading-7 text-white/80">Start free with AI support, a shared inbox, and human handoff. No card needed.</p>
+          <p className="w-fit rounded-full border-2 border-[#11120f] bg-white px-3 py-1 font-mono text-[12px] font-medium uppercase tracking-[0.12em] text-[#11120f]">{t("footer.cta.badge", "Ready when you are")}</p>
+          <h2 className="mt-5 max-w-2xl text-4xl font-normal leading-[1.05] tracking-[-0.045em] sm:text-6xl">{t("footer.cta.title", "Give every customer a helpful answer.")}</h2>
+          <p className="mt-4 max-w-lg text-base leading-7 text-white/80">{t("footer.cta.subtitle", "Start free with AI support, a shared inbox, and human handoff. No card needed.")}</p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link href="/signup" className="group inline-flex h-12 items-center gap-2 rounded-full border-2 border-[#11120f] bg-[#ffd84d] px-7 text-[15px] font-semibold text-[#11120f] transition hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
-              Start free <span aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-1">→</span>
+              {t("footer.cta.ctaStart", "Start free")} <span aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-1">→</span>
             </Link>
-            <Link href="/pricing" className="inline-flex h-12 items-center rounded-full border-2 border-[#11120f] bg-white px-7 text-[15px] font-semibold text-[#11120f] transition hover:-translate-y-0.5">See pricing</Link>
+            <Link href="/pricing" className="inline-flex h-12 items-center rounded-full border-2 border-[#11120f] bg-white px-7 text-[15px] font-semibold text-[#11120f] transition hover:-translate-y-0.5">{t("footer.cta.ctaPricing", "See pricing")}</Link>
           </div>
           {/* peek-a-boo */}
           <div aria-hidden="true" className="pointer-events-none absolute -bottom-1 right-8 hidden h-40 w-40 animate-[elpino-peek_7s_cubic-bezier(0.3,1.3,0.5,1)_infinite] sm:block lg:right-20 lg:h-52 lg:w-52">
@@ -74,12 +97,12 @@ export function Footer({ editorial = false }: { editorial?: boolean }) {
               <div key={column.title}>
                 <h3 className="mb-5 flex items-center gap-2 font-mono text-[12px] font-medium uppercase tracking-[0.12em] text-black/50">
                   <span className="h-2 w-2 rounded-full border-2 border-[#11120f] bg-[#ffd84d]" aria-hidden="true" />
-                  {column.title}
+                  {tColumnTitle(t, column.title)}
                 </h3>
                 <ul className="space-y-3">
                   {column.links.map((link) => (
                     <li key={link.label}>
-                      <Link href={link.href} className={linkClass}>{link.label}</Link>
+                      <Link href={link.href} className={linkClass}>{tNavItem(t, link)}</Link>
                     </li>
                   ))}
                 </ul>
@@ -89,10 +112,10 @@ export function Footer({ editorial = false }: { editorial?: boolean }) {
 
           <div className="sm:col-span-2 lg:col-span-1 lg:pl-6">
             <Link href="/" aria-label="Elpino home" className="inline-flex"><Image src="/elpino.png" alt="Elpino" width={906} height={275} className="h-9 w-auto" /></Link>
-            <p className="mt-6 max-w-xs text-[15px] leading-7 text-black/60">Elpino helps teams answer customers with AI grounded in their own knowledge, then hands conversations to a person when needed.</p>
+            <p className="mt-6 max-w-xs text-[15px] leading-7 text-black/60">{t("footer.description", "Elpino helps teams answer customers with AI grounded in their own knowledge, then hands conversations to a person when needed.")}</p>
             <div className="mt-6 flex flex-wrap gap-2">
-              {[["Blog", "/blog"], ["Contact", "/contact"]].map(([label, href]) => (
-                <Link key={label} href={href} className="rounded-full border-2 border-[#11120f] bg-white px-4 py-1.5 text-sm font-semibold transition hover:-translate-y-0.5 hover:bg-[#ffd84d]">{label} ↗</Link>
+              {[["footer.blog", "Blog", "/blog"], ["footer.contact", "Contact", "/contact"]].map(([key, label, href]) => (
+                <Link key={label} href={href} className="rounded-full border-2 border-[#11120f] bg-white px-4 py-1.5 text-sm font-semibold transition hover:-translate-y-0.5 hover:bg-[#ffd84d]">{t(key, label)} ↗</Link>
               ))}
             </div>
           </div>
@@ -102,11 +125,11 @@ export function Footer({ editorial = false }: { editorial?: boolean }) {
       {/* Legal + wordmark: every letter hops when you touch it */}
       <div className="overflow-hidden bg-[#11120f] text-[#fff8ec]">
         <div className="mx-auto flex max-w-[1500px] flex-col justify-between gap-5 border-b border-white/15 px-5 py-6 text-xs text-white/60 sm:px-8 md:flex-row md:items-center lg:px-16">
-          <span>© {new Date().getFullYear()} Elpino Inc. All rights reserved.</span>
+          <span>{t("footer.copyright", "© {year} Elpino Inc. All rights reserved.").replace("{year}", String(new Date().getFullYear()))}</span>
           <div className="flex flex-wrap gap-x-7 gap-y-3">
-            <Link href="/privacy" className="transition hover:text-white hover:underline">Privacy Policy</Link>
-            <Link href="/terms" className="transition hover:text-white hover:underline">Terms of Service</Link>
-            <Link href="/security-policy" className="transition hover:text-white hover:underline">Security</Link>
+            <Link href="/privacy" className="transition hover:text-white hover:underline">{t("footer.privacy", "Privacy Policy")}</Link>
+            <Link href="/terms" className="transition hover:text-white hover:underline">{t("footer.terms", "Terms of Service")}</Link>
+            <Link href="/security-policy" className="transition hover:text-white hover:underline">{t("footer.security", "Security")}</Link>
           </div>
         </div>
         <p aria-hidden="true" className="select-none px-5 pt-6 text-center text-[clamp(96px,27vw,360px)] font-semibold leading-[0.78] tracking-[-0.06em] sm:px-8">

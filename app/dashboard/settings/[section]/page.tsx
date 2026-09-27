@@ -4,7 +4,7 @@ import { SettingsClient } from "../settings-client";
 
 const SETTINGS_SECTIONS: Record<string, string> = {
   people: "People",
-  teams: "Teams",
+  teams: "Members",
   billing: "Billing",
   availability: "Availability",
   chatbot: "Chatbot Interface",

@@ -4,7 +4,72 @@
     "contactSales": "Contact sales",
     "login": "Log in",
     "goToDashboard": "Go to dashboard",
-    "getStarted": "Get started"
+    "getStarted": "Get started",
+    "startFreeTrial": "Start free trial",
+    "groups": {
+      "product": "Product",
+      "solutions": "Solutions",
+      "resources": "Resources"
+    },
+    "sections": {
+      "getStarted": "Get started",
+      "capabilities": "Capabilities",
+      "platform": "Platform",
+      "whoItIsFor": "Who it is for",
+      "learningGuides": "Learning & Guides",
+      "trustLegal": "Trust & Legal",
+      "community": "Community",
+      "company": "Company"
+    },
+    "items": {
+      "Elpino helpdesk": "Elpino helpdesk",
+      "Elpino AI Agent": "Elpino AI Agent",
+      "Inbox": "Inbox",
+      "Tickets": "Tickets",
+      "Knowledge Hub": "Knowledge Hub",
+      "Integrations": "Integrations",
+      "Safety & security": "Safety & security",
+      "All features": "All features",
+      "For Founders": "For Founders",
+      "For Busy Teams": "For Busy Teams",
+      "For Developers": "For Developers",
+      "See Pricing": "See Pricing",
+      "Talk to Us": "Talk to Us",
+      "Documentation": "Documentation",
+      "Help & FAQ": "Help & FAQ",
+      "Trust Center": "Trust Center",
+      "Privacy Policy": "Privacy Policy",
+      "Terms of Service": "Terms of Service",
+      "Blog": "Blog",
+      "Changelog": "Changelog",
+      "Brand Kit": "Brand Kit",
+      "About Us": "About Us",
+      "Careers": "Careers",
+      "Contact Sales": "Contact Sales"
+    },
+    "megaMenu": {
+      "explore": "Explore",
+      "seePricing": "See pricing",
+      "seePricingNote": "Start free. Pay as your team grows.",
+      "freshFromBlog": "Fresh from the blog"
+    },
+    "featured": {
+      "product": {
+        "title": "AI first. A human the moment it matters.",
+        "text": "Elpino answers from your own knowledge, then hands the chat to a teammate with the full story.",
+        "cta": "Meet the AI agent"
+      },
+      "solutions": {
+        "title": "Made for how you work",
+        "text": "Founders, shops and busy teams each get a setup that fits, live in an afternoon.",
+        "cta": "Find your fit"
+      },
+      "resources": {
+        "title": "Live in three steps",
+        "text": "Paste one line, teach it your docs, switch it on. The guides walk you through each.",
+        "cta": "Open the docs"
+      }
+    }
   },
   "contact": {
     "eyebrow": "Contact us",
@@ -54,7 +119,95 @@
       "privacy": "Privacy Policy",
       "successTitle": "Message sent",
       "successBody": "Thanks for reaching out. We'll get back to you shortly.",
-      "sendAnother": "Send another message"
+      "sendAnother": "Send another message",
+      "sentStamp": "Sent ✓",
+      "postmarkLabel": "mail",
+      "securityNote": "Sent securely — never used for training"
+    },
+    "hero": {
+      "eyebrow": "Contact · the mailroom",
+      "greeting": "Hello.",
+      "titlePrefix": "How can",
+      "titleHl": "we help?",
+      "searchLabel": "Search help topics",
+      "searchPlaceholder": "Search sales, support, billing, and more",
+      "searchButtonLabel": "Search",
+      "noMatch": "No exact match. Press Enter to send us your question.",
+      "linkGettingStarted": "Getting started",
+      "linkFeaturedGuides": "Featured guides",
+      "linkPlansBilling": "Plans & billing",
+      "linkSendMessage": "Or send us a message ↓"
+    },
+    "desks": {
+      "eyebrow": "Choose a route",
+      "titlePrefix": "Reach the ",
+      "titleHl": "right desk.",
+      "subtitle": "Pick the channel that best matches what you need. Every route leads to a real member of our team.",
+      "deskLabel": "Desk {n}",
+      "addressed": "Postcard addressed ✓",
+      "actionAddress": "Address a postcard",
+      "emailNote": "Prefer your own mail app? Every desk with an address also works by {link}.",
+      "emailNoteLink": "email"
+    },
+    "postcard": {
+      "eyebrow": "Send us a note",
+      "titlePrefix": "A real human ",
+      "titleHl": "will read this.",
+      "addressedTo": "Addressed to"
+    },
+    "tracking": {
+      "eyebrow": "Track your postcard",
+      "titlePrefix": "What happens ",
+      "titleHl": "after you hit send.",
+      "onlineStatus": "Our team is online",
+      "hours": "Mon–Fri, 9:00–18:00 CET",
+      "steps": [
+        {
+          "title": "Sent",
+          "body": "Your postcard leaves your hands. Nothing else to do."
+        },
+        {
+          "title": "We read every word",
+          "body": "Your note lands with a human on the team — no ticket maze, no bots."
+        },
+        {
+          "title": "A reply within one business day",
+          "body": "Real answers from someone who works on the product."
+        },
+        {
+          "title": "A call, if it's useful",
+          "body": "For sales and enterprise, we'll walk through Elpino on your actual workflow."
+        }
+      ]
+    },
+    "library": {
+      "titlePrefix": "Prefer to find it ",
+      "titleHl": "yourself?",
+      "subtitle": "Most questions are already answered here — and everything below links straight to the source.",
+      "cardLabel": "Card {n}",
+      "items": [
+        {
+          "title": "Quick answers",
+          "body": "Setup, billing, escalation, and security — answered in the FAQ.",
+          "cta": "Browse the FAQ"
+        },
+        {
+          "title": "Documentation",
+          "body": "Install guides, connector setup, and workspace configuration.",
+          "cta": "Open the docs"
+        },
+        {
+          "title": "Security & privacy",
+          "body": "How your data is encrypted, stored, and never used for training.",
+          "cta": "Read the policies"
+        }
+      ]
+    },
+    "search": {
+      "plansTitle": "Plans and billing",
+      "plansDetail": "Questions about subscriptions, invoices, or pricing",
+      "accountTitle": "Account and security",
+      "accountDetail": "Help with access, privacy, or account settings"
     }
   },
   "auth": {
@@ -114,6 +267,4058 @@
         "lowercase": "Lowercase letter",
         "number": "Number"
       }
+    }
+  },
+  "home": {
+    "hero": {
+      "badge": "AI customer support",
+      "titlePrefix": "Support that",
+      "words": [
+        "answers.",
+        "resolves.",
+        "remembers.",
+        "hands off."
+      ],
+      "subtitle": "An AI that answers from your own knowledge, checks real payments and orders, and hands over to your team with the full story when a person is needed.",
+      "ctaPrimary": "Start free",
+      "ctaSecondary": "Try it yourself",
+      "trust": [
+        "100 free AI messages a month",
+        "No card required",
+        "Live in an afternoon"
+      ],
+      "stickers": [
+        "Resolved by AI",
+        "Human on standby",
+        "Private by default",
+        "Nothing dropped"
+      ],
+      "callouts": [
+        "AI badge on every thread",
+        "Join to take over",
+        "Visitor location & device"
+      ],
+      "widget": {
+        "name": "Elpino",
+        "subtitle": "Answers in seconds",
+        "convo": [
+          "Was I charged twice for my upgrade?",
+          "Checked your payment record",
+          "You were charged once. The second attempt failed and was never captured."
+        ]
+      }
+    },
+    "marquee": {
+      "questions": [
+        "Where's my invoice?",
+        "How do I reset my password?",
+        "Was I charged twice?",
+        "Can I get a refund?",
+        "Where is my order?",
+        "How do I add a teammate?",
+        "Is my data safe?",
+        "Why did my payment fail?",
+        "Can I speak to someone?"
+      ]
+    },
+    "tryit": {
+      "eyebrow": "Try it",
+      "titlePrefix": "Ask it something.",
+      "titleHl": "See what it does.",
+      "subtitle": "Pick a customer question. On the left is the chat, on the right is everything Elpino did before it replied.",
+      "widgetName": "Elpino",
+      "widgetSubtitle": "AI support",
+      "whatItDid": "What Elpino did",
+      "done": "Done",
+      "working": "Working…",
+      "stepStart": "start",
+      "stepOther": "step",
+      "person": "person",
+      "resolved": "resolved",
+      "humanNote": "Asked first · a teammate can join, or a ticket is filed",
+      "resolvedNote": "Answered and resolved, no human needed",
+      "sampleNote": "Sample answers. The steps shown are the kinds of tools Elpino really uses.",
+      "qas": [
+        {
+          "q": "Was I charged twice?",
+          "steps": [
+            "Verified you by email code",
+            "Checked your payment record"
+          ],
+          "a": "You were charged once. The second attempt failed and was never captured."
+        },
+        {
+          "q": "Where is my order?",
+          "steps": [
+            "Verified you by email code",
+            "Called your shop over MCP"
+          ],
+          "a": "It shipped yesterday and arrives Thursday. I've emailed the tracking link."
+        },
+        {
+          "q": "How do I reset my password?",
+          "steps": [
+            "Searched your knowledge base"
+          ],
+          "a": "Choose “Forgot password” on the sign-in page and follow the link we email you."
+        },
+        {
+          "q": "Can I get a refund?",
+          "steps": [
+            "Checked the payment",
+            "Refunds are switched off for this workspace"
+          ],
+          "a": "I can't refund that myself. Would you like me to connect you with our team?"
+        },
+        {
+          "q": "Can I speak to someone?",
+          "steps": [
+            "Asked you before handing off",
+            "Alerted every teammate at once"
+          ],
+          "a": "Priya from our team has joined and has the whole conversation."
+        },
+        {
+          "q": "Do you sell gift cards?",
+          "steps": [
+            "Searched your knowledge base",
+            "No match found"
+          ],
+          "a": "I don't have that information. Would you like me to connect you with our team?"
+        }
+      ]
+    },
+    "customizer": {
+      "eyebrow": "Make it yours",
+      "titlePrefix": "A widget that",
+      "titleHl": "looks and speaks like you.",
+      "subtitle": "Add your logo, name your AI, pick a colour and theme, and choose the language it replies in. Play with the controls and watch the widget change.",
+      "yourLogo": "Your logo",
+      "upload": "Upload a logo",
+      "remove": "Remove",
+      "fileTooBig": "Use an image under 2 MB.",
+      "fileShown": "Shown here only. It's not uploaded anywhere.",
+      "aiName": "AI name",
+      "greeting": "Greeting",
+      "accentColour": "Accent colour",
+      "theme": "Theme",
+      "light": "Light",
+      "dark": "Dark",
+      "customerWritesIn": "Customer writes in",
+      "theAi": "The AI",
+      "repliesIn": "replies in",
+      "autoMatch": "Auto: match the customer",
+      "seesUrl": "AI can see the page URL",
+      "visitorOn": "Visitor is on",
+      "replyingIn": "Replying in",
+      "matched": "(matched)",
+      "writeMessage": "Write a message…",
+      "previewNote": "Preview with sample text. Your real widget uses your own logo, colours and greeting.",
+      "support": "Support",
+      "weReplyFast": "We reply in seconds"
+    },
+    "tour": {
+      "eyebrow": "The product",
+      "titlePrefix": "Everything a support desk needs,",
+      "titleHl": "in one place.",
+      "items": [
+        {
+          "tag": "AI agent",
+          "title": "An agent that knows who it's talking to",
+          "desc": "Remembers customers, verifies identity, checks payments and calls your tools."
+        },
+        {
+          "tag": "Shared inbox",
+          "title": "One inbox for your team and the AI",
+          "desc": "Clear ownership, Join alerts and the full context on every thread."
+        },
+        {
+          "tag": "Knowledge Hub",
+          "title": "Teach it from anything you have",
+          "desc": "Crawl your site, upload files, write pages. Public and private switches."
+        },
+        {
+          "tag": "Tickets",
+          "title": "Nothing gets dropped",
+          "desc": "If nobody's free, a ticket is filed and the customer is told."
+        }
+      ]
+    },
+    "who": {
+      "eyebrow": "Who it's for",
+      "titlePrefix": "Built for the people",
+      "titleHl": "doing the support.",
+      "items": [
+        {
+          "title": "Founders",
+          "desc": "Ship product, not support replies. Elpino only taps you when it truly needs a founder.",
+          "pts": [
+            "Free plan, 100 AI messages a month",
+            "Alerts you only when a person is needed",
+            "Set up in an afternoon"
+          ]
+        },
+        {
+          "title": "Busy teams",
+          "desc": "Rush hour handled: the AI takes repeats, everyone gets the same Join alert, nobody double-replies.",
+          "pts": [
+            "One Join alert reaches the whole team",
+            "Ownership badges on every thread",
+            "A ticket when nobody's free"
+          ]
+        },
+        {
+          "title": "Developers",
+          "desc": "One tag, a signed identity token and MCP servers. You choose what the AI can touch.",
+          "pts": [
+            "One script tag for the widget",
+            "Signed, short-lived identity tokens",
+            "MCP servers, approved tool by tool"
+          ]
+        }
+      ],
+      "founderVisual": [
+        {
+          "q": "How do I export data?",
+          "ok": true
+        },
+        {
+          "q": "Why did my card fail?",
+          "ok": true
+        },
+        {
+          "q": "Custom contract?",
+          "ok": false
+        }
+      ],
+      "handled": "Handled",
+      "needsYou": "Needs you",
+      "joined": "Priya joined"
+    },
+    "statement": "Elpino answers what it knows, does what you allow, and asks a person for the rest.",
+    "integrations": {
+      "eyebrow": "Integrations",
+      "titlePrefix": "Plugs into what",
+      "titleHl": "you already use.",
+      "subtitle": "Payments for lookups and links, project tools for tickets, and MCP for your own systems. Elpino sits in the middle, and everything you connect works with it.",
+      "tags": [
+        "Payments",
+        "Tickets",
+        "Your systems"
+      ],
+      "cta": "See all integrations"
+    },
+    "trust": {
+      "eyebrow": "Trust",
+      "titlePrefix": "Powerful, with",
+      "titleHl": "the brakes on.",
+      "subtitle": "This is the rulebook Elpino works under. Most of it is always on. The parts that move money are yours to switch on.",
+      "cta": "Read the security guide",
+      "rulebook": "Elpino's rulebook",
+      "setByYou": "Set by you",
+      "guardrailsOn": "Guardrails on",
+      "alwaysOn": "Always on",
+      "rules": [
+        {
+          "title": "Answer only from approved knowledge",
+          "desc": "If it isn't in your knowledge, it says so and offers a person."
+        },
+        {
+          "title": "Hide names and emails from the AI",
+          "desc": "The model sees reference codes, not your customers' identities."
+        },
+        {
+          "title": "Verify before anything personal",
+          "desc": "An email code or a signed token comes first."
+        },
+        {
+          "title": "Only tools you switched on",
+          "desc": "Every MCP tool is approved by you, one at a time."
+        }
+      ],
+      "refundTitle": "Let the AI issue refunds",
+      "refundOn": "On. The AI may refund, using the workspace owner's setting.",
+      "refundOff": "Off by default. Only the workspace owner can turn it on."
+    },
+    "pricing": {
+      "eyebrow": "Pricing",
+      "titlePrefix": "Pay for the help,",
+      "titleHl": "not the headcount.",
+      "subtitle": "Start free. Paid plans are metered by the work the AI does.",
+      "cta": "See full pricing",
+      "plans": [
+        {
+          "name": "Free",
+          "big": "$0",
+          "note": "100 AI messages a month",
+          "pts": [
+            "No card required",
+            "Widget, knowledge and inbox",
+            "Handoffs never cost extra"
+          ]
+        },
+        {
+          "name": "Paid plans",
+          "big": "Credit-based",
+          "note": "A monthly AI credit that fits your volume",
+          "pts": [
+            "Payment and account tools",
+            "Room for a bigger team",
+            "Top up any time"
+          ]
+        },
+        {
+          "name": "Extra teammates",
+          "big": "Seat packs",
+          "note": "Add seats that renew with your plan",
+          "pts": [
+            "Only when you grow",
+            "Same inbox, more hands",
+            "Cancel any time"
+          ]
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Questions",
+      "titlePrefix": "Things people",
+      "titleHl": "ask first.",
+      "items": [
+        {
+          "q": "What is Elpino?",
+          "a": "An AI customer support platform: a website chat widget, an AI agent that answers from your knowledge and checks real payments, a shared team inbox, and tickets when nobody's free."
+        },
+        {
+          "q": "Will the AI make things up?",
+          "a": "It answers from the knowledge you've approved, and a review pass checks drafts against tool results. When it doesn't know, it says so and offers a person."
+        },
+        {
+          "q": "What happens when it can't help?",
+          "a": "It asks the customer first. On a yes, every teammate gets a Join alert and has 90 seconds to jump in. If nobody does, a ticket is filed and the customer is emailed."
+        },
+        {
+          "q": "How long does setup take?",
+          "a": "Most teams are live the same day: add your knowledge, paste the widget snippet and invite your team."
+        },
+        {
+          "q": "Is there a free plan?",
+          "a": "Yes: 100 AI messages a month, no card required."
+        },
+        {
+          "q": "Does it work on other channels?",
+          "a": "Website chat is live today. Omnichannel is coming in November."
+        }
+      ]
+    },
+    "closing": {
+      "title": "Give your customers the answer before they finish typing.",
+      "subtitle": "Start free, teach it your business, and let it take the repeat questions.",
+      "ctaPrimary": "Start free",
+      "ctaSecondary": "Talk to us"
+    }
+  },
+  "pricing": {
+    "hero": {
+      "badge": "Pricing",
+      "title": "Start free. Grow when you're ready.",
+      "subtitle": "Every new account starts with AI support, a shared inbox, and human handoff—no card required. Explore Elpino with your team, then choose a plan when you need more.",
+      "stickerFree": "Free forever ✓",
+      "stickerNoCard": "No card needed",
+      "ctaDashboard": "Go to dashboard",
+      "ctaStart": "Start for free",
+      "billingPeriodLabel": "Billing period",
+      "monthly": "Monthly",
+      "annually": "Annually"
+    },
+    "planCards": {
+      "mostPopular": "Most popular",
+      "save": "save",
+      "freeForever": "Free forever",
+      "discussCustomPlan": "or discuss a custom plan",
+      "compareAllFeatures": "Compare all features",
+      "whatsIncluded": "What's included",
+      "builtForTeam": "Built for your whole team",
+      "builtForTeamDesc": "Shared knowledge, one inbox, and human handoff whenever it is needed."
+    },
+    "comparison": {
+      "eyebrow": "Plan comparison",
+      "titlePrefix": "See what ",
+      "titleHl": "fits your team.",
+      "subtitle": "Compare capacity, seats, and product access across every plan. Upgrade whenever your support operation needs more room.",
+      "featuresHeader": "Features",
+      "popular": "Popular",
+      "billedAnnually": "billed annually",
+      "billedMonthly": "billed monthly",
+      "showAll": "Show all features",
+      "showFewer": "Show fewer features",
+      "included": "Included",
+      "notIncluded": "Not included",
+      "categories": {
+        "aiRules": {
+          "name": "What the AI is allowed to do",
+          "rows": {
+            "allowance": {
+              "label": "Monthly AI allowance",
+              "description": "Free is capped at 100 AI messages. Paid plans include a monthly dollar credit that the AI spends as it works, shared by the whole workspace."
+            },
+            "whenOut": {
+              "label": "When the allowance runs out",
+              "description": "The AI hands new conversations to your team. On paid plans you can top up credit at any time, or turn on auto-recharge."
+            },
+            "escalations": {
+              "label": "Escalations to a human",
+              "description": "Threads the AI hands over because it could not answer confidently. The handoff itself never costs extra."
+            }
+          }
+        },
+        "seats": {
+          "name": "Who can log in",
+          "rows": {
+            "included": {
+              "label": "Seats included",
+              "description": "Teammates covered by the plan price, workspace owner included."
+            },
+            "extra": {
+              "label": "Extra seats",
+              "description": "Every teammate past the included seats, on any plan."
+            },
+            "ceiling": {
+              "label": "Seat ceiling",
+              "description": "The point where you need a bigger plan rather than another seat."
+            }
+          }
+        },
+        "product": {
+          "name": "The product",
+          "rows": {
+            "widget": {
+              "label": "Website chat widget",
+              "description": "The embeddable chat your visitors actually talk to."
+            },
+            "knowledge": {
+              "label": "Knowledge base & AI answers",
+              "description": "Crawl your site or upload docs; the AI answers from them."
+            },
+            "storage": {
+              "label": "Knowledge storage",
+              "description": "How much crawled and uploaded content the workspace can hold."
+            },
+            "inbox": {
+              "label": "Shared inbox & handoff",
+              "description": "One inbox for the team, with the AI handing over when it should."
+            },
+            "audit": {
+              "label": "AI audit trail",
+              "description": "Every answer, with the articles and lookups it was built from."
+            },
+            "analytics": {
+              "label": "Visitor analytics",
+              "description": "Live visitors, sources, countries, and pages."
+            },
+            "profiles": {
+              "label": "Customer profiles & history",
+              "description": "Stored customer records and their past conversations."
+            },
+            "domain": {
+              "label": "Connected domain",
+              "description": "One workspace, one website — need a second, start a second workspace."
+            },
+            "support": {
+              "label": "Support",
+              "description": "How to reach us when something needs a human on our side."
+            }
+          }
+        }
+      }
+    },
+    "values": {
+      "handsOff": "Hands off to a human",
+      "topUpOrHandoff": "Top up or hand off",
+      "noExtraCharge": "No extra charge",
+      "noLimit": "No limit",
+      "standard": "Standard",
+      "priority": "Priority",
+      "messages": "messages",
+      "credit": "credit",
+      "seatBundleSummary": "3 seats for $2, 5 for $3"
+    },
+    "billing": {
+      "eyebrow": "Clear, simple billing",
+      "titleLine1": "Pay for what the AI does.",
+      "titleLine2": "Not for handoffs.",
+      "subtitle": "Free includes 100 AI messages a month. Paid plans include a monthly AI credit that covers as many conversations as it can, so a quick question costs less than a long back-and-forth. Handing a conversation to your team is always free.",
+      "creditCard": {
+        "label": "Monthly AI credit",
+        "amount": "From $7",
+        "note": "every month on Starter",
+        "chatsUseCredit": "chats use credit",
+        "refillsMonthly": "refills monthly",
+        "desc": "Starter includes $7, Growth $40 and Scale $240 of AI credit each month. Need more? Top up any time or turn on auto-recharge.",
+        "cta": "Compare plans"
+      },
+      "handoffCard": {
+        "stamp": "Handoff = free",
+        "label": "Extra charge per handoff",
+        "note": "On every plan. Always."
+      },
+      "inboxCard": {
+        "title": "Your AI and your team, in one inbox.",
+        "desc": "AI answers from your knowledge. When a person is needed, your team continues with the full conversation already in view.",
+        "cta": "Explore how it works"
+      }
+    },
+    "capacity": {
+      "eyebrow": "Add capacity",
+      "title": "Grow without changing how you work.",
+      "subtitle": "Add people or AI capacity only when you need it. Your inbox, knowledge, and conversation history stay exactly where they are.",
+      "teammatesTitle": "Additional teammates",
+      "teammatesDesc": "Give more people their own login while sharing the same inbox, knowledge, and AI credit. They stay on your plan every month until you remove them.",
+      "perMonth": "per month",
+      "seatsWord": "seats",
+      "topUpAnytime": "Top up any time",
+      "onAnyPaidPlan": "on any paid plan",
+      "creditTitle": "Additional AI credit",
+      "creditDesc": "Keep the AI answering after your monthly credit is used. Handing a conversation to your team never costs extra.",
+      "creditCards": [
+        {
+          "name": "Monthly credit",
+          "note": "Resets each month"
+        },
+        {
+          "name": "Top-ups",
+          "note": "Never expire"
+        },
+        {
+          "name": "Auto-recharge",
+          "note": "Optional"
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Pricing questions",
+      "subtitle": "The billing details people ask about most. Setup, the AI, integrations and security are covered on the full FAQ.",
+      "readFull": "Read the full FAQ",
+      "items": [
+        {
+          "q": "What do the plans cost?",
+          "a": "Free is $0. Monthly plans are Starter at $12 with $7 of AI credit each month, Growth at $59 with $40, and Scale at $299 with $240. Annual billing is two months free — you pay for ten months and get twelve: Starter is $120 a year ($10/month), Growth is $590 ($49.17/month), and Scale is $2,990 ($249.17/month)."
+        },
+        {
+          "q": "How does the AI allowance work?",
+          "a": "Free includes 100 AI messages a month. Each reply the AI sends counts as one message, so a short chat uses a few and a long back-and-forth uses more. Paid plans work differently: they include a monthly AI credit that the AI spends as it works, so a quick question uses less than a long back-and-forth. Starter includes $7 of credit a month, Growth $40 and Scale $240."
+        },
+        {
+          "q": "Do escalations cost anything?",
+          "a": "No extra charge. The handoff itself is free on every plan, and the AI stops the moment a person takes over. On Free, messages the AI already sent before the handoff still count toward your 100; on paid plans, the AI only spends credit while it is answering, and the AI stops spending credit the moment a person takes over."
+        },
+        {
+          "q": "Can the AI issue refunds?",
+          "a": "Only if the workspace owner turns refunds on. They're off by default. Even with refunds off, the AI can look up the payment and offer to connect the customer with your team."
+        },
+        {
+          "q": "What happens when I use up my AI allowance?",
+          "a": "The AI hands new conversations straight to your team instead of answering. On a paid plan you can top up credit at any time, or turn on automatic recharge so it never stops. Top-ups never expire. Your monthly credit resets each billing period."
+        },
+        {
+          "q": "How much does an extra teammate cost?",
+          "a": "Extra seats come in packs on every plan including Free: 3 seats for $2 a month, or 5 for $3. Seats and AI credit are billed completely separately — adding a teammate never touches your AI allowance."
+        },
+        {
+          "q": "Can I cancel anytime?",
+          "a": "Yes, from Settings → Billing, no lock-in. Cancellation takes effect at the end of the current billing period, so you keep what you paid for until then."
+        },
+        {
+          "q": "What happens if I stop paying?",
+          "a": "The workspace drops to the Free plan at the end of the period. Your knowledge base, conversation history, and settings all stay intact."
+        }
+      ]
+    },
+    "enterprise": {
+      "badge": "Enterprise",
+      "title": "Support that grows with you.",
+      "subtitle": "For organizations supporting more customers across multiple websites and teams. Let's find the right capacity for your support.",
+      "features": [
+        "AI credit well beyond the Scale plan",
+        "Multiple websites and growing teams",
+        "Shared customer context and knowledge",
+        "Volume pricing built around your needs"
+      ],
+      "talkTitle": "Let's talk",
+      "customPricing": "Custom pricing available",
+      "contactCta": "Contact sales",
+      "talkPoints": [
+        "Discuss your conversation volume",
+        "Plan your workspace and seats",
+        "Scope knowledge across websites",
+        "Explore onboarding and SLA needs"
+      ]
+    },
+    "plans": {
+      "free": {
+        "name": "Free",
+        "description": "For a founder answering their own support. Real AI, no card.",
+        "cta": "Get started",
+        "features": [
+          "Up to 100 AI messages/month",
+          "2 seats included",
+          "Seat packs from $0.60/seat",
+          "20 MB knowledge base",
+          "Website chat widget",
+          "Shared inbox with handoff"
+        ]
+      },
+      "starter": {
+        "name": "Starter",
+        "description": "For a small team whose support has outgrown one inbox.",
+        "cta": "Get started",
+        "features": [
+          "$7 AI credit every month",
+          "5 seats included",
+          "Seat packs from $0.60/seat",
+          "200 MB knowledge base",
+          "Top up credit any time",
+          "Visitor analytics"
+        ]
+      },
+      "growth": {
+        "name": "Growth",
+        "description": "For teams running support as a real function, with the data to prove it.",
+        "cta": "Get started",
+        "features": [
+          "$40 AI credit every month",
+          "15 seats included",
+          "Seat packs from $0.60/seat",
+          "1 GB knowledge base",
+          "Top up credit any time",
+          "Full AI audit trail",
+          "Priority support"
+        ]
+      },
+      "scale": {
+        "name": "Scale",
+        "description": "For high-volume support where the AI carries most of the load.",
+        "cta": "Get started",
+        "features": [
+          "$240 AI credit every month",
+          "40 seats included",
+          "Seat packs from $0.60/seat",
+          "5 GB knowledge base",
+          "Top up credit any time",
+          "Integrations & API access"
+        ]
+      }
+    }
+  },
+  "about": {
+    "typingLabel": "Elpino is typing",
+    "hero": {
+      "badge": "About Elpino",
+      "titlePrefix": "Customer support, ",
+      "titleHl": "made more human.",
+      "subtitle": "Elpino gives customers useful answers from the knowledge you already have, then keeps your team close for the moments that need a person.",
+      "ctaMeet": "Meet Elpino",
+      "ctaReadStory": "Read our story ↓",
+      "imageAlt": "Four Elpino sloths working together to support customers",
+      "bubble": "Hi, how can we help? 👋"
+    },
+    "story": {
+      "eyebrow": "Where it began",
+      "titlePrefix": "Our story starts with a ",
+      "titleHl": "question.",
+      "subtitle": "What if customer support software helped both sides of the conversation—not just the company managing it?",
+      "chatTitle": "Elpino",
+      "chatSub": "Telling our story",
+      "sys1": "Where it began",
+      "you1": "What if customer support software helped both sides of the conversation, not just the company managing it?",
+      "elpino1": "Nobody opens a support chat for fun.",
+      "elpino2": "Someone is trying to get something done. Something got in the way. They want a clear answer and to get back to their day.",
+      "elpino3": "On the other side is a team handling familiar questions, scattered information, and more conversations than time. Elpino exists to make that moment easier for everyone.",
+      "sys2": "Here's what that looks like",
+      "you2": "Can I change the email address on my account?",
+      "aiLabel": "Elpino AI · from your knowledge",
+      "aiAnswer": "Yes. Open Settings, choose Profile, then update your contact email.",
+      "aiGuideLabel": "Account settings guide",
+      "sys3": "A teammate is always close when needed"
+    },
+    "roles": {
+      "eyebrow": "Our roles",
+      "titlePrefix": "A crew built for ",
+      "titleHl": "the work.",
+      "subtitle": "There are no employee headshots here. Instead, meet the jobs Elpino is designed to do—steadily, thoughtfully, and with a human team always in the loop.",
+      "joinedChat": "{name} joined the chat",
+      "items": [
+        {
+          "title": "The Listener",
+          "task": "Understands every customer question",
+          "description": "Turns the knowledge your team already has into a clear, useful first answer."
+        },
+        {
+          "title": "The Sorter",
+          "task": "Keeps the inbox moving",
+          "description": "Finds the signal in the queue, so the right conversations get the right attention."
+        },
+        {
+          "title": "The Protector",
+          "task": "Knows when to bring in a person",
+          "description": "Handles routine work with care and hands over the moments that need human judgment."
+        },
+        {
+          "title": "The Grower",
+          "task": "Learns what helps customers most",
+          "description": "Surfaces the gaps, patterns, and questions that make your support better over time."
+        }
+      ]
+    },
+    "remote": {
+      "eyebrow": "Built remote",
+      "titlePrefix": "We've been working remotely since ",
+      "titleHl": "day one.",
+      "subtitle": "We work through clear writing, shared context, and focused time. Where someone works matters less than the care and judgment they bring to the product.",
+      "cta": "See open roles",
+      "badge": "Remote since day one",
+      "imageAlt": "A distributed team collaborating with shared AI support tools"
+    },
+    "team": {
+      "eyebrow": "A small team, for now",
+      "titleLine1": "Built with focus.",
+      "titleLine2Prefix": "Shaped with ",
+      "titleHl": "you.",
+      "subtitle": "Elpino is early. That means the people using it can still influence what it becomes. We listen closely, ship carefully, and keep the customer's problem at the center.",
+      "cta": "Talk to us",
+      "card1": "Listen closely.",
+      "card2": "Build clearly.",
+      "card3": "Make support easier for everyone."
+    },
+    "faqSection": {
+      "eyebrow": "A little more about us",
+      "titlePrefix": "Glad you ",
+      "titleHl": "asked.",
+      "subtitle": "A few answers before you start a conversation of your own. Tap a question below and Elpino will reply.",
+      "exploreLink": "Explore the full FAQ →"
+    },
+    "faqChat": {
+      "title": "Ask Elpino",
+      "sub": "Online · replies instantly",
+      "gladYouAsked": "Glad you asked",
+      "tapQuestion": "Tap a question",
+      "doneText": "That's everything for now. Want to keep going?",
+      "exploreFull": "Explore the full FAQ"
+    },
+    "faqs": [
+      [
+        "What is Elpino?",
+        "Elpino is an AI customer support platform with a website chat widget, answers from your knowledge base, a shared team inbox, and human handoff when the AI cannot help."
+      ],
+      [
+        "Does Elpino replace my support team?",
+        "Elpino handles everyday questions from your knowledge and brings your team in when a conversation needs a person. Your team stays part of the support experience."
+      ],
+      [
+        "How can I get started?",
+        "Start with the free plan, which includes 100 AI messages each month with no card required. Add your knowledge, connect your website, and bring in your teammates."
+      ],
+      [
+        "How is pricing structured?",
+        "Free includes 100 AI messages a month, and paid plans include a monthly AI credit. Extra teammates come in seat packs from $0.60 a seat, and handing a conversation to a human never costs extra. The pricing page explains included seats and the free-plan minimum charge."
+      ]
+    ],
+    "closing": {
+      "titleLine1": "There's more to build.",
+      "titleLine2": "Come shape what's next.",
+      "ctaTry": "Try Elpino",
+      "ctaCareers": "See open roles"
+    }
+  },
+  "helpdesk": {
+    "hero": {
+      "badge": "Elpino helpdesk",
+      "titlePrefix": "Support that ",
+      "titleHl": "answers itself.",
+      "subtitle": "One desk for an AI that resolves, a team that joins when it matters, and tickets that never slip. Watch it take a question.",
+      "ctaStart": "Start free",
+      "ctaFeatures": "See all features"
+    },
+    "prompt": {
+      "customerLabel": "Customer",
+      "listening": "Elpino is listening…",
+      "asks": [
+        {
+          "q": "Was I charged twice for my upgrade?",
+          "steps": [
+            "Checked your payment record",
+            "Found one charge and one failed attempt"
+          ],
+          "a": "You were charged once. The second attempt failed and was never captured."
+        },
+        {
+          "q": "Where is my order #4821?",
+          "steps": [
+            "Verified you by email code",
+            "Looked up the order in your shop"
+          ],
+          "a": "It shipped yesterday and arrives Thursday. Tracking link sent."
+        },
+        {
+          "q": "Can I speak to someone about billing?",
+          "steps": [
+            "No tool can change billing details",
+            "Asked you first, then alerted the team"
+          ],
+          "a": "Priya from our team just joined this chat."
+        }
+      ]
+    },
+    "marquee": {
+      "ariaLabel": "What's on the desk",
+      "words": [
+        "AI agent",
+        "Shared inbox",
+        "Tickets",
+        "Knowledge",
+        "Payments",
+        "MCP tools",
+        "Join alerts",
+        "Verified identity",
+        "Omnichannel · November"
+      ]
+    },
+    "story": {
+      "eyebrow": "One conversation",
+      "titlePrefix": "Watch a question ",
+      "titleHl": "travel the desk.",
+      "stepLabel": "Step {n} / 05",
+      "chapters": [
+        {
+          "title": "A customer writes in",
+          "body": "From the chat widget on your site, with their location, device and the page they're on already attached."
+        },
+        {
+          "title": "The AI does the work",
+          "body": "It answers from your knowledge, remembers the customer, verifies who they are, and uses your payments and MCP tools to actually fix things."
+        },
+        {
+          "title": "Your team joins in a tap",
+          "body": "Only when it can't help, and only after asking the customer. Everyone gets a Join alert, and the first person to tap takes the chat."
+        },
+        {
+          "title": "Nothing gets dropped",
+          "body": "If nobody's free within 90 seconds, a ticket is filed with the reason and a summary, and the customer gets a reference by email."
+        },
+        {
+          "title": "You teach it once",
+          "body": "Add what was missing to your knowledge base. Next time, the AI simply knows."
+        }
+      ],
+      "visuals": {
+        "ask": {
+          "bubble": "Hi, I can't find my invoice for last month.",
+          "chips": [
+            "Pune, India",
+            "Chrome · macOS",
+            "On /billing"
+          ]
+        },
+        "ai": {
+          "rows": [
+            [
+              "search_knowledge",
+              "1 match"
+            ],
+            [
+              "send_email_code",
+              "verified"
+            ],
+            [
+              "get_receipt",
+              "found · sent"
+            ]
+          ],
+          "bubble": "Here's your invoice. I've emailed a copy too."
+        },
+        "team": {
+          "title": "New chat needs a person",
+          "sub": "Alert sent to 4 teammates",
+          "join": "Join",
+          "note": "First to tap takes it. The alert clears for everyone else."
+        },
+        "ticket": {
+          "label": "Ticket",
+          "title": "Support escalation · Aisha Khan",
+          "reason": "Reason: billing country change needs a person.",
+          "chips": [
+            "Issues page",
+            "Customer emailed"
+          ]
+        },
+        "learn": {
+          "title": "Invoice and receipts guide",
+          "added": "Added",
+          "note": "The next customer gets this answer instantly."
+        }
+      }
+    },
+    "bento": {
+      "eyebrow": "Under the hood",
+      "titlePrefix": "Small details, ",
+      "titleHl": "done properly.",
+      "subtitle": "The things you'd check before trusting an AI with your customers.",
+      "redact": {
+        "prefix": "Hi, I'm",
+        "middle": "reach me at"
+      },
+      "privacy": {
+        "title": "The model never sees names or emails.",
+        "desc": "Identities are swapped for reference codes before the AI reads a conversation, and secrets are stripped out."
+      },
+      "languages": {
+        "title": "Replies in your customer's language",
+        "note": "You choose the reply language in settings."
+      },
+      "verified": {
+        "title": "Verified before it acts",
+        "note": "A one-time email code or a signed token from your app."
+      },
+      "tools": {
+        "title": "Your tools, your rules",
+        "rows": [
+          [
+            "get_order",
+            true
+          ],
+          [
+            "track_shipment",
+            true
+          ],
+          [
+            "delete_customer",
+            false
+          ]
+        ]
+      },
+      "handoff": {
+        "title": "Asks before handing off",
+        "ask": "I can't change that myself. Connect you with our team?",
+        "reply": "Yes please"
+      }
+    },
+    "statement": "Elpino answers what it knows, does what you allow, and asks a person for the rest.",
+    "start": {
+      "eyebrow": "Get started",
+      "titlePrefix": "Live in ",
+      "titleHl": "an afternoon.",
+      "note": "Website chat is live today. Omnichannel is coming in November.",
+      "steps": [
+        {
+          "title": "Sign up free",
+          "desc": "100 AI messages a month. No card."
+        },
+        {
+          "title": "Teach it",
+          "desc": "Add your site, files or write pages."
+        },
+        {
+          "title": "Paste the snippet",
+          "desc": "The widget appears on your site."
+        },
+        {
+          "title": "Invite your team",
+          "desc": "So people are ready when it asks."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Questions",
+      "titlePrefix": "Good to ",
+      "titleHl": "know.",
+      "items": [
+        [
+          "What is the Elpino helpdesk?",
+          "The whole support workspace: a chat widget, an AI agent, a shared inbox, tickets and a knowledge base, working together."
+        ],
+        [
+          "Do I need to keep my old helpdesk?",
+          "No. Elpino covers chat, the AI agent, the shared inbox and tickets. Tickets can still be sent to Trello or Asana if your team works there."
+        ],
+        [
+          "Is there a free plan?",
+          "Yes: 100 AI messages a month, no card required."
+        ],
+        [
+          "What channels are supported?",
+          "Website chat is live today. Omnichannel is coming in November."
+        ],
+        [
+          "Can my team use it too?",
+          "Yes. Invite teammates, add seats as you grow, and they'll get Join alerts when a customer needs a person."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Give your customers an answer before they finish typing.",
+      "ctaStart": "Start free",
+      "ctaFeatures": "All features"
+    }
+  },
+  "privacyPage": {
+    "title": "Privacy Policy",
+    "shortTitle": "Privacy",
+    "askUs": "Ask us",
+    "heroTitle": "Follow one message through Elpino.",
+    "heroDescription": "A customer asks where their refund is. Here is every place the message goes, who can see it, and how long it stays. The full policy follows for anyone who wants every word.",
+    "startJourney": "Start the journey",
+    "jumpToPolicy": "Jump to the fine print",
+    "updated": "Updated",
+    "neverSold": "Never sold",
+    "zeroTraining": "Zero AI training",
+    "journey": {
+      "eyebrow": "The journey",
+      "title": "Seven stops. Nothing hidden.",
+      "description": "Scroll down and watch the message change as it moves. On the left, what it looks like at this stop. On the right, what it means for your data."
+    }
+  },
+  "footer": {
+    "ticker": [
+      "AI answers from your own knowledge",
+      "Human handoff, always free",
+      "100 free AI messages",
+      "One shared inbox",
+      "Live in an afternoon"
+    ],
+    "cta": {
+      "badge": "Ready when you are",
+      "title": "Give every customer a helpful answer.",
+      "subtitle": "Start free with AI support, a shared inbox, and human handoff. No card needed.",
+      "ctaStart": "Start free",
+      "ctaPricing": "See pricing"
+    },
+    "description": "Elpino helps teams answer customers with AI grounded in their own knowledge, then hands conversations to a person when needed.",
+    "blog": "Blog",
+    "contact": "Contact",
+    "copyright": "© {year} Elpino Inc. All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "security": "Security"
+  },
+  "aiAgent": {
+    "hero": {
+      "badge": "AI agent",
+      "titlePrefix": "Meet your newest ",
+      "titleHl": "support hire.",
+      "subtitle": "Elpino starts on day one already knowing your business. It remembers every customer, checks who they are before it acts, works your payment and order systems through MCP, and asks before it ever hands a chat to your team.",
+      "ctaHire": "Hire Elpino, free",
+      "ctaFeatures": "See all features"
+    },
+    "badge": {
+      "staffLabel": "Elpino · Staff",
+      "subtitle": "AI support agent",
+      "skills": [
+        "Answers from your docs",
+        "Verifies identity",
+        "Checks payments",
+        "Uses your MCP tools",
+        "Asks before handoff"
+      ],
+      "startDateLabel": "Start date",
+      "startDateValue": "Today",
+      "clearanceLabel": "Clearance",
+      "clearanceValue": "You decide",
+      "barcodeNote": "EL-0001 · Never clocks out"
+    },
+    "trace": {
+      "aiAgentLabel": "AI agent",
+      "customerMsg": "Hi, where is my order #4821?",
+      "agentReply": "Good news, Aisha's order shipped yesterday and arrives Thursday. I've emailed you the tracking link too.",
+      "whatAgentDoing": "What the agent is doing",
+      "resolved": "Resolved",
+      "working": "Working",
+      "idle": "Idle",
+      "waiting": "Waiting for a customer message…",
+      "steps": [
+        {
+          "kind": "route",
+          "text": "router → support specialist"
+        },
+        {
+          "kind": "tool",
+          "text": "recall_conversation(“order 4821”)",
+          "result": "2 earlier messages"
+        },
+        {
+          "kind": "tool",
+          "text": "get_past_conversations",
+          "result": "1 resolved chat last month"
+        },
+        {
+          "kind": "verify",
+          "text": "send_email_code → check_email_code",
+          "result": "identity verified"
+        },
+        {
+          "kind": "mcp",
+          "text": "mcp_shop__get_order(“4821”)",
+          "result": "shipped · arrives Thursday"
+        },
+        {
+          "kind": "review",
+          "text": "review",
+          "result": "facts match tool results"
+        },
+        {
+          "kind": "done",
+          "text": "reply sent · mark_resolved"
+        }
+      ]
+    },
+    "watchIt": {
+      "eyebrow": "First task",
+      "titlePrefix": "Watch it handle ",
+      "titleHl": "a real request.",
+      "subtitle": "A customer asks where their order is. On the right is everything the agent does before it replies.",
+      "note": "Sample conversation. The tool names shown are the ones the agent really calls."
+    },
+    "onboard": {
+      "eyebrow": "Onboarding",
+      "titlePrefix": "Six steps to ",
+      "titleHl": "first day.",
+      "subtitle": "Tick them off. There's no training period, and each one is a setting you control.",
+      "readyBadge": "Ready to work!",
+      "items": [
+        {
+          "t": "Teach it your website and files",
+          "d": "Crawl pages, upload documents, write your own.",
+          "href": "/product/knowledge-hub"
+        },
+        {
+          "t": "Paste the widget snippet",
+          "d": "One line and the chat appears on your site."
+        },
+        {
+          "t": "Connect Stripe or Razorpay",
+          "d": "So it can check payments and subscriptions."
+        },
+        {
+          "t": "Plug in your MCP tools",
+          "d": "Switch on only the tools it may use."
+        },
+        {
+          "t": "Decide on refunds",
+          "d": "They're off until you turn them on."
+        },
+        {
+          "t": "Invite your team",
+          "d": "So humans are ready when it asks for them.",
+          "href": "/product/inbox"
+        }
+      ]
+    },
+    "customerFile": {
+      "eyebrow": "Knowing your customer",
+      "titlePrefix": "Its case file ",
+      "titleHl": "on every customer.",
+      "subtitle": "Before it answers, the agent builds a file on the person it's helping. Tap a source to see what it adds.",
+      "sourcesLabel": "Customer file · {n} of {total} sources",
+      "sampleNote": "Sample data. On the real thing, the AI sees reference codes instead of the customer's name and email.",
+      "sources": [
+        {
+          "key": "conv",
+          "title": "This conversation",
+          "how": "Remembers what was said and can look back for details it needs, even in a long chat.",
+          "rows": [
+            [
+              "Asked about",
+              "Order #4821"
+            ],
+            [
+              "Wants",
+              "A delivery date"
+            ]
+          ]
+        },
+        {
+          "key": "hist",
+          "title": "Past conversations",
+          "how": "Knows earlier chats with the same person, so they never repeat themselves.",
+          "rows": [
+            [
+              "Last chat",
+              "Login issue, resolved"
+            ],
+            [
+              "Times contacted",
+              "2"
+            ]
+          ]
+        },
+        {
+          "key": "id",
+          "title": "Verified identity",
+          "how": "Confirms who they are with a one-time email code or a signed token from your app before touching anything personal.",
+          "rows": [
+            [
+              "Identity",
+              "Verified by email code"
+            ]
+          ]
+        },
+        {
+          "key": "pay",
+          "title": "Payments",
+          "how": "Looks up real payments and subscriptions in Stripe or Razorpay, and can send receipts and payment links.",
+          "rows": [
+            [
+              "Plan",
+              "Growth · active"
+            ],
+            [
+              "Last payment",
+              "Paid, receipt sent"
+            ]
+          ]
+        },
+        {
+          "key": "mcp",
+          "title": "Your systems (MCP)",
+          "how": "Calls the tools you approve on your own MCP servers: orders, accounts, bookings, anything you expose.",
+          "rows": [
+            [
+              "Order #4821",
+              "Shipped · arrives Thursday"
+            ]
+          ]
+        },
+        {
+          "key": "kb",
+          "title": "Your knowledge",
+          "how": "Searches everything you taught it and can read a current page on your site for fresh details.",
+          "rows": [
+            [
+              "Delivery policy",
+              "3–5 business days"
+            ]
+          ]
+        }
+      ]
+    },
+    "mcp": {
+      "eyebrow": "MCP plugins",
+      "titlePrefix": "Access request: ",
+      "titleHl": "your systems.",
+      "subtitle": "Connect up to five MCP servers, whether that's your store, your CRM or your booking system. Elpino discovers their tools, and you switch on exactly the ones the agent may use. Try the control panel below.",
+      "serverTitle": "Your shop MCP server",
+      "toolsDiscovered": "{n} tools discovered",
+      "verifiedCustomers": "Verified customers",
+      "anyVisitor": "Any visitor",
+      "destructive": "Destructive",
+      "changesData": "Changes data",
+      "readOnly": "Read-only",
+      "needsVerified": "Needs verified customer",
+      "whatAgentSees": "What the agent can see",
+      "toolsAvailable": "tools available right now",
+      "tools": [
+        {
+          "name": "get_order",
+          "desc": "Look up an order and its status",
+          "write": false,
+          "on": true
+        },
+        {
+          "name": "track_shipment",
+          "desc": "Live tracking for a parcel",
+          "write": false,
+          "on": true
+        },
+        {
+          "name": "list_products",
+          "desc": "Catalogue and stock levels",
+          "write": false,
+          "on": true
+        },
+        {
+          "name": "update_address",
+          "desc": "Change a delivery address",
+          "write": true,
+          "on": true
+        },
+        {
+          "name": "cancel_order",
+          "desc": "Cancel an order that hasn't shipped",
+          "write": true,
+          "on": false
+        },
+        {
+          "name": "delete_customer",
+          "desc": "Erase a customer record",
+          "write": true,
+          "on": false,
+          "danger": true
+        }
+      ],
+      "bullets": [
+        "A tool that's switched off is invisible to the agent",
+        "Every call is re-checked against your list on the server",
+        "Tools that change data always need a verified customer",
+        "Server credentials are stored encrypted"
+      ],
+      "features": [
+        {
+          "title": "Payments, built in",
+          "desc": "Connect Stripe or Razorpay and the agent can look up payments and subscriptions, send receipts and payment links, and cancel a subscription."
+        },
+        {
+          "title": "Bring any MCP server",
+          "desc": "Anything that speaks MCP works, so you decide which tools the agent gets."
+        },
+        {
+          "title": "Elpino's own MCP server",
+          "desc": "Your customers' own tools can read their Elpino plan, usage and payments over MCP."
+        }
+      ]
+    },
+    "orgChart": {
+      "eyebrow": "The team behind it",
+      "titlePrefix": "One agent. ",
+      "titleHl": "A whole org chart.",
+      "subtitle": "Every message is routed to the right specialist, and nothing goes out before a reviewer checks the facts.",
+      "router": "Router",
+      "routerNote": "picks the specialist",
+      "reviewer": "Reviewer",
+      "reviewerNote": "fact-checks the draft against tool results",
+      "polish": "Polish",
+      "polishNote": "then the customer sees it",
+      "footer": "Hard turns are escalated to a stronger reasoning model, and a fallback model covers provider outages.",
+      "lanes": [
+        {
+          "k": "Sales",
+          "d": "Plans, pricing, fit"
+        },
+        {
+          "k": "Support",
+          "d": "Accounts, payments, how-to"
+        },
+        {
+          "k": "Technical",
+          "d": "Errors, setup, integration"
+        }
+      ]
+    },
+    "shift": {
+      "eyebrow": "A day on the job",
+      "titlePrefix": "One shift, ",
+      "titleHl": "start to finish.",
+      "subtitle": "A sample day, using only things the agent really does.",
+      "items": [
+        {
+          "time": "2:14 AM",
+          "t": "Answers a pricing question",
+          "d": "Your team is asleep. Elpino answers from your knowledge base."
+        },
+        {
+          "time": "9:05 AM",
+          "t": "Verifies a customer, fixes a payment",
+          "d": "Confirms them by email code, finds the failed payment, sends a fresh payment link."
+        },
+        {
+          "time": "11:20 AM",
+          "t": "Checks an order in your shop",
+          "d": "Calls your MCP server, reads the status and shares the tracking."
+        },
+        {
+          "time": "1:30 PM",
+          "t": "Hits something it can't do",
+          "d": "Says so, asks the customer first, then alerts the whole team."
+        },
+        {
+          "time": "3:42 PM",
+          "t": "Nobody's free? It doesn't drop it",
+          "d": "Tells the customer honestly and files a ticket with an email follow-up."
+        }
+      ]
+    },
+    "review": {
+      "eyebrow": "Performance review",
+      "titlePrefix": "An honest ",
+      "titleHl": "scorecard.",
+      "subtitle": "Illustrative ratings, with the weak spot included.",
+      "employeeBadge": "Employee: Elpino",
+      "quote": "“Great with routine questions and never oversteps. Keep the knowledge base fresh and it'll keep getting better.”",
+      "items": [
+        {
+          "k": "Follows your policy",
+          "n": 5,
+          "note": "Answers only from what you approved."
+        },
+        {
+          "k": "Knows when to ask for help",
+          "n": 5,
+          "note": "Asks the customer first, then brings in your team."
+        },
+        {
+          "k": "Stays inside its permissions",
+          "n": 5,
+          "note": "Only the tools you switched on. Refunds off by default."
+        },
+        {
+          "k": "Knows what you never told it",
+          "n": 2,
+          "note": "It can't answer what isn't in your knowledge. Add more to raise this."
+        }
+      ]
+    },
+    "guards": {
+      "eyebrow": "Guardrails",
+      "titlePrefix": "The company ",
+      "titleHl": "handbook.",
+      "subtitle": "The rules Elpino works under. Every one is a control you own.",
+      "items": [
+        {
+          "t": "The model never sees names or emails",
+          "d": "Identities in a conversation are swapped for reference codes before the AI reads it, and secrets like keys and tokens are stripped out."
+        },
+        {
+          "t": "Refunds are off until you say so",
+          "d": "Money-moving actions are opt-in and controlled by the workspace owner."
+        },
+        {
+          "t": "You approve every tool",
+          "d": "The agent only sees MCP tools you switched on, and tools that change data need a verified customer."
+        },
+        {
+          "t": "Ask first, then hand off",
+          "d": "When it has no tool for the job, it says so and asks before bringing your team in."
+        },
+        {
+          "t": "Facts get reviewed",
+          "d": "A review pass checks the draft against tool results before it's sent."
+        },
+        {
+          "t": "Identity before anything personal",
+          "d": "Email code or signed token first, so it never discusses an account with a stranger."
+        }
+      ]
+    },
+    "compare": {
+      "eyebrow": "Not a chatbot",
+      "titlePrefix": "Chatbot vs. ",
+      "titleHl": "Elpino agent.",
+      "headerA": "A typical chatbot",
+      "headerB": "Elpino AI agent",
+      "rows": [
+        [
+          "Searches articles and stops",
+          "Searches, looks up records and takes action"
+        ],
+        [
+          "Treats everyone as a stranger",
+          "Verifies identity, remembers past chats"
+        ],
+        [
+          "“Please contact support” when stuck",
+          "Asks first, alerts the team, files a ticket if nobody's free"
+        ],
+        [
+          "Can't see your systems",
+          "Calls the MCP tools you approve"
+        ],
+        [
+          "Answers can't be trusted",
+          "Facts reviewed against tool results"
+        ]
+      ]
+    },
+    "faq": {
+      "eyebrow": "Questions",
+      "titlePrefix": "Good to ",
+      "titleHl": "know.",
+      "items": [
+        [
+          "What is MCP?",
+          "The Model Context Protocol, a standard way for an AI to call tools on another system. Connect an MCP server and Elpino discovers its tools. You then choose which ones the agent may use."
+        ],
+        [
+          "How many MCP servers can I connect?",
+          "Up to five, with up to 15 tools enabled per server."
+        ],
+        [
+          "Can the agent change things in my systems?",
+          "Only through tools you've switched on, and tools that change data always require a customer whose email has been verified."
+        ],
+        [
+          "How does it know who the customer is?",
+          "From the conversation, earlier chats with them, and a verification step: a one-time email code or a signed token from your app."
+        ],
+        [
+          "Can it issue refunds?",
+          "Only if the workspace owner turns refunds on. They're off by default."
+        ],
+        [
+          "What happens when it can't solve something?",
+          "It says so and asks the customer whether to connect them with your team. Everyone on the team gets a Join alert for 90 seconds, and if nobody joins a ticket is created automatically."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Your newest hire is ready to start.",
+      "subtitle": "Teach it your business, plug in your tools, and set the limits.",
+      "ctaStart": "Start free",
+      "ctaKnowledgeHub": "See the Knowledge Hub"
+    }
+  },
+  "inbox": {
+    "hero": {
+      "badge": "Shared inbox",
+      "titlePrefix": "One conversation. ",
+      "titleHl": "Everyone who should be in it.",
+      "subtitle": "The AI keeps the thread until a person is needed, your whole team is alerted at once, and whoever joins gets the full history. Follow one real conversation from first message to resolved.",
+      "ctaOpen": "Open your inbox",
+      "ctaPricing": "See pricing"
+    },
+    "filters": [
+      "All",
+      "Unread",
+      "Read",
+      "Resolved"
+    ],
+    "desk": {
+      "stages": [
+        {
+          "key": "ai",
+          "label": "AI answers",
+          "badge": "AI",
+          "banner": "Elpino is handling this conversation"
+        },
+        {
+          "key": "ask",
+          "label": "Needs a person",
+          "badge": "Needs human",
+          "banner": "Every teammate got a Join alert. 90 seconds to jump in"
+        },
+        {
+          "key": "join",
+          "label": "Teammate joins",
+          "badge": "Priya",
+          "banner": "Priya joined. The alert cleared for everyone"
+        },
+        {
+          "key": "back",
+          "label": "Hand back",
+          "badge": "AI",
+          "banner": "Priya handed the chat back to Elpino"
+        },
+        {
+          "key": "done",
+          "label": "Resolved",
+          "badge": "Resolved",
+          "banner": "Resolved. Reopen any time if they write back"
+        }
+      ],
+      "lines": [
+        {
+          "at": 0,
+          "from": "you",
+          "text": "Hi, I moved countries. Can you update the billing country on my account?"
+        },
+        {
+          "at": 1,
+          "from": "ai",
+          "text": "I can't change billing details myself. Would you like me to connect you with our team?"
+        },
+        {
+          "at": 1,
+          "from": "you",
+          "text": "Yes please"
+        },
+        {
+          "at": 2,
+          "from": "sys",
+          "text": "Priya joined the chat"
+        },
+        {
+          "at": 2,
+          "from": "team",
+          "text": "Hi! I've got this. I've updated your billing country."
+        },
+        {
+          "at": 3,
+          "from": "sys",
+          "text": "Priya handed the chat back to Elpino"
+        },
+        {
+          "at": 3,
+          "from": "ai",
+          "text": "All set. Anything else I can help with?"
+        },
+        {
+          "at": 4,
+          "from": "you",
+          "text": "That's all, thanks!"
+        },
+        {
+          "at": 4,
+          "from": "sys",
+          "text": "Conversation resolved"
+        }
+      ],
+      "rail": [
+        "Space",
+        "Inbox",
+        "Analytics",
+        "Contacts",
+        "Knowledge",
+        "Settings"
+      ],
+      "list": [
+        {
+          "name": "Harnoor Singh",
+          "date": "21 Sept",
+          "prev": "I can't share anyone's IP address"
+        },
+        {
+          "name": "Aisha Khan",
+          "date": "Today",
+          "prev": ""
+        },
+        {
+          "name": "Tom Becker",
+          "date": "19 Sept",
+          "prev": "Widget not loading on checkout"
+        },
+        {
+          "name": "Meera Iyer",
+          "date": "18 Sept",
+          "prev": "Move the team to annual?"
+        }
+      ],
+      "teamInbox": "Team Inbox",
+      "aiAssist": "AI Assist",
+      "searchPlaceholder": "Search conversations",
+      "verified": "Verified",
+      "joined": "Joined",
+      "join": "Join",
+      "priyaReplying": "Priya is replying",
+      "resolvedLabel": "Resolved",
+      "aiReplying": "Elpino is replying, you're just viewing",
+      "elpinoAi": "Elpino AI",
+      "priyaTeam": "Priya · team",
+      "writeReply": "Write your reply…",
+      "send": "Send",
+      "reopenNote": "Resolved. Reopen it if they write back.",
+      "lockedNote": "Join this conversation to reply. Until then, Elpino keeps talking to the customer.",
+      "websiteVisitor": "Website visitor",
+      "locationDevice": "Location & device",
+      "location": "Pune, India",
+      "device": "Chrome · macOS",
+      "onPage": "On /pricing",
+      "lastSeen": "Last seen just now",
+      "identityVerified": "Identity verified",
+      "signedIn": "Signed in on the website",
+      "otherConvos": "Other conversations",
+      "noOtherConvos": "No other conversations from this visitor yet."
+    },
+    "realThing": {
+      "eyebrow": "The real thing",
+      "titlePrefix": "This is the ",
+      "titleHl": "actual inbox.",
+      "subtitle": "No mock-up. Every conversation, the AI's replies, the visitor's details and the Join button, all on one screen.",
+      "imageAlt": "The Elpino team inbox: a conversation list, an AI-handled thread, and the visitor's location and device",
+      "callouts": [
+        {
+          "label": "Join to take over"
+        },
+        {
+          "label": "Filter: All · Unread · Read · Resolved"
+        },
+        {
+          "label": "Location & device"
+        },
+        {
+          "label": "Auto-closes after 24h quiet"
+        }
+      ]
+    },
+    "twoTabs": {
+      "eyebrow": "Two views",
+      "titlePrefix": "Watch the AI. ",
+      "titleHl": "Run the team.",
+      "subtitle": "Your inbox has a tab for what people are handling and a tab for what Elpino is handling, so nothing hides.",
+      "tabs": [
+        {
+          "label": "Team Inbox",
+          "title": "Conversations your team owns",
+          "body": "Everything a person has joined, taken over, or been assigned. This is where your team works: replies, follow-ups and resolved threads.",
+          "rows": [
+            [
+              "Harnoor Singh",
+              "Can you share the invoice again?",
+              "Priya"
+            ],
+            [
+              "Meera Iyer",
+              "Move the team to annual billing?",
+              "Sam"
+            ],
+            [
+              "Jo Alvarez",
+              "Thanks, that fixed it!",
+              "Resolved"
+            ]
+          ]
+        },
+        {
+          "label": "AI Assist",
+          "title": "Conversations Elpino is handling",
+          "body": "Watch the AI work in real time. A counter shows how many are active, and you can Join any thread the moment you want to step in.",
+          "rows": [
+            [
+              "Aisha Khan",
+              "Elpino is replying…",
+              "AI"
+            ],
+            [
+              "Tom Becker",
+              "Checking your payment record…",
+              "AI"
+            ],
+            [
+              "Ravi Menon",
+              "Sent a secure payment link",
+              "AI"
+            ]
+          ]
+        }
+      ]
+    },
+    "holders": {
+      "eyebrow": "Always clear",
+      "titlePrefix": "You always know ",
+      "titleHl": "who has it.",
+      "subtitle": "Every conversation carries a badge in the list, so nobody double-replies and nothing falls through.",
+      "items": [
+        {
+          "tag": "AI",
+          "title": "Elpino has it",
+          "body": "Answers from your knowledge and tools. You can watch every message live."
+        },
+        {
+          "tag": "Teammate",
+          "title": "A person has it",
+          "body": "Tap Join chat, or Take over if a colleague has it. The AI steps aside."
+        },
+        {
+          "tag": "Resolved",
+          "title": "It's done",
+          "body": "Resolved threads stay searchable, and you can reopen them in one tap."
+        }
+      ]
+    },
+    "baton": {
+      "eyebrow": "Pass the baton",
+      "titlePrefix": "Join it. Take it over. ",
+      "titleHl": "Give it back.",
+      "subtitle": "A conversation moves between the AI and your people with one tap, and the history travels with it.",
+      "items": [
+        {
+          "who": "Elpino AI",
+          "note": "Answers first"
+        },
+        {
+          "who": "Priya",
+          "note": "Tapped Join chat"
+        },
+        {
+          "who": "Sam",
+          "note": "Took over from Priya"
+        },
+        {
+          "who": "Elpino AI",
+          "note": "Handed back"
+        }
+      ],
+      "holdingNow": "Holding it now",
+      "stepLabel": "Step {n}"
+    },
+    "teamAlert": {
+      "eyebrow": "Team-wide alerts",
+      "titlePrefix": "Ring the whole team. ",
+      "titleHl": "One person answers.",
+      "subtitle": "When a customer asks for a human, every teammate gets a Join alert at the same time. The first to tap Join takes the chat, the alert disappears for everyone else, and the customer sees who joined.",
+      "bullets": [
+        "No one is singled out, so nobody is a bottleneck",
+        "90 seconds to jump in before a ticket is filed for you",
+        "Joined by mistake? Hand it back to the AI in a tap"
+      ],
+      "panelLabel": "Inbox alerts",
+      "joinedStatus": "Joined",
+      "alertCleared": "Alert cleared",
+      "joinChatStatus": "Join chat",
+      "quietStatus": "Quiet",
+      "bannerJoined": "Priya joined. The customer sees her name.",
+      "bannerAlerting": "Alerting all 4 teammates…",
+      "bannerAsked": "Customer asked for a person"
+    },
+    "nobodyFree": {
+      "eyebrow": "Nothing gets dropped",
+      "titlePrefix": "Even when everyone's ",
+      "titleHl": "busy.",
+      "subtitle": "If nobody joins in time, the customer isn't left staring at a spinner.",
+      "marks": [
+        {
+          "t": "0s",
+          "h": "Alert goes out",
+          "d": "Every teammate sees a Join alert."
+        },
+        {
+          "t": "≤ 90s",
+          "h": "First to join wins",
+          "d": "The alert clears for everyone else."
+        },
+        {
+          "t": "90s",
+          "h": "No one free? Ticket",
+          "d": "A ticket is created automatically."
+        },
+        {
+          "t": "24h",
+          "h": "Email follow-up",
+          "d": "The customer is told to expect a reply by email within 24 hours."
+        }
+      ]
+    },
+    "findAnything": {
+      "eyebrow": "Search & filters",
+      "titlePrefix": "Find any conversation ",
+      "titleHl": "in a second.",
+      "subtitle": "Search by name or message and narrow to All, Unread, Read or Resolved. Give it a try on the right.",
+      "noMatch": "Nothing matches. Try another word.",
+      "convos": [
+        {
+          "n": "Harnoor Singh",
+          "p": "I can't share anyone's IP address",
+          "s": "resolved"
+        },
+        {
+          "n": "Aisha Khan",
+          "p": "Moved countries, billing question",
+          "s": "unread"
+        },
+        {
+          "n": "Tom Becker",
+          "p": "Widget not loading on checkout",
+          "s": "unread"
+        },
+        {
+          "n": "Meera Iyer",
+          "p": "Move the team to annual billing?",
+          "s": "read"
+        },
+        {
+          "n": "Ravi Menon",
+          "p": "Where can I find my receipt?",
+          "s": "resolved"
+        },
+        {
+          "n": "Jo Alvarez",
+          "p": "Can I add another teammate?",
+          "s": "read"
+        }
+      ]
+    },
+    "context": {
+      "eyebrow": "Context, built in",
+      "titlePrefix": "Never ask ",
+      "titleHl": "“who are you again?”",
+      "subtitle": "Your team opens a thread and already knows the essentials.",
+      "items": [
+        {
+          "t": "Where they are",
+          "d": "Location and local context on every visitor."
+        },
+        {
+          "t": "What they're using",
+          "d": "Device, browser and the page they were on."
+        },
+        {
+          "t": "Who they are",
+          "d": "A Verified badge when identity is confirmed by a signed token or email code."
+        },
+        {
+          "t": "Sensitive things, safely",
+          "d": "Ask for private details through a secure one-time request, not in chat."
+        },
+        {
+          "t": "The whole history",
+          "d": "Earlier conversations with the same person, right there."
+        }
+      ],
+      "extraTitle": "Plus live typing on both sides",
+      "extraDesc": "Customers see when you're replying, and you see when they are."
+    },
+    "secureRequest": {
+      "eyebrow": "Secure requests",
+      "titlePrefix": "Private details ",
+      "titleHl": "stay out of the chat.",
+      "subtitle": "Ask for sensitive information through a one-time secure form, so it never sits in the transcript.",
+      "steps": [
+        {
+          "t": "You need something private",
+          "d": "For details that shouldn't be typed into a chat window."
+        },
+        {
+          "t": "Send a secure request",
+          "d": "The customer gets a private one-time form instead of a chat box."
+        },
+        {
+          "t": "Back in the conversation",
+          "d": "They submit it once, and your team continues the conversation."
+        }
+      ],
+      "stepLabel": "Step {n}"
+    },
+    "afterLeave": {
+      "eyebrow": "After they leave",
+      "titlePrefix": "Closing the tab ",
+      "titleHl": "isn't the end.",
+      "subtitle": "Elpino tells you honestly whether a reply can still reach them.",
+      "steps": [
+        {
+          "t": "Visitor leaves",
+          "d": "They close the chat, or 24 hours pass with no message."
+        },
+        {
+          "t": "Verified email on file?",
+          "d": "If they confirmed their address, they can still be reached."
+        },
+        {
+          "t": "Reply by email",
+          "d": "Your reply goes to their inbox. No verified email means no reply is possible, and the composer says so."
+        }
+      ],
+      "stepLabel": "Step {n}"
+    },
+    "compare": {
+      "eyebrow": "Before & after",
+      "titlePrefix": "From scramble to ",
+      "titleHl": "calm.",
+      "headerA": "Without a shared inbox",
+      "headerB": "With Elpino",
+      "rows": [
+        [
+          "Customers wait until someone is free",
+          "The AI replies in seconds, then a person joins if needed"
+        ],
+        [
+          "Nobody knows who is replying",
+          "A badge shows AI, teammate or resolved on every thread"
+        ],
+        [
+          "The team pings each other to find an owner",
+          "One Join alert reaches everyone, first to join takes it"
+        ],
+        [
+          "Context lives in ten places",
+          "History, location, device and verification in one panel"
+        ],
+        [
+          "Customers who close the tab are lost",
+          "Verified visitors can still get your reply by email"
+        ]
+      ]
+    },
+    "faq": {
+      "eyebrow": "Questions",
+      "titlePrefix": "Good to ",
+      "titleHl": "know.",
+      "items": [
+        [
+          "Who can see a conversation?",
+          "Everyone on your team can see the shared inbox. Each conversation shows who has it: the AI, a teammate, or resolved."
+        ],
+        [
+          "What is the 90-second window?",
+          "When a customer asks for a person, every teammate gets a Join alert. If nobody joins within 90 seconds, the customer is told and a ticket is created automatically with an email follow-up."
+        ],
+        [
+          "Can I give a conversation back to the AI?",
+          "Yes. If you joined and it's a simple follow-up, hand the chat back to Elpino in one tap."
+        ],
+        [
+          "Can I reply after the visitor leaves?",
+          "If they gave a verified email address, your reply is sent by email. Without one, no reply can reach them."
+        ],
+        [
+          "Does it work on more than website chat?",
+          "The website chat widget is live today. Omnichannel is coming in November."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Give your team one place to help from.",
+      "subtitle": "Start free and invite your teammates when you're ready.",
+      "ctaStart": "Start free",
+      "ctaMeetAgent": "Meet the AI agent"
+    }
+  },
+  "tickets": {
+    "hero": {
+      "badge": "Tickets",
+      "titlePrefix": "Every handoff leaves ",
+      "titleHl": "a stub.",
+      "subtitle": "When the AI can't finish a job and nobody's free, Elpino doesn't shrug. It writes up a ticket with the reason and summary, sends it where your team works, and gives the customer a reference to quote.",
+      "ctaStart": "Start free",
+      "ctaInbox": "See the inbox"
+    },
+    "printed": {
+      "ticketBadge": "Ticket",
+      "filedAt": "Filed at AI handoff",
+      "printing": "Printing…",
+      "referenceLabel": "Reference",
+      "referenceNote": "The customer can quote this",
+      "fields": [
+        [
+          "Title",
+          "Support escalation · Aisha Khan"
+        ],
+        [
+          "Reason",
+          "Billing country change needs a person"
+        ],
+        [
+          "Summary",
+          "Moved countries and wants the billing country on her account updated."
+        ],
+        [
+          "Customer",
+          "Aisha Khan · aisha@example.com"
+        ],
+        [
+          "Conversation",
+          "Linked, one tap to open"
+        ],
+        [
+          "Filed to",
+          "Issues page"
+        ]
+      ]
+    },
+    "origins": {
+      "eyebrow": "Where tickets come from",
+      "titlePrefix": "Three ways a stub ",
+      "titleHl": "gets printed.",
+      "subtitle": "You never have to remember to write one down.",
+      "items": [
+        {
+          "tag": "Manual",
+          "t": "A teammate files it",
+          "d": "Spot something that needs follow-up? Turn the conversation into a ticket yourself.",
+          "sample": [
+            "Invoice address change",
+            "Meera asked us to update the billing address on her invoices."
+          ]
+        },
+        {
+          "tag": "Filed at AI handoff",
+          "t": "The AI files it at handoff",
+          "d": "When Elpino hands a chat over and nobody joins in time, it files a ticket with the reason and a summary.",
+          "sample": [
+            "Support escalation · Aisha Khan",
+            "Reason: billing country change needs a person."
+          ]
+        },
+        {
+          "tag": "Flagged by AI review",
+          "t": "The AI spots what's owed",
+          "d": "After a conversation closes, the AI reviews it. If your team still owes the customer something, it flags a ticket and says why.",
+          "sample": [
+            "Follow up on refund request",
+            "Reason: customer was told it would be checked; nothing was recorded."
+          ]
+        }
+      ]
+    },
+    "anatomy": {
+      "eyebrow": "Anatomy of a ticket",
+      "titlePrefix": "Everything your team needs, ",
+      "titleHl": "already written.",
+      "subtitle": "Tap a line to see why it's there.",
+      "fieldLabel": "Field {n} of {total}",
+      "fields": [
+        {
+          "k": "Title",
+          "v": "Support escalation · Aisha Khan",
+          "why": "Named after the customer, so you can spot it in a long list at a glance."
+        },
+        {
+          "k": "Reason",
+          "v": "Billing country change needs a person",
+          "why": "Why the AI handed over, or why its review flagged it. Nobody has to guess what went wrong."
+        },
+        {
+          "k": "Summary",
+          "v": "Moved countries, wants billing country updated.",
+          "why": "The AI writes a short summary of the chat so whoever picks it up starts informed."
+        },
+        {
+          "k": "Customer",
+          "v": "Aisha Khan · aisha@example.com",
+          "why": "Name and email if they gave one, so you know who to reply to."
+        },
+        {
+          "k": "Conversation",
+          "v": "Linked, opens the chat",
+          "why": "One tap to jump back to the full conversation, with every message."
+        },
+        {
+          "k": "Source",
+          "v": "Filed at AI handoff",
+          "why": "Shows whether a teammate, the AI at handoff, or the AI's review created it."
+        },
+        {
+          "k": "Filed to",
+          "v": "Trello, Asana or Issues page",
+          "why": "Where the ticket was sent. With no project tool connected, it lives on the Issues page."
+        },
+        {
+          "k": "Reference",
+          "v": "7F3A9C21",
+          "why": "A short code the customer can quote if they get in touch again."
+        }
+      ]
+    },
+    "scrubber": {
+      "eyebrow": "The 90-second clock",
+      "titlePrefix": "Drag time. ",
+      "titleHl": "Watch what happens.",
+      "subtitle": "If someone joins at any point, no ticket is needed. If the clock runs out, this is the chain.",
+      "seconds": "seconds",
+      "dragMe": "Drag me",
+      "secondsAriaLabel": "Seconds since the alert",
+      "clock": [
+        {
+          "t": "Customer says yes to a person",
+          "d": "Elpino asks first, and only continues on a yes."
+        },
+        {
+          "t": "Every teammate gets a Join alert",
+          "d": "The whole team is asked at the same moment."
+        },
+        {
+          "t": "Nobody joined: ticket filed",
+          "d": "Title, reason, summary and a link to the chat."
+        },
+        {
+          "t": "Customer emailed, team notified",
+          "d": "The customer gets their reference by email."
+        }
+      ]
+    },
+    "connect": {
+      "eyebrow": "Set up in a minute",
+      "titlePrefix": "Plug it into ",
+      "titleHl": "where you work.",
+      "subtitle": "Optional. Skip it and tickets simply live on the Issues page.",
+      "stepLabel": "Step {n}",
+      "steps": [
+        {
+          "t": "Connect Trello or Asana",
+          "d": "Add your project tool from your workspace settings."
+        },
+        {
+          "t": "Tickets go there",
+          "d": "Each new ticket becomes a card or task, already written."
+        },
+        {
+          "t": "Still tracked in Elpino",
+          "d": "The Issues page keeps the list and lets you tick things off."
+        }
+      ]
+    },
+    "reviewScan": {
+      "badge": "AI review",
+      "titlePrefix": "After the chat closes, ",
+      "titleHl": "Elpino re-reads it.",
+      "subtitle": "Chats end politely while promises stay open. When a conversation closes, the AI reviews it, and if your team still owes the customer something, it flags a ticket and tells you why.",
+      "bullets": [
+        "Catches “I'll check and get back to you”",
+        "Says why it flagged it, so you can judge quickly",
+        "Marked as flagged by AI review on the Issues page"
+      ],
+      "closedConvo": "Closed conversation",
+      "statusFlagged": "Flagged",
+      "statusReviewing": "Reviewing…",
+      "statusResolved": "Resolved",
+      "chat": [
+        [
+          "cust",
+          "Hi, my order arrived damaged."
+        ],
+        [
+          "agent",
+          "So sorry about that! I'll check on the refund and get back to you."
+        ],
+        [
+          "cust",
+          "Great, thanks."
+        ],
+        [
+          "agent",
+          "Anything else I can help with?"
+        ],
+        [
+          "cust",
+          "No, that's all."
+        ]
+      ],
+      "flaggedTicketLabel": "Ticket · Flagged by AI review",
+      "flaggedTitle": "Follow up on refund request · Tom Becker",
+      "flaggedDesc": "Customer was told a refund would be checked; nothing was recorded afterwards."
+    },
+    "destinations": {
+      "eyebrow": "Where it lands",
+      "titlePrefix": "Sent to the tool ",
+      "titleHl": "your team already uses.",
+      "subtitle": "Connect Trello or Asana and tickets go straight there. Connect nothing and they're still safe on the Issues page.",
+      "cardTitle": "Support escalation · Aisha Khan",
+      "cardReason": "Reason: billing country change needs a person",
+      "fromElpino": "From Elpino",
+      "items": [
+        {
+          "key": "trello",
+          "label": "Trello",
+          "note": "Becomes a card in your Trello board.",
+          "cols": [
+            "To do",
+            "Doing",
+            "Done"
+          ]
+        },
+        {
+          "key": "asana",
+          "label": "Asana",
+          "note": "Becomes a task in your Asana project.",
+          "cols": [
+            "Not started",
+            "In progress",
+            "Complete"
+          ]
+        },
+        {
+          "key": "issues",
+          "label": "Issues page",
+          "note": "No project tool connected? It lives on your Issues page, no setup needed.",
+          "cols": [
+            "Open",
+            "",
+            "Resolved"
+          ]
+        }
+      ]
+    },
+    "customerSide": {
+      "badge": "The claim check",
+      "titlePrefix": "Customers know ",
+      "titleHl": "they weren't forgotten.",
+      "subtitle": "If nobody could join in time, Elpino tells the customer honestly, emails them so it isn't lost, and gives them a short reference to quote. Your whole team is notified of the new ticket too.",
+      "bullets": [
+        "The customer is told what happens next",
+        "They get an email with their reference",
+        "Every teammate is notified of the ticket"
+      ],
+      "inChat": "In the chat",
+      "chatMsgPrefix": "Our team is tied up right now, so I've opened a ticket. Your reference is ",
+      "chatMsgSuffix": ". You'll hear back by email within 24 hours.",
+      "inInbox": "In their inbox",
+      "emailSubject": "We've got your request",
+      "emailBodyPrefix": "Ticket ",
+      "emailBodySuffix": " is with our team. Reply to this email if you have anything to add.",
+      "teamNotified": "Team notified: new ticket from Aisha Khan"
+    },
+    "issuesBoard": {
+      "badge": "The Issues page",
+      "titlePrefix": "One list. ",
+      "titleHl": "Tick it off.",
+      "subtitle": "Every ticket shows where it came from and where it was sent. The AI's review even tells you why it flagged one. Click a box to mark it resolved.",
+      "openWord": "open",
+      "resolvedWord": "resolved",
+      "panelTitle": "Issues",
+      "panelSubtitle": "Tickets created from support conversations.",
+      "markResolved": "Mark as resolved",
+      "markUnresolved": "Mark as unresolved",
+      "rows": [
+        {
+          "t": "Support escalation · Aisha Khan",
+          "who": "Filed at AI handoff",
+          "where": "Not sent to a project tool",
+          "done": false
+        },
+        {
+          "t": "Follow up on refund request · Tom Becker",
+          "who": "Flagged by AI review",
+          "where": "Trello ticket",
+          "reason": "Customer was told a refund would be checked; nothing was recorded afterwards.",
+          "done": false
+        },
+        {
+          "t": "Invoice address change · Meera Iyer",
+          "where": "Asana ticket",
+          "done": false
+        },
+        {
+          "t": "Support escalation · Ravi Menon",
+          "who": "Filed at AI handoff",
+          "where": "Not sent to a project tool",
+          "done": true
+        }
+      ]
+    },
+    "lifecycle": {
+      "eyebrow": "Life of a ticket",
+      "titlePrefix": "From “can I talk to someone?” ",
+      "titleHl": "to done.",
+      "stepLabel": "Step {n}",
+      "items": [
+        {
+          "t": "Customer asks for a person",
+          "d": "The AI asks first, then alerts the team."
+        },
+        {
+          "t": "90 seconds, nobody joins",
+          "d": "Everyone had a chance to take the chat."
+        },
+        {
+          "t": "Ticket filed",
+          "d": "Title, reason, summary and a link back to the chat."
+        },
+        {
+          "t": "Customer emailed",
+          "d": "With their reference, so nothing feels lost."
+        },
+        {
+          "t": "Worked and resolved",
+          "d": "Your team ticks it off when it's done."
+        }
+      ]
+    },
+    "compare": {
+      "eyebrow": "Before & after",
+      "titlePrefix": "No more ",
+      "titleHl": "dropped promises.",
+      "headerA": "Without tickets",
+      "headerB": "With Elpino",
+      "rows": [
+        [
+          "“Someone will get back to you”, and then silence",
+          "A ticket with a reference the customer can quote"
+        ],
+        [
+          "The team copies details into another tool by hand",
+          "Reason, summary and chat link arrive already written"
+        ],
+        [
+          "Promises made in chat get forgotten",
+          "An AI review flags what your team still owes after a chat closes"
+        ],
+        [
+          "No idea whether anyone's on it",
+          "Tick-box resolved state and where it was sent, in one list"
+        ]
+      ]
+    },
+    "faq": {
+      "eyebrow": "Questions",
+      "titlePrefix": "Good to ",
+      "titleHl": "know.",
+      "items": [
+        [
+          "When does Elpino create a ticket?",
+          "When it hands a conversation over and nobody joins within 90 seconds, and when its review of a closed conversation finds something your team still owes. Teammates can also file one manually."
+        ],
+        [
+          "Where do tickets go?",
+          "To Trello or Asana if you've connected one. If not, they live on your Issues page, so nothing is lost."
+        ],
+        [
+          "What's in a ticket?",
+          "A title, the reason, a short summary, the customer's details, and a link back to the conversation."
+        ],
+        [
+          "Does the customer find out?",
+          "Yes. They're told in the chat, get an email, and are given a short reference they can quote."
+        ],
+        [
+          "Can I mark a ticket resolved?",
+          "Yes, tick it off from the Issues page."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Let nothing slip through.",
+      "subtitle": "Start free and Elpino will write the tickets for you.",
+      "ctaStart": "Start free",
+      "ctaMeetAgent": "Meet the AI agent"
+    }
+  },
+  "knowledgeHub": {
+    "hero": {
+      "badge": "Knowledge Hub",
+      "titlePrefix": "Ask it anything. ",
+      "titleHl": "It checks your knowledge.",
+      "subtitle": "Elpino only answers from the knowledge you give it. Don't take our word for it. Watch it search your knowledge on the left and answer the customer on the right. When it can't find anything, it says so.",
+      "privateNote": "Private sources are never used to answer customers."
+    },
+    "playground": {
+      "yourKnowledge": "Your knowledge",
+      "customer": "Customer",
+      "elpinoAi": "Elpino AI",
+      "statusWaiting": "Waiting for a question",
+      "statusSearching": "Searching your knowledge…",
+      "statusFound": "Found a match",
+      "statusNoMatch": "No match found",
+      "privateBadge": "Private",
+      "matchBadge": "Match",
+      "offersHuman": "Offers a human",
+      "sources": [
+        {
+          "name": "Refund policy.pdf",
+          "kind": "Document"
+        },
+        {
+          "name": "Shipping times",
+          "kind": "Written page"
+        },
+        {
+          "name": "Help: reset password",
+          "kind": "Web page"
+        },
+        {
+          "name": "Escalation playbook",
+          "kind": "Internal notes"
+        }
+      ],
+      "scenes": [
+        {
+          "q": "How long do I have to ask for a refund?",
+          "hit": "refund",
+          "a": "You can request a refund within 30 days of purchase."
+        },
+        {
+          "q": "How do I reset my password?",
+          "hit": "reset",
+          "a": "Choose “Forgot password” on the sign-in page and follow the link we email you."
+        },
+        {
+          "q": "Do you offer discounts for charities?",
+          "hit": null,
+          "a": "I don't have that information. Would you like me to connect you with our team?"
+        },
+        {
+          "q": "How long does delivery take?",
+          "hit": "ship",
+          "a": "Orders usually arrive in 3–5 business days."
+        }
+      ]
+    },
+    "crawlWeb": {
+      "eyebrow": "Discover",
+      "titlePrefix": "One link in. ",
+      "titleHl": "A whole site out.",
+      "subtitle": "Give Elpino your homepage and it follows the links itself, up to 50 pages. It reads help, pricing and policy pages first and skips images, downloads and other noise. Pages built with JavaScript are rendered in a real browser so nothing comes back empty.",
+      "pagesKept": "Pages kept",
+      "filesSkipped": "Files skipped",
+      "svgAlt": "A crawl spreading from one page out to linked pages",
+      "startLabel": "START"
+    },
+    "otherWays": {
+      "eyebrow": "More ways in",
+      "titlePrefix": "Not everything lives ",
+      "titleHl": "on a website.",
+      "subtitle": "Three more ways to teach Elpino, for the knowledge that never got a URL.",
+      "items": [
+        {
+          "title": "Sitemap",
+          "big": "20",
+          "note": "pages pulled in from your sitemap in one go"
+        },
+        {
+          "title": "Files",
+          "big": ".pdf",
+          "note": "also .docx, .txt and .md. Text is extracted for you"
+        },
+        {
+          "title": "Write it",
+          "big": "Aa",
+          "note": "policies and “how we do it” pages, written right in the editor"
+        }
+      ]
+    },
+    "mill": {
+      "eyebrow": "What happens next",
+      "titlePrefix": "Every page takes ",
+      "titleHl": "the same trip.",
+      "items": [
+        {
+          "t": "Fetched safely",
+          "d": "As ElpinoBot, with protection against reaching private networks."
+        },
+        {
+          "t": "Cleaned up",
+          "d": "Menus and boilerplate out, useful text in."
+        },
+        {
+          "t": "Chunked and embedded",
+          "d": "Split into passages and indexed by meaning, not only keywords."
+        },
+        {
+          "t": "Found on demand",
+          "d": "The closest passages are pulled up the moment a customer asks."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Questions",
+      "titlePrefix": "Good to ",
+      "titleHl": "know.",
+      "items": [
+        [
+          "What can I add?",
+          "Web pages by URL, a sitemap (up to 20 pages), a crawl from one link (up to 50 pages), PDF, Word, text and Markdown files, and pages you write yourself."
+        ],
+        [
+          "Does it read JavaScript-built pages?",
+          "Yes. If a page has little readable text, it's rendered in a browser first and the result is read."
+        ],
+        [
+          "Can I keep content private?",
+          "Yes. Each source has a visibility switch, so internal notes stay internal."
+        ],
+        [
+          "Can I connect Notion, Zendesk or Confluence?",
+          "Not yet. Today you add sources by URL, sitemap, file upload, or by writing pages."
+        ],
+        [
+          "What if the answer isn't there?",
+          "Elpino says it doesn't have that information and offers to connect the customer with your team, rather than guessing."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Stock your real shelf.",
+      "subtitle": "Paste a link and Elpino starts answering from it.",
+      "ctaStart": "Start free",
+      "ctaMeetAgent": "Meet the AI agent"
+    }
+  },
+  "integrations": {
+    "hero": {
+      "badge": "Integrations",
+      "titlePrefix": "Plug in. ",
+      "titleHl": "Level up.",
+      "subtitle": "Connect your payments, your ticket tracker and your own systems, and watch what Elpino can do grow. Tap the sockets to plug them in."
+    },
+    "board": {
+      "pluggedInCount": "{on} / {total} plugged in",
+      "pluggedIn": "Plugged in",
+      "tapToPlugIn": "Tap to plug in",
+      "on": "On",
+      "off": "Off",
+      "whatCanDo": "What Elpino can do now",
+      "empty": "Nothing plugged in yet. Tap a socket above."
+    },
+    "conns": [
+      {
+        "name": "Stripe",
+        "blurb": "The AI checks real payments and subscriptions.",
+        "abilities": [
+          "Look up payments and subscriptions",
+          "Send receipts and payment links",
+          "Cancel a subscription on request",
+          "Refunds, only if you switch them on"
+        ]
+      },
+      {
+        "name": "Razorpay",
+        "blurb": "Same payment tools, for Razorpay accounts.",
+        "abilities": [
+          "Look up payments and subscriptions",
+          "Send receipts and payment links",
+          "Cancel a subscription on request",
+          "Refunds, only if you switch them on"
+        ]
+      },
+      {
+        "name": "Cashfree",
+        "blurb": "Payment and settlement history for your team.",
+        "abilities": [
+          "Find an order or payment from a conversation",
+          "See settlement and refund status"
+        ]
+      },
+      {
+        "name": "Paystack",
+        "blurb": "Transaction and refund status for your team.",
+        "abilities": [
+          "Look up a transaction from a conversation",
+          "Check payment and refund status"
+        ]
+      },
+      {
+        "name": "Trello",
+        "blurb": "Tickets land as cards on your board.",
+        "abilities": [
+          "Tickets become Trello cards",
+          "The summary and a link to the chat come attached"
+        ]
+      },
+      {
+        "name": "Asana",
+        "blurb": "Tickets land as tasks in your project.",
+        "abilities": [
+          "Tickets become Asana tasks",
+          "The summary and a link to the chat come attached"
+        ]
+      },
+      {
+        "name": "Your MCP servers",
+        "blurb": "Anything that speaks MCP, with tools you approve.",
+        "abilities": [
+          "Call tools on your own servers",
+          "Up to 5 servers, 15 tools enabled each",
+          "Only the tools you approve are visible",
+          "Tools that change data need a verified customer"
+        ]
+      }
+    ],
+    "how": {
+      "eyebrow": "Connecting",
+      "titlePrefix": "A minute each. ",
+      "titleHl": "No engineers.",
+      "stepLabel": "Step {n}",
+      "steps": [
+        {
+          "t": "Pick a tool",
+          "d": "Open Connect in your dashboard and choose the connector you want."
+        },
+        {
+          "t": "Paste a key or authorise",
+          "d": "API-key tools take your keys. Asana uses a normal sign-in and permission screen."
+        },
+        {
+          "t": "We check it first",
+          "d": "Elpino tests your keys against the provider before saving them, and stores them encrypted."
+        }
+      ]
+    },
+    "families": {
+      "eyebrow": "The catalogue",
+      "titlePrefix": "Three kinds of ",
+      "titleHl": "connection.",
+      "tabs": {
+        "payments": "Payments",
+        "tickets": "Tickets",
+        "systems": "Your systems"
+      },
+      "paymentsNote": "The AI's payment actions today work with Stripe and Razorpay. Cashfree and Paystack bring payment context to your team."
+    },
+    "safe": {
+      "badge": "Safe by default",
+      "titlePrefix": "Connected, ",
+      "titleHl": "not exposed.",
+      "items": [
+        {
+          "t": "Keys stay encrypted",
+          "d": "Credentials are stored encrypted, and Elpino verifies them with the provider before saving."
+        },
+        {
+          "t": "Read access is enough for lookups",
+          "d": "For Stripe, use a restricted key with read access to customers and payments."
+        },
+        {
+          "t": "Money moves only if you allow it",
+          "d": "Refunds are off by default. The workspace owner decides whether the AI may issue them."
+        },
+        {
+          "t": "You approve every MCP tool",
+          "d": "The AI only sees the tools you switched on, and each call is re-checked on the server."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Questions",
+      "titlePrefix": "Good to ",
+      "titleHl": "know.",
+      "items": [
+        [
+          "Which tools can I connect?",
+          "Stripe, Razorpay, Cashfree and Paystack for payments, Trello and Asana for tickets, and your own MCP servers for anything else."
+        ],
+        [
+          "What can the AI do with payments?",
+          "With Stripe or Razorpay connected it can look up payments and subscriptions, send receipts and payment links, and cancel a subscription when asked. Refunds are off unless you enable them."
+        ],
+        [
+          "Do I need to be technical?",
+          "Not for payments or tickets. You paste a key, or sign in to Asana. MCP servers need someone to have built one."
+        ],
+        [
+          "Is Shopify, Slack or HubSpot supported?",
+          "Not as one-click connectors today. If your system has an MCP server, you can connect it, and you can tell us what you'd like next."
+        ],
+        [
+          "Where do tickets go?",
+          "To Trello or Asana if connected. Otherwise they live on your Issues page."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Missing something you need?",
+      "subtitle": "Tell us which tool you'd like next, or connect it yourself over MCP.",
+      "ctaStart": "Start free",
+      "ctaRequest": "Request an integration"
+    }
+  },
+  "securityGuide": {
+    "sticky": {
+      "securityLabel": "Security",
+      "reportIssue": "Report an issue"
+    },
+    "hero": {
+      "badge": "Security guide",
+      "title1": "Built to ",
+      "title2": "protect your data.",
+      "subtitle": "This guide walks through what's protected across the web app, the gateway, and the auth, workspace and AI services — what we guarantee and why you can rely on it, without a step-by-step of the internals.",
+      "ctaBlueprint": "See the blueprint",
+      "ctaChapters": "Read the chapters",
+      "ctaTrust": "Trust Center",
+      "register": {
+        "label": "Drawing register",
+        "chapters": "Chapters",
+        "controlsDescribed": "Controls described",
+        "componentsCovered": "Components covered",
+        "componentsValue": "6",
+        "reviewedAgainst": "Reviewed against",
+        "reviewedValue": "the product"
+      }
+    },
+    "blueprint": {
+      "fig": "Fig. 00 · At a glance",
+      "title": "What happens to a request",
+      "subtitle": "Every arrow is encrypted or authenticated. Point at any part for what that means in practice.",
+      "readChapter": "Read chapter"
+    },
+    "nodes": {
+      "widget": {
+        "label": "Visitor",
+        "sub": "Chat widget",
+        "guards": "Guests stay guests. Logged-in visitors prove themselves with a signed credential or an email code, held only in the widget's own memory."
+      },
+      "team": {
+        "label": "Your team",
+        "sub": "Dashboard",
+        "guards": "Passwords are never stored in readable form, Google sign-in is verified on our server, and you can end any session remotely."
+      },
+      "elpino": {
+        "label": "Elpino",
+        "sub": "Verifies, protects, answers",
+        "guards": "Every request is checked before anything runs, private details are swapped out before an AI model ever sees them, and the AI operates inside limits it can't talk its way past."
+      },
+      "google": {
+        "label": "Google",
+        "sub": "Sign-in",
+        "guards": "Only trusted after our own server independently verifies it."
+      },
+      "pay": {
+        "label": "Payments",
+        "sub": "Razorpay · Stripe",
+        "guards": "Payment notifications are only accepted with a verified signature, and can never be replayed to reset your usage."
+      },
+      "models": {
+        "label": "AI providers",
+        "sub": "Models",
+        "guards": "They see safe placeholders instead of real details, never secrets, and your data doesn't train general models."
+      }
+    },
+    "chaptersSection": {
+      "label": "The chapters",
+      "title1": "Twelve chapters. ",
+      "title2": "Nothing skipped.",
+      "subtitle": "Each control names the part of the system it lives in and the guarantee it gives you — not the exact mechanism behind it.",
+      "contents": "Contents"
+    },
+    "chapters": {
+      "accounts": {
+        "title": "Accounts & sessions",
+        "kicker": "Who is on your team, and how we know it's them.",
+        "intro": "Sign-up, sign-in and every session after it. Passwords are never kept in a readable form, verification codes expire quickly, and a session can be ended from the server at any time.",
+        "stats": [
+          "Passwords hashed, never stored",
+          "Codes expire quickly",
+          "Sessions you can revoke"
+        ],
+        "controls": {
+          "1.1": {
+            "title": "Passwords are hashed, never stored",
+            "text": "Your password is never kept anywhere in a form anyone could read back — not even us. Checking it can't leak how close a wrong guess was."
+          },
+          "1.2": {
+            "title": "Email verification codes",
+            "text": "New accounts confirm their address with a short-lived code. Only a secure hash of it is stored, it expires quickly, and only a few wrong attempts are allowed before you need a fresh one."
+          },
+          "1.3": {
+            "title": "Google sign-in is checked on the server",
+            "text": "The Google sign-in popup runs in your browser, but our server independently verifies it before trusting it, and always signs you into the same account by your verified email — never a second, unlinked one."
+          },
+          "1.4": {
+            "title": "Signed session tokens",
+            "text": "Your session is a signed token our server can always verify on its own — it can't be forged, edited or replayed as something it isn't."
+          },
+          "1.5": {
+            "title": "A locked-down session cookie",
+            "text": "Your session cookie can't be read by page scripts, and only ever travels over a secure connection."
+          },
+          "1.6": {
+            "title": "Sign out everywhere",
+            "text": "Signing out invalidates every one of your sessions quickly. If we can't confirm a session is still valid, it's refused rather than let through."
+          },
+          "1.7": {
+            "title": "Safe redirects",
+            "text": "After signing in, you're only ever sent to a page on our own site — never somewhere else, no matter how the link is crafted."
+          },
+          "1.8": {
+            "title": "Team invitations",
+            "text": "Invitation links are unguessable and expire automatically, and an owner decides whether members can invite others at all."
+          }
+        }
+      },
+      "front-door": {
+        "title": "The front door",
+        "kicker": "What the website does before a request goes any further.",
+        "intro": "The web app is the first thing a browser touches. It hardens the browser, limits abuse, and validates input before anything is passed on.",
+        "stats": [
+          "No framing",
+          "Abuse limited",
+          "Fails closed"
+        ],
+        "controls": {
+          "2.1": {
+            "title": "Browser hardening headers",
+            "text": "Every page except the chat widget is protected against clickjacking, guarded against content-type sniffing, and has sensitive device permissions like camera and location switched off by default. The widget is the one deliberate exception, since it has to live inside an iframe on your site."
+          },
+          "2.2": {
+            "title": "Shared abuse limits",
+            "text": "Public forms are protected by rate limits shared across every server we run, so abuse from one place can't slip through by simply hitting a different one."
+          },
+          "2.3": {
+            "title": "It fails closed",
+            "text": "If the abuse limiter can't be reached, the request is refused rather than waved through."
+          },
+          "2.4": {
+            "title": "Validated, length-capped input",
+            "text": "Every form is checked and size-limited on the server before anything is processed — never trusted just because the browser already validated it."
+          }
+        }
+      },
+      "gateway": {
+        "title": "The gateway",
+        "kicker": "One door for the backend, closed by default.",
+        "intro": "Every call to the backend goes through a single gateway. The rule is simple: if a route isn't explicitly public, it needs to prove it belongs.",
+        "stats": [
+          "Closed by default",
+          "Explicit public list",
+          "Verified live connections"
+        ],
+        "controls": {
+          "3.1": {
+            "title": "Closed by default",
+            "text": "Every route requires proof it's an authorized internal call, unless it's explicitly marked public. If that check isn't configured, the gateway refuses everything rather than failing open."
+          },
+          "3.2": {
+            "title": "A short, explicit public list",
+            "text": "Only callers that genuinely can't hold internal credentials are public: the chat widget, page analytics, the payment webhook, and one-time secure links. Each one is marked deliberately, route by route."
+          },
+          "3.3": {
+            "title": "Explicit origins only",
+            "text": "The API answers browsers only from a known, approved list of origins — never from anywhere that happens to ask."
+          },
+          "3.4": {
+            "title": "Verified live connections",
+            "text": "Live-view connections require a verified, workspace-scoped credential with an expiry. Anything else is dropped immediately."
+          },
+          "3.5": {
+            "title": "Internal pushes are guarded too",
+            "text": "The endpoints services use to push live notifications to dashboards require the same internal proof, so nobody outside can ring a teammate's screen."
+          }
+        }
+      },
+      "visitors": {
+        "title": "Visitors & identity",
+        "kicker": "Telling a logged-in customer from someone who just typed an email.",
+        "intro": "A name, an email or an order number is not proof of who someone is. Account help unlocks only after real proof of identity, and that proof expires quickly.",
+        "stats": [
+          "Real proof required",
+          "Sessions expire automatically",
+          "Time-limited verification"
+        ],
+        "controls": {
+          "4.1": {
+            "title": "Guests stay guests",
+            "text": "A typed name, email, phone or payment reference never counts as proof of identity. Guests can chat and leave contact details, but that unlocks no private tools and is never merged into anyone else's history."
+          },
+          "4.2": {
+            "title": "Signed identity from your own site",
+            "text": "For logged-in customers, your own server vouches for who they are with a short-lived signed credential that only you and Elpino can create together. Contact details only count as verified when your system says they are."
+          },
+          "4.3": {
+            "title": "One exchange, one session",
+            "text": "Each proof of identity is used once, then exchanged for a fresh session of its own — nothing reusable is kept lying around, and what is stored can't be turned back into the original."
+          },
+          "4.4": {
+            "title": "Short-lived sessions",
+            "text": "A session expires automatically after a period of inactivity, or a fixed time from sign-in — whichever comes first. It's held only in the widget's own memory, never in browser storage or a URL."
+          },
+          "4.5": {
+            "title": "Rotation and logout",
+            "text": "Rotating your identity credential invalidates every session that used the old one immediately. Logging out revokes the session on our server, and old sessions are cleaned up automatically."
+          },
+          "4.6": {
+            "title": "Email codes for guests",
+            "text": "A visitor can also verify by email with a short one-time code, rate-limited to prevent abuse. Verifying only unlocks that one conversation, and only for a limited time."
+          },
+          "4.7": {
+            "title": "Every request is re-checked",
+            "text": "Every authenticated read and write independently re-checks who's asking, what workspace it's scoped to, and whether that access is still valid — nothing is trusted just because it was valid a moment ago."
+          }
+        }
+      },
+      "ai": {
+        "title": "The AI's leash",
+        "kicker": "What the AI can and can't do, enforced by the backend, not by asking nicely.",
+        "intro": "The model proposes; the backend decides. Tools, identity, limits and money all live outside the model, where a clever message can't talk its way past them.",
+        "stats": [
+          "Bounded work",
+          "Backend-controlled tools",
+          "Independent review"
+        ],
+        "controls": {
+          "5.1": {
+            "title": "One reply, one owner",
+            "text": "Before an AI reply is saved, the system independently confirms the conversation is still AI-owned and the question being answered is still the latest one. The AI can't talk over your team or answer something that's already moved on."
+          },
+          "5.2": {
+            "title": "Bounded work",
+            "text": "Every AI turn has a hard ceiling on how much it can do. A stuck or looping run is cut off automatically, never left running."
+          },
+          "5.3": {
+            "title": "The backend chooses the tools",
+            "text": "Which tools the AI can use is decided entirely by your workspace's own setup and the customer's verification — the model can't grant itself a tool, declare data public, or reach into another workspace."
+          },
+          "5.4": {
+            "title": "Account tools need a verified customer",
+            "text": "Payment lookups and connected systems only become available once the customer has proved who they are, and only ever act on the identity already on file — never on whatever the model is told."
+          },
+          "5.5": {
+            "title": "Messages are data, not instructions",
+            "text": "Customer messages, documents and tool results reach the model clearly labeled as untrusted information. Instructions hidden inside them are not followed."
+          },
+          "5.6": {
+            "title": "A second opinion",
+            "text": "A separate, independent check reviews each draft reply against the evidence the AI actually gathered. An unsupported claim is sent back for a rewrite, and one that still fails gets handed to a person."
+          },
+          "5.7": {
+            "title": "Money moves behind gates",
+            "text": "AI refunds are off until a workspace owner turns them on, and even then are limited and capped automatically. A retried refund can never be issued twice, and cancelling a subscription never cuts off time you've already paid for."
+          },
+          "5.8": {
+            "title": "An audit trail for every run",
+            "text": "Every AI run keeps a record of what it did and what it used to do it. Anything that touches money is also logged as a note your team can see."
+          }
+        }
+      },
+      "private-data": {
+        "title": "Private data",
+        "kicker": "What the model actually sees.",
+        "intro": "Before any request reaches an AI model, identifying details are replaced with safe placeholders. Try it below with your own text.",
+        "stats": [
+          "Details replaced first",
+          "Secrets removed entirely",
+          "Same rules, every provider"
+        ],
+        "controls": {
+          "6.1": {
+            "title": "Real details never reach the model",
+            "text": "Names, emails, phone numbers, addresses and order or payment details are never sent to the AI model as-is. We swap them for safe placeholders first, and only restore the real value afterward, on our own servers — never inside anything the model sees."
+          },
+          "6.2": {
+            "title": "Secrets are removed, not just hidden",
+            "text": "Passwords, API keys, tokens and one-time codes are stripped out entirely before anything reaches a model — not disguised, just gone."
+          },
+          "6.3": {
+            "title": "Sensitive links are cleaned",
+            "text": "Links carrying access tokens or other sensitive parameters are cleaned before a model ever reads them."
+          },
+          "6.4": {
+            "title": "Payment facts, not payment records",
+            "text": "Payment tools only ever return safe summaries — status and dates — never raw card or account details, and failure reasons are simplified rather than passed through as free text."
+          },
+          "6.5": {
+            "title": "The same rules for every model",
+            "text": "The same protection runs no matter which AI provider answers, including when we fall back to another one. Your conversations and documents are never used to train general-purpose models."
+          }
+        }
+      },
+      "integrations": {
+        "title": "Integrations & outbound requests",
+        "kicker": "When Elpino has to reach out to a URL you gave us.",
+        "intro": "Crawling your site, reading a page, or calling a connected system all mean fetching a URL a person typed in. Each of those requests is locked down so it can't be turned against our own network — or yours.",
+        "stats": [
+          "Encrypted at rest",
+          "Can't reach private networks",
+          "Limited & time-boxed"
+        ],
+        "controls": {
+          "7.1": {
+            "title": "Credentials are encrypted at rest",
+            "text": "Any key or token you connect — Stripe, Razorpay, Trello and the like — is encrypted before it's ever stored. A database copy alone can't recover them."
+          },
+          "7.2": {
+            "title": "Outbound requests can't be aimed inward",
+            "text": "When we fetch a URL on your behalf — crawling your site, calling a connected system — we make sure it can't be redirected at a private network or internal infrastructure instead, including ours."
+          },
+          "7.3": {
+            "title": "Redirects are checked every step",
+            "text": "We follow redirects carefully, checking each hop rather than trusting the final destination, and only ever over standard, secure connections."
+          },
+          "7.4": {
+            "title": "Connected systems are limited",
+            "text": "Connections to your own tools are capped in size and time, so they can't be used to pull unbounded data or hang indefinitely."
+          },
+          "7.5": {
+            "title": "Admins approve every tool",
+            "text": "Connected tools are off until an admin approves them. A tool that can change data is flagged separately, and still needs a verified customer even when the server itself is otherwise public."
+          },
+          "7.6": {
+            "title": "Disconnect means gone",
+            "text": "When you disconnect an integration, its stored tokens and credentials are wiped immediately."
+          }
+        }
+      },
+      "secure-links": {
+        "title": "Secure handovers",
+        "kicker": "When a customer has to send something sensitive.",
+        "intro": "Never paste a key into a chat. A teammate can ask for it through a one-time link instead, and the chat only ever holds the link.",
+        "stats": [
+          "Unguessable link",
+          "Expires automatically",
+          "Separately encrypted"
+        ],
+        "controls": {
+          "8.1": {
+            "title": "The chat never holds the secret",
+            "text": "The notice in the conversation names what was asked for and carries a link — never the value itself."
+          },
+          "8.2": {
+            "title": "An unguessable, short-lived link",
+            "text": "The link itself is the customer's entire proof of authorization, so it's made unguessable, and it expires automatically before it can become a standing risk."
+          },
+          "8.3": {
+            "title": "Encrypted with its own key",
+            "text": "Whatever's submitted is sealed using a key kept entirely separate from the one that protects your other credentials, so either can be rotated — or, worst case, exposed — without touching the other."
+          },
+          "8.4": {
+            "title": "Capped and swept",
+            "text": "Submissions are size-limited, and anything expired is automatically and permanently wiped on a regular schedule, leaving only a record that something happened — never what it was."
+          }
+        }
+      },
+      "money": {
+        "title": "Money & billing",
+        "kicker": "Payments, renewals and the limits tied to them.",
+        "intro": "Anything that moves money is verified twice: once that the message really came from the payment provider, and once that it can't be applied twice.",
+        "stats": [
+          "Verified signatures only",
+          "Replay-safe",
+          "Can't double-charge"
+        ],
+        "controls": {
+          "9.1": {
+            "title": "Signed webhooks and checkouts",
+            "text": "Payment notifications are only accepted with a valid, verified signature from the provider — anything else, including a near-miss, is rejected outright."
+          },
+          "9.2": {
+            "title": "Replays can't reset usage",
+            "text": "A payment notification that arrives more than once — replayed, or simply delivered twice — can never re-zero already-spent usage or re-grant credit."
+          },
+          "9.3": {
+            "title": "Auto-recharge can't double-charge",
+            "text": "Checking that a recharge is within its limit and actually reserving it happen as one atomic step, and your balance is only ever credited once a payment is confirmed and captured."
+          },
+          "9.4": {
+            "title": "Every money movement is on record",
+            "text": "Every payment event from the provider is written to an audit trail, and any payment action the AI takes gets its own separate log."
+          },
+          "9.5": {
+            "title": "Plan limits are enforced on the server",
+            "text": "Plan-gated features are checked in the backend, not just hidden in the interface, and seat limits are counted from real membership — not from what the browser claims."
+          }
+        }
+      },
+      "lifecycle": {
+        "title": "Data lifecycle",
+        "kicker": "Where data lives, how long, and how it goes away.",
+        "intro": "Your data is scoped to your workspace, expires when it should, and can be removed by you.",
+        "stats": [
+          "Workspace-scoped",
+          "Cleaned up automatically",
+          "You can delete it"
+        ],
+        "controls": {
+          "10.1": {
+            "title": "Scoped to your workspace",
+            "text": "Conversations, knowledge, customers and settings all belong to a workspace, and every lookup is scoped to it — nothing crosses over by accident."
+          },
+          "10.2": {
+            "title": "Team-only stays team-only",
+            "text": "Notes marked team-only are filtered out before a conversation is ever shown to the visitor's widget."
+          },
+          "10.3": {
+            "title": "Short-lived things expire",
+            "text": "Verification codes, session credentials and secure-link content are all automatically expired and cleaned up — nothing short-lived is kept around indefinitely."
+          },
+          "10.4": {
+            "title": "Delete your workspace",
+            "text": "Deleting a workspace cancels its subscription immediately and removes its records, with a firm outer limit set in the privacy policy for full removal."
+          },
+          "10.5": {
+            "title": "Leave or delete your account",
+            "text": "People can leave a workspace, and an account can be deleted entirely from Settings."
+          }
+        }
+      },
+      "infrastructure": {
+        "title": "Infrastructure",
+        "kicker": "How the services themselves are run.",
+        "intro": "Plain, unglamorous hygiene that keeps an internal service from becoming a public one.",
+        "stats": [
+          "Not publicly reachable",
+          "Minimal footprint",
+          "Monitored"
+        ],
+        "controls": {
+          "11.1": {
+            "title": "Internal services aren't publicly reachable",
+            "text": "Our backend services and database aren't exposed to the public internet at all — only a single, hardened entry point is."
+          },
+          "11.2": {
+            "title": "Lean production builds",
+            "text": "What actually runs in production carries nothing extra — no development tools, no unused dependencies."
+          },
+          "11.3": {
+            "title": "Limits, health checks and log rotation",
+            "text": "Every service runs with resource limits, automatic health checks and a restart policy, and logs are rotated so they can't grow unbounded."
+          },
+          "11.4": {
+            "title": "Secrets stay out of source",
+            "text": "Keys and secrets are never checked into our codebase — they're supplied to each service separately, and sensitive credential files are mounted read-only."
+          },
+          "11.5": {
+            "title": "Repeatable deploys",
+            "text": "Every deployment goes through the same automated checks, so a release is never a one-off manual process."
+          }
+        }
+      },
+      "verification": {
+        "title": "How we check our own work",
+        "kicker": "The tests that try to break the rules above.",
+        "intro": "Security claims are only worth what tests back them. These are covered by automated tests in our own codebase.",
+        "stats": [
+          "Forged-credential tests",
+          "Replay tests",
+          "Isolation tests"
+        ],
+        "controls": {
+          "12.1": {
+            "title": "Identity regressions",
+            "text": "Automated tests cover forged credentials, expired and replayed sessions, logout, credential rotation, and that one workspace can never see another's data."
+          },
+          "12.2": {
+            "title": "Outbound request tests",
+            "text": "The checks that stop outbound requests from reaching internal networks have their own dedicated tests."
+          },
+          "12.3": {
+            "title": "Privacy filter tests",
+            "text": "The system that replaces private details before they reach a model, and the payment-facts rules that limit what it can be shown, are both directly tested."
+          },
+          "12.4": {
+            "title": "Billing correctness tests",
+            "text": "Renewal replays and signature verification are covered by tests, so a billing fix can't quietly reopen a hole that was already closed."
+          }
+        }
+      }
+    },
+    "demo": {
+      "customerLabel": "What the customer types",
+      "resetSample": "Reset sample",
+      "modelLabel": "What the model reads",
+      "inputAriaLabel": "Message to filter",
+      "caption": "Illustration only, and it runs in your browser: nothing you type here is sent anywhere. The real filter runs on our servers, and the mapping back to the real details never enters a prompt."
+    },
+    "about": {
+      "label": "About this guide",
+      "textBefore": "This is a description of how the platform is built, not a certification. It covers the controls that exist in the product today, and it will change as the product does. If you need a security questionnaire answered or a data processing agreement signed, email ",
+      "textAfter": "."
+    },
+    "report": {
+      "label": "Report a vulnerability",
+      "stamp": "Found something?",
+      "title": "Think you found a weak spot? We want to hear it first.",
+      "subtitle": "Email the details and how to reproduce it. A person on the team reads every report.",
+      "privacy": "Privacy policy",
+      "terms": "Terms",
+      "securityPolicy": "Security policy"
+    }
+  },
+  "features": {
+    "families": {
+      "answer": "Answer",
+      "team": "Team",
+      "know": "Knowledge",
+      "act": "Act",
+      "trust": "Trust",
+      "grow": "Grow"
+    },
+    "pageNames": {
+      "aiAgent": "AI agent",
+      "inbox": "Inbox",
+      "demo": "Demo",
+      "pricing": "Pricing",
+      "knowledgeHub": "Knowledge Hub",
+      "securityGuide": "Security guide"
+    },
+    "tiles": [
+      {
+        "name": "Grounded answers",
+        "body": "Replies come from the knowledge you approved. If it isn't there, the AI says so instead of guessing."
+      },
+      {
+        "name": "Reply language",
+        "body": "Choose the language the chatbot replies in for your customers."
+      },
+      {
+        "name": "Page awareness",
+        "body": "Decide whether the AI can see the page URL a visitor is on, and use it to answer in context."
+      },
+      {
+        "name": "Branded widget",
+        "body": "Your logo and colours on a chat widget you embed with one snippet."
+      },
+      {
+        "name": "Live typing",
+        "body": "Customers see when a teammate is replying, and you see when they are."
+      },
+      {
+        "name": "Attachments",
+        "body": "Customers and your team can send files right inside the conversation."
+      },
+      {
+        "name": "Shared inbox",
+        "body": "Every conversation and reply in one place, with a badge showing whether the AI, a teammate or nobody has it."
+      },
+      {
+        "name": "Join alerts",
+        "body": "When a customer asks for a person, every teammate gets a Join alert. The first to join takes it and the alert clears for everyone."
+      },
+      {
+        "name": "Take over & hand back",
+        "body": "Take a chat from the AI or a colleague, and hand it back to the AI in one tap."
+      },
+      {
+        "name": "Assignments",
+        "body": "Conversations can be assigned to a teammate, who gets notified."
+      },
+      {
+        "name": "Team invites",
+        "body": "Invite teammates by email and add seats as your team grows."
+      },
+      {
+        "name": "Auto tickets",
+        "body": "If nobody joins within 90 seconds, the customer is told and a ticket is created automatically, with an email follow-up."
+      },
+      {
+        "name": "Website crawl",
+        "body": "Point Elpino at a page. JavaScript-built pages are rendered in a real browser first."
+      },
+      {
+        "name": "Sitemap import",
+        "body": "Pull in up to 20 pages from your sitemap in one go."
+      },
+      {
+        "name": "Discover",
+        "body": "Start at one link and Elpino follows it through up to 50 pages, help and policy pages first."
+      },
+      {
+        "name": "File upload",
+        "body": "Upload PDF, Word, text and Markdown files and the text is extracted for you."
+      },
+      {
+        "name": "Written pages",
+        "body": "Write your own pages in the editor for things that live nowhere else."
+      },
+      {
+        "name": "Public / private",
+        "body": "Each source has a visibility switch, so internal notes stay internal."
+      },
+      {
+        "name": "Payment lookup",
+        "body": "Checks real payments in Stripe or Razorpay so answers are facts, not guesses."
+      },
+      {
+        "name": "Payment links",
+        "body": "Creates a fresh, secure payment link when a payment needs another try."
+      },
+      {
+        "name": "Subscriptions",
+        "body": "Checks subscription status and can cancel one when the customer asks."
+      },
+      {
+        "name": "Refunds (opt-in)",
+        "body": "Off by default. The workspace owner decides whether the AI may refund at all."
+      },
+      {
+        "name": "Receipts",
+        "body": "Finds and sends the receipt for a specific payment."
+      },
+      {
+        "name": "MCP tools",
+        "body": "Connect up to five MCP servers and switch on exactly the tools the agent may use."
+      },
+      {
+        "name": "Identity check",
+        "body": "A one-time email code or a signed token from your app confirms who the customer is."
+      },
+      {
+        "name": "Private-data filter",
+        "body": "Names and emails are swapped for reference codes before the AI reads a conversation, and secrets are stripped out."
+      },
+      {
+        "name": "Secure requests",
+        "body": "Ask for sensitive details through a one-time private form instead of the chat."
+      },
+      {
+        "name": "Encrypted keys",
+        "body": "Connected credentials are stored encrypted."
+      },
+      {
+        "name": "Budget guardrails",
+        "body": "A monthly AI credit on paid plans keeps AI spend predictable."
+      },
+      {
+        "name": "Fact review",
+        "body": "Drafts are checked against tool results before the customer sees them."
+      },
+      {
+        "name": "Visitor context",
+        "body": "Location, device and the page they were on, attached to every conversation."
+      },
+      {
+        "name": "Analytics",
+        "body": "See how conversations are going across your workspace."
+      },
+      {
+        "name": "History",
+        "body": "Earlier conversations with the same customer, right next to the thread."
+      },
+      {
+        "name": "Free plan",
+        "body": "Start with 100 AI messages a month, no card required."
+      },
+      {
+        "name": "Credit-based plans",
+        "body": "Paid plans include a monthly AI credit, and extra seats are simple add-ons."
+      },
+      {
+        "name": "Email replies",
+        "body": "Verified visitors who left the chat can still get your reply by email."
+      }
+    ],
+    "table": {
+      "all": "All",
+      "readMoreIn": "Read more in {more}",
+      "hint": "Tap any tile. Every feature here is live today."
+    },
+    "hero": {
+      "badge": "Features",
+      "titlePrefix": "The elements of ",
+      "titleHl": "great support.",
+      "subtitle": "{count} capabilities, one workspace. Filter by family, tap a tile, and see exactly what Elpino does."
+    },
+    "loop": {
+      "eyebrow": "How they fit",
+      "titlePrefix": "It's a loop, ",
+      "titleHl": "not a list.",
+      "subtitle": "Each feature feeds the next, so support gets better the more you use it.",
+      "steps": [
+        {
+          "t": "Teach",
+          "d": "Crawl your site, upload files, write pages."
+        },
+        {
+          "t": "Answer",
+          "d": "The AI replies from your knowledge, in your language."
+        },
+        {
+          "t": "Act",
+          "d": "Payments, subscriptions and your MCP tools."
+        },
+        {
+          "t": "Hand off",
+          "d": "Ask first, alert the team, join or ticket."
+        },
+        {
+          "t": "Learn",
+          "d": "Review conversations and improve your knowledge."
+        }
+      ],
+      "stepOf": "Step {n} of {total}",
+      "explore": "Explore this step"
+    },
+    "personas": {
+      "eyebrow": "Who it's for",
+      "titlePrefix": "Pick your seat. ",
+      "titleHl": "See your features.",
+      "items": [
+        {
+          "label": "Founder",
+          "line": "You're the whole support team and want your evenings back.",
+          "picks": [
+            "Free plan, no card",
+            "Answers from your site in minutes",
+            "AI handles payments and receipts",
+            "Only pings you when it truly needs you"
+          ]
+        },
+        {
+          "label": "Support lead",
+          "line": "You run a team and need clean ownership and no dropped chats.",
+          "picks": [
+            "Shared inbox with clear badges",
+            "Team-wide Join alerts",
+            "Auto tickets when everyone's busy",
+            "Visitor context on every thread"
+          ]
+        },
+        {
+          "label": "Developer",
+          "line": "You want it wired into your own product and data.",
+          "picks": [
+            "Signed-token identity from your app",
+            "MCP servers with per-tool approval",
+            "Stripe and Razorpay lookups",
+            "One embeddable widget snippet"
+          ]
+        },
+        {
+          "label": "Store owner",
+          "line": "Customers ask about orders and payments all day.",
+          "picks": [
+            "Order lookups through your MCP tools",
+            "Payment links and receipts",
+            "Refunds only if you switch them on",
+            "Replies in your customer's language"
+          ]
+        }
+      ]
+    },
+    "stack": {
+      "badge": "One tool",
+      "titlePrefix": "Six tools in. ",
+      "titleHl": "One workspace out.",
+      "subtitle": "Most teams stitch a widget, a helpdesk, a knowledge base and a bot together. Elpino is all of it in one place, with one memory of every customer.",
+      "items": [
+        "Chat widget",
+        "Helpdesk inbox",
+        "Knowledge base",
+        "Chatbot builder",
+        "Payment look-ups",
+        "Handoff rules"
+      ],
+      "cardSubtitle": "Widget · Inbox · Knowledge · AI agent · Tools · Handoff"
+    },
+    "soon": {
+      "badge": "Coming in November",
+      "title": "Omnichannel is next.",
+      "body": "Website chat is live today. Bringing more channels into the same inbox is what we're shipping next, and we'll announce it on the changelog.",
+      "cta": "See the changelog"
+    },
+    "faq": {
+      "eyebrow": "Questions",
+      "titlePrefix": "Good to ",
+      "titleHl": "know.",
+      "items": [
+        {
+          "q": "Is everything on this page live?",
+          "a": "Yes. Every tile describes something Elpino does today. Omnichannel is the one thing we're still building, and it's marked as coming in November."
+        },
+        {
+          "q": "Do I need all of it?",
+          "a": "No. Start with a knowledge base and the widget on the free plan, then turn on tools, MCP and teammates as you need them."
+        },
+        {
+          "q": "What's included on the free plan?",
+          "a": "100 AI messages a month with no card required."
+        },
+        {
+          "q": "How do paid plans work?",
+          "a": "Paid plans include a monthly AI credit, and extra seats are simple add-ons. See the pricing page for details."
+        }
+      ]
+    },
+    "closing": {
+      "title": "Every element, ready to use.",
+      "subtitle": "Start on the free plan and switch things on as you grow.",
+      "ctaStart": "Start free",
+      "ctaPricing": "See pricing"
+    }
+  },
+  "founders": {
+    "stream": {
+      "incomingLive": "Incoming, live",
+      "onDuty": "Elpino on duty",
+      "needsYou": "Needs you",
+      "handled": "Handled",
+      "askedFirst": "{why}. Elpino asked first, then alerted you.",
+      "handledWithoutYou": "Handled without you",
+      "actuallyNeededYou": "Actually needed you",
+      "items": [
+        {
+          "q": "How do I export my data?"
+        },
+        {
+          "q": "Why did my card fail?"
+        },
+        {
+          "q": "Do you offer a startup discount?"
+        },
+        {
+          "q": "Can we get a custom contract?",
+          "why": "Asked for a person"
+        },
+        {
+          "q": "Where's my invoice for March?"
+        },
+        {
+          "q": "How do I reset my password?"
+        },
+        {
+          "q": "Can I talk to the founder?",
+          "why": "Asked for a person"
+        },
+        {
+          "q": "Does it work with Shopify?"
+        }
+      ]
+    },
+    "hero": {
+      "badge": "For founders",
+      "titlePrefix": "Ship product. ",
+      "titleHl": "Not support replies.",
+      "subtitle": "You started a company to build something, not to answer “how do I reset my password?” forty times a week. Elpino takes the repeat questions and only taps you for the ones that truly need a founder.",
+      "ctaStart": "Start free",
+      "ctaPricing": "See pricing",
+      "freeNote": "Free plan: 100 AI messages a month. No card."
+    },
+    "calculator": {
+      "eyebrow": "Do the maths",
+      "titlePrefix": "Get your afternoons ",
+      "titleHl": "back.",
+      "subtitle": "Plug in your own numbers. The AI share is your guess, not a promise, and it depends on what's in your knowledge base.",
+      "sliderQuestions": "Customer questions a day",
+      "sliderMinutes": "Minutes to answer each",
+      "unitMin": "min",
+      "sliderShare": "Share you guess the AI resolves",
+      "yourDay": "Your 8-hour day",
+      "today": "Today",
+      "withElpinoAt": "With Elpino at {pct}%",
+      "backEachWeek": "Back each week",
+      "chatsUntouched": "Chats a day, untouched",
+      "volumeNote": "At this volume, support alone is more than a full day.",
+      "supportLabel": "{h}h support",
+      "buildingLabel": "{h}h building"
+    },
+    "setup": {
+      "eyebrow": "Setup",
+      "titlePrefix": "Live before your ",
+      "titleHl": "coffee cools.",
+      "subtitle": "No engineers, no training period. Four steps, and the last is optional.",
+      "stepLabel": "Step {n}",
+      "steps": [
+        {
+          "t": "Paste your site",
+          "d": "Elpino crawls your pages, including JavaScript-built ones, and learns your product.",
+          "meter": "Reading your site"
+        },
+        {
+          "t": "Add the rest",
+          "d": "Upload docs, or write the policies that live only in your head.",
+          "meter": "Adding knowledge"
+        },
+        {
+          "t": "Drop in the widget",
+          "d": "One snippet and the chat is live on your site.",
+          "meter": "Installing widget"
+        },
+        {
+          "t": "Connect payments (optional)",
+          "d": "Stripe or Razorpay, so it can look up billing for you.",
+          "meter": "Connecting"
+        }
+      ]
+    },
+    "reaches": {
+      "badge": "The filter",
+      "titlePrefix": "Only the ",
+      "titleHl": "important stuff",
+      "titleSuffix": " reaches you.",
+      "subtitle": "You decide what the AI may do. Everything else is a clear rule: ask first, alert together, and never leave the customer hanging.",
+      "rules": [
+        {
+          "t": "Answers from your docs",
+          "d": "Handled. You never see it."
+        },
+        {
+          "t": "Payment and account lookups",
+          "d": "Handled with the tools you switched on."
+        },
+        {
+          "t": "\"Can I talk to someone?\"",
+          "d": "Asks the customer first, then alerts you and your team."
+        },
+        {
+          "t": "You're heads-down?",
+          "d": "After 90 seconds, a ticket is filed and the customer is told."
+        }
+      ]
+    },
+    "money": {
+      "eyebrow": "Billing questions",
+      "titlePrefix": "It checks the real payment. ",
+      "titleHl": "You keep the keys.",
+      "subtitle": "Connect Stripe or Razorpay and the AI can look up payments and subscriptions, send receipts and payment links, and cancel a subscription when asked. Refunds stay off until you flip the switch.",
+      "chatAsk": "Can I get my last payment refunded?",
+      "chatYes": "I've found your payment and started the refund. It usually reaches your account in 5 to 7 working days.",
+      "chatNo": "I can see the payment, but I can't refund it myself. Would you like me to connect you with our team?",
+      "toggleLabel": "Let the AI issue refunds",
+      "toggleNote": "Off by default. Try the switch."
+    },
+    "grows": {
+      "eyebrow": "Room to grow",
+      "titlePrefix": "Starts with you. ",
+      "titleHl": "Scales with your team.",
+      "stageLabel": "Stage {n}",
+      "stages": [
+        {
+          "t": "Just you",
+          "d": "Free plan, 100 AI messages a month, one inbox you rarely open."
+        },
+        {
+          "t": "First hire",
+          "d": "Invite them by email. They get Join alerts and take chats over from the AI."
+        },
+        {
+          "t": "A small team",
+          "d": "Assign conversations, share the inbox, add seats when you need them."
+        },
+        {
+          "t": "Scaling up",
+          "d": "Paid plans with a monthly AI credit, MCP tools for your own systems."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Founder questions",
+      "titlePrefix": "Straight ",
+      "titleHl": "answers.",
+      "items": [
+        {
+          "q": "How is this different from a generic chatbot widget?",
+          "a": "Elpino answers only from the knowledge you gave it, can look up real payments and use your own tools, verifies identity before touching anything personal, and hands over to a person with the full conversation when it can't help."
+        },
+        {
+          "q": "How fast can I set it up on my own?",
+          "a": "Most founders are live the same day: add your site or files, paste the widget snippet, and optionally connect Stripe or Razorpay."
+        },
+        {
+          "q": "How does it decide between answering and alerting me?",
+          "a": "If it can answer from your knowledge or a tool, it does. If it can't, it says so and asks the customer whether to connect them with your team. Only then are you and your team alerted."
+        },
+        {
+          "q": "Will it make things up?",
+          "a": "It answers from what you've approved, and a review pass checks drafts against tool results. When it doesn't know, it says so."
+        },
+        {
+          "q": "Is my Stripe or Razorpay account safe?",
+          "a": "Credentials are stored encrypted, and money-moving actions such as refunds are off unless you turn them on."
+        },
+        {
+          "q": "What happens when I hire a support person?",
+          "a": "Invite them and they'll get Join alerts, can take over chats from the AI, and can hand them back."
+        }
+      ]
+    },
+    "closing": {
+      "title": "Go back to building.",
+      "subtitle": "Start free, teach Elpino your product, and let it take the repeat questions.",
+      "ctaStart": "Start free",
+      "ctaMeetAgent": "Meet the AI agent"
+    }
+  },
+  "busyOperators": {
+    "rush": {
+      "badgeLabel": "Rush hour · illustrative simulation",
+      "reset": "Reset",
+      "waitingForPerson": "Waiting for a person",
+      "levelCalm": "Calm",
+      "levelBusy": "Getting busy",
+      "levelFire": "Queue on fire",
+      "inboxZero": "Inbox zero. Nice.",
+      "chatsWaiting": "chats waiting",
+      "aiToggleLabel": "Elpino AI",
+      "teammatesOnline": "Teammates online",
+      "resolvedByAi": "Resolved by AI",
+      "resolvedByTeam": "Resolved by team",
+      "disclaimer": "A toy model: 3 chats arrive each tick and the AI takes an example share. Real results depend on your knowledge base and tools.",
+      "online": "online",
+      "offline": "offline"
+    },
+    "hero": {
+      "badge": "For busy teams",
+      "titlePrefix": "Rush hour, ",
+      "titleHl": "handled.",
+      "subtitle": "When the queue spikes, the AI takes the repeat questions, your team takes the rest, and nobody trips over each other. Flip the switch below and feel the difference.",
+      "ctaStart": "Start free",
+      "ctaInbox": "See the inbox"
+    },
+    "race": {
+      "badge": "No double replies",
+      "titlePrefix": "Two people, one chat. ",
+      "titleHl": "Only one joins.",
+      "subtitle": "Everyone gets the same Join alert. The first person to tap takes the conversation, the alert clears for everyone else, and the inbox shows who has it. A colleague can still Take over later, on purpose.",
+      "askedForPerson": "Aisha Khan asked for a person",
+      "alertSent": "Alert sent to the whole team",
+      "waiting": "Waiting…",
+      "joined": "Joined",
+      "joinChat": "Join chat",
+      "priyaHasThis": "Priya has this",
+      "priyaJoinedFirst": "Priya joined first. The inbox badge now says Priya.",
+      "bothSee": "Both teammates see the alert…",
+      "customerSaidYes": "Customer said yes to a person"
+    },
+    "context": {
+      "eyebrow": "The handoff",
+      "titlePrefix": "Nobody repeats ",
+      "titleHl": "themselves.",
+      "subtitle": "Toggle to compare a cold handoff with the one Elpino makes.",
+      "toggleCold": "Cold handoff",
+      "toggleElpino": "Elpino handoff",
+      "coldGreeting": "Hi, I'm Priya. How can I help?",
+      "coldComplaint": "…I already explained all this to the bot. I moved countries and need my billing country changed. Again.",
+      "coldNote": "The customer starts over, and the team member starts blind.",
+      "whatPersonSees": "What the person sees",
+      "reasonLabel": "Reason",
+      "reasonValue": "Billing country change needs a person",
+      "summaryLabel": "Summary",
+      "summaryValue": "Moved countries, wants billing country updated. Verified by email code.",
+      "fullThreadLabel": "Full thread",
+      "fullThreadValue": "Every message so far, right above the composer",
+      "visitorLabel": "Visitor",
+      "visitorLocation": "Pune, India",
+      "visitorPage": "On /billing",
+      "identityVerified": "Identity verified"
+    },
+    "around": {
+      "eyebrow": "Round the clock",
+      "titlePrefix": "Cover every hour, ",
+      "titleHl": "without shifts.",
+      "subtitle": "Drag through an example day. Team hours are 9 to 6 here; yours will be your own.",
+      "teamOnline": "Team online",
+      "aiOnWatch": "AI on watch",
+      "hourAriaLabel": "Hour of the day",
+      "am": "AM",
+      "pm": "PM",
+      "dayItems": [
+        {
+          "t": "AI answers first",
+          "d": "Repeat questions never reach the queue."
+        },
+        {
+          "t": "Team gets Join alerts",
+          "d": "The first to tap takes the chat."
+        },
+        {
+          "t": "Hand back any time",
+          "d": "Give simple follow-ups back to the AI."
+        }
+      ],
+      "nightItems": [
+        {
+          "t": "AI answers first",
+          "d": "Questions it can answer are answered."
+        },
+        {
+          "t": "Nobody free? Ticket",
+          "d": "After 90 seconds a ticket is filed with the reason and summary."
+        },
+        {
+          "t": "Morning starts organised",
+          "d": "The customer was emailed, and tickets are waiting for you."
+        }
+      ]
+    },
+    "toolkit": {
+      "eyebrow": "Calm by design",
+      "titlePrefix": "The small things that ",
+      "titleHl": "keep a queue sane.",
+      "items": [
+        {
+          "t": "Ownership badges",
+          "d": "AI, teammate or resolved, on every thread."
+        },
+        {
+          "t": "Search and filters",
+          "d": "All, Unread, Read, Resolved."
+        },
+        {
+          "t": "Live typing",
+          "d": "See when the customer is writing, and let them see you."
+        },
+        {
+          "t": "Verified badge",
+          "d": "Know who has proved who they are."
+        },
+        {
+          "t": "Visitor details",
+          "d": "Location, device and the page they're on."
+        },
+        {
+          "t": "Take over, hand back",
+          "d": "Move a chat between the AI and people in a tap."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Questions",
+      "titlePrefix": "Good to ",
+      "titleHl": "know.",
+      "items": [
+        {
+          "q": "How do you stop two people replying to the same customer?",
+          "a": "Everyone gets the same Join alert, and the first person to tap takes the chat. The alert clears for everyone else, and the inbox shows who has it."
+        },
+        {
+          "q": "Will Elpino replace my team?",
+          "a": "No. It handles repeat questions, and your people take the conversations that need judgment. You can also hand any chat back to the AI."
+        },
+        {
+          "q": "What can it learn from?",
+          "a": "Your website pages (including JavaScript-built ones), uploaded PDF, Word, text and Markdown files, and pages you write. You control which are public."
+        },
+        {
+          "q": "What happens when nobody's online?",
+          "a": "The AI answers what it can. If a customer asks for a person and nobody joins within 90 seconds, a ticket is filed with the reason and summary, and the customer is emailed."
+        },
+        {
+          "q": "How long does rollout take?",
+          "a": "Most teams are live the same day: add knowledge, paste the widget, and invite teammates."
+        }
+      ],
+      "footNote": "Website chat is live today. Omnichannel is coming in November."
+    },
+    "closing": {
+      "title": "Make the queue someone else's problem.",
+      "subtitle": "Start free and invite your team when you're ready.",
+      "ctaStart": "Start free",
+      "ctaTickets": "See tickets"
+    }
+  },
+  "developers": {
+    "hero": {
+      "badge": "For developers",
+      "titlePrefix": "From ",
+      "titleMiddle": " to ",
+      "titleHl": "resolved.",
+      "subtitle": "One tag for the widget, one signed token so Elpino knows who's logged in, one MCP server so the AI can read your data. Watch the three steps land in a page.",
+      "ctaStart": "Start free",
+      "ctaDocs": "Read the docs"
+    },
+    "ide": {
+      "comment1": "<!-- 1. Paste the tag -->",
+      "comment2": "<!-- 2. Tell Elpino who's logged in -->",
+      "comment3": "  // elpinoToken: signed by your backend",
+      "mcpComment": "// In your dashboard: connect an MCP server and enable get_order.",
+      "stepEmbed": "Embed",
+      "stepIdentify": "Identify",
+      "stepResolve": "Resolve",
+      "previewSupport": "Support",
+      "previewVerified": "Verified",
+      "previewGreeting": "Hi Aisha, how can I help?",
+      "previewQuestion": "Where's my order?",
+      "previewAnswer": "It shipped yesterday and arrives Thursday."
+    },
+    "sequence": {
+      "eyebrow": "Request flow",
+      "titlePrefix": "One question, ",
+      "titleHl": "four systems.",
+      "subtitle": "Who talks to whom when a logged-in customer asks about their order. Step through it, or let it play.",
+      "actors": [
+        "Browser",
+        "Your server",
+        "Elpino",
+        "Your MCP server"
+      ],
+      "steps": [
+        {
+          "label": "Customer logs in"
+        },
+        {
+          "label": "Signed JWT",
+          "note": "≤ 5 min · works once"
+        },
+        {
+          "label": "$elpino identify(token)"
+        },
+        {
+          "label": "Verify signature + claims ✓"
+        },
+        {
+          "label": "“Where's my order?”"
+        },
+        {
+          "label": "get_order",
+          "note": "verified customers only"
+        },
+        {
+          "label": "Order status"
+        },
+        {
+          "label": "Reply to the customer"
+        }
+      ],
+      "stepCounter": "Step {n} / {total}",
+      "nextStep": "Next step",
+      "replay": "Replay"
+    },
+    "tokenExplorer": {
+      "eyebrow": "The identity token",
+      "titlePrefix": "Anatomy of a token, ",
+      "titleHl": "and how it breaks.",
+      "subtitle": "HS256, signed with your workspace secret. Tap a claim for its rule, then break the token to see what the widget tells you.",
+      "payload": "Payload",
+      "optional": "optional",
+      "required": "Required",
+      "optionalCap": "Optional",
+      "breakIt": "Break it",
+      "notAccepted": "[Elpino] Identity token was not accepted: {code}",
+      "fix": "Fix:",
+      "claimDescriptions": [
+        "Your stable account ID for this user.",
+        "Exactly \"elpino-widget\".",
+        "A fresh random ID per token, 16 to 128 URL-safe characters. A UUID works.",
+        "Issued-at time in whole seconds (not milliseconds).",
+        "Expiry in whole seconds, at most 5 minutes after iat.",
+        "Omit it when there is none. null is rejected.",
+        "true only if your login system confirmed ownership.",
+        "Display name shown to your team."
+      ]
+    },
+    "server": {
+      "eyebrow": "Your backend",
+      "titlePrefix": "Copy, paste, ",
+      "titleHl": "ship.",
+      "subtitle": "The same snippets your dashboard shows, in the language you already run.",
+      "copy": "Copy",
+      "copied": "Copied",
+      "codeTitle": "identity token"
+    },
+    "mcp": {
+      "badge": "MCP servers",
+      "titlePrefix": "Give the AI tools. ",
+      "titleHl": "Keep the keys.",
+      "subtitle": "Connect up to five MCP servers, enable up to 15 tools on each, and choose who they're open to. Flip the switches to see what the agent can use.",
+      "shopServerName": "Your shop MCP server",
+      "toolsDiscovered": "{n} tools discovered",
+      "toggleLabel": "Open read-only tools to any visitor",
+      "changesData": "Changes data",
+      "readOnly": "Read-only",
+      "needsVerified": "Needs verified customer",
+      "agentCanCall": "Agent can call",
+      "toolDescriptions": [
+        "Look up an order and its status",
+        "Live tracking for a parcel",
+        "Change a delivery address",
+        "Cancel an order that hasn't shipped"
+      ],
+      "bullets": [
+        "Every call is re-checked against your list on the server",
+        "Tools that change data always need a verified customer",
+        "Credentials are stored encrypted"
+      ]
+    },
+    "sees": {
+      "eyebrow": "Privacy by default",
+      "titlePrefix": "The model ",
+      "titleHl": "never sees",
+      "titleSuffix": " who they are.",
+      "subtitle": "Before the AI reads a conversation, names, emails and IDs are swapped for reference codes, and secrets like tokens and keys are stripped out. Tools still get the real values on your side.",
+      "toggleTeam": "What your team sees",
+      "toggleModel": "What the AI model sees",
+      "chatRaw1": "Hi, I'm Aisha Khan (aisha@example.com). Where's my order?",
+      "chatMasked1": "Hi, I'm ref_name_9f2c (ref_email_41ab). Where's my order?",
+      "chatRaw2": "Hi Aisha, your order shipped yesterday.",
+      "chatMasked2": "Hi, your order shipped yesterday."
+    },
+    "faq": {
+      "eyebrow": "Questions",
+      "titlePrefix": "Good to ",
+      "titleHl": "know.",
+      "items": [
+        {
+          "q": "Do I have to use identity verification?",
+          "a": "No, but it's what lets the AI safely show private data. Anyone can type any email into a chat, so a signed token from your own login system is how a customer becomes Verified."
+        },
+        {
+          "q": "How long does a token last?",
+          "a": "At most five minutes, and it works once. The chat session itself lasts up to 8 hours, with a 30-minute idle limit."
+        },
+        {
+          "q": "Which signing algorithm?",
+          "a": "HS256. Other algorithms, including none and RS256, are refused."
+        },
+        {
+          "q": "Which languages have snippets?",
+          "a": "Node.js, Python, PHP and Ruby, in your dashboard's identity settings and the docs."
+        },
+        {
+          "q": "What is an MCP server?",
+          "a": "A service that exposes tools over the Model Context Protocol. Elpino discovers its tools, and you enable the ones the AI may use."
+        },
+        {
+          "q": "Can the AI change data in my systems?",
+          "a": "Only through tools you've enabled, and tools that change data always need a verified customer."
+        },
+        {
+          "q": "Is there an API?",
+          "a": "The widget SDK, identity tokens and MCP are the integration surface today."
+        }
+      ],
+      "linkLabels": [
+        "Identity docs",
+        "Widget docs",
+        "AI agent",
+        "Security guide"
+      ]
+    },
+    "closing": {
+      "title": "Ship it in an afternoon.",
+      "subtitle": "Start free, paste the tag, and wire up identity when you're ready.",
+      "ctaStart": "Start free",
+      "ctaDocs": "Open the docs"
     }
   }
 }

@@ -69,7 +69,7 @@ export function ContactForm({ desk, onDeskChange }: { desk: Desk; onDeskChange: 
         <div className="relative h-32 w-44" aria-hidden="true">
           <Envelope className="absolute inset-0 h-full w-full animate-[elpino-mail_2.6s_cubic-bezier(0.5,0,0.3,1)_both]" />
         </div>
-        <span aria-hidden="true" className="elpino-stamp mt-6 rotate-[-8deg] rounded-lg border-[3px] border-[#1aa37a] px-4 py-1 font-mono text-[18px] font-bold uppercase tracking-[0.2em] text-[#1aa37a]" style={{ animationDelay: "1.9s" }}>Sent ✓</span>
+        <span aria-hidden="true" className="elpino-stamp mt-6 rotate-[-8deg] rounded-lg border-[3px] border-[#1aa37a] px-4 py-1 font-mono text-[18px] font-bold uppercase tracking-[0.2em] text-[#1aa37a]" style={{ animationDelay: "1.9s" }}>{t("contact.form.sentStamp", "Sent ✓")}</span>
         <h3 className="mt-6 animate-[elpino-focus_0.7s_ease-out_1.9s_both] text-4xl font-normal tracking-[-0.04em]">{t("contact.form.successTitle", "Message sent")}</h3>
         <p className="mt-3 max-w-sm animate-[elpino-focus_0.7s_ease-out_2.1s_both] leading-6 text-black/60">{t("contact.form.successBody", "Thanks for reaching out. We'll get back to you shortly.")}</p>
         <button type="button" onClick={() => setStatus("idle")} className="mt-6 animate-[elpino-focus_0.7s_ease-out_2.3s_both] rounded-full border-2 border-[#11120f] bg-[#ffd84d] px-6 py-2.5 text-sm font-semibold transition hover:-translate-y-0.5">{t("contact.form.sendAnother", "Send another message")}</button>
@@ -108,7 +108,7 @@ export function ContactForm({ desk, onDeskChange }: { desk: Desk; onDeskChange: 
             <img src="/icon.png" alt="" className="h-14 w-14 object-contain" />
           </div>
           <div aria-hidden="true" className="absolute right-[64px] top-2 hidden h-20 w-20 -rotate-12 items-center justify-center rounded-full border-2 border-dashed border-[#11120f]/45 text-center font-mono text-[8.5px] font-bold uppercase leading-tight tracking-[0.06em] text-[#11120f]/55 md:flex">
-            Elpino<br />mail<br />{today}
+            Elpino<br />{t("contact.form.postmarkLabel", "mail")}<br />{today}
           </div>
 
           <div className="space-y-5 md:pt-24">
@@ -148,7 +148,7 @@ export function ContactForm({ desk, onDeskChange }: { desk: Desk; onDeskChange: 
         )}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="space-y-1 text-xs text-black/50">
-            <p className="inline-flex items-center gap-1.5"><ShieldCheck size={14} className="text-[#3784ff]" />Sent securely — never used for training</p>
+            <p className="inline-flex items-center gap-1.5"><ShieldCheck size={14} className="text-[#3784ff]" />{t("contact.form.securityNote", "Sent securely — never used for training")}</p>
             <p>{t("contact.form.agreeText", "By sending this, you agree to our")} <a href="/privacy" className="font-semibold text-[#11120f] underline decoration-[#3784ff] decoration-2 underline-offset-4">{t("contact.form.privacy", "Privacy Policy")}</a>.</p>
           </div>
           <button type="submit" disabled={status === "submitting"} className="group inline-flex h-13 items-center justify-center gap-2.5 rounded-full border-2 border-[#11120f] bg-[#3784ff] px-9 text-[15px] font-semibold text-white transition duration-200 hover:-translate-y-0.5 disabled:translate-y-0 disabled:opacity-70">

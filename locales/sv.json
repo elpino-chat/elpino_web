@@ -47,7 +47,95 @@
       "privacy": "Integritetspolicy",
       "successTitle": "Meddelande skickat",
       "successBody": "Tack för att du kontaktade oss. Vi återkommer snart.",
-      "sendAnother": "Skicka ett till meddelande"
+      "sendAnother": "Skicka ett till meddelande",
+      "sentStamp": "Skickat ✓",
+      "postmarkLabel": "mail",
+      "securityNote": "Skickas säkert — har aldrig använts för träning"
+    },
+    "hero": {
+      "eyebrow": "Kontakta · postrummet",
+      "greeting": "Hej.",
+      "titlePrefix": "Hur kan",
+      "titleHl": "hjälper vi?",
+      "searchLabel": "Sök i hjälpämnen",
+      "searchPlaceholder": "Sök efter försäljning, support, fakturering och mer",
+      "searchButtonLabel": "Sök",
+      "noMatch": "Ingen exakt matchning. Tryck på Enter för att skicka din fråga till oss.",
+      "linkGettingStarted": "Komma igång",
+      "linkFeaturedGuides": "Utvalda guider",
+      "linkPlansBilling": "Planer och fakturering",
+      "linkSendMessage": "Eller skicka ett meddelande till oss ↓"
+    },
+    "desks": {
+      "eyebrow": "Välj en rutt",
+      "titlePrefix": "Nå ",
+      "titleHl": "höger skrivbord.",
+      "subtitle": "Välj den kanal som bäst matchar det du behöver. Varje rutt leder till en riktig medlem av vårt team.",
+      "deskLabel": "Skrivbord {n}",
+      "addressed": "Vykort adresserat ✓",
+      "actionAddress": "Adressera ett vykort",
+      "emailNote": "Föredrar du din egen e-postapp? Varje skrivbord med en adress fungerar också med {link}.",
+      "emailNoteLink": "e-post"
+    },
+    "postcard": {
+      "eyebrow": "Skicka ett meddelande till oss",
+      "titlePrefix": "En riktig människa ",
+      "titleHl": "kommer att läsa detta.",
+      "addressedTo": "Adresserad till"
+    },
+    "tracking": {
+      "eyebrow": "Spåra ditt vykort",
+      "titlePrefix": "Vad händer ",
+      "titleHl": "efter att du tryckt på skicka.",
+      "onlineStatus": "Vårt team är online",
+      "hours": "mån–fre, 9:00–18:00 CET",
+      "steps": [
+        {
+          "title": "Skickat",
+          "body": "Ditt vykort lämnar dina händer. Inget annat att göra."
+        },
+        {
+          "title": "Vi läser varje ord",
+          "body": "Din anteckning landar med en människa i laget — ingen biljettlabyrint, inga bots."
+        },
+        {
+          "title": "Ett svar inom en arbetsdag",
+          "body": "Riktiga svar från någon som arbetar med produkten."
+        },
+        {
+          "title": "Ett samtal om det är användbart",
+          "body": "För försäljning och företagande går vi igenom Elpino om ditt faktiska arbetsflöde."
+        }
+      ]
+    },
+    "library": {
+      "titlePrefix": "Föredrar att hitta den ",
+      "titleHl": "dig själv?",
+      "subtitle": "De flesta frågor är redan besvarade här — och allt nedan länkar direkt till källan.",
+      "cardLabel": "Kort {n}",
+      "items": [
+        {
+          "title": "Snabba svar",
+          "body": "Konfiguration, fakturering, eskalering och säkerhet — besvaras i FAQ.",
+          "cta": "Bläddra i FAQ"
+        },
+        {
+          "title": "Dokumentation",
+          "body": "Installera guider, anslutningsinställningar och konfiguration av arbetsytan.",
+          "cta": "Öppna dokumenten"
+        },
+        {
+          "title": "Säkerhet och integritet",
+          "body": "Hur dina data krypteras, lagras och aldrig används för träning.",
+          "cta": "Läs policyerna"
+        }
+      ]
+    },
+    "search": {
+      "plansTitle": "Planer och fakturering",
+      "plansDetail": "Frågor om prenumerationer, fakturor eller prissättning",
+      "accountTitle": "Konto och säkerhet",
+      "accountDetail": "Hjälp med åtkomst, sekretess eller kontoinställningar"
     }
   },
   "auth": {
@@ -105,6 +193,3811 @@
         "lowercase": "Liten bokstav",
         "number": "Siffra"
       }
+    }
+  },
+  "home": {
+    "hero": {
+      "badge": "AI-driven kundsupport",
+      "titlePrefix": "Support som",
+      "words": [
+        "svarar.",
+        "löser.",
+        "kommer ihåg.",
+        "eskalerar."
+      ],
+      "subtitle": "AI som svarar utifrån din kunskap, verifierar riktiga betalningar och beställningar, och eskalerar till ditt team med full kontext när en människa behövs.",
+      "ctaPrimary": "Börja gratis",
+      "ctaSecondary": "Testa själv",
+      "trust": [
+        "100 gratis AI-meddelanden per månad",
+        "Inget kort krävs",
+        "Klart på en eftermiddag"
+      ],
+      "stickers": [
+        "Löst av AI",
+        "Människa redo",
+        "Privat som standard",
+        "Ingenting går förlorat"
+      ],
+      "callouts": [
+        "AI-märke på varje konversation",
+        "Gå med för att ta över",
+        "Besökarens plats och enhet"
+      ],
+      "widget": {
+        "name": "Elpino",
+        "subtitle": "Svarar inom sekunder",
+        "convo": [
+          "Blev jag debiterad dubbelt för uppgraderingen?",
+          "Kontrollerade din betalningshistorik",
+          "Du debiterades bara en gång. Det andra försöket misslyckades och drogs aldrig."
+        ]
+      }
+    },
+    "marquee": {
+      "questions": [
+        "Var är min faktura?",
+        "Hur återställer jag mitt lösenord?",
+        "Blev jag debiterad dubbelt?",
+        "Kan jag få pengarna tillbaka?",
+        "Var är min beställning?",
+        "Hur lägger jag till en teammedlem?",
+        "Är mina uppgifter säkra?",
+        "Varför misslyckades min betalning?",
+        "Kan jag prata med en människa?"
+      ]
+    },
+    "tryit": {
+      "eyebrow": "Testa det",
+      "titlePrefix": "Fråga om något.",
+      "titleHl": "Se vad den gör.",
+      "subtitle": "Välj en kundfråga. Chatten till vänster, allt Elpino gjorde innan den svarade till höger.",
+      "widgetName": "Elpino",
+      "widgetSubtitle": "AI-support",
+      "whatItDid": "Vad Elpino gjorde",
+      "done": "Klart",
+      "working": "Bearbetar…",
+      "stepStart": "start",
+      "stepOther": "steg",
+      "person": "människa",
+      "resolved": "löst",
+      "humanNote": "Frågade först · en teammedlem kan gå med, eller ett ärende skapas",
+      "resolvedNote": "Besvarat och löst, ingen människa behövs",
+      "sampleNote": "Exempelsvar. Stegen som visas är den typ av verktyg Elpino faktiskt använder.",
+      "qas": [
+        {
+          "q": "Blev jag debiterad dubbelt?",
+          "steps": [
+            "Verifierade dig med en e-postkod",
+            "Kontrollerade din betalningshistorik"
+          ],
+          "a": "Du debiterades bara en gång. Det andra försöket misslyckades och drogs aldrig."
+        },
+        {
+          "q": "Var är min beställning?",
+          "steps": [
+            "Verifierade dig med en e-postkod",
+            "Kontaktade butiken via MCP"
+          ],
+          "a": "Skickades igår, anländer på torsdag. Har skickat en spårningslänk via e-post."
+        },
+        {
+          "q": "Hur återställer jag mitt lösenord?",
+          "steps": [
+            "Sökte i din kunskapsbas"
+          ],
+          "a": "Välj 'Glömt lösenord' på inloggningssidan och använd länken vi skickar via e-post."
+        },
+        {
+          "q": "Kan jag få pengarna tillbaka?",
+          "steps": [
+            "Kontrollerade betalningen",
+            "Återbetalningar är avstängda för denna arbetsyta"
+          ],
+          "a": "Jag kan inte göra denna återbetalning själv. Vill du att jag kopplar dig till vårt team?"
+        },
+        {
+          "q": "Kan jag prata med en människa?",
+          "steps": [
+            "Frågade innan eskalering",
+            "Meddelade hela teamet samtidigt"
+          ],
+          "a": "Priya från vårt team har anslutit och ser hela konversationen."
+        },
+        {
+          "q": "Säljer ni presentkort?",
+          "steps": [
+            "Sökte i din kunskapsbas",
+            "Ingen matchning hittades"
+          ],
+          "a": "Jag har inte den informationen. Vill du att jag kopplar dig till vårt team?"
+        }
+      ]
+    },
+    "customizer": {
+      "eyebrow": "Gör den till din egen",
+      "titlePrefix": "En widget som",
+      "titleHl": "ser ut och pratar som du.",
+      "subtitle": "Lägg till din logotyp, namnge din AI, välj färg och tema, och svarsspråk. Testa inställningarna och se widgeten förändras.",
+      "yourLogo": "Din logotyp",
+      "upload": "Ladda upp logotyp",
+      "remove": "Ta bort",
+      "fileTooBig": "Använd en bild under 2 MB.",
+      "fileShown": "Visas bara här. Laddas inte upp någonstans.",
+      "aiName": "AI-namn",
+      "greeting": "Hälsning",
+      "accentColour": "Accentfärg",
+      "theme": "Tema",
+      "light": "Ljust",
+      "dark": "Mörkt",
+      "customerWritesIn": "Kunden skriver på",
+      "theAi": "AI:n",
+      "repliesIn": "svarar på",
+      "autoMatch": "Automatiskt: matcha kunden",
+      "seesUrl": "AI:n ser sidans URL",
+      "visitorOn": "Besökare på",
+      "replyingIn": "Svarar på",
+      "matched": "(matchad)",
+      "writeMessage": "Skriv ett meddelande…",
+      "previewNote": "Förhandsvisning med exempeltext. Din riktiga widget använder din logotyp, färger och hälsning.",
+      "support": "Support",
+      "weReplyFast": "Vi svarar inom sekunder"
+    },
+    "tour": {
+      "eyebrow": "Produkt",
+      "titlePrefix": "Allt ett supportteam behöver,",
+      "titleHl": "på ett ställe.",
+      "items": [
+        {
+          "tag": "AI-agent",
+          "title": "En agent som vet vem den pratar med",
+          "desc": "Kommer ihåg kunder, verifierar identitet, kontrollerar betalningar och anropar dina verktyg."
+        },
+        {
+          "tag": "Delad inkorg",
+          "title": "En inkorg för team och AI",
+          "desc": "Tydligt ägarskap, anslutningsaviseringar och full kontext för varje konversation."
+        },
+        {
+          "tag": "Kunskapsbas",
+          "title": "Lär den allt du har",
+          "desc": "Skanna din webbplats, ladda upp filer, skriv sidor. Med offentlig/privat-växlare."
+        },
+        {
+          "tag": "Ärenden",
+          "title": "Ingenting går förlorat",
+          "desc": "Om ingen är tillgänglig skapas ett ärende och kunden informeras."
+        }
+      ]
+    },
+    "who": {
+      "eyebrow": "Vem det är för",
+      "titlePrefix": "Byggd för människor",
+      "titleHl": "som gör support.",
+      "items": [
+        {
+          "title": "Grundare",
+          "desc": "Bygg produkten, inte supportsvar. Elpino kontaktar dig bara när en grundare verkligen behövs.",
+          "pts": [
+            "Gratis plan, 100 AI-meddelanden per månad",
+            "Meddelar dig bara när en människa behövs",
+            "Konfiguration på en eftermiddag"
+          ]
+        },
+        {
+          "title": "Upptagna team",
+          "desc": "Rusningstid under kontroll: AI:n tar upprepningar, alla får samma anslutningsavisering, ingen svarar dubbelt.",
+          "pts": [
+            "En avisering når hela teamet",
+            "Ägarskapsmärken på varje konversation",
+            "Ett ärende när ingen är tillgänglig"
+          ]
+        },
+        {
+          "title": "Utvecklare",
+          "desc": "En tagg, en signerad identitetstoken och MCP-servrar. Du väljer vad AI:n kan röra.",
+          "pts": [
+            "En skripttagg för widgeten",
+            "Signerade, kortlivade identitetstoken",
+            "MCP-servrar godkända verktyg för verktyg"
+          ]
+        }
+      ],
+      "founderVisual": [
+        {
+          "q": "Hur exporterar jag min data?",
+          "ok": true
+        },
+        {
+          "q": "Varför gick inte mitt kort igenom?",
+          "ok": true
+        },
+        {
+          "q": "Skräddarsytt kontrakt?",
+          "ok": false
+        }
+      ],
+      "handled": "Hanterat",
+      "needsYou": "Behöver dig",
+      "joined": "Priya har anslutit"
+    },
+    "statement": "Elpino svarar det den vet, gör det du tillåter, och frågar en människa om allt annat.",
+    "integrations": {
+      "eyebrow": "Integrationer",
+      "titlePrefix": "Kopplar till det du",
+      "titleHl": "redan använder.",
+      "subtitle": "Betalningssystem för kontroller och länkar, projektverktyg för ärenden, och MCP för dina egna system. Elpino sitter i mitten, och allt du kopplar in fungerar med den.",
+      "tags": [
+        "Betalningar",
+        "Ärenden",
+        "Dina system"
+      ],
+      "cta": "Se alla integrationer"
+    },
+    "trust": {
+      "eyebrow": "Förtroende",
+      "titlePrefix": "Kraftfull, med",
+      "titleHl": "bromsar på plats.",
+      "subtitle": "Det här är reglerna Elpino följer. De flesta är alltid aktiverade. Delarna som rör pengar slår du på själv.",
+      "cta": "Läs säkerhetsguiden",
+      "rulebook": "Elpinos regelbok",
+      "setByYou": "Inställt av dig",
+      "guardrailsOn": "Skyddsåtgärder på",
+      "alwaysOn": "Alltid på",
+      "rules": [
+        {
+          "title": "Svara bara från godkänd kunskap",
+          "desc": "Om det inte finns i din kunskapsbas säger den det och erbjuder en människa."
+        },
+        {
+          "title": "Dölj namn och e-post från AI:n",
+          "desc": "Modellen ser referenskoder, inte dina kunders identitet."
+        },
+        {
+          "title": "Verifiera innan något personligt",
+          "desc": "En e-postkod eller signerad token kommer först."
+        },
+        {
+          "title": "Bara verktyg du har aktiverat",
+          "desc": "Varje MCP-verktyg godkänns av dig, ett i taget."
+        }
+      ],
+      "refundTitle": "Låt AI:n utfärda återbetalningar",
+      "refundOn": "Aktiverat. AI:n kan utfärda återbetalningar enligt arbetsytans ägarinställning.",
+      "refundOff": "Avstängt som standard. Bara arbetsytans ägare kan aktivera det."
+    },
+    "pricing": {
+      "eyebrow": "Priser",
+      "titlePrefix": "Betala för hjälp,",
+      "titleHl": "inte för huvuden.",
+      "subtitle": "Börja gratis. Betalda planer mäts efter mängden arbete AI:n utför.",
+      "cta": "Se alla priser",
+      "plans": [
+        {
+          "name": "Gratis",
+          "big": "0 $",
+          "note": "100 AI-meddelanden per månad",
+          "pts": [
+            "Inget kort krävs",
+            "Widget, kunskap och inkorg",
+            "Eskaleringar kostar aldrig extra"
+          ]
+        },
+        {
+          "name": "Betalda planer",
+          "big": "Kreditbaserat",
+          "note": "Månatlig AI-kredit anpassad till din volym",
+          "pts": [
+            "Betalnings- och kontoverktyg",
+            "Utrymme för ett större team",
+            "Fyll på när som helst"
+          ]
+        },
+        {
+          "name": "Extra medlemmar",
+          "big": "Platspaket",
+          "note": "Lägg till platser som förnyas med din plan",
+          "pts": [
+            "Bara när du växer",
+            "Samma inkorg, fler händer",
+            "Avbryt när som helst"
+          ]
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Frågor",
+      "titlePrefix": "Vad folk frågar",
+      "titleHl": "först.",
+      "items": [
+        {
+          "q": "Vad är Elpino?",
+          "a": "En AI-driven kundsupportplattform: en chattwidget på din webbplats, en AI-agent som svarar utifrån din kunskap och verifierar riktiga betalningar, en delad teaminkorg, och ärenden när ingen är tillgänglig."
+        },
+        {
+          "q": "Kommer AI:n att hitta på saker?",
+          "a": "Den svarar utifrån kunskap du har godkänt, och ett verifieringssteg kontrollerar utkast mot verktygsresultat. När den inte vet säger den det och erbjuder en människa."
+        },
+        {
+          "q": "Vad händer när den inte kan hjälpa?",
+          "a": "Den frågar kunden först. Vid ja får hela teamet en anslutningsavisering och 90 sekunder att reagera. Om ingen ansluter skapas ett ärende och kunden får ett e-postmeddelande."
+        },
+        {
+          "q": "Hur lång tid tar konfigurationen?",
+          "a": "De flesta team är igång samma dag: lägg till kunskap, klistra in widget-koden, och bjud in ditt team."
+        },
+        {
+          "q": "Finns det en gratis plan?",
+          "a": "Ja: 100 AI-meddelanden per månad, inget kort krävs."
+        },
+        {
+          "q": "Fungerar det på andra kanaler?",
+          "a": "Chatt på webbplatsen fungerar redan. Omnikanal kommer i november."
+        }
+      ]
+    },
+    "closing": {
+      "title": "Ge dina kunder svaret innan de är klara med att skriva.",
+      "subtitle": "Börja gratis, lär den din verksamhet, och låt den ta de återkommande frågorna.",
+      "ctaPrimary": "Börja gratis",
+      "ctaSecondary": "Prata med oss"
+    }
+  },
+  "pricing": {
+    "hero": {
+      "badge": "Priser",
+      "title": "Börja gratis. Väx när du är redo.",
+      "subtitle": "Varje nytt konto börjar med AI-support, en delad inkorg och överlämning till en människa — inget kort krävs. Utforska Elpino med ditt team och välj sedan en plan när du behöver mer.",
+      "stickerFree": "Gratis för alltid ✓",
+      "stickerNoCard": "Inget kort krävs",
+      "ctaDashboard": "Gå till dashboard",
+      "ctaStart": "Börja gratis",
+      "billingPeriodLabel": "Faktureringsperiod",
+      "monthly": "Månadsvis",
+      "annually": "Årsvis"
+    },
+    "planCards": {
+      "mostPopular": "Mest populär",
+      "save": "spara",
+      "freeForever": "Gratis för alltid",
+      "discussCustomPlan": "eller diskutera en anpassad plan",
+      "compareAllFeatures": "Jämför alla funktioner",
+      "whatsIncluded": "Vad som ingår",
+      "builtForTeam": "Byggd för hela ditt team",
+      "builtForTeamDesc": "Delad kunskap, en inkorg och överlämning till en människa när det behövs."
+    },
+    "comparison": {
+      "eyebrow": "Planjämförelse",
+      "titlePrefix": "Se vad som ",
+      "titleHl": "passar ditt team.",
+      "subtitle": "Jämför kapacitet, platser och produkttillgång över alla planer. Uppgradera när din supportverksamhet behöver mer utrymme.",
+      "featuresHeader": "Funktioner",
+      "popular": "Populär",
+      "billedAnnually": "faktureras årligen",
+      "billedMonthly": "faktureras månadsvis",
+      "showAll": "Visa alla funktioner",
+      "showFewer": "Visa färre funktioner",
+      "included": "Ingår",
+      "notIncluded": "Ingår inte",
+      "categories": {
+        "aiRules": {
+          "name": "Vad AI:n får göra",
+          "rows": {
+            "allowance": {
+              "label": "Månatlig AI-tilldelning",
+              "description": "Free är begränsad till 100 AI-meddelanden. Betalda planer inkluderar en månatlig dollarkredit som AI:n spenderar medan den arbetar, delad av hela arbetsytan."
+            },
+            "whenOut": {
+              "label": "När tilldelningen tar slut",
+              "description": "AI:n överlämnar nya konversationer till ditt team. På betalda planer kan du fylla på krediten när som helst, eller aktivera automatisk påfyllning."
+            },
+            "escalations": {
+              "label": "Eskaleringar till en människa",
+              "description": "Trådar som AI:n överlämnar eftersom den inte kunde svara med säkerhet. Själva överlämningen kostar aldrig extra."
+            }
+          }
+        },
+        "seats": {
+          "name": "Vem kan logga in",
+          "rows": {
+            "included": {
+              "label": "Ingående platser",
+              "description": "Teammedlemmar som täcks av planens pris, inklusive arbetsytans ägare."
+            },
+            "extra": {
+              "label": "Extra platser",
+              "description": "Varje teammedlem utöver de ingående platserna, på vilken plan som helst."
+            },
+            "ceiling": {
+              "label": "Platstak",
+              "description": "Punkten där du behöver en större plan istället för en till plats."
+            }
+          }
+        },
+        "product": {
+          "name": "Produkten",
+          "rows": {
+            "widget": {
+              "label": "Chattwidget på webbplatsen",
+              "description": "Den inbäddningsbara chatten som dina besökare verkligen pratar med."
+            },
+            "knowledge": {
+              "label": "Kunskapsbas och AI-svar",
+              "description": "Skanna din webbplats eller ladda upp dokument; AI:n svarar utifrån dem."
+            },
+            "storage": {
+              "label": "Kunskapslagring",
+              "description": "Hur mycket skannat och uppladdat innehåll arbetsytan kan hålla."
+            },
+            "inbox": {
+              "label": "Delad inkorg och överlämning",
+              "description": "En inkorg för teamet, med AI-överlämning när det behövs."
+            },
+            "audit": {
+              "label": "AI-granskningslogg",
+              "description": "Varje svar, med artiklarna och sökningarna det byggdes från."
+            },
+            "analytics": {
+              "label": "Besöksanalys",
+              "description": "Live-besökare, källor, länder och sidor."
+            },
+            "profiles": {
+              "label": "Kundprofiler och historik",
+              "description": "Lagrade kundposter och deras tidigare konversationer."
+            },
+            "domain": {
+              "label": "Ansluten domän",
+              "description": "En arbetsyta, en webbplats — behöver du en till? starta en andra arbetsyta."
+            },
+            "support": {
+              "label": "Support",
+              "description": "Hur du når oss när något behöver en människa på vår sida."
+            }
+          }
+        }
+      }
+    },
+    "values": {
+      "handsOff": "Överlämnar till en människa",
+      "topUpOrHandoff": "Fyll på eller överlämna",
+      "noExtraCharge": "Ingen extra kostnad",
+      "noLimit": "Ingen gräns",
+      "standard": "Standard",
+      "priority": "Prioritet",
+      "messages": "meddelanden",
+      "credit": "kredit",
+      "seatBundleSummary": "3 platser för $2, 5 för $3"
+    },
+    "billing": {
+      "eyebrow": "Tydlig, enkel fakturering",
+      "titleLine1": "Betala för det AI:n gör.",
+      "titleLine2": "Inte för överlämningar.",
+      "subtitle": "Free inkluderar 100 AI-meddelanden per månad. Betalda planer inkluderar en månatlig AI-kredit som täcker så många konversationer som möjligt, så en snabb fråga kostar mindre än en lång fram-och-tillbaka. Att överlämna en konversation till ditt team är alltid gratis.",
+      "creditCard": {
+        "label": "Månatlig AI-kredit",
+        "amount": "Från $7",
+        "note": "varje månad på Starter",
+        "chatsUseCredit": "chattar använder kredit",
+        "refillsMonthly": "fylls på månadsvis",
+        "desc": "Starter inkluderar $7, Growth $40 och Scale $240 AI-kredit varje månad. Behöver du mer? Fyll på när som helst eller aktivera automatisk påfyllning.",
+        "cta": "Jämför planer"
+      },
+      "handoffCard": {
+        "stamp": "Överlämning = gratis",
+        "label": "Extra avgift per överlämning",
+        "note": "På varje plan. Alltid."
+      },
+      "inboxCard": {
+        "title": "Din AI och ditt team, i en inkorg.",
+        "desc": "AI:n svarar utifrån din kunskap. När en person behövs fortsätter ditt team med den fullständiga konversationen som redan är synlig.",
+        "cta": "Utforska hur det fungerar"
+      }
+    },
+    "capacity": {
+      "eyebrow": "Lägg till kapacitet",
+      "title": "Väx utan att ändra hur du arbetar.",
+      "subtitle": "Lägg till personer eller AI-kapacitet bara när du behöver det. Din inkorg, kunskap och konversationshistorik förblir exakt där de är.",
+      "teammatesTitle": "Ytterligare teammedlemmar",
+      "teammatesDesc": "Ge fler personer sin egen inloggning medan de delar samma inkorg, kunskap och AI-kredit. De stannar på din plan varje månad tills du tar bort dem.",
+      "perMonth": "per månad",
+      "seatsWord": "platser",
+      "topUpAnytime": "Fyll på när som helst",
+      "onAnyPaidPlan": "på vilken betald plan som helst",
+      "creditTitle": "Ytterligare AI-kredit",
+      "creditDesc": "Låt AI:n fortsätta svara efter att din månatliga kredit har använts. Att överlämna en konversation till ditt team kostar aldrig extra.",
+      "creditCards": [
+        {
+          "name": "Månatlig kredit",
+          "note": "Återställs varje månad"
+        },
+        {
+          "name": "Påfyllningar",
+          "note": "Går aldrig ut"
+        },
+        {
+          "name": "Automatisk påfyllning",
+          "note": "Valfritt"
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Frågor",
+      "title": "Frågor om priser",
+      "subtitle": "De faktureringsdetaljer som folk frågar mest om. Installation, AI:n, integrationer och säkerhet täcks i den fullständiga FAQ:n.",
+      "readFull": "Läs hela FAQ:n",
+      "items": [
+        {
+          "q": "Vad kostar planerna?",
+          "a": "Free är $0. Månadsplaner är Starter för $12 med $7 AI-kredit per månad, Growth för $59 med $40, och Scale för $299 med $240. Årlig fakturering ger två månader gratis — du betalar för tio månader och får tolv: Starter är $120 per år ($10/månad), Growth är $590 ($49.17/månad), och Scale är $2 990 ($249.17/månad)."
+        },
+        {
+          "q": "Hur fungerar AI-tilldelningen?",
+          "a": "Free inkluderar 100 AI-meddelanden per månad. Varje svar AI:n skickar räknas som ett meddelande, så en kort chatt använder få och en lång fram-och-tillbaka använder fler. Betalda planer fungerar annorlunda: de inkluderar en månatlig AI-kredit som AI:n spenderar medan den arbetar, så en snabb fråga använder mindre än en lång fram-och-tillbaka. Starter inkluderar $7 kredit per månad, Growth $40 och Scale $240."
+        },
+        {
+          "q": "Kostar eskaleringar något?",
+          "a": "Ingen extra avgift. Själva överlämningen är gratis på varje plan, och AI:n stannar i det ögonblick en person tar över. På Free räknas meddelanden AI:n redan skickat innan överlämningen fortfarande mot dina 100; på betalda planer spenderar AI:n bara kredit medan den svarar, och slutar spendera kredit i det ögonblick en person tar över."
+        },
+        {
+          "q": "Kan AI:n utfärda återbetalningar?",
+          "a": "Bara om arbetsytans ägare aktiverar återbetalningar. De är avstängda som standard. Även med återbetalningar avstängda kan AI:n slå upp betalningen och erbjuda att koppla kunden till ditt team."
+        },
+        {
+          "q": "Vad händer när jag använder upp min AI-tilldelning?",
+          "a": "AI:n överlämnar nya konversationer direkt till ditt team istället för att svara. På en betald plan kan du fylla på kredit när som helst, eller aktivera automatisk påfyllning så att det aldrig stannar. Påfyllningar går aldrig ut. Din månatliga kredit återställs varje faktureringsperiod."
+        },
+        {
+          "q": "Hur mycket kostar en extra teammedlem?",
+          "a": "Extra platser kommer i paket på varje plan, inklusive Free: 3 platser för $2 per månad, eller 5 för $3. Platser och AI-kredit faktureras helt separat — att lägga till en teammedlem påverkar aldrig din AI-tilldelning."
+        },
+        {
+          "q": "Kan jag avbryta när som helst?",
+          "a": "Ja, från Inställningar → Fakturering, utan bindningstid. Avbokningen träder i kraft vid slutet av den aktuella faktureringsperioden, så du behåller det du betalat för tills då."
+        },
+        {
+          "q": "Vad händer om jag slutar betala?",
+          "a": "Arbetsytan faller tillbaka till Free-planen vid slutet av perioden. Din kunskapsbas, konversationshistorik och inställningar förblir helt intakta."
+        }
+      ]
+    },
+    "enterprise": {
+      "badge": "Enterprise",
+      "title": "Support som växer med dig.",
+      "subtitle": "För organisationer som stödjer fler kunder över flera webbplatser och team. Låt oss hitta rätt kapacitet för din support.",
+      "features": [
+        "AI-kredit långt bortom Scale-planen",
+        "Flera webbplatser och växande team",
+        "Delad kundkontext och kunskap",
+        "Volympriser skräddarsydda för dina behov"
+      ],
+      "talkTitle": "Låt oss prata",
+      "customPricing": "Anpassad prissättning tillgänglig",
+      "contactCta": "Kontakta säljteamet",
+      "talkPoints": [
+        "Diskutera din konversationsvolym",
+        "Planera din arbetsyta och platser",
+        "Definiera kunskapens omfattning över webbplatser",
+        "Utforska onboarding- och SLA-behov"
+      ]
+    },
+    "plans": {
+      "free": {
+        "name": "Free",
+        "description": "För en grundare som svarar på sin egen support. Riktig AI, inget kort.",
+        "cta": "Kom igång",
+        "features": [
+          "Upp till 100 AI-meddelanden/månad",
+          "2 platser ingår",
+          "Platspaket från $0.60/plats",
+          "20 MB kunskapsbas",
+          "Chattwidget på webbplatsen",
+          "Delad inkorg med överlämning"
+        ]
+      },
+      "starter": {
+        "name": "Starter",
+        "description": "För ett litet team vars support har vuxit ur en inkorg.",
+        "cta": "Kom igång",
+        "features": [
+          "$7 AI-kredit varje månad",
+          "5 platser ingår",
+          "Platspaket från $0.60/plats",
+          "200 MB kunskapsbas",
+          "Fyll på kredit när som helst",
+          "Besöksanalys"
+        ]
+      },
+      "growth": {
+        "name": "Growth",
+        "description": "För team som driver support som en riktig funktion, med data som bevisar det.",
+        "cta": "Kom igång",
+        "features": [
+          "$40 AI-kredit varje månad",
+          "15 platser ingår",
+          "Platspaket från $0.60/plats",
+          "1 GB kunskapsbas",
+          "Fyll på kredit när som helst",
+          "Fullständig AI-granskningslogg",
+          "Prioriterad support"
+        ]
+      },
+      "scale": {
+        "name": "Scale",
+        "description": "För support med hög volym där AI:n bär det mesta av belastningen.",
+        "cta": "Kom igång",
+        "features": [
+          "$240 AI-kredit varje månad",
+          "40 platser ingår",
+          "Platspaket från $0.60/plats",
+          "5 GB kunskapsbas",
+          "Fyll på kredit när som helst",
+          "Integrationer och API-åtkomst"
+        ]
+      }
+    }
+  },
+  "about": {
+    "typingLabel": "Elpino skriver",
+    "hero": {
+      "badge": "Om Elpino",
+      "titlePrefix": "Kundsupport, ",
+      "titleHl": "gjord mer mänsklig.",
+      "subtitle": "Elpino ger kunder användbara svar från kunskapen du redan har, och håller sedan ditt team nära för stunder som behöver en människa.",
+      "ctaMeet": "Möt Elpino",
+      "ctaReadStory": "Läs vår historia ↓",
+      "imageAlt": "Fyra Elpino-sengångare som arbetar tillsammans för att stödja kunder",
+      "bubble": "Hej, hur kan vi hjälpa? 👋"
+    },
+    "story": {
+      "eyebrow": "Var det började",
+      "titlePrefix": "Vår historia börjar med en ",
+      "titleHl": "fråga.",
+      "subtitle": "Vad om kundsupportprogramvara hjälpte båda sidorna av konversationen—inte bara företaget som hanterar den?",
+      "chatTitle": "Elpino",
+      "chatSub": "Berättar vår historia",
+      "sys1": "Var det började",
+      "you1": "Vad om kundsupportprogramvara hjälpte båda sidorna av konversationen, inte bara företaget som hanterar den?",
+      "elpino1": "Ingen öppnar en supportchatt för skoj skull.",
+      "elpino2": "Någon försöker få något gjort. Något kom i vägen. De vill ha ett tydligt svar och komma tillbaka till sin dag.",
+      "elpino3": "På den andra sidan finns ett team som hanterar bekanta frågor, utspridd information, och fler konversationer än tid. Elpino existerar för att göra det ögonblicket lättare för alla.",
+      "sys2": "Så här ser det ut",
+      "you2": "Kan jag ändra e-postadressen på mitt konto?",
+      "aiLabel": "Elpino AI · från din kunskap",
+      "aiAnswer": "Ja. Öppna Inställningar, välj Profil, och uppdatera sedan din kontakt-e-post.",
+      "aiGuideLabel": "Guide för kontoinställningar",
+      "sys3": "En lagkamrat finns alltid nära när det behövs"
+    },
+    "roles": {
+      "eyebrow": "Våra roller",
+      "titlePrefix": "Ett team byggt för ",
+      "titleHl": "jobbet.",
+      "subtitle": "Det finns inga anställdas foton här. Möt istället uppgifterna Elpino är designad att utföra—stadigt, omtänksamt, och med ett mänskligt team alltid involverat.",
+      "joinedChat": "{name} gick med i chatten",
+      "items": [
+        {
+          "title": "Lyssnaren",
+          "task": "Förstår varje kundfråga",
+          "description": "Förvandlar kunskapen ditt team redan har till ett tydligt, användbart första svar."
+        },
+        {
+          "title": "Sorteraren",
+          "task": "Håller inkorgen i rörelse",
+          "description": "Hittar signalen i kön, så att rätt konversationer får rätt uppmärksamhet."
+        },
+        {
+          "title": "Skyddaren",
+          "task": "Vet när en person ska tas in",
+          "description": "Hanterar rutinarbete med omsorg och överlämnar stunderna som behöver mänskligt omdöme."
+        },
+        {
+          "title": "Odlaren",
+          "task": "Lär sig vad som hjälper kunder mest",
+          "description": "Lyfter fram luckorna, mönstren, och frågorna som gör din support bättre över tid."
+        }
+      ]
+    },
+    "remote": {
+      "eyebrow": "Byggt på distans",
+      "titlePrefix": "Vi har arbetat på distans sedan ",
+      "titleHl": "dag ett.",
+      "subtitle": "Vi arbetar genom tydligt skrivande, delad kontext, och fokuserad tid. Var någon arbetar spelar mindre roll än omsorgen och omdömet de tar med till produkten.",
+      "cta": "Se lediga tjänster",
+      "badge": "På distans sedan dag ett",
+      "imageAlt": "Ett distribuerat team samarbetar med delade AI-supportverktyg"
+    },
+    "team": {
+      "eyebrow": "Ett litet team, för nu",
+      "titleLine1": "Byggt med fokus.",
+      "titleLine2Prefix": "Format med ",
+      "titleHl": "dig.",
+      "subtitle": "Elpino är tidigt ute. Det betyder att människorna som använder det fortfarande kan påverka vad det blir. Vi lyssnar noga, lanserar noggrant, och håller kundens problem i centrum.",
+      "cta": "Prata med oss",
+      "card1": "Lyssna noga.",
+      "card2": "Bygg tydligt.",
+      "card3": "Gör support lättare för alla."
+    },
+    "faqSection": {
+      "eyebrow": "Lite mer om oss",
+      "titlePrefix": "Glad att du ",
+      "titleHl": "frågade.",
+      "subtitle": "Några svar innan du börjar din egen konversation. Tryck på en fråga nedan och Elpino svarar.",
+      "exploreLink": "Utforska hela FAQ:n →"
+    },
+    "faqChat": {
+      "title": "Fråga Elpino",
+      "sub": "Online · svarar direkt",
+      "gladYouAsked": "Glad att du frågade",
+      "tapQuestion": "Tryck på en fråga",
+      "doneText": "Det var allt för nu. Vill du fortsätta?",
+      "exploreFull": "Utforska hela FAQ:n"
+    },
+    "faqs": [
+      [
+        "Vad är Elpino?",
+        "Elpino är en AI-driven kundsupportplattform med en chattwidget på webbplatsen, svar från din kunskapsbas, en delad teaminkorg, och överlämning till människor när AI:n inte kan hjälpa."
+      ],
+      [
+        "Ersätter Elpino mitt supportteam?",
+        "Elpino hanterar vardagliga frågor från din kunskap och tar in ditt team när en konversation behöver en person. Ditt team är fortfarande en del av supportupplevelsen."
+      ],
+      [
+        "Hur kan jag komma igång?",
+        "Börja med den gratis planen, som inkluderar 100 AI-meddelanden varje månad utan kort krävs. Lägg till din kunskap, anslut din webbplats, och ta in dina lagkamrater."
+      ],
+      [
+        "Hur är prissättningen strukturerad?",
+        "Free inkluderar 100 AI-meddelanden per månad, och betalda planer inkluderar en månatlig AI-kredit. Extra lagkamrater kommer i platspaket från $0.60 per plats, och att överlämna en konversation till en människa kostar aldrig extra. Prissidan förklarar inkluderade platser och den gratis planens minimiavgift."
+      ]
+    ],
+    "closing": {
+      "titleLine1": "Det finns mer att bygga.",
+      "titleLine2": "Kom och forma vad som kommer härnäst.",
+      "ctaTry": "Prova Elpino",
+      "ctaCareers": "Se lediga tjänster"
+    }
+  },
+  "helpdesk": {
+    "hero": {
+      "badge": "Elpino helpdesk",
+      "titlePrefix": "Support som ",
+      "titleHl": "svarar sig själv.",
+      "subtitle": "Ett skrivbord för en AI som löser, ett team som ansluter när det spelar roll, och ärenden som aldrig glider bort. Se den besvara en fråga.",
+      "ctaStart": "Börja gratis",
+      "ctaFeatures": "Se alla funktioner"
+    },
+    "prompt": {
+      "customerLabel": "Kund",
+      "listening": "Elpino lyssnar…",
+      "asks": [
+        {
+          "q": "Blev jag debiterad dubbelt för min uppgradering?",
+          "steps": [
+            "Kontrollerade din betalningshistorik",
+            "Hittade en debitering och ett misslyckat försök"
+          ],
+          "a": "Du debiterades bara en gång. Det andra försöket misslyckades och drogs aldrig."
+        },
+        {
+          "q": "Var är min beställning #4821?",
+          "steps": [
+            "Verifierade dig med en e-postkod",
+            "Slog upp beställningen i din butik"
+          ],
+          "a": "Skickades igår, anländer på torsdag. Spårningslänk skickad."
+        },
+        {
+          "q": "Kan jag prata med någon om fakturering?",
+          "steps": [
+            "Inget verktyg kan ändra faktureringsuppgifter",
+            "Frågade dig först, varnade sedan teamet"
+          ],
+          "a": "Priya från vårt team har just anslutit till den här chatten."
+        }
+      ]
+    },
+    "marquee": {
+      "ariaLabel": "Vad som finns på skrivbordet",
+      "words": [
+        "AI-agent",
+        "Delad inkorg",
+        "Ärenden",
+        "Kunskap",
+        "Betalningar",
+        "MCP-verktyg",
+        "Anslutningsaviseringar",
+        "Verifierad identitet",
+        "Omnikanal · november"
+      ]
+    },
+    "story": {
+      "eyebrow": "En konversation",
+      "titlePrefix": "Se en fråga ",
+      "titleHl": "resa genom skrivbordet.",
+      "stepLabel": "Steg {n} / 05",
+      "chapters": [
+        {
+          "title": "En kund skriver in",
+          "body": "Från chattwidgeten på din webbplats, med deras plats, enhet och sidan de är på redan bifogade."
+        },
+        {
+          "title": "AI:n gör jobbet",
+          "body": "Den svarar från din kunskap, kommer ihåg kunden, verifierar vem de är, och använder dina betalningar och MCP-verktyg för att faktiskt fixa saker."
+        },
+        {
+          "title": "Ditt team ansluter med en tryckning",
+          "body": "Bara när den inte kan hjälpa, och bara efter att ha frågat kunden. Alla får en anslutningsavisering, och den första som trycker tar chatten."
+        },
+        {
+          "title": "Ingenting går förlorat",
+          "body": "Om ingen är tillgänglig inom 90 sekunder skapas ett ärende med anledningen och en sammanfattning, och kunden får en referens via e-post."
+        },
+        {
+          "title": "Du lär den en gång",
+          "body": "Lägg till det som saknades i din kunskapsbas. Nästa gång vet AI:n det bara."
+        }
+      ],
+      "visuals": {
+        "ask": {
+          "bubble": "Hej, jag hittar inte min faktura från förra månaden.",
+          "chips": [
+            "Pune, Indien",
+            "Chrome · macOS",
+            "På /billing"
+          ]
+        },
+        "ai": {
+          "rows": [
+            [
+              "search_knowledge",
+              "1 matchning"
+            ],
+            [
+              "send_email_code",
+              "verifierad"
+            ],
+            [
+              "get_receipt",
+              "hittad · skickad"
+            ]
+          ],
+          "bubble": "Här är din faktura. Jag har också skickat en kopia via e-post."
+        },
+        "team": {
+          "title": "En ny chatt behöver en person",
+          "sub": "Avisering skickad till 4 lagkamrater",
+          "join": "Anslut",
+          "note": "Den första som trycker tar den. Aviseringen försvinner för de andra."
+        },
+        "ticket": {
+          "label": "Ärende",
+          "title": "Supporteskalering · Aisha Khan",
+          "reason": "Anledning: ändring av faktureringsland behöver en person.",
+          "chips": [
+            "Problemsida",
+            "Kund meddelad via e-post"
+          ]
+        },
+        "learn": {
+          "title": "Guide för fakturor och kvitton",
+          "added": "Tillagd",
+          "note": "Nästa kund får detta svar direkt."
+        }
+      }
+    },
+    "bento": {
+      "eyebrow": "Under huven",
+      "titlePrefix": "Små detaljer, ",
+      "titleHl": "gjorda ordentligt.",
+      "subtitle": "Sakerna du skulle kolla innan du anförtror dina kunder till en AI.",
+      "redact": {
+        "prefix": "Hej, jag är",
+        "middle": "nå mig på"
+      },
+      "privacy": {
+        "title": "Modellen ser aldrig namn eller e-post.",
+        "desc": "Identiteter byts ut mot referenskoder innan AI:n läser en konversation, och hemligheter tas bort."
+      },
+      "languages": {
+        "title": "Svarar på din kunds språk",
+        "note": "Du väljer svarsspråket i inställningarna."
+      },
+      "verified": {
+        "title": "Verifierad innan den agerar",
+        "note": "En engångs-e-postkod eller en signerad token från din app."
+      },
+      "tools": {
+        "title": "Dina verktyg, dina regler",
+        "rows": [
+          [
+            "get_order",
+            true
+          ],
+          [
+            "track_shipment",
+            true
+          ],
+          [
+            "delete_customer",
+            false
+          ]
+        ]
+      },
+      "handoff": {
+        "title": "Frågar innan den överlämnar",
+        "ask": "Det kan jag inte ändra själv. Kopplar jag dig till vårt team?",
+        "reply": "Ja, tack"
+      }
+    },
+    "statement": "Elpino svarar det den vet, gör det du tillåter, och frågar en människa om allt annat.",
+    "start": {
+      "eyebrow": "Kom igång",
+      "titlePrefix": "Live på ",
+      "titleHl": "en eftermiddag.",
+      "note": "Webbplatschatt är live redan idag. Omnikanal kommer i november.",
+      "steps": [
+        {
+          "title": "Registrera dig gratis",
+          "desc": "100 AI-meddelanden per månad. Inget kort."
+        },
+        {
+          "title": "Lär den",
+          "desc": "Lägg till din webbplats, filer eller skriv sidor."
+        },
+        {
+          "title": "Klistra in kodsnutten",
+          "desc": "Widgeten visas på din webbplats."
+        },
+        {
+          "title": "Bjud in ditt team",
+          "desc": "Så att folk är redo när den frågar."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Frågor",
+      "titlePrefix": "Bra att ",
+      "titleHl": "veta.",
+      "items": [
+        [
+          "Vad är Elpino helpdesk?",
+          "Hela supportarbetsytan: en chattwidget, en AI-agent, en delad inkorg, ärenden och en kunskapsbas, som alla arbetar tillsammans."
+        ],
+        [
+          "Måste jag behålla min gamla helpdesk?",
+          "Nej. Elpino täcker chatt, AI-agenten, den delade inkorgen och ärenden. Ärenden kan fortfarande skickas till Trello eller Asana om ditt team arbetar där."
+        ],
+        [
+          "Finns det en gratis plan?",
+          "Ja: 100 AI-meddelanden per månad, inget kort krävs."
+        ],
+        [
+          "Vilka kanaler stöds?",
+          "Webbplatschatt är live redan idag. Omnikanal kommer i november."
+        ],
+        [
+          "Kan mitt team också använda det?",
+          "Ja. Bjud in lagkamrater, lägg till platser när du växer, och de får anslutningsaviseringar när en kund behöver en person."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Ge dina kunder ett svar innan de är klara med att skriva.",
+      "ctaStart": "Börja gratis",
+      "ctaFeatures": "Alla funktioner"
+    }
+  },
+  "nav": {
+    "startFreeTrial": "Starta gratis provperiod",
+    "groups": {
+      "product": "Produkt",
+      "solutions": "Lösningar",
+      "resources": "Resurser"
+    },
+    "sections": {
+      "getStarted": "Kom igång",
+      "capabilities": "Funktioner",
+      "platform": "Plattform",
+      "whoItIsFor": "Vem det är för",
+      "learningGuides": "Lärande & guider",
+      "trustLegal": "Förtroende & juridik",
+      "community": "Community",
+      "company": "Företag"
+    },
+    "items": {
+      "Elpino helpdesk": "Elpino helpdesk",
+      "Elpino AI Agent": "Elpino AI-agent",
+      "Inbox": "Inkorg",
+      "Tickets": "Ärenden",
+      "Knowledge Hub": "Kunskapshubb",
+      "Integrations": "Integrationer",
+      "Safety & security": "Säkerhet",
+      "All features": "Alla funktioner",
+      "For Founders": "För grundare",
+      "For Busy Teams": "För upptagna team",
+      "For Developers": "För utvecklare",
+      "See Pricing": "Se priser",
+      "Talk to Us": "Prata med oss",
+      "Documentation": "Dokumentation",
+      "Help & FAQ": "Hjälp & FAQ",
+      "Trust Center": "Förtroendecenter",
+      "Privacy Policy": "Sekretesspolicy",
+      "Terms of Service": "Användarvillkor",
+      "Blog": "Blogg",
+      "Changelog": "Ändringslogg",
+      "Brand Kit": "Varumärkeskit",
+      "About Us": "Om oss",
+      "Careers": "Karriär",
+      "Contact Sales": "Kontakta säljteamet"
+    },
+    "megaMenu": {
+      "explore": "Utforska",
+      "seePricing": "Se priser",
+      "seePricingNote": "Börja gratis. Betala när ditt team växer.",
+      "freshFromBlog": "Nytt från bloggen"
+    },
+    "featured": {
+      "product": {
+        "title": "AI först. En människa när det spelar roll.",
+        "text": "Elpino svarar från din kunskap och överlämnar sedan chatten till en lagkamrat med hela historien.",
+        "cta": "Möt AI-agenten"
+      },
+      "solutions": {
+        "title": "Gjord för hur du arbetar",
+        "text": "Grundare, butiker och upptagna team får var sin passande inställning, live på en eftermiddag.",
+        "cta": "Hitta vad som passar dig"
+      },
+      "resources": {
+        "title": "Live i tre steg",
+        "text": "Klistra in en rad, lär den dina dokument, slå på. Guiderna leder dig genom varje steg.",
+        "cta": "Öppna dokumentationen"
+      }
+    },
+    "pricing": "Priser",
+    "contactSales": "Kontakta säljteamet",
+    "login": "Logga in",
+    "goToDashboard": "Gå till dashboard",
+    "getStarted": "Kom igång"
+  },
+  "footer": {
+    "ticker": [
+      "AI-svar från din egen kunskap",
+      "Mänsklig överlämning, alltid gratis",
+      "100 gratis AI-meddelanden",
+      "En delad inkorg",
+      "Live på en eftermiddag"
+    ],
+    "cta": {
+      "badge": "Redo när du är redo",
+      "title": "Ge varje kund ett hjälpsamt svar.",
+      "subtitle": "Börja gratis med AI-support, en delad inkorg och mänsklig överlämning. Inget kort krävs.",
+      "ctaStart": "Börja gratis",
+      "ctaPricing": "Se priser"
+    },
+    "description": "Elpino hjälper team att svara kunder med AI baserad på deras egen kunskap, och överlämnar sedan konversationer till en person vid behov.",
+    "blog": "Blogg",
+    "contact": "Kontakt",
+    "copyright": "© {year} Elpino Inc. Alla rättigheter förbehållna.",
+    "privacy": "Sekretesspolicy",
+    "terms": "Användarvillkor",
+    "security": "Säkerhet"
+  },
+  "aiAgent": {
+    "hero": {
+      "badge": "AI-agent",
+      "titlePrefix": "Möt din nyaste ",
+      "titleHl": "supportanställda.",
+      "subtitle": "Elpino börjar dag ett med att redan känna till ditt företag. Den kommer ihåg varje kund, kontrollerar vem de är innan den agerar, arbetar med dina betalnings- och beställningssystem via MCP, och frågar alltid innan den överlämnar en chatt till ditt team.",
+      "ctaHire": "Anställ Elpino, gratis",
+      "ctaFeatures": "Se alla funktioner"
+    },
+    "badge": {
+      "staffLabel": "Elpino · Personal",
+      "subtitle": "AI-supportagent",
+      "skills": [
+        "Svarar från dina dokument",
+        "Verifierar identitet",
+        "Kontrollerar betalningar",
+        "Använder dina MCP-verktyg",
+        "Frågar innan överlämning"
+      ],
+      "startDateLabel": "Startdatum",
+      "startDateValue": "Idag",
+      "clearanceLabel": "Behörighetsnivå",
+      "clearanceValue": "Du bestämmer",
+      "barcodeNote": "EL-0001 · Slutar aldrig arbetsdagen"
+    },
+    "trace": {
+      "aiAgentLabel": "AI-agent",
+      "customerMsg": "Hej, var är min beställning #4821?",
+      "agentReply": "Goda nyheter, Aishas beställning skickades igår och anländer på torsdag. Jag har också skickat spårningslänken till dig via e-post.",
+      "whatAgentDoing": "Vad agenten gör",
+      "resolved": "Löst",
+      "working": "Arbetar",
+      "idle": "Vilande",
+      "waiting": "Väntar på ett kundmeddelande…",
+      "steps": [
+        {
+          "kind": "route",
+          "text": "router → supportspecialist"
+        },
+        {
+          "kind": "tool",
+          "text": "recall_conversation(“beställning 4821”)",
+          "result": "2 tidigare meddelanden"
+        },
+        {
+          "kind": "tool",
+          "text": "get_past_conversations",
+          "result": "1 löst chatt förra månaden"
+        },
+        {
+          "kind": "verify",
+          "text": "send_email_code → check_email_code",
+          "result": "identitet verifierad"
+        },
+        {
+          "kind": "mcp",
+          "text": "mcp_shop__get_order(“4821”)",
+          "result": "skickad · anländer torsdag"
+        },
+        {
+          "kind": "review",
+          "text": "granskning",
+          "result": "fakta matchar verktygsresultat"
+        },
+        {
+          "kind": "done",
+          "text": "svar skickat · mark_resolved"
+        }
+      ]
+    },
+    "watchIt": {
+      "eyebrow": "Första uppgiften",
+      "titlePrefix": "Se den hantera ",
+      "titleHl": "en verklig förfrågan.",
+      "subtitle": "En kund frågar var deras beställning är. Till höger ser du allt agenten gör innan den svarar.",
+      "note": "Exempelkonversation. De visade verktygsnamnen är de agenten faktiskt anropar."
+    },
+    "onboard": {
+      "eyebrow": "Onboarding",
+      "titlePrefix": "Sex steg till ",
+      "titleHl": "första dagen.",
+      "subtitle": "Bocka av dem. Det finns ingen utbildningsperiod, och varje är en inställning du kontrollerar.",
+      "readyBadge": "Redo att arbeta!",
+      "items": [
+        {
+          "t": "Lär den din webbplats och filer",
+          "d": "Genomsök sidor, ladda upp dokument, skriv dina egna.",
+          "href": "/product/knowledge-hub"
+        },
+        {
+          "t": "Klistra in widget-utdraget",
+          "d": "En rad och chatten visas på din webbplats."
+        },
+        {
+          "t": "Anslut Stripe eller Razorpay",
+          "d": "Så den kan kontrollera betalningar och prenumerationer."
+        },
+        {
+          "t": "Anslut dina MCP-verktyg",
+          "d": "Aktivera bara de verktyg den får använda."
+        },
+        {
+          "t": "Bestäm om återbetalningar",
+          "d": "De är av tills du aktiverar dem."
+        },
+        {
+          "t": "Bjud in ditt team",
+          "d": "Så människor är redo när den frågar efter dem.",
+          "href": "/product/inbox"
+        }
+      ]
+    },
+    "customerFile": {
+      "eyebrow": "Att lära känna din kund",
+      "titlePrefix": "Dess ärendeakt ",
+      "titleHl": "för varje kund.",
+      "subtitle": "Innan den svarar bygger agenten upp en akt om personen den hjälper. Tryck på en källa för att se vad den lägger till.",
+      "sourcesLabel": "Kundakt · {n} av {total} källor",
+      "sampleNote": "Exempeldata. I verkligheten ser AI:n referenskoder istället för kundens namn och e-post.",
+      "sources": [
+        {
+          "key": "conv",
+          "title": "Denna konversation",
+          "how": "Kommer ihåg vad som sagts och kan titta tillbaka på detaljer den behöver, även i en lång chatt.",
+          "rows": [
+            [
+              "Frågade om",
+              "Beställning #4821"
+            ],
+            [
+              "Vill ha",
+              "Ett leveransdatum"
+            ]
+          ]
+        },
+        {
+          "key": "hist",
+          "title": "Tidigare konversationer",
+          "how": "Känner till tidigare chattar med samma person, så de aldrig upprepar sig.",
+          "rows": [
+            [
+              "Senaste chatt",
+              "Inloggningsproblem, löst"
+            ],
+            [
+              "Antal kontakter",
+              "2"
+            ]
+          ]
+        },
+        {
+          "key": "id",
+          "title": "Verifierad identitet",
+          "how": "Bekräftar vem de är med en engångs-e-postkod eller en signerad token från din app innan den rör något personligt.",
+          "rows": [
+            [
+              "Identitet",
+              "Verifierad via e-postkod"
+            ]
+          ]
+        },
+        {
+          "key": "pay",
+          "title": "Betalningar",
+          "how": "Söker efter riktiga betalningar och prenumerationer i Stripe eller Razorpay, och kan skicka kvitton och betalningslänkar.",
+          "rows": [
+            [
+              "Plan",
+              "Growth · aktiv"
+            ],
+            [
+              "Senaste betalning",
+              "Betald, kvitto skickat"
+            ]
+          ]
+        },
+        {
+          "key": "mcp",
+          "title": "Dina system (MCP)",
+          "how": "Anropar de verktyg du godkänner på dina egna MCP-servrar: beställningar, konton, bokningar, allt du exponerar.",
+          "rows": [
+            [
+              "Beställning #4821",
+              "Skickad · anländer torsdag"
+            ]
+          ]
+        },
+        {
+          "key": "kb",
+          "title": "Din kunskap",
+          "how": "Söker igenom allt du lärt den och kan läsa en aktuell sida på din webbplats för färska detaljer.",
+          "rows": [
+            [
+              "Leveranspolicy",
+              "3–5 arbetsdagar"
+            ]
+          ]
+        }
+      ]
+    },
+    "mcp": {
+      "eyebrow": "MCP-plugin",
+      "titlePrefix": "Åtkomstbegäran: ",
+      "titleHl": "dina system.",
+      "subtitle": "Anslut upp till fem MCP-servrar, oavsett om det är din butik, ditt CRM eller ditt bokningssystem. Elpino upptäcker deras verktyg, och du aktiverar exakt de agenten får använda. Prova kontrollpanelen nedan.",
+      "serverTitle": "Din butiks MCP-server",
+      "toolsDiscovered": "{n} verktyg upptäckta",
+      "verifiedCustomers": "Verifierade kunder",
+      "anyVisitor": "Alla besökare",
+      "destructive": "Destruktiv",
+      "changesData": "Ändrar data",
+      "readOnly": "Endast läsning",
+      "needsVerified": "Kräver verifierad kund",
+      "whatAgentSees": "Vad agenten kan se",
+      "toolsAvailable": "verktyg tillgängliga just nu",
+      "tools": [
+        {
+          "name": "get_order",
+          "desc": "Slå upp en beställning och dess status",
+          "write": false,
+          "on": true
+        },
+        {
+          "name": "track_shipment",
+          "desc": "Livespårning för ett paket",
+          "write": false,
+          "on": true
+        },
+        {
+          "name": "list_products",
+          "desc": "Katalog och lagernivåer",
+          "write": false,
+          "on": true
+        },
+        {
+          "name": "update_address",
+          "desc": "Ändra en leveransadress",
+          "write": true,
+          "on": true
+        },
+        {
+          "name": "cancel_order",
+          "desc": "Avbryt en beställning som inte skickats",
+          "write": true,
+          "on": false
+        },
+        {
+          "name": "delete_customer",
+          "desc": "Radera en kundpost",
+          "write": true,
+          "on": false,
+          "danger": true
+        }
+      ],
+      "bullets": [
+        "Ett avstängt verktyg är osynligt för agenten",
+        "Varje anrop kontrolleras igen mot din lista på servern",
+        "Verktyg som ändrar data behöver alltid en verifierad kund",
+        "Serverautentiseringsuppgifter lagras krypterade"
+      ],
+      "features": [
+        {
+          "title": "Betalningar, inbyggt",
+          "desc": "Anslut Stripe eller Razorpay och agenten kan slå upp betalningar och prenumerationer, skicka kvitton och betalningslänkar, och avbryta en prenumeration."
+        },
+        {
+          "title": "Ta med vilken MCP-server som helst",
+          "desc": "Allt som talar MCP fungerar, så du bestämmer vilka verktyg agenten får."
+        },
+        {
+          "title": "Elpinos egen MCP-server",
+          "desc": "Dina kunders egna verktyg kan läsa deras Elpino-plan, användning och betalningar via MCP."
+        }
+      ]
+    },
+    "orgChart": {
+      "eyebrow": "Teamet bakom",
+      "titlePrefix": "En agent. ",
+      "titleHl": "Ett helt organisationsschema.",
+      "subtitle": "Varje meddelande dirigeras till rätt specialist, och ingenting går ut innan en granskare kontrollerar fakta.",
+      "router": "Router",
+      "routerNote": "väljer specialisten",
+      "reviewer": "Granskare",
+      "reviewerNote": "faktakontrollerar utkastet mot verktygsresultat",
+      "polish": "Polering",
+      "polishNote": "sedan ser kunden det",
+      "footer": "Svåra fall eskaleras till en starkare resonemangsmodell, och en reservmodell täcker leverantörsavbrott.",
+      "lanes": [
+        {
+          "k": "Försäljning",
+          "d": "Planer, priser, passform"
+        },
+        {
+          "k": "Support",
+          "d": "Konton, betalningar, instruktioner"
+        },
+        {
+          "k": "Teknisk",
+          "d": "Fel, konfiguration, integration"
+        }
+      ]
+    },
+    "shift": {
+      "eyebrow": "En dag på jobbet",
+      "titlePrefix": "Ett skift, ",
+      "titleHl": "från början till slut.",
+      "subtitle": "En exempeldag, med endast saker agenten faktiskt gör.",
+      "items": [
+        {
+          "time": "2:14",
+          "t": "Svarar på en prisfråga",
+          "d": "Ditt team sover. Elpino svarar från din kunskapsbas."
+        },
+        {
+          "time": "9:05",
+          "t": "Verifierar en kund, fixar en betalning",
+          "d": "Bekräftar dem via e-postkod, hittar den misslyckade betalningen, skickar en ny betalningslänk."
+        },
+        {
+          "time": "11:20",
+          "t": "Kontrollerar en beställning i din butik",
+          "d": "Anropar din MCP-server, läser statusen och delar spårningen."
+        },
+        {
+          "time": "13:30",
+          "t": "Stöter på något den inte kan göra",
+          "d": "Säger det, frågar kunden först, varnar sedan hela teamet."
+        },
+        {
+          "time": "15:42",
+          "t": "Ingen ledig? Den släpper det inte",
+          "d": "Berättar sanningen för kunden och skapar ett ärende med e-postuppföljning."
+        }
+      ]
+    },
+    "review": {
+      "eyebrow": "Prestationsutvärdering",
+      "titlePrefix": "Ett ärligt ",
+      "titleHl": "betygskort.",
+      "subtitle": "Illustrativa betyg, inklusive den svaga punkten.",
+      "employeeBadge": "Anställd: Elpino",
+      "quote": "”Utmärkt med rutinfrågor och överskrider aldrig sina gränser. Håll kunskapsbasen aktuell och den fortsätter att förbättras.”",
+      "items": [
+        {
+          "k": "Följer din policy",
+          "n": 5,
+          "note": "Svarar bara från det du godkänt."
+        },
+        {
+          "k": "Vet när den ska be om hjälp",
+          "n": 5,
+          "note": "Frågar kunden först, tar in ditt team sedan."
+        },
+        {
+          "k": "Stannar inom sina behörigheter",
+          "n": 5,
+          "note": "Bara de verktyg du aktiverat. Återbetalningar avstängda som standard."
+        },
+        {
+          "k": "Vet vad du aldrig berättat för den",
+          "n": 2,
+          "note": "Den kan inte svara på det som inte finns i din kunskap. Lägg till mer för att höja detta."
+        }
+      ]
+    },
+    "guards": {
+      "eyebrow": "Skyddsåtgärder",
+      "titlePrefix": "Företagets ",
+      "titleHl": "handbok.",
+      "subtitle": "Reglerna Elpino arbetar under. Varje är en kontroll du äger.",
+      "items": [
+        {
+          "t": "Modellen ser aldrig namn eller e-post",
+          "d": "Identiteter i en konversation byts ut mot referenskoder innan AI:n läser den, och hemligheter som nycklar och tokens tas bort."
+        },
+        {
+          "t": "Återbetalningar är avstängda tills du säger till",
+          "d": "Åtgärder som flyttar pengar är valfria och kontrolleras av arbetsytans ägare."
+        },
+        {
+          "t": "Du godkänner varje verktyg",
+          "d": "Agenten ser bara MCP-verktyg du aktiverat, och de som ändrar data behöver en verifierad kund."
+        },
+        {
+          "t": "Fråga först, överlämna sedan",
+          "d": "När den inte har ett verktyg för uppgiften säger den det och frågar innan den tar in ditt team."
+        },
+        {
+          "t": "Fakta granskas",
+          "d": "Ett granskningssteg kontrollerar utkastet mot verktygsresultat innan det skickas."
+        },
+        {
+          "t": "Identitet före något personligt",
+          "d": "E-postkod eller signerad token kommer först, så den diskuterar aldrig ett konto med en främling."
+        }
+      ]
+    },
+    "compare": {
+      "eyebrow": "Inte en chattbot",
+      "titlePrefix": "Chattbot vs. ",
+      "titleHl": "Elpino-agent.",
+      "headerA": "En typisk chattbot",
+      "headerB": "Elpino AI-agent",
+      "rows": [
+        [
+          "Söker artiklar och stannar",
+          "Söker, slår upp poster och agerar"
+        ],
+        [
+          "Behandlar alla som en främling",
+          "Verifierar identitet, minns tidigare chattar"
+        ],
+        [
+          "”Kontakta support” när den fastnar",
+          "Frågar först, varnar teamet, skapar ett ärende om ingen är ledig"
+        ],
+        [
+          "Kan inte se dina system",
+          "Anropar de MCP-verktyg du godkänner"
+        ],
+        [
+          "Svar kan inte litas på",
+          "Fakta granskad mot verktygsresultat"
+        ]
+      ]
+    },
+    "faq": {
+      "eyebrow": "Frågor",
+      "titlePrefix": "Bra att ",
+      "titleHl": "veta.",
+      "items": [
+        [
+          "Vad är MCP?",
+          "Model Context Protocol, ett standardsätt för en AI att anropa verktyg på ett annat system. Anslut en MCP-server och Elpino upptäcker dess verktyg. Du väljer sedan vilka agenten får använda."
+        ],
+        [
+          "Hur många MCP-servrar kan jag ansluta?",
+          "Upp till fem, med upp till 15 verktyg aktiverade per server."
+        ],
+        [
+          "Kan agenten ändra saker i mina system?",
+          "Bara via verktyg du aktiverat, och de som ändrar data kräver alltid en kund vars e-post har verifierats."
+        ],
+        [
+          "Hur vet den vem kunden är?",
+          "Från konversationen, tidigare chattar med dem, och ett verifieringssteg: en engångs-e-postkod eller en signerad token från din app."
+        ],
+        [
+          "Kan den utfärda återbetalningar?",
+          "Bara om arbetsytans ägare aktiverar återbetalningar. De är avstängda som standard."
+        ],
+        [
+          "Vad händer när den inte kan lösa något?",
+          "Den säger det och frågar kunden om de vill kopplas till ditt team. Hela teamet får en anslutningsavisering i 90 sekunder, och om ingen ansluter skapas ett ärende automatiskt."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Din nyaste anställda är redo att börja.",
+      "subtitle": "Lär den ditt företag, anslut dina verktyg, och sätt gränserna.",
+      "ctaStart": "Börja gratis",
+      "ctaKnowledgeHub": "Se Kunskapshubben"
+    }
+  },
+  "inbox": {
+    "hero": {
+      "badge": "Delad inkorg",
+      "titlePrefix": "En konversation. ",
+      "titleHl": "Alla som borde vara med i den.",
+      "subtitle": "AI:n håller i tråden tills en person behövs, hela teamet larmas samtidigt, och den som ansluter får hela historiken. Följ en riktig konversation från första meddelandet till löst.",
+      "ctaOpen": "Öppna din inkorg",
+      "ctaPricing": "Se priser"
+    },
+    "filters": [
+      "Alla",
+      "Oläst",
+      "Läst",
+      "Löst"
+    ],
+    "desk": {
+      "stages": [
+        {
+          "key": "ai",
+          "label": "AI svarar",
+          "badge": "AI",
+          "banner": "Elpino hanterar den här konversationen"
+        },
+        {
+          "key": "ask",
+          "label": "Behöver en person",
+          "badge": "Behöver människa",
+          "banner": "Alla i teamet fick ett Gå med-larm. 90 sekunder att hoppa in"
+        },
+        {
+          "key": "join",
+          "label": "Kollega ansluter",
+          "badge": "Priya",
+          "banner": "Priya anslöt. Larmet försvann för alla"
+        },
+        {
+          "key": "back",
+          "label": "Lämnar tillbaka",
+          "badge": "AI",
+          "banner": "Priya lämnade tillbaka chatten till Elpino"
+        },
+        {
+          "key": "done",
+          "label": "Löst",
+          "badge": "Löst",
+          "banner": "Löst. Öppna igen när de skriver tillbaka"
+        }
+      ],
+      "lines": [
+        {
+          "at": 0,
+          "from": "you",
+          "text": "Hej, jag har flyttat till ett annat land. Kan ni uppdatera faktureringslandet på mitt konto?"
+        },
+        {
+          "at": 1,
+          "from": "ai",
+          "text": "Jag kan inte ändra faktureringsuppgifter själv. Vill du att jag kopplar dig till vårt team?"
+        },
+        {
+          "at": 1,
+          "from": "you",
+          "text": "Ja tack"
+        },
+        {
+          "at": 2,
+          "from": "sys",
+          "text": "Priya anslöt till chatten"
+        },
+        {
+          "at": 2,
+          "from": "team",
+          "text": "Hej! Jag tar hand om det. Jag har uppdaterat ditt faktureringsland."
+        },
+        {
+          "at": 3,
+          "from": "sys",
+          "text": "Priya lämnade tillbaka chatten till Elpino"
+        },
+        {
+          "at": 3,
+          "from": "ai",
+          "text": "Allt klart. Är det något annat jag kan hjälpa med?"
+        },
+        {
+          "at": 4,
+          "from": "you",
+          "text": "Det var allt, tack!"
+        },
+        {
+          "at": 4,
+          "from": "sys",
+          "text": "Konversationen löst"
+        }
+      ],
+      "rail": [
+        "Utrymme",
+        "Inkorg",
+        "Analys",
+        "Kontakter",
+        "Kunskapsbas",
+        "Inställningar"
+      ],
+      "list": [
+        {
+          "name": "Harnoor Singh",
+          "date": "21 sep",
+          "prev": "Jag kan inte dela någons IP-adress"
+        },
+        {
+          "name": "Aisha Khan",
+          "date": "Idag",
+          "prev": ""
+        },
+        {
+          "name": "Tom Becker",
+          "date": "19 sep",
+          "prev": "Widgeten laddas inte vid kassan"
+        },
+        {
+          "name": "Meera Iyer",
+          "date": "18 sep",
+          "prev": "Flytta teamet till årsabonnemang?"
+        }
+      ],
+      "teamInbox": "Teamets inkorg",
+      "aiAssist": "AI-assistans",
+      "searchPlaceholder": "Sök konversationer",
+      "verified": "Verifierad",
+      "joined": "Anslöt",
+      "join": "Gå med",
+      "priyaReplying": "Priya svarar",
+      "resolvedLabel": "Löst",
+      "aiReplying": "Elpino svarar, du bara tittar",
+      "elpinoAi": "Elpino AI",
+      "priyaTeam": "Priya · team",
+      "writeReply": "Skriv ditt svar…",
+      "send": "Skicka",
+      "reopenNote": "Löst. Öppna igen om de skriver tillbaka.",
+      "lockedNote": "Gå med i konversationen för att svara. Tills då fortsätter Elpino att prata med kunden.",
+      "websiteVisitor": "Webbplatsbesökare",
+      "locationDevice": "Plats och enhet",
+      "location": "Pune, India",
+      "device": "Chrome · macOS",
+      "onPage": "På /pricing",
+      "lastSeen": "Senast sedd just nu",
+      "identityVerified": "Identitet verifierad",
+      "signedIn": "Inloggad på webbplatsen",
+      "otherConvos": "Andra konversationer",
+      "noOtherConvos": "Inga andra konversationer från denna besökare ännu."
+    },
+    "realThing": {
+      "eyebrow": "Det äkta",
+      "titlePrefix": "Det här är den ",
+      "titleHl": "riktiga inkorgen.",
+      "subtitle": "Ingen mockup. Varje konversation, AI:ns svar, besökarens uppgifter och Gå med-knappen, allt på en skärm.",
+      "imageAlt": "Elpinos teaminkorg: en konversationslista, en AI-hanterad tråd samt besökarens plats och enhet",
+      "callouts": [
+        {
+          "label": "Gå med för att ta över"
+        },
+        {
+          "label": "Filter: Alla · Oläst · Läst · Löst"
+        },
+        {
+          "label": "Plats och enhet"
+        },
+        {
+          "label": "Stängs automatiskt efter 24h tystnad"
+        }
+      ]
+    },
+    "twoTabs": {
+      "eyebrow": "Två vyer",
+      "titlePrefix": "Titta på AI:n. ",
+      "titleHl": "Driv teamet.",
+      "subtitle": "Din inkorg har en flik för det som människor hanterar och en flik för det som Elpino hanterar, så inget göms.",
+      "tabs": [
+        {
+          "label": "Teamets inkorg",
+          "title": "Konversationer som ditt team äger",
+          "body": "Allt som en person har anslutit till, tagit över eller blivit tilldelad. Det är här ditt team arbetar: svar, uppföljningar och lösta trådar.",
+          "rows": [
+            [
+              "Harnoor Singh",
+              "Kan du skicka fakturan igen?",
+              "Priya"
+            ],
+            [
+              "Meera Iyer",
+              "Flytta teamet till årlig fakturering?",
+              "Sam"
+            ],
+            [
+              "Jo Alvarez",
+              "Tack, det löste det!",
+              "Löst"
+            ]
+          ]
+        },
+        {
+          "label": "AI-assistans",
+          "title": "Konversationer som Elpino hanterar",
+          "body": "Se AI:n arbeta i realtid. En räknare visar hur många som är aktiva, och du kan gå med i vilken tråd du vill precis när du vill kliva in.",
+          "rows": [
+            [
+              "Aisha Khan",
+              "Elpino svarar…",
+              "AI"
+            ],
+            [
+              "Tom Becker",
+              "Kontrollerar din betalningshistorik…",
+              "AI"
+            ],
+            [
+              "Ravi Menon",
+              "Skickade en säker betalningslänk",
+              "AI"
+            ]
+          ]
+        }
+      ]
+    },
+    "holders": {
+      "eyebrow": "Alltid tydligt",
+      "titlePrefix": "Du vet alltid ",
+      "titleHl": "vem som har den.",
+      "subtitle": "Varje konversation har en märkning i listan, så ingen svarar dubbelt och inget faller mellan stolarna.",
+      "items": [
+        {
+          "tag": "AI",
+          "title": "Elpino har den",
+          "body": "Svarar utifrån din kunskap och dina verktyg. Du kan följa varje meddelande live."
+        },
+        {
+          "tag": "Kollega",
+          "title": "En person har den",
+          "body": "Tryck på Gå med i chatten, eller Ta över om en kollega har den. AI:n kliver åt sidan."
+        },
+        {
+          "tag": "Löst",
+          "title": "Det är klart",
+          "body": "Lösta trådar går att söka i, och du kan öppna dem igen med ett tryck."
+        }
+      ]
+    },
+    "baton": {
+      "eyebrow": "Skicka stafettpinnen",
+      "titlePrefix": "Gå med. Ta över. ",
+      "titleHl": "Lämna tillbaka.",
+      "subtitle": "En konversation flyttas mellan AI:n och dina medarbetare med ett tryck, och historiken följer med.",
+      "items": [
+        {
+          "who": "Elpino AI",
+          "note": "Svarar först"
+        },
+        {
+          "who": "Priya",
+          "note": "Tryckte på Gå med i chatten"
+        },
+        {
+          "who": "Sam",
+          "note": "Tog över från Priya"
+        },
+        {
+          "who": "Elpino AI",
+          "note": "Lämnades tillbaka"
+        }
+      ],
+      "holdingNow": "Har den nu",
+      "stepLabel": "Steg {n}"
+    },
+    "teamAlert": {
+      "eyebrow": "Larm för hela teamet",
+      "titlePrefix": "Larma hela teamet. ",
+      "titleHl": "En person svarar.",
+      "subtitle": "När en kund ber om en människa får alla i teamet ett Gå med-larm samtidigt. Den som trycker på Gå med först tar över chatten, larmet försvinner för alla andra, och kunden ser vem som anslöt.",
+      "bullets": [
+        "Ingen pekas ut, så ingen blir en flaskhals",
+        "90 sekunder att hoppa in innan ett ärende skapas åt dig",
+        "Anslöt av misstag? Lämna tillbaka den till AI:n med ett tryck"
+      ],
+      "panelLabel": "Inkorgslarm",
+      "joinedStatus": "Anslöt",
+      "alertCleared": "Larm rensat",
+      "joinChatStatus": "Gå med i chatten",
+      "quietStatus": "Tyst",
+      "bannerJoined": "Priya anslöt. Kunden ser hennes namn.",
+      "bannerAlerting": "Larmar alla 4 i teamet…",
+      "bannerAsked": "Kunden bad om en person"
+    },
+    "nobodyFree": {
+      "eyebrow": "Inget missas",
+      "titlePrefix": "Även när alla ",
+      "titleHl": "är upptagna.",
+      "subtitle": "Om ingen ansluter i tid blir kunden inte kvar och stirrar på en snurrande laddningsikon.",
+      "marks": [
+        {
+          "t": "0s",
+          "h": "Larmet skickas ut",
+          "d": "Alla i teamet ser ett Gå med-larm."
+        },
+        {
+          "t": "≤ 90s",
+          "h": "Först att ansluta vinner",
+          "d": "Larmet försvinner för alla andra."
+        },
+        {
+          "t": "90s",
+          "h": "Ingen ledig? Ärende",
+          "d": "Ett ärende skapas automatiskt."
+        },
+        {
+          "t": "24h",
+          "h": "E-postuppföljning",
+          "d": "Kunden får veta att de kan förvänta sig ett svar via e-post inom 24 timmar."
+        }
+      ]
+    },
+    "findAnything": {
+      "eyebrow": "Sök och filter",
+      "titlePrefix": "Hitta vilken konversation som helst ",
+      "titleHl": "på en sekund.",
+      "subtitle": "Sök på namn eller meddelande och filtrera till Alla, Oläst, Läst eller Löst. Testa till höger.",
+      "noMatch": "Inget matchar. Prova ett annat ord.",
+      "convos": [
+        {
+          "n": "Harnoor Singh",
+          "p": "Jag kan inte dela någons IP-adress",
+          "s": "resolved"
+        },
+        {
+          "n": "Aisha Khan",
+          "p": "Flyttade till ett annat land, faktureringsfråga",
+          "s": "unread"
+        },
+        {
+          "n": "Tom Becker",
+          "p": "Widgeten laddas inte vid kassan",
+          "s": "unread"
+        },
+        {
+          "n": "Meera Iyer",
+          "p": "Flytta teamet till årlig fakturering?",
+          "s": "read"
+        },
+        {
+          "n": "Ravi Menon",
+          "p": "Var hittar jag mitt kvitto?",
+          "s": "resolved"
+        },
+        {
+          "n": "Jo Alvarez",
+          "p": "Kan jag lägga till en till kollega?",
+          "s": "read"
+        }
+      ]
+    },
+    "context": {
+      "eyebrow": "Kontext, inbyggt",
+      "titlePrefix": "Fråga aldrig ",
+      "titleHl": "”vem var du igen?”",
+      "subtitle": "Ditt team öppnar en tråd och känner redan till det viktigaste.",
+      "items": [
+        {
+          "t": "Var de befinner sig",
+          "d": "Plats och lokal kontext för varje besökare."
+        },
+        {
+          "t": "Vad de använder",
+          "d": "Enhet, webbläsare och sidan de var på."
+        },
+        {
+          "t": "Vem de är",
+          "d": "En Verifierad-märkning när identiteten bekräftas av en signerad token eller e-postkod."
+        },
+        {
+          "t": "Känsliga saker, säkert",
+          "d": "Be om privata uppgifter genom en säker engångsförfrågan, inte i chatten."
+        },
+        {
+          "t": "Hela historiken",
+          "d": "Tidigare konversationer med samma person, precis där."
+        }
+      ],
+      "extraTitle": "Plus livewriting på båda sidor",
+      "extraDesc": "Kunder ser när du svarar, och du ser när de gör det."
+    },
+    "secureRequest": {
+      "eyebrow": "Säkra förfrågningar",
+      "titlePrefix": "Privata uppgifter ",
+      "titleHl": "hålls utanför chatten.",
+      "subtitle": "Be om känslig information genom ett säkert engångsformulär, så att det aldrig hamnar i transkriptet.",
+      "steps": [
+        {
+          "t": "Du behöver något privat",
+          "d": "För uppgifter som inte bör skrivas in i ett chattfönster."
+        },
+        {
+          "t": "Skicka en säker förfrågan",
+          "d": "Kunden får ett privat engångsformulär istället för en chattruta."
+        },
+        {
+          "t": "Tillbaka i konversationen",
+          "d": "De skickar in det en gång, och ditt team fortsätter konversationen."
+        }
+      ],
+      "stepLabel": "Steg {n}"
+    },
+    "afterLeave": {
+      "eyebrow": "Efter att de lämnat",
+      "titlePrefix": "Att stänga fliken ",
+      "titleHl": "är inte slutet.",
+      "subtitle": "Elpino berättar ärligt om ett svar fortfarande kan nå dem.",
+      "steps": [
+        {
+          "t": "Besökaren lämnar",
+          "d": "De stänger chatten, eller 24 timmar går utan meddelande."
+        },
+        {
+          "t": "Verifierad e-post registrerad?",
+          "d": "Om de bekräftat sin adress kan de fortfarande nås."
+        },
+        {
+          "t": "Svar via e-post",
+          "d": "Ditt svar går till deras inkorg. Ingen verifierad e-post innebär att inget svar är möjligt, och skrivfältet visar det."
+        }
+      ],
+      "stepLabel": "Steg {n}"
+    },
+    "compare": {
+      "eyebrow": "Före och efter",
+      "titlePrefix": "Från stress till ",
+      "titleHl": "lugn.",
+      "headerA": "Utan en delad inkorg",
+      "headerB": "Med Elpino",
+      "rows": [
+        [
+          "Kunder väntar tills någon är ledig",
+          "AI:n svarar på sekunder, sedan ansluter en person om det behövs"
+        ],
+        [
+          "Ingen vet vem som svarar",
+          "En märkning visar AI, kollega eller löst på varje tråd"
+        ],
+        [
+          "Teamet pingar varandra för att hitta en ansvarig",
+          "Ett Gå med-larm når alla, den som ansluter först tar den"
+        ],
+        [
+          "Kontexten finns på tio olika ställen",
+          "Historik, plats, enhet och verifiering i en enda panel"
+        ],
+        [
+          "Kunder som stänger fliken går förlorade",
+          "Verifierade besökare kan fortfarande få ditt svar via e-post"
+        ]
+      ]
+    },
+    "faq": {
+      "eyebrow": "Frågor",
+      "titlePrefix": "Bra att ",
+      "titleHl": "veta.",
+      "items": [
+        [
+          "Vem kan se en konversation?",
+          "Alla i ditt team kan se den delade inkorgen. Varje konversation visar vem som har den: AI:n, en kollega, eller löst."
+        ],
+        [
+          "Vad är 90-sekundersfönstret?",
+          "När en kund ber om en person får alla i teamet ett Gå med-larm. Om ingen ansluter inom 90 sekunder får kunden veta det och ett ärende skapas automatiskt med en e-postuppföljning."
+        ],
+        [
+          "Kan jag lämna tillbaka en konversation till AI:n?",
+          "Ja. Om du anslöt och det är en enkel uppföljning, lämna tillbaka chatten till Elpino med ett tryck."
+        ],
+        [
+          "Kan jag svara efter att besökaren har lämnat?",
+          "Om de gav en verifierad e-postadress skickas ditt svar via e-post. Utan en sådan kan inget svar nå dem."
+        ],
+        [
+          "Fungerar det på mer än webbplatschatt?",
+          "Webbplatsens chattwidget är live redan idag. Omnikanal kommer i november."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Ge ditt team en plats att hjälpa från.",
+      "subtitle": "Börja gratis och bjud in ditt team när du är redo.",
+      "ctaStart": "Börja gratis",
+      "ctaMeetAgent": "Möt AI-agenten"
+    }
+  },
+  "tickets": {
+    "hero": {
+      "badge": "Ärenden",
+      "titlePrefix": "Varje överlämning lämnar ",
+      "titleHl": "en stubb.",
+      "subtitle": "När AI:n inte kan slutföra ett jobb och ingen är tillgänglig rycker Elpino inte på axlarna. Den skapar ett ärende med orsak och sammanfattning, skickar det dit ditt team arbetar och ger kunden en referens att hänvisa till.",
+      "ctaStart": "Kom igång gratis",
+      "ctaInbox": "Se inkorgen"
+    },
+    "printed": {
+      "ticketBadge": "Ärende",
+      "filedAt": "Skapat vid AI-överlämning",
+      "printing": "Skriver ut…",
+      "referenceLabel": "Referens",
+      "referenceNote": "Kunden kan hänvisa till denna",
+      "fields": [
+        [
+          "Titel",
+          "Supporteskalering · Aisha Khan"
+        ],
+        [
+          "Orsak",
+          "Ändring av faktureringsland kräver en person"
+        ],
+        [
+          "Sammanfattning",
+          "Har flyttat till ett annat land och vill uppdatera faktureringslandet på sitt konto."
+        ],
+        [
+          "Kund",
+          "Aisha Khan · aisha@example.com"
+        ],
+        [
+          "Konversation",
+          "Länkad, öppnas med ett klick"
+        ],
+        [
+          "Skickat till",
+          "Ärendesidan"
+        ]
+      ]
+    },
+    "origins": {
+      "eyebrow": "Var ärenden kommer från",
+      "titlePrefix": "Tre sätt som en stubb ",
+      "titleHl": "skapas på.",
+      "subtitle": "Du behöver aldrig komma ihåg att skriva ner ett.",
+      "items": [
+        {
+          "tag": "Manuellt",
+          "t": "En medarbetare skapar det",
+          "d": "Ser du något som behöver följas upp? Gör konversationen till ett ärende själv.",
+          "sample": [
+            "Ändring av fakturaadress",
+            "Meera bad oss uppdatera faktureringsadressen på hennes fakturor."
+          ]
+        },
+        {
+          "tag": "Skapat vid AI-överlämning",
+          "t": "AI:n skapar det vid överlämning",
+          "d": "När Elpino lämnar över en chatt och ingen ansluter i tid skapas ett ärende med orsak och en sammanfattning.",
+          "sample": [
+            "Supporteskalering · Aisha Khan",
+            "Orsak: ändring av faktureringsland kräver en person."
+          ]
+        },
+        {
+          "tag": "Flaggat av AI-granskning",
+          "t": "AI:n upptäcker vad som är skyldigt",
+          "d": "Efter att en konversation avslutas granskar AI:n den. Om ditt team fortfarande är skyldigt kunden något flaggas ett ärende, med förklaring varför.",
+          "sample": [
+            "Följ upp återbetalningsförfrågan",
+            "Orsak: kunden fick veta att det skulle kontrolleras; ingenting registrerades."
+          ]
+        }
+      ]
+    },
+    "anatomy": {
+      "eyebrow": "Ett ärendes anatomi",
+      "titlePrefix": "Allt ditt team behöver, ",
+      "titleHl": "redan skrivet.",
+      "subtitle": "Tryck på en rad för att se varför den finns där.",
+      "fieldLabel": "Fält {n} av {total}",
+      "fields": [
+        {
+          "k": "Titel",
+          "v": "Supporteskalering · Aisha Khan",
+          "why": "Namngivet efter kunden, så du kan hitta det i en lång lista med en blick."
+        },
+        {
+          "k": "Orsak",
+          "v": "Ändring av faktureringsland kräver en person",
+          "why": "Varför AI:n lämnade över, eller varför dess granskning flaggade det. Ingen behöver gissa vad som gick fel."
+        },
+        {
+          "k": "Sammanfattning",
+          "v": "Har flyttat land, vill uppdatera faktureringslandet.",
+          "why": "AI:n skriver en kort sammanfattning av chatten så att den som tar hand om ärendet börjar informerad."
+        },
+        {
+          "k": "Kund",
+          "v": "Aisha Khan · aisha@example.com",
+          "why": "Namn och e-post om de angav en, så att du vet vem du ska svara."
+        },
+        {
+          "k": "Konversation",
+          "v": "Länkad, öppnar chatten",
+          "why": "Ett klick för att hoppa tillbaka till hela konversationen, med varje meddelande."
+        },
+        {
+          "k": "Källa",
+          "v": "Skapat vid AI-överlämning",
+          "why": "Visar om en medarbetare, AI:n vid överlämning eller AI:ns granskning skapade det."
+        },
+        {
+          "k": "Skickat till",
+          "v": "Trello, Asana eller Ärendesidan",
+          "why": "Vart ärendet skickades. Utan något projektverktyg anslutet finns det på Ärendesidan."
+        },
+        {
+          "k": "Referens",
+          "v": "7F3A9C21",
+          "why": "En kort kod som kunden kan hänvisa till om de hör av sig igen."
+        }
+      ]
+    },
+    "scrubber": {
+      "eyebrow": "Den 90-sekunders klockan",
+      "titlePrefix": "Dra tiden. ",
+      "titleHl": "Se vad som händer.",
+      "subtitle": "Om någon ansluter vid något tillfälle behövs inget ärende. Om klockan rinner ut är detta kedjan.",
+      "seconds": "sekunder",
+      "dragMe": "Dra mig",
+      "secondsAriaLabel": "Sekunder sedan varningen",
+      "clock": [
+        {
+          "t": "Kunden säger ja till en person",
+          "d": "Elpino frågar först, och fortsätter bara vid ett ja."
+        },
+        {
+          "t": "Varje medarbetare får en anslutningsvarning",
+          "d": "Hela teamet tillfrågas samtidigt."
+        },
+        {
+          "t": "Ingen anslöt: ärende skapat",
+          "d": "Titel, orsak, sammanfattning och en länk till chatten."
+        },
+        {
+          "t": "Kunden får ett e-postmeddelande, teamet informeras",
+          "d": "Kunden får sin referens via e-post."
+        }
+      ]
+    },
+    "connect": {
+      "eyebrow": "Konfigurera på en minut",
+      "titlePrefix": "Koppla det till ",
+      "titleHl": "där du arbetar.",
+      "subtitle": "Valfritt. Hoppa över det, och ärenden finns kvar på Ärendesidan.",
+      "stepLabel": "Steg {n}",
+      "steps": [
+        {
+          "t": "Anslut Trello eller Asana",
+          "d": "Lägg till ditt projektverktyg från dina arbetsyteinställningar."
+        },
+        {
+          "t": "Ärenden hamnar där",
+          "d": "Varje nytt ärende blir ett kort eller en uppgift, redan skriven."
+        },
+        {
+          "t": "Fortfarande spårat i Elpino",
+          "d": "Ärendesidan behåller listan och låter dig bocka av saker."
+        }
+      ]
+    },
+    "reviewScan": {
+      "badge": "AI-granskning",
+      "titlePrefix": "Efter att chatten avslutas, ",
+      "titleHl": "läser Elpino den igen.",
+      "subtitle": "Chattar avslutas artigt medan löften förblir öppna. När en konversation avslutas granskar AI:n den, och om ditt team fortfarande är skyldigt kunden något flaggas ett ärende och du får veta varför.",
+      "bullets": [
+        "Fångar upp „jag kollar och återkommer”",
+        "Berättar varför den flaggades, så du snabbt kan bedöma",
+        "Markerad som flaggad av AI-granskning på Ärendesidan"
+      ],
+      "closedConvo": "Avslutad konversation",
+      "statusFlagged": "Flaggad",
+      "statusReviewing": "Granskar…",
+      "statusResolved": "Löst",
+      "chat": [
+        [
+          "cust",
+          "Hej, min beställning kom skadad."
+        ],
+        [
+          "agent",
+          "Så tråkigt! Jag kollar återbetalningen och återkommer."
+        ],
+        [
+          "cust",
+          "Toppen, tack."
+        ],
+        [
+          "agent",
+          "Kan jag hjälpa med något annat?"
+        ],
+        [
+          "cust",
+          "Nej, det var allt."
+        ]
+      ],
+      "flaggedTicketLabel": "Ärende · Flaggat av AI-granskning",
+      "flaggedTitle": "Följ upp återbetalningsförfrågan · Tom Becker",
+      "flaggedDesc": "Kunden fick veta att en återbetalning skulle kontrolleras; ingenting registrerades efteråt."
+    },
+    "destinations": {
+      "eyebrow": "Vart det hamnar",
+      "titlePrefix": "Skickat till verktyget ",
+      "titleHl": "ditt team redan använder.",
+      "subtitle": "Anslut Trello eller Asana och ärenden går direkt dit. Ansluter du inget är de fortfarande säkra på Ärendesidan.",
+      "cardTitle": "Supporteskalering · Aisha Khan",
+      "cardReason": "Orsak: ändring av faktureringsland kräver en person",
+      "fromElpino": "Från Elpino",
+      "items": [
+        {
+          "key": "trello",
+          "label": "Trello",
+          "note": "Blir ett kort på din Trello-tavla.",
+          "cols": [
+            "Att göra",
+            "Pågår",
+            "Klar"
+          ]
+        },
+        {
+          "key": "asana",
+          "label": "Asana",
+          "note": "Blir en uppgift i ditt Asana-projekt.",
+          "cols": [
+            "Ej påbörjad",
+            "Pågående",
+            "Klar"
+          ]
+        },
+        {
+          "key": "issues",
+          "label": "Ärendesidan",
+          "note": "Inget projektverktyg anslutet? Det finns på din Ärendesida, utan någon konfiguration.",
+          "cols": [
+            "Öppen",
+            "",
+            "Löst"
+          ]
+        }
+      ]
+    },
+    "customerSide": {
+      "badge": "Ärendekvittot",
+      "titlePrefix": "Kunder vet ",
+      "titleHl": "att de inte glömdes bort.",
+      "subtitle": "Om ingen kunde ansluta i tid berättar Elpino det ärligt för kunden, skickar ett e-postmeddelande så att det inte glöms bort och ger dem en kort referens att hänvisa till. Hela ditt team informeras också om det nya ärendet.",
+      "bullets": [
+        "Kunden får veta vad som händer härnäst",
+        "De får ett e-postmeddelande med sin referens",
+        "Varje medarbetare informeras om ärendet"
+      ],
+      "inChat": "I chatten",
+      "chatMsgPrefix": "Vårt team är upptaget just nu, så jag har öppnat ett ärende. Din referens är ",
+      "chatMsgSuffix": ". Du hör från oss via e-post inom 24 timmar.",
+      "inInbox": "I deras inkorg",
+      "emailSubject": "Vi har tagit emot din förfrågan",
+      "emailBodyPrefix": "Ärende ",
+      "emailBodySuffix": " är hos vårt team. Svara på detta e-postmeddelande om du har något att lägga till.",
+      "teamNotified": "Team informerat: nytt ärende från Aisha Khan"
+    },
+    "issuesBoard": {
+      "badge": "Ärendesidan",
+      "titlePrefix": "En lista. ",
+      "titleHl": "Bocka av det.",
+      "subtitle": "Varje ärende visar var det kom från och vart det skickades. AI:ns granskning berättar även varför den flaggade ett. Klicka på rutan för att markera det som löst.",
+      "openWord": "öppen",
+      "resolvedWord": "löst",
+      "panelTitle": "Ärenden",
+      "panelSubtitle": "Ärenden skapade från supportkonversationer.",
+      "markResolved": "Markera som löst",
+      "markUnresolved": "Markera som ej löst",
+      "rows": [
+        {
+          "t": "Supporteskalering · Aisha Khan",
+          "who": "Skapat vid AI-överlämning",
+          "where": "Inte skickat till ett projektverktyg",
+          "done": false
+        },
+        {
+          "t": "Följ upp återbetalningsförfrågan · Tom Becker",
+          "who": "Flaggat av AI-granskning",
+          "where": "Trello-ärende",
+          "reason": "Kunden fick veta att en återbetalning skulle kontrolleras; ingenting registrerades efteråt.",
+          "done": false
+        },
+        {
+          "t": "Ändring av fakturaadress · Meera Iyer",
+          "where": "Asana-ärende",
+          "done": false
+        },
+        {
+          "t": "Supporteskalering · Ravi Menon",
+          "who": "Skapat vid AI-överlämning",
+          "where": "Inte skickat till ett projektverktyg",
+          "done": true
+        }
+      ]
+    },
+    "lifecycle": {
+      "eyebrow": "Ett ärendes livscykel",
+      "titlePrefix": "Från „kan jag prata med någon?” ",
+      "titleHl": "till klart.",
+      "stepLabel": "Steg {n}",
+      "items": [
+        {
+          "t": "Kunden ber om en person",
+          "d": "AI:n frågar först, sedan larmas teamet."
+        },
+        {
+          "t": "90 sekunder, ingen ansluter",
+          "d": "Alla hade en chans att ta chatten."
+        },
+        {
+          "t": "Ärende skapat",
+          "d": "Titel, orsak, sammanfattning och en länk tillbaka till chatten."
+        },
+        {
+          "t": "Kunden får e-post",
+          "d": "Med sin referens, så att inget känns förlorat."
+        },
+        {
+          "t": "Åtgärdat och löst",
+          "d": "Ditt team bockar av det när det är klart."
+        }
+      ]
+    },
+    "compare": {
+      "eyebrow": "Före och efter",
+      "titlePrefix": "Inga fler ",
+      "titleHl": "tappade löften.",
+      "headerA": "Utan ärenden",
+      "headerB": "Med Elpino",
+      "rows": [
+        [
+          "„Någon återkommer till dig”, och sedan tystnad",
+          "Ett ärende med en referens som kunden kan hänvisa till"
+        ],
+        [
+          "Teamet kopierar detaljer till ett annat verktyg för hand",
+          "Orsak, sammanfattning och chattlänk anländer redan skrivna"
+        ],
+        [
+          "Löften som gjorts i chatten glöms bort",
+          "En AI-granskning flaggar vad ditt team fortfarande är skyldigt efter att en chatt avslutas"
+        ],
+        [
+          "Ingen aning om någon tar hand om det",
+          "Avbockningsbar löst-status och vart det skickades, i en enda lista"
+        ]
+      ]
+    },
+    "faq": {
+      "eyebrow": "Frågor",
+      "titlePrefix": "Bra att ",
+      "titleHl": "veta.",
+      "items": [
+        [
+          "När skapar Elpino ett ärende?",
+          "När den lämnar över en konversation och ingen ansluter inom 90 sekunder, och när granskningen av en avslutad konversation hittar något ditt team fortfarande är skyldigt. Medarbetare kan också skapa ett manuellt."
+        ],
+        [
+          "Vart går ärenden?",
+          "Till Trello eller Asana om du har anslutit ett sådant. Om inte finns de på din Ärendesida, så inget går förlorat."
+        ],
+        [
+          "Vad finns i ett ärende?",
+          "En titel, orsaken, en kort sammanfattning, kundens uppgifter och en länk tillbaka till konversationen."
+        ],
+        [
+          "Får kunden veta?",
+          "Ja. De informeras i chatten, får ett e-postmeddelande och får en kort referens de kan hänvisa till."
+        ],
+        [
+          "Kan jag markera ett ärende som löst?",
+          "Ja, bocka av det från Ärendesidan."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Låt ingenting slinka igenom.",
+      "subtitle": "Kom igång gratis, och Elpino skriver ärendena för dig.",
+      "ctaStart": "Kom igång gratis",
+      "ctaMeetAgent": "Möt AI-agenten"
+    }
+  },
+  "knowledgeHub": {
+    "hero": {
+      "badge": "Kunskapsnav",
+      "titlePrefix": "Fråga vad som helst. ",
+      "titleHl": "Den kontrollerar din kunskap.",
+      "subtitle": "Elpino svarar bara utifrån den kunskap du ger den. Ta inte bara vårt ord för det. Se hur den söker i din kunskap till vänster och svarar kunden till höger. När den inte hittar något säger den det.",
+      "privateNote": "Privata källor används aldrig för att svara kunder."
+    },
+    "playground": {
+      "yourKnowledge": "Din kunskap",
+      "customer": "Kund",
+      "elpinoAi": "Elpino AI",
+      "statusWaiting": "Väntar på en fråga",
+      "statusSearching": "Söker i din kunskap…",
+      "statusFound": "Hittade en matchning",
+      "statusNoMatch": "Ingen matchning hittades",
+      "privateBadge": "Privat",
+      "matchBadge": "Matchning",
+      "offersHuman": "Erbjuder en människa",
+      "sources": [
+        {
+          "name": "Återbetalningspolicy.pdf",
+          "kind": "Dokument"
+        },
+        {
+          "name": "Leveranstider",
+          "kind": "Skriven sida"
+        },
+        {
+          "name": "Hjälp: återställ lösenord",
+          "kind": "Webbsida"
+        },
+        {
+          "name": "Eskaleringsguide",
+          "kind": "Interna anteckningar"
+        }
+      ],
+      "scenes": [
+        {
+          "q": "Hur länge kan jag begära återbetalning?",
+          "hit": "refund",
+          "a": "Du kan begära återbetalning inom 30 dagar från köpet."
+        },
+        {
+          "q": "Hur återställer jag mitt lösenord?",
+          "hit": "reset",
+          "a": "Välj ”Glömt lösenord” på inloggningssidan och följ länken vi mejlar dig."
+        },
+        {
+          "q": "Erbjuder ni rabatter för välgörenhetsorganisationer?",
+          "hit": null,
+          "a": "Jag har inte den informationen. Vill du att jag kopplar dig till vårt team?"
+        },
+        {
+          "q": "Hur lång tid tar leveransen?",
+          "hit": "ship",
+          "a": "Beställningar kommer vanligtvis inom 3–5 arbetsdagar."
+        }
+      ]
+    },
+    "crawlWeb": {
+      "eyebrow": "Upptäck",
+      "titlePrefix": "En länk in. ",
+      "titleHl": "En hel webbplats ut.",
+      "subtitle": "Ge Elpino din startsida och den följer länkarna själv, upp till 50 sidor. Den läser hjälp-, pris- och policysidor först och hoppar över bilder, nedladdningar och annat brus. Sidor byggda med JavaScript renderas i en riktig webbläsare så att inget kommer tillbaka tomt.",
+      "pagesKept": "Sidor sparade",
+      "filesSkipped": "Filer överhoppade",
+      "svgAlt": "En genomsökning som sprider sig från en sida till länkade sidor",
+      "startLabel": "START"
+    },
+    "otherWays": {
+      "eyebrow": "Fler sätt in",
+      "titlePrefix": "Allt finns inte ",
+      "titleHl": "på en webbplats.",
+      "subtitle": "Tre fler sätt att lära Elpino, för den kunskap som aldrig fick en URL.",
+      "items": [
+        {
+          "title": "Webbkarta",
+          "big": "20",
+          "note": "sidor hämtade från din webbkarta i ett svep"
+        },
+        {
+          "title": "Filer",
+          "big": ".pdf",
+          "note": "även .docx, .txt och .md. Texten extraheras åt dig"
+        },
+        {
+          "title": "Skriv det",
+          "big": "Aa",
+          "note": "policyer och ”så gör vi”-sidor, skrivna direkt i redigeraren"
+        }
+      ]
+    },
+    "mill": {
+      "eyebrow": "Vad händer sedan",
+      "titlePrefix": "Varje sida gör ",
+      "titleHl": "samma resa.",
+      "items": [
+        {
+          "t": "Hämtad säkert",
+          "d": "Som ElpinoBot, med skydd mot att nå privata nätverk."
+        },
+        {
+          "t": "Rensad",
+          "d": "Menyer och standardtext ut, användbar text in."
+        },
+        {
+          "t": "Uppdelad och inbäddad",
+          "d": "Delad i avsnitt och indexerad efter betydelse, inte bara nyckelord."
+        },
+        {
+          "t": "Hittad vid behov",
+          "d": "De närmaste avsnitten hämtas fram i samma stund en kund frågar."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Frågor",
+      "titlePrefix": "Bra att ",
+      "titleHl": "veta.",
+      "items": [
+        [
+          "Vad kan jag lägga till?",
+          "Webbsidor via URL, en webbkarta (upp till 20 sidor), en genomsökning från en länk (upp till 50 sidor), PDF-, Word-, text- och Markdown-filer, samt sidor du skriver själv."
+        ],
+        [
+          "Läser den JavaScript-byggda sidor?",
+          "Ja. Om en sida har lite läsbar text renderas den först i en webbläsare, och resultatet läses."
+        ],
+        [
+          "Kan jag hålla innehåll privat?",
+          "Ja. Varje källa har en synlighetsknapp, så interna anteckningar förblir interna."
+        ],
+        [
+          "Kan jag ansluta Notion, Zendesk eller Confluence?",
+          "Inte än. Idag lägger du till källor via URL, webbkarta, filuppladdning eller genom att skriva sidor."
+        ],
+        [
+          "Vad händer om svaret inte finns?",
+          "Elpino säger att den inte har den informationen och erbjuder att koppla kunden till ditt team, istället för att gissa."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Fyll din verkliga hylla.",
+      "subtitle": "Klistra in en länk och Elpino börjar svara utifrån den.",
+      "ctaStart": "Starta gratis",
+      "ctaMeetAgent": "Möt AI-agenten"
+    }
+  },
+  "integrations": {
+    "hero": {
+      "badge": "Integrationer",
+      "titlePrefix": "Anslut. ",
+      "titleHl": "Nästa nivå.",
+      "subtitle": "Koppla ihop dina betalningar, ditt ärendesystem och dina egna system, och se vad Elpino kan göra växa. Tryck på uttagen för att ansluta dem."
+    },
+    "board": {
+      "pluggedInCount": "{on} / {total} anslutna",
+      "pluggedIn": "Ansluten",
+      "tapToPlugIn": "Tryck för att ansluta",
+      "on": "På",
+      "off": "Av",
+      "whatCanDo": "Vad Elpino kan göra nu",
+      "empty": "Inget anslutet än. Tryck på ett uttag ovan."
+    },
+    "conns": [
+      {
+        "name": "Stripe",
+        "blurb": "AI:n kontrollerar riktiga betalningar och prenumerationer.",
+        "abilities": [
+          "Slå upp betalningar och prenumerationer",
+          "Skicka kvitton och betalningslänkar",
+          "Avsluta en prenumeration på begäran",
+          "Återbetalningar, endast om du aktiverar dem"
+        ]
+      },
+      {
+        "name": "Razorpay",
+        "blurb": "Samma betalningsverktyg, för Razorpay-konton.",
+        "abilities": [
+          "Slå upp betalningar och prenumerationer",
+          "Skicka kvitton och betalningslänkar",
+          "Avsluta en prenumeration på begäran",
+          "Återbetalningar, endast om du aktiverar dem"
+        ]
+      },
+      {
+        "name": "Cashfree",
+        "blurb": "Betalnings- och avräkningshistorik för ditt team.",
+        "abilities": [
+          "Hitta en order eller betalning från en konversation",
+          "Se status för avräkning och återbetalning"
+        ]
+      },
+      {
+        "name": "Paystack",
+        "blurb": "Transaktions- och återbetalningsstatus för ditt team.",
+        "abilities": [
+          "Slå upp en transaktion från en konversation",
+          "Kontrollera betalnings- och återbetalningsstatus"
+        ]
+      },
+      {
+        "name": "Trello",
+        "blurb": "Ärenden hamnar som kort på din tavla.",
+        "abilities": [
+          "Ärenden blir Trello-kort",
+          "Sammanfattningen och en länk till chatten bifogas"
+        ]
+      },
+      {
+        "name": "Asana",
+        "blurb": "Ärenden hamnar som uppgifter i ditt projekt.",
+        "abilities": [
+          "Ärenden blir Asana-uppgifter",
+          "Sammanfattningen och en länk till chatten bifogas"
+        ]
+      },
+      {
+        "name": "Dina MCP-servrar",
+        "blurb": "Allt som talar MCP, med verktyg du godkänner.",
+        "abilities": [
+          "Anropa verktyg på dina egna servrar",
+          "Upp till 5 servrar, 15 verktyg aktiverade per server",
+          "Endast de verktyg du godkänner syns",
+          "Verktyg som ändrar data kräver en verifierad kund"
+        ]
+      }
+    ],
+    "how": {
+      "eyebrow": "Anslutning",
+      "titlePrefix": "En minut var. ",
+      "titleHl": "Inga ingenjörer.",
+      "stepLabel": "Steg {n}",
+      "steps": [
+        {
+          "t": "Välj ett verktyg",
+          "d": "Öppna Anslut i din instrumentpanel och välj den anslutning du vill ha."
+        },
+        {
+          "t": "Klistra in en nyckel eller godkänn",
+          "d": "Verktyg med API-nyckel tar dina nycklar. Asana använder vanlig inloggning och en behörighetsskärm."
+        },
+        {
+          "t": "Vi kontrollerar den först",
+          "d": "Elpino testar dina nycklar mot leverantören innan de sparas, och lagrar dem krypterade."
+        }
+      ]
+    },
+    "families": {
+      "eyebrow": "Katalogen",
+      "titlePrefix": "Tre typer av ",
+      "titleHl": "anslutning.",
+      "tabs": {
+        "payments": "Betalningar",
+        "tickets": "Ärenden",
+        "systems": "Dina system"
+      },
+      "paymentsNote": "AI:ns betalningsåtgärder fungerar idag med Stripe och Razorpay. Cashfree och Paystack ger ditt team betalningskontext."
+    },
+    "safe": {
+      "badge": "Säkert som standard",
+      "titlePrefix": "Ansluten, ",
+      "titleHl": "inte exponerad.",
+      "items": [
+        {
+          "t": "Nycklarna förblir krypterade",
+          "d": "Uppgifter lagras krypterade, och Elpino verifierar dem mot leverantören innan de sparas."
+        },
+        {
+          "t": "Läsbehörighet räcker för uppslag",
+          "d": "För Stripe, använd en begränsad nyckel med läsbehörighet till kunder och betalningar."
+        },
+        {
+          "t": "Pengar rör sig bara om du tillåter det",
+          "d": "Återbetalningar är avstängda som standard. Arbetsytans ägare bestämmer om AI:n får utfärda dem."
+        },
+        {
+          "t": "Du godkänner varje MCP-verktyg",
+          "d": "AI:n ser bara de verktyg du har aktiverat, och varje anrop kontrolleras igen på servern."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Frågor",
+      "titlePrefix": "Bra att ",
+      "titleHl": "veta.",
+      "items": [
+        [
+          "Vilka verktyg kan jag ansluta?",
+          "Stripe, Razorpay, Cashfree och Paystack för betalningar, Trello och Asana för ärenden, och dina egna MCP-servrar för allt annat."
+        ],
+        [
+          "Vad kan AI:n göra med betalningar?",
+          "Med Stripe eller Razorpay anslutet kan den slå upp betalningar och prenumerationer, skicka kvitton och betalningslänkar, och avsluta en prenumeration på begäran. Återbetalningar är avstängda om du inte aktiverar dem."
+        ],
+        [
+          "Måste jag vara teknisk?",
+          "Inte för betalningar eller ärenden. Du klistrar in en nyckel, eller loggar in på Asana. MCP-servrar kräver att någon har byggt en."
+        ],
+        [
+          "Stöds Shopify, Slack eller HubSpot?",
+          "Inte som en-klicks-anslutningar idag. Om ditt system har en MCP-server kan du ansluta den, och du kan berätta för oss vad du vill ha härnäst."
+        ],
+        [
+          "Vart går ärenden?",
+          "Till Trello eller Asana om anslutet. Annars finns de på din Ärenden-sida."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Saknar du något du behöver?",
+      "subtitle": "Berätta vilket verktyg du vill ha härnäst, eller anslut det själv via MCP.",
+      "ctaStart": "Kom igång gratis",
+      "ctaRequest": "Begär en integration"
+    }
+  },
+  "securityGuide": {
+    "sticky": {
+      "securityLabel": "Säkerhet",
+      "reportIssue": "Rapportera ett problem"
+    },
+    "hero": {
+      "badge": "Säkerhetsguide",
+      "title1": "Byggt för att ",
+      "title2": "skydda din data.",
+      "subtitle": "Den här guiden går igenom vad som skyddas i webbappen, gatewayen och tjänsterna för autentisering, workspace och AI — vad vi garanterar och varför du kan lita på det, utan en steg-för-steg-genomgång av det interna.",
+      "ctaBlueprint": "Se ritningen",
+      "ctaChapters": "Läs kapitlen",
+      "ctaTrust": "Trust Center",
+      "register": {
+        "label": "Ritningsregister",
+        "chapters": "Kapitel",
+        "controlsDescribed": "Beskrivna kontroller",
+        "componentsCovered": "Komponenter som täcks",
+        "componentsValue": "6",
+        "reviewedAgainst": "Granskad mot",
+        "reviewedValue": "produkten"
+      }
+    },
+    "blueprint": {
+      "fig": "Fig. 00 · I korthet",
+      "title": "Vad som händer med en förfrågan",
+      "subtitle": "Varje pil är krypterad eller autentiserad. Peka på en del för att se vad det innebär i praktiken.",
+      "readChapter": "Läs kapitlet"
+    },
+    "nodes": {
+      "widget": {
+        "label": "Besökare",
+        "sub": "Chattwidget",
+        "guards": "Gäster förblir gäster. Inloggade besökare bevisar sin identitet med en signerad inloggningsuppgift eller en e-postkod, som bara lagras i widgetens egna minne."
+      },
+      "team": {
+        "label": "Ditt team",
+        "sub": "Instrumentpanel",
+        "guards": "Lösenord sparas aldrig i läsbar form, inloggning med Google verifieras på vår server, och du kan avsluta vilken session som helst på distans."
+      },
+      "elpino": {
+        "label": "Elpino",
+        "sub": "Verifierar, skyddar, svarar",
+        "guards": "Varje förfrågan kontrolleras innan något körs, privata uppgifter byts ut innan en AI-modell ser dem, och AI:n arbetar inom gränser som den inte kan prata sig förbi."
+      },
+      "google": {
+        "label": "Google",
+        "sub": "Inloggning",
+        "guards": "Betraktas som pålitlig först efter att vår egen server oberoende verifierat den."
+      },
+      "pay": {
+        "label": "Betalningar",
+        "sub": "Razorpay · Stripe",
+        "guards": "Betalningsaviseringar godtas endast med en verifierad signatur och kan aldrig spelas upp igen för att nollställa din användning."
+      },
+      "models": {
+        "label": "AI-leverantörer",
+        "sub": "Modeller",
+        "guards": "De ser säkra platshållare istället för riktiga uppgifter, aldrig hemligheter, och din data används inte för att träna generella modeller."
+      }
+    },
+    "chaptersSection": {
+      "label": "Kapitlen",
+      "title1": "Tolv kapitel. ",
+      "title2": "Inget hoppas över.",
+      "subtitle": "Varje kontroll anger vilken del av systemet den finns i och vilken garanti den ger dig — inte den exakta mekanismen bakom den.",
+      "contents": "Innehåll"
+    },
+    "chapters": {
+      "accounts": {
+        "title": "Konton och sessioner",
+        "kicker": "Vilka som finns i ditt team, och hur vi vet att det är dem.",
+        "intro": "Registrering, inloggning och varje session efter det. Lösenord sparas aldrig i läsbar form, verifieringskoder går ut snabbt, och en session kan avslutas från servern när som helst.",
+        "stats": [
+          "Lösenord hashas, sparas aldrig",
+          "Koder går ut snabbt",
+          "Sessioner du kan återkalla"
+        ],
+        "controls": {
+          "1.1": {
+            "title": "Lösenord hashas, sparas aldrig",
+            "text": "Ditt lösenord sparas aldrig någonstans i en form som någon kan läsa — inte ens vi. Att kontrollera det kan inte avslöja hur nära en felaktig gissning var."
+          },
+          "1.2": {
+            "title": "Verifieringskoder via e-post",
+            "text": "Nya konton bekräftar sin adress med en kortlivad kod. Bara en säker hash av koden sparas, den går ut snabbt, och endast ett par felaktiga försök tillåts innan du behöver en ny."
+          },
+          "1.3": {
+            "title": "Inloggning med Google kontrolleras på servern",
+            "text": "Popup-fönstret för Google-inloggning körs i din webbläsare, men vår server verifierar det oberoende innan den litar på det, och loggar alltid in dig på samma konto utifrån din verifierade e-post — aldrig ett andra, ofristående konto."
+          },
+          "1.4": {
+            "title": "Signerade sessionstoken",
+            "text": "Din session är ett signerat token som vår server alltid kan verifiera på egen hand — det går inte att förfalska, ändra eller spela upp som något det inte är."
+          },
+          "1.5": {
+            "title": "En låst sessionscookie",
+            "text": "Din sessionscookie kan inte läsas av skript på sidan, och skickas alltid bara över en säker anslutning."
+          },
+          "1.6": {
+            "title": "Logga ut överallt",
+            "text": "Att logga ut ogiltigförklarar snabbt alla dina sessioner. Om vi inte kan bekräfta att en session fortfarande är giltig nekas den, i stället för att släppas igenom."
+          },
+          "1.7": {
+            "title": "Säkra omdirigeringar",
+            "text": "Efter inloggning skickas du alltid bara till en sida på vår egen webbplats — aldrig någon annanstans, oavsett hur länken är utformad."
+          },
+          "1.8": {
+            "title": "Teaminbjudningar",
+            "text": "Inbjudningslänkar går inte att gissa och löper ut automatiskt, och det är ägaren som bestämmer om medlemmar får bjuda in andra."
+          }
+        }
+      },
+      "front-door": {
+        "title": "Den första dörren",
+        "kicker": "Vad webbplatsen gör innan en förfrågan går vidare.",
+        "intro": "Webbappen är det första en webbläsare möter. Den härdar webbläsaren, begränsar missbruk och validerar indata innan något skickas vidare.",
+        "stats": [
+          "Ingen inramning",
+          "Begränsat missbruk",
+          "Stängs vid fel"
+        ],
+        "controls": {
+          "2.1": {
+            "title": "Härdande webbläsarheaders",
+            "text": "Varje sida förutom chattwidgeten är skyddad mot clickjacking, skyddad mot felaktig identifiering av innehållstyp, och har känsliga enhetsbehörigheter som kamera och plats avstängda som standard. Widgeten är det enda medvetna undantaget, eftersom den måste finnas inuti en iframe på din webbplats."
+          },
+          "2.2": {
+            "title": "Delade gränser mot missbruk",
+            "text": "Offentliga formulär skyddas av hastighetsgränser som delas mellan alla servrar vi driver, så missbruk från ett håll kan inte ta sig igenom bara genom att träffa en annan."
+          },
+          "2.3": {
+            "title": "Den stängs vid fel",
+            "text": "Om missbruksbegränsaren inte kan nås nekas förfrågan, i stället för att släppas igenom."
+          },
+          "2.4": {
+            "title": "Validerad indata med längdbegränsning",
+            "text": "Varje formulär kontrolleras och storleksbegränsas på servern innan något bearbetas — aldrig litat på bara för att webbläsaren redan har validerat det."
+          }
+        }
+      },
+      "gateway": {
+        "title": "Gatewayen",
+        "kicker": "En enda dörr till backend, stängd som standard.",
+        "intro": "Varje anrop till backend går genom en enda gateway. Regeln är enkel: om en rutt inte är uttryckligen markerad som offentlig måste den bevisa att den hör hemma där.",
+        "stats": [
+          "Stängd som standard",
+          "Uttrycklig offentlig lista",
+          "Verifierade live-anslutningar"
+        ],
+        "controls": {
+          "3.1": {
+            "title": "Stängd som standard",
+            "text": "Varje rutt kräver bevis på att det är ett auktoriserat internt anrop, om den inte uttryckligen är markerad som offentlig. Om den kontrollen inte är konfigurerad nekar gatewayen allt i stället för att fallera öppet."
+          },
+          "3.2": {
+            "title": "En kort, uttrycklig offentlig lista",
+            "text": "Bara de som verkligen inte kan bära interna inloggningsuppgifter är offentliga: chattwidgeten, sidanalys, betalningswebhooken och engångslänkar. Var och en är medvetet markerad, rutt för rutt."
+          },
+          "3.3": {
+            "title": "Endast uttryckliga ursprung",
+            "text": "API:et svarar webbläsare bara från en känd, godkänd lista med ursprung — aldrig varifrån det råkar be om det."
+          },
+          "3.4": {
+            "title": "Verifierade live-anslutningar",
+            "text": "Live-anslutningar kräver en verifierad inloggningsuppgift kopplad till workspace med ett utgångsdatum. Allt annat avvisas omedelbart."
+          },
+          "3.5": {
+            "title": "Interna utskick skyddas också",
+            "text": "Slutpunkterna som tjänster använder för att skicka live-aviseringar till instrumentpaneler kräver samma interna bevis, så att ingen utanför kan larma en kollegas skärm."
+          }
+        }
+      },
+      "visitors": {
+        "title": "Besökare och identitet",
+        "kicker": "Att skilja en inloggad kund från någon som bara skrivit in en e-postadress.",
+        "intro": "Ett namn, en e-postadress eller ett ordernummer är inte bevis på identitet. Kontohjälp låses upp först efter riktigt identitetsbevis, och det beviset går snabbt ut.",
+        "stats": [
+          "Riktigt bevis krävs",
+          "Sessioner löper ut automatiskt",
+          "Tidsbegränsad verifiering"
+        ],
+        "controls": {
+          "4.1": {
+            "title": "Gäster förblir gäster",
+            "text": "Ett skrivet namn, e-postadress, telefonnummer eller betalningsreferens räknas aldrig som identitetsbevis. Gäster kan chatta och lämna kontaktuppgifter, men det låser upp inga privata verktyg och slås aldrig ihop med någon annans historik."
+          },
+          "4.2": {
+            "title": "Signerad identitet från din egen webbplats",
+            "text": "För inloggade kunder intygar din egen server vem de är med en kortlivad signerad inloggningsuppgift som bara du och Elpino tillsammans kan skapa. Kontaktuppgifter räknas bara som verifierade när ditt system säger att de är det."
+          },
+          "4.3": {
+            "title": "Ett byte, en session",
+            "text": "Varje identitetsbevis används en gång och byts sedan mot en helt egen ny session — inget återanvändbart ligger kvar, och det som lagras går inte att göra om till det ursprungliga värdet."
+          },
+          "4.4": {
+            "title": "Kortlivade sessioner",
+            "text": "En session löper ut automatiskt efter en period av inaktivitet, eller en fast tid från inloggning — vilket som inträffar först. Den lagras bara i widgetens egna minne, aldrig i webbläsarens lagring eller i en URL."
+          },
+          "4.5": {
+            "title": "Rotation och utloggning",
+            "text": "Att rotera din identitetsuppgift ogiltigförklarar omedelbart varje session som använde den gamla. Utloggning återkallar sessionen på vår server, och gamla sessioner rensas bort automatiskt."
+          },
+          "4.6": {
+            "title": "E-postkoder för gäster",
+            "text": "En besökare kan också verifiera sig via e-post med en kort engångskod, hastighetsbegränsad för att förhindra missbruk. Verifiering låser bara upp den ena konversationen, och bara under begränsad tid."
+          },
+          "4.7": {
+            "title": "Varje förfrågan kontrolleras på nytt",
+            "text": "Varje autentiserad läsning och skrivning kontrollerar på nytt och oberoende vem som frågar, vilket workspace det gäller, och om åtkomsten fortfarande är giltig — inget litas på bara för att det var giltigt ett ögonblick tidigare."
+          }
+        }
+      },
+      "ai": {
+        "title": "AI:ns koppel",
+        "kicker": "Vad AI:n kan och inte kan göra, upprätthållet av backend, inte genom en vänlig förfrågan.",
+        "intro": "Modellen föreslår; backend bestämmer. Verktyg, identitet, gränser och pengar finns alla utanför modellen, där ett smart meddelande inte kan prata sig förbi dem.",
+        "stats": [
+          "Begränsat arbete",
+          "Backend-styrda verktyg",
+          "Oberoende granskning"
+        ],
+        "controls": {
+          "5.1": {
+            "title": "Ett svar, en ägare",
+            "text": "Innan ett AI-svar sparas bekräftar systemet oberoende att konversationen fortfarande ägs av AI:n och att frågan som besvaras fortfarande är den senaste. AI:n kan inte tala i mun på ditt team eller svara på något som redan har gått vidare."
+          },
+          "5.2": {
+            "title": "Begränsat arbete",
+            "text": "Varje AI-tur har ett hårt tak för hur mycket den kan göra. En fastnad eller loopande körning avbryts automatiskt och lämnas aldrig igång."
+          },
+          "5.3": {
+            "title": "Backend väljer verktygen",
+            "text": "Vilka verktyg AI:n kan använda avgörs helt av din workspace-inställning och kundens verifiering — modellen kan inte ge sig själv ett verktyg, förklara data offentlig eller nå in i ett annat workspace."
+          },
+          "5.4": {
+            "title": "Kontoverktyg kräver en verifierad kund",
+            "text": "Betalningssökningar och anslutna system blir bara tillgängliga när kunden har bevisat sin identitet, och agerar alltid på den identitet som redan finns registrerad — aldrig på det modellen påstås ha fått veta."
+          },
+          "5.5": {
+            "title": "Meddelanden är data, inte instruktioner",
+            "text": "Kundmeddelanden, dokument och verktygsresultat når modellen tydligt märkta som opålitlig information. Instruktioner gömda i dem följs inte."
+          },
+          "5.6": {
+            "title": "En andra åsikt",
+            "text": "En separat, oberoende kontroll granskar varje svarsutkast mot de bevis AI:n faktiskt har samlat in. Ett obestyrkt påstående skickas tillbaka för omskrivning, och det som fortfarande misslyckas lämnas över till en person."
+          },
+          "5.7": {
+            "title": "Pengar rör sig bakom spärrar",
+            "text": "AI-återbetalningar är avstängda tills en workspace-ägare slår på dem, och även då är de begränsade och automatiskt begränsade i tak. En upprepad återbetalning kan aldrig utfärdas två gånger, och att avsluta en prenumeration tar aldrig bort tid du redan betalat för."
+          },
+          "5.8": {
+            "title": "En granskningslogg för varje körning",
+            "text": "Varje AI-körning håller en logg över vad den gjorde och vad den använde för att göra det. Allt som rör pengar loggas också som en anteckning som ditt team kan se."
+          }
+        }
+      },
+      "private-data": {
+        "title": "Privat data",
+        "kicker": "Vad modellen faktiskt ser.",
+        "intro": "Innan en förfrågan når en AI-modell byts identifierande uppgifter ut mot säkra platshållare. Prova nedan med din egen text.",
+        "stats": [
+          "Uppgifter byts ut först",
+          "Hemligheter tas bort helt",
+          "Samma regler hos varje leverantör"
+        ],
+        "controls": {
+          "6.1": {
+            "title": "Riktiga uppgifter når aldrig modellen",
+            "text": "Namn, e-postadresser, telefonnummer, adresser och order- eller betalningsuppgifter skickas aldrig till AI-modellen som de är. Vi byter ut dem mot säkra platshållare först, och återställer det riktiga värdet bara efteråt, på våra egna servrar — aldrig inuti något modellen ser."
+          },
+          "6.2": {
+            "title": "Hemligheter tas bort, inte bara döljs",
+            "text": "Lösenord, API-nycklar, token och engångskoder tas bort helt innan något når en modell — inte maskerade, bara borta."
+          },
+          "6.3": {
+            "title": "Känsliga länkar rensas",
+            "text": "Länkar med åtkomsttoken eller andra känsliga parametrar rensas innan en modell någonsin läser dem."
+          },
+          "6.4": {
+            "title": "Betalningsfakta, inte betalningsuppgifter",
+            "text": "Betalningsverktyg returnerar bara säkra sammanfattningar — status och datum — aldrig råa kort- eller kontouppgifter, och felorsaker förenklas i stället för att skickas vidare som fritext."
+          },
+          "6.5": {
+            "title": "Samma regler för varje modell",
+            "text": "Samma skydd gäller oavsett vilken AI-leverantör som svarar, även när vi växlar till en annan som reserv. Dina konversationer och dokument används aldrig för att träna generella modeller."
+          }
+        }
+      },
+      "integrations": {
+        "title": "Integrationer och utgående förfrågningar",
+        "kicker": "När Elpino måste nå en URL du har gett oss.",
+        "intro": "Att crawla din webbplats, läsa en sida eller anropa ett anslutet system innebär alla att hämta en URL som en person skrivit in. Varje sådan förfrågan är låst så att den inte kan vändas mot vårt eget nätverk — eller ditt.",
+        "stats": [
+          "Krypterad i vila",
+          "Kan inte nå privata nätverk",
+          "Begränsad och tidsbegränsad"
+        ],
+        "controls": {
+          "7.1": {
+            "title": "Inloggningsuppgifter krypteras i vila",
+            "text": "Varje nyckel eller token du kopplar in — Stripe, Razorpay, Trello och liknande — krypteras innan den lagras. En kopia av databasen ensam räcker inte för att återskapa dem."
+          },
+          "7.2": {
+            "title": "Utgående förfrågningar kan inte riktas inåt",
+            "text": "När vi hämtar en URL på dina vägnar — crawlar din webbplats, anropar ett anslutet system — säkerställer vi att den inte kan omdirigeras mot ett privat nätverk eller intern infrastruktur, inklusive vår egen."
+          },
+          "7.3": {
+            "title": "Omdirigeringar kontrolleras vid varje steg",
+            "text": "Vi följer omdirigeringar noggrant, kontrollerar varje steg i stället för att lita på slutdestinationen, och alltid bara över standardiserade, säkra anslutningar."
+          },
+          "7.4": {
+            "title": "Anslutna system är begränsade",
+            "text": "Anslutningar till dina egna verktyg är begränsade i storlek och tid, så att de inte kan användas för att hämta obegränsad data eller hänga kvar på obestämd tid."
+          },
+          "7.5": {
+            "title": "Administratörer godkänner varje verktyg",
+            "text": "Anslutna verktyg är avstängda tills en administratör godkänner dem. Ett verktyg som kan ändra data flaggas separat, och kräver fortfarande en verifierad kund även när servern i sig annars är offentlig."
+          },
+          "7.6": {
+            "title": "Koppla bort betyder borta",
+            "text": "När du kopplar bort en integration raderas dess lagrade token och inloggningsuppgifter omedelbart."
+          }
+        }
+      },
+      "secure-links": {
+        "title": "Säkra överlämningar",
+        "kicker": "När en kund behöver skicka något känsligt.",
+        "intro": "Klistra aldrig in en nyckel i en chatt. En kollega kan istället be om den via en engångslänk, och chatten innehåller bara länken.",
+        "stats": [
+          "Länk som inte går att gissa",
+          "Löper ut automatiskt",
+          "Krypterad separat"
+        ],
+        "controls": {
+          "8.1": {
+            "title": "Chatten innehåller aldrig själva hemligheten",
+            "text": "Meddelandet i konversationen anger vad som efterfrågades och innehåller en länk — aldrig själva värdet."
+          },
+          "8.2": {
+            "title": "En länk som inte går att gissa och är kortlivad",
+            "text": "Länken i sig är kundens hela bevis på behörighet, så den görs omöjlig att gissa, och den löper ut automatiskt innan den kan bli en varaktig risk."
+          },
+          "8.3": {
+            "title": "Krypterad med sin egen nyckel",
+            "text": "Vad som skickas in förseglas med en nyckel som hålls helt separat från den som skyddar dina andra inloggningsuppgifter, så att endera kan roteras — eller, i värsta fall, exponeras — utan att påverka den andra."
+          },
+          "8.4": {
+            "title": "Begränsad och rensad regelbundet",
+            "text": "Inskickade uppgifter är storleksbegränsade, och allt som gått ut raderas automatiskt och permanent enligt ett regelbundet schema, och lämnar kvar bara en post om att något hänt — aldrig vad det var."
+          }
+        }
+      },
+      "money": {
+        "title": "Pengar och fakturering",
+        "kicker": "Betalningar, förnyelser och gränserna kopplade till dem.",
+        "intro": "Allt som flyttar pengar verifieras två gånger: en gång för att meddelandet verkligen kom från betalningsleverantören, och en gång för att det inte kan tillämpas två gånger.",
+        "stats": [
+          "Endast verifierade signaturer",
+          "Skyddad mot upprepning",
+          "Kan inte dubbelfakturera"
+        ],
+        "controls": {
+          "9.1": {
+            "title": "Signerade webhooks och kassaflöden",
+            "text": "Betalningsaviseringar godtas bara med en giltig, verifierad signatur från leverantören — allt annat, inklusive en nästan korrekt signatur, avvisas direkt."
+          },
+          "9.2": {
+            "title": "Upprepningar kan inte nollställa användning",
+            "text": "En betalningsavisering som kommer mer än en gång — upprepad, eller helt enkelt levererad dubbelt — kan aldrig nollställa redan förbrukad användning eller bevilja kredit igen."
+          },
+          "9.3": {
+            "title": "Automatisk påfyllning kan inte dubbelfakturera",
+            "text": "Att kontrollera att en påfyllning är inom sin gräns och att faktiskt reservera den sker som ett odelbart steg, och ditt saldo krediteras först när en betalning har bekräftats och fångats."
+          },
+          "9.4": {
+            "title": "Varje pengarörelse är dokumenterad",
+            "text": "Varje betalningshändelse från leverantören skrivs till en granskningslogg, och varje betalningsåtgärd som AI:n vidtar får sin egen separata logg."
+          },
+          "9.5": {
+            "title": "Plangränser upprätthålls på servern",
+            "text": "Funktioner kopplade till en plan kontrolleras i backend, inte bara döljs i gränssnittet, och platsgränser räknas utifrån faktiskt medlemskap — inte vad webbläsaren påstår."
+          }
+        }
+      },
+      "lifecycle": {
+        "title": "Datans livscykel",
+        "kicker": "Var data finns, hur länge, och hur den försvinner.",
+        "intro": "Din data är begränsad till din workspace, löper ut när den ska, och kan tas bort av dig.",
+        "stats": [
+          "Begränsad till workspace",
+          "Rensas automatiskt",
+          "Du kan radera den"
+        ],
+        "controls": {
+          "10.1": {
+            "title": "Begränsad till din workspace",
+            "text": "Konversationer, kunskap, kunder och inställningar tillhör alla en workspace, och varje sökning är begränsad till den — inget hamnar av misstag i en annan."
+          },
+          "10.2": {
+            "title": "Det som bara är för teamet stannar bara hos teamet",
+            "text": "Anteckningar märkta som endast för teamet filtreras bort innan en konversation visas i besökarens widget."
+          },
+          "10.3": {
+            "title": "Kortlivade saker löper ut",
+            "text": "Verifieringskoder, sessionsuppgifter och innehåll i säkra länkar löper alla ut och rensas bort automatiskt — inget kortlivat sparas på obestämd tid."
+          },
+          "10.4": {
+            "title": "Radera din workspace",
+            "text": "Att radera en workspace avslutar dess prenumeration omedelbart och tar bort dess data, med en fast yttersta gräns i sekretesspolicyn för fullständig radering."
+          },
+          "10.5": {
+            "title": "Lämna eller radera ditt konto",
+            "text": "Personer kan lämna en workspace, och ett konto kan raderas helt från Inställningar."
+          }
+        }
+      },
+      "infrastructure": {
+        "title": "Infrastruktur",
+        "kicker": "Hur tjänsterna själva drivs.",
+        "intro": "Enkel, oglamorös hygien som hindrar en intern tjänst från att bli en offentlig.",
+        "stats": [
+          "Inte offentligt nåbar",
+          "Minimal fotavtryck",
+          "Övervakad"
+        ],
+        "controls": {
+          "11.1": {
+            "title": "Interna tjänster är inte offentligt nåbara",
+            "text": "Våra backend-tjänster och databas är inte exponerade mot det öppna internet alls — bara en enda, härdad ingångspunkt är det."
+          },
+          "11.2": {
+            "title": "Slimmade produktionsbyggen",
+            "text": "Det som faktiskt körs i produktion bär inget extra — inga utvecklingsverktyg, inga oanvända beroenden."
+          },
+          "11.3": {
+            "title": "Gränser, hälsokontroller och logrotation",
+            "text": "Varje tjänst körs med resursgränser, automatiska hälsokontroller och en omstartspolicy, och loggar roteras så att de inte kan växa obegränsat."
+          },
+          "11.4": {
+            "title": "Hemligheter hålls utanför källkoden",
+            "text": "Nycklar och hemligheter checkas aldrig in i vår kodbas — de tillhandahålls varje tjänst separat, och känsliga inloggningsfiler monteras skrivskyddat."
+          },
+          "11.5": {
+            "title": "Upprepningsbara driftsättningar",
+            "text": "Varje driftsättning går igenom samma automatiserade kontroller, så en release är aldrig en engångsprocess som görs manuellt."
+          }
+        }
+      },
+      "verification": {
+        "title": "Hur vi kontrollerar vårt eget arbete",
+        "kicker": "Testerna som försöker bryta reglerna ovan.",
+        "intro": "Säkerhetspåståenden är bara värda vad tester kan bekräfta. De här täcks av automatiska tester i vår egen kodbas.",
+        "stats": [
+          "Tester för förfalskade inloggningsuppgifter",
+          "Tester för upprepning",
+          "Isoleringstester"
+        ],
+        "controls": {
+          "12.1": {
+            "title": "Identitetsregressioner",
+            "text": "Automatiska tester täcker förfalskade inloggningsuppgifter, utgångna och upprepade sessioner, utloggning, rotation av inloggningsuppgifter, och att en workspace aldrig kan se en annans data."
+          },
+          "12.2": {
+            "title": "Tester för utgående förfrågningar",
+            "text": "Kontrollerna som hindrar utgående förfrågningar från att nå interna nätverk har egna dedikerade tester."
+          },
+          "12.3": {
+            "title": "Tester för sekretessfiltret",
+            "text": "Systemet som byter ut privata uppgifter innan de når en modell, och reglerna för betalningsfakta som begränsar vad som kan visas, testas båda direkt."
+          },
+          "12.4": {
+            "title": "Tester för korrekt fakturering",
+            "text": "Upprepade förnyelser och signaturverifiering täcks av tester, så en fakturafix inte i tysthet kan öppna upp ett hål som redan var stängt."
+          }
+        }
+      }
+    },
+    "demo": {
+      "customerLabel": "Vad kunden skriver",
+      "resetSample": "Återställ exempel",
+      "modelLabel": "Vad modellen läser",
+      "inputAriaLabel": "Meddelande att filtrera",
+      "caption": "Bara en illustration, och den körs i din webbläsare: inget du skriver här skickas någonstans. Det verkliga filtret körs på våra servrar, och mappningen tillbaka till de riktiga uppgifterna når aldrig en prompt."
+    },
+    "about": {
+      "label": "Om den här guiden",
+      "textBefore": "Det här är en beskrivning av hur plattformen är byggd, inte en certifiering. Den täcker de kontroller som finns i produkten idag, och den kommer att ändras i takt med produkten. Om du behöver få ett säkerhetsformulär besvarat eller ett dataavtal signerat, mejla ",
+      "textAfter": "."
+    },
+    "report": {
+      "label": "Rapportera en sårbarhet",
+      "stamp": "Har du hittat något?",
+      "title": "Tror du att du hittat en svag punkt? Vi vill höra det först.",
+      "subtitle": "Mejla detaljerna och hur man återskapar det. En person i teamet läser varje rapport.",
+      "privacy": "Sekretesspolicy",
+      "terms": "Villkor",
+      "securityPolicy": "Säkerhetspolicy"
+    }
+  },
+  "founders": {
+    "stream": {
+      "incomingLive": "Inkommande, direkt",
+      "onDuty": "Elpino i tjänst",
+      "needsYou": "Behöver dig",
+      "handled": "Hanterat",
+      "askedFirst": "{why}. Elpino frågade först och larmade dig sedan.",
+      "handledWithoutYou": "Hanterat utan dig",
+      "actuallyNeededYou": "Behövde faktiskt dig",
+      "items": [
+        {
+          "q": "Hur exporterar jag min data?"
+        },
+        {
+          "q": "Varför nekades mitt kort?"
+        },
+        {
+          "q": "Har ni startup-rabatt?"
+        },
+        {
+          "q": "Kan vi få ett skräddarsytt avtal?",
+          "why": "Bad om att prata med en person"
+        },
+        {
+          "q": "Var är min faktura för mars?"
+        },
+        {
+          "q": "Hur återställer jag mitt lösenord?"
+        },
+        {
+          "q": "Kan jag prata med grundaren?",
+          "why": "Bad om att prata med en person"
+        },
+        {
+          "q": "Fungerar det med Shopify?"
+        }
+      ]
+    },
+    "hero": {
+      "badge": "För grundare",
+      "titlePrefix": "Bygg produkten. ",
+      "titleHl": "Inte supportsvar.",
+      "subtitle": "Du startade ett företag för att bygga något, inte för att svara på \"hur återställer jag mitt lösenord?\" fyrtio gånger i veckan. Elpino tar hand om de återkommande frågorna och kontaktar dig bara när det verkligen behövs en grundare.",
+      "ctaStart": "Kom igång gratis",
+      "ctaPricing": "Se priser",
+      "freeNote": "Gratisplan: 100 AI-meddelanden per månad. Inget kort krävs."
+    },
+    "calculator": {
+      "eyebrow": "Räkna på det",
+      "titlePrefix": "Få tillbaka dina ",
+      "titleHl": "eftermiddagar.",
+      "subtitle": "Fyll i dina egna siffror. Andelen AI klarar är din gissning, inget löfte, och beror på vad som finns i din kunskapsbas.",
+      "sliderQuestions": "Kundfrågor per dag",
+      "sliderMinutes": "Minuter att svara på varje",
+      "unitMin": "min",
+      "sliderShare": "Andel du gissar att AI löser",
+      "yourDay": "Din 8-timmarsdag",
+      "today": "Idag",
+      "withElpinoAt": "Med Elpino på {pct}%",
+      "backEachWeek": "Tillbaka varje vecka",
+      "chatsUntouched": "Chattar per dag, orörda",
+      "volumeNote": "Vid den här volymen tar support ensam mer än en hel arbetsdag.",
+      "supportLabel": "{h}h support",
+      "buildingLabel": "{h}h byggande"
+    },
+    "setup": {
+      "eyebrow": "Installation",
+      "titlePrefix": "Igång innan ditt ",
+      "titleHl": "kaffe kallnar.",
+      "subtitle": "Inga utvecklare, ingen upplärningsperiod. Fyra steg, och det sista är valfritt.",
+      "stepLabel": "Steg {n}",
+      "steps": [
+        {
+          "t": "Klistra in din webbplats",
+          "d": "Elpino crawlar dina sidor, inklusive de som byggs med JavaScript, och lär sig din produkt.",
+          "meter": "Läser din webbplats"
+        },
+        {
+          "t": "Lägg till resten",
+          "d": "Ladda upp dokument eller skriv ner de rutiner som bara finns i ditt huvud.",
+          "meter": "Lägger till kunskap"
+        },
+        {
+          "t": "Lägg in widgeten",
+          "d": "En kodsnutt och chatten är igång på din webbplats.",
+          "meter": "Installerar widget"
+        },
+        {
+          "t": "Koppla betalningar (valfritt)",
+          "d": "Stripe eller Razorpay, så den kan slå upp fakturering åt dig.",
+          "meter": "Ansluter"
+        }
+      ]
+    },
+    "reaches": {
+      "badge": "Filtret",
+      "titlePrefix": "Bara det som är ",
+      "titleHl": "viktigt",
+      "titleSuffix": " når fram till dig.",
+      "subtitle": "Du bestämmer vad AI:n får göra. Allt annat följer en tydlig regel: fråga först, larma tillsammans och lämna aldrig kunden hängande.",
+      "rules": [
+        {
+          "t": "Svar från dina dokument",
+          "d": "Hanterat. Du ser det aldrig."
+        },
+        {
+          "t": "Uppslag av betalningar och konton",
+          "d": "Hanterat med de verktyg du har aktiverat."
+        },
+        {
+          "t": "\"Kan jag få prata med någon?\"",
+          "d": "Frågar kunden först, larmar sedan dig och ditt team."
+        },
+        {
+          "t": "Fullt upp med annat?",
+          "d": "Efter 90 sekunder skapas ett ärende och kunden informeras."
+        }
+      ]
+    },
+    "money": {
+      "eyebrow": "Frågor om betalning",
+      "titlePrefix": "Kontrollerar den verkliga betalningen. ",
+      "titleHl": "Du behåller nycklarna.",
+      "subtitle": "Anslut Stripe eller Razorpay så kan AI:n slå upp betalningar och prenumerationer, skicka kvitton och betallänkar, och säga upp en prenumeration vid förfrågan. Återbetalningar är avstängda tills du slår på det själv.",
+      "chatAsk": "Kan jag få min senaste betalning återbetald?",
+      "chatYes": "Jag hittade din betalning och startade återbetalningen. Den brukar synas på ditt konto inom 5–7 arbetsdagar.",
+      "chatNo": "Jag ser betalningen, men kan inte återbetala den själv. Vill du att jag kopplar dig till vårt team?",
+      "toggleLabel": "Låt AI:n göra återbetalningar",
+      "toggleNote": "Avstängt som standard. Testa reglaget."
+    },
+    "grows": {
+      "eyebrow": "Utrymme att växa",
+      "titlePrefix": "Börjar med dig. ",
+      "titleHl": "Växer med ditt team.",
+      "stageLabel": "Steg {n}",
+      "stages": [
+        {
+          "t": "Bara du",
+          "d": "Gratisplan, 100 AI-meddelanden per månad, en inkorg du sällan öppnar."
+        },
+        {
+          "t": "Första anställningen",
+          "d": "Bjud in via mejl. Personen får aviseringar och kan ta över chattar från AI:n."
+        },
+        {
+          "t": "Ett litet team",
+          "d": "Fördela konversationer, dela inkorgen, lägg till platser vid behov."
+        },
+        {
+          "t": "Skalar upp",
+          "d": "Betalplaner med månatlig AI-kredit, MCP-verktyg för era egna system."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Frågor från grundare",
+      "titlePrefix": "Raka ",
+      "titleHl": "svar.",
+      "items": [
+        {
+          "q": "Vad skiljer detta från en generisk chattbot?",
+          "a": "Elpino svarar bara utifrån kunskapen du gett den, kan slå upp verkliga betalningar och använda dina egna verktyg, verifierar identitet innan den rör något personligt, och lämnar över till en person med hela konversationen när den inte kan hjälpa."
+        },
+        {
+          "q": "Hur snabbt kan jag sätta upp det själv?",
+          "a": "De flesta grundare är igång samma dag: lägg till din webbplats eller filer, klistra in widget-koden och koppla eventuellt Stripe eller Razorpay."
+        },
+        {
+          "q": "Hur avgör den om den ska svara eller larma mig?",
+          "a": "Om den kan svara utifrån din kunskap eller ett verktyg gör den det. Om den inte kan säger den det och frågar kunden om de vill kopplas till ditt team. Först då larmas du och ditt team."
+        },
+        {
+          "q": "Kommer den att hitta på saker?",
+          "a": "Den svarar utifrån det du godkänt, och en granskning kontrollerar utkast mot verktygsresultat. När den inte vet säger den det."
+        },
+        {
+          "q": "Är mitt Stripe- eller Razorpay-konto säkert?",
+          "a": "Uppgifter lagras krypterat, och penningrörande åtgärder som återbetalningar är avstängda tills du aktiverar dem."
+        },
+        {
+          "q": "Vad händer när jag anställer en supportperson?",
+          "a": "Bjud in personen, så får de aviseringar, kan ta över chattar från AI:n och lämna tillbaka dem."
+        }
+      ]
+    },
+    "closing": {
+      "title": "Gå tillbaka till att bygga.",
+      "subtitle": "Kom igång gratis, lär Elpino din produkt och låt den ta hand om de återkommande frågorna.",
+      "ctaStart": "Kom igång gratis",
+      "ctaMeetAgent": "Möt AI-agenten"
+    }
+  },
+  "developers": {
+    "hero": {
+      "badge": "För utvecklare",
+      "titlePrefix": "Från ",
+      "titleMiddle": " till ",
+      "titleHl": "löst.",
+      "subtitle": "En tagg för widgeten, en signerad token så att Elpino vet vem som är inloggad, en MCP-server så att AI:n kan läsa din data. Se de tre stegen utspela sig på en sida.",
+      "ctaStart": "Starta gratis",
+      "ctaDocs": "Läs dokumentationen"
+    },
+    "ide": {
+      "comment1": "<!-- 1. Klistra in taggen -->",
+      "comment2": "<!-- 2. Berätta för Elpino vem som är inloggad -->",
+      "comment3": "  // elpinoToken: signerad av din backend",
+      "mcpComment": "// I din instrumentpanel: anslut en MCP-server och aktivera get_order.",
+      "stepEmbed": "Bädda in",
+      "stepIdentify": "Identifiera",
+      "stepResolve": "Lös",
+      "previewSupport": "Support",
+      "previewVerified": "Verifierad",
+      "previewGreeting": "Hej Aisha, hur kan jag hjälpa till?",
+      "previewQuestion": "Var är min beställning?",
+      "previewAnswer": "Den skickades igår och kommer på torsdag."
+    },
+    "sequence": {
+      "eyebrow": "Förfrågningsflöde",
+      "titlePrefix": "En fråga, ",
+      "titleHl": "fyra system.",
+      "subtitle": "Vem som pratar med vem när en inloggad kund frågar om sin beställning. Klicka dig igenom steg för steg, eller låt det spela upp.",
+      "actors": [
+        "Webbläsare",
+        "Din server",
+        "Elpino",
+        "Din MCP-server"
+      ],
+      "steps": [
+        {
+          "label": "Kunden loggar in"
+        },
+        {
+          "label": "Signerad JWT",
+          "note": "≤ 5 min · engångs"
+        },
+        {
+          "label": "$elpino identify(token)"
+        },
+        {
+          "label": "Verifierar signatur + claims ✓"
+        },
+        {
+          "label": "“Var är min beställning?”"
+        },
+        {
+          "label": "get_order",
+          "note": "endast verifierade kunder"
+        },
+        {
+          "label": "Beställningsstatus"
+        },
+        {
+          "label": "Svarar kunden"
+        }
+      ],
+      "stepCounter": "Steg {n} / {total}",
+      "nextStep": "Nästa steg",
+      "replay": "Spela igen"
+    },
+    "tokenExplorer": {
+      "eyebrow": "Identitetstoken",
+      "titlePrefix": "Anatomin på en token, ",
+      "titleHl": "och hur den går sönder.",
+      "subtitle": "HS256, signerad med din arbetsytas hemlighet. Tryck på ett claim för dess regel, bryt sedan token för att se vad widgeten säger.",
+      "payload": "Payload",
+      "optional": "valfritt",
+      "required": "Obligatoriskt",
+      "optionalCap": "Valfritt",
+      "breakIt": "Bryt den",
+      "notAccepted": "[Elpino] Identitetstoken accepterades inte: {code}",
+      "fix": "Lösning:",
+      "claimDescriptions": [
+        "Det stabila konto-ID:t för denna användare.",
+        "Exakt \"elpino-widget\".",
+        "Ett nytt slumpmässigt ID per token, 16 till 128 URL-säkra tecken. En UUID fungerar.",
+        "Utfärdandetid i hela sekunder (inte millisekunder).",
+        "Utgång i hela sekunder, högst 5 minuter efter iat.",
+        "Utelämna när det inte finns någon. null avvisas.",
+        "true endast om ditt inloggningssystem bekräftade ägarskapet.",
+        "Visningsnamn som ditt team ser."
+      ]
+    },
+    "server": {
+      "eyebrow": "Din backend",
+      "titlePrefix": "Kopiera, klistra in, ",
+      "titleHl": "lansera.",
+      "subtitle": "Samma kodsnuttar som din instrumentpanel visar, i det språk du redan använder.",
+      "copy": "Kopiera",
+      "copied": "Kopierat",
+      "codeTitle": "identitetstoken"
+    },
+    "mcp": {
+      "badge": "MCP-servrar",
+      "titlePrefix": "Ge AI:n verktyg. ",
+      "titleHl": "Behåll nycklarna.",
+      "subtitle": "Anslut upp till fem MCP-servrar, aktivera upp till 15 verktyg på varje, och välj vem de är öppna för. Vrid på reglagen för att se vad agenten kan använda.",
+      "shopServerName": "Din butiks-MCP-server",
+      "toolsDiscovered": "{n} verktyg upptäckta",
+      "toggleLabel": "Öppna skrivskyddade verktyg för alla besökare",
+      "changesData": "Ändrar data",
+      "readOnly": "Skrivskyddad",
+      "needsVerified": "Kräver verifierad kund",
+      "agentCanCall": "Agenten kan anropa",
+      "toolDescriptions": [
+        "Slå upp en beställning och dess status",
+        "Live-spårning för ett paket",
+        "Ändra en leveransadress",
+        "Avbryt en beställning som inte har skickats"
+      ],
+      "bullets": [
+        "Varje anrop kontrolleras på nytt mot din lista på servern",
+        "Verktyg som ändrar data kräver alltid en verifierad kund",
+        "Uppgifter lagras krypterade"
+      ]
+    },
+    "sees": {
+      "eyebrow": "Sekretess som standard",
+      "titlePrefix": "Modellen ",
+      "titleHl": "ser aldrig",
+      "titleSuffix": " vem de är.",
+      "subtitle": "Innan AI:n läser en konversation byts namn, e-post och ID ut mot referenskoder, och hemligheter som tokens och nycklar tas bort. Verktyg får ändå de riktiga värdena på din sida.",
+      "toggleTeam": "Vad ditt team ser",
+      "toggleModel": "Vad AI-modellen ser",
+      "chatRaw1": "Hej, jag är Aisha Khan (aisha@example.com). Var är min beställning?",
+      "chatMasked1": "Hej, jag är ref_name_9f2c (ref_email_41ab). Var är min beställning?",
+      "chatRaw2": "Hej Aisha, din beställning skickades igår.",
+      "chatMasked2": "Hej, din beställning skickades igår."
+    },
+    "faq": {
+      "eyebrow": "Frågor",
+      "titlePrefix": "Bra att ",
+      "titleHl": "veta.",
+      "items": [
+        {
+          "q": "Måste jag använda identitetsverifiering?",
+          "a": "Nej, men det är det som gör att AI:n säkert kan visa privata data. Vem som helst kan skriva in vilken e-postadress som helst i en chatt, så en token signerad av ditt eget inloggningssystem är hur en kund blir Verifierad."
+        },
+        {
+          "q": "Hur länge håller en token?",
+          "a": "Högst fem minuter, och den fungerar en gång. Själva chattsessionen varar upp till 8 timmar, med en 30-minuters inaktivitetsgräns."
+        },
+        {
+          "q": "Vilken signeringsalgoritm?",
+          "a": "HS256. Andra algoritmer, inklusive none och RS256, avvisas."
+        },
+        {
+          "q": "Vilka språk har kodsnuttar?",
+          "a": "Node.js, Python, PHP och Ruby, i din instrumentpanels identitetsinställningar och i dokumentationen."
+        },
+        {
+          "q": "Vad är en MCP-server?",
+          "a": "En tjänst som exponerar verktyg via Model Context Protocol. Elpino upptäcker dess verktyg, och du aktiverar de som AI:n får använda."
+        },
+        {
+          "q": "Kan AI:n ändra data i mina system?",
+          "a": "Endast via verktyg du har aktiverat, och verktyg som ändrar data kräver alltid en verifierad kund."
+        },
+        {
+          "q": "Finns det ett API?",
+          "a": "Widget-SDK:n, identitetstokens och MCP är integrationsytan idag."
+        }
+      ],
+      "linkLabels": [
+        "Identitetsdokumentation",
+        "Widgetdokumentation",
+        "AI-agent",
+        "Säkerhetsguide"
+      ]
+    },
+    "closing": {
+      "title": "Lansera det på en eftermiddag.",
+      "subtitle": "Starta gratis, klistra in taggen och koppla in identitet när du är redo.",
+      "ctaStart": "Starta gratis",
+      "ctaDocs": "Öppna dokumentationen"
+    }
+  },
+  "busyOperators": {
+    "rush": {
+      "badgeLabel": "Rush hour · illustrativ simulering",
+      "reset": "Återställ",
+      "waitingForPerson": "Väntar på en person",
+      "levelCalm": "Lugn",
+      "levelBusy": "Blir upptagen",
+      "levelFire": "Kö i brand",
+      "inboxZero": "Inkorg noll. Trevlig.",
+      "chatsWaiting": "chattar väntar",
+      "aiToggleLabel": "Elpino AI",
+      "teammatesOnline": "Lagkamrater online",
+      "resolvedByAi": "Löst av AI",
+      "resolvedByTeam": "Löst av team",
+      "disclaimer": "En leksaksmodell: 3 chattar kommer varje bock och AI:n tar ett exempel. Verkliga resultat beror på din kunskapsbas och dina verktyg.",
+      "online": "online",
+      "offline": "offline"
+    },
+    "hero": {
+      "badge": "För upptagna lag",
+      "titlePrefix": "Rusningstid, ",
+      "titleHl": "hanteras.",
+      "subtitle": "När kön ökar tar AI:n de upprepade frågorna, ditt team tar resten och ingen snubblar över varandra. Vänd på knappen nedan och känn skillnaden.",
+      "ctaStart": "Börja gratis",
+      "ctaInbox": "Se inkorgen"
+    },
+    "race": {
+      "badge": "Inga dubbla svar",
+      "titlePrefix": "Två personer, en chatt. ",
+      "titleHl": "Endast en går med.",
+      "subtitle": "Alla får samma Anslut-alarm. Den första personen som trycker tar samtalet, varningen rensas för alla andra och inkorgen visar vem som har den. En kollega kan fortfarande ta över senare, med avsikt.",
+      "askedForPerson": "Aisha Khan frågade efter en person",
+      "alertSent": "Alert skickat till hela teamet",
+      "waiting": "Väntar...",
+      "joined": "Anslöt sig",
+      "joinChat": "Gå med i chatten",
+      "priyaHasThis": "Priya har detta",
+      "priyaJoinedFirst": "Priya gick med först. Nu står det Priya på inkorgsmärket.",
+      "bothSee": "Båda lagkamraterna ser varningen...",
+      "customerSaidYes": "Kunden sa ja till en person"
+    },
+    "context": {
+      "eyebrow": "Överlämningen",
+      "titlePrefix": "Ingen upprepar ",
+      "titleHl": "sig själva.",
+      "subtitle": "Växla för att jämföra en kall handoff med den Elpino gör.",
+      "toggleCold": "Kall handoff",
+      "toggleElpino": "Elpino handoff",
+      "coldGreeting": "Hej, jag heter Priya. Hur kan jag hjälpa till?",
+      "coldComplaint": "…Jag har redan förklarat allt detta för boten. Jag har flyttat till länder och behöver ändra mitt faktureringsland. Igen.",
+      "coldNote": "Kunden börjar om och teammedlemmen börjar blind.",
+      "whatPersonSees": "Vad personen ser",
+      "reasonLabel": "Anledning",
+      "reasonValue": "Ändring av faktureringsland behöver en person",
+      "summaryLabel": "Sammanfattning",
+      "summaryValue": "Flyttade länder, vill uppdatera faktureringslandet. Verifierad med e-postkod.",
+      "fullThreadLabel": "Hela tråden",
+      "fullThreadValue": "Varje meddelande hittills, precis ovanför kompositören",
+      "visitorLabel": "Besökare",
+      "visitorLocation": "Pune, Indien",
+      "visitorPage": "På /fakturering",
+      "identityVerified": "Identitet verifierad"
+    },
+    "around": {
+      "eyebrow": "Dygnet runt",
+      "titlePrefix": "Täck varje timme, ",
+      "titleHl": "utan skift.",
+      "subtitle": "Dra genom en exempeldag. Team timmar är 9 till 6 här; din kommer att vara din egen.",
+      "teamOnline": "Team online",
+      "aiOnWatch": "AI på vakt",
+      "hourAriaLabel": "Timme på dygnet",
+      "am": "AM",
+      "pm": "PM",
+      "dayItems": [
+        {
+          "t": "AI svarar först",
+          "d": "Upprepade frågor når aldrig i kön."
+        },
+        {
+          "t": "Team får Join-varningar",
+          "d": "Den första som trycker tar chatten."
+        },
+        {
+          "t": "Lämna tillbaka när som helst",
+          "d": "Ge enkla uppföljningar tillbaka till AI."
+        }
+      ],
+      "nightItems": [
+        {
+          "t": "AI svarar först",
+          "d": "Frågor den kan besvara besvaras."
+        },
+        {
+          "t": "Ingen ledig? Biljett",
+          "d": "Efter 90 sekunder arkiveras en biljett med anledning och sammanfattning."
+        },
+        {
+          "t": "Morgonen börjar organiserad",
+          "d": "Kunden har mailats och biljetter väntar på dig."
+        }
+      ]
+    },
+    "toolkit": {
+      "eyebrow": "Lugn genom design",
+      "titlePrefix": "De små sakerna som ",
+      "titleHl": "håll en kö på rätt sätt.",
+      "items": [
+        {
+          "t": "Ägaremblem",
+          "d": "AI, lagkamrat eller beslutsam, i varje tråd."
+        },
+        {
+          "t": "Sök och filter",
+          "d": "Alla, olästa, lästa, lösta."
+        },
+        {
+          "t": "Livetypning",
+          "d": "Se när kunden skriver och låt dem se dig."
+        },
+        {
+          "t": "Verifierat märke",
+          "d": "Vet vem som har bevisat vem de är."
+        },
+        {
+          "t": "Besöksinformation",
+          "d": "Plats, enhet och sidan de är på."
+        },
+        {
+          "t": "Ta över, lämna tillbaka",
+          "d": "Flytta en chatt mellan AI och personer med ett tryck."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Frågor",
+      "titlePrefix": "Bra att ",
+      "titleHl": "vet.",
+      "items": [
+        {
+          "q": "Hur hindrar du två personer från att svara samma kund?",
+          "a": "Alla får samma varning om Gå med och den första personen som trycker på tar chatten. Varningen rensas för alla andra, och inkorgen visar vem som har den."
+        },
+        {
+          "q": "Kommer Elpino att ersätta mitt lag?",
+          "a": "Nej. Den hanterar upprepade frågor och dina personer tar de konversationer som behöver bedömas. Du kan också lämna tillbaka valfri chatt till AI."
+        },
+        {
+          "q": "Vad kan det lära sig av?",
+          "a": "Dina webbsidor (inklusive JavaScript-byggda), uppladdade PDF-, Word-, text- och Markdown-filer och sidor du skriver. Du styr vilka som är offentliga."
+        },
+        {
+          "q": "Vad händer när ingen är online?",
+          "a": "AI:n svarar vad den kan. Om en kund frågar efter en person och ingen går med inom 90 sekunder, arkiveras en biljett med anledning och sammanfattning, och kunden mailas."
+        },
+        {
+          "q": "Hur lång tid tar lanseringen?",
+          "a": "De flesta lag är live samma dag: lägg till kunskap, klistra in widgeten och bjud in lagkamrater."
+        }
+      ],
+      "footNote": "Webbplatschatt är live idag. Omnikanal kommer i november."
+    },
+    "closing": {
+      "title": "Gör kön till någon annans problem.",
+      "subtitle": "Börja gratis och bjud in ditt team när du är redo.",
+      "ctaStart": "Börja gratis",
+      "ctaTickets": "Se biljetter"
     }
   }
 }

@@ -1,8 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode, type RefObject } from "react";
 import { ArrowDown, Clock, Mail, Search, Shield } from "lucide-react";
+import { useStoredLanguage } from "@/app/hooks/useStoredLanguage";
+import { useTranslation } from "@/app/hooks/useTranslation";
+import privacyTranslations from "./privacy-translations.generated.json";
 
 // A privacy policy told as a journey. One customer message ("Where's my
 // refund?") travels through Elpino; every stop says what happens to it, who
@@ -13,6 +16,57 @@ import { ArrowDown, Clock, Mail, Search, Shield } from "lucide-react";
 const LAST_UPDATED = "September 19, 2026";
 const CONTACT = "hello@elpino.chat";
 const INK = "#11120f";
+
+const generatedPrivacyTranslations = privacyTranslations as Record<string, Record<string, string>>;
+
+function useGeneratedPrivacyTranslation(language: string, rootRef: RefObject<HTMLDivElement | null>) {
+  const originalText = useRef(new WeakMap<Text, string>());
+  const originalAttributes = useRef(new WeakMap<Element, Map<string, string>>());
+
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    const dictionary = generatedPrivacyTranslations[language] ?? generatedPrivacyTranslations.en;
+    if (!root || !dictionary) return;
+
+    const translate = () => {
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      let node = walker.nextNode() as Text | null;
+      while (node) {
+        if (!node.parentElement?.closest("script, style")) {
+          if (!originalText.current.has(node)) originalText.current.set(node, node.nodeValue ?? "");
+          const original = originalText.current.get(node) ?? "";
+          const compact = original.replace(/\s+/g, " ").trim();
+          const translated = dictionary[compact];
+          if (translated && translated !== compact) {
+            const leading = original.match(/^\s*/)?.[0] ?? "";
+            const trailing = original.match(/\s*$/)?.[0] ?? "";
+            const next = `${leading}${translated}${trailing}`;
+            if (node.nodeValue !== next) node.nodeValue = next;
+          } else if (language === "en" && node.nodeValue !== original) node.nodeValue = original;
+        }
+        node = walker.nextNode() as Text | null;
+      }
+
+      root.querySelectorAll("[placeholder], [aria-label], [title]").forEach((element) => {
+        let originals = originalAttributes.current.get(element);
+        if (!originals) { originals = new Map(); originalAttributes.current.set(element, originals); }
+        for (const name of ["placeholder", "aria-label", "title"]) {
+          const value = element.getAttribute(name);
+          if (!value) continue;
+          if (!originals.has(name)) originals.set(name, value);
+          const original = originals.get(name)!;
+          const next = dictionary[original] ?? original;
+          if (value !== next) element.setAttribute(name, next);
+        }
+      });
+    };
+
+    translate();
+    const observer = new MutationObserver(translate);
+    observer.observe(root, { childList: true, subtree: true, characterData: true });
+    return () => observer.disconnect();
+  }, [language, rootRef]);
+}
 
 type Provider = { name: string; tagline: string; badge: string; color: string; role: string; dataShared: string; trainingPolicy: string; location: string };
 
@@ -183,6 +237,8 @@ const CHAPTERS = [
 ] as const;
 
 export function PrivacyView() {
+  const language = useStoredLanguage();
+  const { t } = useTranslation(language as any);
   const [station, setStation] = useState(0);
   const [trackFill, setTrackFill] = useState(0);
   const [chapter, setChapter] = useState<string>("");
@@ -191,6 +247,13 @@ export function PrivacyView() {
   const [query, setQuery] = useState("");
   const [expandAll, setExpandAll] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
+  const pageRef = useRef<HTMLDivElement>(null);
+  useGeneratedPrivacyTranslation(language, pageRef);
+
+  useEffect(() => {
+    document.documentElement.lang = language;
+    document.title = `${t("privacyPage.title", "Privacy Policy")} | Elpino`;
+  }, [language, t]);
 
   // Scroll: the journey's track fill, the active station, the sticky header's progress and chapter.
   useEffect(() => {
@@ -229,7 +292,7 @@ export function PrivacyView() {
   const current = STATIONS[station];
 
   return (
-    <div className="bg-white text-[#11120f]">
+    <div ref={pageRef} lang={language} className="bg-white text-[#11120f]">
       {/* Sticky header for this long page: where you are, and how far */}
       <div className={`fixed inset-x-0 top-0 z-[60] transition-transform duration-500 ease-[cubic-bezier(0.3,1,0.3,1)] ${showBar ? "translate-y-0" : "-translate-y-full"}`} aria-hidden={!showBar}>
         <div className="border-b-2 border-[#11120f] bg-white/80 backdrop-blur-xl">
@@ -237,7 +300,7 @@ export function PrivacyView() {
             <Link href="/" aria-label="Elpino home" className="flex shrink-0 items-center gap-2">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/icon.png" alt="" className="h-8 w-8 rounded-full border-2 border-[#11120f] bg-white object-contain p-0.5" />
-              <span className="hidden text-[15px] font-semibold sm:inline">Privacy</span>
+              <span className="hidden text-[15px] font-semibold sm:inline">{t("privacyPage.shortTitle", "Privacy")}</span>
             </Link>
             <span className="hidden h-5 w-px bg-black/15 sm:block" />
             <p className="min-w-0 flex-1 truncate font-mono text-[12px] font-medium uppercase tracking-[0.1em] text-black/55">
@@ -249,7 +312,7 @@ export function PrivacyView() {
               ))}
             </nav>
             <a href={`mailto:${CONTACT}`} className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border-2 border-[#11120f] bg-[#3784ff] px-4 text-[13px] font-semibold text-white transition hover:-translate-y-0.5">
-              <Mail size={14} /> <span className="hidden sm:inline">Ask us</span>
+              <Mail size={14} /> <span className="hidden sm:inline">{t("privacyPage.askUs", "Ask us")}</span>
             </a>
           </div>
           <div className="h-[3px] bg-black/10"><div className="h-full bg-[#3784ff]" style={{ width: `${pageProgress * 100}%` }} /></div>
@@ -260,24 +323,24 @@ export function PrivacyView() {
       <section className="relative isolate overflow-hidden pb-20 pt-[124px]">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 bg-[url('/piliar-1-grandient.png')] bg-cover bg-top bg-no-repeat [mask-image:linear-gradient(to_bottom,black_75%,transparent)]" />
         <div className="mx-auto max-w-5xl px-5 text-center sm:px-8">
-          <p className="mx-auto w-fit rounded-full border-2 border-[#11120f] bg-white px-4 py-1 font-mono text-[12px] font-medium uppercase tracking-[0.12em]">Privacy policy</p>
+          <p className="mx-auto w-fit rounded-full border-2 border-[#11120f] bg-white px-4 py-1 font-mono text-[12px] font-medium uppercase tracking-[0.12em]">{t("privacyPage.title", "Privacy policy")}</p>
           <h1 className="mt-5 animate-[elpino-focus_0.9s_ease-out_both] text-5xl font-normal tracking-[-0.045em] sm:text-7xl">
-            Follow one message<br className="hidden sm:block" /> through <span className="bg-[linear-gradient(transparent_62%,#ffd84d_62%)]">Elpino.</span>
+            {t("privacyPage.heroTitle", "Follow one message through Elpino.")}
           </h1>
           <p className="mx-auto mt-5 max-w-2xl animate-[elpino-focus_0.9s_ease-out_0.15s_both] text-base leading-7 text-black/60 sm:text-lg">
-            A customer types <b className="text-[#11120f]">&ldquo;Where&apos;s my refund?&rdquo;</b> Here is every place it goes, who can see it, and how long it stays. The full policy follows, for anyone who wants every word.
+            {t("privacyPage.heroDescription", "A customer asks where their refund is. Here is every place the message goes, who can see it, and how long it stays. The full policy follows for anyone who wants every word.")}
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <a href="#journey" className="group inline-flex h-12 items-center gap-2 rounded-full border-2 border-[#11120f] bg-[#3784ff] px-7 text-[15px] font-semibold text-white transition hover:-translate-y-0.5">
-              Start the journey <ArrowDown size={16} className="transition-transform group-hover:translate-y-0.5" />
+              {t("privacyPage.startJourney", "Start the journey")} <ArrowDown size={16} className="transition-transform group-hover:translate-y-0.5" />
             </a>
-            <a href="#fine-print" className="inline-flex h-12 items-center rounded-full border-2 border-[#11120f] bg-white px-7 text-[15px] font-semibold transition hover:-translate-y-0.5">Jump to the fine print</a>
+            <a href="#fine-print" className="inline-flex h-12 items-center rounded-full border-2 border-[#11120f] bg-white px-7 text-[15px] font-semibold transition hover:-translate-y-0.5">{t("privacyPage.jumpToPolicy", "Jump to the fine print")}</a>
           </div>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-2.5 text-sm">
-            <span className="inline-flex items-center gap-1.5 rounded-full border-2 border-[#11120f] bg-white px-3.5 py-1.5"><Clock size={14} /> Updated {LAST_UPDATED}</span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border-2 border-[#11120f] bg-white px-3.5 py-1.5"><Clock size={14} /> {t("privacyPage.updated", "Updated")} {LAST_UPDATED}</span>
             <span className="inline-flex items-center gap-1.5 rounded-full border-2 border-[#11120f] bg-[#ffd84d] px-3.5 py-1.5 font-semibold"><Shield size={14} /> GDPR &amp; CCPA</span>
-            <span className="rounded-full border-2 border-[#11120f] bg-white px-3.5 py-1.5">Never sold</span>
-            <span className="rounded-full border-2 border-[#11120f] bg-white px-3.5 py-1.5">Zero AI training</span>
+            <span className="rounded-full border-2 border-[#11120f] bg-white px-3.5 py-1.5">{t("privacyPage.neverSold", "Never sold")}</span>
+            <span className="rounded-full border-2 border-[#11120f] bg-white px-3.5 py-1.5">{t("privacyPage.zeroTraining", "Zero AI training")}</span>
           </div>
         </div>
       </section>
@@ -286,9 +349,9 @@ export function PrivacyView() {
       <section id="journey" className="scroll-mt-16 bg-[#fff8ec] px-5 py-20 sm:px-8 lg:py-28">
         <div className="mx-auto max-w-[1200px]">
           <div className="max-w-2xl">
-            <p className="font-mono text-[12px] font-medium uppercase tracking-[0.12em] text-[#7060bd]">The journey</p>
-            <h2 className="mt-3 text-4xl font-normal tracking-[-0.045em] sm:text-5xl">Seven stops. <span className="bg-[linear-gradient(transparent_62%,#ffd84d_62%)]">Nothing hidden.</span></h2>
-            <p className="mt-4 text-base leading-7 text-black/60">Scroll down and watch the message change as it moves. On the left, what it looks like at this stop. On the right, what it means for your data.</p>
+            <p className="font-mono text-[12px] font-medium uppercase tracking-[0.12em] text-[#7060bd]">{t("privacyPage.journey.eyebrow", "The journey")}</p>
+            <h2 className="mt-3 text-4xl font-normal tracking-[-0.045em] sm:text-5xl">{t("privacyPage.journey.title", "Seven stops. Nothing hidden.")}</h2>
+            <p className="mt-4 text-base leading-7 text-black/60">{t("privacyPage.journey.description", "Scroll down and watch the message change as it moves. On the left, what it looks like at this stop. On the right, what it means for your data.")}</p>
           </div>
 
           <div className="mt-14 grid gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16">

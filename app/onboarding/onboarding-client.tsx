@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import posthog from "posthog-js";
 import {
   Briefcase,
@@ -727,6 +727,14 @@ function getTimezoneOptions(current: string): string[] {
 
 // ── Validate + normalize a user-entered website URL (adds https:// if the
 // protocol was omitted, rejects anything without a real domain). ───────────
+// "localhost" (and 127.0.0.1) deliberately pass alongside a real dotted
+// domain — sites already have a real allowLocalhost concept server-side
+// (see /api/workspace/sites), for exactly this: testing against a site
+// that isn't reachable from the public internet yet.
+function isLocalDevHostname(hostname: string): boolean {
+  return hostname === "localhost" || hostname === "127.0.0.1";
+}
+
 function normalizeWebsiteUrl(raw: string): string | null {
   const trimmed = raw.trim();
   if (!trimmed) return null;
@@ -734,7 +742,7 @@ function normalizeWebsiteUrl(raw: string): string | null {
   try {
     const url = new URL(candidate);
     if (url.protocol !== "http:" && url.protocol !== "https:") return null;
-    if (!/^[a-z0-9.-]+\.[a-z]{2,}$/i.test(url.hostname)) return null;
+    if (!isLocalDevHostname(url.hostname) && !/^[a-z0-9.-]+\.[a-z]{2,}$/i.test(url.hostname)) return null;
     return url.toString();
   } catch {
     return null;
@@ -1124,6 +1132,24 @@ const TOTAL_STEPS = 5;
 const CRAWL_LIMIT_OPTIONS = [10, 25, 50] as const;
 const DEVELOPER_EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+// Step 5's platform picker. Only these two get shown, on purpose: WordPress
+// has its own real, automated flow (the actual plugin — see
+// plugins/wordpress/elpino-chat.php — connects with no code to paste), and
+// HTML is the honest, working fallback for literally everything else. Every
+// other platform (Shopify, WooCommerce, ...) would get that exact same
+// generic snippet anyway, since we have no dedicated integration for them —
+// listing them here would just be claiming breadth we don't have.
+type PlatformId = "html" | "wordpress";
+const PLATFORMS: { id: PlatformId; label: string }[] = [
+  { id: "html", label: "HTML" },
+  { id: "wordpress", label: "WordPress" },
+];
+
+function PlatformIcon({ id }: { id: PlatformId }) {
+  if (id === "html") return <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-[#3b82f6] text-white"><Code2 className="size-[18px]" /></span>;
+  return <span className="grid size-9 shrink-0 place-items-center rounded-lg text-[13px] font-bold text-white" style={{ backgroundColor: "#21759b" }}>W</span>;
+}
+
 type PagePriority = "high" | "medium" | "low";
 type CrawlPage = {
   url: string;
@@ -1266,15 +1292,46 @@ function TimezoneCombobox({
 // ── Main component ────────────────────────────────────────────────────────────
 type OnboardingSession = { email: string; name?: string; userId: string; image?: string };
 
+// A relative, same-site path only — mirrors AuthFlow.tsx's sanitizeReturnPath
+// so a "next" carried through onboarding can't become an open redirect.
+function sanitizeNextPath(value: string | null | undefined): string {
+  if (!value || !value.startsWith("/") || value.startsWith("//") || value.includes("\\")) return "";
+  try {
+    const parsed = new URL(value, "https://elpino.local");
+    return `${parsed.pathname}${parsed.search}${parsed.hash}`;
+  } catch {
+    return "";
+  }
+}
+
+// `next` for a WordPress-originated signup is /connect/wordpress's own URL,
+// which already carries the WordPress site's address as its own `site_url`
+// param — pulled out here so step 1 doesn't make the admin type a domain
+// we've already been handed. Yields "" for any other `next` (or none).
+function siteUrlFromNext(nextPath: string): string {
+  const queryStart = nextPath.indexOf("?");
+  if (queryStart === -1) return "";
+  try {
+    return new URLSearchParams(nextPath.slice(queryStart + 1)).get("site_url") ?? "";
+  } catch {
+    return "";
+  }
+}
+
 export function OnboardingClient({ session }: { session: OnboardingSession }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  // Where to land after finishing (or if already finished) — e.g. back at
+  // /connect/wordpress for a WordPress admin who had to sign up first.
+  // Falls back to /dashboard, same as before this existed.
+  const next = sanitizeNextPath(searchParams.get("next"));
   const language = useStoredLanguage();
   const [languageOpen, setLanguageOpen] = useState(false);
   const [avatarOpen, setAvatarOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1);
   const [profileName, setProfileName] = useState("");
-  const [websiteUrl, setWebsiteUrl] = useState("");
+  const [websiteUrl, setWebsiteUrl] = useState(() => siteUrlFromNext(next));
   const [siteDescription, setSiteDescription] = useState("");
   const [siteType, setSiteType] = useState("");
   const [profilePhone, setProfilePhone] = useState("");
@@ -1297,6 +1354,9 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
   const [verifyMessage, setVerifyMessage] = useState<string | null>(null);
   const [widgetKeyError, setWidgetKeyError] = useState<string | null>(null);
   const [snippetCopied, setSnippetCopied] = useState(false);
+  // Step 5's platform picker — null shows the grid, otherwise the matching
+  // instructions open as a dialog on top of it.
+  const [openPlatform, setOpenPlatform] = useState<PlatformId | null>(null);
   const [developerEmails, setDeveloperEmails] = useState<string[]>([]);
   const [developerEmailDraft, setDeveloperEmailDraft] = useState("");
   const [developerEmailDraftError, setDeveloperEmailDraftError] = useState(false);
@@ -1385,7 +1445,7 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
       .then((data: { onboarding?: OnboardingState; name?: string; phone?: string; email?: string; organizationName?: string; websiteUrl?: string }) => {
         const onboarding = data.onboarding ?? {};
         if (onboarding.completedAt) {
-          router.replace("/dashboard");
+          router.replace(next || "/dashboard");
           return;
         }
 
@@ -1588,7 +1648,7 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
         body: JSON.stringify({
           name: profileName.trim() || hostname || "My website",
           domain: normalizeWebsiteUrl(websiteUrl) ?? websiteUrl,
-          allowLocalhost: false,
+          allowLocalhost: hostname !== null && isLocalDevHostname(hostname),
           permissions: { support: true, visitors: true, analytics: true },
         }),
       }).then((r) => r.json().catch(() => ({}))) as { site?: SiteRow; message?: string };
@@ -1850,7 +1910,7 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
         body: JSON.stringify({ completedAt: new Date().toISOString() }),
       });
       if (!res.ok) throw new Error("save_failed");
-      router.push("/dashboard");
+      router.push(next || "/dashboard");
     } catch {
       setSkipError("Something went wrong finishing setup. Please try again.");
     } finally {
@@ -1877,7 +1937,7 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
     }
   }
 
-  async function finishOnboarding(destination = "/dashboard") {
+  async function finishOnboarding(destination = next || "/dashboard") {
     if (skipLoading) return;
     setSkipError(null);
     setSkipLoading(true);
@@ -2190,133 +2250,199 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
         )}
 
         {step === 5 && (
-          <section className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-14">
-            <div className="min-w-0">
+          <section>
             <h1 className="text-balance text-[clamp(1.9rem,3.2vw,2.35rem)] font-normal leading-[1.12] tracking-[-0.03em]">
               Add Elpino to your website
             </h1>
-            <p className="mt-3 max-w-xl text-[15px] leading-6 text-black/55">Complete the widget first. Identity verification is optional and is useful when signed-in customers ask about private account data.</p>
-            <div className="mt-7 space-y-3">
-              <details open className="group rounded-xl border border-black/10 bg-white">
-                <summary className="flex cursor-pointer list-none items-center gap-3 px-5 py-4 [&::-webkit-details-marker]:hidden"><span className="flex size-7 items-center justify-center rounded-full bg-black text-xs text-white">1</span><span className="flex-1 text-[15px] font-normal">Paste the widget code and verify</span><span className="text-lg text-black/35 transition group-open:rotate-45">+</span></summary>
-                <div className="border-t border-black/[0.07] px-5 pb-5 pt-4">
-                  <p className="text-sm leading-6 text-black/55">Place this before the closing <code className="rounded bg-black/[0.05] px-1">&lt;/head&gt;</code> tag on {siteHostname}.</p>
-                  <div className="relative mt-3 overflow-hidden rounded-lg bg-[#17181a]">
-                    <pre className="overflow-x-auto p-4 pr-12 text-xs leading-5 text-white/85"><code>{`<script async src="https://cdn.elpino.chat/tag.js" data-site-key="${widgetKey ?? "YOUR_SITE_KEY"}"></script>`}</code></pre>
-                    <button type="button" disabled={!widgetKey} onClick={() => { if (!widgetKey) return; void navigator.clipboard.writeText(`<script async src="https://cdn.elpino.chat/tag.js" data-site-key="${widgetKey}"></script>`).then(() => { setSnippetCopied(true); setTimeout(() => setSnippetCopied(false), 2000); }); }} className="absolute right-2 top-2 rounded-md bg-white/10 px-2 py-1 text-[11px] text-white transition hover:bg-white/20 disabled:opacity-40">{snippetCopied ? "Copied" : "Copy"}</button>
-                  </div>
-                  <div className="mt-4 flex flex-wrap items-center gap-3">
-                    <button type="button" disabled={!widgetKey || verifying} onClick={() => void verifyInstall()} className="inline-flex h-10 items-center rounded-lg bg-black px-4 text-sm text-white transition hover:bg-black/80 disabled:opacity-40">{verifying ? "Checking…" : "Verify installation"}</button>
-                  </div>
-                  {verifiedInCurrentSession && <p className="mt-3 text-sm text-emerald-700">Verified — Elpino is live on {siteHostname}.</p>}
-                  {verifyMessage && !verifiedInCurrentSession && <p className="mt-3 text-sm text-amber-700">{verifyMessage}</p>}
-                </div>
-              </details>
+            <p className="mt-3 max-w-xl text-[15px] leading-6 text-black/55">Select your website builder to see how to add Elpino.</p>
 
-              <details className="group rounded-xl border border-black/10 bg-white">
-                <summary className="flex cursor-pointer list-none items-center gap-3 px-5 py-4 [&::-webkit-details-marker]:hidden"><span className="flex size-7 items-center justify-center rounded-full border border-black/15 text-xs">2</span><span className="flex-1 text-[15px] font-normal">Identify signed-in customers <span className="text-black/40">(optional)</span></span><span className="text-lg text-black/35 transition group-open:rotate-45">+</span></summary>
-                <div className="border-t border-black/[0.07] px-5 pb-5 pt-4">
-                  <p className="text-sm leading-6 text-black/55">Your server signs a short-lived token; the browser receives only that token, never the identity secret. Add this before the Elpino tag.</p>
-                  <pre className="mt-3 max-h-56 overflow-auto rounded-lg bg-[#17181a] p-4 text-xs leading-5 text-white/85"><code>{PAGE_SNIPPET}</code></pre>
-                  <Link href="/docs/identity-verification" target="_blank" className="mt-3 inline-flex text-sm text-black/55 underline underline-offset-4 hover:text-black">Read the complete identity guide</Link>
-                </div>
-              </details>
+            <div className="mt-8 grid max-w-md grid-cols-2 gap-3">
+              {PLATFORMS.map((platform) => (
+                <button
+                  key={platform.id}
+                  type="button"
+                  onClick={() => setOpenPlatform(platform.id)}
+                  className="flex items-center gap-3 rounded-xl border border-black/10 bg-white px-4 py-3.5 text-left transition hover:border-black/25 hover:bg-black/[0.015]"
+                >
+                  <PlatformIcon id={platform.id} />
+                  <span className="text-[15px] font-normal text-[#111214]">{platform.label}</span>
+                </button>
+              ))}
             </div>
+
             {skipError && <p className="mt-4 text-sm text-red-600">{skipError}</p>}
-            <div className="mt-6 flex items-center gap-5"><button type="button" disabled={skipLoading} onClick={() => void finishOnboarding()} className="inline-flex h-11 items-center rounded-lg bg-black px-5 text-sm text-white transition hover:bg-black/80 disabled:opacity-50">{skipLoading ? "Finishing setup…" : siteVerified ? "Go to dashboard" : "Continue"}</button><button type="button" disabled={skipLoading} onClick={() => void finishOnboarding()} className="text-[14px] text-black/50 underline-offset-4 transition hover:text-black hover:underline disabled:opacity-50">Skip for now</button></div>
+            <div className="mt-8 flex items-center gap-5">
+              <button type="button" disabled={skipLoading} onClick={() => void finishOnboarding()} className="inline-flex h-11 items-center rounded-lg bg-black px-5 text-sm text-white transition hover:bg-black/80 disabled:opacity-50">{skipLoading ? "Finishing setup…" : siteVerified ? "Go to dashboard" : "Continue"}</button>
+              <button type="button" disabled={skipLoading} onClick={() => void finishOnboarding()} className="text-[14px] text-black/50 underline-offset-4 transition hover:text-black hover:underline disabled:opacity-50">Skip for now</button>
             </div>
-
-            <aside className="lg:sticky lg:top-8">
-              <div className="rounded-2xl bg-[#f5f5f2] p-5 sm:p-6">
-                <p className="text-[15px] font-normal text-black">Send to a developer</p>
-                <p className="mt-1.5 text-[13px] leading-5 text-black/50">Add one or more developer emails. We&rsquo;ll prepare the installation instructions and widget code for you.</p>
-                <form className="mt-5 space-y-4" onSubmit={async (event) => {
-                  event.preventDefault();
-                  if (!widgetKey || developerSending) return;
-                  let emails = developerEmails;
-                  const draft = developerEmailDraft.trim().replace(/,$/, "");
-                  if (draft) {
-                    if (!DEVELOPER_EMAIL_RE.test(draft)) {
-                      setDeveloperEmailDraftError(true);
-                      developerEmailRef.current?.focus();
-                      return;
-                    }
-                    if (!emails.includes(draft)) emails = [...emails, draft];
-                    setDeveloperEmails(emails);
-                    setDeveloperEmailDraft("");
-                  }
-                  if (emails.length === 0) {
-                    setDeveloperEmailDraftError(true);
-                    developerEmailRef.current?.focus();
-                    return;
-                  }
-                  setDeveloperSending(true);
-                  setDeveloperSendStatus(null);
-                  try {
-                    const response = await fetch("/api/onboarding/send-widget-instructions", {
-                      method: "POST",
-                      headers: { "content-type": "application/json" },
-                      body: JSON.stringify({ emails, siteKey: widgetKey }),
-                    });
-                    const result = await response.json().catch(() => ({})) as { message?: string; sent?: number };
-                    if (!response.ok) throw new Error(result.message || "Could not send the instructions.");
-                    setDeveloperSendStatus({ type: "success", message: `Instructions sent to you and ${result.sent ?? emails.length} developer${(result.sent ?? emails.length) === 1 ? "" : "s"}.` });
-                    setDeveloperEmails([]);
-                  } catch (error) {
-                    setDeveloperSendStatus({ type: "error", message: error instanceof Error ? error.message : "Could not send the instructions." });
-                  } finally {
-                    setDeveloperSending(false);
-                  }
-                }}>
-                  <div>
-                    <label htmlFor="developer-email" className="mb-1.5 block text-[12px] text-black/55">Developer emails</label>
-                    <div
-                      onClick={() => developerEmailRef.current?.focus()}
-                      className={`flex min-h-11 w-full flex-wrap items-center gap-1.5 rounded-lg bg-white px-2.5 py-1.5 ring-1 transition focus-within:ring-black/35 ${developerEmailDraftError ? "ring-red-400" : "ring-black/10"}`}
-                    >
-                      {developerEmails.map((email) => (
-                        <span key={email} className="flex items-center gap-1 rounded-full bg-black/[0.06] py-1 pl-2.5 pr-1.5 text-[12px] text-black/80">
-                          {email}
-                          <button
-                            type="button"
-                            disabled={developerSending}
-                            onClick={() => removeDeveloperEmail(email)}
-                            aria-label={`Remove ${email}`}
-                            className="flex size-4 items-center justify-center rounded-full text-black/40 transition hover:bg-black/10 hover:text-black/70 disabled:opacity-50"
-                          >
-                            ×
-                          </button>
-                        </span>
-                      ))}
-                      <input
-                        ref={developerEmailRef}
-                        id="developer-email"
-                        type="text"
-                        inputMode="email"
-                        disabled={developerSending}
-                        value={developerEmailDraft}
-                        onChange={(event) => handleDeveloperEmailChange(event.target.value)}
-                        onKeyDown={handleDeveloperEmailKeyDown}
-                        onBlur={() => { if (developerEmailDraft.trim()) { const ok = commitDeveloperEmail(developerEmailDraft); setDeveloperEmailDraft(ok ? "" : developerEmailDraft); setDeveloperEmailDraftError(!ok); } }}
-                        onPaste={(event) => {
-                          const text = event.clipboardData.getData("text");
-                          if (!/[,\s]/.test(text)) return;
-                          event.preventDefault();
-                          text.split(/[,\s]+/).forEach((part) => { if (part.trim()) commitDeveloperEmail(part); });
-                        }}
-                        placeholder={developerEmails.length === 0 ? "dev@company.com, team@company.com" : "Add another…"}
-                        className="h-7 min-w-[8rem] flex-1 bg-transparent text-[13px] outline-none placeholder:text-black/30 disabled:opacity-60"
-                      />
-                    </div>
-                    <p className={`mt-1.5 text-[11px] leading-4 ${developerEmailDraftError ? "text-red-600" : "text-black/40"}`}>{developerEmailDraftError ? "Enter a valid email address." : "Press comma, space, or enter to add each address."}</p>
-                  </div>
-                  <button type="submit" disabled={!widgetKey || developerSending} className="flex h-11 w-full items-center justify-center rounded-lg bg-black px-4 text-[13px] text-white transition hover:bg-black/80 disabled:cursor-not-allowed disabled:opacity-50">{developerSending ? "Sending…" : "Send instructions"}</button>
-                </form>
-                {developerSendStatus && <p role="status" className={`mt-3 text-[12px] leading-5 ${developerSendStatus.type === "success" ? "text-emerald-700" : "text-red-600"}`}>{developerSendStatus.message}</p>}
-                <p className="mt-3 text-[11px] leading-4 text-black/40">Elpino sends the instructions directly and copies every address you enter.</p>
-              </div>
-            </aside>
           </section>
+        )}
+
+        {step === 5 && openPlatform && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" role="dialog" aria-modal="true" aria-label={`Integrate Elpino with ${PLATFORMS.find((p) => p.id === openPlatform)?.label}`}>
+            <button type="button" aria-label="Close" onClick={() => setOpenPlatform(null)} className="absolute inset-0 cursor-default" />
+            <div className="relative max-h-[90vh] w-full max-w-[880px] overflow-y-auto rounded-2xl bg-white p-6 sm:p-8">
+              <div className="mb-6 flex items-center gap-3">
+                <button type="button" onClick={() => setOpenPlatform(null)} aria-label="Back" className="flex size-8 items-center justify-center rounded-full text-black/50 transition hover:bg-black/5 hover:text-black">
+                  <svg className="size-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2"><path d="m12 4-6 6 6 6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                </button>
+                <h2 className="flex-1 text-[17px] font-medium text-[#111214]">Integrate Elpino with {PLATFORMS.find((p) => p.id === openPlatform)?.label}</h2>
+                <button type="button" onClick={() => setOpenPlatform(null)} aria-label="Close" className="flex size-8 items-center justify-center rounded-full text-black/50 transition hover:bg-black/5 hover:text-black">
+                  <svg className="size-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 5l10 10M15 5 5 15" strokeLinecap="round" /></svg>
+                </button>
+              </div>
+
+              <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px]">
+                <div className="min-w-0">
+                  {openPlatform === "wordpress" ? (
+                    <div className="space-y-3">
+                      <div className="rounded-xl border border-black/10 bg-white">
+                        <p className="flex items-center gap-3 border-b border-black/[0.07] px-5 py-4"><span className="flex size-7 items-center justify-center rounded-full bg-black text-xs text-white">1</span><span className="text-[15px] font-normal">Get the plugin</span></p>
+                        <div className="px-5 py-4">
+                          <p className="text-sm leading-6 text-black/55">
+                            Go to your WordPress dashboard. Click on <strong>Plugins / Add New</strong> and search <strong>Elpino Chat</strong>. Install it and activate it.
+                          </p>
+                          <p className="mt-2 text-sm leading-6 text-black/55">
+                            Not listed yet? <a href="https://github.com/elpino-chat/wordpress-plugin/archive/refs/heads/plugin/elpino-chat.zip" className="text-[#2563eb] underline underline-offset-2">Download the plugin</a> and upload it under <code className="rounded bg-black/[0.05] px-1">Plugins → Add New → Upload Plugin</code>.
+                          </p>
+                        </div>
+                      </div>
+                      <div className="rounded-xl border border-black/10 bg-white">
+                        <p className="flex items-center gap-3 border-b border-black/[0.07] px-5 py-4"><span className="flex size-7 items-center justify-center rounded-full bg-black text-xs text-white">2</span><span className="text-[15px] font-normal">Connect with Elpino</span></p>
+                        <div className="px-5 py-4">
+                          <p className="text-sm leading-6 text-black/55">Click <strong>Elpino Chat</strong> in your WordPress admin menu, then <strong>Connect to Elpino</strong>. Log in and it connects automatically — no code to paste.</p>
+                        </div>
+                      </div>
+                      <div className="rounded-xl border border-black/10 bg-white">
+                        <p className="flex items-center gap-3 border-b border-black/[0.07] px-5 py-4"><span className="flex size-7 items-center justify-center rounded-full bg-black text-xs text-white">3</span><span className="text-[15px] font-normal">Play with Elpino</span></p>
+                        <div className="px-5 py-4">
+                          <p className="text-sm leading-6 text-black/55">Go to your site — Elpino is live immediately after connecting. If you don&apos;t see it, reset your cache and check the plugin&apos;s own settings page.</p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      <details open className="group rounded-xl border border-black/10 bg-white">
+                        <summary className="flex cursor-pointer list-none items-center gap-3 px-5 py-4 [&::-webkit-details-marker]:hidden"><span className="flex size-7 items-center justify-center rounded-full bg-black text-xs text-white">1</span><span className="flex-1 text-[15px] font-normal">Paste the widget code and verify</span><span className="text-lg text-black/35 transition group-open:rotate-45">+</span></summary>
+                        <div className="border-t border-black/[0.07] px-5 pb-5 pt-4">
+                          <p className="text-sm leading-6 text-black/55">Place this before the closing <code className="rounded bg-black/[0.05] px-1">&lt;/head&gt;</code> tag on {siteHostname}.</p>
+                          <div className="relative mt-3 overflow-hidden rounded-lg bg-[#17181a]">
+                            <pre className="overflow-x-auto p-4 pr-12 text-xs leading-5 text-white/85"><code>{`<script async src="https://cdn.elpino.chat/tag.js" data-site-key="${widgetKey ?? "YOUR_SITE_KEY"}"></script>`}</code></pre>
+                            <button type="button" disabled={!widgetKey} onClick={() => { if (!widgetKey) return; void navigator.clipboard.writeText(`<script async src="https://cdn.elpino.chat/tag.js" data-site-key="${widgetKey}"></script>`).then(() => { setSnippetCopied(true); setTimeout(() => setSnippetCopied(false), 2000); }); }} className="absolute right-2 top-2 rounded-md bg-white/10 px-2 py-1 text-[11px] text-white transition hover:bg-white/20 disabled:opacity-40">{snippetCopied ? "Copied" : "Copy"}</button>
+                          </div>
+                          <div className="mt-4 flex flex-wrap items-center gap-3">
+                            <button type="button" disabled={!widgetKey || verifying} onClick={() => void verifyInstall()} className="inline-flex h-10 items-center rounded-lg bg-black px-4 text-sm text-white transition hover:bg-black/80 disabled:opacity-40">{verifying ? "Checking…" : "Verify installation"}</button>
+                          </div>
+                          {verifiedInCurrentSession && <p className="mt-3 text-sm text-emerald-700">Verified — Elpino is live on {siteHostname}.</p>}
+                          {verifyMessage && !verifiedInCurrentSession && <p className="mt-3 text-sm text-amber-700">{verifyMessage}</p>}
+                        </div>
+                      </details>
+
+                      <details className="group rounded-xl border border-black/10 bg-white">
+                        <summary className="flex cursor-pointer list-none items-center gap-3 px-5 py-4 [&::-webkit-details-marker]:hidden"><span className="flex size-7 items-center justify-center rounded-full border border-black/15 text-xs">2</span><span className="flex-1 text-[15px] font-normal">Identify signed-in customers <span className="text-black/40">(optional)</span></span><span className="text-lg text-black/35 transition group-open:rotate-45">+</span></summary>
+                        <div className="border-t border-black/[0.07] px-5 pb-5 pt-4">
+                          <p className="text-sm leading-6 text-black/55">Your server signs a short-lived token; the browser receives only that token, never the identity secret. Add this before the Elpino tag.</p>
+                          <pre className="mt-3 max-h-56 overflow-auto rounded-lg bg-[#17181a] p-4 text-xs leading-5 text-white/85"><code>{PAGE_SNIPPET}</code></pre>
+                          <Link href="/docs/identity-verification" target="_blank" className="mt-3 inline-flex text-sm text-black/55 underline underline-offset-4 hover:text-black">Read the complete identity guide</Link>
+                        </div>
+                      </details>
+                    </div>
+                  )}
+                </div>
+
+                <aside>
+                  <div className="rounded-2xl bg-[#f5f5f2] p-5 sm:p-6">
+                    <p className="text-[15px] font-normal text-black">Send to a developer</p>
+                    <p className="mt-1.5 text-[13px] leading-5 text-black/50">Add one or more developer emails. We&rsquo;ll prepare the installation instructions and widget code for you.</p>
+                    <form className="mt-5 space-y-4" onSubmit={async (event) => {
+                      event.preventDefault();
+                      if (!widgetKey || developerSending) return;
+                      let emails = developerEmails;
+                      const draft = developerEmailDraft.trim().replace(/,$/, "");
+                      if (draft) {
+                        if (!DEVELOPER_EMAIL_RE.test(draft)) {
+                          setDeveloperEmailDraftError(true);
+                          developerEmailRef.current?.focus();
+                          return;
+                        }
+                        if (!emails.includes(draft)) emails = [...emails, draft];
+                        setDeveloperEmails(emails);
+                        setDeveloperEmailDraft("");
+                      }
+                      if (emails.length === 0) {
+                        setDeveloperEmailDraftError(true);
+                        developerEmailRef.current?.focus();
+                        return;
+                      }
+                      setDeveloperSending(true);
+                      setDeveloperSendStatus(null);
+                      try {
+                        const response = await fetch("/api/onboarding/send-widget-instructions", {
+                          method: "POST",
+                          headers: { "content-type": "application/json" },
+                          body: JSON.stringify({ emails, siteKey: widgetKey }),
+                        });
+                        const result = await response.json().catch(() => ({})) as { message?: string; sent?: number };
+                        if (!response.ok) throw new Error(result.message || "Could not send the instructions.");
+                        setDeveloperSendStatus({ type: "success", message: `Instructions sent to you and ${result.sent ?? emails.length} developer${(result.sent ?? emails.length) === 1 ? "" : "s"}.` });
+                        setDeveloperEmails([]);
+                      } catch (error) {
+                        setDeveloperSendStatus({ type: "error", message: error instanceof Error ? error.message : "Could not send the instructions." });
+                      } finally {
+                        setDeveloperSending(false);
+                      }
+                    }}>
+                      <div>
+                        <label htmlFor="developer-email" className="mb-1.5 block text-[12px] text-black/55">Developer emails</label>
+                        <div
+                          onClick={() => developerEmailRef.current?.focus()}
+                          className={`flex min-h-11 w-full flex-wrap items-center gap-1.5 rounded-lg bg-white px-2.5 py-1.5 ring-1 transition focus-within:ring-black/35 ${developerEmailDraftError ? "ring-red-400" : "ring-black/10"}`}
+                        >
+                          {developerEmails.map((email) => (
+                            <span key={email} className="flex items-center gap-1 rounded-full bg-black/[0.06] py-1 pl-2.5 pr-1.5 text-[12px] text-black/80">
+                              {email}
+                              <button
+                                type="button"
+                                disabled={developerSending}
+                                onClick={() => removeDeveloperEmail(email)}
+                                aria-label={`Remove ${email}`}
+                                className="flex size-4 items-center justify-center rounded-full text-black/40 transition hover:bg-black/10 hover:text-black/70 disabled:opacity-50"
+                              >
+                                ×
+                              </button>
+                            </span>
+                          ))}
+                          <input
+                            ref={developerEmailRef}
+                            id="developer-email"
+                            type="text"
+                            inputMode="email"
+                            disabled={developerSending}
+                            value={developerEmailDraft}
+                            onChange={(event) => handleDeveloperEmailChange(event.target.value)}
+                            onKeyDown={handleDeveloperEmailKeyDown}
+                            onBlur={() => { if (developerEmailDraft.trim()) { const ok = commitDeveloperEmail(developerEmailDraft); setDeveloperEmailDraft(ok ? "" : developerEmailDraft); setDeveloperEmailDraftError(!ok); } }}
+                            onPaste={(event) => {
+                              const text = event.clipboardData.getData("text");
+                              if (!/[,\s]/.test(text)) return;
+                              event.preventDefault();
+                              text.split(/[,\s]+/).forEach((part) => { if (part.trim()) commitDeveloperEmail(part); });
+                            }}
+                            placeholder={developerEmails.length === 0 ? "dev@company.com, team@company.com" : "Add another…"}
+                            className="h-7 min-w-[8rem] flex-1 bg-transparent text-[13px] outline-none placeholder:text-black/30 disabled:opacity-60"
+                          />
+                        </div>
+                        <p className={`mt-1.5 text-[11px] leading-4 ${developerEmailDraftError ? "text-red-600" : "text-black/40"}`}>{developerEmailDraftError ? "Enter a valid email address." : "Press comma, space, or enter to add each address."}</p>
+                      </div>
+                      <button type="submit" disabled={!widgetKey || developerSending} className="flex h-11 w-full items-center justify-center rounded-lg bg-black px-4 text-[13px] text-white transition hover:bg-black/80 disabled:cursor-not-allowed disabled:opacity-50">{developerSending ? "Sending…" : "Send instructions"}</button>
+                    </form>
+                    {developerSendStatus && <p role="status" className={`mt-3 text-[12px] leading-5 ${developerSendStatus.type === "success" ? "text-emerald-700" : "text-red-600"}`}>{developerSendStatus.message}</p>}
+                    <p className="mt-3 text-[11px] leading-4 text-black/40">Elpino sends the instructions directly and copies every address you enter.</p>
+                  </div>
+                </aside>
+              </div>
+            </div>
+          </div>
         )}
 
         {false && (() => {

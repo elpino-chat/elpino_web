@@ -47,7 +47,95 @@
       "privacy": "Kebijakan Privasi kami",
       "successTitle": "Pesan terkirim",
       "successBody": "Terima kasih telah menghubungi kami. Kami akan segera menghubungi Anda kembali.",
-      "sendAnother": "Kirim pesan lain"
+      "sendAnother": "Kirim pesan lain",
+      "sentStamp": "Terkirim ✓",
+      "postmarkLabel": "surat",
+      "securityNote": "Dikirim dengan aman — tidak pernah digunakan untuk pelatihan"
+    },
+    "hero": {
+      "eyebrow": "Kontak · ruang surat",
+      "greeting": "Halo.",
+      "titlePrefix": "Bagaimana bisa",
+      "titleHl": "kami bantu?",
+      "searchLabel": "Cari topik bantuan",
+      "searchPlaceholder": "Cari penjualan, dukungan, penagihan, dan banyak lagi",
+      "searchButtonLabel": "Cari",
+      "noMatch": "Tidak ada yang sama persis. Tekan Enter untuk mengirimkan pertanyaan Anda kepada kami.",
+      "linkGettingStarted": "Memulai",
+      "linkFeaturedGuides": "Panduan unggulan",
+      "linkPlansBilling": "Paket & penagihan",
+      "linkSendMessage": "Atau kirimkan pesan kepada kami ↓"
+    },
+    "desks": {
+      "eyebrow": "Pilih rute",
+      "titlePrefix": "Jangkau ",
+      "titleHl": "meja kanan.",
+      "subtitle": "Pilih saluran yang paling sesuai dengan kebutuhan Anda. Setiap rute mengarah ke anggota tim kami yang sebenarnya.",
+      "deskLabel": "Meja {n}",
+      "addressed": "Kartu pos ditujukan ✓",
+      "actionAddress": "Alamatkan kartu pos",
+      "emailNote": "Lebih suka aplikasi email Anda sendiri? Setiap meja dengan alamat juga berfungsi melalui {link}.",
+      "emailNoteLink": "email"
+    },
+    "postcard": {
+      "eyebrow": "Kirimi kami pesan",
+      "titlePrefix": "Manusia sejati ",
+      "titleHl": "akan membaca ini.",
+      "addressedTo": "Ditujukan kepada"
+    },
+    "tracking": {
+      "eyebrow": "Lacak kartu pos Anda",
+      "titlePrefix": "Apa yang terjadi ",
+      "titleHl": "setelah Anda menekan kirim.",
+      "onlineStatus": "Tim kami sedang online",
+      "hours": "Senin–Jumat, 09.00–18.00 CET",
+      "steps": [
+        {
+          "title": "Terkirim",
+          "body": "Kartu pos Anda lepas dari tangan Anda. Tidak ada lagi yang bisa dilakukan."
+        },
+        {
+          "title": "Kami membaca setiap kata",
+          "body": "Catatan Anda mendarat bersama manusia di tim — tanpa labirin tiket, tanpa bot."
+        },
+        {
+          "title": "Balasan dalam satu hari kerja",
+          "body": "Jawaban nyata dari seseorang yang mengerjakan produk."
+        },
+        {
+          "title": "Telepon, jika bermanfaat",
+          "body": "Untuk penjualan dan perusahaan, kami akan memandu Elpino tentang alur kerja Anda yang sebenarnya."
+        }
+      ]
+    },
+    "library": {
+      "titlePrefix": "Lebih suka menemukannya ",
+      "titleHl": "dirimu sendiri?",
+      "subtitle": "Sebagian besar pertanyaan sudah terjawab di sini — dan semua pertanyaan di bawah ini tertaut langsung ke sumbernya.",
+      "cardLabel": "Kartu {n}",
+      "items": [
+        {
+          "title": "Jawaban cepat",
+          "body": "Penyiapan, penagihan, eskalasi, dan keamanan — dijawab di FAQ.",
+          "cta": "Telusuri FAQ"
+        },
+        {
+          "title": "Dokumentasi",
+          "body": "Panduan pemasangan, penyiapan konektor, dan konfigurasi ruang kerja.",
+          "cta": "Buka dokumen"
+        },
+        {
+          "title": "Keamanan & privasi",
+          "body": "Bagaimana data Anda dienkripsi, disimpan, dan tidak pernah digunakan untuk pelatihan.",
+          "cta": "Baca kebijakannya"
+        }
+      ]
+    },
+    "search": {
+      "plansTitle": "Paket dan penagihan",
+      "plansDetail": "Pertanyaan tentang langganan, faktur, atau harga",
+      "accountTitle": "Akun dan keamanan",
+      "accountDetail": "Bantuan terkait akses, privasi, atau pengaturan akun"
     }
   },
   "auth": {
@@ -105,6 +193,4113 @@
         "lowercase": "Huruf kecil",
         "number": "Angka"
       }
+    }
+  },
+  "home": {
+    "hero": {
+      "badge": "Dukungan pelanggan bertenaga AI",
+      "titlePrefix": "Dukungan yang",
+      "words": [
+        "menjawab.",
+        "menyelesaikan.",
+        "mengingat.",
+        "meneruskan."
+      ],
+      "subtitle": "AI yang menjawab dari pengetahuan Anda sendiri, memeriksa pembayaran dan pesanan asli, dan meneruskan ke tim Anda dengan konteks lengkap ketika dibutuhkan manusia.",
+      "ctaPrimary": "Mulai gratis",
+      "ctaSecondary": "Coba sendiri",
+      "trust": [
+        "100 pesan AI gratis per bulan",
+        "Tanpa kartu diperlukan",
+        "Siap dalam satu sore"
+      ],
+      "stickers": [
+        "Diselesaikan oleh AI",
+        "Manusia siaga",
+        "Privat secara default",
+        "Tidak ada yang terlewat"
+      ],
+      "callouts": [
+        "Lencana AI di setiap percakapan",
+        "Bergabung untuk mengambil alih",
+        "Lokasi & perangkat pengunjung"
+      ],
+      "widget": {
+        "name": "Elpino",
+        "subtitle": "Menjawab dalam hitungan detik",
+        "convo": [
+          "Apakah saya ditagih dua kali untuk upgrade saya?",
+          "Saya memeriksa riwayat pembayaran Anda",
+          "Anda hanya ditagih sekali. Percobaan kedua gagal dan tidak pernah berhasil ditagih."
+        ]
+      }
+    },
+    "marquee": {
+      "questions": [
+        "Di mana faktur saya?",
+        "Bagaimana cara reset kata sandi saya?",
+        "Apakah saya ditagih dua kali?",
+        "Bisakah saya mendapat pengembalian dana?",
+        "Di mana pesanan saya?",
+        "Bagaimana cara menambah anggota tim?",
+        "Apakah data saya aman?",
+        "Kenapa pembayaran saya gagal?",
+        "Bisakah saya bicara dengan seseorang?"
+      ]
+    },
+    "tryit": {
+      "eyebrow": "Coba sekarang",
+      "titlePrefix": "Tanyakan sesuatu.",
+      "titleHl": "Lihat apa yang dilakukannya.",
+      "subtitle": "Pilih pertanyaan pelanggan. Di kiri adalah chat, di kanan semua yang dilakukan Elpino sebelum membalas.",
+      "widgetName": "Elpino",
+      "widgetSubtitle": "Dukungan AI",
+      "whatItDid": "Yang dilakukan Elpino",
+      "done": "Selesai",
+      "working": "Memproses…",
+      "stepStart": "mulai",
+      "stepOther": "langkah",
+      "person": "manusia",
+      "resolved": "terselesaikan",
+      "humanNote": "Bertanya dulu · anggota tim bisa bergabung, atau tiket dibuat",
+      "resolvedNote": "Dijawab dan terselesaikan, tidak perlu manusia",
+      "sampleNote": "Contoh jawaban. Langkah yang ditampilkan adalah jenis alat yang benar-benar digunakan Elpino.",
+      "qas": [
+        {
+          "q": "Apakah saya ditagih dua kali?",
+          "steps": [
+            "Memverifikasi Anda dengan kode email",
+            "Memeriksa riwayat pembayaran Anda"
+          ],
+          "a": "Anda hanya ditagih sekali. Percobaan kedua gagal dan tidak pernah berhasil ditagih."
+        },
+        {
+          "q": "Di mana pesanan saya?",
+          "steps": [
+            "Memverifikasi Anda dengan kode email",
+            "Menghubungi toko Anda via MCP"
+          ],
+          "a": "Sudah dikirim kemarin dan tiba hari Kamis. Saya sudah mengirim link pelacakan via email."
+        },
+        {
+          "q": "Bagaimana cara reset kata sandi saya?",
+          "steps": [
+            "Mencari di basis pengetahuan Anda"
+          ],
+          "a": "Pilih “Lupa kata sandi” di halaman masuk dan ikuti tautan yang kami kirim via email."
+        },
+        {
+          "q": "Bisakah saya mendapat pengembalian dana?",
+          "steps": [
+            "Memeriksa pembayaran",
+            "Pengembalian dana dinonaktifkan untuk ruang kerja ini"
+          ],
+          "a": "Saya tidak bisa mengembalikan dana itu sendiri. Mau saya hubungkan dengan tim kami?"
+        },
+        {
+          "q": "Bisakah saya bicara dengan seseorang?",
+          "steps": [
+            "Bertanya dulu sebelum meneruskan",
+            "Memberi tahu seluruh tim sekaligus"
+          ],
+          "a": "Priya dari tim kami telah bergabung dan sudah tahu seluruh percakapan."
+        },
+        {
+          "q": "Apakah Anda menjual kartu hadiah?",
+          "steps": [
+            "Mencari di basis pengetahuan Anda",
+            "Tidak ditemukan kecocokan"
+          ],
+          "a": "Saya tidak punya informasi itu. Mau saya hubungkan dengan tim kami?"
+        }
+      ]
+    },
+    "customizer": {
+      "eyebrow": "Jadikan milik Anda",
+      "titlePrefix": "Widget yang",
+      "titleHl": "terlihat dan berbicara seperti Anda.",
+      "subtitle": "Tambahkan logo Anda, beri nama AI Anda, pilih warna dan tema, dan pilih bahasa balasannya. Coba-coba pengaturannya dan lihat widget berubah.",
+      "yourLogo": "Logo Anda",
+      "upload": "Unggah logo",
+      "remove": "Hapus",
+      "fileTooBig": "Gunakan gambar di bawah 2 MB.",
+      "fileShown": "Hanya ditampilkan di sini. Tidak diunggah ke mana pun.",
+      "aiName": "Nama AI",
+      "greeting": "Salam pembuka",
+      "accentColour": "Warna aksen",
+      "theme": "Tema",
+      "light": "Terang",
+      "dark": "Gelap",
+      "customerWritesIn": "Pelanggan menulis dalam",
+      "theAi": "AI",
+      "repliesIn": "membalas dalam",
+      "autoMatch": "Otomatis: sesuaikan dengan pelanggan",
+      "seesUrl": "AI dapat melihat URL halaman",
+      "visitorOn": "Pengunjung berada di",
+      "replyingIn": "Membalas dalam",
+      "matched": "(disesuaikan)",
+      "writeMessage": "Tulis pesan…",
+      "previewNote": "Pratinjau dengan teks contoh. Widget asli Anda menggunakan logo, warna, dan salam Anda sendiri.",
+      "support": "Dukungan",
+      "weReplyFast": "Kami membalas dalam hitungan detik"
+    },
+    "tour": {
+      "eyebrow": "Produk",
+      "titlePrefix": "Semua yang dibutuhkan tim dukungan,",
+      "titleHl": "dalam satu tempat.",
+      "items": [
+        {
+          "tag": "Agen AI",
+          "title": "Agen yang tahu dengan siapa ia berbicara",
+          "desc": "Mengingat pelanggan, memverifikasi identitas, memeriksa pembayaran, dan memanggil alat Anda."
+        },
+        {
+          "tag": "Kotak masuk bersama",
+          "title": "Satu kotak masuk untuk tim dan AI Anda",
+          "desc": "Kepemilikan yang jelas, notifikasi bergabung, dan konteks lengkap di setiap percakapan."
+        },
+        {
+          "tag": "Pusat pengetahuan",
+          "title": "Ajari dari apa pun yang Anda miliki",
+          "desc": "Rayapi situs Anda, unggah file, tulis halaman. Dengan sakelar publik dan privat."
+        },
+        {
+          "tag": "Tiket",
+          "title": "Tidak ada yang terlewat",
+          "desc": "Jika tidak ada yang tersedia, tiket dibuat dan pelanggan diberi tahu."
+        }
+      ]
+    },
+    "who": {
+      "eyebrow": "Untuk siapa",
+      "titlePrefix": "Dibuat untuk orang-orang",
+      "titleHl": "yang menangani dukungan.",
+      "items": [
+        {
+          "title": "Pendiri",
+          "desc": "Kembangkan produk, bukan balasan dukungan. Elpino hanya menghubungi Anda saat benar-benar butuh pendiri.",
+          "pts": [
+            "Paket gratis, 100 pesan AI per bulan",
+            "Memberi tahu Anda hanya saat manusia diperlukan",
+            "Pengaturan dalam satu sore"
+          ]
+        },
+        {
+          "title": "Tim yang sibuk",
+          "desc": "Jam sibuk teratasi: AI menangani pertanyaan berulang, semua orang menerima notifikasi bergabung yang sama, tidak ada yang membalas dua kali.",
+          "pts": [
+            "Satu notifikasi bergabung mencapai seluruh tim",
+            "Lencana kepemilikan di setiap percakapan",
+            "Tiket dibuat saat tidak ada yang tersedia"
+          ]
+        },
+        {
+          "title": "Pengembang",
+          "desc": "Satu tag, token identitas bertanda tangan, dan server MCP. Anda memilih apa yang bisa disentuh AI.",
+          "pts": [
+            "Satu tag skrip untuk widget",
+            "Token identitas bertanda tangan berumur pendek",
+            "Server MCP, disetujui alat demi alat"
+          ]
+        }
+      ],
+      "founderVisual": [
+        {
+          "q": "Bagaimana cara ekspor data?",
+          "ok": true
+        },
+        {
+          "q": "Kenapa kartu saya gagal?",
+          "ok": true
+        },
+        {
+          "q": "Kontrak khusus?",
+          "ok": false
+        }
+      ],
+      "handled": "Ditangani",
+      "needsYou": "Butuh Anda",
+      "joined": "Priya bergabung"
+    },
+    "statement": "Elpino menjawab yang diketahuinya, melakukan yang Anda izinkan, dan meminta manusia untuk sisanya.",
+    "integrations": {
+      "eyebrow": "Integrasi",
+      "titlePrefix": "Terhubung dengan yang",
+      "titleHl": "sudah Anda gunakan.",
+      "subtitle": "Pembayaran untuk pencarian dan tautan, alat proyek untuk tiket, dan MCP untuk sistem Anda sendiri. Elpino berada di tengah, dan semua yang Anda hubungkan bekerja dengannya.",
+      "tags": [
+        "Pembayaran",
+        "Tiket",
+        "Sistem Anda"
+      ],
+      "cta": "Lihat semua integrasi"
+    },
+    "trust": {
+      "eyebrow": "Kepercayaan",
+      "titlePrefix": "Kuat, dengan",
+      "titleHl": "rem terpasang.",
+      "subtitle": "Ini adalah aturan yang diikuti Elpino. Sebagian besar selalu aktif. Bagian yang menyangkut uang bisa Anda aktifkan sendiri.",
+      "cta": "Baca panduan keamanan",
+      "rulebook": "Aturan Elpino",
+      "setByYou": "Diatur oleh Anda",
+      "guardrailsOn": "Pengaman aktif",
+      "alwaysOn": "Selalu aktif",
+      "rules": [
+        {
+          "title": "Hanya menjawab dari pengetahuan yang disetujui",
+          "desc": "Jika tidak ada dalam pengetahuan Anda, ia mengatakannya dan menawarkan manusia."
+        },
+        {
+          "title": "Sembunyikan nama dan email dari AI",
+          "desc": "Model melihat kode referensi, bukan identitas pelanggan Anda."
+        },
+        {
+          "title": "Verifikasi sebelum apa pun yang bersifat pribadi",
+          "desc": "Kode email atau token bertanda tangan datang lebih dulu."
+        },
+        {
+          "title": "Hanya alat yang Anda aktifkan",
+          "desc": "Setiap alat MCP disetujui oleh Anda, satu per satu."
+        }
+      ],
+      "refundTitle": "Izinkan AI mengeluarkan pengembalian dana",
+      "refundOn": "Aktif. AI dapat mengembalikan dana, sesuai pengaturan pemilik ruang kerja.",
+      "refundOff": "Nonaktif secara default. Hanya pemilik ruang kerja yang bisa mengaktifkannya."
+    },
+    "pricing": {
+      "eyebrow": "Harga",
+      "titlePrefix": "Bayar untuk bantuannya,",
+      "titleHl": "bukan untuk jumlah stafnya.",
+      "subtitle": "Mulai gratis. Paket berbayar diukur berdasarkan pekerjaan yang dilakukan AI.",
+      "cta": "Lihat semua harga",
+      "plans": [
+        {
+          "name": "Gratis",
+          "big": "$0",
+          "note": "100 pesan AI per bulan",
+          "pts": [
+            "Tanpa kartu diperlukan",
+            "Widget, pengetahuan, dan kotak masuk",
+            "Pengalihan tidak pernah dikenakan biaya tambahan"
+          ]
+        },
+        {
+          "name": "Paket berbayar",
+          "big": "Berbasis kredit",
+          "note": "Kredit AI bulanan yang sesuai dengan volume Anda",
+          "pts": [
+            "Alat pembayaran dan akun",
+            "Ruang untuk tim yang lebih besar",
+            "Isi ulang kapan saja"
+          ]
+        },
+        {
+          "name": "Anggota tambahan",
+          "big": "Paket kursi",
+          "note": "Tambahkan kursi yang diperbarui bersama paket Anda",
+          "pts": [
+            "Hanya saat Anda berkembang",
+            "Kotak masuk yang sama, lebih banyak tangan",
+            "Batalkan kapan saja"
+          ]
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Pertanyaan",
+      "titlePrefix": "Yang paling sering",
+      "titleHl": "ditanyakan.",
+      "items": [
+        {
+          "q": "Apa itu Elpino?",
+          "a": "Platform dukungan pelanggan bertenaga AI: widget chat untuk situs web, agen AI yang menjawab dari pengetahuan Anda dan memeriksa pembayaran asli, kotak masuk tim bersama, dan tiket saat tidak ada yang tersedia."
+        },
+        {
+          "q": "Apakah AI akan mengarang sesuatu?",
+          "a": "AI menjawab dari pengetahuan yang telah Anda setujui, dan tahap peninjauan memeriksa draf terhadap hasil alat. Saat tidak tahu, ia mengatakannya dan menawarkan manusia."
+        },
+        {
+          "q": "Apa yang terjadi saat AI tidak bisa membantu?",
+          "a": "AI bertanya dulu pada pelanggan. Jika ya, seluruh tim menerima notifikasi bergabung dan punya 90 detik untuk ikut serta. Jika tidak ada yang merespons, tiket dibuat dan pelanggan diberi tahu via email."
+        },
+        {
+          "q": "Berapa lama pengaturannya?",
+          "a": "Sebagian besar tim aktif di hari yang sama: tambahkan pengetahuan Anda, tempel cuplikan widget, dan undang tim Anda."
+        },
+        {
+          "q": "Apakah ada paket gratis?",
+          "a": "Ya: 100 pesan AI per bulan, tanpa kartu diperlukan."
+        },
+        {
+          "q": "Apakah bisa digunakan di saluran lain?",
+          "a": "Chat situs web sudah aktif sekarang. Omnichannel akan hadir bulan November."
+        }
+      ]
+    },
+    "closing": {
+      "title": "Berikan jawaban pada pelanggan Anda sebelum mereka selesai mengetik.",
+      "subtitle": "Mulai gratis, ajari ia tentang bisnis Anda, dan biarkan ia menangani pertanyaan yang berulang.",
+      "ctaPrimary": "Mulai gratis",
+      "ctaSecondary": "Hubungi kami"
+    }
+  },
+  "pricing": {
+    "hero": {
+      "badge": "Harga",
+      "title": "Mulai gratis. Tumbuh saat Anda siap.",
+      "subtitle": "Setiap akun baru dimulai dengan dukungan AI, kotak masuk bersama, dan pengalihan ke manusia—tanpa kartu diperlukan. Jelajahi Elpino dengan tim Anda, lalu pilih paket saat Anda butuh lebih banyak.",
+      "stickerFree": "Gratis selamanya ✓",
+      "stickerNoCard": "Tanpa kartu",
+      "ctaDashboard": "Ke dashboard",
+      "ctaStart": "Mulai gratis",
+      "billingPeriodLabel": "Periode penagihan",
+      "monthly": "Bulanan",
+      "annually": "Tahunan"
+    },
+    "planCards": {
+      "mostPopular": "Paling populer",
+      "save": "hemat",
+      "freeForever": "Gratis selamanya",
+      "discussCustomPlan": "atau diskusikan paket khusus",
+      "compareAllFeatures": "Bandingkan semua fitur",
+      "whatsIncluded": "Yang termasuk",
+      "builtForTeam": "Dibuat untuk seluruh tim Anda",
+      "builtForTeamDesc": "Pengetahuan bersama, satu kotak masuk, dan pengalihan ke manusia saat diperlukan."
+    },
+    "comparison": {
+      "eyebrow": "Perbandingan paket",
+      "titlePrefix": "Lihat apa yang ",
+      "titleHl": "sesuai untuk tim Anda.",
+      "subtitle": "Bandingkan kapasitas, kursi, dan akses produk di setiap paket. Tingkatkan kapan pun operasi dukungan Anda butuh lebih banyak ruang.",
+      "featuresHeader": "Fitur",
+      "popular": "Populer",
+      "billedAnnually": "ditagih tahunan",
+      "billedMonthly": "ditagih bulanan",
+      "showAll": "Tampilkan semua fitur",
+      "showFewer": "Tampilkan lebih sedikit fitur",
+      "included": "Termasuk",
+      "notIncluded": "Tidak termasuk",
+      "categories": {
+        "aiRules": {
+          "name": "Yang boleh dilakukan AI",
+          "rows": {
+            "allowance": {
+              "label": "Jatah AI bulanan",
+              "description": "Free dibatasi 100 pesan AI. Paket berbayar mencakup kredit dolar bulanan yang digunakan AI saat bekerja, dibagikan oleh seluruh ruang kerja."
+            },
+            "whenOut": {
+              "label": "Saat jatah habis",
+              "description": "AI mengalihkan percakapan baru ke tim Anda. Pada paket berbayar Anda dapat mengisi ulang kredit kapan saja, atau mengaktifkan isi ulang otomatis."
+            },
+            "escalations": {
+              "label": "Pengalihan ke manusia",
+              "description": "Percakapan yang dialihkan AI karena tidak bisa menjawab dengan percaya diri. Pengalihan itu sendiri tidak pernah dikenai biaya tambahan."
+            }
+          }
+        },
+        "seats": {
+          "name": "Siapa yang bisa masuk",
+          "rows": {
+            "included": {
+              "label": "Kursi termasuk",
+              "description": "Rekan tim yang tercakup dalam harga paket, termasuk pemilik ruang kerja."
+            },
+            "extra": {
+              "label": "Kursi tambahan",
+              "description": "Setiap rekan tim di luar kursi yang termasuk, pada paket apa pun."
+            },
+            "ceiling": {
+              "label": "Batas kursi",
+              "description": "Titik di mana Anda perlu paket lebih besar daripada kursi tambahan."
+            }
+          }
+        },
+        "product": {
+          "name": "Produk",
+          "rows": {
+            "widget": {
+              "label": "Widget chat situs web",
+              "description": "Chat yang dapat disematkan tempat pengunjung Anda benar-benar berbicara."
+            },
+            "knowledge": {
+              "label": "Basis pengetahuan & jawaban AI",
+              "description": "Pindai situs Anda atau unggah dokumen; AI menjawab dari itu."
+            },
+            "storage": {
+              "label": "Penyimpanan pengetahuan",
+              "description": "Berapa banyak konten yang dipindai dan diunggah yang dapat ditampung ruang kerja."
+            },
+            "inbox": {
+              "label": "Kotak masuk bersama & pengalihan",
+              "description": "Satu kotak masuk untuk tim, dengan AI mengalihkan saat seharusnya."
+            },
+            "audit": {
+              "label": "Jejak audit AI",
+              "description": "Setiap jawaban, dengan artikel dan pencarian yang menjadi dasarnya."
+            },
+            "analytics": {
+              "label": "Analitik pengunjung",
+              "description": "Pengunjung langsung, sumber, negara, dan halaman."
+            },
+            "profiles": {
+              "label": "Profil & riwayat pelanggan",
+              "description": "Catatan pelanggan tersimpan dan percakapan mereka sebelumnya."
+            },
+            "domain": {
+              "label": "Domain terhubung",
+              "description": "Satu ruang kerja, satu situs web — perlu yang kedua? mulai ruang kerja kedua."
+            },
+            "support": {
+              "label": "Dukungan",
+              "description": "Cara menghubungi kami saat sesuatu memerlukan manusia dari pihak kami."
+            }
+          }
+        }
+      }
+    },
+    "values": {
+      "handsOff": "Mengalihkan ke manusia",
+      "topUpOrHandoff": "Isi ulang atau alihkan",
+      "noExtraCharge": "Tanpa biaya tambahan",
+      "noLimit": "Tanpa batas",
+      "standard": "Standar",
+      "priority": "Prioritas",
+      "messages": "pesan",
+      "credit": "kredit",
+      "seatBundleSummary": "3 kursi $2, 5 kursi $3"
+    },
+    "billing": {
+      "eyebrow": "Penagihan jelas dan sederhana",
+      "titleLine1": "Bayar untuk yang dilakukan AI.",
+      "titleLine2": "Bukan untuk pengalihan.",
+      "subtitle": "Free mencakup 100 pesan AI per bulan. Paket berbayar mencakup kredit AI bulanan yang mencakup sebanyak mungkin percakapan, sehingga pertanyaan singkat lebih murah daripada bolak-balik panjang. Mengalihkan percakapan ke tim Anda selalu gratis.",
+      "creditCard": {
+        "label": "Kredit AI bulanan",
+        "amount": "Mulai $7",
+        "note": "setiap bulan di Starter",
+        "chatsUseCredit": "chat menggunakan kredit",
+        "refillsMonthly": "diisi ulang bulanan",
+        "desc": "Starter mencakup $7, Growth $40, dan Scale $240 kredit AI setiap bulan. Butuh lebih? Isi ulang kapan saja atau aktifkan isi ulang otomatis.",
+        "cta": "Bandingkan paket"
+      },
+      "handoffCard": {
+        "stamp": "Pengalihan = gratis",
+        "label": "Biaya tambahan per pengalihan",
+        "note": "Di setiap paket. Selalu."
+      },
+      "inboxCard": {
+        "title": "AI dan tim Anda, dalam satu kotak masuk.",
+        "desc": "AI menjawab dari pengetahuan Anda. Saat orang diperlukan, tim Anda melanjutkan dengan percakapan lengkap yang sudah terlihat.",
+        "cta": "Jelajahi cara kerjanya"
+      }
+    },
+    "capacity": {
+      "eyebrow": "Tambah kapasitas",
+      "title": "Tumbuh tanpa mengubah cara kerja Anda.",
+      "subtitle": "Tambahkan orang atau kapasitas AI hanya saat Anda perlu. Kotak masuk, pengetahuan, dan riwayat percakapan Anda tetap sama seperti sebelumnya.",
+      "teammatesTitle": "Rekan tim tambahan",
+      "teammatesDesc": "Berikan lebih banyak orang login mereka sendiri sambil berbagi kotak masuk, pengetahuan, dan kredit AI yang sama. Mereka tetap di paket Anda setiap bulan sampai Anda menghapusnya.",
+      "perMonth": "per bulan",
+      "seatsWord": "kursi",
+      "topUpAnytime": "Isi ulang kapan saja",
+      "onAnyPaidPlan": "di paket berbayar mana pun",
+      "creditTitle": "Kredit AI tambahan",
+      "creditDesc": "Biarkan AI terus menjawab setelah kredit bulanan Anda digunakan. Mengalihkan percakapan ke tim Anda tidak pernah dikenai biaya tambahan.",
+      "creditCards": [
+        {
+          "name": "Kredit bulanan",
+          "note": "Diatur ulang setiap bulan"
+        },
+        {
+          "name": "Isi ulang",
+          "note": "Tidak pernah kedaluwarsa"
+        },
+        {
+          "name": "Isi ulang otomatis",
+          "note": "Opsional"
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Pertanyaan seputar harga",
+      "subtitle": "Detail penagihan yang paling banyak ditanyakan. Penyiapan, AI, integrasi, dan keamanan dibahas di FAQ lengkap.",
+      "readFull": "Baca FAQ lengkap",
+      "items": [
+        {
+          "q": "Berapa biaya paketnya?",
+          "a": "Free adalah $0. Paket bulanan adalah Starter $12 dengan kredit AI $7 setiap bulan, Growth $59 dengan $40, dan Scale $299 dengan $240. Penagihan tahunan memberi dua bulan gratis — Anda membayar sepuluh bulan dan mendapat dua belas: Starter $120 setahun ($10/bulan), Growth $590 ($49.17/bulan), dan Scale $2,990 ($249.17/bulan)."
+        },
+        {
+          "q": "Bagaimana jatah AI bekerja?",
+          "a": "Free mencakup 100 pesan AI per bulan. Setiap balasan yang dikirim AI dihitung sebagai satu pesan, jadi obrolan singkat menggunakan sedikit dan bolak-balik panjang menggunakan lebih banyak. Paket berbayar bekerja berbeda: mereka mencakup kredit AI bulanan yang digunakan AI saat bekerja, jadi pertanyaan cepat menggunakan lebih sedikit daripada bolak-balik panjang. Starter mencakup kredit $7 sebulan, Growth $40 dan Scale $240."
+        },
+        {
+          "q": "Apakah pengalihan mengenakan biaya?",
+          "a": "Tanpa biaya tambahan. Pengalihan itu sendiri gratis di setiap paket, dan AI berhenti saat orang mengambil alih. Di Free, pesan yang sudah dikirim AI sebelum pengalihan tetap terhitung dalam 100 Anda; di paket berbayar, AI hanya menggunakan kredit saat menjawab, dan berhenti menggunakan kredit saat orang mengambil alih."
+        },
+        {
+          "q": "Bisakah AI mengeluarkan pengembalian dana?",
+          "a": "Hanya jika pemilik ruang kerja mengaktifkan pengembalian dana. Secara default dimatikan. Bahkan dengan pengembalian dana dimatikan, AI dapat melihat pembayaran dan menawarkan untuk menghubungkan pelanggan dengan tim Anda."
+        },
+        {
+          "q": "Apa yang terjadi saat saya menghabiskan jatah AI saya?",
+          "a": "AI mengalihkan percakapan baru langsung ke tim Anda daripada menjawab. Pada paket berbayar Anda dapat mengisi ulang kredit kapan saja, atau mengaktifkan isi ulang otomatis agar tidak pernah berhenti. Isi ulang tidak pernah kedaluwarsa. Kredit bulanan Anda diatur ulang setiap periode penagihan."
+        },
+        {
+          "q": "Berapa biaya rekan tim tambahan?",
+          "a": "Kursi tambahan tersedia dalam paket di setiap paket termasuk Free: 3 kursi untuk $2 sebulan, atau 5 untuk $3. Kursi dan kredit AI ditagih secara terpisah sepenuhnya — menambahkan rekan tim tidak pernah menyentuh jatah AI Anda."
+        },
+        {
+          "q": "Bisakah saya membatalkan kapan saja?",
+          "a": "Ya, dari Pengaturan → Penagihan, tanpa kontrak. Pembatalan berlaku pada akhir periode penagihan saat ini, jadi Anda tetap memiliki apa yang Anda bayar hingga saat itu."
+        },
+        {
+          "q": "Apa yang terjadi jika saya berhenti membayar?",
+          "a": "Ruang kerja turun ke paket Free pada akhir periode. Basis pengetahuan, riwayat percakapan, dan pengaturan Anda semuanya tetap utuh."
+        }
+      ]
+    },
+    "enterprise": {
+      "badge": "Enterprise",
+      "title": "Dukungan yang tumbuh bersama Anda.",
+      "subtitle": "Untuk organisasi yang mendukung lebih banyak pelanggan di berbagai situs web dan tim. Mari kita temukan kapasitas yang tepat untuk dukungan Anda.",
+      "features": [
+        "Kredit AI jauh melampaui paket Scale",
+        "Beberapa situs web dan tim yang berkembang",
+        "Konteks dan pengetahuan pelanggan bersama",
+        "Harga volume yang disesuaikan dengan kebutuhan Anda"
+      ],
+      "talkTitle": "Ayo bicara",
+      "customPricing": "Harga khusus tersedia",
+      "contactCta": "Hubungi sales",
+      "talkPoints": [
+        "Diskusikan volume percakapan Anda",
+        "Rencanakan ruang kerja dan kursi Anda",
+        "Tentukan lingkup pengetahuan di berbagai situs web",
+        "Jelajahi kebutuhan onboarding dan SLA"
+      ]
+    },
+    "plans": {
+      "free": {
+        "name": "Free",
+        "description": "Untuk pendiri yang menjawab dukungan sendiri. AI nyata, tanpa kartu.",
+        "cta": "Mulai",
+        "features": [
+          "Hingga 100 pesan AI/bulan",
+          "2 kursi termasuk",
+          "Paket kursi mulai $0.60/kursi",
+          "Basis pengetahuan 20 MB",
+          "Widget chat situs web",
+          "Kotak masuk bersama dengan pengalihan"
+        ]
+      },
+      "starter": {
+        "name": "Starter",
+        "description": "Untuk tim kecil yang dukungannya telah melampaui satu kotak masuk.",
+        "cta": "Mulai",
+        "features": [
+          "Kredit AI $7 setiap bulan",
+          "5 kursi termasuk",
+          "Paket kursi mulai $0.60/kursi",
+          "Basis pengetahuan 200 MB",
+          "Isi ulang kredit kapan saja",
+          "Analitik pengunjung"
+        ]
+      },
+      "growth": {
+        "name": "Growth",
+        "description": "Untuk tim yang menjalankan dukungan sebagai fungsi nyata, dengan data untuk membuktikannya.",
+        "cta": "Mulai",
+        "features": [
+          "Kredit AI $40 setiap bulan",
+          "15 kursi termasuk",
+          "Paket kursi mulai $0.60/kursi",
+          "Basis pengetahuan 1 GB",
+          "Isi ulang kredit kapan saja",
+          "Jejak audit AI penuh",
+          "Dukungan prioritas"
+        ]
+      },
+      "scale": {
+        "name": "Scale",
+        "description": "Untuk dukungan bervolume tinggi di mana AI menanggung sebagian besar beban.",
+        "cta": "Mulai",
+        "features": [
+          "Kredit AI $240 setiap bulan",
+          "40 kursi termasuk",
+          "Paket kursi mulai $0.60/kursi",
+          "Basis pengetahuan 5 GB",
+          "Isi ulang kredit kapan saja",
+          "Integrasi & akses API"
+        ]
+      }
+    }
+  },
+  "about": {
+    "typingLabel": "Elpino sedang mengetik",
+    "hero": {
+      "badge": "Tentang Elpino",
+      "titlePrefix": "Dukungan pelanggan, ",
+      "titleHl": "dibuat lebih manusiawi.",
+      "subtitle": "Elpino memberi pelanggan jawaban yang berguna dari pengetahuan yang sudah Anda miliki, lalu menjaga tim Anda tetap dekat untuk momen yang membutuhkan orang.",
+      "ctaMeet": "Kenali Elpino",
+      "ctaReadStory": "Baca kisah kami ↓",
+      "imageAlt": "Empat kukang Elpino bekerja sama untuk mendukung pelanggan",
+      "bubble": "Hai, ada yang bisa kami bantu? 👋"
+    },
+    "story": {
+      "eyebrow": "Di mana ini dimulai",
+      "titlePrefix": "Kisah kami dimulai dengan sebuah ",
+      "titleHl": "pertanyaan.",
+      "subtitle": "Bagaimana jika perangkat lunak dukungan pelanggan membantu kedua sisi percakapan—bukan hanya perusahaan yang mengelolanya?",
+      "chatTitle": "Elpino",
+      "chatSub": "Menceritakan kisah kami",
+      "sys1": "Di mana ini dimulai",
+      "you1": "Bagaimana jika perangkat lunak dukungan pelanggan membantu kedua sisi percakapan, bukan hanya perusahaan yang mengelolanya?",
+      "elpino1": "Tidak ada yang membuka chat dukungan untuk hiburan.",
+      "elpino2": "Seseorang mencoba menyelesaikan sesuatu. Sesuatu menghalangi. Mereka ingin jawaban yang jelas dan kembali ke hari mereka.",
+      "elpino3": "Di sisi lain ada tim yang menangani pertanyaan yang familiar, informasi yang tersebar, dan lebih banyak percakapan daripada waktu. Elpino ada untuk membuat momen itu lebih mudah bagi semua orang.",
+      "sys2": "Beginilah bentuknya",
+      "you2": "Bisakah saya mengubah alamat email di akun saya?",
+      "aiLabel": "AI Elpino · dari pengetahuan Anda",
+      "aiAnswer": "Ya. Buka Pengaturan, pilih Profil, lalu perbarui email kontak Anda.",
+      "aiGuideLabel": "Panduan pengaturan akun",
+      "sys3": "Rekan tim selalu ada di dekat saat diperlukan"
+    },
+    "roles": {
+      "eyebrow": "Peran kami",
+      "titlePrefix": "Kru yang dibangun untuk ",
+      "titleHl": "pekerjaan.",
+      "subtitle": "Tidak ada foto karyawan di sini. Sebagai gantinya, temui pekerjaan yang dirancang untuk dilakukan Elpino—dengan mantap, penuh pertimbangan, dan dengan tim manusia yang selalu terlibat.",
+      "joinedChat": "{name} bergabung dengan chat",
+      "items": [
+        {
+          "title": "Si Pendengar",
+          "task": "Memahami setiap pertanyaan pelanggan",
+          "description": "Mengubah pengetahuan yang sudah dimiliki tim Anda menjadi jawaban pertama yang jelas dan berguna."
+        },
+        {
+          "title": "Si Penyortir",
+          "task": "Menjaga kotak masuk terus bergerak",
+          "description": "Menemukan sinyal dalam antrean, sehingga percakapan yang tepat mendapat perhatian yang tepat."
+        },
+        {
+          "title": "Si Pelindung",
+          "task": "Tahu kapan harus melibatkan orang",
+          "description": "Menangani pekerjaan rutin dengan hati-hati dan mengalihkan momen yang membutuhkan penilaian manusia."
+        },
+        {
+          "title": "Si Penumbuh",
+          "task": "Belajar apa yang paling membantu pelanggan",
+          "description": "Mengungkap kesenjangan, pola, dan pertanyaan yang membuat dukungan Anda lebih baik dari waktu ke waktu."
+        }
+      ]
+    },
+    "remote": {
+      "eyebrow": "Dibangun secara remote",
+      "titlePrefix": "Kami telah bekerja secara remote sejak ",
+      "titleHl": "hari pertama.",
+      "subtitle": "Kami bekerja melalui penulisan yang jelas, konteks bersama, dan waktu yang fokus. Di mana seseorang bekerja kurang penting dibandingkan perhatian dan penilaian yang mereka bawa ke produk.",
+      "cta": "Lihat lowongan terbuka",
+      "badge": "Remote sejak hari pertama",
+      "imageAlt": "Tim yang tersebar berkolaborasi dengan alat dukungan AI bersama"
+    },
+    "team": {
+      "eyebrow": "Tim kecil, untuk saat ini",
+      "titleLine1": "Dibangun dengan fokus.",
+      "titleLine2Prefix": "Dibentuk bersama ",
+      "titleHl": "Anda.",
+      "subtitle": "Elpino masih tahap awal. Itu berarti orang-orang yang menggunakannya masih dapat mempengaruhi apa yang akan menjadi. Kami mendengarkan dengan cermat, meluncurkan dengan hati-hati, dan menjaga masalah pelanggan tetap di tengah.",
+      "cta": "Bicara dengan kami",
+      "card1": "Mendengarkan dengan cermat.",
+      "card2": "Membangun dengan jelas.",
+      "card3": "Membuat dukungan lebih mudah bagi semua orang."
+    },
+    "faqSection": {
+      "eyebrow": "Sedikit lebih tentang kami",
+      "titlePrefix": "Senang Anda ",
+      "titleHl": "bertanya.",
+      "subtitle": "Beberapa jawaban sebelum Anda memulai percakapan Anda sendiri. Ketuk pertanyaan di bawah dan Elpino akan membalas.",
+      "exploreLink": "Jelajahi FAQ lengkap →"
+    },
+    "faqChat": {
+      "title": "Tanya Elpino",
+      "sub": "Online · membalas secara instan",
+      "gladYouAsked": "Senang Anda bertanya",
+      "tapQuestion": "Ketuk pertanyaan",
+      "doneText": "Itu saja untuk saat ini. Ingin melanjutkan?",
+      "exploreFull": "Jelajahi FAQ lengkap"
+    },
+    "faqs": [
+      [
+        "Apa itu Elpino?",
+        "Elpino adalah platform dukungan pelanggan berbasis AI dengan widget chat situs web, jawaban dari basis pengetahuan Anda, kotak masuk tim bersama, dan pengalihan ke manusia saat AI tidak dapat membantu."
+      ],
+      [
+        "Apakah Elpino menggantikan tim dukungan saya?",
+        "Elpino menangani pertanyaan sehari-hari dari pengetahuan Anda dan melibatkan tim Anda saat percakapan membutuhkan orang. Tim Anda tetap menjadi bagian dari pengalaman dukungan."
+      ],
+      [
+        "Bagaimana saya bisa mulai?",
+        "Mulai dengan paket gratis, yang mencakup 100 pesan AI setiap bulan tanpa kartu diperlukan. Tambahkan pengetahuan Anda, hubungkan situs web Anda, dan libatkan rekan tim Anda."
+      ],
+      [
+        "Bagaimana struktur harganya?",
+        "Free mencakup 100 pesan AI per bulan, dan paket berbayar mencakup kredit AI bulanan. Rekan tim tambahan tersedia dalam paket kursi mulai $0.60 per kursi, dan mengalihkan percakapan ke manusia tidak pernah dikenai biaya tambahan. Halaman harga menjelaskan kursi yang termasuk dan biaya minimum paket gratis."
+      ]
+    ],
+    "closing": {
+      "titleLine1": "Masih ada lebih banyak yang harus dibangun.",
+      "titleLine2": "Datanglah untuk membentuk apa yang akan datang.",
+      "ctaTry": "Coba Elpino",
+      "ctaCareers": "Lihat lowongan terbuka"
+    }
+  },
+  "helpdesk": {
+    "hero": {
+      "badge": "Meja bantuan Elpino",
+      "titlePrefix": "Dukungan yang ",
+      "titleHl": "menjawab sendiri.",
+      "subtitle": "Satu meja untuk AI yang menyelesaikan, tim yang bergabung saat penting, dan tiket yang tidak pernah terlewat. Lihat cara ia menjawab pertanyaan.",
+      "ctaStart": "Mulai gratis",
+      "ctaFeatures": "Lihat semua fitur"
+    },
+    "prompt": {
+      "customerLabel": "Pelanggan",
+      "listening": "Elpino sedang mendengarkan…",
+      "asks": [
+        {
+          "q": "Apakah saya dikenakan biaya dua kali untuk upgrade?",
+          "steps": [
+            "Memeriksa riwayat pembayaran Anda",
+            "Menemukan satu biaya dan satu percobaan yang gagal"
+          ],
+          "a": "Anda hanya dikenakan biaya sekali. Percobaan kedua gagal dan tidak pernah tertagih."
+        },
+        {
+          "q": "Di mana pesanan #4821 saya?",
+          "steps": [
+            "Memverifikasi Anda dengan kode email",
+            "Memeriksa pesanan di toko Anda"
+          ],
+          "a": "Dikirim kemarin dan tiba Kamis. Tautan pelacakan telah dikirim."
+        },
+        {
+          "q": "Bisakah saya berbicara dengan seseorang tentang penagihan?",
+          "steps": [
+            "Tidak ada alat yang dapat mengubah detail penagihan",
+            "Menanyakan Anda dulu, lalu memberi tahu tim"
+          ],
+          "a": "Priya dari tim kami baru saja bergabung dengan chat ini."
+        }
+      ]
+    },
+    "marquee": {
+      "ariaLabel": "Apa yang ada di meja",
+      "words": [
+        "Agen AI",
+        "Kotak masuk bersama",
+        "Tiket",
+        "Pengetahuan",
+        "Pembayaran",
+        "Alat MCP",
+        "Peringatan gabung",
+        "Identitas terverifikasi",
+        "Omnichannel · November"
+      ]
+    },
+    "story": {
+      "eyebrow": "Satu percakapan",
+      "titlePrefix": "Lihat pertanyaan ",
+      "titleHl": "melintasi meja.",
+      "stepLabel": "Langkah {n} / 05",
+      "chapters": [
+        {
+          "title": "Pelanggan menulis",
+          "body": "Dari widget chat di situs Anda, dengan lokasi, perangkat, dan halaman tempat mereka berada sudah terlampir."
+        },
+        {
+          "title": "AI melakukan pekerjaan",
+          "body": "Ia menjawab dari pengetahuan Anda, mengingat pelanggan, memverifikasi identitasnya, dan menggunakan pembayaran serta alat MCP Anda untuk benar-benar menyelesaikan masalah."
+        },
+        {
+          "title": "Tim Anda bergabung dengan satu ketukan",
+          "body": "Hanya ketika ia tidak bisa membantu, dan hanya setelah bertanya kepada pelanggan. Semua orang mendapat peringatan gabung, dan orang pertama yang mengetuk mengambil chat."
+        },
+        {
+          "title": "Tidak ada yang terlewat",
+          "body": "Jika tidak ada yang tersedia dalam 90 detik, tiket diajukan dengan alasan dan ringkasan, dan pelanggan mendapat referensi melalui email."
+        },
+        {
+          "title": "Anda mengajarinya sekali",
+          "body": "Tambahkan apa yang kurang ke basis pengetahuan Anda. Lain kali, AI akan langsung mengetahuinya."
+        }
+      ],
+      "visuals": {
+        "ask": {
+          "bubble": "Hai, saya tidak bisa menemukan faktur bulan lalu.",
+          "chips": [
+            "Pune, India",
+            "Chrome · macOS",
+            "Di /billing"
+          ]
+        },
+        "ai": {
+          "rows": [
+            [
+              "search_knowledge",
+              "1 kecocokan"
+            ],
+            [
+              "send_email_code",
+              "terverifikasi"
+            ],
+            [
+              "get_receipt",
+              "ditemukan · terkirim"
+            ]
+          ],
+          "bubble": "Ini faktur Anda. Saya juga sudah mengirimkan salinannya melalui email."
+        },
+        "team": {
+          "title": "Chat baru memerlukan orang",
+          "sub": "Peringatan dikirim ke 4 rekan tim",
+          "join": "Gabung",
+          "note": "Yang pertama mengetuk mengambilnya. Peringatan hilang untuk yang lain."
+        },
+        "ticket": {
+          "label": "Tiket",
+          "title": "Eskalasi dukungan · Aisha Khan",
+          "reason": "Alasan: perubahan negara penagihan memerlukan orang.",
+          "chips": [
+            "Halaman masalah",
+            "Pelanggan diberi tahu via email"
+          ]
+        },
+        "learn": {
+          "title": "Panduan faktur dan kuitansi",
+          "added": "Ditambahkan",
+          "note": "Pelanggan berikutnya langsung mendapat jawaban ini."
+        }
+      }
+    },
+    "bento": {
+      "eyebrow": "Di balik layar",
+      "titlePrefix": "Detail kecil, ",
+      "titleHl": "dilakukan dengan benar.",
+      "subtitle": "Hal-hal yang akan Anda periksa sebelum mempercayakan pelanggan Anda kepada AI.",
+      "redact": {
+        "prefix": "Hai, saya",
+        "middle": "hubungi saya di"
+      },
+      "privacy": {
+        "title": "Model tidak pernah melihat nama atau email.",
+        "desc": "Identitas diganti dengan kode referensi sebelum AI membaca percakapan, dan rahasia dihapus."
+      },
+      "languages": {
+        "title": "Membalas dalam bahasa pelanggan Anda",
+        "note": "Anda memilih bahasa balasan di pengaturan."
+      },
+      "verified": {
+        "title": "Diverifikasi sebelum bertindak",
+        "note": "Kode email sekali pakai atau token bertanda tangan dari aplikasi Anda."
+      },
+      "tools": {
+        "title": "Alat Anda, aturan Anda",
+        "rows": [
+          [
+            "get_order",
+            true
+          ],
+          [
+            "track_shipment",
+            true
+          ],
+          [
+            "delete_customer",
+            false
+          ]
+        ]
+      },
+      "handoff": {
+        "title": "Bertanya sebelum mengalihkan",
+        "ask": "Saya tidak bisa mengubah itu sendiri. Hubungkan Anda dengan tim kami?",
+        "reply": "Ya, tolong"
+      }
+    },
+    "statement": "Elpino menjawab apa yang ia tahu, melakukan apa yang Anda izinkan, dan menanyakan seseorang untuk sisanya.",
+    "start": {
+      "eyebrow": "Mulai",
+      "titlePrefix": "Aktif dalam ",
+      "titleHl": "satu sore.",
+      "note": "Chat situs web sudah aktif hari ini. Omnichannel akan hadir di November.",
+      "steps": [
+        {
+          "title": "Daftar gratis",
+          "desc": "100 pesan AI per bulan. Tanpa kartu."
+        },
+        {
+          "title": "Ajari",
+          "desc": "Tambahkan situs, file, atau tulis halaman Anda."
+        },
+        {
+          "title": "Tempel snippet",
+          "desc": "Widget muncul di situs Anda."
+        },
+        {
+          "title": "Undang tim Anda",
+          "desc": "Agar orang siap saat diperlukan."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Pertanyaan",
+      "titlePrefix": "Baik untuk ",
+      "titleHl": "diketahui.",
+      "items": [
+        [
+          "Apa itu meja bantuan Elpino?",
+          "Seluruh ruang kerja dukungan: widget chat, agen AI, kotak masuk bersama, tiket, dan basis pengetahuan, semuanya bekerja bersama."
+        ],
+        [
+          "Apakah saya perlu tetap menggunakan meja bantuan lama saya?",
+          "Tidak. Elpino mencakup chat, agen AI, kotak masuk bersama, dan tiket. Tiket masih dapat dikirim ke Trello atau Asana jika tim Anda bekerja di sana."
+        ],
+        [
+          "Apakah ada paket gratis?",
+          "Ya: 100 pesan AI per bulan, tanpa kartu diperlukan."
+        ],
+        [
+          "Kanal apa yang didukung?",
+          "Chat situs web sudah aktif hari ini. Omnichannel akan hadir di November."
+        ],
+        [
+          "Bisakah tim saya juga menggunakannya?",
+          "Ya. Undang rekan tim, tambahkan kursi saat Anda berkembang, dan mereka akan mendapat peringatan gabung saat pelanggan memerlukan orang."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Berikan pelanggan Anda jawaban sebelum mereka selesai mengetik.",
+      "ctaStart": "Mulai gratis",
+      "ctaFeatures": "Semua fitur"
+    }
+  },
+  "nav": {
+    "startFreeTrial": "Mulai uji coba gratis",
+    "groups": {
+      "product": "Produk",
+      "solutions": "Solusi",
+      "resources": "Sumber Daya"
+    },
+    "sections": {
+      "getStarted": "Mulai",
+      "capabilities": "Kemampuan",
+      "platform": "Platform",
+      "whoItIsFor": "Untuk siapa",
+      "learningGuides": "Pembelajaran & Panduan",
+      "trustLegal": "Kepercayaan & Hukum",
+      "community": "Komunitas",
+      "company": "Perusahaan"
+    },
+    "items": {
+      "Elpino helpdesk": "Meja bantuan Elpino",
+      "Elpino AI Agent": "Agen AI Elpino",
+      "Inbox": "Kotak masuk",
+      "Tickets": "Tiket",
+      "Knowledge Hub": "Hub Pengetahuan",
+      "Integrations": "Integrasi",
+      "Safety & security": "Keamanan",
+      "All features": "Semua fitur",
+      "For Founders": "Untuk Pendiri",
+      "For Busy Teams": "Untuk Tim Sibuk",
+      "For Developers": "Untuk Pengembang",
+      "See Pricing": "Lihat Harga",
+      "Talk to Us": "Bicara dengan Kami",
+      "Documentation": "Dokumentasi",
+      "Help & FAQ": "Bantuan & FAQ",
+      "Trust Center": "Pusat Kepercayaan",
+      "Privacy Policy": "Kebijakan Privasi",
+      "Terms of Service": "Syarat Layanan",
+      "Blog": "Blog",
+      "Changelog": "Log Perubahan",
+      "Brand Kit": "Kit Merek",
+      "About Us": "Tentang Kami",
+      "Careers": "Karier",
+      "Contact Sales": "Hubungi Penjualan"
+    },
+    "megaMenu": {
+      "explore": "Jelajahi",
+      "seePricing": "Lihat Harga",
+      "seePricingNote": "Mulai gratis. Bayar saat tim Anda berkembang.",
+      "freshFromBlog": "Terbaru dari blog"
+    },
+    "featured": {
+      "product": {
+        "title": "AI dulu. Manusia saat penting.",
+        "text": "Elpino menjawab dari pengetahuan Anda sendiri, lalu menyerahkan chat ke rekan tim dengan cerita lengkap.",
+        "cta": "Kenali agen AI"
+      },
+      "solutions": {
+        "title": "Dibuat sesuai cara kerja Anda",
+        "text": "Pendiri, toko, dan tim sibuk masing-masing mendapatkan pengaturan yang sesuai, aktif dalam satu sore.",
+        "cta": "Temukan yang cocok untuk Anda"
+      },
+      "resources": {
+        "title": "Aktif dalam tiga langkah",
+        "text": "Tempel satu baris, ajari dokumen Anda, nyalakan. Panduan akan memandu Anda di setiap langkah.",
+        "cta": "Buka dokumentasi"
+      }
+    },
+    "pricing": "Harga",
+    "contactSales": "Hubungi Penjualan",
+    "login": "Masuk",
+    "goToDashboard": "Ke dasbor",
+    "getStarted": "Mulai"
+  },
+  "footer": {
+    "ticker": [
+      "Jawaban AI dari pengetahuan Anda sendiri",
+      "Pengalihan manusia, selalu gratis",
+      "100 pesan AI gratis",
+      "Satu kotak masuk bersama",
+      "Aktif dalam satu sore"
+    ],
+    "cta": {
+      "badge": "Siap kapan pun Anda siap",
+      "title": "Berikan setiap pelanggan jawaban yang membantu.",
+      "subtitle": "Mulai gratis dengan dukungan AI, kotak masuk bersama, dan pengalihan manusia. Tidak perlu kartu.",
+      "ctaStart": "Mulai gratis",
+      "ctaPricing": "Lihat Harga"
+    },
+    "description": "Elpino membantu tim menjawab pelanggan dengan AI yang didasarkan pada pengetahuan mereka sendiri, lalu menyerahkan percakapan ke seseorang saat diperlukan.",
+    "blog": "Blog",
+    "contact": "Kontak",
+    "copyright": "© {year} Elpino Inc. Semua hak dilindungi.",
+    "privacy": "Kebijakan Privasi",
+    "terms": "Syarat Layanan",
+    "security": "Keamanan"
+  },
+  "aiAgent": {
+    "hero": {
+      "badge": "Agen AI",
+      "titlePrefix": "Kenali karyawan dukungan ",
+      "titleHl": "terbaru Anda.",
+      "subtitle": "Elpino mulai hari pertama dengan sudah mengetahui bisnis Anda. Ia mengingat setiap pelanggan, memeriksa siapa mereka sebelum bertindak, bekerja dengan sistem pembayaran dan pesanan Anda melalui MCP, dan bertanya sebelum pernah mengalihkan chat ke tim Anda.",
+      "ctaHire": "Rekrut Elpino, gratis",
+      "ctaFeatures": "Lihat semua fitur"
+    },
+    "badge": {
+      "staffLabel": "Elpino · Staf",
+      "subtitle": "Agen dukungan AI",
+      "skills": [
+        "Menjawab dari dokumen Anda",
+        "Memverifikasi identitas",
+        "Memeriksa pembayaran",
+        "Menggunakan alat MCP Anda",
+        "Bertanya sebelum mengalihkan"
+      ],
+      "startDateLabel": "Tanggal mulai",
+      "startDateValue": "Hari ini",
+      "clearanceLabel": "Izin akses",
+      "clearanceValue": "Anda yang memutuskan",
+      "barcodeNote": "EL-0001 · Tidak pernah absen keluar"
+    },
+    "trace": {
+      "aiAgentLabel": "Agen AI",
+      "customerMsg": "Hai, di mana pesanan #4821 saya?",
+      "agentReply": "Kabar baik, pesanan Aisha dikirim kemarin dan tiba Kamis. Saya juga sudah mengirimkan tautan pelacakan melalui email.",
+      "whatAgentDoing": "Yang sedang dilakukan agen",
+      "resolved": "Terselesaikan",
+      "working": "Sedang bekerja",
+      "idle": "Menunggu",
+      "waiting": "Menunggu pesan pelanggan…",
+      "steps": [
+        {
+          "kind": "route",
+          "text": "router → spesialis dukungan"
+        },
+        {
+          "kind": "tool",
+          "text": "recall_conversation(“pesanan 4821”)",
+          "result": "2 pesan sebelumnya"
+        },
+        {
+          "kind": "tool",
+          "text": "get_past_conversations",
+          "result": "1 chat terselesaikan bulan lalu"
+        },
+        {
+          "kind": "verify",
+          "text": "send_email_code → check_email_code",
+          "result": "identitas terverifikasi"
+        },
+        {
+          "kind": "mcp",
+          "text": "mcp_shop__get_order(“4821”)",
+          "result": "dikirim · tiba Kamis"
+        },
+        {
+          "kind": "review",
+          "text": "tinjauan",
+          "result": "fakta cocok dengan hasil alat"
+        },
+        {
+          "kind": "done",
+          "text": "balasan terkirim · mark_resolved"
+        }
+      ]
+    },
+    "watchIt": {
+      "eyebrow": "Tugas pertama",
+      "titlePrefix": "Lihat cara ia menangani ",
+      "titleHl": "permintaan nyata.",
+      "subtitle": "Pelanggan bertanya di mana pesanan mereka. Di sebelah kanan adalah semua yang dilakukan agen sebelum membalas.",
+      "note": "Percakapan contoh. Nama alat yang ditampilkan adalah yang benar-benar dipanggil oleh agen."
+    },
+    "onboard": {
+      "eyebrow": "Onboarding",
+      "titlePrefix": "Enam langkah menuju ",
+      "titleHl": "hari pertama.",
+      "subtitle": "Centang semuanya. Tidak ada periode pelatihan, dan masing-masing adalah pengaturan yang Anda kontrol.",
+      "readyBadge": "Siap bekerja!",
+      "items": [
+        {
+          "t": "Ajari situs web dan file Anda",
+          "d": "Rayapi halaman, unggah dokumen, tulis sendiri.",
+          "href": "/product/knowledge-hub"
+        },
+        {
+          "t": "Tempel snippet widget",
+          "d": "Satu baris dan chat muncul di situs Anda."
+        },
+        {
+          "t": "Hubungkan Stripe atau Razorpay",
+          "d": "Agar bisa memeriksa pembayaran dan langganan."
+        },
+        {
+          "t": "Sambungkan alat MCP Anda",
+          "d": "Aktifkan hanya alat yang boleh digunakan."
+        },
+        {
+          "t": "Tentukan soal pengembalian dana",
+          "d": "Nonaktif sampai Anda mengaktifkannya."
+        },
+        {
+          "t": "Undang tim Anda",
+          "d": "Agar manusia siap saat diperlukan.",
+          "href": "/product/inbox"
+        }
+      ]
+    },
+    "customerFile": {
+      "eyebrow": "Mengenal pelanggan Anda",
+      "titlePrefix": "Berkas kasusnya ",
+      "titleHl": "untuk setiap pelanggan.",
+      "subtitle": "Sebelum menjawab, agen membuat berkas tentang orang yang dibantunya. Ketuk sumber untuk melihat apa yang ditambahkan.",
+      "sourcesLabel": "Berkas pelanggan · {n} dari {total} sumber",
+      "sampleNote": "Data contoh. Pada kenyataannya, AI melihat kode referensi bukan nama dan email pelanggan.",
+      "sources": [
+        {
+          "key": "conv",
+          "title": "Percakapan ini",
+          "how": "Mengingat apa yang dikatakan dan bisa melihat kembali detail yang diperlukan, bahkan dalam chat panjang.",
+          "rows": [
+            [
+              "Bertanya tentang",
+              "Pesanan #4821"
+            ],
+            [
+              "Ingin",
+              "Tanggal pengiriman"
+            ]
+          ]
+        },
+        {
+          "key": "hist",
+          "title": "Percakapan sebelumnya",
+          "how": "Mengetahui chat sebelumnya dengan orang yang sama, sehingga tidak pernah mengulangi diri.",
+          "rows": [
+            [
+              "Chat terakhir",
+              "Masalah login, terselesaikan"
+            ],
+            [
+              "Jumlah kontak",
+              "2"
+            ]
+          ]
+        },
+        {
+          "key": "id",
+          "title": "Identitas terverifikasi",
+          "how": "Mengonfirmasi siapa mereka dengan kode email sekali pakai atau token bertanda tangan dari aplikasi Anda sebelum menyentuh apa pun yang bersifat pribadi.",
+          "rows": [
+            [
+              "Identitas",
+              "Terverifikasi via kode email"
+            ]
+          ]
+        },
+        {
+          "key": "pay",
+          "title": "Pembayaran",
+          "how": "Mencari pembayaran dan langganan nyata di Stripe atau Razorpay, dan bisa mengirim kuitansi serta tautan pembayaran.",
+          "rows": [
+            [
+              "Paket",
+              "Growth · aktif"
+            ],
+            [
+              "Pembayaran terakhir",
+              "Dibayar, kuitansi terkirim"
+            ]
+          ]
+        },
+        {
+          "key": "mcp",
+          "title": "Sistem Anda (MCP)",
+          "how": "Memanggil alat yang Anda setujui di server MCP Anda sendiri: pesanan, akun, pemesanan, apa pun yang Anda ekspos.",
+          "rows": [
+            [
+              "Pesanan #4821",
+              "Dikirim · tiba Kamis"
+            ]
+          ]
+        },
+        {
+          "key": "kb",
+          "title": "Pengetahuan Anda",
+          "how": "Mencari di semua yang telah Anda ajarkan dan bisa membaca halaman terkini di situs Anda untuk detail terbaru.",
+          "rows": [
+            [
+              "Kebijakan pengiriman",
+              "3–5 hari kerja"
+            ]
+          ]
+        }
+      ]
+    },
+    "mcp": {
+      "eyebrow": "Plugin MCP",
+      "titlePrefix": "Permintaan akses: ",
+      "titleHl": "sistem Anda.",
+      "subtitle": "Hubungkan hingga lima server MCP, baik itu toko, CRM, atau sistem pemesanan Anda. Elpino menemukan alat mereka, dan Anda mengaktifkan tepat yang boleh digunakan agen. Coba panel kontrol di bawah.",
+      "serverTitle": "Server MCP toko Anda",
+      "toolsDiscovered": "{n} alat ditemukan",
+      "verifiedCustomers": "Pelanggan terverifikasi",
+      "anyVisitor": "Semua pengunjung",
+      "destructive": "Destruktif",
+      "changesData": "Mengubah data",
+      "readOnly": "Hanya baca",
+      "needsVerified": "Perlu pelanggan terverifikasi",
+      "whatAgentSees": "Yang bisa dilihat agen",
+      "toolsAvailable": "alat tersedia sekarang",
+      "tools": [
+        {
+          "name": "get_order",
+          "desc": "Cari pesanan dan statusnya",
+          "write": false,
+          "on": true
+        },
+        {
+          "name": "track_shipment",
+          "desc": "Pelacakan langsung untuk paket",
+          "write": false,
+          "on": true
+        },
+        {
+          "name": "list_products",
+          "desc": "Katalog dan tingkat stok",
+          "write": false,
+          "on": true
+        },
+        {
+          "name": "update_address",
+          "desc": "Mengubah alamat pengiriman",
+          "write": true,
+          "on": true
+        },
+        {
+          "name": "cancel_order",
+          "desc": "Membatalkan pesanan yang belum dikirim",
+          "write": true,
+          "on": false
+        },
+        {
+          "name": "delete_customer",
+          "desc": "Menghapus catatan pelanggan",
+          "write": true,
+          "on": false,
+          "danger": true
+        }
+      ],
+      "bullets": [
+        "Alat yang dinonaktifkan tidak terlihat oleh agen",
+        "Setiap panggilan diperiksa ulang terhadap daftar Anda di server",
+        "Alat yang mengubah data selalu memerlukan pelanggan terverifikasi",
+        "Kredensial server disimpan terenkripsi"
+      ],
+      "features": [
+        {
+          "title": "Pembayaran, bawaan",
+          "desc": "Hubungkan Stripe atau Razorpay dan agen bisa mencari pembayaran dan langganan, mengirim kuitansi dan tautan pembayaran, serta membatalkan langganan."
+        },
+        {
+          "title": "Bawa server MCP apa pun",
+          "desc": "Apa pun yang berbicara MCP berfungsi, jadi Anda memutuskan alat mana yang didapat agen."
+        },
+        {
+          "title": "Server MCP milik Elpino sendiri",
+          "desc": "Alat milik pelanggan Anda sendiri bisa membaca paket, penggunaan, dan pembayaran Elpino mereka melalui MCP."
+        }
+      ]
+    },
+    "orgChart": {
+      "eyebrow": "Tim di baliknya",
+      "titlePrefix": "Satu agen. ",
+      "titleHl": "Seluruh struktur organisasi.",
+      "subtitle": "Setiap pesan dirutekan ke spesialis yang tepat, dan tidak ada yang keluar sebelum peninjau memeriksa fakta.",
+      "router": "Router",
+      "routerNote": "memilih spesialis",
+      "reviewer": "Peninjau",
+      "reviewerNote": "memeriksa fakta draf terhadap hasil alat",
+      "polish": "Penyempurnaan",
+      "polishNote": "baru pelanggan melihatnya",
+      "footer": "Kasus sulit dieskalasi ke model penalaran yang lebih kuat, dan model cadangan menutupi gangguan penyedia.",
+      "lanes": [
+        {
+          "k": "Penjualan",
+          "d": "Paket, harga, kesesuaian"
+        },
+        {
+          "k": "Dukungan",
+          "d": "Akun, pembayaran, cara penggunaan"
+        },
+        {
+          "k": "Teknis",
+          "d": "Kesalahan, penyiapan, integrasi"
+        }
+      ]
+    },
+    "shift": {
+      "eyebrow": "Satu hari kerja",
+      "titlePrefix": "Satu shift, ",
+      "titleHl": "dari awal hingga akhir.",
+      "subtitle": "Contoh hari, hanya menggunakan hal-hal yang benar-benar dilakukan agen.",
+      "items": [
+        {
+          "time": "02:14",
+          "t": "Menjawab pertanyaan harga",
+          "d": "Tim Anda sedang tidur. Elpino menjawab dari basis pengetahuan Anda."
+        },
+        {
+          "time": "09:05",
+          "t": "Memverifikasi pelanggan, memperbaiki pembayaran",
+          "d": "Mengonfirmasinya dengan kode email, menemukan pembayaran yang gagal, mengirim tautan pembayaran baru."
+        },
+        {
+          "time": "11:20",
+          "t": "Memeriksa pesanan di toko Anda",
+          "d": "Memanggil server MCP Anda, membaca status dan membagikan pelacakan."
+        },
+        {
+          "time": "13:30",
+          "t": "Menemui sesuatu yang tidak bisa dilakukannya",
+          "d": "Mengatakannya, bertanya pada pelanggan dulu, lalu memberi tahu seluruh tim."
+        },
+        {
+          "time": "15:42",
+          "t": "Tidak ada yang tersedia? Ia tidak mengabaikannya",
+          "d": "Memberi tahu pelanggan dengan jujur dan mengajukan tiket dengan tindak lanjut email."
+        }
+      ]
+    },
+    "review": {
+      "eyebrow": "Tinjauan performa",
+      "titlePrefix": "Kartu nilai yang ",
+      "titleHl": "jujur.",
+      "subtitle": "Penilaian ilustratif, termasuk titik lemahnya.",
+      "employeeBadge": "Karyawan: Elpino",
+      "quote": "“Sangat baik dengan pertanyaan rutin dan tidak pernah melampaui batas. Jaga basis pengetahuan tetap segar dan ia akan terus membaik.”",
+      "items": [
+        {
+          "k": "Mengikuti kebijakan Anda",
+          "n": 5,
+          "note": "Hanya menjawab dari apa yang Anda setujui."
+        },
+        {
+          "k": "Tahu kapan meminta bantuan",
+          "n": 5,
+          "note": "Bertanya pada pelanggan dulu, lalu melibatkan tim Anda."
+        },
+        {
+          "k": "Tetap dalam izinnya",
+          "n": 5,
+          "note": "Hanya alat yang Anda aktifkan. Pengembalian dana nonaktif secara default."
+        },
+        {
+          "k": "Tahu apa yang tidak pernah Anda katakan",
+          "n": 2,
+          "note": "Ia tidak bisa menjawab apa yang tidak ada dalam pengetahuan Anda. Tambahkan lebih banyak untuk meningkatkan ini."
+        }
+      ]
+    },
+    "guards": {
+      "eyebrow": "Perlindungan",
+      "titlePrefix": "Buku pedoman ",
+      "titleHl": "perusahaan.",
+      "subtitle": "Aturan yang menjadi pedoman kerja Elpino. Masing-masing adalah kontrol yang Anda miliki.",
+      "items": [
+        {
+          "t": "Model tidak pernah melihat nama atau email",
+          "d": "Identitas dalam percakapan diganti dengan kode referensi sebelum AI membacanya, dan rahasia seperti kunci dan token dihapus."
+        },
+        {
+          "t": "Pengembalian dana nonaktif sampai Anda mengatakannya",
+          "d": "Tindakan yang memindahkan uang bersifat opt-in dan dikontrol oleh pemilik ruang kerja."
+        },
+        {
+          "t": "Anda menyetujui setiap alat",
+          "d": "Agen hanya melihat alat MCP yang Anda aktifkan, dan yang mengubah data memerlukan pelanggan terverifikasi."
+        },
+        {
+          "t": "Tanya dulu, baru alihkan",
+          "d": "Ketika tidak memiliki alat untuk tugas tersebut, ia mengatakannya dan bertanya sebelum melibatkan tim Anda."
+        },
+        {
+          "t": "Fakta ditinjau",
+          "d": "Langkah tinjauan memeriksa draf terhadap hasil alat sebelum dikirim."
+        },
+        {
+          "t": "Identitas sebelum apa pun yang pribadi",
+          "d": "Kode email atau token bertanda tangan dulu, sehingga tidak pernah membahas akun dengan orang asing."
+        }
+      ]
+    },
+    "compare": {
+      "eyebrow": "Bukan chatbot",
+      "titlePrefix": "Chatbot vs. ",
+      "titleHl": "agen Elpino.",
+      "headerA": "Chatbot biasa",
+      "headerB": "Agen AI Elpino",
+      "rows": [
+        [
+          "Mencari artikel dan berhenti",
+          "Mencari, memeriksa catatan, dan mengambil tindakan"
+        ],
+        [
+          "Memperlakukan semua orang sebagai orang asing",
+          "Memverifikasi identitas, mengingat chat sebelumnya"
+        ],
+        [
+          "“Silakan hubungi dukungan” saat terjebak",
+          "Bertanya dulu, memberi tahu tim, mengajukan tiket jika tidak ada yang tersedia"
+        ],
+        [
+          "Tidak bisa melihat sistem Anda",
+          "Memanggil alat MCP yang Anda setujui"
+        ],
+        [
+          "Jawaban tidak bisa dipercaya",
+          "Fakta ditinjau terhadap hasil alat"
+        ]
+      ]
+    },
+    "faq": {
+      "eyebrow": "Pertanyaan",
+      "titlePrefix": "Baik untuk ",
+      "titleHl": "diketahui.",
+      "items": [
+        [
+          "Apa itu MCP?",
+          "Model Context Protocol, cara standar bagi AI untuk memanggil alat di sistem lain. Hubungkan server MCP dan Elpino menemukan alatnya. Anda kemudian memilih mana yang boleh digunakan agen."
+        ],
+        [
+          "Berapa banyak server MCP yang bisa saya hubungkan?",
+          "Hingga lima, dengan hingga 15 alat diaktifkan per server."
+        ],
+        [
+          "Bisakah agen mengubah sesuatu di sistem saya?",
+          "Hanya melalui alat yang Anda aktifkan, dan alat yang mengubah data selalu memerlukan pelanggan yang emailnya sudah diverifikasi."
+        ],
+        [
+          "Bagaimana ia tahu siapa pelanggannya?",
+          "Dari percakapan, chat sebelumnya dengan mereka, dan langkah verifikasi: kode email sekali pakai atau token bertanda tangan dari aplikasi Anda."
+        ],
+        [
+          "Bisakah ia mengeluarkan pengembalian dana?",
+          "Hanya jika pemilik ruang kerja mengaktifkan pengembalian dana. Nonaktif secara default."
+        ],
+        [
+          "Apa yang terjadi ketika ia tidak bisa menyelesaikan sesuatu?",
+          "Ia mengatakannya dan bertanya pada pelanggan apakah ingin terhubung dengan tim Anda. Semua orang di tim mendapat peringatan gabung selama 90 detik, dan jika tidak ada yang bergabung, tiket dibuat otomatis."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Karyawan terbaru Anda siap untuk mulai bekerja.",
+      "subtitle": "Ajari bisnis Anda, sambungkan alat Anda, dan tetapkan batasannya.",
+      "ctaStart": "Mulai gratis",
+      "ctaKnowledgeHub": "Lihat Hub Pengetahuan"
+    }
+  },
+  "inbox": {
+    "hero": {
+      "badge": "Kotak masuk bersama",
+      "titlePrefix": "Satu percakapan. ",
+      "titleHl": "Semua orang yang seharusnya terlibat, ada di dalamnya.",
+      "subtitle": "AI akan melanjutkan percakapan sampai dibutuhkan campur tangan orang, seluruh tim Anda diberi tahu secara bersamaan, dan siapa pun yang bergabung akan melihat riwayat lengkapnya. Ikuti satu percakapan nyata dari pesan pertama hingga selesai.",
+      "ctaOpen": "Buka kotak masuk Anda",
+      "ctaPricing": "Lihat harga"
+    },
+    "filters": [
+      "Semua",
+      "Belum dibaca",
+      "Dibaca",
+      "Selesai"
+    ],
+    "desk": {
+      "stages": [
+        {
+          "key": "ai",
+          "label": "AI menjawab",
+          "badge": "AI",
+          "banner": "Elpino sedang menangani percakapan ini"
+        },
+        {
+          "key": "ask",
+          "label": "Butuh manusia",
+          "badge": "Butuh manusia",
+          "banner": "Setiap anggota tim mendapat notifikasi Gabung. 90 detik untuk ikut membantu"
+        },
+        {
+          "key": "join",
+          "label": "Anggota tim bergabung",
+          "badge": "Priya",
+          "banner": "Priya telah bergabung. Notifikasi hilang untuk semua orang"
+        },
+        {
+          "key": "back",
+          "label": "Kembalikan ke AI",
+          "badge": "AI",
+          "banner": "Priya mengembalikan percakapan ke Elpino"
+        },
+        {
+          "key": "done",
+          "label": "Selesai",
+          "badge": "Selesai",
+          "banner": "Selesai. Buka kembali kapan saja jika mereka membalas"
+        }
+      ],
+      "lines": [
+        {
+          "at": 0,
+          "from": "you",
+          "text": "Hai, saya baru pindah negara. Bisa tolong ubah negara penagihan di akun saya?"
+        },
+        {
+          "at": 1,
+          "from": "ai",
+          "text": "Saya tidak bisa mengubah detail penagihan sendiri. Ingin saya hubungkan Anda dengan tim kami?"
+        },
+        {
+          "at": 1,
+          "from": "you",
+          "text": "Ya, tolong"
+        },
+        {
+          "at": 2,
+          "from": "sys",
+          "text": "Priya bergabung dalam percakapan"
+        },
+        {
+          "at": 2,
+          "from": "team",
+          "text": "Hai! Saya yang akan menangani ini. Saya sudah mengubah negara penagihan Anda."
+        },
+        {
+          "at": 3,
+          "from": "sys",
+          "text": "Priya mengembalikan percakapan ke Elpino"
+        },
+        {
+          "at": 3,
+          "from": "ai",
+          "text": "Semua sudah selesai. Ada lagi yang bisa saya bantu?"
+        },
+        {
+          "at": 4,
+          "from": "you",
+          "text": "Itu saja, terima kasih!"
+        },
+        {
+          "at": 4,
+          "from": "sys",
+          "text": "Percakapan selesai"
+        }
+      ],
+      "rail": [
+        "Ruang Kerja",
+        "Kotak Masuk",
+        "Analitik",
+        "Kontak",
+        "Pengetahuan",
+        "Pengaturan"
+      ],
+      "list": [
+        {
+          "name": "Harnoor Singh",
+          "date": "21 Sep",
+          "prev": "Saya tidak bisa membagikan alamat IP siapa pun"
+        },
+        {
+          "name": "Aisha Khan",
+          "date": "Hari ini",
+          "prev": ""
+        },
+        {
+          "name": "Tom Becker",
+          "date": "19 Sep",
+          "prev": "Widget tidak muncul saat checkout"
+        },
+        {
+          "name": "Meera Iyer",
+          "date": "18 Sep",
+          "prev": "Ubah tim ke paket tahunan?"
+        }
+      ],
+      "teamInbox": "Kotak Masuk Tim",
+      "aiAssist": "Bantuan AI",
+      "searchPlaceholder": "Cari percakapan",
+      "verified": "Terverifikasi",
+      "joined": "Bergabung",
+      "join": "Gabung",
+      "priyaReplying": "Priya sedang membalas",
+      "resolvedLabel": "Selesai",
+      "aiReplying": "Elpino sedang membalas, Anda hanya melihat",
+      "elpinoAi": "Elpino AI",
+      "priyaTeam": "Priya · tim",
+      "writeReply": "Tulis balasan Anda…",
+      "send": "Kirim",
+      "reopenNote": "Selesai. Buka kembali jika mereka membalas.",
+      "lockedNote": "Gabung ke percakapan ini untuk membalas. Sampai saat itu, Elpino akan terus melayani pelanggan.",
+      "websiteVisitor": "Pengunjung situs",
+      "locationDevice": "Lokasi & perangkat",
+      "location": "Pune, India",
+      "device": "Chrome · macOS",
+      "onPage": "Di halaman /pricing",
+      "lastSeen": "Baru saja terlihat",
+      "identityVerified": "Identitas terverifikasi",
+      "signedIn": "Sudah masuk di situs web",
+      "otherConvos": "Percakapan lain",
+      "noOtherConvos": "Belum ada percakapan lain dari pengunjung ini."
+    },
+    "realThing": {
+      "eyebrow": "Tampilan sebenarnya",
+      "titlePrefix": "Inilah ",
+      "titleHl": "kotak masuk yang sesungguhnya.",
+      "subtitle": "Bukan tampilan tiruan. Semua percakapan, balasan AI, detail pengunjung, dan tombol Gabung, semuanya dalam satu layar.",
+      "imageAlt": "Kotak masuk tim Elpino: daftar percakapan, thread yang ditangani AI, serta lokasi dan perangkat pengunjung",
+      "callouts": [
+        {
+          "label": "Gabung untuk mengambil alih"
+        },
+        {
+          "label": "Filter: Semua · Belum dibaca · Dibaca · Selesai"
+        },
+        {
+          "label": "Lokasi & perangkat"
+        },
+        {
+          "label": "Otomatis ditutup setelah 24 jam tanpa aktivitas"
+        }
+      ]
+    },
+    "twoTabs": {
+      "eyebrow": "Dua tampilan",
+      "titlePrefix": "Pantau AI. ",
+      "titleHl": "Kelola tim.",
+      "subtitle": "Kotak masuk Anda memiliki tab untuk yang ditangani manusia dan tab untuk yang ditangani Elpino, sehingga tidak ada yang tersembunyi.",
+      "tabs": [
+        {
+          "label": "Kotak Masuk Tim",
+          "title": "Percakapan yang ditangani tim Anda",
+          "body": "Semua yang telah digabung, diambil alih, atau ditugaskan ke seseorang. Di sinilah tim Anda bekerja: balasan, tindak lanjut, dan thread yang sudah selesai.",
+          "rows": [
+            [
+              "Harnoor Singh",
+              "Bisa kirimkan lagi invoicenya?",
+              "Priya"
+            ],
+            [
+              "Meera Iyer",
+              "Ubah tim ke penagihan tahunan?",
+              "Sam"
+            ],
+            [
+              "Jo Alvarez",
+              "Terima kasih, itu berhasil!",
+              "Selesai"
+            ]
+          ]
+        },
+        {
+          "label": "Bantuan AI",
+          "title": "Percakapan yang ditangani Elpino",
+          "body": "Pantau AI bekerja secara real-time. Sebuah penghitung menunjukkan berapa banyak yang sedang aktif, dan Anda bisa Gabung ke thread mana pun saat Anda ingin ikut membantu.",
+          "rows": [
+            [
+              "Aisha Khan",
+              "Elpino sedang membalas…",
+              "AI"
+            ],
+            [
+              "Tom Becker",
+              "Memeriksa riwayat pembayaran Anda…",
+              "AI"
+            ],
+            [
+              "Ravi Menon",
+              "Mengirim tautan pembayaran aman",
+              "AI"
+            ]
+          ]
+        }
+      ]
+    },
+    "holders": {
+      "eyebrow": "Selalu jelas",
+      "titlePrefix": "Anda selalu tahu ",
+      "titleHl": "siapa yang menangani.",
+      "subtitle": "Setiap percakapan memiliki lencana di daftar, sehingga tidak ada yang membalas dua kali dan tidak ada yang terlewat.",
+      "items": [
+        {
+          "tag": "AI",
+          "title": "Ditangani Elpino",
+          "body": "Menjawab dari pengetahuan dan alat Anda. Anda bisa memantau setiap pesan secara langsung."
+        },
+        {
+          "tag": "Anggota tim",
+          "title": "Ditangani seseorang",
+          "body": "Ketuk Gabung chat, atau Ambil alih jika rekan kerja sedang menanganinya. AI akan mundur."
+        },
+        {
+          "tag": "Selesai",
+          "title": "Sudah selesai",
+          "body": "Thread yang selesai tetap bisa dicari, dan Anda bisa membukanya kembali dengan satu ketukan."
+        }
+      ]
+    },
+    "baton": {
+      "eyebrow": "Serah terima",
+      "titlePrefix": "Gabung. Ambil alih. ",
+      "titleHl": "Kembalikan.",
+      "subtitle": "Percakapan berpindah antara AI dan tim Anda dengan satu ketukan, dan riwayatnya ikut berpindah.",
+      "items": [
+        {
+          "who": "Elpino AI",
+          "note": "Menjawab lebih dulu"
+        },
+        {
+          "who": "Priya",
+          "note": "Mengetuk Gabung chat"
+        },
+        {
+          "who": "Sam",
+          "note": "Mengambil alih dari Priya"
+        },
+        {
+          "who": "Elpino AI",
+          "note": "Dikembalikan"
+        }
+      ],
+      "holdingNow": "Sedang ditangani oleh",
+      "stepLabel": "Langkah {n}"
+    },
+    "teamAlert": {
+      "eyebrow": "Notifikasi seluruh tim",
+      "titlePrefix": "Beri tahu seluruh tim. ",
+      "titleHl": "Satu orang menjawab.",
+      "subtitle": "Saat pelanggan meminta bantuan manusia, setiap anggota tim mendapat notifikasi Gabung secara bersamaan. Orang pertama yang mengetuk Gabung akan mengambil percakapan tersebut, notifikasi hilang untuk yang lain, dan pelanggan melihat siapa yang bergabung.",
+      "bullets": [
+        "Tidak ada satu orang pun yang dibebani sendirian, jadi tidak ada bottleneck",
+        "90 detik untuk ikut membantu sebelum tiket dibuatkan untuk Anda",
+        "Salah gabung? Kembalikan ke AI hanya dengan satu ketukan"
+      ],
+      "panelLabel": "Notifikasi kotak masuk",
+      "joinedStatus": "Bergabung",
+      "alertCleared": "Notifikasi hilang",
+      "joinChatStatus": "Gabung chat",
+      "quietStatus": "Sepi",
+      "bannerJoined": "Priya telah bergabung. Pelanggan melihat namanya.",
+      "bannerAlerting": "Memberi notifikasi ke 4 anggota tim…",
+      "bannerAsked": "Pelanggan meminta bantuan manusia"
+    },
+    "nobodyFree": {
+      "eyebrow": "Tidak ada yang terlewat",
+      "titlePrefix": "Bahkan saat semua orang ",
+      "titleHl": "sibuk.",
+      "subtitle": "Jika tidak ada yang bergabung tepat waktu, pelanggan tidak dibiarkan menatap layar berputar.",
+      "marks": [
+        {
+          "t": "0 detik",
+          "h": "Notifikasi dikirim",
+          "d": "Setiap anggota tim melihat notifikasi Gabung."
+        },
+        {
+          "t": "≤ 90 detik",
+          "h": "Yang pertama bergabung menang",
+          "d": "Notifikasi hilang untuk yang lain."
+        },
+        {
+          "t": "90 detik",
+          "h": "Tidak ada yang tersedia? Tiket dibuat",
+          "d": "Tiket dibuat secara otomatis."
+        },
+        {
+          "t": "24 jam",
+          "h": "Tindak lanjut via email",
+          "d": "Pelanggan diberi tahu akan mendapat balasan lewat email dalam 24 jam."
+        }
+      ]
+    },
+    "findAnything": {
+      "eyebrow": "Pencarian & filter",
+      "titlePrefix": "Temukan percakapan apa pun ",
+      "titleHl": "dalam sekejap.",
+      "subtitle": "Cari berdasarkan nama atau pesan dan persempit ke Semua, Belum dibaca, Dibaca, atau Selesai. Coba di sebelah kanan.",
+      "noMatch": "Tidak ada yang cocok. Coba kata lain.",
+      "convos": [
+        {
+          "n": "Harnoor Singh",
+          "p": "Saya tidak bisa membagikan alamat IP siapa pun",
+          "s": "resolved"
+        },
+        {
+          "n": "Aisha Khan",
+          "p": "Pindah negara, pertanyaan penagihan",
+          "s": "unread"
+        },
+        {
+          "n": "Tom Becker",
+          "p": "Widget tidak muncul saat checkout",
+          "s": "unread"
+        },
+        {
+          "n": "Meera Iyer",
+          "p": "Ubah tim ke penagihan tahunan?",
+          "s": "read"
+        },
+        {
+          "n": "Ravi Menon",
+          "p": "Di mana saya bisa menemukan kuitansi saya?",
+          "s": "resolved"
+        },
+        {
+          "n": "Jo Alvarez",
+          "p": "Bisa tambah anggota tim lagi?",
+          "s": "read"
+        }
+      ]
+    },
+    "context": {
+      "eyebrow": "Konteks bawaan",
+      "titlePrefix": "Jangan pernah bertanya ",
+      "titleHl": "“maaf, Anda siapa?”",
+      "subtitle": "Tim Anda membuka thread dan sudah tahu semua informasi penting.",
+      "items": [
+        {
+          "t": "Di mana mereka berada",
+          "d": "Lokasi dan konteks lokal setiap pengunjung."
+        },
+        {
+          "t": "Apa yang mereka gunakan",
+          "d": "Perangkat, browser, dan halaman yang sedang mereka lihat."
+        },
+        {
+          "t": "Siapa mereka",
+          "d": "Lencana Terverifikasi saat identitas dikonfirmasi lewat token bertanda tangan atau kode email."
+        },
+        {
+          "t": "Hal-hal sensitif, dengan aman",
+          "d": "Minta detail pribadi lewat permintaan aman satu kali, bukan di chat."
+        },
+        {
+          "t": "Seluruh riwayat",
+          "d": "Percakapan sebelumnya dengan orang yang sama, tersedia langsung di sana."
+        }
+      ],
+      "extraTitle": "Plus indikator mengetik langsung di kedua sisi",
+      "extraDesc": "Pelanggan tahu saat Anda sedang membalas, dan Anda tahu saat mereka sedang mengetik."
+    },
+    "secureRequest": {
+      "eyebrow": "Permintaan aman",
+      "titlePrefix": "Detail pribadi ",
+      "titleHl": "tidak masuk ke chat.",
+      "subtitle": "Minta informasi sensitif lewat formulir aman satu kali, sehingga tidak pernah tersimpan di transkrip.",
+      "steps": [
+        {
+          "t": "Anda butuh sesuatu yang pribadi",
+          "d": "Untuk detail yang tidak seharusnya diketik di jendela chat."
+        },
+        {
+          "t": "Kirim permintaan aman",
+          "d": "Pelanggan mendapat formulir pribadi satu kali, bukan kotak chat."
+        },
+        {
+          "t": "Kembali ke percakapan",
+          "d": "Mereka mengisinya sekali, dan tim Anda melanjutkan percakapan."
+        }
+      ],
+      "stepLabel": "Langkah {n}"
+    },
+    "afterLeave": {
+      "eyebrow": "Setelah mereka pergi",
+      "titlePrefix": "Menutup tab ",
+      "titleHl": "bukan akhir dari segalanya.",
+      "subtitle": "Elpino memberi tahu Anda secara jujur apakah balasan masih bisa menjangkau mereka.",
+      "steps": [
+        {
+          "t": "Pengunjung pergi",
+          "d": "Mereka menutup chat, atau 24 jam berlalu tanpa pesan."
+        },
+        {
+          "t": "Ada email terverifikasi?",
+          "d": "Jika mereka mengonfirmasi alamat email, mereka masih bisa dihubungi."
+        },
+        {
+          "t": "Balas lewat email",
+          "d": "Balasan Anda akan masuk ke kotak masuk email mereka. Tanpa email terverifikasi, balasan tidak bisa dikirim, dan kolom balasan akan menunjukkan hal ini."
+        }
+      ],
+      "stepLabel": "Langkah {n}"
+    },
+    "compare": {
+      "eyebrow": "Sebelum & sesudah",
+      "titlePrefix": "Dari kacau menjadi ",
+      "titleHl": "tenang.",
+      "headerA": "Tanpa kotak masuk bersama",
+      "headerB": "Dengan Elpino",
+      "rows": [
+        [
+          "Pelanggan menunggu hingga ada yang tersedia",
+          "AI membalas dalam hitungan detik, lalu seseorang bergabung jika diperlukan"
+        ],
+        [
+          "Tidak ada yang tahu siapa yang membalas",
+          "Lencana menunjukkan AI, anggota tim, atau selesai di setiap thread"
+        ],
+        [
+          "Tim saling bertanya untuk menemukan yang bertanggung jawab",
+          "Satu notifikasi Gabung menjangkau semua orang, yang pertama bergabung mengambilnya"
+        ],
+        [
+          "Konteks tersebar di sepuluh tempat",
+          "Riwayat, lokasi, perangkat, dan verifikasi dalam satu panel"
+        ],
+        [
+          "Pelanggan yang menutup tab menjadi hilang",
+          "Pengunjung terverifikasi masih bisa mendapat balasan Anda lewat email"
+        ]
+      ]
+    },
+    "faq": {
+      "eyebrow": "Pertanyaan",
+      "titlePrefix": "Baik untuk ",
+      "titleHl": "diketahui.",
+      "items": [
+        [
+          "Siapa yang bisa melihat percakapan?",
+          "Semua orang di tim Anda bisa melihat kotak masuk bersama. Setiap percakapan menunjukkan siapa yang menanganinya: AI, anggota tim, atau selesai."
+        ],
+        [
+          "Apa itu jendela waktu 90 detik?",
+          "Saat pelanggan meminta bantuan manusia, setiap anggota tim mendapat notifikasi Gabung. Jika tidak ada yang bergabung dalam 90 detik, pelanggan diberi tahu dan tiket dibuat otomatis dengan tindak lanjut lewat email."
+        ],
+        [
+          "Bisakah saya mengembalikan percakapan ke AI?",
+          "Ya. Jika Anda sudah bergabung dan itu hanya tindak lanjut sederhana, kembalikan chat ke Elpino dengan satu ketukan."
+        ],
+        [
+          "Bisakah saya membalas setelah pengunjung pergi?",
+          "Jika mereka memberikan alamat email terverifikasi, balasan Anda akan dikirim lewat email. Tanpa itu, tidak ada balasan yang bisa menjangkau mereka."
+        ],
+        [
+          "Apakah ini berfungsi di luar chat website?",
+          "Widget chat website sudah aktif sekarang. Omnichannel akan hadir pada bulan November."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Beri tim Anda satu tempat untuk membantu.",
+      "subtitle": "Mulai gratis dan undang anggota tim Anda saat sudah siap.",
+      "ctaStart": "Mulai gratis",
+      "ctaMeetAgent": "Kenali agen AI"
+    }
+  },
+  "tickets": {
+    "hero": {
+      "badge": "Tiket",
+      "titlePrefix": "Setiap pengalihan meninggalkan ",
+      "titleHl": "sebuah catatan.",
+      "subtitle": "Saat AI tidak bisa menyelesaikan tugas dan tidak ada yang siap membantu, Elpino tidak diam saja. Elpino membuat tiket berisi alasan dan ringkasan, mengirimkannya ke tempat tim Anda bekerja, dan memberi pelanggan nomor referensi yang bisa mereka sebutkan.",
+      "ctaStart": "Mulai gratis",
+      "ctaInbox": "Lihat kotak masuk"
+    },
+    "printed": {
+      "ticketBadge": "Tiket",
+      "filedAt": "Dibuat saat pengalihan AI",
+      "printing": "Mencetak…",
+      "referenceLabel": "Referensi",
+      "referenceNote": "Pelanggan dapat menyebutkan ini",
+      "fields": [
+        [
+          "Judul",
+          "Eskalasi dukungan · Aisha Khan"
+        ],
+        [
+          "Alasan",
+          "Perubahan negara penagihan perlu ditangani orang"
+        ],
+        [
+          "Ringkasan",
+          "Pindah negara dan ingin negara penagihan pada akunnya diperbarui."
+        ],
+        [
+          "Pelanggan",
+          "Aisha Khan · aisha@example.com"
+        ],
+        [
+          "Percakapan",
+          "Sudah ditautkan, cukup satu ketukan untuk membuka"
+        ],
+        [
+          "Dikirim ke",
+          "Halaman Issues"
+        ]
+      ]
+    },
+    "origins": {
+      "eyebrow": "Asal tiket",
+      "titlePrefix": "Tiga cara catatan ",
+      "titleHl": "bisa tercetak.",
+      "subtitle": "Anda tidak perlu mengingat untuk mencatatnya sendiri.",
+      "items": [
+        {
+          "tag": "Manual",
+          "t": "Rekan tim yang membuatnya",
+          "d": "Melihat sesuatu yang perlu ditindaklanjuti? Anda bisa mengubah percakapan itu menjadi tiket sendiri.",
+          "sample": [
+            "Perubahan alamat faktur",
+            "Meera meminta kami memperbarui alamat penagihan pada fakturnya."
+          ]
+        },
+        {
+          "tag": "Dibuat saat pengalihan AI",
+          "t": "AI membuatnya saat pengalihan",
+          "d": "Ketika Elpino mengalihkan obrolan dan tidak ada yang bergabung tepat waktu, Elpino membuat tiket berisi alasan dan ringkasan.",
+          "sample": [
+            "Eskalasi dukungan · Aisha Khan",
+            "Alasan: perubahan negara penagihan perlu ditangani orang."
+          ]
+        },
+        {
+          "tag": "Ditandai oleh tinjauan AI",
+          "t": "AI mengenali kewajiban yang belum terpenuhi",
+          "d": "Setelah percakapan ditutup, AI meninjaunya. Jika tim Anda masih memiliki kewajiban kepada pelanggan, AI menandai tiket dan menjelaskan alasannya.",
+          "sample": [
+            "Tindak lanjut permintaan pengembalian dana",
+            "Alasan: pelanggan diberi tahu akan diperiksa, tapi tidak ada catatan selanjutnya."
+          ]
+        }
+      ]
+    },
+    "anatomy": {
+      "eyebrow": "Anatomi sebuah tiket",
+      "titlePrefix": "Semua yang tim Anda butuhkan, ",
+      "titleHl": "sudah tertulis.",
+      "subtitle": "Ketuk satu baris untuk melihat alasan keberadaannya.",
+      "fieldLabel": "Kolom {n} dari {total}",
+      "fields": [
+        {
+          "k": "Judul",
+          "v": "Eskalasi dukungan · Aisha Khan",
+          "why": "Diberi nama sesuai pelanggan, sehingga mudah dikenali sekilas dalam daftar yang panjang."
+        },
+        {
+          "k": "Alasan",
+          "v": "Perubahan negara penagihan perlu ditangani orang",
+          "why": "Alasan AI mengalihkan percakapan, atau alasan tinjauannya menandai tiket. Tidak perlu ada yang menebak apa yang salah."
+        },
+        {
+          "k": "Ringkasan",
+          "v": "Pindah negara, ingin negara penagihan diperbarui.",
+          "why": "AI menulis ringkasan singkat percakapan agar siapa pun yang menanganinya langsung memahami situasinya."
+        },
+        {
+          "k": "Pelanggan",
+          "v": "Aisha Khan · aisha@example.com",
+          "why": "Nama dan email jika pelanggan memberikannya, agar Anda tahu kepada siapa harus membalas."
+        },
+        {
+          "k": "Percakapan",
+          "v": "Sudah ditautkan, membuka obrolan",
+          "why": "Satu ketukan untuk langsung kembali ke seluruh percakapan, lengkap dengan setiap pesan."
+        },
+        {
+          "k": "Sumber",
+          "v": "Dibuat saat pengalihan AI",
+          "why": "Menunjukkan apakah tiket dibuat oleh rekan tim, AI saat pengalihan, atau tinjauan AI."
+        },
+        {
+          "k": "Dikirim ke",
+          "v": "Trello, Asana, atau halaman Issues",
+          "why": "Tempat tiket dikirim. Jika tidak ada alat proyek yang terhubung, tiket tetap berada di halaman Issues."
+        },
+        {
+          "k": "Referensi",
+          "v": "7F3A9C21",
+          "why": "Kode singkat yang bisa disebutkan pelanggan jika menghubungi lagi."
+        }
+      ]
+    },
+    "scrubber": {
+      "eyebrow": "Hitung mundur 90 detik",
+      "titlePrefix": "Geser waktunya.",
+      "titleHl": "Lihat apa yang terjadi.",
+      "subtitle": "Jika seseorang bergabung kapan saja, tiket tidak diperlukan. Jika waktu habis, inilah rangkaian yang terjadi.",
+      "seconds": "detik",
+      "dragMe": "Geser saya",
+      "secondsAriaLabel": "Detik sejak peringatan dikirim",
+      "clock": [
+        {
+          "t": "Pelanggan setuju dialihkan ke orang",
+          "d": "Elpino bertanya dulu, dan hanya melanjutkan jika pelanggan setuju."
+        },
+        {
+          "t": "Setiap rekan tim menerima peringatan Gabung",
+          "d": "Seluruh tim diminta pada saat yang sama."
+        },
+        {
+          "t": "Tidak ada yang bergabung: tiket dibuat",
+          "d": "Judul, alasan, ringkasan, dan tautan ke percakapan."
+        },
+        {
+          "t": "Pelanggan dikirimi email, tim diberi tahu",
+          "d": "Pelanggan menerima nomor referensinya lewat email."
+        }
+      ]
+    },
+    "connect": {
+      "eyebrow": "Siap dalam satu menit",
+      "titlePrefix": "Hubungkan dengan ",
+      "titleHl": "alat yang sudah Anda gunakan.",
+      "subtitle": "Bersifat opsional. Jika dilewati, tiket akan tetap berada di halaman Issues.",
+      "stepLabel": "Langkah {n}",
+      "steps": [
+        {
+          "t": "Hubungkan Trello atau Asana",
+          "d": "Tambahkan alat proyek Anda dari pengaturan workspace."
+        },
+        {
+          "t": "Tiket dikirim ke sana",
+          "d": "Setiap tiket baru menjadi kartu atau tugas, yang isinya sudah tertulis."
+        },
+        {
+          "t": "Tetap dilacak di Elpino",
+          "d": "Halaman Issues menyimpan daftarnya dan memungkinkan Anda mencentang yang sudah selesai."
+        }
+      ]
+    },
+    "reviewScan": {
+      "badge": "Tinjauan AI",
+      "titlePrefix": "Setelah percakapan ditutup, ",
+      "titleHl": "Elpino membacanya kembali.",
+      "subtitle": "Percakapan bisa berakhir dengan sopan, tetapi janji yang diberikan masih belum terpenuhi. Ketika percakapan ditutup, AI meninjaunya, dan jika tim Anda masih memiliki kewajiban kepada pelanggan, AI menandai tiket dan memberitahu alasannya.",
+      "bullets": [
+        "Menangkap kalimat seperti “Saya akan periksa dan menghubungi Anda kembali”",
+        "Menjelaskan alasan penandaan, sehingga Anda bisa cepat menilai",
+        "Ditandai sebagai \"ditandai oleh tinjauan AI\" pada halaman Issues"
+      ],
+      "closedConvo": "Percakapan yang ditutup",
+      "statusFlagged": "Ditandai",
+      "statusReviewing": "Meninjau…",
+      "statusResolved": "Selesai",
+      "chat": [
+        [
+          "cust",
+          "Hai, pesanan saya tiba dalam keadaan rusak."
+        ],
+        [
+          "agent",
+          "Mohon maaf atas hal itu! Saya akan memeriksa pengembalian dananya dan menghubungi Anda kembali."
+        ],
+        [
+          "cust",
+          "Baik, terima kasih."
+        ],
+        [
+          "agent",
+          "Ada lagi yang bisa saya bantu?"
+        ],
+        [
+          "cust",
+          "Tidak, itu saja."
+        ]
+      ],
+      "flaggedTicketLabel": "Tiket · Ditandai oleh tinjauan AI",
+      "flaggedTitle": "Tindak lanjut permintaan pengembalian dana · Tom Becker",
+      "flaggedDesc": "Pelanggan diberi tahu bahwa pengembalian dana akan diperiksa; tidak ada catatan setelahnya."
+    },
+    "destinations": {
+      "eyebrow": "Tempat tiket berakhir",
+      "titlePrefix": "Dikirim ke alat ",
+      "titleHl": "yang sudah digunakan tim Anda.",
+      "subtitle": "Hubungkan Trello atau Asana, dan tiket langsung dikirim ke sana. Tidak menghubungkan apa pun, tiket tetap aman di halaman Issues.",
+      "cardTitle": "Eskalasi dukungan · Aisha Khan",
+      "cardReason": "Alasan: perubahan negara penagihan perlu ditangani orang",
+      "fromElpino": "Dari Elpino",
+      "items": [
+        {
+          "key": "trello",
+          "label": "Trello",
+          "note": "Menjadi kartu di board Trello Anda.",
+          "cols": [
+            "Perlu dikerjakan",
+            "Dikerjakan",
+            "Selesai"
+          ]
+        },
+        {
+          "key": "asana",
+          "label": "Asana",
+          "note": "Menjadi tugas dalam proyek Asana Anda.",
+          "cols": [
+            "Belum dimulai",
+            "Berlangsung",
+            "Selesai"
+          ]
+        },
+        {
+          "key": "issues",
+          "label": "Halaman Issues",
+          "note": "Tidak ada alat proyek yang terhubung? Tiket tetap berada di halaman Issues, tanpa perlu pengaturan apa pun.",
+          "cols": [
+            "Terbuka",
+            "",
+            "Selesai"
+          ]
+        }
+      ]
+    },
+    "customerSide": {
+      "badge": "Bukti klaim",
+      "titlePrefix": "Pelanggan tahu ",
+      "titleHl": "mereka tidak dilupakan.",
+      "subtitle": "Jika tidak ada yang bisa bergabung tepat waktu, Elpino memberi tahu pelanggan secara jujur, mengirim email agar tidak terlewat, dan memberikan nomor referensi singkat yang bisa disebutkan. Seluruh tim Anda juga diberi tahu tentang tiket baru ini.",
+      "bullets": [
+        "Pelanggan diberi tahu apa yang akan terjadi selanjutnya",
+        "Mereka menerima email berisi nomor referensi",
+        "Setiap rekan tim diberi tahu tentang tiket tersebut"
+      ],
+      "inChat": "Dalam percakapan",
+      "chatMsgPrefix": "Tim kami sedang sibuk saat ini, jadi saya sudah membuat tiket. Referensi Anda adalah ",
+      "chatMsgSuffix": ". Anda akan mendapat balasan lewat email dalam 24 jam.",
+      "inInbox": "Di kotak masuk mereka",
+      "emailSubject": "Permintaan Anda sudah kami terima",
+      "emailBodyPrefix": "Tiket ",
+      "emailBodySuffix": " sedang ditangani tim kami. Balas email ini jika ada yang ingin Anda tambahkan.",
+      "teamNotified": "Tim diberi tahu: tiket baru dari Aisha Khan"
+    },
+    "issuesBoard": {
+      "badge": "Halaman Issues",
+      "titlePrefix": "Satu daftar.",
+      "titleHl": "Centang saat selesai.",
+      "subtitle": "Setiap tiket menunjukkan asal dan tujuan pengirimannya. Tinjauan AI bahkan memberi tahu alasan penandaannya. Klik kotak untuk menandainya sebagai selesai.",
+      "openWord": "terbuka",
+      "resolvedWord": "selesai",
+      "panelTitle": "Issues",
+      "panelSubtitle": "Tiket yang dibuat dari percakapan dukungan.",
+      "markResolved": "Tandai sebagai selesai",
+      "markUnresolved": "Tandai sebagai belum selesai",
+      "rows": [
+        {
+          "t": "Eskalasi dukungan · Aisha Khan",
+          "who": "Dibuat saat pengalihan AI",
+          "where": "Tidak dikirim ke alat proyek",
+          "done": false
+        },
+        {
+          "t": "Tindak lanjut permintaan pengembalian dana · Tom Becker",
+          "who": "Ditandai oleh tinjauan AI",
+          "where": "Tiket Trello",
+          "reason": "Pelanggan diberi tahu bahwa pengembalian dana akan diperiksa; tidak ada catatan setelahnya.",
+          "done": false
+        },
+        {
+          "t": "Perubahan alamat faktur · Meera Iyer",
+          "where": "Tiket Asana",
+          "done": false
+        },
+        {
+          "t": "Eskalasi dukungan · Ravi Menon",
+          "who": "Dibuat saat pengalihan AI",
+          "where": "Tidak dikirim ke alat proyek",
+          "done": true
+        }
+      ]
+    },
+    "lifecycle": {
+      "eyebrow": "Siklus hidup sebuah tiket",
+      "titlePrefix": "Dari “bisa bicara dengan seseorang?” ",
+      "titleHl": "sampai selesai.",
+      "stepLabel": "Langkah {n}",
+      "items": [
+        {
+          "t": "Pelanggan meminta bicara dengan orang",
+          "d": "AI bertanya dulu, lalu memberi peringatan ke tim."
+        },
+        {
+          "t": "90 detik, tidak ada yang bergabung",
+          "d": "Semua orang punya kesempatan untuk mengambil percakapan itu."
+        },
+        {
+          "t": "Tiket dibuat",
+          "d": "Judul, alasan, ringkasan, dan tautan kembali ke percakapan."
+        },
+        {
+          "t": "Pelanggan dikirimi email",
+          "d": "Beserta nomor referensinya, agar tidak ada yang terasa terlewat."
+        },
+        {
+          "t": "Ditangani dan diselesaikan",
+          "d": "Tim Anda mencentangnya saat selesai."
+        }
+      ]
+    },
+    "compare": {
+      "eyebrow": "Sebelum & sesudah",
+      "titlePrefix": "Tidak ada lagi ",
+      "titleHl": "janji yang terlewat.",
+      "headerA": "Tanpa tiket",
+      "headerB": "Dengan Elpino",
+      "rows": [
+        [
+          "“Nanti akan ada yang menghubungi Anda kembali”, lalu tidak ada kabar",
+          "Tiket dengan nomor referensi yang bisa disebutkan pelanggan"
+        ],
+        [
+          "Tim menyalin detail ke alat lain secara manual",
+          "Alasan, ringkasan, dan tautan percakapan tiba dalam keadaan sudah tertulis"
+        ],
+        [
+          "Janji yang dibuat dalam percakapan terlupakan",
+          "Tinjauan AI menandai kewajiban tim yang belum terpenuhi setelah percakapan ditutup"
+        ],
+        [
+          "Tidak jelas apakah ada yang menanganinya",
+          "Status selesai berupa kotak centang dan tujuan pengiriman, dalam satu daftar"
+        ]
+      ]
+    },
+    "faq": {
+      "eyebrow": "Pertanyaan",
+      "titlePrefix": "Baik untuk ",
+      "titleHl": "diketahui.",
+      "items": [
+        [
+          "Kapan Elpino membuat tiket?",
+          "Saat Elpino mengalihkan percakapan dan tidak ada yang bergabung dalam 90 detik, serta saat tinjauannya terhadap percakapan yang sudah ditutup menemukan kewajiban yang belum terpenuhi tim Anda. Rekan tim juga bisa membuatnya secara manual."
+        ],
+        [
+          "Ke mana tiket dikirim?",
+          "Ke Trello atau Asana jika Anda sudah menghubungkannya. Jika belum, tiket tetap berada di halaman Issues, sehingga tidak ada yang terlewat."
+        ],
+        [
+          "Apa isi sebuah tiket?",
+          "Judul, alasan, ringkasan singkat, detail pelanggan, dan tautan kembali ke percakapan."
+        ],
+        [
+          "Apakah pelanggan mengetahuinya?",
+          "Ya. Mereka diberi tahu dalam percakapan, menerima email, dan diberikan nomor referensi singkat yang bisa disebutkan."
+        ],
+        [
+          "Bisakah saya menandai tiket sebagai selesai?",
+          "Ya, cukup centang dari halaman Issues."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Jangan sampai ada yang terlewat.",
+      "subtitle": "Mulai gratis dan Elpino akan menuliskan tiketnya untuk Anda.",
+      "ctaStart": "Mulai gratis",
+      "ctaMeetAgent": "Kenali agen AI"
+    }
+  },
+  "knowledgeHub": {
+    "hero": {
+      "badge": "Pusat Pengetahuan",
+      "titlePrefix": "Tanyakan apa saja. ",
+      "titleHl": "Elpino memeriksa basis pengetahuan Anda.",
+      "subtitle": "Elpino hanya menjawab berdasarkan pengetahuan yang Anda berikan. Jangan hanya percaya kata-kata kami. Lihat sendiri saat Elpino mencari di basis pengetahuan Anda di sebelah kiri dan menjawab pelanggan di sebelah kanan. Jika tidak menemukan jawabannya, Elpino akan mengatakannya.",
+      "privateNote": "Sumber privat tidak pernah digunakan untuk menjawab pelanggan."
+    },
+    "playground": {
+      "yourKnowledge": "Basis pengetahuan Anda",
+      "customer": "Pelanggan",
+      "elpinoAi": "Elpino AI",
+      "statusWaiting": "Menunggu pertanyaan",
+      "statusSearching": "Mencari di basis pengetahuan Anda…",
+      "statusFound": "Kecocokan ditemukan",
+      "statusNoMatch": "Tidak ada kecocokan yang ditemukan",
+      "privateBadge": "Privat",
+      "matchBadge": "Cocok",
+      "offersHuman": "Menawarkan bantuan agen manusia",
+      "sources": [
+        {
+          "name": "Kebijakan pengembalian dana.pdf",
+          "kind": "Dokumen"
+        },
+        {
+          "name": "Waktu pengiriman",
+          "kind": "Halaman tertulis"
+        },
+        {
+          "name": "Bantuan: atur ulang kata sandi",
+          "kind": "Halaman web"
+        },
+        {
+          "name": "Panduan eskalasi",
+          "kind": "Catatan internal"
+        }
+      ],
+      "scenes": [
+        {
+          "q": "Berapa lama waktu yang saya miliki untuk mengajukan pengembalian dana?",
+          "hit": "refund",
+          "a": "Anda dapat mengajukan pengembalian dana dalam waktu 30 hari setelah pembelian."
+        },
+        {
+          "q": "Bagaimana cara mengatur ulang kata sandi saya?",
+          "hit": "reset",
+          "a": "Pilih “Lupa kata sandi” di halaman masuk dan ikuti tautan yang kami kirim melalui email."
+        },
+        {
+          "q": "Apakah ada diskon untuk lembaga amal?",
+          "hit": null,
+          "a": "Saya tidak memiliki informasi tersebut. Apakah Anda ingin saya menghubungkan Anda dengan tim kami?"
+        },
+        {
+          "q": "Berapa lama waktu pengiriman?",
+          "hit": "ship",
+          "a": "Pesanan biasanya tiba dalam 3–5 hari kerja."
+        }
+      ]
+    },
+    "crawlWeb": {
+      "eyebrow": "Temukan",
+      "titlePrefix": "Satu tautan masuk. ",
+      "titleHl": "Seluruh situs keluar.",
+      "subtitle": "Berikan alamat beranda Anda ke Elpino dan ia akan mengikuti tautannya sendiri, hingga 50 halaman. Ia membaca halaman bantuan, harga, dan kebijakan lebih dulu, serta melewati gambar, unduhan, dan gangguan lainnya. Halaman yang dibuat dengan JavaScript dirender di browser sungguhan agar tidak ada hasil yang kosong.",
+      "pagesKept": "Halaman yang disimpan",
+      "filesSkipped": "File yang dilewati",
+      "svgAlt": "Perayapan yang menyebar dari satu halaman ke halaman-halaman yang tertaut",
+      "startLabel": "START"
+    },
+    "otherWays": {
+      "eyebrow": "Cara lain untuk menambahkan",
+      "titlePrefix": "Tidak semuanya ada ",
+      "titleHl": "di sebuah situs web.",
+      "subtitle": "Tiga cara lain untuk mengajari Elpino, untuk pengetahuan yang tidak pernah memiliki URL.",
+      "items": [
+        {
+          "title": "Sitemap",
+          "big": "20",
+          "note": "halaman yang ditarik dari sitemap Anda sekaligus"
+        },
+        {
+          "title": "File",
+          "big": ".pdf",
+          "note": "juga .docx, .txt, dan .md. Teksnya akan diekstrak untuk Anda"
+        },
+        {
+          "title": "Tulis sendiri",
+          "big": "Aa",
+          "note": "halaman kebijakan dan “cara kami bekerja”, ditulis langsung di editor"
+        }
+      ]
+    },
+    "mill": {
+      "eyebrow": "Apa yang terjadi selanjutnya",
+      "titlePrefix": "Setiap halaman melalui ",
+      "titleHl": "perjalanan yang sama.",
+      "items": [
+        {
+          "t": "Diambil dengan aman",
+          "d": "Sebagai ElpinoBot, dengan perlindungan agar tidak mengakses jaringan privat."
+        },
+        {
+          "t": "Dibersihkan",
+          "d": "Menu dan teks boilerplate dihapus, teks yang bermanfaat dipertahankan."
+        },
+        {
+          "t": "Dipecah dan disematkan",
+          "d": "Dipecah menjadi bagian-bagian dan diindeks berdasarkan makna, bukan hanya kata kunci."
+        },
+        {
+          "t": "Ditemukan saat diperlukan",
+          "d": "Bagian yang paling relevan langsung dimunculkan begitu pelanggan bertanya."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Pertanyaan",
+      "titlePrefix": "Baik untuk ",
+      "titleHl": "diketahui.",
+      "items": [
+        [
+          "Apa yang bisa saya tambahkan?",
+          "Halaman web melalui URL, sitemap (hingga 20 halaman), perayapan dari satu tautan (hingga 50 halaman), file PDF, Word, teks, dan Markdown, serta halaman yang Anda tulis sendiri."
+        ],
+        [
+          "Apakah Elpino bisa membaca halaman yang dibuat dengan JavaScript?",
+          "Ya. Jika sebuah halaman memiliki sedikit teks yang dapat dibaca, halaman itu akan dirender di browser terlebih dahulu, lalu hasilnya dibaca."
+        ],
+        [
+          "Bisakah saya menjaga konten tetap privat?",
+          "Ya. Setiap sumber memiliki sakelar visibilitas, sehingga catatan internal tetap internal."
+        ],
+        [
+          "Bisakah saya menghubungkan Notion, Zendesk, atau Confluence?",
+          "Belum bisa. Saat ini Anda dapat menambahkan sumber melalui URL, sitemap, unggahan file, atau dengan menulis halaman sendiri."
+        ],
+        [
+          "Bagaimana jika jawabannya tidak ada?",
+          "Elpino akan mengatakan bahwa ia tidak memiliki informasi tersebut dan menawarkan untuk menghubungkan pelanggan dengan tim Anda, daripada menebak-nebak."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Isi rak pengetahuan Anda yang sesungguhnya.",
+      "subtitle": "Tempelkan sebuah tautan dan Elpino mulai menjawab berdasarkan tautan itu.",
+      "ctaStart": "Mulai gratis",
+      "ctaMeetAgent": "Kenali agen AI"
+    }
+  },
+  "integrations": {
+    "hero": {
+      "badge": "Integrasi",
+      "titlePrefix": "Hubungkan. ",
+      "titleHl": "Tingkatkan level.",
+      "subtitle": "Hubungkan pembayaran, pelacak tiket, dan sistem Anda sendiri, lalu lihat kemampuan Elpino terus bertambah. Ketuk soket untuk menghubungkannya."
+    },
+    "board": {
+      "pluggedInCount": "{on} / {total} terhubung",
+      "pluggedIn": "Terhubung",
+      "tapToPlugIn": "Ketuk untuk menghubungkan",
+      "on": "Aktif",
+      "off": "Nonaktif",
+      "whatCanDo": "Yang bisa dilakukan Elpino sekarang",
+      "empty": "Belum ada yang terhubung. Ketuk soket di atas."
+    },
+    "conns": [
+      {
+        "name": "Stripe",
+        "blurb": "AI memeriksa pembayaran dan langganan yang sebenarnya.",
+        "abilities": [
+          "Melihat pembayaran dan langganan",
+          "Mengirim kwitansi dan tautan pembayaran",
+          "Membatalkan langganan atas permintaan",
+          "Pengembalian dana hanya jika Anda mengaktifkannya"
+        ]
+      },
+      {
+        "name": "Razorpay",
+        "blurb": "Alat pembayaran yang sama, untuk akun Razorpay.",
+        "abilities": [
+          "Melihat pembayaran dan langganan",
+          "Mengirim kwitansi dan tautan pembayaran",
+          "Membatalkan langganan atas permintaan",
+          "Pengembalian dana hanya jika Anda mengaktifkannya"
+        ]
+      },
+      {
+        "name": "Cashfree",
+        "blurb": "Riwayat pembayaran dan pencairan dana untuk tim Anda.",
+        "abilities": [
+          "Menemukan pesanan atau pembayaran dari sebuah percakapan",
+          "Melihat status pencairan dana dan pengembalian dana"
+        ]
+      },
+      {
+        "name": "Paystack",
+        "blurb": "Status transaksi dan pengembalian dana untuk tim Anda.",
+        "abilities": [
+          "Melihat transaksi dari sebuah percakapan",
+          "Memeriksa status pembayaran dan pengembalian dana"
+        ]
+      },
+      {
+        "name": "Trello",
+        "blurb": "Tiket akan menjadi kartu di board Anda.",
+        "abilities": [
+          "Tiket menjadi kartu Trello",
+          "Ringkasan dan tautan ke percakapan turut dilampirkan"
+        ]
+      },
+      {
+        "name": "Asana",
+        "blurb": "Tiket akan menjadi tugas di proyek Anda.",
+        "abilities": [
+          "Tiket menjadi tugas Asana",
+          "Ringkasan dan tautan ke percakapan turut dilampirkan"
+        ]
+      },
+      {
+        "name": "Server MCP Anda",
+        "blurb": "Apa pun yang mendukung MCP, dengan alat yang Anda setujui.",
+        "abilities": [
+          "Memanggil alat pada server Anda sendiri",
+          "Hingga 5 server, masing-masing dengan 15 alat aktif",
+          "Hanya alat yang Anda setujui yang terlihat",
+          "Alat yang mengubah data memerlukan pelanggan yang terverifikasi"
+        ]
+      }
+    ],
+    "how": {
+      "eyebrow": "Menghubungkan",
+      "titlePrefix": "Cukup satu menit. ",
+      "titleHl": "Tanpa perlu developer.",
+      "stepLabel": "Langkah {n}",
+      "steps": [
+        {
+          "t": "Pilih alat",
+          "d": "Buka Connect di dashboard Anda dan pilih konektor yang Anda inginkan."
+        },
+        {
+          "t": "Tempel kunci atau lakukan otorisasi",
+          "d": "Alat berbasis kunci API memerlukan kunci Anda. Asana menggunakan proses masuk dan layar izin yang biasa."
+        },
+        {
+          "t": "Kami memeriksanya terlebih dahulu",
+          "d": "Elpino menguji kunci Anda ke penyedia sebelum menyimpannya, dan menyimpannya dalam bentuk terenkripsi."
+        }
+      ]
+    },
+    "families": {
+      "eyebrow": "Katalog",
+      "titlePrefix": "Tiga jenis ",
+      "titleHl": "koneksi.",
+      "tabs": {
+        "payments": "Pembayaran",
+        "tickets": "Tiket",
+        "systems": "Sistem Anda"
+      },
+      "paymentsNote": "Saat ini, tindakan pembayaran AI berfungsi dengan Stripe dan Razorpay. Cashfree dan Paystack memberikan konteks pembayaran kepada tim Anda."
+    },
+    "safe": {
+      "badge": "Aman secara default",
+      "titlePrefix": "Terhubung, ",
+      "titleHl": "bukan terekspos.",
+      "items": [
+        {
+          "t": "Kunci tetap terenkripsi",
+          "d": "Kredensial disimpan dalam bentuk terenkripsi, dan Elpino memverifikasinya dengan penyedia sebelum menyimpannya."
+        },
+        {
+          "t": "Akses baca sudah cukup untuk pencarian",
+          "d": "Untuk Stripe, gunakan kunci terbatas dengan akses baca ke pelanggan dan pembayaran."
+        },
+        {
+          "t": "Uang hanya berpindah jika Anda mengizinkannya",
+          "d": "Pengembalian dana nonaktif secara default. Pemilik workspace yang memutuskan apakah AI boleh menerbitkannya."
+        },
+        {
+          "t": "Anda menyetujui setiap alat MCP",
+          "d": "AI hanya melihat alat yang Anda aktifkan, dan setiap panggilan diperiksa ulang di server."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Pertanyaan",
+      "titlePrefix": "Baik untuk ",
+      "titleHl": "diketahui.",
+      "items": [
+        [
+          "Alat apa saja yang bisa saya hubungkan?",
+          "Stripe, Razorpay, Cashfree, dan Paystack untuk pembayaran, Trello dan Asana untuk tiket, serta server MCP Anda sendiri untuk hal lainnya."
+        ],
+        [
+          "Apa yang bisa dilakukan AI dengan pembayaran?",
+          "Dengan Stripe atau Razorpay terhubung, AI dapat melihat pembayaran dan langganan, mengirim kwitansi dan tautan pembayaran, serta membatalkan langganan bila diminta. Pengembalian dana nonaktif kecuali Anda mengaktifkannya."
+        ],
+        [
+          "Apakah saya perlu memiliki keahlian teknis?",
+          "Tidak untuk pembayaran atau tiket. Anda hanya perlu menempel kunci, atau masuk ke Asana. Server MCP memerlukan seseorang yang sudah membuatnya."
+        ],
+        [
+          "Apakah Shopify, Slack, atau HubSpot didukung?",
+          "Belum sebagai konektor sekali klik saat ini. Jika sistem Anda memiliki server MCP, Anda dapat menghubungkannya, dan Anda bisa memberi tahu kami apa yang Anda inginkan selanjutnya."
+        ],
+        [
+          "Ke mana tiket akan dikirim?",
+          "Ke Trello atau Asana jika terhubung. Jika tidak, tiket akan berada di halaman Issues Anda."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Ada yang Anda butuhkan tapi belum tersedia?",
+      "subtitle": "Beri tahu kami alat apa yang Anda inginkan selanjutnya, atau hubungkan sendiri melalui MCP.",
+      "ctaStart": "Mulai gratis",
+      "ctaRequest": "Ajukan permintaan integrasi"
+    }
+  },
+  "securityGuide": {
+    "sticky": {
+      "securityLabel": "Keamanan",
+      "reportIssue": "Laporkan masalah"
+    },
+    "hero": {
+      "badge": "Panduan keamanan",
+      "title1": "Dibangun untuk ",
+      "title2": "melindungi data Anda.",
+      "subtitle": "Panduan ini menjelaskan apa yang dilindungi di aplikasi web, gateway, serta layanan auth, workspace, dan AI — apa yang kami jamin dan mengapa Anda bisa mengandalkannya, tanpa rincian langkah demi langkah mengenai mekanisme internalnya.",
+      "ctaBlueprint": "Lihat blueprint-nya",
+      "ctaChapters": "Baca bab-babnya",
+      "ctaTrust": "Trust Center",
+      "register": {
+        "label": "Register gambar",
+        "chapters": "Bab",
+        "controlsDescribed": "Kontrol yang dijelaskan",
+        "componentsCovered": "Komponen yang tercakup",
+        "componentsValue": "6",
+        "reviewedAgainst": "Ditinjau terhadap",
+        "reviewedValue": "produk itu sendiri"
+      }
+    },
+    "blueprint": {
+      "fig": "Gbr. 00 · Sekilas pandang",
+      "title": "Apa yang terjadi pada sebuah request",
+      "subtitle": "Setiap tanda panah dienkripsi atau diautentikasi. Arahkan ke bagian mana pun untuk melihat artinya dalam praktik.",
+      "readChapter": "Baca bab"
+    },
+    "nodes": {
+      "widget": {
+        "label": "Pengunjung",
+        "sub": "Chat widget",
+        "guards": "Tamu tetap menjadi tamu. Pengunjung yang sudah login membuktikan identitasnya lewat kredensial bertanda tangan atau kode email, yang hanya disimpan di memori widget itu sendiri."
+      },
+      "team": {
+        "label": "Tim Anda",
+        "sub": "Dashboard",
+        "guards": "Kata sandi tidak pernah disimpan dalam bentuk yang bisa dibaca, login Google diverifikasi di server kami, dan Anda bisa mengakhiri sesi apa pun dari jarak jauh."
+      },
+      "elpino": {
+        "label": "Elpino",
+        "sub": "Memverifikasi, melindungi, menjawab",
+        "guards": "Setiap request diperiksa sebelum apa pun dijalankan, detail privat diganti sebelum model AI melihatnya, dan AI bekerja dalam batasan yang tidak bisa dinegosiasikan."
+      },
+      "google": {
+        "label": "Google",
+        "sub": "Login",
+        "guards": "Hanya dipercaya setelah server kami sendiri memverifikasinya secara independen."
+      },
+      "pay": {
+        "label": "Pembayaran",
+        "sub": "Razorpay · Stripe",
+        "guards": "Notifikasi pembayaran hanya diterima dengan tanda tangan yang terverifikasi, dan tidak pernah bisa diputar ulang untuk mereset penggunaan Anda."
+      },
+      "models": {
+        "label": "Penyedia AI",
+        "sub": "Model",
+        "guards": "Mereka melihat placeholder yang aman, bukan detail asli, tidak pernah rahasia, dan data Anda tidak digunakan untuk melatih model umum."
+      }
+    },
+    "chaptersSection": {
+      "label": "Bab-babnya",
+      "title1": "Dua belas bab. ",
+      "title2": "Tidak ada yang dilewatkan.",
+      "subtitle": "Setiap kontrol menyebutkan bagian sistem tempatnya berada dan jaminan yang diberikan kepada Anda — bukan mekanisme pastinya.",
+      "contents": "Daftar isi"
+    },
+    "chapters": {
+      "accounts": {
+        "title": "Akun & sesi",
+        "kicker": "Siapa yang ada di tim Anda, dan bagaimana kami memastikannya.",
+        "intro": "Pendaftaran, login, dan setiap sesi setelahnya. Kata sandi tidak pernah disimpan dalam bentuk yang bisa dibaca, kode verifikasi cepat kedaluwarsa, dan sesi bisa diakhiri dari server kapan saja.",
+        "stats": [
+          "Kata sandi di-hash, tidak pernah disimpan",
+          "Kode cepat kedaluwarsa",
+          "Sesi yang bisa Anda cabut"
+        ],
+        "controls": {
+          "1.1": {
+            "title": "Kata sandi di-hash, tidak pernah disimpan",
+            "text": "Kata sandi Anda tidak pernah disimpan di mana pun dalam bentuk yang bisa dibaca kembali oleh siapa pun — bahkan oleh kami. Proses pengecekannya tidak bisa membocorkan seberapa dekat sebuah tebakan yang salah."
+          },
+          "1.2": {
+            "title": "Kode verifikasi email",
+            "text": "Akun baru mengonfirmasi alamatnya dengan kode berumur pendek. Hanya hash aman dari kode itu yang disimpan, kodenya cepat kedaluwarsa, dan hanya beberapa kali percobaan salah yang diperbolehkan sebelum Anda perlu kode baru."
+          },
+          "1.3": {
+            "title": "Login Google diperiksa di server",
+            "text": "Popup login Google berjalan di browser Anda, tetapi server kami memverifikasinya secara independen sebelum dipercaya, dan selalu membuat Anda masuk ke akun yang sama berdasarkan email terverifikasi Anda — tidak pernah ke akun kedua yang tidak terhubung."
+          },
+          "1.4": {
+            "title": "Token sesi bertanda tangan",
+            "text": "Sesi Anda adalah token bertanda tangan yang selalu bisa diverifikasi sendiri oleh server kami — tidak bisa dipalsukan, diubah, atau diputar ulang menjadi sesuatu yang bukan aslinya."
+          },
+          "1.5": {
+            "title": "Cookie sesi yang terkunci rapat",
+            "text": "Cookie sesi Anda tidak bisa dibaca oleh skrip halaman, dan hanya melewati koneksi yang aman."
+          },
+          "1.6": {
+            "title": "Keluar dari semua perangkat",
+            "text": "Logout membuat semua sesi Anda tidak valid dengan cepat. Jika kami tidak bisa memastikan sebuah sesi masih valid, sesi itu ditolak, bukan diloloskan."
+          },
+          "1.7": {
+            "title": "Redirect yang aman",
+            "text": "Setelah login, Anda hanya akan diarahkan ke halaman di situs kami sendiri — tidak pernah ke tempat lain, apa pun bentuk link yang dibuat."
+          },
+          "1.8": {
+            "title": "Undangan tim",
+            "text": "Link undangan tidak bisa ditebak dan kedaluwarsa secara otomatis, dan pemilik yang menentukan apakah anggota bisa mengundang orang lain."
+          }
+        }
+      },
+      "front-door": {
+        "title": "Pintu depan",
+        "kicker": "Apa yang dilakukan situs web sebelum sebuah request diteruskan lebih jauh.",
+        "intro": "Aplikasi web adalah hal pertama yang disentuh browser. Ia mengeraskan browser, membatasi penyalahgunaan, dan memvalidasi input sebelum diteruskan.",
+        "stats": [
+          "Tidak bisa di-frame",
+          "Penyalahgunaan dibatasi",
+          "Gagal secara tertutup"
+        ],
+        "controls": {
+          "2.1": {
+            "title": "Header pengerasan browser",
+            "text": "Setiap halaman kecuali chat widget dilindungi dari clickjacking, dijaga dari content-type sniffing, dan izin perangkat sensitif seperti kamera dan lokasi dimatikan secara default. Widget adalah satu-satunya pengecualian yang disengaja, karena ia harus hidup di dalam iframe di situs Anda."
+          },
+          "2.2": {
+            "title": "Batas penyalahgunaan bersama",
+            "text": "Formulir publik dilindungi oleh rate limit yang dibagikan di semua server yang kami jalankan, sehingga penyalahgunaan dari satu tempat tidak bisa lolos begitu saja hanya dengan mengalihkan ke server lain."
+          },
+          "2.3": {
+            "title": "Gagal secara tertutup",
+            "text": "Jika pembatas penyalahgunaan tidak bisa dijangkau, request ditolak, bukan diloloskan."
+          },
+          "2.4": {
+            "title": "Input yang tervalidasi dan dibatasi panjangnya",
+            "text": "Setiap formulir diperiksa dan dibatasi ukurannya di server sebelum diproses — tidak pernah dipercaya hanya karena browser sudah memvalidasinya."
+          }
+        }
+      },
+      "gateway": {
+        "title": "Gateway",
+        "kicker": "Satu pintu untuk backend, tertutup secara default.",
+        "intro": "Setiap panggilan ke backend melewati satu gateway. Aturannya sederhana: jika sebuah rute tidak secara eksplisit ditandai publik, rute itu harus membuktikan bahwa ia berhak ada di sana.",
+        "stats": [
+          "Tertutup secara default",
+          "Daftar publik yang eksplisit",
+          "Koneksi live yang terverifikasi"
+        ],
+        "controls": {
+          "3.1": {
+            "title": "Tertutup secara default",
+            "text": "Setiap rute memerlukan bukti bahwa ia adalah panggilan internal yang sah, kecuali secara eksplisit ditandai publik. Jika pengecekan itu tidak dikonfigurasi, gateway menolak semuanya alih-alih gagal terbuka."
+          },
+          "3.2": {
+            "title": "Daftar publik yang singkat dan eksplisit",
+            "text": "Hanya pemanggil yang benar-benar tidak bisa memegang kredensial internal yang bersifat publik: chat widget, analitik halaman, webhook pembayaran, dan link aman sekali pakai. Masing-masing ditandai secara sengaja, per rute."
+          },
+          "3.3": {
+            "title": "Hanya origin yang eksplisit",
+            "text": "API hanya menjawab browser dari daftar origin yang dikenal dan disetujui — tidak pernah dari sembarang tempat yang kebetulan bertanya."
+          },
+          "3.4": {
+            "title": "Koneksi live yang terverifikasi",
+            "text": "Koneksi live-view memerlukan kredensial terverifikasi, terikat pada workspace, dengan masa berlaku. Apa pun yang lain langsung ditolak."
+          },
+          "3.5": {
+            "title": "Push internal juga dijaga",
+            "text": "Endpoint yang digunakan layanan untuk mendorong notifikasi live ke dashboard memerlukan bukti internal yang sama, sehingga tidak ada pihak luar yang bisa membuat layar teman satu tim berbunyi."
+          }
+        }
+      },
+      "visitors": {
+        "title": "Pengunjung & identitas",
+        "kicker": "Membedakan pelanggan yang sudah login dari orang yang sekadar mengetik email.",
+        "intro": "Nama, email, atau nomor pesanan bukanlah bukti identitas seseorang. Bantuan akun hanya terbuka setelah bukti identitas yang nyata, dan bukti itu cepat kedaluwarsa.",
+        "stats": [
+          "Bukti nyata diperlukan",
+          "Sesi kedaluwarsa otomatis",
+          "Verifikasi dengan batas waktu"
+        ],
+        "controls": {
+          "4.1": {
+            "title": "Tamu tetap menjadi tamu",
+            "text": "Nama, email, telepon, atau referensi pembayaran yang diketik tidak pernah dianggap sebagai bukti identitas. Tamu bisa chat dan meninggalkan detail kontak, tetapi itu tidak membuka alat privat apa pun dan tidak pernah digabungkan dengan riwayat orang lain."
+          },
+          "4.2": {
+            "title": "Identitas bertanda tangan dari situs Anda sendiri",
+            "text": "Untuk pelanggan yang sudah login, server Anda sendiri menjamin identitas mereka dengan kredensial bertanda tangan berumur pendek yang hanya bisa dibuat bersama oleh Anda dan Elpino. Detail kontak baru dianggap terverifikasi ketika sistem Anda mengatakan begitu."
+          },
+          "4.3": {
+            "title": "Satu penukaran, satu sesi",
+            "text": "Setiap bukti identitas digunakan sekali, lalu ditukar dengan sesi baru miliknya sendiri — tidak ada yang bisa digunakan ulang yang disimpan, dan apa yang disimpan tidak bisa diubah kembali menjadi aslinya."
+          },
+          "4.4": {
+            "title": "Sesi berumur pendek",
+            "text": "Sesi kedaluwarsa otomatis setelah periode tidak aktif, atau waktu tetap sejak login — mana yang lebih dulu terjadi. Sesi hanya disimpan di memori widget itu sendiri, tidak pernah di penyimpanan browser atau URL."
+          },
+          "4.5": {
+            "title": "Rotasi dan logout",
+            "text": "Merotasi kredensial identitas Anda langsung membuat tidak valid semua sesi yang menggunakan kredensial lama. Logout mencabut sesi di server kami, dan sesi lama dibersihkan secara otomatis."
+          },
+          "4.6": {
+            "title": "Kode email untuk tamu",
+            "text": "Pengunjung juga bisa memverifikasi via email dengan kode sekali pakai yang singkat, dibatasi kecepatannya untuk mencegah penyalahgunaan. Verifikasi hanya membuka satu percakapan itu, dan hanya untuk waktu terbatas."
+          },
+          "4.7": {
+            "title": "Setiap request diperiksa ulang",
+            "text": "Setiap pembacaan dan penulisan yang terautentikasi secara independen memeriksa ulang siapa yang meminta, workspace mana yang menjadi lingkupnya, dan apakah akses itu masih valid — tidak ada yang dipercaya hanya karena valid sesaat yang lalu."
+          }
+        }
+      },
+      "ai": {
+        "title": "Tali kekang AI",
+        "kicker": "Apa yang bisa dan tidak bisa dilakukan AI, ditegakkan oleh backend, bukan dengan meminta baik-baik.",
+        "intro": "Model mengusulkan; backend memutuskan. Alat, identitas, batasan, dan uang semuanya berada di luar model, di tempat yang tidak bisa dinegosiasikan lewat pesan yang cerdik.",
+        "stats": [
+          "Pekerjaan terbatas",
+          "Alat dikendalikan backend",
+          "Tinjauan independen"
+        ],
+        "controls": {
+          "5.1": {
+            "title": "Satu balasan, satu pemilik",
+            "text": "Sebelum balasan AI disimpan, sistem secara independen memastikan percakapan itu masih dimiliki AI dan pertanyaan yang dijawab masih yang terbaru. AI tidak bisa memotong pembicaraan tim Anda atau menjawab sesuatu yang sudah berlalu."
+          },
+          "5.2": {
+            "title": "Pekerjaan terbatas",
+            "text": "Setiap putaran AI memiliki batas atas yang ketat tentang seberapa banyak yang bisa dilakukannya. Proses yang macet atau berulang otomatis dihentikan, tidak pernah dibiarkan terus berjalan."
+          },
+          "5.3": {
+            "title": "Backend memilih alatnya",
+            "text": "Alat mana yang bisa digunakan AI ditentukan sepenuhnya oleh konfigurasi workspace Anda sendiri dan status verifikasi pelanggan — model tidak bisa memberi dirinya sendiri sebuah alat, menyatakan data publik, atau menjangkau workspace lain."
+          },
+          "5.4": {
+            "title": "Alat akun membutuhkan pelanggan terverifikasi",
+            "text": "Pencarian pembayaran dan sistem terhubung hanya tersedia setelah pelanggan membuktikan identitasnya, dan hanya bertindak berdasarkan identitas yang sudah tercatat — tidak pernah berdasarkan apa pun yang dikatakan kepada model."
+          },
+          "5.5": {
+            "title": "Pesan adalah data, bukan instruksi",
+            "text": "Pesan pelanggan, dokumen, dan hasil alat mencapai model dengan label yang jelas sebagai informasi yang tidak dipercaya. Instruksi yang tersembunyi di dalamnya tidak diikuti."
+          },
+          "5.6": {
+            "title": "Opini kedua",
+            "text": "Pemeriksaan independen yang terpisah menilai setiap draf balasan terhadap bukti yang benar-benar dikumpulkan AI. Klaim yang tidak didukung dikembalikan untuk ditulis ulang, dan yang tetap gagal diserahkan ke seseorang."
+          },
+          "5.7": {
+            "title": "Pergerakan uang lewat gerbang",
+            "text": "Refund AI dimatikan sampai pemilik workspace mengaktifkannya, dan bahkan setelah itu tetap dibatasi dan dikunci otomatis. Refund yang dicoba ulang tidak akan pernah diterbitkan dua kali, dan membatalkan subscription tidak pernah menghapus waktu yang sudah Anda bayar."
+          },
+          "5.8": {
+            "title": "Jejak audit untuk setiap proses",
+            "text": "Setiap proses AI menyimpan catatan tentang apa yang dilakukannya dan apa yang digunakannya untuk melakukannya. Apa pun yang menyangkut uang juga dicatat sebagai catatan yang bisa dilihat tim Anda."
+          }
+        }
+      },
+      "private-data": {
+        "title": "Data privat",
+        "kicker": "Apa yang sebenarnya dilihat model.",
+        "intro": "Sebelum request apa pun mencapai model AI, detail yang bisa mengidentifikasi diganti dengan placeholder yang aman. Coba di bawah ini dengan teks Anda sendiri.",
+        "stats": [
+          "Detail diganti lebih dulu",
+          "Rahasia dihapus seluruhnya",
+          "Aturan yang sama, semua penyedia"
+        ],
+        "controls": {
+          "6.1": {
+            "title": "Detail asli tidak pernah mencapai model",
+            "text": "Nama, email, nomor telepon, alamat, serta detail pesanan atau pembayaran tidak pernah dikirim ke model AI apa adanya. Kami menggantinya dengan placeholder yang aman terlebih dahulu, dan hanya mengembalikan nilai aslinya setelahnya, di server kami sendiri — tidak pernah di dalam apa pun yang dilihat model."
+          },
+          "6.2": {
+            "title": "Rahasia dihapus, bukan hanya disembunyikan",
+            "text": "Kata sandi, API key, token, dan kode sekali pakai dihapus seluruhnya sebelum apa pun mencapai model — tidak disamarkan, hanya dihilangkan."
+          },
+          "6.3": {
+            "title": "Link sensitif dibersihkan",
+            "text": "Link yang membawa token akses atau parameter sensitif lainnya dibersihkan sebelum sempat dibaca oleh model."
+          },
+          "6.4": {
+            "title": "Fakta pembayaran, bukan catatan pembayaran",
+            "text": "Alat pembayaran hanya mengembalikan ringkasan yang aman — status dan tanggal — tidak pernah detail kartu atau rekening mentah, dan alasan kegagalan disederhanakan alih-alih diteruskan sebagai teks bebas."
+          },
+          "6.5": {
+            "title": "Aturan yang sama untuk setiap model",
+            "text": "Perlindungan yang sama berjalan tidak peduli penyedia AI mana yang menjawab, termasuk saat kami beralih ke penyedia lain. Percakapan dan dokumen Anda tidak pernah digunakan untuk melatih model tujuan umum."
+          }
+        }
+      },
+      "integrations": {
+        "title": "Integrasi & request keluar",
+        "kicker": "Saat Elpino harus menjangkau URL yang Anda berikan.",
+        "intro": "Meng-crawl situs Anda, membaca sebuah halaman, atau memanggil sistem yang terhubung semuanya berarti mengambil URL yang diketikkan seseorang. Setiap request semacam itu dikunci rapat agar tidak bisa diarahkan balik ke jaringan kami — atau jaringan Anda.",
+        "stats": [
+          "Terenkripsi saat disimpan",
+          "Tidak bisa menjangkau jaringan privat",
+          "Dibatasi & diberi batas waktu"
+        ],
+        "controls": {
+          "7.1": {
+            "title": "Kredensial dienkripsi saat disimpan",
+            "text": "Setiap key atau token yang Anda hubungkan — Stripe, Razorpay, Trello, dan sejenisnya — dienkripsi sebelum pernah disimpan. Salinan database saja tidak bisa mengembalikannya."
+          },
+          "7.2": {
+            "title": "Request keluar tidak bisa diarahkan ke dalam",
+            "text": "Saat kami mengambil URL atas nama Anda — meng-crawl situs Anda, memanggil sistem yang terhubung — kami memastikan itu tidak bisa dialihkan ke jaringan privat atau infrastruktur internal, termasuk milik kami."
+          },
+          "7.3": {
+            "title": "Redirect diperiksa di setiap langkah",
+            "text": "Kami mengikuti redirect dengan hati-hati, memeriksa setiap lompatan alih-alih mempercayai tujuan akhir, dan selalu melalui koneksi standar yang aman."
+          },
+          "7.4": {
+            "title": "Sistem yang terhubung dibatasi",
+            "text": "Koneksi ke alat Anda sendiri dibatasi ukuran dan waktunya, sehingga tidak bisa digunakan untuk menarik data tanpa batas atau menggantung tanpa henti."
+          },
+          "7.5": {
+            "title": "Admin menyetujui setiap alat",
+            "text": "Alat yang terhubung dimatikan sampai admin menyetujuinya. Alat yang bisa mengubah data ditandai secara terpisah, dan masih membutuhkan pelanggan terverifikasi bahkan ketika servernya sendiri publik."
+          },
+          "7.6": {
+            "title": "Putuskan koneksi berarti hilang",
+            "text": "Saat Anda memutuskan sebuah integrasi, token dan kredensial yang tersimpan langsung dihapus."
+          }
+        }
+      },
+      "secure-links": {
+        "title": "Serah terima yang aman",
+        "kicker": "Saat pelanggan harus mengirimkan sesuatu yang sensitif.",
+        "intro": "Jangan pernah menempelkan key ke dalam chat. Seorang anggota tim bisa memintanya lewat link sekali pakai, dan chat hanya menyimpan link itu.",
+        "stats": [
+          "Link yang tidak bisa ditebak",
+          "Kedaluwarsa otomatis",
+          "Dienkripsi secara terpisah"
+        ],
+        "controls": {
+          "8.1": {
+            "title": "Chat tidak pernah menyimpan rahasianya",
+            "text": "Pemberitahuan di percakapan menyebutkan apa yang diminta dan membawa sebuah link — tidak pernah nilai itu sendiri."
+          },
+          "8.2": {
+            "title": "Link yang tidak bisa ditebak dan berumur pendek",
+            "text": "Link itu sendiri adalah seluruh bukti otorisasi pelanggan, jadi dibuat tidak bisa ditebak, dan kedaluwarsa secara otomatis sebelum bisa menjadi risiko yang bertahan."
+          },
+          "8.3": {
+            "title": "Dienkripsi dengan key-nya sendiri",
+            "text": "Apa pun yang diserahkan disegel menggunakan key yang benar-benar terpisah dari key yang melindungi kredensial Anda yang lain, sehingga masing-masing bisa dirotasi — atau, dalam kasus terburuk, terekspos — tanpa memengaruhi yang lain."
+          },
+          "8.4": {
+            "title": "Dibatasi dan dibersihkan",
+            "text": "Pengiriman dibatasi ukurannya, dan apa pun yang kedaluwarsa otomatis dan permanen dihapus dalam jadwal rutin, hanya menyisakan catatan bahwa sesuatu terjadi — tidak pernah apa isinya."
+          }
+        }
+      },
+      "money": {
+        "title": "Uang & penagihan",
+        "kicker": "Pembayaran, perpanjangan, dan batasan yang terkait dengannya.",
+        "intro": "Apa pun yang menggerakkan uang diverifikasi dua kali: sekali bahwa pesan itu benar-benar datang dari penyedia pembayaran, dan sekali bahwa itu tidak bisa diterapkan dua kali.",
+        "stats": [
+          "Hanya tanda tangan yang terverifikasi",
+          "Aman dari replay",
+          "Tidak bisa charge dobel"
+        ],
+        "controls": {
+          "9.1": {
+            "title": "Webhook dan checkout bertanda tangan",
+            "text": "Notifikasi pembayaran hanya diterima dengan tanda tangan yang valid dan terverifikasi dari penyedianya — apa pun yang lain, termasuk yang hampir mirip, ditolak sepenuhnya."
+          },
+          "9.2": {
+            "title": "Replay tidak bisa mereset penggunaan",
+            "text": "Notifikasi pembayaran yang tiba lebih dari sekali — diputar ulang, atau sekadar dikirim dua kali — tidak akan pernah bisa mengembalikan ke nol penggunaan yang sudah dipakai atau memberi kredit ulang."
+          },
+          "9.3": {
+            "title": "Auto-recharge tidak bisa charge dobel",
+            "text": "Pemeriksaan bahwa sebuah top-up masih dalam batasnya dan pemesanannya yang sebenarnya terjadi sebagai satu langkah atomik, dan saldo Anda hanya dikreditkan setelah sebuah pembayaran dikonfirmasi dan berhasil ditangkap."
+          },
+          "9.4": {
+            "title": "Setiap pergerakan uang tercatat",
+            "text": "Setiap event pembayaran dari penyedia dituliskan ke jejak audit, dan setiap tindakan pembayaran yang dilakukan AI mendapat log terpisahnya sendiri."
+          },
+          "9.5": {
+            "title": "Batasan paket ditegakkan di server",
+            "text": "Fitur yang dibatasi paket diperiksa di backend, tidak hanya disembunyikan di antarmuka, dan batasan seat dihitung dari keanggotaan yang nyata — bukan dari apa yang diklaim browser."
+          }
+        }
+      },
+      "lifecycle": {
+        "title": "Siklus hidup data",
+        "kicker": "Di mana data tinggal, berapa lama, dan bagaimana ia hilang.",
+        "intro": "Data Anda dibatasi lingkupnya pada workspace Anda, kedaluwarsa saat seharusnya, dan bisa dihapus oleh Anda.",
+        "stats": [
+          "Dibatasi lingkup ke workspace",
+          "Dibersihkan otomatis",
+          "Bisa Anda hapus"
+        ],
+        "controls": {
+          "10.1": {
+            "title": "Dibatasi lingkup ke workspace Anda",
+            "text": "Percakapan, pengetahuan, pelanggan, dan pengaturan semuanya milik satu workspace, dan setiap pencarian dibatasi lingkupnya ke situ — tidak ada yang berpindah secara tidak sengaja."
+          },
+          "10.2": {
+            "title": "Yang khusus-tim tetap khusus-tim",
+            "text": "Catatan yang ditandai khusus-tim disaring sebelum sebuah percakapan pernah ditampilkan ke widget pengunjung."
+          },
+          "10.3": {
+            "title": "Hal-hal berumur pendek kedaluwarsa",
+            "text": "Kode verifikasi, kredensial sesi, dan konten link aman semuanya otomatis kedaluwarsa dan dibersihkan — tidak ada yang berumur pendek dibiarkan tersimpan tanpa batas."
+          },
+          "10.4": {
+            "title": "Hapus workspace Anda",
+            "text": "Menghapus workspace langsung membatalkan subscription-nya dan menghapus catatannya, dengan batas waktu akhir yang tegas untuk penghapusan penuh yang tercantum dalam kebijakan privasi."
+          },
+          "10.5": {
+            "title": "Keluar atau hapus akun Anda",
+            "text": "Orang bisa meninggalkan sebuah workspace, dan sebuah akun bisa dihapus seluruhnya dari Settings."
+          }
+        }
+      },
+      "infrastructure": {
+        "title": "Infrastruktur",
+        "kicker": "Bagaimana layanan itu sendiri dijalankan.",
+        "intro": "Kebersihan sederhana dan tidak mewah yang mencegah layanan internal menjadi layanan publik.",
+        "stats": [
+          "Tidak bisa dijangkau publik",
+          "Jejak minimal",
+          "Dipantau"
+        ],
+        "controls": {
+          "11.1": {
+            "title": "Layanan internal tidak bisa dijangkau publik",
+            "text": "Layanan backend dan database kami sama sekali tidak terekspos ke internet publik — hanya satu titik masuk yang diperkuat yang terekspos."
+          },
+          "11.2": {
+            "title": "Build produksi yang ramping",
+            "text": "Apa yang benar-benar berjalan di produksi tidak membawa apa pun yang berlebihan — tidak ada alat pengembangan, tidak ada dependensi yang tidak dipakai."
+          },
+          "11.3": {
+            "title": "Batasan, health check, dan rotasi log",
+            "text": "Setiap layanan berjalan dengan batasan resource, health check otomatis, dan kebijakan restart, serta log dirotasi sehingga tidak bisa membesar tanpa batas."
+          },
+          "11.4": {
+            "title": "Rahasia tetap di luar source code",
+            "text": "Key dan rahasia tidak pernah dimasukkan ke dalam codebase kami — mereka disuplai ke setiap layanan secara terpisah, dan file kredensial sensitif dipasang sebagai read-only."
+          },
+          "11.5": {
+            "title": "Deploy yang bisa diulang",
+            "text": "Setiap deployment melewati pemeriksaan otomatis yang sama, sehingga sebuah rilis tidak pernah menjadi proses manual satu kali."
+          }
+        }
+      },
+      "verification": {
+        "title": "Bagaimana kami memeriksa pekerjaan kami sendiri",
+        "kicker": "Tes yang mencoba mematahkan aturan-aturan di atas.",
+        "intro": "Klaim keamanan hanya bernilai sebesar tes yang mendukungnya. Ini dicakup oleh tes otomatis di codebase kami sendiri.",
+        "stats": [
+          "Tes kredensial palsu",
+          "Tes replay",
+          "Tes isolasi"
+        ],
+        "controls": {
+          "12.1": {
+            "title": "Regresi identitas",
+            "text": "Tes otomatis mencakup kredensial palsu, sesi yang kedaluwarsa dan diputar ulang, logout, rotasi kredensial, serta memastikan satu workspace tidak akan pernah melihat data workspace lain."
+          },
+          "12.2": {
+            "title": "Tes request keluar",
+            "text": "Pemeriksaan yang menghentikan request keluar dari menjangkau jaringan internal memiliki tes khususnya sendiri."
+          },
+          "12.3": {
+            "title": "Tes filter privasi",
+            "text": "Sistem yang mengganti detail privat sebelum mencapai model, dan aturan fakta-pembayaran yang membatasi apa yang bisa ditampilkan, keduanya diuji secara langsung."
+          },
+          "12.4": {
+            "title": "Tes ketepatan penagihan",
+            "text": "Replay perpanjangan dan verifikasi tanda tangan dicakup oleh tes, sehingga perbaikan penagihan tidak bisa diam-diam membuka kembali lubang yang sudah ditutup."
+          }
+        }
+      }
+    },
+    "demo": {
+      "customerLabel": "Apa yang diketik pelanggan",
+      "resetSample": "Reset contoh",
+      "modelLabel": "Apa yang dibaca model",
+      "inputAriaLabel": "Pesan untuk difilter",
+      "caption": "Hanya ilustrasi, dan berjalan di browser Anda: apa pun yang Anda ketik di sini tidak dikirim ke mana pun. Filter yang sebenarnya berjalan di server kami, dan pemetaan balik ke detail asli tidak pernah masuk ke dalam prompt."
+    },
+    "about": {
+      "label": "Tentang panduan ini",
+      "textBefore": "Ini adalah deskripsi tentang bagaimana platform ini dibangun, bukan sebuah sertifikasi. Ini mencakup kontrol yang ada di produk saat ini, dan akan berubah seiring produknya berubah. Jika Anda perlu menjawab kuesioner keamanan atau menandatangani perjanjian pemrosesan data, kirim email ke ",
+      "textAfter": "."
+    },
+    "report": {
+      "label": "Laporkan kerentanan",
+      "stamp": "Menemukan sesuatu?",
+      "title": "Menurut Anda menemukan titik lemah? Kami ingin mendengarnya dari Anda terlebih dahulu.",
+      "subtitle": "Kirim email dengan detailnya dan cara mereproduksinya. Seseorang di tim kami membaca setiap laporan.",
+      "privacy": "Kebijakan privasi",
+      "terms": "Ketentuan",
+      "securityPolicy": "Kebijakan keamanan"
+    }
+  },
+  "features": {
+    "families": {
+      "answer": "Jawaban",
+      "team": "Tim",
+      "know": "Pengetahuan",
+      "act": "Tindakan",
+      "trust": "Kepercayaan",
+      "grow": "Pertumbuhan"
+    },
+    "pageNames": {
+      "aiAgent": "Agen AI",
+      "inbox": "Kotak masuk",
+      "demo": "Demo",
+      "pricing": "Harga",
+      "knowledgeHub": "Pusat pengetahuan",
+      "securityGuide": "Panduan keamanan"
+    },
+    "tiles": [
+      {
+        "name": "Jawaban yang berdasar",
+        "body": "Balasan berasal dari pengetahuan yang sudah kamu setujui. Jika tidak ada, AI akan mengatakannya, bukan menebak."
+      },
+      {
+        "name": "Bahasa balasan",
+        "body": "Pilih bahasa yang digunakan chatbot untuk membalas pelangganmu."
+      },
+      {
+        "name": "Kesadaran halaman",
+        "body": "Tentukan apakah AI bisa melihat URL halaman yang sedang dibuka pengunjung, dan menggunakannya untuk menjawab sesuai konteks."
+      },
+      {
+        "name": "Widget bermerek",
+        "body": "Logo dan warnamu pada widget chat yang kamu tanamkan dengan satu potongan kode."
+      },
+      {
+        "name": "Pengetikan langsung",
+        "body": "Pelanggan melihat saat rekan timmu sedang membalas, dan kamu melihat saat mereka mengetik."
+      },
+      {
+        "name": "Lampiran",
+        "body": "Pelanggan dan timmu dapat mengirim file langsung di dalam percakapan."
+      },
+      {
+        "name": "Kotak masuk bersama",
+        "body": "Semua percakapan dan balasan di satu tempat, dengan lencana yang menunjukkan apakah AI, rekan tim, atau tidak ada yang menanganinya."
+      },
+      {
+        "name": "Peringatan gabung",
+        "body": "Saat pelanggan meminta bantuan orang, setiap rekan tim menerima peringatan Gabung. Yang pertama bergabung akan mengambilnya, dan peringatan itu hilang untuk semua orang."
+      },
+      {
+        "name": "Ambil alih & kembalikan",
+        "body": "Ambil alih obrolan dari AI atau rekan kerja, lalu kembalikan ke AI hanya dengan satu ketukan."
+      },
+      {
+        "name": "Penugasan",
+        "body": "Percakapan dapat ditugaskan ke rekan tim, yang akan menerima notifikasi."
+      },
+      {
+        "name": "Undangan tim",
+        "body": "Undang rekan tim lewat email, dan tambah kursi seiring pertumbuhan timmu."
+      },
+      {
+        "name": "Tiket otomatis",
+        "body": "Jika tidak ada yang bergabung dalam 90 detik, pelanggan diberi tahu dan tiket dibuat otomatis, dengan tindak lanjut email."
+      },
+      {
+        "name": "Perayapan situs",
+        "body": "Arahkan Elpino ke sebuah halaman. Halaman berbasis JavaScript akan dirender terlebih dahulu di browser sungguhan."
+      },
+      {
+        "name": "Impor sitemap",
+        "body": "Tarik hingga 20 halaman dari sitemap-mu sekaligus."
+      },
+      {
+        "name": "Temukan",
+        "body": "Mulai dari satu tautan, dan Elpino mengikutinya hingga 50 halaman, mendahulukan halaman bantuan dan kebijakan."
+      },
+      {
+        "name": "Unggah file",
+        "body": "Unggah file PDF, Word, teks, dan Markdown, teksnya akan diekstrak untukmu."
+      },
+      {
+        "name": "Halaman tulisan",
+        "body": "Tulis halamanmu sendiri di editor untuk hal-hal yang tidak ada di tempat lain."
+      },
+      {
+        "name": "Publik / privat",
+        "body": "Setiap sumber punya saklar visibilitas, sehingga catatan internal tetap internal."
+      },
+      {
+        "name": "Pencarian pembayaran",
+        "body": "Memeriksa pembayaran nyata di Stripe atau Razorpay sehingga jawabannya berupa fakta, bukan tebakan."
+      },
+      {
+        "name": "Tautan pembayaran",
+        "body": "Membuat tautan pembayaran baru yang aman saat pembayaran perlu dicoba lagi."
+      },
+      {
+        "name": "Subscription",
+        "body": "Memeriksa status subscription dan dapat membatalkannya saat pelanggan meminta."
+      },
+      {
+        "name": "Refund (opsional)",
+        "body": "Nonaktif secara default. Pemilik workspace yang menentukan apakah AI boleh melakukan refund sama sekali."
+      },
+      {
+        "name": "Kwitansi",
+        "body": "Menemukan dan mengirim kwitansi untuk pembayaran tertentu."
+      },
+      {
+        "name": "Alat MCP",
+        "body": "Hubungkan hingga lima server MCP dan aktifkan tepat alat-alat yang boleh digunakan agen."
+      },
+      {
+        "name": "Verifikasi identitas",
+        "body": "Kode email sekali pakai atau token bertanda tangan dari aplikasimu memastikan siapa pelanggannya."
+      },
+      {
+        "name": "Filter data privat",
+        "body": "Nama dan email diganti dengan kode referensi sebelum AI membaca percakapan, dan informasi rahasia dihapus."
+      },
+      {
+        "name": "Permintaan aman",
+        "body": "Minta detail sensitif lewat formulir privat sekali pakai, bukan lewat chat."
+      },
+      {
+        "name": "Kunci terenkripsi",
+        "body": "Kredensial yang terhubung disimpan dalam bentuk terenkripsi."
+      },
+      {
+        "name": "Batas anggaran",
+        "body": "Kredit AI bulanan pada paket berbayar membuat pengeluaran AI tetap terprediksi."
+      },
+      {
+        "name": "Peninjauan fakta",
+        "body": "Draf diperiksa terhadap hasil alat sebelum pelanggan melihatnya."
+      },
+      {
+        "name": "Konteks pengunjung",
+        "body": "Lokasi, perangkat, dan halaman yang mereka kunjungi, dilampirkan pada setiap percakapan."
+      },
+      {
+        "name": "Analitik",
+        "body": "Lihat bagaimana percakapan berjalan di seluruh workspace-mu."
+      },
+      {
+        "name": "Riwayat",
+        "body": "Percakapan sebelumnya dengan pelanggan yang sama, tepat di sebelah thread."
+      },
+      {
+        "name": "Paket gratis",
+        "body": "Mulai dengan 100 pesan AI per bulan, tanpa perlu kartu."
+      },
+      {
+        "name": "Paket berbasis kredit",
+        "body": "Paket berbayar mencakup kredit AI bulanan, dan kursi tambahan berupa add-on sederhana."
+      },
+      {
+        "name": "Balasan email",
+        "body": "Pengunjung terverifikasi yang meninggalkan chat masih bisa menerima balasanmu lewat email."
+      }
+    ],
+    "table": {
+      "all": "Semua",
+      "readMoreIn": "Baca lebih lanjut di {more}",
+      "hint": "Ketuk ubin mana pun. Setiap fitur di sini sudah aktif hari ini."
+    },
+    "hero": {
+      "badge": "Fitur",
+      "titlePrefix": "Elemen-elemen ",
+      "titleHl": "dukungan yang hebat.",
+      "subtitle": "{count} kemampuan, satu workspace. Filter berdasarkan kelompok, ketuk sebuah ubin, dan lihat tepatnya apa yang dilakukan Elpino."
+    },
+    "loop": {
+      "eyebrow": "Bagaimana semuanya saling terkait",
+      "titlePrefix": "Ini adalah lingkaran, ",
+      "titleHl": "bukan daftar.",
+      "subtitle": "Setiap fitur memberi masukan untuk yang berikutnya, sehingga dukungan makin baik semakin sering kamu memakainya.",
+      "steps": [
+        {
+          "t": "Ajarkan",
+          "d": "Rayapi situsmu, unggah file, tulis halaman."
+        },
+        {
+          "t": "Jawab",
+          "d": "AI membalas dari pengetahuanmu, dalam bahasamu."
+        },
+        {
+          "t": "Tindakan",
+          "d": "Pembayaran, subscription, dan alat MCP-mu."
+        },
+        {
+          "t": "Serahkan",
+          "d": "Tanya dulu, beri tahu tim, gabung atau buat tiket."
+        },
+        {
+          "t": "Belajar",
+          "d": "Tinjau percakapan dan tingkatkan pengetahuanmu."
+        }
+      ],
+      "stepOf": "Langkah {n} dari {total}",
+      "explore": "Jelajahi langkah ini"
+    },
+    "personas": {
+      "eyebrow": "Untuk siapa ini",
+      "titlePrefix": "Pilih perananmu. ",
+      "titleHl": "Lihat fiturmu.",
+      "items": [
+        {
+          "label": "Founder",
+          "line": "Kamu adalah seluruh tim support dan ingin malam harimu kembali.",
+          "picks": [
+            "Paket gratis, tanpa kartu",
+            "Jawaban dari situsmu dalam hitungan menit",
+            "AI menangani pembayaran dan kwitansi",
+            "Hanya menghubungimu saat benar-benar dibutuhkan"
+          ]
+        },
+        {
+          "label": "Support lead",
+          "line": "Kamu memimpin tim dan butuh kepemilikan yang jelas tanpa ada chat yang terlewat.",
+          "picks": [
+            "Kotak masuk bersama dengan lencana yang jelas",
+            "Peringatan Gabung untuk seluruh tim",
+            "Tiket otomatis saat semua orang sibuk",
+            "Konteks pengunjung di setiap thread"
+          ]
+        },
+        {
+          "label": "Developer",
+          "line": "Kamu ingin ini terhubung ke produk dan datamu sendiri.",
+          "picks": [
+            "Identitas berbasis token bertanda tangan dari aplikasimu",
+            "Server MCP dengan persetujuan per alat",
+            "Pencarian Stripe dan Razorpay",
+            "Satu potongan kode widget yang bisa ditanamkan"
+          ]
+        },
+        {
+          "label": "Pemilik toko",
+          "line": "Pelanggan bertanya soal pesanan dan pembayaran sepanjang hari.",
+          "picks": [
+            "Pencarian pesanan lewat alat MCP-mu",
+            "Tautan pembayaran dan kwitansi",
+            "Refund hanya jika kamu mengaktifkannya",
+            "Balasan dalam bahasa pelangganmu"
+          ]
+        }
+      ]
+    },
+    "stack": {
+      "badge": "Satu alat",
+      "titlePrefix": "Enam alat masuk. ",
+      "titleHl": "Satu workspace keluar.",
+      "subtitle": "Kebanyakan tim menyambung-nyambungkan widget, helpdesk, basis pengetahuan, dan bot. Elpino menyatukan semuanya di satu tempat, dengan satu memori untuk setiap pelanggan.",
+      "items": [
+        "Widget chat",
+        "Kotak masuk helpdesk",
+        "Basis pengetahuan",
+        "Pembuat chatbot",
+        "Pencarian pembayaran",
+        "Aturan handoff"
+      ],
+      "cardSubtitle": "Widget · Kotak masuk · Pengetahuan · Agen AI · Alat · Handoff"
+    },
+    "soon": {
+      "badge": "Datang bulan November",
+      "title": "Omnichannel berikutnya.",
+      "body": "Chat website sudah aktif hari ini. Membawa lebih banyak kanal ke kotak masuk yang sama adalah yang kami luncurkan selanjutnya, dan kami akan mengumumkannya di changelog.",
+      "cta": "Lihat changelog"
+    },
+    "faq": {
+      "eyebrow": "Pertanyaan",
+      "titlePrefix": "Baik untuk ",
+      "titleHl": "diketahui.",
+      "items": [
+        {
+          "q": "Apakah semua yang ada di halaman ini sudah aktif?",
+          "a": "Ya. Setiap ubin menggambarkan sesuatu yang sudah dilakukan Elpino hari ini. Omnichannel adalah satu-satunya hal yang masih kami bangun, dan ditandai akan datang bulan November."
+        },
+        {
+          "q": "Apakah saya perlu semuanya?",
+          "a": "Tidak. Mulai dengan basis pengetahuan dan widget di paket gratis, lalu aktifkan alat, MCP, dan rekan tim sesuai kebutuhanmu."
+        },
+        {
+          "q": "Apa yang termasuk dalam paket gratis?",
+          "a": "100 pesan AI per bulan tanpa perlu kartu."
+        },
+        {
+          "q": "Bagaimana cara kerja paket berbayar?",
+          "a": "Paket berbayar mencakup kredit AI bulanan, dan kursi tambahan berupa add-on sederhana. Lihat halaman harga untuk detailnya."
+        }
+      ]
+    },
+    "closing": {
+      "title": "Setiap elemen, siap digunakan.",
+      "subtitle": "Mulai dengan paket gratis dan aktifkan lebih banyak seiring pertumbuhanmu.",
+      "ctaStart": "Mulai gratis",
+      "ctaPricing": "Lihat harga"
+    }
+  },
+  "founders": {
+    "stream": {
+      "incomingLive": "Masuk, secara langsung",
+      "onDuty": "Elpino sedang bertugas",
+      "needsYou": "Butuh kamu",
+      "handled": "Sudah ditangani",
+      "askedFirst": "{why}. Elpino bertanya dulu, lalu memberi tahu kamu.",
+      "handledWithoutYou": "Ditangani tanpa kamu",
+      "actuallyNeededYou": "Memang butuh kamu",
+      "items": [
+        {
+          "q": "Bagaimana cara mengekspor data saya?"
+        },
+        {
+          "q": "Kenapa kartu saya gagal?"
+        },
+        {
+          "q": "Apakah ada diskon untuk startup?"
+        },
+        {
+          "q": "Bisa dapat kontrak khusus?",
+          "why": "Minta bicara dengan orang"
+        },
+        {
+          "q": "Di mana invoice saya untuk bulan Maret?"
+        },
+        {
+          "q": "Bagaimana cara reset password saya?"
+        },
+        {
+          "q": "Bisa bicara dengan founder-nya?",
+          "why": "Minta bicara dengan orang"
+        },
+        {
+          "q": "Apakah bisa dipakai dengan Shopify?"
+        }
+      ]
+    },
+    "hero": {
+      "badge": "Untuk founder",
+      "titlePrefix": "Kirim produk. ",
+      "titleHl": "Bukan balasan support.",
+      "subtitle": "Kamu membangun perusahaan untuk membuat sesuatu, bukan untuk menjawab “bagaimana cara reset password saya?” empat puluh kali seminggu. Elpino menangani pertanyaan berulang dan hanya menghubungimu untuk hal yang benar-benar butuh founder.",
+      "ctaStart": "Mulai gratis",
+      "ctaPricing": "Lihat harga",
+      "freeNote": "Paket gratis: 100 pesan AI per bulan. Tanpa kartu."
+    },
+    "calculator": {
+      "eyebrow": "Hitung sendiri",
+      "titlePrefix": "Dapatkan kembali ",
+      "titleHl": "sore harimu.",
+      "subtitle": "Masukkan angkamu sendiri. Persentase AI adalah perkiraanmu, bukan jaminan, dan tergantung isi knowledge base-mu.",
+      "sliderQuestions": "Pertanyaan pelanggan per hari",
+      "sliderMinutes": "Menit untuk menjawab masing-masing",
+      "unitMin": "menit",
+      "sliderShare": "Perkiraan porsi yang diselesaikan AI",
+      "yourDay": "Hari kerjamu yang 8 jam",
+      "today": "Sekarang",
+      "withElpinoAt": "Dengan Elpino di {pct}%",
+      "backEachWeek": "Waktu yang kembali setiap minggu",
+      "chatsUntouched": "Chat per hari, tak tersentuh",
+      "volumeNote": "Pada volume ini, support saja sudah lebih dari satu hari kerja penuh.",
+      "supportLabel": "{h} jam support",
+      "buildingLabel": "{h} jam membangun"
+    },
+    "setup": {
+      "eyebrow": "Setup",
+      "titlePrefix": "Aktif sebelum kopimu ",
+      "titleHl": "dingin.",
+      "subtitle": "Tanpa engineer, tanpa periode pelatihan. Empat langkah, dan yang terakhir opsional.",
+      "stepLabel": "Langkah {n}",
+      "steps": [
+        {
+          "t": "Tempel situsmu",
+          "d": "Elpino menjelajahi halaman-halamanmu, termasuk yang dibangun dengan JavaScript, dan mempelajari produkmu.",
+          "meter": "Membaca situsmu"
+        },
+        {
+          "t": "Tambahkan sisanya",
+          "d": "Unggah dokumen, atau tulis kebijakan yang hanya ada di kepalamu.",
+          "meter": "Menambahkan pengetahuan"
+        },
+        {
+          "t": "Pasang widget-nya",
+          "d": "Satu snippet, dan chat langsung aktif di situsmu.",
+          "meter": "Memasang widget"
+        },
+        {
+          "t": "Hubungkan pembayaran (opsional)",
+          "d": "Stripe atau Razorpay, agar bisa mengecek info billing untukmu.",
+          "meter": "Menghubungkan"
+        }
+      ]
+    },
+    "reaches": {
+      "badge": "Filternya",
+      "titlePrefix": "Hanya yang ",
+      "titleHl": "benar-benar penting",
+      "titleSuffix": " yang sampai ke kamu.",
+      "subtitle": "Kamu yang menentukan apa yang boleh dilakukan AI. Selebihnya aturan yang jelas: tanya dulu, beri tahu bersama, dan jangan pernah membiarkan pelanggan menggantung.",
+      "rules": [
+        {
+          "t": "Jawaban dari dokumenmu",
+          "d": "Ditangani. Kamu tidak pernah melihatnya."
+        },
+        {
+          "t": "Pengecekan pembayaran dan akun",
+          "d": "Ditangani dengan tools yang sudah kamu aktifkan."
+        },
+        {
+          "t": "\"Bisa bicara dengan seseorang?\"",
+          "d": "Bertanya ke pelanggan dulu, lalu memberi tahu kamu dan timmu."
+        },
+        {
+          "t": "Sedang sibuk?",
+          "d": "Setelah 90 detik, tiket dibuat dan pelanggan diberi tahu."
+        }
+      ]
+    },
+    "money": {
+      "eyebrow": "Pertanyaan billing",
+      "titlePrefix": "Ini mengecek pembayaran asli. ",
+      "titleHl": "Kunci tetap di tanganmu.",
+      "subtitle": "Hubungkan Stripe atau Razorpay dan AI bisa mengecek pembayaran serta subscription, mengirim receipt dan payment link, dan membatalkan subscription saat diminta. Refund tetap nonaktif sampai kamu mengaktifkan sakelarnya.",
+      "chatAsk": "Bisa minta refund untuk pembayaran terakhir saya?",
+      "chatYes": "Saya sudah menemukan pembayaranmu dan memulai proses refund. Biasanya masuk ke akunmu dalam 5 sampai 7 hari kerja.",
+      "chatNo": "Saya bisa lihat pembayarannya, tapi tidak bisa melakukan refund sendiri. Mau saya hubungkan dengan tim kami?",
+      "toggleLabel": "Izinkan AI mengeluarkan refund",
+      "toggleNote": "Nonaktif secara default. Coba sakelarnya."
+    },
+    "grows": {
+      "eyebrow": "Ruang untuk bertumbuh",
+      "titlePrefix": "Dimulai dari kamu. ",
+      "titleHl": "Berkembang bersama timmu.",
+      "stageLabel": "Tahap {n}",
+      "stages": [
+        {
+          "t": "Cuma kamu",
+          "d": "Paket gratis, 100 pesan AI per bulan, satu inbox yang jarang kamu buka."
+        },
+        {
+          "t": "Karyawan pertama",
+          "d": "Undang lewat email. Mereka dapat notifikasi Join dan mengambil alih chat dari AI."
+        },
+        {
+          "t": "Tim kecil",
+          "d": "Tugaskan percakapan, bagikan inbox, tambah seat saat dibutuhkan."
+        },
+        {
+          "t": "Berkembang lebih besar",
+          "d": "Paket berbayar dengan kredit AI bulanan, tools MCP untuk sistemmu sendiri."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Pertanyaan founder",
+      "titlePrefix": "Jawaban ",
+      "titleHl": "langsung.",
+      "items": [
+        {
+          "q": "Apa bedanya ini dari widget chatbot biasa?",
+          "a": "Elpino hanya menjawab dari pengetahuan yang kamu berikan, bisa mengecek pembayaran asli dan memakai tools milikmu, memverifikasi identitas sebelum menyentuh apa pun yang bersifat pribadi, dan menyerahkan ke manusia dengan seluruh riwayat percakapan saat tidak bisa membantu."
+        },
+        {
+          "q": "Seberapa cepat saya bisa mengaturnya sendiri?",
+          "a": "Kebanyakan founder sudah aktif di hari yang sama: tambahkan situs atau filemu, tempel snippet widget-nya, dan opsional hubungkan Stripe atau Razorpay."
+        },
+        {
+          "q": "Bagaimana ia menentukan antara menjawab atau memberi tahu saya?",
+          "a": "Jika bisa dijawab dari pengetahuanmu atau sebuah tool, ia akan menjawab. Jika tidak bisa, ia mengatakannya dan menanyakan pelanggan apakah ingin dihubungkan dengan timmu. Baru setelah itu kamu dan timmu diberi tahu."
+        },
+        {
+          "q": "Apakah ia akan mengada-ada?",
+          "a": "Ia menjawab berdasarkan apa yang sudah kamu setujui, dan proses review memeriksa draf jawaban terhadap hasil tools. Saat tidak tahu, ia akan mengatakannya."
+        },
+        {
+          "q": "Apakah akun Stripe atau Razorpay saya aman?",
+          "a": "Kredensial disimpan terenkripsi, dan aksi yang menyangkut pergerakan uang seperti refund nonaktif kecuali kamu mengaktifkannya."
+        },
+        {
+          "q": "Apa yang terjadi kalau saya merekrut orang support?",
+          "a": "Undang mereka dan mereka akan mendapat notifikasi Join, bisa mengambil alih chat dari AI, dan bisa mengembalikannya lagi."
+        }
+      ]
+    },
+    "closing": {
+      "title": "Kembali membangun.",
+      "subtitle": "Mulai gratis, ajari Elpino tentang produkmu, dan biarkan ia menangani pertanyaan yang berulang.",
+      "ctaStart": "Mulai gratis",
+      "ctaMeetAgent": "Kenali agen AI-nya"
+    }
+  },
+  "developers": {
+    "hero": {
+      "badge": "Untuk pengembang",
+      "titlePrefix": "Dari ",
+      "titleMiddle": " hingga ",
+      "titleHl": "terselesaikan.",
+      "subtitle": "Satu tag untuk widget, satu token bertanda tangan agar Elpino tahu siapa yang login, satu server MCP agar AI dapat membaca data Anda. Lihat tiga langkah ini terjadi di satu halaman.",
+      "ctaStart": "Mulai gratis",
+      "ctaDocs": "Baca dokumentasi"
+    },
+    "ide": {
+      "comment1": "<!-- 1. Tempel tag -->",
+      "comment2": "<!-- 2. Beri tahu Elpino siapa yang login -->",
+      "comment3": "  // elpinoToken: ditandatangani oleh backend Anda",
+      "mcpComment": "// Di dashboard Anda: hubungkan server MCP dan aktifkan get_order.",
+      "stepEmbed": "Sematkan",
+      "stepIdentify": "Identifikasi",
+      "stepResolve": "Selesaikan",
+      "previewSupport": "Dukungan",
+      "previewVerified": "Terverifikasi",
+      "previewGreeting": "Hai Aisha, ada yang bisa dibantu?",
+      "previewQuestion": "Di mana pesanan saya?",
+      "previewAnswer": "Dikirim kemarin dan tiba hari Kamis."
+    },
+    "sequence": {
+      "eyebrow": "Alur permintaan",
+      "titlePrefix": "Satu pertanyaan, ",
+      "titleHl": "empat sistem.",
+      "subtitle": "Siapa berbicara dengan siapa ketika pelanggan yang sudah login menanyakan pesanannya. Telusuri langkah demi langkah, atau biarkan berjalan otomatis.",
+      "actors": [
+        "Browser",
+        "Server Anda",
+        "Elpino",
+        "Server MCP Anda"
+      ],
+      "steps": [
+        {
+          "label": "Pelanggan login"
+        },
+        {
+          "label": "JWT bertanda tangan",
+          "note": "≤ 5 menit · sekali pakai"
+        },
+        {
+          "label": "$elpino identify(token)"
+        },
+        {
+          "label": "Memverifikasi tanda tangan + claim ✓"
+        },
+        {
+          "label": "“Di mana pesanan saya?”"
+        },
+        {
+          "label": "get_order",
+          "note": "hanya pelanggan terverifikasi"
+        },
+        {
+          "label": "Status pesanan"
+        },
+        {
+          "label": "Membalas pelanggan"
+        }
+      ],
+      "stepCounter": "Langkah {n} / {total}",
+      "nextStep": "Langkah berikutnya",
+      "replay": "Putar ulang"
+    },
+    "tokenExplorer": {
+      "eyebrow": "Token identitas",
+      "titlePrefix": "Anatomi sebuah token, ",
+      "titleHl": "dan cara ia gagal.",
+      "subtitle": "HS256, ditandatangani dengan rahasia workspace Anda. Sentuh sebuah claim untuk melihat aturannya, lalu rusak token untuk melihat apa yang dilaporkan widget.",
+      "payload": "Payload",
+      "optional": "opsional",
+      "required": "Wajib",
+      "optionalCap": "Opsional",
+      "breakIt": "Rusak",
+      "notAccepted": "[Elpino] Token identitas tidak diterima: {code}",
+      "fix": "Perbaikan:",
+      "claimDescriptions": [
+        "ID akun tetap untuk pengguna ini.",
+        "Persis \"elpino-widget\".",
+        "ID acak baru untuk setiap token, 16 hingga 128 karakter aman-URL. UUID cocok.",
+        "Waktu penerbitan dalam detik penuh (bukan milidetik).",
+        "Kedaluwarsa dalam detik penuh, paling lama 5 menit setelah iat.",
+        "Hilangkan jika tidak ada. null akan ditolak.",
+        "true hanya jika sistem login Anda mengonfirmasi kepemilikan.",
+        "Nama tampilan yang dilihat tim Anda."
+      ]
+    },
+    "server": {
+      "eyebrow": "Backend Anda",
+      "titlePrefix": "Salin, tempel, ",
+      "titleHl": "luncurkan.",
+      "subtitle": "Cuplikan kode yang sama seperti yang ditampilkan dashboard Anda, dalam bahasa yang sudah Anda gunakan.",
+      "copy": "Salin",
+      "copied": "Disalin",
+      "codeTitle": "token identitas"
+    },
+    "mcp": {
+      "badge": "Server MCP",
+      "titlePrefix": "Beri AI alat. ",
+      "titleHl": "Simpan kuncinya.",
+      "subtitle": "Hubungkan hingga lima server MCP, aktifkan hingga 15 alat pada masing-masing, dan pilih untuk siapa alat itu terbuka. Nyalakan sakelarnya untuk melihat apa yang bisa digunakan agen.",
+      "shopServerName": "Server MCP toko Anda",
+      "toolsDiscovered": "{n} alat ditemukan",
+      "toggleLabel": "Buka alat baca-saja untuk semua pengunjung",
+      "changesData": "Mengubah data",
+      "readOnly": "Baca saja",
+      "needsVerified": "Memerlukan pelanggan terverifikasi",
+      "agentCanCall": "Agen dapat memanggil",
+      "toolDescriptions": [
+        "Mencari pesanan dan statusnya",
+        "Pelacakan langsung untuk paket",
+        "Mengubah alamat pengiriman",
+        "Membatalkan pesanan yang belum dikirim"
+      ],
+      "bullets": [
+        "Setiap panggilan diperiksa ulang terhadap daftar Anda di server",
+        "Alat yang mengubah data selalu memerlukan pelanggan terverifikasi",
+        "Kredensial disimpan terenkripsi"
+      ]
+    },
+    "sees": {
+      "eyebrow": "Privasi secara default",
+      "titlePrefix": "Model ",
+      "titleHl": "tidak pernah melihat",
+      "titleSuffix": " siapa mereka.",
+      "subtitle": "Sebelum AI membaca percakapan, nama, email, dan ID diganti dengan kode referensi, dan rahasia seperti token dan kunci dihapus. Alat tetap mendapatkan nilai asli di sisi Anda.",
+      "toggleTeam": "Apa yang dilihat tim Anda",
+      "toggleModel": "Apa yang dilihat model AI",
+      "chatRaw1": "Hai, saya Aisha Khan (aisha@example.com). Di mana pesanan saya?",
+      "chatMasked1": "Hai, saya ref_name_9f2c (ref_email_41ab). Di mana pesanan saya?",
+      "chatRaw2": "Hai Aisha, pesanan Anda dikirim kemarin.",
+      "chatMasked2": "Hai, pesanan Anda dikirim kemarin."
+    },
+    "faq": {
+      "eyebrow": "Pertanyaan",
+      "titlePrefix": "Baik untuk ",
+      "titleHl": "diketahui.",
+      "items": [
+        {
+          "q": "Apakah saya harus menggunakan verifikasi identitas?",
+          "a": "Tidak, tetapi itulah yang memungkinkan AI menampilkan data pribadi dengan aman. Siapa pun bisa mengetik email apa pun di chat, jadi token yang ditandatangani oleh sistem login Anda sendiri adalah cara pelanggan menjadi Terverifikasi."
+        },
+        {
+          "q": "Berapa lama token berlaku?",
+          "a": "Paling lama lima menit, dan hanya berfungsi sekali. Sesi chat itu sendiri berlangsung hingga 8 jam, dengan batas idle 30 menit."
+        },
+        {
+          "q": "Algoritma tanda tangan apa?",
+          "a": "HS256. Algoritma lain, termasuk none dan RS256, ditolak."
+        },
+        {
+          "q": "Bahasa apa saja yang memiliki cuplikan kode?",
+          "a": "Node.js, Python, PHP, dan Ruby, di pengaturan identitas dashboard Anda dan di dokumentasi."
+        },
+        {
+          "q": "Apa itu server MCP?",
+          "a": "Layanan yang menyediakan alat melalui Model Context Protocol. Elpino menemukan alatnya, dan Anda mengaktifkan yang boleh digunakan AI."
+        },
+        {
+          "q": "Bisakah AI mengubah data di sistem saya?",
+          "a": "Hanya melalui alat yang Anda aktifkan, dan alat yang mengubah data selalu memerlukan pelanggan terverifikasi."
+        },
+        {
+          "q": "Apakah ada API?",
+          "a": "SDK widget, token identitas, dan MCP adalah permukaan integrasi saat ini."
+        }
+      ],
+      "linkLabels": [
+        "Dokumentasi identitas",
+        "Dokumentasi widget",
+        "Agen AI",
+        "Panduan keamanan"
+      ]
+    },
+    "closing": {
+      "title": "Luncurkan dalam satu sore.",
+      "subtitle": "Mulai gratis, tempel tag, dan siapkan identitas saat Anda siap.",
+      "ctaStart": "Mulai gratis",
+      "ctaDocs": "Buka dokumentasi"
+    }
+  },
+  "busyOperators": {
+    "rush": {
+      "badgeLabel": "Jam sibuk · simulasi ilustratif",
+      "reset": "Setel ulang",
+      "waitingForPerson": "Menunggu seseorang",
+      "levelCalm": "Tenang",
+      "levelBusy": "Mulai sibuk",
+      "levelFire": "Antrian terbakar",
+      "inboxZero": "Kotak masuk nol. Bagus.",
+      "chatsWaiting": "obrolan menunggu",
+      "aiToggleLabel": "Elpino AI",
+      "teammatesOnline": "Rekan tim online",
+      "resolvedByAi": "Diselesaikan oleh AI",
+      "resolvedByTeam": "Diselesaikan oleh tim",
+      "disclaimer": "Model mainan: 3 obrolan tiba setiap centang dan AI mengambil contoh pembagian. Hasil nyata bergantung pada basis pengetahuan dan alat Anda.",
+      "online": "daring",
+      "offline": "luring"
+    },
+    "hero": {
+      "badge": "Untuk tim yang sibuk",
+      "titlePrefix": "Jam sibuk, ",
+      "titleHl": "ditangani.",
+      "subtitle": "Saat antrean melonjak, AI menjawab pertanyaan berulang, tim Anda mengerjakan sisanya, dan tidak ada yang tersandung satu sama lain. Balikkan tombol di bawah dan rasakan perbedaannya.",
+      "ctaStart": "Mulai dengan gratis",
+      "ctaInbox": "Lihat kotak masuk"
+    },
+    "race": {
+      "badge": "Tidak ada balasan ganda",
+      "titlePrefix": "Dua orang, satu ngobrol. ",
+      "titleHl": "Hanya satu yang bergabung.",
+      "subtitle": "Semua orang mendapat peringatan Gabung yang sama. Orang pertama yang mengetuk akan melakukan percakapan, peringatan akan dihapus untuk semua orang, dan kotak masuk akan menunjukkan siapa yang melakukan percakapan tersebut. Seorang kolega masih bisa mengambil alih nanti, dengan sengaja.",
+      "askedForPerson": "Aisha Khan meminta seseorang",
+      "alertSent": "Peringatan dikirim ke seluruh tim",
+      "waiting": "Menunggu…",
+      "joined": "Bergabung",
+      "joinChat": "Bergabunglah dengan obrolan",
+      "priyaHasThis": "Priya punya ini",
+      "priyaJoinedFirst": "Priya bergabung lebih dulu. Lencana kotak masuk sekarang bertuliskan Priya.",
+      "bothSee": "Kedua rekan satu tim melihat peringatan…",
+      "customerSaidYes": "Pelanggan mengatakan ya kepada seseorang"
+    },
+    "context": {
+      "eyebrow": "Penyerahan",
+      "titlePrefix": "Tidak ada yang mengulangi ",
+      "titleHl": "sendiri.",
+      "subtitle": "Beralih untuk membandingkan handoff dingin dengan yang dibuat Elpino.",
+      "toggleCold": "Penyerahan dingin",
+      "toggleElpino": "Penyerahan Elpino",
+      "coldGreeting": "Hai, saya Priya. Apa yang bisa saya bantu?",
+      "coldComplaint": "…Saya sudah menjelaskan semua ini kepada bot. Saya pindah negara dan ingin negara penagihan saya diubah. Lagi.",
+      "coldNote": "Pelanggan memulai kembali, dan anggota tim mulai buta.",
+      "whatPersonSees": "Apa yang dilihat orang tersebut",
+      "reasonLabel": "Alasan",
+      "reasonValue": "Perubahan negara penagihan membutuhkan seseorang",
+      "summaryLabel": "Ringkasan",
+      "summaryValue": "Pindah negara, ingin negara penagihan diperbarui. Diverifikasi melalui kode email.",
+      "fullThreadLabel": "Utas penuh",
+      "fullThreadValue": "Setiap pesan sejauh ini, tepat di atas komposer",
+      "visitorLabel": "Pengunjung",
+      "visitorLocation": "Pune, India",
+      "visitorPage": "Aktif /penagihan",
+      "identityVerified": "Identitas diverifikasi"
+    },
+    "around": {
+      "eyebrow": "Sepanjang waktu",
+      "titlePrefix": "Tutup setiap jam, ",
+      "titleHl": "tanpa shift.",
+      "subtitle": "Tarik melalui contoh hari. Jam kerja tim adalah 9 hingga 6 di sini; milikmu akan menjadi milikmu sendiri.",
+      "teamOnline": "Tim online",
+      "aiOnWatch": "AI berjaga-jaga",
+      "hourAriaLabel": "Jam dalam sehari",
+      "am": "pagi",
+      "pm": "sore",
+      "dayItems": [
+        {
+          "t": "AI menjawab lebih dulu",
+          "d": "Pertanyaan berulang tidak pernah mencapai antrian."
+        },
+        {
+          "t": "Tim mendapat pemberitahuan Gabung",
+          "d": "Yang pertama mengetuk akan menerima obrolan."
+        },
+        {
+          "t": "Serahkan kembali kapan saja",
+          "d": "Berikan tindak lanjut sederhana kembali ke AI."
+        }
+      ],
+      "nightItems": [
+        {
+          "t": "AI menjawab lebih dulu",
+          "d": "Pertanyaan yang dapat dijawabnya telah terjawab."
+        },
+        {
+          "t": "Tidak ada yang bebas? Tiket",
+          "d": "Setelah 90 detik tiket diajukan dengan alasan dan ringkasan."
+        },
+        {
+          "t": "Pagi mulai terorganisir",
+          "d": "Pelanggan telah dikirimi email, dan tiket menunggu Anda."
+        }
+      ]
+    },
+    "toolkit": {
+      "eyebrow": "Tenang memang disengaja",
+      "titlePrefix": "Hal-hal kecil itu ",
+      "titleHl": "menjaga antrian tetap waras.",
+      "items": [
+        {
+          "t": "Lencana kepemilikan",
+          "d": "AI, rekan satu tim atau terselesaikan, di setiap thread."
+        },
+        {
+          "t": "Pencarian dan filter",
+          "d": "Semua, Belum Dibaca, Dibaca, Terselesaikan."
+        },
+        {
+          "t": "Langsung mengetik",
+          "d": "Lihat kapan pelanggan menulis, dan biarkan mereka melihat Anda."
+        },
+        {
+          "t": "Lencana terverifikasi",
+          "d": "Ketahuilah siapa yang telah membuktikan siapa mereka."
+        },
+        {
+          "t": "Detail pengunjung",
+          "d": "Lokasi, perangkat, dan halaman yang mereka buka."
+        },
+        {
+          "t": "Ambil alih, kembalikan",
+          "d": "Pindahkan obrolan antara AI dan orang-orang dalam satu ketukan."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Pertanyaan",
+      "titlePrefix": "Bagus ",
+      "titleHl": "tahu.",
+      "items": [
+        {
+          "q": "Bagaimana Anda menghentikan dua orang membalas pelanggan yang sama?",
+          "a": "Semua orang mendapat peringatan Gabung yang sama, dan orang pertama yang mengetuk akan melakukan obrolan. Peringatan tersebut dihapus untuk semua orang, dan kotak masuk menunjukkan siapa yang memilikinya."
+        },
+        {
+          "q": "Akankah Elpino menggantikan tim saya?",
+          "a": "Tidak. Ini menangani pertanyaan berulang, dan orang-orang Anda mengambil percakapan yang memerlukan penilaian. Anda juga dapat mengembalikan obrolan apa pun ke AI."
+        },
+        {
+          "q": "Pelajaran apa yang bisa diambil?",
+          "a": "Halaman situs web Anda (termasuk yang dibuat dengan JavaScript), file PDF, Word, teks dan Markdown yang diunggah, dan halaman yang Anda tulis. Anda mengontrol mana yang bersifat publik."
+        },
+        {
+          "q": "Apa yang terjadi jika tidak ada orang yang online?",
+          "a": "AI menjawab semampunya. Jika pelanggan meminta seseorang dan tidak ada yang bergabung dalam waktu 90 detik, tiket akan diisi dengan alasan dan ringkasannya, dan pelanggan akan dikirimi email."
+        },
+        {
+          "q": "Berapa lama waktu yang dibutuhkan untuk peluncurannya?",
+          "a": "Sebagian besar tim ditayangkan pada hari yang sama: menambah pengetahuan, menempelkan widget, dan mengundang rekan satu tim."
+        }
+      ],
+      "footNote": "Obrolan situs web ditayangkan hari ini. Multisaluran akan hadir pada bulan November."
+    },
+    "closing": {
+      "title": "Membuat antrian menjadi masalah orang lain.",
+      "subtitle": "Mulai dengan gratis dan undang tim Anda jika Anda sudah siap.",
+      "ctaStart": "Mulai dengan gratis",
+      "ctaTickets": "Lihat tiket"
     }
   }
 }

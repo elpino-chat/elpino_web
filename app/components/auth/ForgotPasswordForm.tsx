@@ -6,6 +6,8 @@ import { useState, type FormEvent } from "react";
 import api from "@/lib/api";
 import { getErrorMessage, Spinner } from "@/app/components/auth/AuthShared";
 
+const dots = { backgroundImage: "radial-gradient(#000 1.2px, transparent 1.2px)", backgroundSize: "14px 14px" };
+
 export function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -27,64 +29,65 @@ export function ForgotPasswordForm() {
   }
 
   return (
-    <div className="relative flex min-h-screen overflow-hidden bg-white px-4 py-8 text-slate-950 antialiased sm:px-6 lg:px-10">
-      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-[460px] items-center justify-center pt-16">
-        <div className="w-full">
-          <Link href="/" className="mx-auto flex w-fit items-center gap-2">
-            <Image src="/elpino.png" alt="Elpino" width={906} height={275} className="h-8 w-auto object-contain" />
-          </Link>
+    <main className="relative min-h-screen overflow-hidden bg-[#fff8ec] font-display text-[#11120f] antialiased">
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 opacity-[0.35]" style={dots} />
+      <span aria-hidden className="pointer-events-none absolute left-[8%] top-[16%] hidden -rotate-6 rounded-2xl border-2 border-[#11120f] bg-[#ffd84d] px-4 py-2 text-[14px] font-semibold sm:block">We&apos;ll get you back in</span>
+      <span aria-hidden className="pointer-events-none absolute right-[9%] top-[22%] hidden rotate-3 rounded-2xl border-2 border-[#11120f] bg-white px-4 py-2 text-[14px] font-semibold sm:block">Link expires in 30 min</span>
 
-          <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-            {sent ? (
-              <>
-                <h1 className="text-xl font-semibold text-slate-950">Check your email</h1>
-                <p className="mt-2 text-sm leading-6 text-slate-500">
-                  If an account exists for <span className="font-medium text-slate-700">{email}</span>, a password
-                  reset link is on its way. It expires in 30 minutes.
-                </p>
-              </>
-            ) : (
-              <>
-                <h1 className="text-xl font-semibold text-slate-950">Reset your password</h1>
-                <p className="mt-2 text-sm leading-6 text-slate-500">
-                  Enter the email on your account and we&apos;ll send you a reset link.
-                </p>
+      <section className="relative z-10 mx-auto flex min-h-screen w-full max-w-[500px] flex-col items-center justify-center px-6 py-16 text-center">
+        <Link href="/" aria-label="Elpino home" className="mb-6 flex w-fit items-center">
+          <Image src="/elpino.png" alt="Elpino" width={906} height={275} priority className="h-8 w-auto object-contain" />
+        </Link>
 
-                <form onSubmit={handleSubmit} className="mt-6">
-                  <label className="block text-sm font-medium text-slate-600">Email</label>
-                  <input
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
-                    placeholder="you@company.com"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    autoFocus
-                    className="mt-2 h-12 w-full rounded-lg border border-slate-200 bg-white px-4 text-sm font-medium text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-[#D9BEF4] focus:shadow-[0_0_0_3px_rgba(217,190,244,0.15)]"
-                  />
+        <div className="w-full animate-[fadeIn_.55s_ease-out_both] rounded-[22px] border-2 border-[#11120f] bg-white p-8 text-left shadow-[6px_6px_0_0_#11120f]">
+          {sent ? (
+            <div className="text-center">
+              <p className="mx-auto w-fit rounded-full border-2 border-[#11120f] bg-[#ffd84d] px-3.5 py-1 font-mono text-[11px] font-medium uppercase tracking-[0.12em]">Check your email</p>
+              <h1 className="mt-4 text-[22px] font-semibold leading-[1.1] tracking-[-0.03em]">A link is on its way</h1>
+              <p className="mt-2 text-[13.5px] leading-6 text-[#11120f]/55">
+                If an account exists for <span className="font-semibold text-[#11120f]">{email}</span>, a password reset link is on its way. It expires in 30 minutes.
+              </p>
+            </div>
+          ) : (
+            <div className="text-center">
+              <p className="mx-auto w-fit rounded-full border-2 border-[#11120f] bg-[#ffd84d] px-3.5 py-1 font-mono text-[11px] font-medium uppercase tracking-[0.12em]">Reset password</p>
+              <h1 className="mt-4 text-[22px] font-semibold leading-[1.1] tracking-[-0.03em]">Forgot your password?</h1>
+              <p className="mt-2 text-[13.5px] leading-6 text-[#11120f]/55">Enter the email on your account and we&apos;ll send you a reset link.</p>
 
-                  {error && <p className="mt-3 text-sm font-medium text-red-500">{error}</p>}
+              <form onSubmit={handleSubmit} className="mt-6 text-left">
+                <label className="mb-2 block text-[13px] font-semibold text-[#11120f]/70">Email</label>
+                <input
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  placeholder="you@company.com"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  autoFocus
+                  className="h-12 w-full rounded-xl border-2 border-[#11120f] bg-white px-4 text-[15px] outline-none transition placeholder:text-[#11120f]/30 focus:ring-4 focus:ring-[#3784ff]/20"
+                />
 
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-slate-950 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    {loading && <Spinner />}
-                    Send reset link
-                  </button>
-                </form>
-              </>
-            )}
+                {error && <p className="mt-3 rounded-xl border-2 border-[#11120f] bg-[#ffe9ea] px-3 py-2 text-[13px] font-medium text-[#8a2b32]">{error}</p>}
 
-            <p className="mt-5 text-center text-sm font-medium text-slate-500">
-              <Link href="/login" className="font-semibold text-slate-950 underline-offset-2 hover:underline">
-                Back to sign in
-              </Link>
-            </p>
-          </div>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-full border-2 border-[#11120f] bg-[#3784ff] text-[15px] font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[#2f77ea] disabled:pointer-events-none disabled:opacity-50"
+                >
+                  {loading && <Spinner />}
+                  Send reset link
+                </button>
+              </form>
+            </div>
+          )}
+
+          <p className="mt-6 text-center text-[13px] font-medium text-[#11120f]/55">
+            <Link href="/login" className="font-semibold text-[#11120f] underline decoration-[#11120f]/30 underline-offset-4 transition hover:decoration-[#11120f]">
+              Back to sign in
+            </Link>
+          </p>
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }

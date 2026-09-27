@@ -7,6 +7,8 @@ import { useState, type FormEvent } from "react";
 import api from "@/lib/api";
 import { getErrorMessage, Spinner } from "@/app/components/auth/AuthShared";
 
+const dots = { backgroundImage: "radial-gradient(#000 1.2px, transparent 1.2px)", backgroundSize: "14px 14px" };
+
 export function ResetPasswordForm() {
   const params = useSearchParams();
   const router = useRouter();
@@ -42,80 +44,79 @@ export function ResetPasswordForm() {
   }
 
   return (
-    <div className="relative flex min-h-screen overflow-hidden bg-white px-4 py-8 text-slate-950 antialiased sm:px-6 lg:px-10">
-      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-[460px] items-center justify-center pt-16">
-        <div className="w-full">
-          <Link href="/" className="mx-auto flex w-fit items-center gap-2">
-            <Image src="/elpino.png" alt="Elpino" width={906} height={275} className="h-8 w-auto object-contain" />
-          </Link>
+    <main className="relative min-h-screen overflow-hidden bg-[#fff8ec] font-display text-[#11120f] antialiased">
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 opacity-[0.35]" style={dots} />
+      <span aria-hidden className="pointer-events-none absolute left-[8%] top-[16%] hidden -rotate-6 rounded-2xl border-2 border-[#11120f] bg-[#ffd84d] px-4 py-2 text-[14px] font-semibold sm:block">Almost there</span>
+      <span aria-hidden className="pointer-events-none absolute right-[9%] top-[22%] hidden rotate-3 rounded-2xl border-2 border-[#11120f] bg-white px-4 py-2 text-[14px] font-semibold sm:block">Signs you out everywhere else</span>
 
-          <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-            {!token ? (
-              <>
-                <h1 className="text-xl font-semibold text-slate-950">Invalid link</h1>
-                <p className="mt-2 text-sm leading-6 text-slate-500">
-                  This reset link is missing its token. Request a new one from the sign-in page.
-                </p>
-              </>
-            ) : done ? (
-              <>
-                <h1 className="text-xl font-semibold text-slate-950">Password updated</h1>
-                <p className="mt-2 text-sm leading-6 text-slate-500">
-                  Redirecting you to sign in with your new password…
-                </p>
-              </>
-            ) : (
-              <>
-                <h1 className="text-xl font-semibold text-slate-950">Choose a new password</h1>
-                <p className="mt-2 text-sm leading-6 text-slate-500">
-                  This will sign you out everywhere else, for safety.
-                </p>
+      <section className="relative z-10 mx-auto flex min-h-screen w-full max-w-[500px] flex-col items-center justify-center px-6 py-16 text-center">
+        <Link href="/" aria-label="Elpino home" className="mb-6 flex w-fit items-center">
+          <Image src="/elpino.png" alt="Elpino" width={906} height={275} priority className="h-8 w-auto object-contain" />
+        </Link>
 
-                <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-600">New password</label>
-                    <input
-                      value={password}
-                      onChange={(event) => setPassword(event.target.value)}
-                      placeholder="At least 8 characters"
-                      type="password"
-                      autoComplete="new-password"
-                      minLength={8}
-                      required
-                      autoFocus
-                      className="mt-2 h-12 w-full rounded-lg border border-slate-200 bg-white px-4 text-sm font-medium text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-[#D9BEF4] focus:shadow-[0_0_0_3px_rgba(217,190,244,0.15)]"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-600">Confirm password</label>
-                    <input
-                      value={confirm}
-                      onChange={(event) => setConfirm(event.target.value)}
-                      placeholder="Re-enter your new password"
-                      type="password"
-                      autoComplete="new-password"
-                      minLength={8}
-                      required
-                      className="mt-2 h-12 w-full rounded-lg border border-slate-200 bg-white px-4 text-sm font-medium text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-[#D9BEF4] focus:shadow-[0_0_0_3px_rgba(217,190,244,0.15)]"
-                    />
-                  </div>
+        <div className="w-full animate-[fadeIn_.55s_ease-out_both] rounded-[22px] border-2 border-[#11120f] bg-white p-8 text-left shadow-[6px_6px_0_0_#11120f]">
+          {!token ? (
+            <div className="text-center">
+              <p className="mx-auto w-fit rounded-full border-2 border-[#11120f] bg-[#ffe9ea] px-3.5 py-1 font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-[#8a2b32]">Invalid link</p>
+              <h1 className="mt-4 text-[22px] font-semibold leading-[1.1] tracking-[-0.03em]">This link isn&apos;t working</h1>
+              <p className="mt-2 text-[13.5px] leading-6 text-[#11120f]/55">This reset link is missing its token. Request a new one from the sign-in page.</p>
+            </div>
+          ) : done ? (
+            <div className="text-center">
+              <p className="mx-auto w-fit rounded-full border-2 border-[#11120f] bg-[#d9f2e6] px-3.5 py-1 font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-[#1a7a4f]">Password updated</p>
+              <h1 className="mt-4 text-[22px] font-semibold leading-[1.1] tracking-[-0.03em]">You&apos;re all set</h1>
+              <p className="mt-2 text-[13.5px] leading-6 text-[#11120f]/55">Redirecting you to sign in with your new password…</p>
+            </div>
+          ) : (
+            <div className="text-center">
+              <p className="mx-auto w-fit rounded-full border-2 border-[#11120f] bg-[#ffd84d] px-3.5 py-1 font-mono text-[11px] font-medium uppercase tracking-[0.12em]">Reset password</p>
+              <h1 className="mt-4 text-[22px] font-semibold leading-[1.1] tracking-[-0.03em]">Choose a new password</h1>
+              <p className="mt-2 text-[13.5px] leading-6 text-[#11120f]/55">This will sign you out everywhere else, for safety.</p>
 
-                  {error && <p className="text-sm font-medium text-red-500">{error}</p>}
+              <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4 text-left">
+                <div>
+                  <label className="mb-2 block text-[13px] font-semibold text-[#11120f]/70">New password</label>
+                  <input
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                    placeholder="At least 8 characters"
+                    type="password"
+                    autoComplete="new-password"
+                    minLength={8}
+                    required
+                    autoFocus
+                    className="h-12 w-full rounded-xl border-2 border-[#11120f] bg-white px-4 text-[15px] outline-none transition placeholder:text-[#11120f]/30 focus:ring-4 focus:ring-[#3784ff]/20"
+                  />
+                </div>
+                <div>
+                  <label className="mb-2 block text-[13px] font-semibold text-[#11120f]/70">Confirm password</label>
+                  <input
+                    value={confirm}
+                    onChange={(event) => setConfirm(event.target.value)}
+                    placeholder="Re-enter your new password"
+                    type="password"
+                    autoComplete="new-password"
+                    minLength={8}
+                    required
+                    className="h-12 w-full rounded-xl border-2 border-[#11120f] bg-white px-4 text-[15px] outline-none transition placeholder:text-[#11120f]/30 focus:ring-4 focus:ring-[#3784ff]/20"
+                  />
+                </div>
 
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="mt-2 flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-slate-950 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    {loading && <Spinner />}
-                    Update password
-                  </button>
-                </form>
-              </>
-            )}
-          </div>
+                {error && <p className="rounded-xl border-2 border-[#11120f] bg-[#ffe9ea] px-3 py-2 text-[13px] font-medium text-[#8a2b32]">{error}</p>}
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="mt-2 flex h-12 w-full items-center justify-center gap-2 rounded-full border-2 border-[#11120f] bg-[#3784ff] text-[15px] font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[#2f77ea] disabled:pointer-events-none disabled:opacity-50"
+                >
+                  {loading && <Spinner />}
+                  Update password
+                </button>
+              </form>
+            </div>
+          )}
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }

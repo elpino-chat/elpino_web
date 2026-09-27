@@ -47,7 +47,95 @@
       "privacy": "Zásadami ochrany osobních údajů",
       "successTitle": "Zpráva odeslána",
       "successBody": "Děkujeme za kontaktování. Brzy se vám ozveme.",
-      "sendAnother": "Odeslat další zprávu"
+      "sendAnother": "Odeslat další zprávu",
+      "sentStamp": "Odesláno ✓",
+      "postmarkLabel": "mail",
+      "securityNote": "Odesláno bezpečně — nikdy nebylo použito pro školení"
+    },
+    "hero": {
+      "eyebrow": "Kontakt · podatelnu",
+      "greeting": "Dobrý den.",
+      "titlePrefix": "Jak mohu",
+      "titleHl": "pomáháme?",
+      "searchLabel": "Hledejte témata nápovědy",
+      "searchPlaceholder": "Hledejte prodej, podporu, fakturaci a další",
+      "searchButtonLabel": "Hledat",
+      "noMatch": "Žádná přesná shoda. Stiskněte Enter a pošlete nám svůj dotaz.",
+      "linkGettingStarted": "Začínáme",
+      "linkFeaturedGuides": "Vybraní průvodci",
+      "linkPlansBilling": "Plány a fakturace",
+      "linkSendMessage": "Nebo nám pošlete zprávu ↓"
+    },
+    "desks": {
+      "eyebrow": "Vyberte trasu",
+      "titlePrefix": "Dosáhněte ",
+      "titleHl": "pravý stůl.",
+      "subtitle": "Vyberte kanál, který nejlépe odpovídá tomu, co potřebujete. Každá cesta vede ke skutečnému členovi našeho týmu.",
+      "deskLabel": "Stůl {n}",
+      "addressed": "Adresa pohlednice ✓",
+      "actionAddress": "Adresa pohlednice",
+      "emailNote": "Dáváte přednost vlastní poštovní aplikaci? Každý stůl s adresou funguje také od {link}.",
+      "emailNoteLink": "e-mailu"
+    },
+    "postcard": {
+      "eyebrow": "Pošlete nám poznámku",
+      "titlePrefix": "Skutečný člověk ",
+      "titleHl": "si to přečte.",
+      "addressedTo": "Adresováno na"
+    },
+    "tracking": {
+      "eyebrow": "Sledujte svou pohlednici",
+      "titlePrefix": "Co se stane ",
+      "titleHl": "poté, co stisknete odeslat.",
+      "onlineStatus": "Náš tým je online",
+      "hours": "Po–Pá, 9:00–18:00 CET",
+      "steps": [
+        {
+          "title": "Odesláno",
+          "body": "Vaše pohlednice opustí vaše ruce. Nic jiného na práci."
+        },
+        {
+          "title": "Čteme každé slovo",
+          "body": "Vaše poznámka přistane s člověkem v týmu – žádné bludiště lístků, žádní roboti."
+        },
+        {
+          "title": "Odpověď do jednoho pracovního dne",
+          "body": "Skutečné odpovědi od někoho, kdo na produktu pracuje."
+        },
+        {
+          "title": "Volání, pokud je užitečné",
+          "body": "V oblasti prodeje a podnikání projdeme Elpino na vašem skutečném pracovním postupu."
+        }
+      ]
+    },
+    "library": {
+      "titlePrefix": "Raději to najděte ",
+      "titleHl": "sebe?",
+      "subtitle": "Většina otázek je zde již zodpovězena — a vše níže odkazuje přímo na zdroj.",
+      "cardLabel": "karta {n}",
+      "items": [
+        {
+          "title": "Rychlé odpovědi",
+          "body": "Nastavení, účtování, eskalace a zabezpečení – odpověď v FAQ.",
+          "cta": "Projděte si FAQ"
+        },
+        {
+          "title": "Dokumentace",
+          "body": "Instalační průvodce, nastavení konektoru a konfigurace pracovního prostoru.",
+          "cta": "Otevřete dokumenty"
+        },
+        {
+          "title": "Zabezpečení a soukromí",
+          "body": "Jak jsou vaše data zašifrována, uložena a nikdy použita pro školení.",
+          "cta": "Přečtěte si zásady"
+        }
+      ]
+    },
+    "search": {
+      "plansTitle": "Plány a fakturace",
+      "plansDetail": "Otázky týkající se předplatného, faktur nebo cen",
+      "accountTitle": "Účet a zabezpečení",
+      "accountDetail": "Pomoc s nastavením přístupu, ochrany osobních údajů nebo účtu"
     }
   },
   "auth": {
@@ -105,6 +193,4130 @@
         "lowercase": "Malé písmeno",
         "number": "Číslo"
       }
+    }
+  },
+  "home": {
+    "hero": {
+      "badge": "Podpora zákazníků založená na AI",
+      "titlePrefix": "Podpora, která",
+      "words": [
+        "odpovídá.",
+        "řeší.",
+        "pamatuje si.",
+        "předává."
+      ],
+      "subtitle": "AI, která odpovídá na základě vašich znalostí, ověřuje skutečné platby a objednávky a předává týmu s plným kontextem, když je potřeba člověk.",
+      "ctaPrimary": "Začít zdarma",
+      "ctaSecondary": "Vyzkoušejte to sami",
+      "trust": [
+        "100 bezplatných AI zpráv měsíčně",
+        "Karta není nutná",
+        "Hotovo za jedno odpoledne"
+      ],
+      "stickers": [
+        "Vyřešeno AI",
+        "Člověk v pohotovosti",
+        "Ve výchozím stavu soukromé",
+        "Nic se neztratí"
+      ],
+      "callouts": [
+        "Odznak AI u každé konverzace",
+        "Připojte se a převezměte",
+        "Poloha a zařízení návštěvníka"
+      ],
+      "widget": {
+        "name": "Elpino",
+        "subtitle": "Odpovídá během sekund",
+        "convo": [
+          "Byl mi účtován upgrade dvakrát?",
+          "Zkontroloval jsem vaši historii plateb",
+          "Bylo vám naúčtováno jen jednou. Druhý pokus se nezdařil a nikdy nebyl zaúčtován."
+        ]
+      }
+    },
+    "marquee": {
+      "questions": [
+        "Kde je moje faktura?",
+        "Jak resetuji heslo?",
+        "Byl mi účtován dvakrát?",
+        "Můžu získat vrácení peněz?",
+        "Kde je moje objednávka?",
+        "Jak přidám člena týmu?",
+        "Jsou má data v bezpečí?",
+        "Proč se moje platba nezdařila?",
+        "Můžu mluvit s člověkem?"
+      ]
+    },
+    "tryit": {
+      "eyebrow": "Vyzkoušejte",
+      "titlePrefix": "Zeptejte se na něco.",
+      "titleHl": "Podívejte se, co udělá.",
+      "subtitle": "Vyberte otázku zákazníka. Vlevo chat, vpravo vše, co Elpino udělal před odpovědí.",
+      "widgetName": "Elpino",
+      "widgetSubtitle": "AI podpora",
+      "whatItDid": "Co Elpino udělal",
+      "done": "Hotovo",
+      "working": "Zpracovává se…",
+      "stepStart": "start",
+      "stepOther": "krok",
+      "person": "člověk",
+      "resolved": "vyřešeno",
+      "humanNote": "Nejprve se zeptal · člen týmu se může připojit, nebo se vytvoří tiket",
+      "resolvedNote": "Odpovězeno a vyřešeno, člověk není potřeba",
+      "sampleNote": "Ukázkové odpovědi. Zobrazené kroky jsou typem nástrojů, které Elpino skutečně používá.",
+      "qas": [
+        {
+          "q": "Byl mi účtován dvakrát?",
+          "steps": [
+            "Ověřil vás kódem z e-mailu",
+            "Zkontroloval vaši historii plateb"
+          ],
+          "a": "Bylo vám naúčtováno jen jednou. Druhý pokus se nezdařil a nikdy nebyl zaúčtován."
+        },
+        {
+          "q": "Kde je moje objednávka?",
+          "steps": [
+            "Ověřil vás kódem z e-mailu",
+            "Kontaktoval obchod přes MCP"
+          ],
+          "a": "Odesláno včera, doručení ve čtvrtek. Poslal jsem vám sledovací odkaz e-mailem."
+        },
+        {
+          "q": "Jak resetuji heslo?",
+          "steps": [
+            "Prohledal vaši znalostní databázi"
+          ],
+          "a": "Na přihlašovací stránce zvolte „Zapomenuté heslo“ a použijte odkaz, který vám e-mailem zašleme."
+        },
+        {
+          "q": "Můžu získat vrácení peněz?",
+          "steps": [
+            "Zkontroloval platbu",
+            "Vrácení peněz je pro tento pracovní prostor vypnuto"
+          ],
+          "a": "Nemohu to vrácení provést sám. Chcete, abych vás spojil s naším týmem?"
+        },
+        {
+          "q": "Můžu mluvit s člověkem?",
+          "steps": [
+            "Zeptal se před předáním",
+            "Upozornil celý týmu najednou"
+          ],
+          "a": "Priya z našeho týmu se připojila a vidí celou konverzaci."
+        },
+        {
+          "q": "Prodáváte dárkové karty?",
+          "steps": [
+            "Prohledal vaši znalostní databázi",
+            "Nenalezena žádná shoda"
+          ],
+          "a": "Tuto informaci nemám. Chcete, abych vás spojil s naším týmem?"
+        }
+      ]
+    },
+    "customizer": {
+      "eyebrow": "Přizpůsobte si to",
+      "titlePrefix": "Widget, který",
+      "titleHl": "vypadá a mluví jako vy.",
+      "subtitle": "Přidejte své logo, pojmenujte svou AI, vyberte barvu a téma a jazyk odpovědí. Pohrajte si s nastavením a sledujte, jak se widget mění.",
+      "yourLogo": "Vaše logo",
+      "upload": "Nahrát logo",
+      "remove": "Odstranit",
+      "fileTooBig": "Použijte obrázek do 2 MB.",
+      "fileShown": "Zobrazuje se pouze zde. Nikam se nenahrává.",
+      "aiName": "Jméno AI",
+      "greeting": "Pozdrav",
+      "accentColour": "Zvýrazňující barva",
+      "theme": "Téma",
+      "light": "Světlé",
+      "dark": "Tmavé",
+      "customerWritesIn": "Zákazník píše v",
+      "theAi": "AI",
+      "repliesIn": "odpovídá v",
+      "autoMatch": "Automaticky: podle zákazníka",
+      "seesUrl": "AI vidí URL stránky",
+      "visitorOn": "Návštěvník je na",
+      "replyingIn": "Odpovídá v",
+      "matched": "(shoda)",
+      "writeMessage": "Napište zprávu…",
+      "previewNote": "Náhled s ukázkovým textem. Váš skutečný widget používá vaše logo, barvy a pozdrav.",
+      "support": "Podpora",
+      "weReplyFast": "Odpovídáme během sekund"
+    },
+    "tour": {
+      "eyebrow": "Produkt",
+      "titlePrefix": "Vše, co potřebuje týmu podpory,",
+      "titleHl": "na jednom místě.",
+      "items": [
+        {
+          "tag": "AI agent",
+          "title": "Agent, který ví, s kým mluví",
+          "desc": "Pamatuje si zákazníky, ověřuje identitu, kontroluje platby a volá vaše nástroje."
+        },
+        {
+          "tag": "Sdílená schránka",
+          "title": "Jedna schránka pro tým i AI",
+          "desc": "Jasná odpovědnost, upozornění na připojení a plný kontext každé konverzace."
+        },
+        {
+          "tag": "Znalostní databáze",
+          "title": "Naučte ji vše, co máte",
+          "desc": "Prohledejte svůj web, nahrajte soubory, pište stránky. S přepínači veřejné/soukromé."
+        },
+        {
+          "tag": "Tikety",
+          "title": "Nic se neztratí",
+          "desc": "Pokud nikdo není k dispozici, vytvoří se tiket a zákazník je informován."
+        }
+      ]
+    },
+    "who": {
+      "eyebrow": "Pro koho",
+      "titlePrefix": "Vytvořeno pro lidi,",
+      "titleHl": "kteří dělají podporu.",
+      "items": [
+        {
+          "title": "Zakladatelé",
+          "desc": "Budujte produkt, ne odpovědi podpory. Elpino vás kontaktuje jen tehdy, když je skutečně potřeba zakladatel.",
+          "pts": [
+            "Bezplatný plán, 100 AI zpráv měsíčně",
+            "Upozorní vás jen tehdy, když je potřeba člověk",
+            "Nastavení za jedno odpoledne"
+          ]
+        },
+        {
+          "title": "Zaneprázdněné týmy",
+          "desc": "Špičky pod kontrolou: AI zvládá opakování, všichni dostanou stejné upozornění na připojení, nikdo neodpoví dvakrát.",
+          "pts": [
+            "Jedno upozornění zasáhne celý týmu",
+            "Odznaky odpovědnosti u každé konverzace",
+            "Tiket, když nikdo není k dispozici"
+          ]
+        },
+        {
+          "title": "Vývojáři",
+          "desc": "Jeden tag, podepsaný identity token a MCP servery. Vy si vybíráte, čeho se AI může dotknout.",
+          "pts": [
+            "Jeden script tag pro widget",
+            "Podepsané, krátkodobé identity tokeny",
+            "MCP servery schvalované po jednotlivých nástrojích"
+          ]
+        }
+      ],
+      "founderVisual": [
+        {
+          "q": "Jak exportuji svá data?",
+          "ok": true
+        },
+        {
+          "q": "Proč mi neprošla karta?",
+          "ok": true
+        },
+        {
+          "q": "Vlastní smlouva?",
+          "ok": false
+        }
+      ],
+      "handled": "Vyřízeno",
+      "needsYou": "Potřebuje vás",
+      "joined": "Priya se připojila"
+    },
+    "statement": "Elpino odpoví, co ví, udělá, co dovolíte, a na vše ostatní se zeptá člověka.",
+    "integrations": {
+      "eyebrow": "Integrace",
+      "titlePrefix": "Připojuje se k tomu, co",
+      "titleHl": "už používáte.",
+      "subtitle": "Platební systémy pro kontroly a odkazy, projektové nástroje pro tikety a MCP pro vaše vlastní systémy. Elpino je uprostřed a vše, co připojíte, s ním funguje.",
+      "tags": [
+        "Platby",
+        "Tikety",
+        "Vaše systémy"
+      ],
+      "cta": "Zobrazit všechny integrace"
+    },
+    "trust": {
+      "eyebrow": "Důvěra",
+      "titlePrefix": "Výkonné, s",
+      "titleHl": "brzdami na svém místě.",
+      "subtitle": "Toto jsou pravidla, podle kterých Elpino funguje. Většina je vždy zapnutá. Části týkající se peněz zapínáte vy.",
+      "cta": "Přečíst bezpečnostní průvodce",
+      "rulebook": "Pravidla Elpino",
+      "setByYou": "Nastaveno vámi",
+      "guardrailsOn": "Zábrany zapnuty",
+      "alwaysOn": "Vždy zapnuto",
+      "rules": [
+        {
+          "title": "Odpovídat pouze ze schválených znalostí",
+          "desc": "Pokud to není ve vaší znalostní databázi, AI to řekne a nabídne člověka."
+        },
+        {
+          "title": "Skrýt jména a e-maily před AI",
+          "desc": "Model vidí referenční kódy, ne identity vašich zákazníků."
+        },
+        {
+          "title": "Ověřit před něčím osobním",
+          "desc": "Nejprve přichází e-mailový kód nebo podepsaný token."
+        },
+        {
+          "title": "Pouze nástroje, které povolíte",
+          "desc": "Každý MCP nástroj schvalujete jednotlivě."
+        }
+      ],
+      "refundTitle": "Povolit AI vydávat vrácení peněz",
+      "refundOn": "Zapnuto. AI může vracet peníze podle nastavení vlastníka pracovního prostoru.",
+      "refundOff": "Ve výchozím stavu vypnuto. Zapnout to může jen vlastník pracovního prostoru."
+    },
+    "pricing": {
+      "eyebrow": "Ceny",
+      "titlePrefix": "Plaťte za pomoc,",
+      "titleHl": "ne za hlavy.",
+      "subtitle": "Začněte zdarma. Placené plány se měří podle množství práce, kterou AI odvede.",
+      "cta": "Zobrazit všechny ceny",
+      "plans": [
+        {
+          "name": "Zdarma",
+          "big": "0 $",
+          "note": "100 AI zpráv měsíčně",
+          "pts": [
+            "Karta není nutná",
+            "Widget, znalosti a schránka",
+            "Předání nikdy nestojí navíc"
+          ]
+        },
+        {
+          "name": "Placené plány",
+          "big": "Na základě kreditu",
+          "note": "Měsíční AI kredit odpovídající vašemu objemu",
+          "pts": [
+            "Nástroje pro platby a účet",
+            "Prostor pro větší týmu",
+            "Doplňte kdykoli"
+          ]
+        },
+        {
+          "name": "Extra členové",
+          "big": "Balíčky míst",
+          "note": "Přidejte místa, která se prodlužují s vaším plánem",
+          "pts": [
+            "Pouze když rostete",
+            "Stejná schránka, více rukou",
+            "Zrušte kdykoli"
+          ]
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Otázky",
+      "titlePrefix": "Co se lidé ptají",
+      "titleHl": "nejdřív.",
+      "items": [
+        {
+          "q": "Co je Elpino?",
+          "a": "Platforma podpory zákazníků založená na AI: chatový widget na vašem webu, AI agent, který odpovídá z vašich znalostí a ověřuje skutečné platby, sdílená schránka týmu a tikety, když nikdo není k dispozici."
+        },
+        {
+          "q": "Bude AI vymýšlet věci?",
+          "a": "Odpovídá ze znalostí, které jste schválili, a fáze ověření porovnává návrhy s výsledky nástrojů. Když neví, řekne to a nabídne člověka."
+        },
+        {
+          "q": "Co se stane, když nemůže pomoct?",
+          "a": "Nejprve se zeptá zákazníka. Pokud souhlasí, celý tým dostane upozornění na připojení a má 90 sekund na reakci. Pokud se nikdo nepřipojí, vytvoří se tiket a zákazník je informován e-mailem."
+        },
+        {
+          "q": "Jak dlouho trvá nastavení?",
+          "a": "Většina týmů je v provozu do stejného dne: přidejte znalosti, vložte kód widgetu a pozvěte svůj tým."
+        },
+        {
+          "q": "Existuje bezplatný plán?",
+          "a": "Ano: 100 AI zpráv měsíčně, karta není nutná."
+        },
+        {
+          "q": "Funguje to na jiných kanálech?",
+          "a": "Chat na webu už funguje. Omnichannel přichází v listopadu."
+        }
+      ]
+    },
+    "closing": {
+      "title": "Dejte zákazníkům odpověď dřív, než dopíší.",
+      "subtitle": "Začněte zdarma, naučte ho o svém podnikání a nechte ho zvládat opakující se otázky.",
+      "ctaPrimary": "Začít zdarma",
+      "ctaSecondary": "Kontaktujte nás"
+    }
+  },
+  "pricing": {
+    "hero": {
+      "badge": "Ceny",
+      "title": "Začněte zdarma. Rozvíjejte se, když budete připraveni.",
+      "subtitle": "Každý nový účet začíná s podporou AI, sdílenou schránkou a předáním člověku — karta není nutná. Poznejte Elpino se svým týmem a poté vyberte plán, když potřebujete více.",
+      "stickerFree": "Zdarma navždy ✓",
+      "stickerNoCard": "Karta není nutná",
+      "ctaDashboard": "Přejít na panel",
+      "ctaStart": "Začít zdarma",
+      "billingPeriodLabel": "Fakturační období",
+      "monthly": "Měsíčně",
+      "annually": "Ročně"
+    },
+    "planCards": {
+      "mostPopular": "Nejoblíbenější",
+      "save": "ušetřete",
+      "freeForever": "Zdarma navždy",
+      "discussCustomPlan": "nebo proberte vlastní plán",
+      "compareAllFeatures": "Porovnat všechny funkce",
+      "whatsIncluded": "Co je zahrnuto",
+      "builtForTeam": "Vytvořeno pro celý váš tým",
+      "builtForTeamDesc": "Sdílené znalosti, jedna schránka a předání člověku, kdykoli je potřeba."
+    },
+    "comparison": {
+      "eyebrow": "Srovnání plánů",
+      "titlePrefix": "Zjistěte, co ",
+      "titleHl": "vyhovuje vašemu týmu.",
+      "subtitle": "Porovnejte kapacitu, místa a přístup k produktu ve všech plánech. Upgradujte, kdykoli váš tým podpory potřebuje více prostoru.",
+      "featuresHeader": "Funkce",
+      "popular": "Oblíbené",
+      "billedAnnually": "fakturováno ročně",
+      "billedMonthly": "fakturováno měsíčně",
+      "showAll": "Zobrazit všechny funkce",
+      "showFewer": "Zobrazit méně funkcí",
+      "included": "Zahrnuto",
+      "notIncluded": "Nezahrnuto",
+      "categories": {
+        "aiRules": {
+          "name": "Co může AI dělat",
+          "rows": {
+            "allowance": {
+              "label": "Měsíční limit AI",
+              "description": "Free je omezen na 100 zpráv AI. Placené plány zahrnují měsíční dolarový kredit, který AI utrácí při práci, sdílený celým pracovním prostorem."
+            },
+            "whenOut": {
+              "label": "Když se limit vyčerpá",
+              "description": "AI předává nové konverzace vašemu týmu. U placených plánů můžete kredit kdykoli dobít nebo zapnout automatické dobíjení."
+            },
+            "escalations": {
+              "label": "Předání člověku",
+              "description": "Vlákna, která AI předává, protože nemohlo odpovědět s jistotou. Samotné předání nikdy nestojí navíc."
+            }
+          }
+        },
+        "seats": {
+          "name": "Kdo se může přihlásit",
+          "rows": {
+            "included": {
+              "label": "Zahrnutá místa",
+              "description": "Členové týmu zahrnutí v ceně plánu, včetně vlastníka pracovního prostoru."
+            },
+            "extra": {
+              "label": "Extra místa",
+              "description": "Každý člen týmu nad zahrnutá místa, na jakémkoli plánu."
+            },
+            "ceiling": {
+              "label": "Strop míst",
+              "description": "Bod, kde potřebujete větší plán, ne další místo."
+            }
+          }
+        },
+        "product": {
+          "name": "Produkt",
+          "rows": {
+            "widget": {
+              "label": "Widget chatu na webu",
+              "description": "Vložitelný chat, se kterým vaši návštěvníci skutečně mluví."
+            },
+            "knowledge": {
+              "label": "Znalostní databáze a odpovědi AI",
+              "description": "Prohledejte svůj web nebo nahrajte dokumenty; AI odpovídá na jejich základě."
+            },
+            "storage": {
+              "label": "Úložiště znalostí",
+              "description": "Kolik skenovaného a nahraného obsahu může pracovní prostor pojmout."
+            },
+            "inbox": {
+              "label": "Sdílená schránka a předání",
+              "description": "Jedna schránka pro tým, s předáním AI, kdy by měla."
+            },
+            "audit": {
+              "label": "Auditní stopa AI",
+              "description": "Každá odpověď, s články a vyhledáváními, ze kterých byla vytvořena."
+            },
+            "analytics": {
+              "label": "Analýza návštěvníků",
+              "description": "Živí návštěvníci, zdroje, země a stránky."
+            },
+            "profiles": {
+              "label": "Profily klientů a historie",
+              "description": "Uložené záznamy klientů a jejich předchozí konverzace."
+            },
+            "domain": {
+              "label": "Připojená domena",
+              "description": "Jeden pracovní prostor, jeden web — potřebujete druhý? spusťte druhý pracovní prostor."
+            },
+            "support": {
+              "label": "Podpora",
+              "description": "Jak nás kontaktovat, když něco potřebuje člověka z naší strany."
+            }
+          }
+        }
+      }
+    },
+    "values": {
+      "handsOff": "Předává člověku",
+      "topUpOrHandoff": "Dobít nebo předat",
+      "noExtraCharge": "Bez dodatečného poplatku",
+      "noLimit": "Bez limitu",
+      "standard": "Standardní",
+      "priority": "Prioritní",
+      "messages": "zpráv",
+      "credit": "kredit",
+      "seatBundleSummary": "3 místa za $2, 5 za $3"
+    },
+    "billing": {
+      "eyebrow": "Jasné, jednoduché účtování",
+      "titleLine1": "Plaťte za to, co AI dělá.",
+      "titleLine2": "Ne za předání.",
+      "subtitle": "Free zahrnuje 100 zpráv AI za měsíc. Placené plány zahrnují měsíční kredit AI, který kryje co nejvíce konverzací, takže rychlá otázka stojí méně než dlouhá výměna. Předání konverzace vašemu týmu je vždy zdarma.",
+      "creditCard": {
+        "label": "Měsíční kredit AI",
+        "amount": "Od $7",
+        "note": "každý měsíc na Starter",
+        "chatsUseCredit": "chaty používají kredit",
+        "refillsMonthly": "doplňuje se měsíčně",
+        "desc": "Starter zahrnuje $7, Growth $40 a Scale $240 kreditu AI každý měsíc. Potřebujete více? Dobijte kdykoli nebo zapněte automatické dobíjení.",
+        "cta": "Porovnat plány"
+      },
+      "handoffCard": {
+        "stamp": "Předání = zdarma",
+        "label": "Příplatek za předání",
+        "note": "Na každém plánu. Vždy."
+      },
+      "inboxCard": {
+        "title": "Vaše AI a váš tým, v jedné schránce.",
+        "desc": "AI odpovídá z vašich znalostí. Když je potřeba člověk, váš tým pokračuje s již viditelnou úplnou konverzací.",
+        "cta": "Zjistit, jak to funguje"
+      }
+    },
+    "capacity": {
+      "eyebrow": "Přidat kapacitu",
+      "title": "Rostěte bez změny způsobu práce.",
+      "subtitle": "Přidávejte lidi nebo kapacitu AI pouze tehdy, když potřebujete. Vaše schránka, znalosti a historie konverzací zůstávají přesně tam, kde jsou.",
+      "teammatesTitle": "Další členové týmu",
+      "teammatesDesc": "Dejte více lidem vlastní přihlášení, zatímco sdílí stejnou schránku, znalosti a kredit AI. Zůstávají ve vašem plánu každý měsíc, dokud je neodstraníte.",
+      "perMonth": "za měsíc",
+      "seatsWord": "míst",
+      "topUpAnytime": "Dobijte kdykoli",
+      "onAnyPaidPlan": "na jakémkoli placeném plánu",
+      "creditTitle": "Další kredit AI",
+      "creditDesc": "Nechte AI odpovídat i po vyčerpání měsíčního kreditu. Předání konverzace vašemu týmu nikdy nestojí navíc.",
+      "creditCards": [
+        {
+          "name": "Měsíční kredit",
+          "note": "Resetuje se každý měsíc"
+        },
+        {
+          "name": "Dobití",
+          "note": "Nikdy nevyprší"
+        },
+        {
+          "name": "Automatické dobíjení",
+          "note": "Volitelné"
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Otázky",
+      "title": "Otázky o cenách",
+      "subtitle": "Nejčastěji dotazované podrobnosti o fakturaci. Nastavení, AI, integrace a bezpečnost jsou popsány v úplném FAQ.",
+      "readFull": "Přečíst úplné FAQ",
+      "items": [
+        {
+          "q": "Kolik stojí plány?",
+          "a": "Free je $0. Měsíční plány jsou Starter za $12 s $7 kreditu AI měsíčně, Growth za $59 s $40, a Scale za $299 s $240. Roční fakturace dává dva měsíce zdarma — platíte za deset měsíců a dostanete dvanáct: Starter stojí $120 za rok ($10/měsíc), Growth $590 ($49.17/měsíc), a Scale $2,990 ($249.17/měsíc)."
+        },
+        {
+          "q": "Jak funguje limit AI?",
+          "a": "Free zahrnuje 100 zpráv AI za měsíc. Každá odpověď, kterou AI odešle, se počítá jako jedna zpráva, takže krátký chat využívá málo a dlouhá výměna více. Placené plány fungují jinak: zahrnují měsíční kredit AI, který AI utrácí při práci, takže rychlá otázka využívá méně než dlouhá výměna. Starter zahrnuje $7 kreditu za měsíc, Growth $40 a Scale $240."
+        },
+        {
+          "q": "Stojí předání něco?",
+          "a": "Bez dodatečného poplatku. Samotné předání je zdarma na každém plánu, a AI se zastaví ve chvíli, kdy převezme člověk. Na Free se zprávy, které AI již odeslalo před předáním, stále počítají do vašich 100; u placených plánů AI utrácí kredit pouze během odpovídání a přestává kredit utrácet ve chvíli, kdy převezme člověk."
+        },
+        {
+          "q": "Může AI vydávat vrácení peněz?",
+          "a": "Pouze pokud vlastník pracovního prostoru zapne vrácení peněz. Ve výchozím stavu jsou vypnuté. I s vypnutými vráceními může AI zkontrolovat platbu a nabídnout spojení klienta s vaším týmem."
+        },
+        {
+          "q": "Co se stane, když vyčerpám svůj limit AI?",
+          "a": "AI předává nové konverzace přímo vašemu týmu, místo aby odpovídalo. U placeného plánu můžete kredit kdykoli dobít nebo zapnout automatické dobíjení, aby se nikdy nezastavil. Dobití nikdy nevyprší. Váš měsíční kredit se resetuje každé fakturační období."
+        },
+        {
+          "q": "Kolik stojí extra člen týmu?",
+          "a": "Extra místa přicházejí v balíčcích na každém plánu, včetně Free: 3 místa za $2 za měsíc, nebo 5 za $3. Místa a kredit AI se účtují zcela oddělene — přidání člena týmu nikdy neovlivní váš limit AI."
+        },
+        {
+          "q": "Mohu zrušit kdykoli?",
+          "a": "Ano, z Nastavení → Fakturace, bez závazků. Zrušení nabývá účinnosti na konci současného fakturačního období, takže si zachováte to, za co jste zaplatili, do té doby."
+        },
+        {
+          "q": "Co se stane, když přestanu platit?",
+          "a": "Pracovní prostor klesne na konci období na plán Free. Vaše znalostní databáze, historie konverzací a nastavení zůstávají zcela zachovány."
+        }
+      ]
+    },
+    "enterprise": {
+      "badge": "Enterprise",
+      "title": "Podpora, která roste s vámi.",
+      "subtitle": "Pro organizace podporující více klientů na více webech a týmech. Najděme správnou kapacitu pro vaši podporu.",
+      "features": [
+        "Kredit AI výrazně vyšší než v plánu Scale",
+        "Více webů a rostoucí týmy",
+        "Sdílený kontext a znalosti klientů",
+        "Objemové ceny přizpůsobené vašim potřebám"
+      ],
+      "talkTitle": "Promluvme si",
+      "customPricing": "Dostupné individuální ceny",
+      "contactCta": "Kontaktovat obchod",
+      "talkPoints": [
+        "Prodiskutovat objem vašich konverzací",
+        "Naplánovat váš pracovní prostor a místa",
+        "Určit rozsah znalostí napříč weby",
+        "Prozkoumat potřeby onboardingu a SLA"
+      ]
+    },
+    "plans": {
+      "free": {
+        "name": "Free",
+        "description": "Pro zakladatele, který odpovídá na vlastní podporu. Skutečná AI, žádná karta.",
+        "cta": "Začít",
+        "features": [
+          "Až 100 zpráv AI/měsíc",
+          "2 místa zahrnuta",
+          "Balíčky míst od $0.60/místo",
+          "Znalostní databáze 20 MB",
+          "Widget chatu na webu",
+          "Sdílená schránka s předáním"
+        ]
+      },
+      "starter": {
+        "name": "Starter",
+        "description": "Pro malý tým, jehož podpora přerostla jednu schránku.",
+        "cta": "Začít",
+        "features": [
+          "Kredit AI $7 každý měsíc",
+          "5 míst zahrnuto",
+          "Balíčky míst od $0.60/místo",
+          "Znalostní databáze 200 MB",
+          "Dobijte kredit kdykoli",
+          "Analýza návštěvníků"
+        ]
+      },
+      "growth": {
+        "name": "Growth",
+        "description": "Pro týmy provozující podporu jako skutečnou funkci, s daty, která to dokazují.",
+        "cta": "Začít",
+        "features": [
+          "Kredit AI $40 každý měsíc",
+          "15 míst zahrnuto",
+          "Balíčky míst od $0.60/místo",
+          "Znalostní databáze 1 GB",
+          "Dobijte kredit kdykoli",
+          "Plná auditní stopa AI",
+          "Prioritní podpora"
+        ]
+      },
+      "scale": {
+        "name": "Scale",
+        "description": "Pro podporu s vysokým objemem, kde AI nese většinu zátěže.",
+        "cta": "Začít",
+        "features": [
+          "Kredit AI $240 každý měsíc",
+          "40 míst zahrnuto",
+          "Balíčky míst od $0.60/místo",
+          "Znalostní databáze 5 GB",
+          "Dobijte kredit kdykoli",
+          "Integrace a přístup k API"
+        ]
+      }
+    }
+  },
+  "about": {
+    "typingLabel": "Elpino píše",
+    "hero": {
+      "badge": "O Elpino",
+      "titlePrefix": "Podpora zákazníků, ",
+      "titleHl": "více lidská.",
+      "subtitle": "Elpino dává zákazníkům užitečné odpovědi ze znalostí, které již máte, a poté udržuje váš tým blízko pro chvíle, které potřebují člověka.",
+      "ctaMeet": "Poznejte Elpino",
+      "ctaReadStory": "Přečtěte si náš příběh ↓",
+      "imageAlt": "Čtyři lenochodi Elpino spolupracují na podpoře zákazníků",
+      "bubble": "Ahoj, jak můžeme pomoct? 👋"
+    },
+    "story": {
+      "eyebrow": "Kde to začalo",
+      "titlePrefix": "Náš příběh začíná ",
+      "titleHl": "otázkou.",
+      "subtitle": "Co kdyby software pro podporu zákazníků pomáhal oběma stranám konverzace—nejen firmě, která ho řídí?",
+      "chatTitle": "Elpino",
+      "chatSub": "Vypráví náš příběh",
+      "sys1": "Kde to začalo",
+      "you1": "Co kdyby software pro podporu zákazníků pomáhal oběma stranám konverzace, nejen firmě, která ho řídí?",
+      "elpino1": "Nikdo neotevírá chat podpory pro zábavu.",
+      "elpino2": "Někdo se snaží něco dokončit. Něco mu stálo v cestě. Chce jasnou odpověď a vrátit se ke svému dni.",
+      "elpino3": "Na druhé straně je tým, který zpracovává známé otázky, rozptýlené informace, a více konverzací než času. Elpino existuje, aby tento okamžik zjednodušil pro každého.",
+      "sys2": "Takto to vypadá",
+      "you2": "Můžu si změnit e-mailovou adresu na svém účtu?",
+      "aiLabel": "AI Elpino · z vašich znalostí",
+      "aiAnswer": "Ano. Otevřete Nastavení, zvolte Profil, a poté aktualizujte svůj kontaktní e-mail.",
+      "aiGuideLabel": "Průvodce nastavením účtu",
+      "sys3": "Člen týmu je vždy blízko, když je potřeba"
+    },
+    "roles": {
+      "eyebrow": "Naše role",
+      "titlePrefix": "Tým vytvořený pro ",
+      "titleHl": "tuto práci.",
+      "subtitle": "Zde nejsou žádné fotografie zaměstnanců. Místo toho poznejte úkoly, které Elpino má za úkol dělat—stabilně, uvážlivě, a s lidským týmem, který je vždy v obraze.",
+      "joinedChat": "{name} se připojil k chatu",
+      "items": [
+        {
+          "title": "Posluchač",
+          "task": "Rozumí každé otázce zákazníka",
+          "description": "Přemění znalosti, které váš tým už má, na jasnou, užitečnou první odpověď."
+        },
+        {
+          "title": "Třídič",
+          "task": "Udržuje schránku v pohybu",
+          "description": "Najde signál v řadě, aby správné konverzace získaly správnou pozornost."
+        },
+        {
+          "title": "Ochránce",
+          "task": "Ví, kdy přivést člověka",
+          "description": "Zpracovává rutinní práci s péčí a předává chvíle, které potřebují lidský úsudek."
+        },
+        {
+          "title": "Pěstitel",
+          "task": "Učí se, co zákazníkům nejvíce pomáhá",
+          "description": "Odhaluje mezery, vzorce a otázky, které v čase zlepšují vaši podporu."
+        }
+      ]
+    },
+    "remote": {
+      "eyebrow": "Vytvořeno na dálku",
+      "titlePrefix": "Pracujeme na dálku od ",
+      "titleHl": "prvního dne.",
+      "subtitle": "Pracujeme prostřednictvím jasného psaní, sdíleného kontextu a soustředěného času. Kde někdo pracuje, je méně důležité než péče a úsudek, který přináší do produktu.",
+      "cta": "Zobrazit otevřené pozice",
+      "badge": "Na dálku od prvního dne",
+      "imageAlt": "Distribuovaný tým spolupracuje se sdílenými nástroji podpory AI"
+    },
+    "team": {
+      "eyebrow": "Malý tým, pro nyní",
+      "titleLine1": "Vytvořeno se zaměřením.",
+      "titleLine2Prefix": "Formováno s ",
+      "titleHl": "vámi.",
+      "subtitle": "Elpino je v rané fázi. To znamená, že lidé, kteří ho používají, mohou stále ovlivnit, čím se stane. Pozorně nasloucháme, opatrně vydáváme, a udržujeme problém zákazníka v centru.",
+      "cta": "Promluvte si s nami",
+      "card1": "Pozorně naslouchat.",
+      "card2": "Stavět jasně.",
+      "card3": "Zjednodušit podporu pro každého."
+    },
+    "faqSection": {
+      "eyebrow": "Trochu více o nás",
+      "titlePrefix": "Rádi, že jste se ",
+      "titleHl": "zeptali.",
+      "subtitle": "Několik odpovědí, než začnete svou vlastní konverzaci. Klikněte na otázku níže a Elpino odpoví.",
+      "exploreLink": "Prozkoumat celé FAQ →"
+    },
+    "faqChat": {
+      "title": "Zeptejte se Elpino",
+      "sub": "Online · odpovídá okamžitě",
+      "gladYouAsked": "Rádi, že jste se zeptali",
+      "tapQuestion": "Klikněte na otázku",
+      "doneText": "To je vše pro teď. Chcete pokračovat?",
+      "exploreFull": "Prozkoumat celé FAQ"
+    },
+    "faqs": [
+      [
+        "Co je Elpino?",
+        "Elpino je platforma podpory zákazníků založená na AI s chatovým widgetem na webu, odpověďmi z vaší znalostní databáze, sdílenou schránkou týmu, a předáním člověku, když AI nemůže pomoct."
+      ],
+      [
+        "Nahrazuje Elpino můj tým podpory?",
+        "Elpino zpracovává běžné otázky z vašich znalostí a zapojuje váš tým, když konverzace potřebuje člověka. Váš tým zůstává součástí zážitku podpory."
+      ],
+      [
+        "Jak mohu začít?",
+        "Začněte s bezplatným plánem, který zahrnuje 100 zpráv AI každý měsíc bez nutnosti karty. Přidejte své znalosti, připojte svůj web, a zapojte své spolupracovníky."
+      ],
+      [
+        "Jak je strukturována cena?",
+        "Free zahrnuje 100 zpráv AI za měsíc, a placené plány zahrnují měsíční kredit AI. Další členové týmu přicházejí v balíčcích míst od $0.60 za místo, a předání konverzace člověku nikdy nestojí navíc. Stránka s cenami vysvětluje zahrnutá místa a minimální poplatek bezplatného plánu."
+      ]
+    ],
+    "closing": {
+      "titleLine1": "Je toho ještě hodně co postavit.",
+      "titleLine2": "Přijďte formovat, co bude dál.",
+      "ctaTry": "Vyzkoušet Elpino",
+      "ctaCareers": "Zobrazit otevřené pozice"
+    }
+  },
+  "helpdesk": {
+    "hero": {
+      "badge": "Helpdesk Elpino",
+      "titlePrefix": "Podpora, která ",
+      "titleHl": "odpovídá sama.",
+      "subtitle": "Jeden stůl pro AI, která řeší problémy, tým, který se přidá, když je to důležité, a tikety, které se nikdy neztratí. Sledujte, jak odpovídá na otázku.",
+      "ctaStart": "Začít zdarma",
+      "ctaFeatures": "Zobrazit všechny funkce"
+    },
+    "prompt": {
+      "customerLabel": "Zákazník",
+      "listening": "Elpino poslouchá…",
+      "asks": [
+        {
+          "q": "Byl mi upgrade naúčtován dvakrát?",
+          "steps": [
+            "Zkontroloval vaši historii plateb",
+            "Nalezl jeden poplatek a jeden neúspěšný pokus"
+          ],
+          "a": "Bylo vám naúčtováno jen jednou. Druhý pokus se nezdařil a nikdy nebyl zaúčtován."
+        },
+        {
+          "q": "Kde je moje objednávka #4821?",
+          "steps": [
+            "Ověřil vás kódem z e-mailu",
+            "Vyhledal objednávku ve vašem obchodě"
+          ],
+          "a": "Odesláno včera, dorazí ve čtvrtek. Sledovací odkaz odeslán."
+        },
+        {
+          "q": "Můžu s někým mluvit o fakturaci?",
+          "steps": [
+            "Žádný nástroj nemůže změnit fakturační údaje",
+            "Nejprve se zeptal vás, poté upozornil tým"
+          ],
+          "a": "Priya z našeho týmu se právě připojila k tomuto chatu."
+        }
+      ]
+    },
+    "marquee": {
+      "ariaLabel": "Co je na stole",
+      "words": [
+        "AI agent",
+        "Sdílená schránka",
+        "Tikety",
+        "Znalosti",
+        "Platby",
+        "Nástroje MCP",
+        "Upozornění na připojení",
+        "Ověřená identita",
+        "Omnichannel · listopad"
+      ]
+    },
+    "story": {
+      "eyebrow": "Jedna konverzace",
+      "titlePrefix": "Sledujte, jak otázka ",
+      "titleHl": "putuje po stole.",
+      "stepLabel": "Krok {n} / 05",
+      "chapters": [
+        {
+          "title": "Zákazník napíše",
+          "body": "Z chatového widgetu na vašem webu, s jeho polohou, zařízením a stránkou, na které se nachází, již přiloženými."
+        },
+        {
+          "title": "AI odvede práci",
+          "body": "Odpovídá z vašich znalostí, pamatuje si zákazníka, ověřuje, kdo je, a používá vaše platby a nástroje MCP k tomu, aby věci skutečně vyřešila."
+        },
+        {
+          "title": "Váš tým se připojí jedním klepnutím",
+          "body": "Pouze když nemůže pomoct, a pouze poté, co se zeptá zákazníka. Všichni dostanou upozornění na připojení, a první osoba, která klepne, si vezme chat."
+        },
+        {
+          "title": "Nic se neztratí",
+          "body": "Pokud není nikdo volný do 90 sekund, vytvoří se tiket s důvodem a shrnutím, a zákazník obdrží referenční číslo e-mailem."
+        },
+        {
+          "title": "Naučíte ji to jednou",
+          "body": "Přidejte to, co chybělo, do vaší znalostní databáze. Příště to AI jednoduše ví."
+        }
+      ],
+      "visuals": {
+        "ask": {
+          "bubble": "Ahoj, nemůžu najít svou faktura z minulého měsíce.",
+          "chips": [
+            "Pune, Indie",
+            "Chrome · macOS",
+            "Na /billing"
+          ]
+        },
+        "ai": {
+          "rows": [
+            [
+              "search_knowledge",
+              "1 shoda"
+            ],
+            [
+              "send_email_code",
+              "ověřeno"
+            ],
+            [
+              "get_receipt",
+              "nalezeno · odesláno"
+            ]
+          ],
+          "bubble": "Tady je vaše faktura. Kopii jsem vám také poslal e-mailem."
+        },
+        "team": {
+          "title": "Nový chat potřebuje člověka",
+          "sub": "Upozornění odesláno 4 členům týmu",
+          "join": "Připojit se",
+          "note": "První, kdo klepne, si to vezme. Upozornění pro ostatní zmizí."
+        },
+        "ticket": {
+          "label": "Tiket",
+          "title": "Eskalace podpory · Aisha Khan",
+          "reason": "Důvod: změna fakturační země vyžaduje člověka.",
+          "chips": [
+            "Stránka problémů",
+            "Zákazník informován e-mailem"
+          ]
+        },
+        "learn": {
+          "title": "Průvodce fakturami a účtenkami",
+          "added": "Přidáno",
+          "note": "Další zákazník dostane tuto odpověď okamžitě."
+        }
+      }
+    },
+    "bento": {
+      "eyebrow": "Pod pokličkou",
+      "titlePrefix": "Malé detaily, ",
+      "titleHl": "dělané správně.",
+      "subtitle": "Věci, které byste zkontrolovali, než byste svěřili své zákazníky AI.",
+      "redact": {
+        "prefix": "Ahoj, jsem",
+        "middle": "kontaktujte mě na"
+      },
+      "privacy": {
+        "title": "Model nikdy nevidí jména ani e-maily.",
+        "desc": "Identity jsou vyměněny za referenční kódy, než AI přečte konverzaci, a tajemství jsou odstraněna."
+      },
+      "languages": {
+        "title": "Odpovídá v jazyce vašeho zákazníka",
+        "note": "Jazyk odpovědi si vyberete v nastavení."
+      },
+      "verified": {
+        "title": "Ověřeno před akcí",
+        "note": "Jednorázový e-mailový kód nebo podepsaný token z vaší aplikace."
+      },
+      "tools": {
+        "title": "Vaše nástroje, vaše pravidla",
+        "rows": [
+          [
+            "get_order",
+            true
+          ],
+          [
+            "track_shipment",
+            true
+          ],
+          [
+            "delete_customer",
+            false
+          ]
+        ]
+      },
+      "handoff": {
+        "title": "Zeptá se před předáním",
+        "ask": "To nemůžu změnit sám. Spojit vás s naším týmem?",
+        "reply": "Ano, prosím"
+      }
+    },
+    "statement": "Elpino odpoví, co ví, udělá, co dovolíte, a na vše ostatní se zeptá člověka.",
+    "start": {
+      "eyebrow": "Začněte",
+      "titlePrefix": "Spuštěno za ",
+      "titleHl": "jedno odpoledne.",
+      "note": "Chat na webu už funguje. Omnichannel přichází v listopadu.",
+      "steps": [
+        {
+          "title": "Zaregistrujte se zdarma",
+          "desc": "100 zpráv AI za měsíc. Žádná karta."
+        },
+        {
+          "title": "Naučte ji to",
+          "desc": "Přidejte svůj web, soubory nebo napište stránky."
+        },
+        {
+          "title": "Vložte fragment kódu",
+          "desc": "Widget se objeví na vašem webu."
+        },
+        {
+          "title": "Pozvěte svůj tým",
+          "desc": "Aby byli připraveni, když to bude potřeba."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Otázky",
+      "titlePrefix": "Dobré ",
+      "titleHl": "vědět.",
+      "items": [
+        [
+          "Co je helpdesk Elpino?",
+          "Celý pracovní prostor podpory: chatový widget, AI agent, sdílená schránka, tikety a znalostní databáze, vše pracující společně."
+        ],
+        [
+          "Musím si udržet svůj starý helpdesk?",
+          "Ne. Elpino zahrnuje chat, AI agenta, sdílenou schránku a tikety. Tikety lze stále odeslat do Trello nebo Asana, pokud tam váš tým pracuje."
+        ],
+        [
+          "Je tam bezplatný plán?",
+          "Ano: 100 zpráv AI za měsíc, žádná karta není nutná."
+        ],
+        [
+          "Jaké kanály jsou podporovány?",
+          "Chat na webu už funguje. Omnichannel přichází v listopadu."
+        ],
+        [
+          "Může to používat i můj tým?",
+          "Ano. Pozvěte spolupracovníky, přidávejte místa, jak rostete, a dostanou upozornění na připojení, když zákazník potřebuje člověka."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Dejte svým zákazníkům odpověď dřív, než dopíšou.",
+      "ctaStart": "Začít zdarma",
+      "ctaFeatures": "Všechny funkce"
+    }
+  },
+  "nav": {
+    "startFreeTrial": "Začít bezplatnou zkušební verzi",
+    "groups": {
+      "product": "Produkt",
+      "solutions": "Řešení",
+      "resources": "Zdroje"
+    },
+    "sections": {
+      "getStarted": "Začínáme",
+      "capabilities": "Možnosti",
+      "platform": "Platforma",
+      "whoItIsFor": "Pro koho je to",
+      "learningGuides": "Vzdělávání a průvodci",
+      "trustLegal": "Důvěra a právní záležitosti",
+      "community": "Komunita",
+      "company": "Společnost"
+    },
+    "items": {
+      "Elpino helpdesk": "Helpdesk Elpino",
+      "Elpino AI Agent": "AI agent Elpino",
+      "Inbox": "Schránka",
+      "Tickets": "Tikety",
+      "Knowledge Hub": "Centrum znalostí",
+      "Integrations": "Integrace",
+      "Safety & security": "Bezpečnost",
+      "All features": "Všechny funkce",
+      "For Founders": "Pro zakladatele",
+      "For Busy Teams": "Pro zaneprázdněné týmy",
+      "For Developers": "Pro vývojáře",
+      "See Pricing": "Zobrazit ceny",
+      "Talk to Us": "Promluvte si s námi",
+      "Documentation": "Dokumentace",
+      "Help & FAQ": "Nápověda a FAQ",
+      "Trust Center": "Centrum důvěry",
+      "Privacy Policy": "Zásady ochrany osobních údajů",
+      "Terms of Service": "Podmínky služby",
+      "Blog": "Blog",
+      "Changelog": "Seznam změn",
+      "Brand Kit": "Sada značky",
+      "About Us": "O nás",
+      "Careers": "Kariéra",
+      "Contact Sales": "Kontaktovat obchod"
+    },
+    "megaMenu": {
+      "explore": "Prozkoumat",
+      "seePricing": "Zobrazit ceny",
+      "seePricingNote": "Začněte zdarma. Plaťte, jak váš tým roste.",
+      "freshFromBlog": "Novinky z blogu"
+    },
+    "featured": {
+      "product": {
+        "title": "Nejprve AI. Člověk, když je to důležité.",
+        "text": "Elpino odpovídá z vašich znalostí a poté předá chat kolegovi s celým příběhem.",
+        "cta": "Poznejte AI agenta"
+      },
+      "solutions": {
+        "title": "Vytvořeno pro váš způsob práce",
+        "text": "Zakladatelé, obchody a zaneprázdněné týmy získají konfiguraci na míru, spuštěnou za jedno odpoledne.",
+        "cta": "Najděte, co se vám hodí"
+      },
+      "resources": {
+        "title": "Spuštěno ve třech krocích",
+        "text": "Vložte jeden řádek, naučte ho vaše dokumenty, zapněte. Průvodci vás povedou každým krokem.",
+        "cta": "Otevřít dokumentaci"
+      }
+    },
+    "pricing": "Ceny",
+    "contactSales": "Kontaktovat obchod",
+    "login": "Přihlásit se",
+    "goToDashboard": "Přejít na panel",
+    "getStarted": "Začít"
+  },
+  "privacyPage": {
+    "title": "Zásady ochrany osobních údajů",
+    "shortTitle": "Soukromí",
+    "askUs": "Zeptejte se nás",
+    "heroTitle": "Sledujte cestu jedné zprávy přes Elpino.",
+    "heroDescription": "Zákazník se zeptá, kde je jeho refundace. Zde uvidíte, kam zpráva putuje, kdo ji může vidět a jak dlouho zůstává uložená. Poté následuje úplné znění zásad.",
+    "startJourney": "Začít cestu",
+    "jumpToPolicy": "Přejít na úplné znění",
+    "updated": "Aktualizováno",
+    "neverSold": "Nikdy neprodáváme",
+    "zeroTraining": "Žádné trénování AI",
+    "journey": {
+      "eyebrow": "Cesta zprávy",
+      "title": "Sedm zastávek. Nic neskrýváme.",
+      "description": "Posouvejte se dolů a sledujte, jak se zpráva mění. Vlevo uvidíte její podobu v dané zastávce, vpravo význam pro vaše údaje."
+    }
+  },
+  "footer": {
+    "ticker": [
+      "Odpovědi AI z vašich vlastních znalostí",
+      "Předání člověku, vždy zdarma",
+      "100 bezplatných zpráv AI",
+      "Jedna sdílená schránka",
+      "Spuštěno za jedno odpoledne"
+    ],
+    "cta": {
+      "badge": "Připraveni, kdy budete vy",
+      "title": "Dejte každému zákazníkovi užitečnou odpověď.",
+      "subtitle": "Začněte zdarma s podporou AI, sdílenou schránkou a předáním člověku. Žádná karta není nutná.",
+      "ctaStart": "Začít zdarma",
+      "ctaPricing": "Zobrazit ceny"
+    },
+    "description": "Elpino pomáhá týmům odpovídat zákazníkům pomocí AI založené na jejich vlastních znalostech a poté předává konverzace člověku, když je to potřeba.",
+    "blog": "Blog",
+    "contact": "Kontakt",
+    "copyright": "© {year} Elpino Inc. Všechna práva vyhrazena.",
+    "privacy": "Zásady ochrany osobních údajů",
+    "terms": "Podmínky služby",
+    "security": "Zabezpečení"
+  },
+  "aiAgent": {
+    "hero": {
+      "badge": "AI agent",
+      "titlePrefix": "Poznejte svého nejnovějšího ",
+      "titleHl": "pracovníka podpory.",
+      "subtitle": "Elpino začíná první den, už znaje vaše podnikání. Pamatuje si každého zákazníka, ověřuje, kdo je, než jedná, spolupracuje s vašimi platebními a objednávkovými systémy přes MCP, a vždy se zeptá, než předá chat vašemu týmu.",
+      "ctaHire": "Najměte Elpino zdarma",
+      "ctaFeatures": "Zobrazit všechny funkce"
+    },
+    "badge": {
+      "staffLabel": "Elpino · Personál",
+      "subtitle": "AI agent podpory",
+      "skills": [
+        "Odpovídá z vašich dokumentů",
+        "Ověřuje identitu",
+        "Kontroluje platby",
+        "Používá vaše nástroje MCP",
+        "Zeptá se před předáním"
+      ],
+      "startDateLabel": "Datum nástupu",
+      "startDateValue": "Dnes",
+      "clearanceLabel": "Úroveň přístupu",
+      "clearanceValue": "Vy rozhodujete",
+      "barcodeNote": "EL-0001 · Nikdy neodpichuje"
+    },
+    "trace": {
+      "aiAgentLabel": "AI agent",
+      "customerMsg": "Ahoj, kde je moje objednávka #4821?",
+      "agentReply": "Dobrá zpráva, objednávka Aishy byla odeslána včera a dorazí ve čtvrtek. Poslal jsem vám také sledovací odkaz e-mailem.",
+      "whatAgentDoing": "Co agent dělá",
+      "resolved": "Vyřešeno",
+      "working": "Zpracovává se",
+      "idle": "Nečinný",
+      "waiting": "Čeká se na zprávu od zákazníka…",
+      "steps": [
+        {
+          "kind": "route",
+          "text": "router → specialista podpory"
+        },
+        {
+          "kind": "tool",
+          "text": "recall_conversation(“objednávka 4821”)",
+          "result": "2 předchozí zprávy"
+        },
+        {
+          "kind": "tool",
+          "text": "get_past_conversations",
+          "result": "1 vyřešený chat minulý měsíc"
+        },
+        {
+          "kind": "verify",
+          "text": "send_email_code → check_email_code",
+          "result": "identita ověřena"
+        },
+        {
+          "kind": "mcp",
+          "text": "mcp_shop__get_order(“4821”)",
+          "result": "odesláno · dorazí ve čtvrtek"
+        },
+        {
+          "kind": "review",
+          "text": "kontrola",
+          "result": "fakta odpovídají výsledkům nástrojů"
+        },
+        {
+          "kind": "done",
+          "text": "odpověď odeslána · mark_resolved"
+        }
+      ]
+    },
+    "watchIt": {
+      "eyebrow": "První úkol",
+      "titlePrefix": "Sledujte, jak zvládá ",
+      "titleHl": "skutečný požadavek.",
+      "subtitle": "Zákazník se ptá, kde je jeho objednávka. Vpravo je vše, co agent dělá, než odpoví.",
+      "note": "Ukázková konverzace. Zobrazené názvy nástrojů jsou ty, které agent skutečně volá."
+    },
+    "onboard": {
+      "eyebrow": "Zaškolení",
+      "titlePrefix": "Šest kroků k ",
+      "titleHl": "prvnímu dni.",
+      "subtitle": "Odškrtávejte je. Není zde žádné školicí období, a každý je nastavení, které kontrolujete.",
+      "readyBadge": "Připraven k práci!",
+      "items": [
+        {
+          "t": "Naučte ho váš web a soubory",
+          "d": "Prohledejte stránky, nahrajte dokumenty, napište své vlastní.",
+          "href": "/product/knowledge-hub"
+        },
+        {
+          "t": "Vložte fragment widgetu",
+          "d": "Jeden řádek a chat se objeví na vašem webu."
+        },
+        {
+          "t": "Připojte Stripe nebo Razorpay",
+          "d": "Aby mohl kontrolovat platby a předplatná."
+        },
+        {
+          "t": "Připojte své nástroje MCP",
+          "d": "Zapněte pouze nástroje, které může používat."
+        },
+        {
+          "t": "Rozhodněte o vrácení peněz",
+          "d": "Jsou vypnuté, dokud je nezapnete."
+        },
+        {
+          "t": "Pozvěte svůj tým",
+          "d": "Aby byli lidé připraveni, když je bude potřebovat.",
+          "href": "/product/inbox"
+        }
+      ]
+    },
+    "customerFile": {
+      "eyebrow": "Poznávání vašeho zákazníka",
+      "titlePrefix": "Jeho spis ",
+      "titleHl": "o každém zákazníkovi.",
+      "subtitle": "Než odpoví, agent vytvoří spis o osobě, které pomáhá. Klepněte na zdroj, abyste viděli, co přidává.",
+      "sourcesLabel": "Spis zákazníka · {n} z {total} zdrojů",
+      "sampleNote": "Ukázková data. Ve skutečnosti AI vidí referenční kódy místo jména a e-mailu zákazníka.",
+      "sources": [
+        {
+          "key": "conv",
+          "title": "Tato konverzace",
+          "how": "Pamatuje si, co bylo řečeno, a může se vrátit k potřebným detailům, i v dlouhém chatu.",
+          "rows": [
+            [
+              "Ptal se na",
+              "Objednávka #4821"
+            ],
+            [
+              "Chce",
+              "Datum dodání"
+            ]
+          ]
+        },
+        {
+          "key": "hist",
+          "title": "Předchozí konverzace",
+          "how": "Znají předchozí chaty se stejnou osobou, takže se nikdy neopakují.",
+          "rows": [
+            [
+              "Poslední chat",
+              "Problém s přihlášením, vyřešeno"
+            ],
+            [
+              "Počet kontaktů",
+              "2"
+            ]
+          ]
+        },
+        {
+          "key": "id",
+          "title": "Ověřená identita",
+          "how": "Potvrdí, kdo je, jednorázovým e-mailovým kódem nebo podepsaným tokenem z vaší aplikace, než se dotkne čehokoli osobního.",
+          "rows": [
+            [
+              "Identita",
+              "Ověřena e-mailovým kódem"
+            ]
+          ]
+        },
+        {
+          "key": "pay",
+          "title": "Platby",
+          "how": "Vyhledá skutečné platby a předplatná ve Stripe nebo Razorpay a může poslat účtenky a platební odkazy.",
+          "rows": [
+            [
+              "Plán",
+              "Growth · aktivní"
+            ],
+            [
+              "Poslední platba",
+              "Zaplaceno, účtenka odeslána"
+            ]
+          ]
+        },
+        {
+          "key": "mcp",
+          "title": "Vaše systémy (MCP)",
+          "how": "Volá nástroje, které schvalujete na vlastních serverech MCP: objednávky, účty, rezervace, cokoli zveřejníte.",
+          "rows": [
+            [
+              "Objednávka #4821",
+              "Odesláno · dorazí ve čtvrtek"
+            ]
+          ]
+        },
+        {
+          "key": "kb",
+          "title": "Vaše znalosti",
+          "how": "Prohledává vše, co jste ho naučili, a může přečíst aktuální stránku vašeho webu pro čerstvé detaily.",
+          "rows": [
+            [
+              "Zásady doručení",
+              "3–5 pracovních dní"
+            ]
+          ]
+        }
+      ]
+    },
+    "mcp": {
+      "eyebrow": "MCP pluginy",
+      "titlePrefix": "Žádost o přístup: ",
+      "titleHl": "vaše systémy.",
+      "subtitle": "Připojte až pět serverů MCP, ať už je to váš obchod, CRM nebo rezervační systém. Elpino objeví jejich nástroje, a vy zapnete přesně ty, které agent může používat. Vyzkoušejte ovládací panel níže.",
+      "serverTitle": "MCP server vašeho obchodu",
+      "toolsDiscovered": "Objeveno {n} nástrojů",
+      "verifiedCustomers": "Ověření zákazníci",
+      "anyVisitor": "Kdokoli",
+      "destructive": "Destruktivní",
+      "changesData": "Mění data",
+      "readOnly": "Pouze pro čtení",
+      "needsVerified": "Vyžaduje ověřeného zákazníka",
+      "whatAgentSees": "Co agent vidí",
+      "toolsAvailable": "nástrojů dostupných nyní",
+      "tools": [
+        {
+          "name": "get_order",
+          "desc": "Vyhledat objednávku a její stav",
+          "write": false,
+          "on": true
+        },
+        {
+          "name": "track_shipment",
+          "desc": "Sledování zásilky v reálném čase",
+          "write": false,
+          "on": true
+        },
+        {
+          "name": "list_products",
+          "desc": "Katalog a úrovně zásob",
+          "write": false,
+          "on": true
+        },
+        {
+          "name": "update_address",
+          "desc": "Změnit dodací adresu",
+          "write": true,
+          "on": true
+        },
+        {
+          "name": "cancel_order",
+          "desc": "Zrušit nevyexpedovanou objednávku",
+          "write": true,
+          "on": false
+        },
+        {
+          "name": "delete_customer",
+          "desc": "Smazat záznam zákazníka",
+          "write": true,
+          "on": false,
+          "danger": true
+        }
+      ],
+      "bullets": [
+        "Vypnutý nástroj je pro agenta nevidím",
+        "Každé volání je znovu ověřeno proti vašemu seznamu na serveru",
+        "Nástroje, které mění data, vždy vyžadují ověřeného zákazníka",
+        "Přihlašovací údaje serveru jsou uloženy zašifrované"
+      ],
+      "features": [
+        {
+          "title": "Platby, vestavěné",
+          "desc": "Připojte Stripe nebo Razorpay a agent může vyhledávat platby a předplatná, posílat účtenky a platební odkazy, a zrušit předplatné."
+        },
+        {
+          "title": "Přineste jakýkoli server MCP",
+          "desc": "Funguje vše, co mluví MCP, takže si vybíráte, jaké nástroje agent získá."
+        },
+        {
+          "title": "Vlastní MCP server Elpino",
+          "desc": "Vlastní nástroje vašich zákazníků mohou číst jejich plán Elpino, využití a platby přes MCP."
+        }
+      ]
+    },
+    "orgChart": {
+      "eyebrow": "Tým v zákulisí",
+      "titlePrefix": "Jeden agent. ",
+      "titleHl": "Celá organizační struktura.",
+      "subtitle": "Každá zpráva je přesměrována na správného specialistu, a nic nevyjde, dokud kontrolor neověří fakta.",
+      "router": "Router",
+      "routerNote": "vybírá specialistu",
+      "reviewer": "Kontrolor",
+      "reviewerNote": "kontroluje návrh proti výsledkům nástrojů",
+      "polish": "Vyladění",
+      "polishNote": "pak to zákazník vidí",
+      "footer": "Obtížné případy jsou eskalovány na silnější uvažovací model, a záložní model kryje výpadky poskytovatele.",
+      "lanes": [
+        {
+          "k": "Prodej",
+          "d": "Plány, ceny, vhodnost"
+        },
+        {
+          "k": "Podpora",
+          "d": "Účty, platby, návody"
+        },
+        {
+          "k": "Technický",
+          "d": "Chyby, nastavení, integrace"
+        }
+      ]
+    },
+    "shift": {
+      "eyebrow": "Den v práci",
+      "titlePrefix": "Jedna směna, ",
+      "titleHl": "od začátku do konce.",
+      "subtitle": "Ukázkový den, používající pouze věci, které agent skutečně dělá.",
+      "items": [
+        {
+          "time": "2:14",
+          "t": "Odpovídá na otázku o ceně",
+          "d": "Váš tým spí. Elpino odpovídá z vaší znalostní databáze."
+        },
+        {
+          "time": "9:05",
+          "t": "Ověří zákazníka, opraví platbu",
+          "d": "Potvrdí ho e-mailovým kódem, najde neúspěšnou platbu, poslé nový platební odkaz."
+        },
+        {
+          "time": "11:20",
+          "t": "Zkontroluje objednávku ve vašem obchodě",
+          "d": "Volá váš server MCP, přečte stav a sdílí sledování."
+        },
+        {
+          "time": "13:30",
+          "t": "Narazí na něco, co nemůže udělat",
+          "d": "Řekne to, zeptá se nejprve zákazníka, pak upozorní celý tým."
+        },
+        {
+          "time": "15:42",
+          "t": "Nikdo volný? Neopustí to",
+          "d": "Řekne zákazníkovi pravdu a vytvoří tiket s e-mailovým sledováním."
+        }
+      ]
+    },
+    "review": {
+      "eyebrow": "Hodnocení výkonu",
+      "titlePrefix": "Upřímné ",
+      "titleHl": "hodnocení.",
+      "subtitle": "Ilustrativní hodnocení, včetně slabého místa.",
+      "employeeBadge": "Zaměstnanec: Elpino",
+      "quote": "„Výborný s běžnými otázkami a nikdy nepřekračuje meze. Udržujte znalostní databázi aktuální a bude se dále zlepšovat.“",
+      "items": [
+        {
+          "k": "Dodržuje vaše zásady",
+          "n": 5,
+          "note": "Odpovídá pouze z toho, co jste schválili."
+        },
+        {
+          "k": "Ví, kdy požádat o pomoc",
+          "n": 5,
+          "note": "Zeptá se nejprve zákazníka, pak přivede váš tým."
+        },
+        {
+          "k": "Zůstává v rámci svých oprávnění",
+          "n": 5,
+          "note": "Pouze nástroje, které jste zapnuli. Vrácení peněz standardně vypnuto."
+        },
+        {
+          "k": "Ví, co jste mu nikdy neřekli",
+          "n": 2,
+          "note": "Nemůže odpovědět na to, co není ve vašich znalostech. Přidejte více pro zvýšení tohoto."
+        }
+      ]
+    },
+    "guards": {
+      "eyebrow": "Ochranná opatření",
+      "titlePrefix": "Firemní ",
+      "titleHl": "příručka.",
+      "subtitle": "Pravidla, podle kterých Elpino funguje. Každé je kontrola, kterou vlastníte.",
+      "items": [
+        {
+          "t": "Model nikdy nevidí jména ani e-maily",
+          "d": "Identity v konverzaci jsou vyměněny za referenční kódy, než je AI přečte, a tajemství jako klíče a tokeny jsou odstraněny."
+        },
+        {
+          "t": "Vrácení peněz je vypnuto, dokud neřeknete",
+          "d": "Akce pohybující peníze jsou opt-in a kontrolovány vlastníkem pracovního prostoru."
+        },
+        {
+          "t": "Schvalujete každý nástroj",
+          "d": "Agent vidí pouze nástroje MCP, které jste zapnuli, a ty, které mění data, vyžadují ověřeného zákazníka."
+        },
+        {
+          "t": "Zeptejte se nejprve, pak předejte",
+          "d": "Když nemá nástroj pro úkol, řekne to a zeptá se, než přivede váš tým."
+        },
+        {
+          "t": "Fakta jsou kontrolována",
+          "d": "Krok kontroly ověří návrh proti výsledkům nástrojů před odeslám."
+        },
+        {
+          "t": "Identita před čímkoli osobním",
+          "d": "Nejprve e-mailový kód nebo podepsaný token, aby nikdy nediskutoval o účtu s cizincem."
+        }
+      ]
+    },
+    "compare": {
+      "eyebrow": "Není to chatbot",
+      "titlePrefix": "Chatbot vs. ",
+      "titleHl": "agent Elpino.",
+      "headerA": "Typický chatbot",
+      "headerB": "AI agent Elpino",
+      "rows": [
+        [
+          "Vyhledává články a zastaví se",
+          "Vyhledává, kontroluje záznamy a jedná"
+        ],
+        [
+          "Zachází s každým jako s cizincem",
+          "Ověřuje identitu, pamatuje si předchozí chaty"
+        ],
+        [
+          "„Kontaktujte podporu“, když je uvíznutý",
+          "Zeptá se nejprve, upozorní tým, vytvoří tiket, pokud nikdo není volný"
+        ],
+        [
+          "Nemůže vidět vaše systémy",
+          "Volá nástroje MCP, které schvalujete"
+        ],
+        [
+          "Odpovědím se nedá věřit",
+          "Fakta ověřena proti výsledkům nástrojů"
+        ]
+      ]
+    },
+    "faq": {
+      "eyebrow": "Otázky",
+      "titlePrefix": "Dobré ",
+      "titleHl": "vědět.",
+      "items": [
+        [
+          "Co je MCP?",
+          "Model Context Protocol, standardní způsob, jak AI volá nástroje na jiném systému. Připojte server MCP a Elpino objeví jeho nástroje. Poté si vyberete, které agent může používat."
+        ],
+        [
+          "Kolik serverů MCP mohu připojit?",
+          "Až pět, s až 15 zapnutými nástroji na server."
+        ],
+        [
+          "Může agent měnit věci v mých systémech?",
+          "Pouze prostřednictvím nástrojů, které jste zapnuli, a ty, které mění data, vždy vyžadují zákazníka s ověřeným e-mailem."
+        ],
+        [
+          "Jak ví, kdo je zákazník?",
+          "Z konverzace, předchozích chatů s ním, a kroku ověření: jednorázový e-mailový kód nebo podepsaný token z vaší aplikace."
+        ],
+        [
+          "Může vydávat vrácení peněz?",
+          "Pouze pokud vlastník pracovního prostoru zapne vrácení peněz. Standardně jsou vypnuté."
+        ],
+        [
+          "Co se stane, když nemůže něco vyřešit?",
+          "Řekne to a zeptá se zákazníka, zda chce být spojen s vaším týmem. Celý tým dostane upozornění na připojení na 90 sekund, a pokud se nikdo nepřipojí, tiket se vytvoří automaticky."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Váš nejnovější pracovník je připraven začít.",
+      "subtitle": "Naučte ho vaše podnikání, připojte vaše nástroje, a stanovte limity.",
+      "ctaStart": "Začít zdarma",
+      "ctaKnowledgeHub": "Zobrazit Centrum znalostí"
+    }
+  },
+  "inbox": {
+    "hero": {
+      "badge": "Sdílená doručená pošta",
+      "titlePrefix": "Jedna konverzace. ",
+      "titleHl": "Všichni, kdo v ní mají být.",
+      "subtitle": "AI vede konverzaci, dokud není potřeba člověk, celý váš tým je upozorněn najednou a kdokoli se připojí, získá celou historii. Sledujte jednu skutečnou konverzaci od první zprávy až po vyřešení.",
+      "ctaOpen": "Otevřít doručenou poštu",
+      "ctaPricing": "Zobrazit ceny"
+    },
+    "filters": [
+      "Vše",
+      "Nepřečtené",
+      "Přečtené",
+      "Vyřešené"
+    ],
+    "desk": {
+      "stages": [
+        {
+          "key": "ai",
+          "label": "AI odpovídá",
+          "badge": "AI",
+          "banner": "Elpino zpracovává tuto konverzaci"
+        },
+        {
+          "key": "ask",
+          "label": "Potřeba člověka",
+          "badge": "Potřeba člověka",
+          "banner": "Každý člen týmu obdržel upozornění Připojit se. 90 sekund na zapojení"
+        },
+        {
+          "key": "join",
+          "label": "Člen týmu se připojí",
+          "badge": "Priya",
+          "banner": "Priya se připojila. Upozornění zmizelo všem"
+        },
+        {
+          "key": "back",
+          "label": "Vrácení zpět",
+          "badge": "AI",
+          "banner": "Priya předala konverzaci zpět Elpinu"
+        },
+        {
+          "key": "done",
+          "label": "Vyřešeno",
+          "badge": "Vyřešeno",
+          "banner": "Vyřešeno. Kdykoli znovu otevřete, pokud znovu napíší"
+        }
+      ],
+      "lines": [
+        {
+          "at": 0,
+          "from": "you",
+          "text": "Ahoj, přestěhoval jsem se do jiné země. Můžete mi aktualizovat fakturační zemi na účtu?"
+        },
+        {
+          "at": 1,
+          "from": "ai",
+          "text": "Fakturační údaje nemohu změnit sám. Chcete, abych vás spojil s naším týmem?"
+        },
+        {
+          "at": 1,
+          "from": "you",
+          "text": "Ano, prosím"
+        },
+        {
+          "at": 2,
+          "from": "sys",
+          "text": "Priya se připojila k chatu"
+        },
+        {
+          "at": 2,
+          "from": "team",
+          "text": "Ahoj! Postarám se o to. Aktualizovala jsem vaši fakturační zemi."
+        },
+        {
+          "at": 3,
+          "from": "sys",
+          "text": "Priya předala chat zpět Elpinu"
+        },
+        {
+          "at": 3,
+          "from": "ai",
+          "text": "Vše je hotovo. Můžu pomoci s něčím dalším?"
+        },
+        {
+          "at": 4,
+          "from": "you",
+          "text": "To je vše, díky!"
+        },
+        {
+          "at": 4,
+          "from": "sys",
+          "text": "Konverzace vyřešena"
+        }
+      ],
+      "rail": [
+        "Prostor",
+        "Doručená pošta",
+        "Analytika",
+        "Kontakty",
+        "Znalostní báze",
+        "Nastavení"
+      ],
+      "list": [
+        {
+          "name": "Harnoor Singh",
+          "date": "21. zář",
+          "prev": "Nemůžu sdílet IP adresu nikoho jiného"
+        },
+        {
+          "name": "Aisha Khan",
+          "date": "Dnes",
+          "prev": ""
+        },
+        {
+          "name": "Tom Becker",
+          "date": "19. zář",
+          "prev": "Widget se nenačítá při platbě"
+        },
+        {
+          "name": "Meera Iyer",
+          "date": "18. zář",
+          "prev": "Přejít s týmem na roční fakturaci?"
+        }
+      ],
+      "teamInbox": "Týmová pošta",
+      "aiAssist": "AI asistent",
+      "searchPlaceholder": "Hledat konverzace",
+      "verified": "Ověřeno",
+      "joined": "Připojeno",
+      "join": "Připojit se",
+      "priyaReplying": "Priya odpovídá",
+      "resolvedLabel": "Vyřešeno",
+      "aiReplying": "Elpino odpovídá, vy jen sledujete",
+      "elpinoAi": "Elpino AI",
+      "priyaTeam": "Priya · tým",
+      "writeReply": "Napište svou odpověď…",
+      "send": "Odeslat",
+      "reopenNote": "Vyřešeno. Znovu otevřete, pokud znovu napíší.",
+      "lockedNote": "Připojte se k této konverzaci, abyste mohli odpovídat. Do té doby s klientem hovoří Elpino.",
+      "websiteVisitor": "Návštěvník webu",
+      "locationDevice": "Poloha a zařízení",
+      "location": "Pune, Indie",
+      "device": "Chrome · macOS",
+      "onPage": "Na /pricing",
+      "lastSeen": "Poslední aktivita právě teď",
+      "identityVerified": "Identita ověřena",
+      "signedIn": "Přihlášen na webu",
+      "otherConvos": "Další konverzace",
+      "noOtherConvos": "Od tohoto návštěvníka zatím nejsou žádné další konverzace."
+    },
+    "realThing": {
+      "eyebrow": "Skutečná věc",
+      "titlePrefix": "Toto je ",
+      "titleHl": "skutečná doručená pošta.",
+      "subtitle": "Žádný mockup. Každá konverzace, odpovědi AI, údaje o návštěvníkovi a tlačítko Připojit se, vše na jedné obrazovce.",
+      "imageAlt": "Týmová doručená pošta Elpino: seznam konverzací, vlákno zpracovávané AI a poloha a zařízení návštěvníka",
+      "callouts": [
+        {
+          "label": "Připojit se a převzít"
+        },
+        {
+          "label": "Filtr: Vše · Nepřečtené · Přečtené · Vyřešené"
+        },
+        {
+          "label": "Poloha a zařízení"
+        },
+        {
+          "label": "Automaticky se uzavře po 24 h klidu"
+        }
+      ]
+    },
+    "twoTabs": {
+      "eyebrow": "Dva pohledy",
+      "titlePrefix": "Sledujte AI. ",
+      "titleHl": "Řiďte tým.",
+      "subtitle": "Vaše doručená pošta má kartu pro to, co řeší lidé, a kartu pro to, co řeší Elpino, takže se nic neztratí.",
+      "tabs": [
+        {
+          "label": "Týmová pošta",
+          "title": "Konverzace, které vlastní váš tým",
+          "body": "Vše, k čemu se člověk připojil, co převzal nebo co mu bylo přiřazeno. Zde váš tým pracuje: odpovědi, návazné zprávy a vyřešená vlákna.",
+          "rows": [
+            [
+              "Harnoor Singh",
+              "Můžete znovu poslat fakturu?",
+              "Priya"
+            ],
+            [
+              "Meera Iyer",
+              "Přejít s týmem na roční fakturaci?",
+              "Sam"
+            ],
+            [
+              "Jo Alvarez",
+              "Díky, to to vyřešilo!",
+              "Vyřešeno"
+            ]
+          ]
+        },
+        {
+          "label": "AI asistent",
+          "title": "Konverzace, které řeší Elpino",
+          "body": "Sledujte práci AI v reálném čase. Počítadlo zobrazuje, kolik jich je aktivních, a kdykoli se můžete Připojit k jakémukoli vláknu, jakmile chcete zasáhnout.",
+          "rows": [
+            [
+              "Aisha Khan",
+              "Elpino odpovídá…",
+              "AI"
+            ],
+            [
+              "Tom Becker",
+              "Kontroluji váš platební záznam…",
+              "AI"
+            ],
+            [
+              "Ravi Menon",
+              "Odeslán zabezpečený platební odkaz",
+              "AI"
+            ]
+          ]
+        }
+      ]
+    },
+    "holders": {
+      "eyebrow": "Vždy jasné",
+      "titlePrefix": "Vždy víte, ",
+      "titleHl": "kdo to má.",
+      "subtitle": "Každá konverzace má v seznamu odznak, takže nikdo neodpovídá dvakrát a nic se neztratí.",
+      "items": [
+        {
+          "tag": "AI",
+          "title": "Má to Elpino",
+          "body": "Odpovídá z vašich znalostí a nástrojů. Každou zprávu můžete sledovat živě."
+        },
+        {
+          "tag": "Člen týmu",
+          "title": "Má to člověk",
+          "body": "Klepněte na Připojit se, nebo Převzít, pokud to má kolega. AI ustoupí."
+        },
+        {
+          "tag": "Vyřešeno",
+          "title": "Je to hotové",
+          "body": "Vyřešená vlákna zůstávají vyhledatelná a znovu je otevřete jedním klepnutím."
+        }
+      ]
+    },
+    "baton": {
+      "eyebrow": "Předání štafety",
+      "titlePrefix": "Připojte se. Převezměte. ",
+      "titleHl": "Vraťte to zpět.",
+      "subtitle": "Konverzace se mezi AI a vašimi lidmi přesouvá jedním klepnutím a historie cestuje s ní.",
+      "items": [
+        {
+          "who": "Elpino AI",
+          "note": "Odpovídá první"
+        },
+        {
+          "who": "Priya",
+          "note": "Klepla na Připojit se"
+        },
+        {
+          "who": "Sam",
+          "note": "Převzal od Priyi"
+        },
+        {
+          "who": "Elpino AI",
+          "note": "Vráceno zpět"
+        }
+      ],
+      "holdingNow": "Nyní to má",
+      "stepLabel": "Krok {n}"
+    },
+    "teamAlert": {
+      "eyebrow": "Upozornění pro celý tým",
+      "titlePrefix": "Vyzvěte celý tým. ",
+      "titleHl": "Odpoví jeden člověk.",
+      "subtitle": "Když klient požádá o člověka, každý člen týmu obdrží upozornění Připojit se ve stejný okamžik. První, kdo klepne na Připojit se, převezme chat, upozornění zmizí všem ostatním a klient uvidí, kdo se připojil.",
+      "bullets": [
+        "Nikdo není vybírán zvlášť, takže nikdo není brzdou",
+        "90 sekund na zapojení, než je za vás automaticky vytvořen tiket",
+        "Připojili jste se omylem? Vraťte to AI jedním klepnutím"
+      ],
+      "panelLabel": "Upozornění doručené pošty",
+      "joinedStatus": "Připojeno",
+      "alertCleared": "Upozornění zrušeno",
+      "joinChatStatus": "Připojit se k chatu",
+      "quietStatus": "Klid",
+      "bannerJoined": "Priya se připojila. Klient vidí její jméno.",
+      "bannerAlerting": "Upozorňujeme všechny 4 členy týmu…",
+      "bannerAsked": "Klient požádal o člověka"
+    },
+    "nobodyFree": {
+      "eyebrow": "Nic se neztratí",
+      "titlePrefix": "I když jsou všichni ",
+      "titleHl": "zaneprázdněni.",
+      "subtitle": "Pokud se nikdo včas nepřipojí, klient nezůstane zírat na kolečko načítání.",
+      "marks": [
+        {
+          "t": "0 s",
+          "h": "Upozornění je odesláno",
+          "d": "Každý člen týmu vidí upozornění Připojit se."
+        },
+        {
+          "t": "≤ 90 s",
+          "h": "Vyhrává první, kdo se připojí",
+          "d": "Upozornění zmizí všem ostatním."
+        },
+        {
+          "t": "90 s",
+          "h": "Nikdo volný? Tiket",
+          "d": "Tiket je vytvořen automaticky."
+        },
+        {
+          "t": "24 h",
+          "h": "Navazující e-mail",
+          "d": "Klient je informován, že odpověď e-mailem lze očekávat do 24 hodin."
+        }
+      ]
+    },
+    "findAnything": {
+      "eyebrow": "Vyhledávání a filtry",
+      "titlePrefix": "Najděte jakoukoli konverzaci ",
+      "titleHl": "za sekundu.",
+      "subtitle": "Vyhledávejte podle jména nebo zprávy a zúžíte na Vše, Nepřečtené, Přečtené nebo Vyřešené. Zkuste to vpravo.",
+      "noMatch": "Nic neodpovídá. Zkuste jiné slovo.",
+      "convos": [
+        {
+          "n": "Harnoor Singh",
+          "p": "Nemůžu sdílet IP adresu nikoho jiného",
+          "s": "resolved"
+        },
+        {
+          "n": "Aisha Khan",
+          "p": "Přestěhování do jiné země, dotaz na fakturaci",
+          "s": "unread"
+        },
+        {
+          "n": "Tom Becker",
+          "p": "Widget se nenačítá při platbě",
+          "s": "unread"
+        },
+        {
+          "n": "Meera Iyer",
+          "p": "Přejít s týmem na roční fakturaci?",
+          "s": "read"
+        },
+        {
+          "n": "Ravi Menon",
+          "p": "Kde najdu svou účtenku?",
+          "s": "resolved"
+        },
+        {
+          "n": "Jo Alvarez",
+          "p": "Mohu přidat dalšího člena týmu?",
+          "s": "read"
+        }
+      ]
+    },
+    "context": {
+      "eyebrow": "Kontext v ceně",
+      "titlePrefix": "Nikdy se nemusíte ptát ",
+      "titleHl": "„kdo jste zase vy?“",
+      "subtitle": "Váš tým otevře vlákno a už znají to podstatné.",
+      "items": [
+        {
+          "t": "Kde jsou",
+          "d": "Poloha a místní kontext u každého návštěvníka."
+        },
+        {
+          "t": "Co používají",
+          "d": "Zařízení, prohlížeč a stránka, na které byli."
+        },
+        {
+          "t": "Kdo jsou",
+          "d": "Odznak Ověřeno, když je identita potvrzena podepsaným tokenem nebo e-mailovým kódem."
+        },
+        {
+          "t": "Citlivé věci bezpečně",
+          "d": "O soukromé údaje žádejte prostřednictvím zabezpečeného jednorázového požadavku, ne v chatu."
+        },
+        {
+          "t": "Celá historie",
+          "d": "Dřívější konverzace se stejnou osobou, přímo zde."
+        }
+      ],
+      "extraTitle": "Plus živé psaní na obou stranách",
+      "extraDesc": "Klienti vidí, když odpovídáte, a vy vidíte, když odpovídají oni."
+    },
+    "secureRequest": {
+      "eyebrow": "Zabezpečené požadavky",
+      "titlePrefix": "Soukromé údaje ",
+      "titleHl": "zůstávají mimo chat.",
+      "subtitle": "O citlivé informace žádejte prostřednictvím jednorázového zabezpečeného formuláře, aby se nikdy neobjevily v přepisu.",
+      "steps": [
+        {
+          "t": "Potřebujete něco soukromého",
+          "d": "Pro údaje, které by se nemely psát do okna chatu."
+        },
+        {
+          "t": "Odešlete zabezpečený požadavek",
+          "d": "Klient obdrží soukromý jednorázový formulář místo pole chatu."
+        },
+        {
+          "t": "Zpět v konverzaci",
+          "d": "Jednou jej odešlou a váš tým pokračuje v konverzaci."
+        }
+      ],
+      "stepLabel": "Krok {n}"
+    },
+    "afterLeave": {
+      "eyebrow": "Po jejich odchodu",
+      "titlePrefix": "Zavření karty ",
+      "titleHl": "není konec.",
+      "subtitle": "Elpino vám upřímně řekne, zda odpověď ještě může dorazit.",
+      "steps": [
+        {
+          "t": "Návštěvník odchází",
+          "d": "Zavře chat, nebo uplyne 24 hodin bez zprávy."
+        },
+        {
+          "t": "Ověřený e-mail v systému?",
+          "d": "Pokud potvrdili svou adresu, lze je stále kontaktovat."
+        },
+        {
+          "t": "Odpověď e-mailem",
+          "d": "Vaše odpověď dorazí do jejich poštovní schránky. Bez ověřeného e-mailu odpověď není možná a formulář na to upozorní."
+        }
+      ],
+      "stepLabel": "Krok {n}"
+    },
+    "compare": {
+      "eyebrow": "Před a po",
+      "titlePrefix": "Od zmatku ke ",
+      "titleHl": "klidu.",
+      "headerA": "Bez sdílené doručené pošty",
+      "headerB": "S Elpinem",
+      "rows": [
+        [
+          "Klienti čekají, až bude někdo volný",
+          "AI odpoví během sekund a poté se v případě potřeby připojí člověk"
+        ],
+        [
+          "Nikdo neví, kdo odpovídá",
+          "Odznak zobrazuje AI, člena týmu nebo vyřešeno u každého vlákna"
+        ],
+        [
+          "Tým si mezi sebou píše, aby našel vlastníka",
+          "Jedno upozornění Připojit se zasáhne všechny, první, kdo se připojí, to převezme"
+        ],
+        [
+          "Kontext žije na deseti místech",
+          "Historie, poloha, zařízení a ověření na jednom panelu"
+        ],
+        [
+          "Klienti, kteří zavřou kartu, jsou ztraceni",
+          "Ověření návštěvníci mohou přesto obdržet vaši odpověď e-mailem"
+        ]
+      ]
+    },
+    "faq": {
+      "eyebrow": "Otázky",
+      "titlePrefix": "Dobré ",
+      "titleHl": "vědět.",
+      "items": [
+        [
+          "Kdo vidí konverzaci?",
+          "Sdílenou doručenou poštu vidí každý ve vašem týmu. Každá konverzace zobrazuje, kdo ji má: AI, člen týmu, nebo vyřešeno."
+        ],
+        [
+          "Co je 90sekundové okno?",
+          "Když klient požádá o člověka, každý člen týmu obdrží upozornění Připojit se. Pokud se nikdo do 90 sekund nepřipojí, klient je o tom informován a automaticky se vytvoří tiket s navazujícím e-mailem."
+        ],
+        [
+          "Můžu konverzaci vrátit zpět AI?",
+          "Ano. Pokud jste se připojili a jde o jednoduchou návaznost, vraťte chat Elpinu jedním klepnutím."
+        ],
+        [
+          "Můžu odpovědět poté, co návštěvník odejde?",
+          "Pokud uvedl ověřenou e-mailovou adresu, vaše odpověď se odešle e-mailem. Bez ní se k němu žádná odpověď nedostane."
+        ],
+        [
+          "Funguje to na víc než jen chat na webu?",
+          "Widget chatu na webu je dostupný již dnes. Omnichannel přichází v listopadu."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Dejte svému týmu jedno místo, ze kterého může pomáhat.",
+      "subtitle": "Začněte zdarma a pozvěte své kolegy, až budete připraveni.",
+      "ctaStart": "Začít zdarma",
+      "ctaMeetAgent": "Seznamte se s AI agentem"
+    }
+  },
+  "tickets": {
+    "hero": {
+      "badge": "Tikety",
+      "titlePrefix": "Každé předání zanechá ",
+      "titleHl": "svůj útržek.",
+      "subtitle": "Když AI nemůže úkol dokončit a nikdo z týmu není volný, Elpino nekrčí rameny. Vytvoří tiket s důvodem a shrnutím, odešle ho tam, kde váš tým pracuje, a dá klientovi referenční kód, na který se může odvolat.",
+      "ctaStart": "Začít zdarma",
+      "ctaInbox": "Zobrazit schránku"
+    },
+    "printed": {
+      "ticketBadge": "Tiket",
+      "filedAt": "Vytvořeno při předání AI",
+      "printing": "Tiskne se…",
+      "referenceLabel": "Referenční kód",
+      "referenceNote": "Klient se na něj může odvolat",
+      "fields": [
+        [
+          "Název",
+          "Eskalace podpory · Aisha Khan"
+        ],
+        [
+          "Důvod",
+          "Změna fakturační země vyžaduje člověka"
+        ],
+        [
+          "Shrnutí",
+          "Přestěhovala se do jiné země a chce aktualizovat fakturační zemi na svém účtu."
+        ],
+        [
+          "Klient",
+          "Aisha Khan · aisha@example.com"
+        ],
+        [
+          "Konverzace",
+          "Propojeno, otevře se jedním kliknutím"
+        ],
+        [
+          "Odesláno do",
+          "Stránky Problémy"
+        ]
+      ]
+    },
+    "origins": {
+      "eyebrow": "Odkud se tikety berou",
+      "titlePrefix": "Tři způsoby, jak útržek ",
+      "titleHl": "vznikne.",
+      "subtitle": "Nikdy nemusíte pamatovat na to, abyste ho zapsali.",
+      "items": [
+        {
+          "tag": "Ručně",
+          "t": "Zapíše ho člen týmu",
+          "d": "Všimli jste si něčeho, co potřebuje vyřešit? Sami změňte konverzaci na tiket.",
+          "sample": [
+            "Změna adresy na faktuře",
+            "Meera nás požádala, abychom aktualizovali fakturační adresu na jejích fakturách."
+          ]
+        },
+        {
+          "tag": "Vytvořeno při předání AI",
+          "t": "AI ho zapíše při předání",
+          "d": "Když Elpino předá konverzaci a nikdo se včas nepřipojí, vytvoří tiket s důvodem a shrnutím.",
+          "sample": [
+            "Eskalace podpory · Aisha Khan",
+            "Důvod: změna fakturační země vyžaduje člověka."
+          ]
+        },
+        {
+          "tag": "Označeno kontrolou AI",
+          "t": "AI odhalí, co je dlužné",
+          "d": "Po uzavření konverzace ji AI zkontroluje. Pokud váš tým klientovi ještě něco dluží, označí tiket a uvede důvod.",
+          "sample": [
+            "Vyřešit žádost o vrácení peněz",
+            "Důvod: klientovi bylo řečeno, že se to prověří; nic nebylo zaznamenáno."
+          ]
+        }
+      ]
+    },
+    "anatomy": {
+      "eyebrow": "Anatomie tiketu",
+      "titlePrefix": "Vše, co váš tým potřebuje, ",
+      "titleHl": "už napsané.",
+      "subtitle": "Klepnutím na řádek zjistíte, proč tam je.",
+      "fieldLabel": "Pole {n} z {total}",
+      "fields": [
+        {
+          "k": "Název",
+          "v": "Eskalace podpory · Aisha Khan",
+          "why": "Pojmenováno podle klienta, takže ho na dlouhém seznamu snadno najdete."
+        },
+        {
+          "k": "Důvod",
+          "v": "Změna fakturační země vyžaduje člověka",
+          "why": "Proč AI konverzaci předala, nebo proč to její kontrola označila. Nikdo nemusí hádat, co se pokazilo."
+        },
+        {
+          "k": "Shrnutí",
+          "v": "Přestěhovala se, chce aktualizovat fakturační zemi.",
+          "why": "AI napíše krátké shrnutí konverzace, aby ten, kdo tiket převezme, byl hned informovaný."
+        },
+        {
+          "k": "Klient",
+          "v": "Aisha Khan · aisha@example.com",
+          "why": "Jméno a e-mail, pokud ho klient uvedl, abyste věděli, komu odpovědět."
+        },
+        {
+          "k": "Konverzace",
+          "v": "Propojeno, otevře chat",
+          "why": "Jedno kliknutí a jste zpět v celé konverzaci, se všemi zprávami."
+        },
+        {
+          "k": "Zdroj",
+          "v": "Vytvořeno při předání AI",
+          "why": "Ukazuje, jestli tiket vytvořil člen týmu, AI při předání, nebo kontrola AI."
+        },
+        {
+          "k": "Odesláno do",
+          "v": "Trello, Asana nebo stránka Problémy",
+          "why": "Kam byl tiket odeslán. Bez připojeného projektového nástroje zůstává na stránce Problémy."
+        },
+        {
+          "k": "Referenční kód",
+          "v": "7F3A9C21",
+          "why": "Krátký kód, na který se klient může odvolat, pokud se znovu ozve."
+        }
+      ]
+    },
+    "scrubber": {
+      "eyebrow": "90sekundové hodiny",
+      "titlePrefix": "Posuňte čas. ",
+      "titleHl": "Sledujte, co se stane.",
+      "subtitle": "Pokud se kdykoli někdo připojí, tiket není potřeba. Pokud čas vyprší, tohle je posloupnost.",
+      "seconds": "sekund",
+      "dragMe": "Přesuňte mě",
+      "secondsAriaLabel": "Sekund od upozornění",
+      "clock": [
+        {
+          "t": "Klient souhlasí s hovorem s člověkem",
+          "d": "Elpino se nejdřív zeptá a pokračuje jen po souhlasu."
+        },
+        {
+          "t": "Každý člen týmu dostane upozornění k připojení",
+          "d": "Celý tým je vyzván ve stejném okamžiku."
+        },
+        {
+          "t": "Nikdo se nepřipojil: tiket vytvořen",
+          "d": "Název, důvod, shrnutí a odkaz na konverzaci."
+        },
+        {
+          "t": "Klient informován e-mailem, tým upozorněn",
+          "d": "Klient dostane svůj referenční kód e-mailem."
+        }
+      ]
+    },
+    "connect": {
+      "eyebrow": "Nastavte za minutu",
+      "titlePrefix": "Propojte to s nástrojem, ",
+      "titleHl": "ve kterém pracujete.",
+      "subtitle": "Nepovinné. Tento krok vynechte a tikety zůstanou jednoduše na stránce Problémy.",
+      "stepLabel": "Krok {n}",
+      "steps": [
+        {
+          "t": "Připojte Trello nebo Asanu",
+          "d": "Přidejte svůj projektový nástroj v nastavení pracovního prostoru."
+        },
+        {
+          "t": "Tikety tam putují",
+          "d": "Každý nový tiket se stane kartou nebo úkolem, už napsaným."
+        },
+        {
+          "t": "Stále sledováno v Elpino",
+          "d": "Stránka Problémy udržuje seznam a umožňuje věci odškrtávat."
+        }
+      ]
+    },
+    "reviewScan": {
+      "badge": "Kontrola AI",
+      "titlePrefix": "Jakmile se konverzace uzavře, ",
+      "titleHl": "Elpino si ji znovu přečte.",
+      "subtitle": "Konverzace končí zdvořile, zatímco sliby zůstávají nesplněné. Když se konverzace uzavře, AI ji zkontroluje, a pokud váš tým klientovi ještě něco dluží, označí tiket a řekne proč.",
+      "bullets": [
+        "Zachytí „prověřím to a ozvu se vám“",
+        "Uvede, proč to označila, abyste mohli rychle posoudit situaci",
+        "Označeno jako oznámeno kontrolou AI na stránce Problémy"
+      ],
+      "closedConvo": "Uzavřená konverzace",
+      "statusFlagged": "Označeno",
+      "statusReviewing": "Kontroluje se…",
+      "statusResolved": "Vyřešeno",
+      "chat": [
+        [
+          "cust",
+          "Dobrý den, moje objednávka dorazila poškozená."
+        ],
+        [
+          "agent",
+          "To je nám líto! Prověřím vrácení peněz a ozvu se vám."
+        ],
+        [
+          "cust",
+          "Super, děkuji."
+        ],
+        [
+          "agent",
+          "Můžu ještě s něčím pomoct?"
+        ],
+        [
+          "cust",
+          "Ne, to je vše."
+        ]
+      ],
+      "flaggedTicketLabel": "Tiket · Označeno kontrolou AI",
+      "flaggedTitle": "Vyřešit žádost o vrácení peněz · Tom Becker",
+      "flaggedDesc": "Klientovi bylo řečeno, že vrácení peněz se prověří; nic potom nebylo zaznamenáno."
+    },
+    "destinations": {
+      "eyebrow": "Kam to putuje",
+      "titlePrefix": "Odesláno do nástroje, ",
+      "titleHl": "který váš tým už používá.",
+      "subtitle": "Připojte Trello nebo Asanu a tikety tam půjdou přímo. Nepřipojíte nic a stejně zůstanou v bezpečí na stránce Problémy.",
+      "cardTitle": "Eskalace podpory · Aisha Khan",
+      "cardReason": "Důvod: změna fakturační země vyžaduje člověka",
+      "fromElpino": "Od Elpino",
+      "items": [
+        {
+          "key": "trello",
+          "label": "Trello",
+          "note": "Stane se kartou na vaší nástěnce Trello.",
+          "cols": [
+            "K vyřízení",
+            "Probíhá",
+            "Hotovo"
+          ]
+        },
+        {
+          "key": "asana",
+          "label": "Asana",
+          "note": "Stane se úkolem ve vašem projektu Asana.",
+          "cols": [
+            "Nezahájeno",
+            "Probíhá",
+            "Dokončeno"
+          ]
+        },
+        {
+          "key": "issues",
+          "label": "Stránka Problémy",
+          "note": "Nemáte připojený žádný projektový nástroj? Zůstane na stránce Problémy, bez jakéhokoli nastavování.",
+          "cols": [
+            "Otevřeno",
+            "",
+            "Vyřešeno"
+          ]
+        }
+      ]
+    },
+    "customerSide": {
+      "badge": "Potvrzení o převzetí",
+      "titlePrefix": "Klienti vědí, ",
+      "titleHl": "že na ně nikdo nezapomněl.",
+      "subtitle": "Pokud se nikdo nemohl včas připojit, Elpino to klientovi upřímně sdělí, odešle e-mail, aby se to neztratilo, a dá mu krátký referenční kód, na který se může odvolat. O novém tiketu je informován i celý váš tým.",
+      "bullets": [
+        "Klient se dozví, co bude dál",
+        "Dostane e-mail se svým referenčním kódem",
+        "O tiketu je informován každý člen týmu"
+      ],
+      "inChat": "V chatu",
+      "chatMsgPrefix": "Náš tým je právě zaneprázdněný, takže jsem otevřel/a tiket. Váš referenční kód je ",
+      "chatMsgSuffix": ". Ozveme se vám e-mailem do 24 hodin.",
+      "inInbox": "V jejich schránce",
+      "emailSubject": "Máme vaši žádost",
+      "emailBodyPrefix": "Tiket ",
+      "emailBodySuffix": " má na starosti náš tým. Pokud chcete něco doplnit, odpovězte na tento e-mail.",
+      "teamNotified": "Tým informován: nový tiket od Aishy Khan"
+    },
+    "issuesBoard": {
+      "badge": "Stránka Problémy",
+      "titlePrefix": "Jeden seznam. ",
+      "titleHl": "Odškrtněte to.",
+      "subtitle": "Každý tiket ukazuje, odkud přišel a kam byl odeslán. Kontrola AI dokonce uvede, proč ho označila. Kliknutím na pole ho označíte jako vyřešené.",
+      "openWord": "otevřeno",
+      "resolvedWord": "vyřešeno",
+      "panelTitle": "Problémy",
+      "panelSubtitle": "Tikety vytvořené z konverzací podpory.",
+      "markResolved": "Označit jako vyřešené",
+      "markUnresolved": "Označit jako nevyřešené",
+      "rows": [
+        {
+          "t": "Eskalace podpory · Aisha Khan",
+          "who": "Vytvořeno při předání AI",
+          "where": "Neodesláno do projektového nástroje",
+          "done": false
+        },
+        {
+          "t": "Vyřešit žádost o vrácení peněz · Tom Becker",
+          "who": "Označeno kontrolou AI",
+          "where": "Tiket v Trello",
+          "reason": "Klientovi bylo řečeno, že vrácení peněz se prověří; nic potom nebylo zaznamenáno.",
+          "done": false
+        },
+        {
+          "t": "Změna adresy na faktuře · Meera Iyer",
+          "where": "Tiket v Asaně",
+          "done": false
+        },
+        {
+          "t": "Eskalace podpory · Ravi Menon",
+          "who": "Vytvořeno při předání AI",
+          "where": "Neodesláno do projektového nástroje",
+          "done": true
+        }
+      ]
+    },
+    "lifecycle": {
+      "eyebrow": "Život tiketu",
+      "titlePrefix": "Od „mohu mluvit s člověkem?“ ",
+      "titleHl": "až po hotovo.",
+      "stepLabel": "Krok {n}",
+      "items": [
+        {
+          "t": "Klient požádá o člověka",
+          "d": "AI se nejdřív zeptá, pak upozorní tým."
+        },
+        {
+          "t": "90 sekund, nikdo se nepřipojí",
+          "d": "Každý měl šanci konverzaci převzít."
+        },
+        {
+          "t": "Tiket vytvořen",
+          "d": "Název, důvod, shrnutí a odkaz zpět na konverzaci."
+        },
+        {
+          "t": "Klient informován e-mailem",
+          "d": "S jeho referenčním kódem, aby se nic neztratilo."
+        },
+        {
+          "t": "Vyřízeno a vyřešeno",
+          "d": "Váš tým to odškrtne, jakmile je hotovo."
+        }
+      ]
+    },
+    "compare": {
+      "eyebrow": "Před a po",
+      "titlePrefix": "Konec ",
+      "titleHl": "zapomenutých slibů.",
+      "headerA": "Bez tiketů",
+      "headerB": "S Elpino",
+      "rows": [
+        [
+          "„Někdo se vám ozve“, a pak ticho",
+          "Tiket s referenčním kódem, na který se klient může odvolat"
+        ],
+        [
+          "Tým ručně přepisuje detaily do jiného nástroje",
+          "Důvod, shrnutí a odkaz na chat přijdou už napsané"
+        ],
+        [
+          "Sliby dané v chatu se zapomenou",
+          "Kontrola AI označí, co váš tým ještě dluží po uzavření konverzace"
+        ],
+        [
+          "Žádná jistota, jestli se tím někdo zabývá",
+          "Stav vyřešeno k odškrtnutí a kam bylo odesláno, v jednom seznamu"
+        ]
+      ]
+    },
+    "faq": {
+      "eyebrow": "Otázky",
+      "titlePrefix": "Dobré ",
+      "titleHl": "vědět.",
+      "items": [
+        [
+          "Kdy Elpino vytvoří tiket?",
+          "Když předá konverzaci a nikdo se do 90 sekund nepřipojí, a když jeho kontrola uzavřené konverzace zjistí, že váš tým ještě něco dluží. Členové týmu ho mohou také zapsat ručně."
+        ],
+        [
+          "Kam tikety putují?",
+          "Do Trello nebo Asany, pokud jste je připojili. Pokud ne, zůstávají na vaší stránce Problémy, takže se nic neztratí."
+        ],
+        [
+          "Co tiket obsahuje?",
+          "Název, důvod, krátké shrnutí, údaje o klientovi a odkaz zpět na konverzaci."
+        ],
+        [
+          "Dozví se to klient?",
+          "Ano. Je informován v chatu, dostane e-mail a krátký referenční kód, na který se může odvolat."
+        ],
+        [
+          "Můžu tiket označit jako vyřešený?",
+          "Ano, odškrtněte ho na stránce Problémy."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Ať nic neproklouzne.",
+      "subtitle": "Začněte zdarma a Elpino za vás bude tikety psát.",
+      "ctaStart": "Začít zdarma",
+      "ctaMeetAgent": "Seznamte se s AI agentem"
+    }
+  },
+  "knowledgeHub": {
+    "hero": {
+      "badge": "Centrum znalostí",
+      "titlePrefix": "Zeptejte se na cokoli. ",
+      "titleHl": "Elpino to ověří ve vašich znalostech.",
+      "subtitle": "Elpino odpovídá pouze na základě znalostí, které mu poskytnete. Nemusíte nám to jen věřit. Sledujte, jak vlevo prohledává vaše znalosti a vpravo odpovídá klientovi. Když nic nenajde, řekne to na rovinu.",
+      "privateNote": "Soukromé zdroje se k odpovědím klientům nikdy nepoužívají."
+    },
+    "playground": {
+      "yourKnowledge": "Vaše znalosti",
+      "customer": "Klient",
+      "elpinoAi": "Elpino AI",
+      "statusWaiting": "Čeká na otázku",
+      "statusSearching": "Prohledává vaše znalosti…",
+      "statusFound": "Nalezena shoda",
+      "statusNoMatch": "Shoda nenalezena",
+      "privateBadge": "Soukromé",
+      "matchBadge": "Shoda",
+      "offersHuman": "Nabízí spojení s člověkem",
+      "sources": [
+        {
+          "name": "Zásady vracení.pdf",
+          "kind": "Dokument"
+        },
+        {
+          "name": "Doba doručení",
+          "kind": "Textová stránka"
+        },
+        {
+          "name": "Nápověda: reset hesla",
+          "kind": "Webová stránka"
+        },
+        {
+          "name": "Playbook pro eskalace",
+          "kind": "Interní poznámky"
+        }
+      ],
+      "scenes": [
+        {
+          "q": "Do kdy mohu požádat o vrácení peněz?",
+          "hit": "refund",
+          "a": "O vrácení peněz můžete požádat do 30 dnů od nákupu."
+        },
+        {
+          "q": "Jak si resetuji heslo?",
+          "hit": "reset",
+          "a": "Na přihlašovací stránce zvolte „Zapomenuté heslo“ a postupujte podle odkazu, který vám zašleme e-mailem."
+        },
+        {
+          "q": "Nabízíte slevy pro charitativní organizace?",
+          "hit": null,
+          "a": "Tuto informaci nemám. Chcete, abych vás spojil s naším týmem?"
+        },
+        {
+          "q": "Jak dlouho trvá doručení?",
+          "hit": "ship",
+          "a": "Objednávky obvykle dorazí do 3–5 pracovních dnů."
+        }
+      ]
+    },
+    "crawlWeb": {
+      "eyebrow": "Objevte",
+      "titlePrefix": "Jeden odkaz na vstupu. ",
+      "titleHl": "Celý web na výstupu.",
+      "subtitle": "Zadejte Elpinu adresu své hlavní stránky a ono si samo projde odkazy, až 50 stránek. Nejprve čte stránky s nápovědou, ceníkem a zásadami a přeskočí obrázky, soubory ke stažení a další šum. Stránky postavené na JavaScriptu se vykreslí ve skutečném prohlížeči, takže se nic nevrátí prázdné.",
+      "pagesKept": "Zachované stránky",
+      "filesSkipped": "Přeskočené soubory",
+      "svgAlt": "Procházení šířící se z jedné stránky na propojené stránky",
+      "startLabel": "START"
+    },
+    "otherWays": {
+      "eyebrow": "Další cesty",
+      "titlePrefix": "Ne všechno je ",
+      "titleHl": "na webové stránce.",
+      "subtitle": "Tři další způsoby, jak Elpino naučit znalostem, které nikdy neměly svou URL adresu.",
+      "items": [
+        {
+          "title": "Mapa webu",
+          "big": "20",
+          "note": "stránek načtených z vaší mapy webu najednou"
+        },
+        {
+          "title": "Soubory",
+          "big": ".pdf",
+          "note": "také .docx, .txt a .md. Text se automaticky extrahuje"
+        },
+        {
+          "title": "Napište to",
+          "big": "Aa",
+          "note": "zásady a stránky „jak to děláme“, napsané přímo v editoru"
+        }
+      ]
+    },
+    "mill": {
+      "eyebrow": "Co se stane dál",
+      "titlePrefix": "Každá stránka podstoupí ",
+      "titleHl": "stejnou cestu.",
+      "items": [
+        {
+          "t": "Bezpečně stažena",
+          "d": "Jako ElpinoBot, s ochranou proti přístupu do soukromých sítí."
+        },
+        {
+          "t": "Vyčištěna",
+          "d": "Nabídky a šablonový obsah pryč, užitečný text zůstává."
+        },
+        {
+          "t": "Rozdělena a zaindexována",
+          "d": "Rozdělena na úseky a indexována podle významu, nejen podle klíčových slov."
+        },
+        {
+          "t": "Nalezena na požádání",
+          "d": "Nejbližší úseky se vyvolají ve chvíli, kdy se klient zeptá."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Otázky",
+      "titlePrefix": "Dobré ",
+      "titleHl": "vědět.",
+      "items": [
+        [
+          "Co mohu přidat?",
+          "Webové stránky podle URL adresy, mapu webu (až 20 stránek), procházení z jednoho odkazu (až 50 stránek), soubory PDF, Word, textové a Markdown a stránky, které si sami napíšete."
+        ],
+        [
+          "Umí číst stránky postavené na JavaScriptu?",
+          "Ano. Pokud stránka obsahuje jen málo čitelného textu, nejprve se vykreslí v prohlížeči a poté se přečte výsledek."
+        ],
+        [
+          "Mohu obsah nechat soukromý?",
+          "Ano. Každý zdroj má přepínač viditelnosti, takže interní poznámky zůstávají interní."
+        ],
+        [
+          "Mohu připojit Notion, Zendesk nebo Confluence?",
+          "Ještě ne. Dnes zdroje přidáváte pomocí URL adresy, mapy webu, nahrání souboru nebo psaním stránek."
+        ],
+        [
+          "Co když odpověď neexistuje?",
+          "Elpino řekne, že tuto informaci nemá, a nabídne spojení klienta s vaším týmem, místo aby hádalo."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Naplňte svůj skutečný regál.",
+      "subtitle": "Vložte odkaz a Elpino z něj začne odpovídat.",
+      "ctaStart": "Začít zdarma",
+      "ctaMeetAgent": "Poznejte AI agenta"
+    }
+  },
+  "integrations": {
+    "hero": {
+      "badge": "Integrace",
+      "titlePrefix": "Připoj. ",
+      "titleHl": "Posuň se dál.",
+      "subtitle": "Připoj své platby, systém pro tikety a vlastní systémy a sleduj, jak rostou možnosti Elpino. Klepnutím na zásuvky je připojíš."
+    },
+    "board": {
+      "pluggedInCount": "{on} / {total} připojeno",
+      "pluggedIn": "Připojeno",
+      "tapToPlugIn": "Klepnutím připojíš",
+      "on": "Zap",
+      "off": "Vyp",
+      "whatCanDo": "Co Elpino umí teď",
+      "empty": "Zatím nic není připojeno. Klepni na zásuvku výše."
+    },
+    "conns": [
+      {
+        "name": "Stripe",
+        "blurb": "AI kontroluje skutečné platby a předplatná.",
+        "abilities": [
+          "Vyhledání plateb a předplatných",
+          "Zasílání potvrzení a platebních odkazů",
+          "Zrušení předplatného na požádání",
+          "Refundace, pouze pokud je zapneš"
+        ]
+      },
+      {
+        "name": "Razorpay",
+        "blurb": "Stejné platební nástroje pro účty Razorpay.",
+        "abilities": [
+          "Vyhledání plateb a předplatných",
+          "Zasílání potvrzení a platebních odkazů",
+          "Zrušení předplatného na požádání",
+          "Refundace, pouze pokud je zapneš"
+        ]
+      },
+      {
+        "name": "Cashfree",
+        "blurb": "Historie plateb a vyrovnání pro tvůj tým.",
+        "abilities": [
+          "Nalezení objednávky nebo platby podle konverzace",
+          "Zobrazení stavu vyrovnání a refundace"
+        ]
+      },
+      {
+        "name": "Paystack",
+        "blurb": "Stav transakcí a refundací pro tvůj tým.",
+        "abilities": [
+          "Vyhledání transakce podle konverzace",
+          "Kontrola stavu platby a refundace"
+        ]
+      },
+      {
+        "name": "Trello",
+        "blurb": "Tikety se objeví jako karty na tvé nástěnce.",
+        "abilities": [
+          "Tikety se stávají kartami Trello",
+          "Přiloženo je shrnutí a odkaz na chat"
+        ]
+      },
+      {
+        "name": "Asana",
+        "blurb": "Tikety se objeví jako úkoly ve tvém projektu.",
+        "abilities": [
+          "Tikety se stávají úkoly Asana",
+          "Přiloženo je shrnutí a odkaz na chat"
+        ]
+      },
+      {
+        "name": "Tvé servery MCP",
+        "blurb": "Vše, co mluví MCP, s nástroji, které schválíš.",
+        "abilities": [
+          "Volání nástrojů na tvých vlastních serverech",
+          "Až 5 serverů, každý s 15 povolenými nástroji",
+          "Viditelné jsou pouze nástroje, které schválíš",
+          "Nástroje, které mění data, vyžadují ověřeného klienta"
+        ]
+      }
+    ],
+    "how": {
+      "eyebrow": "Připojování",
+      "titlePrefix": "Minuta na každý. ",
+      "titleHl": "Bez programátorů.",
+      "stepLabel": "Krok {n}",
+      "steps": [
+        {
+          "t": "Vyber nástroj",
+          "d": "Otevři Připojit ve svém dashboardu a zvol konektor, který chceš."
+        },
+        {
+          "t": "Vlož klíč nebo autorizuj",
+          "d": "Nástroje s API klíčem přijímají tvé klíče. Asana používá běžné přihlášení a obrazovku oprávnění."
+        },
+        {
+          "t": "Nejdřív to zkontrolujeme",
+          "d": "Elpino před uložením ověří tvé klíče u poskytovatele a uloží je v zašifrované podobě."
+        }
+      ]
+    },
+    "families": {
+      "eyebrow": "Katalog",
+      "titlePrefix": "Tři druhy ",
+      "titleHl": "připojení.",
+      "tabs": {
+        "payments": "Platby",
+        "tickets": "Tikety",
+        "systems": "Tvé systémy"
+      },
+      "paymentsNote": "Platební akce AI dnes fungují se Stripe a Razorpay. Cashfree a Paystack přinášejí tvému týmu kontext o platbách."
+    },
+    "safe": {
+      "badge": "Ve výchozím nastavení bezpečné",
+      "titlePrefix": "Připojené, ",
+      "titleHl": "ne vystavené.",
+      "items": [
+        {
+          "t": "Klíče zůstávají zašifrované",
+          "d": "Přihlašovací údaje jsou uloženy zašifrované a Elpino je před uložením ověří u poskytovatele."
+        },
+        {
+          "t": "Pro vyhledávání stačí přístup pouze pro čtení",
+          "d": "Pro Stripe použij omezený klíč s přístupem pro čtení k zákazníkům a platbám."
+        },
+        {
+          "t": "Peníze se pohnou jen tehdy, když to povolíš",
+          "d": "Refundace jsou ve výchozím nastavení vypnuté. Vlastník pracovního prostoru rozhoduje, zda je AI může vydávat."
+        },
+        {
+          "t": "Každý nástroj MCP schvaluješ ty",
+          "d": "AI vidí jen nástroje, které jsi zapnul, a každé volání je znovu ověřeno na serveru."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Otázky",
+      "titlePrefix": "Dobré ",
+      "titleHl": "vědět.",
+      "items": [
+        [
+          "Které nástroje mohu připojit?",
+          "Stripe, Razorpay, Cashfree a Paystack pro platby, Trello a Asana pro tikety a tvé vlastní servery MCP pro vše ostatní."
+        ],
+        [
+          "Co může AI dělat s platbami?",
+          "Po připojení Stripe nebo Razorpay může vyhledávat platby a předplatná, zasílat potvrzení a platební odkazy a na požádání zrušit předplatné. Refundace jsou vypnuté, pokud je nepovolíš."
+        ],
+        [
+          "Musím být technicky zdatný?",
+          "Ne u plateb nebo tiketů. Vložíš klíč, nebo se přihlásíš do Asany. Servery MCP vyžadují, aby je někdo vytvořil."
+        ],
+        [
+          "Je podporován Shopify, Slack nebo HubSpot?",
+          "Dnes ne jako konektory na jedno kliknutí. Pokud má tvůj systém server MCP, můžeš ho připojit, a můžeš nám napsat, co bys chtěl příště."
+        ],
+        [
+          "Kam jdou tikety?",
+          "Do Trello nebo Asana, pokud jsou připojené. Jinak zůstávají na tvé stránce Issues."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Chybí ti něco, co potřebuješ?",
+      "subtitle": "Řekni nám, jaký nástroj bys chtěl příště, nebo si ho připoj sám přes MCP.",
+      "ctaStart": "Začít zdarma",
+      "ctaRequest": "Vyžádat integraci"
+    }
+  },
+  "securityGuide": {
+    "sticky": {
+      "securityLabel": "Zabezpečení",
+      "reportIssue": "Nahlásit problém"
+    },
+    "hero": {
+      "badge": "Průvodce zabezpečením",
+      "title1": "Postaveno tak, aby ",
+      "title2": "chránilo vaše data.",
+      "subtitle": "Tento průvodce popisuje, co je chráněno ve webové aplikaci, na bráně a v službách pro autentizaci, pracovní prostor a AI – co garantujeme a proč se na to můžete spolehnout, bez podrobného popisu vnitřního fungování.",
+      "ctaBlueprint": "Zobrazit schéma",
+      "ctaChapters": "Přečíst kapitoly",
+      "ctaTrust": "Centrum důvěry",
+      "register": {
+        "label": "Rejstřík schématu",
+        "chapters": "Kapitoly",
+        "controlsDescribed": "Popsaná opatření",
+        "componentsCovered": "Zahrnuté komponenty",
+        "componentsValue": "6",
+        "reviewedAgainst": "Kontrolováno proti",
+        "reviewedValue": "produktu"
+      }
+    },
+    "blueprint": {
+      "fig": "Obr. 00 · Na první pohled",
+      "title": "Co se stane s požadavkem",
+      "subtitle": "Každá šipka je šifrovaná nebo autentizovaná. Najeďte na kteroukoli část a zjistíte, co to v praxi znamená.",
+      "readChapter": "Přečíst kapitolu"
+    },
+    "nodes": {
+      "widget": {
+        "label": "Návštěvník",
+        "sub": "Chatový widget",
+        "guards": "Hosté zůstávají hosty. Přihlášení návštěvníci se prokazují podepsaným pověřením nebo e-mailovým kódem, který je uložen jen v paměti samotného widgetu."
+      },
+      "team": {
+        "label": "Váš tým",
+        "sub": "Dashboard",
+        "guards": "Hesla se nikdy neukládají v čitelné podobě, přihlášení přes Google se ověřuje na našem serveru a jakoukoli relaci můžete kdykoli vzdáleně ukončit."
+      },
+      "elpino": {
+        "label": "Elpino",
+        "sub": "Ověřuje, chrání, odpovídá",
+        "guards": "Každý požadavek se prověří dřív, než se cokoli spustí, citlivé údaje se nahradí ještě před tím, než je uvidí AI model, a AI se pohybuje jen v mezích, které nemůže obejít žádnou formulací."
+      },
+      "google": {
+        "label": "Google",
+        "sub": "Přihlášení",
+        "guards": "Důvěryhodné až po nezávislém ověření naším vlastním serverem."
+      },
+      "pay": {
+        "label": "Platby",
+        "sub": "Razorpay · Stripe",
+        "guards": "Platební oznámení se přijímají jen s ověřeným podpisem a nelze je nikdy zopakovat pro reset vašeho čerpání."
+      },
+      "models": {
+        "label": "Poskytovatelé AI",
+        "sub": "Modely",
+        "guards": "Vidí jen bezpečné náhrady místo skutečných údajů, nikdy žádná tajemství, a vaše data se nepoužívají k trénování obecných modelů."
+      }
+    },
+    "chaptersSection": {
+      "label": "Kapitoly",
+      "title1": "Dvanáct kapitol. ",
+      "title2": "Nic nevynecháno.",
+      "subtitle": "Každé opatření pojmenovává část systému, ve které existuje, a záruku, kterou vám dává – ne přesný mechanismus, který za ní stojí.",
+      "contents": "Obsah"
+    },
+    "chapters": {
+      "accounts": {
+        "title": "Účty a relace",
+        "kicker": "Kdo je ve vašem týmu a jak to poznáme.",
+        "intro": "Registrace, přihlášení a každá relace po něm. Hesla se nikdy neukládají v čitelné podobě, ověřovací kódy rychle vypršou a relaci lze kdykoli ukončit ze serveru.",
+        "stats": [
+          "Hesla se hashují, nikdy neukládají",
+          "Kódy rychle vypršou",
+          "Relace, které lze zrušit"
+        ],
+        "controls": {
+          "1.1": {
+            "title": "Hesla se hashují, nikdy se neukládají",
+            "text": "Vaše heslo nikde neuchováváme v podobě, kterou by kdokoli mohl přečíst – ani my. Jeho ověření nemůže vyzradit, jak blízko byl špatný pokus."
+          },
+          "1.2": {
+            "title": "Ověřovací kódy e-mailem",
+            "text": "Nové účty potvrzují svou adresu krátce platným kódem. Uchovává se jen jeho bezpečný hash, rychle vyprší a je povoleno jen několik chybných pokusů, než je potřeba nový."
+          },
+          "1.3": {
+            "title": "Přihlášení přes Google se ověřuje na serveru",
+            "text": "Vyskakovací okno pro přihlášení přes Google běží ve vašem prohlížeči, ale náš server ho před důvěrou v něj nezávisle ověří a vždy vás přihlásí do stejného účtu podle vašeho ověřeného e-mailu – nikdy do druhého, nespojeného."
+          },
+          "1.4": {
+            "title": "Podepsané tokeny relace",
+            "text": "Vaše relace je podepsaný token, který si náš server dokáže vždy sám ověřit – nelze ho zfalšovat, upravit ani znovu přehrát jako něco jiného."
+          },
+          "1.5": {
+            "title": "Zabezpečená cookie relace",
+            "text": "Cookie vaší relace nelze přečíst skripty na stránce a přenáší se výhradně přes zabezpečené spojení."
+          },
+          "1.6": {
+            "title": "Odhlášení všude",
+            "text": "Odhlášení rychle zneplatní všechny vaše relace. Pokud nelze potvrdit, že je relace stále platná, je odmítnuta, ne propuštěna dál."
+          },
+          "1.7": {
+            "title": "Bezpečná přesměrování",
+            "text": "Po přihlášení jste vždy posláni jen na stránku na našem vlastním webu – nikdy jinam, bez ohledu na to, jak je odkaz vytvořen."
+          },
+          "1.8": {
+            "title": "Pozvánky do týmu",
+            "text": "Odkazy s pozvánkou nelze uhodnout a automaticky vypršují, a vlastník rozhoduje, zda členové mohou zvát další lidi."
+          }
+        }
+      },
+      "front-door": {
+        "title": "Vstupní brána",
+        "kicker": "Co web udělá dřív, než se požadavek posune dál.",
+        "intro": "Webová aplikace je první věc, se kterou se prohlížeč setká. Zabezpečuje prohlížeč, omezuje zneužití a validuje vstup dřív, než se cokoli předá dál.",
+        "stats": [
+          "Bez rámování",
+          "Omezené zneužití",
+          "Selhává uzavřeně"
+        ],
+        "controls": {
+          "2.1": {
+            "title": "Bezpečnostní hlavičky prohlížeče",
+            "text": "Každá stránka kromě chatového widgetu je chráněna proti clickjackingu, chráněna proti detekci typu obsahu a má citlivá oprávnění zařízení, jako kamera a poloha, ve výchozím stavu vypnutá. Widget je jedinou úmyslnou výjimkou, protože musí žít uvnitř iframe na vašem webu."
+          },
+          "2.2": {
+            "title": "Sdílené limity proti zneužití",
+            "text": "Veřejné formuláře jsou chráněny limity požadavků sdílenými napříč všemi servery, které provozujeme, takže zneužití z jednoho místa nemůže jednoduše proklouznout přes jiné."
+          },
+          "2.3": {
+            "title": "Selhává uzavřeně",
+            "text": "Pokud nelze dosáhnout omezovače zneužití, je požadavek odmítnut, ne propuštěn dál."
+          },
+          "2.4": {
+            "title": "Validovaný vstup s omezenou délkou",
+            "text": "Každý formulář je zkontrolován a omezen na velikosti na serveru dřív, než se cokoli zpracuje – nikdy se nevěří jen tomu, že ho už validoval prohlížeč."
+          }
+        }
+      },
+      "gateway": {
+        "title": "Brána",
+        "kicker": "Jeden vstup pro backend, ve výchozím stavu uzavřený.",
+        "intro": "Každé volání backendu prochází jedinou branou. Pravidlo je jednoduché: pokud trasa není explicitně veřejná, musí prokázat, že tam patří.",
+        "stats": [
+          "Ve výchozím stavu uzavřená",
+          "Explicitní seznam veřejných tras",
+          "Ověřená živá spojení"
+        ],
+        "controls": {
+          "3.1": {
+            "title": "Ve výchozím stavu uzavřená",
+            "text": "Každá trasa vyžaduje důkaz, že se jedná o autorizované interní volání, pokud není explicitně označena jako veřejná. Pokud tato kontrola není nastavena, brána odmítne vše, místo aby selhala otevřeně."
+          },
+          "3.2": {
+            "title": "Krátký, explicitní seznam veřejných tras",
+            "text": "Veřejní jsou pouze ti volající, kteří skutečně nemohou mít interní přihlašovací údaje: chatový widget, analytika stránek, platební webhook a jednorázové bezpečné odkazy. Každý z nich je označen záměrně, trasu po trase."
+          },
+          "3.3": {
+            "title": "Pouze explicitní zdroje",
+            "text": "API odpovídá prohlížečům jen ze známého, schváleného seznamu zdrojů – nikdy odkudkoli, kdo se náhodou zeptá."
+          },
+          "3.4": {
+            "title": "Ověřená živá spojení",
+            "text": "Připojení k živému zobrazení vyžadují ověřené přihlašovací údaje vázané na pracovní prostor s platností. Cokoli jiného je okamžitě zahozeno."
+          },
+          "3.5": {
+            "title": "Interní odesílání je také chráněné",
+            "text": "Koncové body, které služby používají k odesílání živých oznámení do dashboardů, vyžadují stejný interní důkaz, takže nikdo z venku nemůže rozezvonit obrazovku kolegy."
+          }
+        }
+      },
+      "visitors": {
+        "title": "Návštěvníci a identita",
+        "kicker": "Jak rozeznat přihlášeného klienta od někoho, kdo jen napsal e-mail.",
+        "intro": "Jméno, e-mail nebo číslo objednávky není důkazem, kdo je daná osoba. Nápověda k účtu se odemkne až po skutečném ověření identity, a to ověření rychle vyprší.",
+        "stats": [
+          "Vyžadován skutečný důkaz",
+          "Relace automaticky vypršují",
+          "Časově omezené ověření"
+        ],
+        "controls": {
+          "4.1": {
+            "title": "Hosté zůstávají hosty",
+            "text": "Napsané jméno, e-mail, telefon nebo platební reference nikdy nepočítají jako důkaz identity. Hosté mohou chatovat a zanechat kontaktní údaje, ale to neodemyká žádné soukromé nástroje a nikdy se to nespojí s historií nikoho jiného."
+          },
+          "4.2": {
+            "title": "Podepsaná identita z vašeho vlastního webu",
+            "text": "U přihlášených klientů se za jejich identitu zaručuje váš vlastní server pomocí krátkodobě platného podepsaného pověření, které mohou vytvořit jen společně vy a Elpino. Kontaktní údaje se počítají jako ověřené jen tehdy, když to potvrdí váš systém."
+          },
+          "4.3": {
+            "title": "Jedna výměna, jedna relace",
+            "text": "Každý důkaz identity se použije jen jednou a poté se vymění za novou vlastní relaci – nic opakovaně použitelného se neuchovává a to, co je uloženo, nelze převést zpět na původní hodnotu."
+          },
+          "4.4": {
+            "title": "Krátkodobé relace",
+            "text": "Relace automaticky vyprší po období nečinnosti nebo po pevně stanoveném čase od přihlášení – podle toho, co nastane dřív. Uchovává se jen v paměti samotného widgetu, nikdy v úložišti prohlížeče nebo v URL."
+          },
+          "4.5": {
+            "title": "Rotace a odhlášení",
+            "text": "Rotace vašeho identitního pověření okamžitě zneplatní každou relaci, která používala to staré. Odhlášení zruší relaci na našem serveru a staré relace se automaticky vyčistí."
+          },
+          "4.6": {
+            "title": "E-mailové kódy pro hosty",
+            "text": "Návštěvník se také může ověřit e-mailem krátkým jednorázovým kódem, omezeným frekvenčním limitem proti zneužití. Ověření odemkne jen tuto jednu konverzaci, a jen po omezenou dobu."
+          },
+          "4.7": {
+            "title": "Každý požadavek se znovu kontroluje",
+            "text": "Každé ověřené čtení a zápis nezávisle znovu kontroluje, kdo se dotazuje, ke kterému pracovnímu prostoru je vázán a zda je tento přístup stále platný – nic se nepovažuje za důvěryhodné jen proto, že bylo platné před okamžikem."
+          }
+        }
+      },
+      "ai": {
+        "title": "Vodítko AI",
+        "kicker": "Co AI může a nemůže dělat, vynucuje backend, ne slušná prosba.",
+        "intro": "Model navrhuje, backend rozhoduje. Nástroje, identita, limity a peníze žijí mimo model, kde je chytrá zpráva nemůže obejít žádnou formulací.",
+        "stats": [
+          "Omezená práce",
+          "Nástroje kontroluje backend",
+          "Nezávislá kontrola"
+        ],
+        "controls": {
+          "5.1": {
+            "title": "Jedna odpověď, jeden vlastník",
+            "text": "Před uložením odpovědi AI systém nezávisle potvrdí, že konverzace je stále vlastněna AI a že zodpovídaná otázka je stále ta nejnovější. AI nemůže mluvit přes váš tým ani odpovídat na něco, co už bylo vyřešeno jinak."
+          },
+          "5.2": {
+            "title": "Omezená práce",
+            "text": "Každé kolo AI má pevný strop toho, co může udělat. Zaseknutý nebo smyčkující běh se automaticky přeruší, nikdy se nenechá běžet dál."
+          },
+          "5.3": {
+            "title": "Nástroje vybírá backend",
+            "text": "Které nástroje může AI použít, rozhoduje výhradně nastavení vašeho pracovního prostoru a ověření klienta – model si nemůže sám udělit nástroj, prohlásit data za veřejná nebo se dostat do jiného pracovního prostoru."
+          },
+          "5.4": {
+            "title": "Nástroje pro účet potřebují ověřeného klienta",
+            "text": "Vyhledávání plateb a připojené systémy se stanou dostupné až poté, co klient prokáže svou identitu, a jednají výhradně podle identity, která je již v záznamu – nikdy podle toho, co je řečeno modelu."
+          },
+          "5.5": {
+            "title": "Zprávy jsou data, ne instrukce",
+            "text": "Zprávy klientů, dokumenty a výsledky nástrojů se k modelu dostávají jasně označené jako nedůvěryhodné informace. Instrukce skryté v nich se neplní."
+          },
+          "5.6": {
+            "title": "Druhý názor",
+            "text": "Samostatná, nezávislá kontrola prověří každý návrh odpovědi proti důkazům, které AI skutečně shromáždila. Nepodložené tvrzení se vrátí k přepsání, a to, co znovu neprojde, se předá člověku."
+          },
+          "5.7": {
+            "title": "Pohyby peněz jsou za branami",
+            "text": "Vrácení peněz pomocí AI jsou vypnutá, dokud je vlastník pracovního prostoru nezapne, a i pak jsou omezená a automaticky limitovaná. Opakovaně zadané vrácení peněz nelze nikdy vydat dvakrát, a zrušení předplatného nikdy nepřipraví o čas, který jste už zaplatili."
+          },
+          "5.8": {
+            "title": "Auditní stopa pro každý běh",
+            "text": "Každý běh AI uchovává záznam o tom, co udělal a co k tomu použil. Cokoli, co se týká peněz, se navíc zaznamenává jako poznámka, kterou váš tým vidí."
+          }
+        }
+      },
+      "private-data": {
+        "title": "Soukromá data",
+        "kicker": "Co model ve skutečnosti vidí.",
+        "intro": "Než se jakýkoli požadavek dostane k AI modelu, identifikační údaje se nahradí bezpečnými náhradami. Vyzkoušejte to níže s vlastním textem.",
+        "stats": [
+          "Údaje se nahradí nejdřív",
+          "Tajemství úplně odstraněna",
+          "Stejná pravidla pro každého poskytovatele"
+        ],
+        "controls": {
+          "6.1": {
+            "title": "Skutečné údaje se k modelu nikdy nedostanou",
+            "text": "Jména, e-maily, telefonní čísla, adresy a údaje o objednávkách nebo platbách se nikdy nezasílají AI modelu v původní podobě. Nejprve je nahradíme bezpečnými náhradami a skutečnou hodnotu obnovíme až poté, na našich vlastních serverech – nikdy uvnitř ničeho, co model vidí."
+          },
+          "6.2": {
+            "title": "Tajemství se odstraňují, ne jen skrývají",
+            "text": "Hesla, API klíče, tokeny a jednorázové kódy se úplně odstraní dřív, než se cokoli dostane k modelu – nejsou zamaskovány, jsou pryč."
+          },
+          "6.3": {
+            "title": "Citlivé odkazy se čistí",
+            "text": "Odkazy obsahující přístupové tokeny nebo jiné citlivé parametry se očistí dřív, než je model vůbec přečte."
+          },
+          "6.4": {
+            "title": "Fakta o platbě, ne platební záznamy",
+            "text": "Platební nástroje vracejí jen bezpečné souhrny – stav a data – nikdy syrové údaje o kartě nebo účtu, a důvody selhání jsou zjednodušené, ne předány jako volný text."
+          },
+          "6.5": {
+            "title": "Stejná pravidla pro každý model",
+            "text": "Stejná ochrana platí bez ohledu na to, který poskytovatel AI odpovídá, včetně případů, kdy přejdeme na jiného. Vaše konverzace a dokumenty se nikdy nepoužívají k trénování obecných modelů."
+          }
+        }
+      },
+      "integrations": {
+        "title": "Integrace a odchozí požadavky",
+        "kicker": "Když se Elpino musí spojit s adresou URL, kterou jste nám dali.",
+        "intro": "Procházení vašeho webu, čtení stránky nebo volání připojeného systému znamená stažení URL, kterou někdo zadal. Každý takový požadavek je zabezpečen tak, aby ho nešlo obrátit proti naší vlastní síti – ani proti vaší.",
+        "stats": [
+          "Šifrováno v klidu",
+          "Nedosáhne na privátní sítě",
+          "Omezeno a časově ohraničeno"
+        ],
+        "controls": {
+          "7.1": {
+            "title": "Přihlašovací údaje jsou šifrovány v klidu",
+            "text": "Jakýkoli klíč nebo token, který připojíte – Stripe, Razorpay, Trello a podobné – je zašifrován dřív, než je uložen. Samotná kopie databáze je nedokáže obnovit."
+          },
+          "7.2": {
+            "title": "Odchozí požadavky nelze namířit dovnitř",
+            "text": "Když stahujeme URL ve váš prospěch – procházíme váš web, voláme připojený systém – zajistíme, aby ho nešlo přesměrovat na privátní síť nebo interní infrastrukturu, včetně naší vlastní."
+          },
+          "7.3": {
+            "title": "Přesměrování se kontroluje na každém kroku",
+            "text": "Přesměrování sledujeme pečlivě, kontrolujeme každý mezikrok místo důvěry ve finální cíl, a pouze přes standardní, zabezpečená spojení."
+          },
+          "7.4": {
+            "title": "Připojené systémy jsou omezeny",
+            "text": "Spojení s vašimi vlastními nástroji jsou omezena velikostí a časem, takže je nelze zneužít k neomezenému stahování dat nebo nekonečnému čekání."
+          },
+          "7.5": {
+            "title": "Administrátoři schvalují každý nástroj",
+            "text": "Připojené nástroje jsou vypnuté, dokud je administrátor neschválí. Nástroj, který může měnit data, je označen samostatně a stále vyžaduje ověřeného klienta, i když je server jinak veřejný."
+          },
+          "7.6": {
+            "title": "Odpojení znamená zmizí",
+            "text": "Když odpojíte integraci, její uložené tokeny a přihlašovací údaje se okamžitě vymažou."
+          }
+        }
+      },
+      "secure-links": {
+        "title": "Bezpečné předání",
+        "kicker": "Když klient musí poslat něco citlivého.",
+        "intro": "Nikdy nevkládejte klíč do chatu. Kolega o něj může místo toho požádat jednorázovým odkazem, a chat pak obsahuje jen tento odkaz.",
+        "stats": [
+          "Neuhodnutelný odkaz",
+          "Automaticky vyprší",
+          "Samostatně šifrováno"
+        ],
+        "controls": {
+          "8.1": {
+            "title": "Chat nikdy neobsahuje tajemství",
+            "text": "Oznámení v konverzaci pojmenovává, co bylo žádáno, a obsahuje odkaz – nikdy samotnou hodnotu."
+          },
+          "8.2": {
+            "title": "Neuhodnutelný, krátkodobý odkaz",
+            "text": "Sám odkaz je celým důkazem oprávnění klienta, proto je vytvořen jako neuhodnutelný a automaticky vyprší dřív, než se stane trvalým rizikem."
+          },
+          "8.3": {
+            "title": "Šifrováno vlastním klíčem",
+            "text": "Vše, co je odesláno, je zapečetěno klíčem, který je zcela oddělen od toho, který chrání vaše ostatní přihlašovací údaje, takže lze jeden rotovat – nebo v nejhorším případě vystavit – bez dopadu na druhý."
+          },
+          "8.4": {
+            "title": "Omezeno a pravidelně mazáno",
+            "text": "Odeslané údaje mají omezenou velikost a vše, co vyprší, se automaticky a trvale vymaže v pravidelném intervalu, přičemž zůstane jen záznam, že se něco stalo – nikdy co to bylo."
+          }
+        }
+      },
+      "money": {
+        "title": "Peníze a fakturace",
+        "kicker": "Platby, obnovení a limity s nimi spojené.",
+        "intro": "Vše, co pohybuje peníze, se ověřuje dvakrát: jednou, že zpráva skutečně přišla od poskytovatele plateb, a jednou, že ji nelze uplatnit dvakrát.",
+        "stats": [
+          "Jen ověřené podpisy",
+          "Bezpečné proti opakovanému přehrání",
+          "Nelze zaúčtovat dvakrát"
+        ],
+        "controls": {
+          "9.1": {
+            "title": "Podepsané webhooky a platby",
+            "text": "Platební oznámení se přijímají jen s platným, ověřeným podpisem od poskytovatele – vše ostatní, včetně téměř shodného, je bez výjimky odmítnuto."
+          },
+          "9.2": {
+            "title": "Opakované přehrání nemůže resetovat čerpání",
+            "text": "Platební oznámení, které dorazí víc než jednou – ať zopakované, nebo prostě doručené dvakrát – nemůže nikdy znovu vynulovat už vyčerpané limity nebo znovu přidělit kredit."
+          },
+          "9.3": {
+            "title": "Automatické dobití nemůže zaúčtovat dvakrát",
+            "text": "Kontrola, že je dobití v rámci limitu, a jeho skutečná rezervace probíhají jako jeden atomický krok, a váš zůstatek se navýší jen poté, co je platba potvrzena a zpracována."
+          },
+          "9.4": {
+            "title": "Každý pohyb peněz je zaznamenán",
+            "text": "Každá platební událost od poskytovatele se zapisuje do auditní stopy, a jakákoli platební akce, kterou provede AI, má svůj vlastní samostatný záznam."
+          },
+          "9.5": {
+            "title": "Limity plánu se vynucují na serveru",
+            "text": "Funkce omezené plánem se kontrolují v backendu, ne jen skryté v rozhraní, a limity míst se počítají z reálného členství – ne z toho, co tvrdí prohlížeč."
+          }
+        }
+      },
+      "lifecycle": {
+        "title": "Životní cyklus dat",
+        "kicker": "Kde data žijí, jak dlouho a jak zmizí.",
+        "intro": "Vaše data jsou vázána na váš pracovní prostor, vyprší, kdy mají, a můžete je sami odstranit.",
+        "stats": [
+          "Vázáno na pracovní prostor",
+          "Automaticky vyčištěno",
+          "Můžete je odstranit"
+        ],
+        "controls": {
+          "10.1": {
+            "title": "Vázáno na váš pracovní prostor",
+            "text": "Konverzace, znalosti, klienti a nastavení patří pracovnímu prostoru a každé vyhledávání je na něj omezeno – nic nepřechází omylem jinam."
+          },
+          "10.2": {
+            "title": "Jen pro tým zůstává jen pro tým",
+            "text": "Poznámky označené jen pro tým se odfiltrují dřív, než je konverzace vůbec zobrazena ve widgetu návštěvníka."
+          },
+          "10.3": {
+            "title": "Krátkodobé věci vyprší",
+            "text": "Ověřovací kódy, přihlašovací údaje relace a obsah bezpečných odkazů automaticky vyprší a vyčistí se – nic krátkodobého se neuchovává navěky."
+          },
+          "10.4": {
+            "title": "Odstranit váš pracovní prostor",
+            "text": "Odstranění pracovního prostoru okamžitě zruší jeho předplatné a odstraní jeho záznamy, s pevnou vnější lhůtou pro úplné odstranění stanovenou v zásadách ochrany osobních údajů."
+          },
+          "10.5": {
+            "title": "Odejít nebo odstranit svůj účet",
+            "text": "Lidé mohou pracovní prostor opustit a účet lze zcela odstranit v Nastavení."
+          }
+        }
+      },
+      "infrastructure": {
+        "title": "Infrastruktura",
+        "kicker": "Jak jsou samotné služby provozovány.",
+        "intro": "Obyčejná, nepůsobivá hygiena, díky které se interní služba nestane veřejnou.",
+        "stats": [
+          "Není veřejně dostupné",
+          "Minimální stopa",
+          "Monitorováno"
+        ],
+        "controls": {
+          "11.1": {
+            "title": "Interní služby nejsou veřejně dostupné",
+            "text": "Naše backendové služby a databáze nejsou vystaveny veřejnému internetu vůbec – veřejně přístupný je jen jediný, zabezpečený vstupní bod."
+          },
+          "11.2": {
+            "title": "Odlehčené produkční sestavení",
+            "text": "To, co skutečně běží v produkci, neobsahuje nic navíc – žádné vývojové nástroje, žádné nevyužité závislosti."
+          },
+          "11.3": {
+            "title": "Limity, kontroly stavu a rotace logů",
+            "text": "Každá služba běží s limity zdrojů, automatickými kontrolami stavu a pravidlem pro restart, a logy se rotují, aby nemohly neomezeně růst."
+          },
+          "11.4": {
+            "title": "Tajemství zůstávají mimo zdrojový kód",
+            "text": "Klíče a tajemství se nikdy nezapisují do našeho kódu – dodávají se každé službě samostatně, a citlivé soubory s přihlašovacími údaji jsou připojeny jen pro čtení."
+          },
+          "11.5": {
+            "title": "Opakovatelná nasazení",
+            "text": "Každé nasazení prochází stejnými automatizovanými kontrolami, takže vydání nikdy není jednorázový manuální proces."
+          }
+        }
+      },
+      "verification": {
+        "title": "Jak kontrolujeme svou vlastní práci",
+        "kicker": "Testy, které se snaží porušit pravidla výše.",
+        "intro": "Bezpečnostní tvrzení mají cenu jen tehdy, když je podpoří testy. Tyto jsou kryté automatizovanými testy v našem vlastním kódu.",
+        "stats": [
+          "Testy zfalšovaných pověření",
+          "Testy opakovaného přehrání",
+          "Testy izolace"
+        ],
+        "controls": {
+          "12.1": {
+            "title": "Regrese identity",
+            "text": "Automatizované testy kryjí zfalšovaná pověření, vypršelé a znovu přehrané relace, odhlášení, rotaci pověření a to, že jeden pracovní prostor nikdy nemůže vidět data jiného."
+          },
+          "12.2": {
+            "title": "Testy odchozích požadavků",
+            "text": "Kontroly, které zabraňují odchozím požadavkům dosáhnout interních sítí, mají vlastní vyhrazené testy."
+          },
+          "12.3": {
+            "title": "Testy filtru soukromí",
+            "text": "Systém, který nahrazuje soukromé údaje dřív, než se dostanou k modelu, a pravidla o platebních faktech, která omezují, co lze zobrazit, jsou obě přímo testovány."
+          },
+          "12.4": {
+            "title": "Testy správnosti fakturace",
+            "text": "Opakovaná přehrání obnovení a ověření podpisů jsou kryté testy, takže oprava fakturace nemůže tiše znovu otevřít díru, která už byla uzavřena."
+          }
+        }
+      }
+    },
+    "demo": {
+      "customerLabel": "Co klient píše",
+      "resetSample": "Obnovit ukázku",
+      "modelLabel": "Co model čte",
+      "inputAriaLabel": "Zpráva k filtrování",
+      "caption": "Jen ilustrace, běží ve vašem prohlížeči: nic, co sem napíšete, se nikam neodesílá. Skutečný filtr běží na našich serverech a mapování zpět na skutečné údaje se nikdy nedostane do promptu."
+    },
+    "about": {
+      "label": "O tomto průvodci",
+      "textBefore": "Toto je popis toho, jak je platforma postavena, ne certifikace. Zahrnuje opatření, která v produktu existují dnes, a bude se měnit s tím, jak se produkt vyvíjí. Pokud potřebujete zodpovědět bezpečnostní dotazník nebo podepsat smlouvu o zpracování dat, napište e-mail na ",
+      "textAfter": "."
+    },
+    "report": {
+      "label": "Nahlásit zranitelnost",
+      "stamp": "Něco jste našli?",
+      "title": "Myslíte, že jste našli slabé místo? Chceme o tom slyšet jako první.",
+      "subtitle": "Napište e-mail s podrobnostmi a postupem, jak to reprodukovat. Každé hlášení čte člověk z týmu.",
+      "privacy": "Zásady ochrany osobních údajů",
+      "terms": "Podmínky",
+      "securityPolicy": "Zásady zabezpečení"
+    }
+  },
+  "features": {
+    "families": {
+      "answer": "Odpovědi",
+      "team": "Tým",
+      "know": "Znalosti",
+      "act": "Akce",
+      "trust": "Důvěra",
+      "grow": "Růst"
+    },
+    "pageNames": {
+      "aiAgent": "AI agent",
+      "inbox": "Doručená pošta",
+      "demo": "Demo",
+      "pricing": "Ceník",
+      "knowledgeHub": "Centrum znalostí",
+      "securityGuide": "Bezpečnostní příručka"
+    },
+    "tiles": [
+      {
+        "name": "Podložené odpovědi",
+        "body": "Odpovědi vycházejí ze znalostí, které jste schválili. Pokud tam informace nejsou, AI to řekne, místo aby hádala."
+      },
+      {
+        "name": "Jazyk odpovědí",
+        "body": "Vyberte jazyk, ve kterém chatbot odpovídá vašim klientům."
+      },
+      {
+        "name": "Znalost stránky",
+        "body": "Rozhodněte, zda AI vidí URL stránky, na které se návštěvník nachází, a využívá to k odpovědi v kontextu."
+      },
+      {
+        "name": "Widget s vaší značkou",
+        "body": "Vaše logo a barvy na chatovém widgetu, který vložíte jedním úryvkem kódu."
+      },
+      {
+        "name": "Živé psaní",
+        "body": "Klienti vidí, když píše člen týmu, a vy vidíte, když píší oni."
+      },
+      {
+        "name": "Přílohy",
+        "body": "Klienti i váš tým mohou odesílat soubory přímo v konverzaci."
+      },
+      {
+        "name": "Sdílená doručená pošta",
+        "body": "Všechny konverzace a odpovědi na jednom místě, se štítkem, který ukazuje, zda se jich ujala AI, člen týmu nebo nikdo."
+      },
+      {
+        "name": "Upozornění na připojení",
+        "body": "Když klient požádá o člověka, dostane upozornění celý tým. První, kdo se připojí, konverzaci přebírá a upozornění zmizí všem ostatním."
+      },
+      {
+        "name": "Převzetí a předání zpět",
+        "body": "Převezměte chat od AI nebo kolegy a jedním dotykem ho vraťte zpět AI."
+      },
+      {
+        "name": "Přiřazení",
+        "body": "Konverzace lze přiřadit členu týmu, který o tom dostane oznámení."
+      },
+      {
+        "name": "Pozvánky do týmu",
+        "body": "Zvěte členy týmu e-mailem a přidávejte místa podle toho, jak váš tým roste."
+      },
+      {
+        "name": "Automatické tikety",
+        "body": "Pokud se do 90 sekund nikdo nepřipojí, klient je informován a automaticky se vytvoří tiket s návazným e-mailem."
+      },
+      {
+        "name": "Procházení webu",
+        "body": "Namiřte Elpino na stránku. Stránky postavené na JavaScriptu se nejdřív vykreslí v reálném prohlížeči."
+      },
+      {
+        "name": "Import mapy webu",
+        "body": "Naimportujte najednou až 20 stránek z vaší mapy webu (sitemap)."
+      },
+      {
+        "name": "Objevování",
+        "body": "Začněte jedním odkazem a Elpino ho následuje až přes 50 stránek, přednostně nápovědu a pravidla."
+      },
+      {
+        "name": "Nahrávání souborů",
+        "body": "Nahrajte PDF, Word, textové a Markdown soubory a text se z nich automaticky extrahuje."
+      },
+      {
+        "name": "Psané stránky",
+        "body": "Napište si vlastní stránky v editoru pro věci, které nemají místo nikde jinde."
+      },
+      {
+        "name": "Veřejné / soukromé",
+        "body": "Každý zdroj má přepínač viditelnosti, takže interní poznámky zůstanou interní."
+      },
+      {
+        "name": "Ověření plateb",
+        "body": "Kontroluje skutečné platby ve Stripe nebo Razorpay, takže odpovědi jsou fakta, ne odhady."
+      },
+      {
+        "name": "Platební odkazy",
+        "body": "Vytvoří nový bezpečný platební odkaz, když je potřeba platbu zkusit znovu."
+      },
+      {
+        "name": "Předplatná",
+        "body": "Zkontroluje stav předplatného a na žádost klienta ho může zrušit."
+      },
+      {
+        "name": "Vrácení peněz (volitelné)",
+        "body": "Ve výchozím stavu vypnuto. O tom, zda AI může vůbec vracet peníze, rozhoduje vlastník workspace."
+      },
+      {
+        "name": "Účtenky",
+        "body": "Najde a odešle účtenku ke konkrétní platbě."
+      },
+      {
+        "name": "Nástroje MCP",
+        "body": "Připojte až pět MCP serverů a zapněte přesně ty nástroje, které agent může používat."
+      },
+      {
+        "name": "Ověření identity",
+        "body": "Jednorázový kód e-mailem nebo podepsaný token z vaší aplikace potvrdí, kdo je klient."
+      },
+      {
+        "name": "Filtr soukromých údajů",
+        "body": "Jména a e-maily se před tím, než AI konverzaci přečte, nahradí referenčními kódy, a citlivé údaje se odstraní."
+      },
+      {
+        "name": "Bezpečné požadavky",
+        "body": "O citlivé údaje si vyžádejte přes jednorázový soukromý formulář, ne v chatu."
+      },
+      {
+        "name": "Šifrované klíče",
+        "body": "Připojené přihlašovací údaje se ukládají zašifrované."
+      },
+      {
+        "name": "Rozpočtové limity",
+        "body": "Měsíční AI kredit u placených plánů udržuje výdaje na AI předvídatelné."
+      },
+      {
+        "name": "Kontrola faktů",
+        "body": "Návrhy odpovědí se před zobrazením klientovi ověří proti výsledkům nástrojů."
+      },
+      {
+        "name": "Kontext návštěvníka",
+        "body": "Poloha, zařízení a stránka, na které byl, přiřazené ke každé konverzaci."
+      },
+      {
+        "name": "Analytika",
+        "body": "Sledujte, jak si konverzace vedou napříč celým vaším workspacem."
+      },
+      {
+        "name": "Historie",
+        "body": "Dřívější konverzace se stejným klientem přímo vedle vlákna."
+      },
+      {
+        "name": "Bezplatný plán",
+        "body": "Začněte se 100 AI zprávami měsíčně, bez nutnosti platební karty."
+      },
+      {
+        "name": "Plány s kreditem",
+        "body": "Placené plány zahrnují měsíční AI kredit a další místa jsou jednoduché doplňky."
+      },
+      {
+        "name": "Odpovědi e-mailem",
+        "body": "Ověření návštěvníci, kteří chat opustili, mohou vaši odpověď stále dostat e-mailem."
+      }
+    ],
+    "table": {
+      "all": "Vše",
+      "readMoreIn": "Více se dozvíte v {more}",
+      "hint": "Klikněte na kteroukoli dlaždici. Každá funkce zde je dnes plně funkční."
+    },
+    "hero": {
+      "badge": "Funkce",
+      "titlePrefix": "Prvky ",
+      "titleHl": "výborné podpory.",
+      "subtitle": "{count} funkcí, jeden workspace. Filtrujte podle skupiny, klikněte na dlaždici a uvidíte přesně, co Elpino umí."
+    },
+    "loop": {
+      "eyebrow": "Jak do sebe zapadají",
+      "titlePrefix": "Je to smyčka, ",
+      "titleHl": "ne seznam.",
+      "subtitle": "Každá funkce navazuje na další, takže se podpora zlepšuje čím víc ji používáte.",
+      "steps": [
+        {
+          "t": "Naučit",
+          "d": "Prohledejte svůj web, nahrajte soubory, napište stránky."
+        },
+        {
+          "t": "Odpovědět",
+          "d": "AI odpovídá z vašich znalostí, ve vašem jazyce."
+        },
+        {
+          "t": "Jednat",
+          "d": "Platby, předplatná a vaše nástroje MCP."
+        },
+        {
+          "t": "Předat",
+          "d": "Nejdřív se zeptat, upozornit tým, připojit se nebo vytvořit tiket."
+        },
+        {
+          "t": "Učit se",
+          "d": "Projděte konverzace a vylepšete své znalosti."
+        }
+      ],
+      "stepOf": "Krok {n} z {total}",
+      "explore": "Prozkoumat tento krok"
+    },
+    "personas": {
+      "eyebrow": "Pro koho je to určeno",
+      "titlePrefix": "Vyberte svou roli. ",
+      "titleHl": "Uvidíte své funkce.",
+      "items": [
+        {
+          "label": "Zakladatel",
+          "line": "Jste celý podpůrný tým a chcete si zpátky získat večery.",
+          "picks": [
+            "Bezplatný plán, bez karty",
+            "Odpovědi z vašeho webu během minut",
+            "AI se stará o platby a účtenky",
+            "Upozorní vás jen tehdy, když vás skutečně potřebuje"
+          ]
+        },
+        {
+          "label": "Vedoucí podpory",
+          "line": "Vedete tým a potřebujete jasné vlastnictví konverzací a žádné ztracené chaty.",
+          "picks": [
+            "Sdílená doručená pošta s jasnými štítky",
+            "Upozornění na připojení pro celý tým",
+            "Automatické tikety, když jsou všichni zaneprázdněni",
+            "Kontext návštěvníka u každého vlákna"
+          ]
+        },
+        {
+          "label": "Vývojář",
+          "line": "Chcete to propojit s vlastním produktem a daty.",
+          "picks": [
+            "Identita ověřená podepsaným tokenem z vaší aplikace",
+            "MCP servery se schvalováním jednotlivých nástrojů",
+            "Vyhledávání ve Stripe a Razorpay",
+            "Jeden vložitelný úryvek widgetu"
+          ]
+        },
+        {
+          "label": "Majitel obchodu",
+          "line": "Klienti se celý den ptají na objednávky a platby.",
+          "picks": [
+            "Vyhledávání objednávek přes vaše nástroje MCP",
+            "Platební odkazy a účtenky",
+            "Vrácení peněz pouze pokud je zapnete",
+            "Odpovědi v jazyce vašeho klienta"
+          ]
+        }
+      ]
+    },
+    "stack": {
+      "badge": "Jeden nástroj",
+      "titlePrefix": "Šest nástrojů uvnitř. ",
+      "titleHl": "Jeden workspace navenek.",
+      "subtitle": "Většina týmů si slepuje widget, helpdesk, znalostní bázi a bota. Elpino je to všechno na jednom místě, s jednou pamětí o každém klientovi.",
+      "items": [
+        "Chatový widget",
+        "Doručená pošta helpdesku",
+        "Znalostní báze",
+        "Tvorba chatbota",
+        "Vyhledávání plateb",
+        "Pravidla předávání"
+      ],
+      "cardSubtitle": "Widget · Doručená pošta · Znalosti · AI agent · Nástroje · Předání"
+    },
+    "soon": {
+      "badge": "Přichází v listopadu",
+      "title": "Další na řadě je omnichannel.",
+      "body": "Chat na webu funguje už dnes. Jako další věc chystáme propojení dalších kanálů do stejné doručené pošty a oznámíme to v changelogu.",
+      "cta": "Zobrazit changelog"
+    },
+    "faq": {
+      "eyebrow": "Otázky",
+      "titlePrefix": "Dobré ",
+      "titleHl": "vědět.",
+      "items": [
+        {
+          "q": "Funguje na této stránce už dnes všechno?",
+          "a": "Ano. Každá dlaždice popisuje něco, co Elpino dělá už dnes. Omnichannel je jediná věc, kterou ještě dokončujeme, a je označena jako přicházející v listopadu."
+        },
+        {
+          "q": "Musím používat všechno?",
+          "a": "Ne. Začněte s znalostní bází a widgetem na bezplatném plánu a nástroje, MCP a členy týmu zapínejte podle potřeby."
+        },
+        {
+          "q": "Co je součástí bezplatného plánu?",
+          "a": "100 AI zpráv měsíčně, bez nutnosti platební karty."
+        },
+        {
+          "q": "Jak fungují placené plány?",
+          "a": "Placené plány zahrnují měsíční AI kredit a další místa jsou jednoduché doplňky. Podrobnosti najdete na stránce s ceníkem."
+        }
+      ]
+    },
+    "closing": {
+      "title": "Každý prvek připravený k použití.",
+      "subtitle": "Začněte s bezplatným plánem a funkce zapínejte, jak rostete.",
+      "ctaStart": "Začít zdarma",
+      "ctaPricing": "Zobrazit ceník"
+    }
+  },
+  "founders": {
+    "stream": {
+      "incomingLive": "Příchozí, živě",
+      "onDuty": "Elpino ve službě",
+      "needsYou": "Potřebuje vás",
+      "handled": "Vyřešeno",
+      "askedFirst": "{why}. Elpino se nejdřív zeptal a pak vás upozornil.",
+      "handledWithoutYou": "Vyřešeno bez vás",
+      "actuallyNeededYou": "Skutečně potřebovalo vás",
+      "items": [
+        {
+          "q": "Jak si mohu exportovat svá data?"
+        },
+        {
+          "q": "Proč mi neprošla platba kartou?"
+        },
+        {
+          "q": "Nabízíte slevu pro startupy?"
+        },
+        {
+          "q": "Můžeme mít vlastní smlouvu?",
+          "why": "Chtěl mluvit s člověkem"
+        },
+        {
+          "q": "Kde najdu fakturu za březen?"
+        },
+        {
+          "q": "Jak si obnovím heslo?"
+        },
+        {
+          "q": "Můžu mluvit se zakladatelem?",
+          "why": "Chtěl mluvit s člověkem"
+        },
+        {
+          "q": "Funguje to se Shopify?"
+        }
+      ]
+    },
+    "hero": {
+      "badge": "Pro zakladatele",
+      "titlePrefix": "Vydávejte produkt. ",
+      "titleHl": "Ne odpovědi podpoře.",
+      "subtitle": "Firmu jste založili, abyste něco vytvořili, ne abyste čtyřicetkrát týdně odpovídali na „jak si obnovím heslo?“. Elpino zvládne opakující se otázky a osloví vás jen u těch, které skutečně potřebují zakladatele.",
+      "ctaStart": "Začít zdarma",
+      "ctaPricing": "Zobrazit ceny",
+      "freeNote": "Bezplatný plán: 100 AI zpráv měsíčně. Bez karty."
+    },
+    "calculator": {
+      "eyebrow": "Spočítejte si to",
+      "titlePrefix": "Získejte své odpoledne ",
+      "titleHl": "zpátky.",
+      "subtitle": "Zadejte vlastní čísla. Podíl AI je váš odhad, ne slib, a záleží na tom, co máte ve své znalostní databázi.",
+      "sliderQuestions": "Dotazů od klientů za den",
+      "sliderMinutes": "Minut na zodpovězení každého",
+      "unitMin": "min",
+      "sliderShare": "Podíl, který odhadujete, že vyřeší AI",
+      "yourDay": "Váš 8hodinový den",
+      "today": "Dnes",
+      "withElpinoAt": "S Elpinem na {pct}%",
+      "backEachWeek": "Zpátky každý týden",
+      "chatsUntouched": "Konverzací za den, bez zásahu",
+      "volumeNote": "Při tomto objemu zabere podpora sama víc než celý den.",
+      "supportLabel": "{h}h podpora",
+      "buildingLabel": "{h}h stavění"
+    },
+    "setup": {
+      "eyebrow": "Nastavení",
+      "titlePrefix": "Živě dřív, než vám ",
+      "titleHl": "vychladne káva.",
+      "subtitle": "Žádní vývojáři, žádné zaškolování. Čtyři kroky, poslední je nepovinný.",
+      "stepLabel": "Krok {n}",
+      "steps": [
+        {
+          "t": "Vložte svůj web",
+          "d": "Elpino prochází vaše stránky, včetně těch generovaných JavaScriptem, a učí se váš produkt.",
+          "meter": "Čte váš web"
+        },
+        {
+          "t": "Doplňte ostatní",
+          "d": "Nahrajte dokumenty nebo napište zásady, které existují jen ve vaší hlavě.",
+          "meter": "Přidávání znalostí"
+        },
+        {
+          "t": "Vložte widget",
+          "d": "Jeden kód a chat je živý na vašem webu.",
+          "meter": "Instalace widgetu"
+        },
+        {
+          "t": "Připojte platby (nepovinné)",
+          "d": "Stripe nebo Razorpay, aby mohl za vás vyhledávat fakturační údaje.",
+          "meter": "Připojování"
+        }
+      ]
+    },
+    "reaches": {
+      "badge": "Filtr",
+      "titlePrefix": "K vám se dostane jen ",
+      "titleHl": "to důležité",
+      "titleSuffix": ".",
+      "subtitle": "Vy rozhodujete, co AI může dělat. Všechno ostatní je jasné pravidlo: nejdřív se zeptat, upozornit společně a nikdy nenechat klienta bez odpovědi.",
+      "rules": [
+        {
+          "t": "Odpovědi z vaší dokumentace",
+          "d": "Vyřešeno. Nikdy to neuvidíte."
+        },
+        {
+          "t": "Vyhledávání plateb a účtů",
+          "d": "Vyřešeno pomocí nástrojů, které jste zapnuli."
+        },
+        {
+          "t": "\"Můžu mluvit s někým?\"",
+          "d": "Nejdřív se zeptá klienta, potom upozorní vás a váš tým."
+        },
+        {
+          "t": "Máte plné ruce práce?",
+          "d": "Po 90 sekundách se založí tiket a klient je informován."
+        }
+      ]
+    },
+    "money": {
+      "eyebrow": "Otázky ohledně plateb",
+      "titlePrefix": "Ověří skutečnou platbu. ",
+      "titleHl": "Klíče zůstávají u vás.",
+      "subtitle": "Připojte Stripe nebo Razorpay a AI dokáže vyhledávat platby a předplatná, odesílat potvrzení a platební odkazy a na požádání zrušit předplatné. Vrácení peněz zůstává vypnuté, dokud sami nepřepnete přepínač.",
+      "chatAsk": "Můžu si nechat vrátit svou poslední platbu?",
+      "chatYes": "Vaši platbu jsem našel a zahájil jsem vrácení peněz. Obvykle se na váš účet dostane do 5 až 7 pracovních dnů.",
+      "chatNo": "Platbu vidím, ale sám ji vrátit nemohu. Chcete, abych vás spojil s naším týmem?",
+      "toggleLabel": "Nechat AI vracet peníze",
+      "toggleNote": "Ve výchozím stavu vypnuto. Vyzkoušejte přepínač."
+    },
+    "grows": {
+      "eyebrow": "Prostor pro růst",
+      "titlePrefix": "Začíná u vás. ",
+      "titleHl": "Rozšiřuje se s vaším týmem.",
+      "stageLabel": "Fáze {n}",
+      "stages": [
+        {
+          "t": "Jen vy",
+          "d": "Bezplatný plán, 100 AI zpráv měsíčně, jedna schránka, kterou málokdy otevřete."
+        },
+        {
+          "t": "První zaměstnanec",
+          "d": "Pozvěte ho e-mailem. Dostane upozornění o připojení a převezme konverzace od AI."
+        },
+        {
+          "t": "Malý tým",
+          "d": "Přidělujte konverzace, sdílejte schránku, přidávejte licence, když je potřebujete."
+        },
+        {
+          "t": "Rozšiřování",
+          "d": "Placené plány s měsíčním AI kreditem, MCP nástroje pro vaše vlastní systémy."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Otázky zakladatelů",
+      "titlePrefix": "Přímé ",
+      "titleHl": "odpovědi.",
+      "items": [
+        {
+          "q": "Jak se to liší od běžného chatbotového widgetu?",
+          "a": "Elpino odpovídá jen na základě znalostí, které jste mu dali, dokáže vyhledávat skutečné platby a používat vaše vlastní nástroje, ověřuje identitu před jakoukoli osobní záležitostí a předá konverzaci člověku s celou historií, když nedokáže pomoct."
+        },
+        {
+          "q": "Jak rychle to zvládnu nastavit sám?",
+          "a": "Většina zakladatelů je živá ještě týž den: přidáte svůj web nebo soubory, vložíte kód widgetu a volitelně připojíte Stripe nebo Razorpay."
+        },
+        {
+          "q": "Jak se rozhoduje mezi odpovědí a upozorněním mě?",
+          "a": "Pokud dokáže odpovědět z vašich znalostí nebo pomocí nástroje, udělá to. Pokud ne, řekne to a zeptá se klienta, jestli ho má spojit s vaším týmem. Až potom jste upozorněni vy a váš tým."
+        },
+        {
+          "q": "Bude si něco vymýšlet?",
+          "a": "Odpovídá jen na základě toho, co jste schválili, a kontrolní krok porovnává návrhy s výsledky nástrojů. Když něco neví, řekne to."
+        },
+        {
+          "q": "Je můj účet Stripe nebo Razorpay v bezpečí?",
+          "a": "Přístupové údaje jsou uloženy šifrovaně a akce s pohybem peněz, jako vracení plateb, jsou vypnuté, dokud je sami nezapnete."
+        },
+        {
+          "q": "Co se stane, když najmu člověka do podpory?",
+          "a": "Pozvěte ho a bude dostávat upozornění o připojení, může převzít konverzace od AI a zase je vrátit."
+        }
+      ]
+    },
+    "closing": {
+      "title": "Vraťte se ke stavění.",
+      "subtitle": "Začněte zdarma, naučte Elpino svůj produkt a nechte ho zvládat opakující se otázky.",
+      "ctaStart": "Začít zdarma",
+      "ctaMeetAgent": "Poznejte AI agenta"
+    }
+  },
+  "developers": {
+    "hero": {
+      "badge": "Pro vývojáře",
+      "titlePrefix": "Od ",
+      "titleMiddle": " k ",
+      "titleHl": "vyřešeno.",
+      "subtitle": "Jeden tag pro widget, jeden podepsaný token, aby Elpino věděl, kdo je přihlášen, jeden MCP server, aby AI mohla číst vaše data. Sledujte, jak se tyto tři kroky odehrávají na stránce.",
+      "ctaStart": "Začít zdarma",
+      "ctaDocs": "Přečíst dokumentaci"
+    },
+    "ide": {
+      "comment1": "<!-- 1. Vložte tag -->",
+      "comment2": "<!-- 2. Řekněte Elpinu, kdo je přihlášen -->",
+      "comment3": "  // elpinoToken: podepsaný vaším backendem",
+      "mcpComment": "// Ve svém panelu: připojte MCP server a povolte get_order.",
+      "stepEmbed": "Vložit",
+      "stepIdentify": "Identifikovat",
+      "stepResolve": "Vyřešit",
+      "previewSupport": "Podpora",
+      "previewVerified": "Ověřeno",
+      "previewGreeting": "Ahoj Aisho, jak mohu pomoci?",
+      "previewQuestion": "Kde je moje objednávka?",
+      "previewAnswer": "Byla odeslána včera a dorazí ve čtvrtek."
+    },
+    "sequence": {
+      "eyebrow": "Průběh požadavku",
+      "titlePrefix": "Jedna otázka, ",
+      "titleHl": "čtyři systémy.",
+      "subtitle": "Kdo s kým mluví, když se přihlášený zákazník zeptá na svou objednávku. Projděte to krok za krokem, nebo to nechte přehrát.",
+      "actors": [
+        "Prohlížeč",
+        "Váš server",
+        "Elpino",
+        "Váš MCP server"
+      ],
+      "steps": [
+        {
+          "label": "Zákazník se přihlásí"
+        },
+        {
+          "label": "Podepsaný JWT",
+          "note": "≤ 5 min · jednorázově"
+        },
+        {
+          "label": "$elpino identify(token)"
+        },
+        {
+          "label": "Ověří podpis + claimy ✓"
+        },
+        {
+          "label": "„Kde je moje objednávka?“"
+        },
+        {
+          "label": "get_order",
+          "note": "pouze ověření zákazníci"
+        },
+        {
+          "label": "Stav objednávky"
+        },
+        {
+          "label": "Odpovídá zákazníkovi"
+        }
+      ],
+      "stepCounter": "Krok {n} / {total}",
+      "nextStep": "Další krok",
+      "replay": "Přehrát znovu"
+    },
+    "tokenExplorer": {
+      "eyebrow": "Identitní token",
+      "titlePrefix": "Anatomie tokenu, ",
+      "titleHl": "a jak se rozbije.",
+      "subtitle": "HS256, podepsaný tajemstvím vašeho pracovního prostoru. Klepněte na claim pro jeho pravidlo a poté token rozbijte, abyste viděli, co widget hlásí.",
+      "payload": "Payload",
+      "optional": "volitelné",
+      "required": "Povinné",
+      "optionalCap": "Volitelné",
+      "breakIt": "Rozbít",
+      "notAccepted": "[Elpino] Identitní token nebyl přijat: {code}",
+      "fix": "Oprava:",
+      "claimDescriptions": [
+        "Stabilní ID účtu tohoto uživatele.",
+        "Přesně \"elpino-widget\".",
+        "Nové náhodné ID pro každý token, 16 až 128 znaků bezpečných pro URL. UUID postačí.",
+        "Čas vydání v celých sekundách (ne milisekundách).",
+        "Vypršení v celých sekundách, nejvýše 5 minut po iat.",
+        "Vynechejte, pokud neexistuje. null je odmítnuto.",
+        "true pouze pokud váš přihlašovací systém potvrdil vlastnictví.",
+        "Zobrazované jméno, které uvidí váš tým."
+      ]
+    },
+    "server": {
+      "eyebrow": "Váš backend",
+      "titlePrefix": "Zkopírujte, vložte, ",
+      "titleHl": "nasaďte.",
+      "subtitle": "Stejné úryvky, jaké ukazuje váš panel, v jazyce, který už používáte.",
+      "copy": "Kopírovat",
+      "copied": "Zkopírováno",
+      "codeTitle": "identitní token"
+    },
+    "mcp": {
+      "badge": "MCP servery",
+      "titlePrefix": "Dejte AI nástroje. ",
+      "titleHl": "Klíče si nechte.",
+      "subtitle": "Připojte až pět MCP serverů, povolte až 15 nástrojů na každém a vyberte, komu jsou otevřené. Přepínejte, abyste viděli, co může agent použít.",
+      "shopServerName": "Váš MCP server obchodu",
+      "toolsDiscovered": "{n} nalezených nástrojů",
+      "toggleLabel": "Otevřít nástroje jen pro čtení jakémukoli návštěvníkovi",
+      "changesData": "Mění data",
+      "readOnly": "Jen pro čtení",
+      "needsVerified": "Vyžaduje ověřeného zákazníka",
+      "agentCanCall": "Agent může volat",
+      "toolDescriptions": [
+        "Vyhledat objednávku a její stav",
+        "Živé sledování zásilky",
+        "Změnit doručovací adresu",
+        "Zrušit objednávku, která ještě nebyla odeslána"
+      ],
+      "bullets": [
+        "Každé volání se na serveru znovu ověřuje proti vašemu seznamu",
+        "Nástroje, které mění data, vždy vyžadují ověřeného zákazníka",
+        "Přihlašovací údaje jsou uloženy šifrovaně"
+      ]
+    },
+    "sees": {
+      "eyebrow": "Soukromí ve výchozím nastavení",
+      "titlePrefix": "Model ",
+      "titleHl": "nikdy nevidí",
+      "titleSuffix": ", kdo jsou.",
+      "subtitle": "Než AI přečte konverzaci, jména, e-maily a ID se nahradí referenčními kódy a tajné údaje jako tokeny a klíče se odstraní. Nástroje na vaší straně přesto dostávají skutečné hodnoty.",
+      "toggleTeam": "Co vidí váš tým",
+      "toggleModel": "Co vidí model AI",
+      "chatRaw1": "Ahoj, jsem Aisha Khan (aisha@example.com). Kde je moje objednávka?",
+      "chatMasked1": "Ahoj, jsem ref_name_9f2c (ref_email_41ab). Kde je moje objednávka?",
+      "chatRaw2": "Ahoj Aisho, vaše objednávka byla odeslána včera.",
+      "chatMasked2": "Ahoj, vaše objednávka byla odeslána včera."
+    },
+    "faq": {
+      "eyebrow": "Otázky",
+      "titlePrefix": "Dobré ",
+      "titleHl": "vědět.",
+      "items": [
+        {
+          "q": "Musím používat ověření identity?",
+          "a": "Ne, ale díky němu může AI bezpečně zobrazovat soukromá data. Kdokoli může do chatu napsat jakýkoli e-mail, takže token podepsaný vaším vlastním přihlašovacím systémem je způsob, jak se zákazník stane Ověřeným."
+        },
+        {
+          "q": "Jak dlouho token vydrží?",
+          "a": "Nejvýše pět minut a funguje jen jednou. Samotná chatová relace trvá až 8 hodin, s 30minutovým limitem nečinnosti."
+        },
+        {
+          "q": "Jaký podpisový algoritmus?",
+          "a": "HS256. Jiné algoritmy, včetně none a RS256, jsou odmítnuty."
+        },
+        {
+          "q": "Pro jaké jazyky jsou úryvky?",
+          "a": "Node.js, Python, PHP a Ruby, v nastavení identity vašeho panelu a v dokumentaci."
+        },
+        {
+          "q": "Co je MCP server?",
+          "a": "Služba, která zpřístupňuje nástroje přes Model Context Protocol. Elpino objeví jeho nástroje a vy povolíte ty, které AI smí používat."
+        },
+        {
+          "q": "Může AI měnit data v mých systémech?",
+          "a": "Pouze prostřednictvím nástrojů, které jste povolili, a nástroje měnící data vždy vyžadují ověřeného zákazníka."
+        },
+        {
+          "q": "Existuje API?",
+          "a": "SDK widgetu, identitní tokeny a MCP jsou dnes integračním rozhraním."
+        }
+      ],
+      "linkLabels": [
+        "Dokumentace identity",
+        "Dokumentace widgetu",
+        "AI agent",
+        "Bezpečnostní příručka"
+      ]
+    },
+    "closing": {
+      "title": "Nasaďte to za jedno odpoledne.",
+      "subtitle": "Začněte zdarma, vložte tag a nastavte identitu, až budete připraveni.",
+      "ctaStart": "Začít zdarma",
+      "ctaDocs": "Otevřít dokumentaci"
+    }
+  },
+  "busyOperators": {
+    "rush": {
+      "badgeLabel": "Špička · ilustrativní simulace",
+      "reset": "Resetovat",
+      "waitingForPerson": "Čekání na osobu",
+      "levelCalm": "Klid",
+      "levelBusy": "Jsem zaneprázdněn",
+      "levelFire": "Fronta v plamenech",
+      "inboxZero": "Doručená pošta nula. Pěkný.",
+      "chatsWaiting": "chaty čekají",
+      "aiToggleLabel": "Elpino AI",
+      "teammatesOnline": "Spoluhráči online",
+      "resolvedByAi": "Vyřešeno AI",
+      "resolvedByTeam": "Vyřešeno týmem",
+      "disclaimer": "Model hraček: Každé zaškrtnutí přijdou 3 chaty a AI si vezme příklad sdílení. Skutečné výsledky závisí na vaší znalostní bázi a nástrojích.",
+      "online": "online",
+      "offline": "offline"
+    },
+    "hero": {
+      "badge": "Pro vytížené týmy",
+      "titlePrefix": "Špička, ",
+      "titleHl": "zpracováno.",
+      "subtitle": "Když fronta naroste, AI převezme opakované otázky, zbytek vezme váš tým a nikdo o sebe nezakopne. Přepněte přepínač níže a pociťte rozdíl.",
+      "ctaStart": "Začněte zdarma",
+      "ctaInbox": "Viz doručená pošta"
+    },
+    "race": {
+      "badge": "Žádné dvojité odpovědi",
+      "titlePrefix": "Dva lidé, jeden chat. ",
+      "titleHl": "Připojuje se pouze jeden.",
+      "subtitle": "Všichni obdrží stejné upozornění na připojení. První, kdo klepne, převezme konverzaci, upozornění se vymaže pro všechny ostatní a v doručené poště se zobrazí, kdo ho má. Kolega může stále převzít později, schválně.",
+      "askedForPerson": "Aisha Khan požádala o osobu",
+      "alertSent": "Upozornění odesláno celému týmu",
+      "waiting": "Čekání…",
+      "joined": "Připojeno",
+      "joinChat": "Připojte se k chatu",
+      "priyaHasThis": "Priya to má",
+      "priyaJoinedFirst": "Priya se přidala jako první. Odznak doručené pošty nyní říká Priya.",
+      "bothSee": "Oba spoluhráči vidí upozornění...",
+      "customerSaidYes": "Zákazník řekl nějaké osobě ano"
+    },
+    "context": {
+      "eyebrow": "Předání",
+      "titlePrefix": "Nikdo se neopakuje ",
+      "titleHl": "sami.",
+      "subtitle": "Přepnutím porovnáte studené předání s předáním Elpino.",
+      "toggleCold": "Studené předání",
+      "toggleElpino": "Elpino předání",
+      "coldGreeting": "Ahoj, já jsem Priya. Jak mohu pomoci?",
+      "coldComplaint": "...toto vše jsem už vysvětlil botovi. Přestěhoval jsem se do zemí a potřebuji změnit svou fakturační zemi. Znovu.",
+      "coldNote": "Zákazník začíná znovu a člen týmu začíná naslepo.",
+      "whatPersonSees": "Co ten člověk vidí",
+      "reasonLabel": "Důvod",
+      "reasonValue": "Změna fakturační země vyžaduje osobu",
+      "summaryLabel": "Shrnutí",
+      "summaryValue": "Přesunuté země, chce aktualizovat fakturační zemi. Ověřeno e-mailovým kódem.",
+      "fullThreadLabel": "Celé vlákno",
+      "fullThreadValue": "Všechny dosavadní zprávy, přímo nad skladatelem",
+      "visitorLabel": "Návštěvník",
+      "visitorLocation": "Pune, Indie",
+      "visitorPage": "Zapnuto /fakturace",
+      "identityVerified": "Totožnost ověřena"
+    },
+    "around": {
+      "eyebrow": "Nepřetržitě",
+      "titlePrefix": "Kryt každou hodinu, ",
+      "titleHl": "bez směn.",
+      "subtitle": "Přetáhněte ukázkový den. Týmové hodiny jsou zde od 9 do 6; tvoje bude tvoje.",
+      "teamOnline": "Tým online",
+      "aiOnWatch": "AI na hodinkách",
+      "hourAriaLabel": "Hodina dne",
+      "am": "AM",
+      "pm": "PM",
+      "dayItems": [
+        {
+          "t": "AI odpovídá jako první",
+          "d": "Opakované otázky se nikdy nedostanou do fronty."
+        },
+        {
+          "t": "Tým dostává upozornění na připojení",
+          "d": "První, kdo klepne, převezme chat."
+        },
+        {
+          "t": "Vraťte se kdykoli",
+          "d": "Vraťte AI jednoduchá následná opatření."
+        }
+      ],
+      "nightItems": [
+        {
+          "t": "AI odpovídá jako první",
+          "d": "Otázky, na které může odpovědět, jsou zodpovězeny."
+        },
+        {
+          "t": "Nikdo volný? Vstupenka",
+          "d": "Po 90 sekundách je vložen tiket s důvodem a shrnutím."
+        },
+        {
+          "t": "Dopolední začíná organizovaně",
+          "d": "Zákazníkovi byl zaslán e-mail a vstupenky na vás čekají."
+        }
+      ]
+    },
+    "toolkit": {
+      "eyebrow": "Designově klidný",
+      "titlePrefix": "Malé věci, které ",
+      "titleHl": "udržujte frontu při smyslech.",
+      "items": [
+        {
+          "t": "Odznaky vlastnictví",
+          "d": "AI, spoluhráč nebo vyřešeno, v každém vlákně."
+        },
+        {
+          "t": "Vyhledávání a filtry",
+          "d": "Vše, nepřečteno, přečteno, vyřešeno."
+        },
+        {
+          "t": "Živé psaní",
+          "d": "Podívejte se, když zákazník píše, a nechte ho vidět vás."
+        },
+        {
+          "t": "Ověřený odznak",
+          "d": "Vědět, kdo dokázal, kdo je."
+        },
+        {
+          "t": "Podrobnosti o návštěvníkovi",
+          "d": "Poloha, zařízení a stránka, na které se nacházejí."
+        },
+        {
+          "t": "Převezměte, dejte zpět",
+          "d": "Přesuňte chat mezi AI a lidmi jediným klepnutím."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Otázky",
+      "titlePrefix": "Dobře ",
+      "titleHl": "vím.",
+      "items": [
+        {
+          "q": "Jak zabráníte tomu, aby dva lidé odpovídali stejnému zákazníkovi?",
+          "a": "Všichni obdrží stejné upozornění na připojení a ten, kdo jako první klepne, převezme chat. Upozornění se vymaže pro všechny ostatní a v doručené poště se zobrazí, kdo jej má."
+        },
+        {
+          "q": "Nahradí Elpino můj tým?",
+          "a": "Ne. Zvládá opakované otázky a vaši lidé přebírají konverzace, které vyžadují posouzení. Jakýkoli chat můžete také předat zpět AI."
+        },
+        {
+          "q": "Z čeho se může učit?",
+          "a": "Vaše webové stránky (včetně těch vytvořených v JavaScriptu), nahrané soubory PDF, Word, textové soubory a soubory Markdown a stránky, které píšete. Vy řídíte, které jsou veřejné."
+        },
+        {
+          "q": "Co se stane, když nikdo není online?",
+          "a": "AI odpovídá, co může. Pokud se zákazník zeptá na osobu a nikdo se nepřipojí do 90 sekund, je vložen tiket s důvodem a shrnutím a zákazníkovi je zaslán e-mail."
+        },
+        {
+          "q": "Jak dlouho zavádění trvá?",
+          "a": "Většina týmů žije ve stejný den: přidejte znalosti, vložte widget a pozvěte spoluhráče."
+        }
+      ],
+      "footNote": "Webový chat je dnes aktivní. Omnichannel přichází v listopadu."
+    },
+    "closing": {
+      "title": "Udělejte z fronty problém někoho jiného.",
+      "subtitle": "Začněte zdarma a pozvěte svůj tým, až budete připraveni.",
+      "ctaStart": "Začněte zdarma",
+      "ctaTickets": "Viz vstupenky"
     }
   }
 }

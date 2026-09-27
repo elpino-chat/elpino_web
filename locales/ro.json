@@ -47,7 +47,95 @@
       "privacy": "Politica de confidențialitate",
       "successTitle": "Mesaj trimis",
       "successBody": "Mulțumim că ne-ai contactat. Îți vom răspunde în curând.",
-      "sendAnother": "Trimite alt mesaj"
+      "sendAnother": "Trimite alt mesaj",
+      "sentStamp": "Trimis ✓",
+      "postmarkLabel": "mail",
+      "securityNote": "Trimis în siguranță — nu este niciodată folosit pentru antrenament"
+    },
+    "hero": {
+      "eyebrow": "Contactați · camera de corespondență",
+      "greeting": "Bună.",
+      "titlePrefix": "Cum se poate",
+      "titleHl": "ajutăm?",
+      "searchLabel": "Căutați subiecte de ajutor",
+      "searchPlaceholder": "Căutați vânzări, asistență, facturare și multe altele",
+      "searchButtonLabel": "Căutați",
+      "noMatch": "Nicio potrivire exactă. Apăsați Enter pentru a ne trimite întrebarea dvs.",
+      "linkGettingStarted": "Noțiuni introductive",
+      "linkFeaturedGuides": "Ghiduri recomandate",
+      "linkPlansBilling": "Planuri și facturare",
+      "linkSendMessage": "Sau trimite-ne un mesaj ↓"
+    },
+    "desks": {
+      "eyebrow": "Alegeți o rută",
+      "titlePrefix": "Ajunge la ",
+      "titleHl": "birou din dreapta.",
+      "subtitle": "Alege canalul care se potrivește cel mai bine cu ceea ce ai nevoie. Fiecare traseu duce la un membru real al echipei noastre.",
+      "deskLabel": "Birou {n}",
+      "addressed": "Carte poștală adresată ✓",
+      "actionAddress": "Adresați o carte poștală",
+      "emailNote": "Preferiți propria aplicație de e-mail? Fiecare birou cu o adresă funcționează și prin {link}.",
+      "emailNoteLink": "e-mail"
+    },
+    "postcard": {
+      "eyebrow": "Trimite-ne o notă",
+      "titlePrefix": "Un om adevărat ",
+      "titleHl": "va citi asta.",
+      "addressedTo": "Adresat către"
+    },
+    "tracking": {
+      "eyebrow": "Urmăriți-vă cartea poștală",
+      "titlePrefix": "Ce se întâmplă ",
+      "titleHl": "după ce apăsați trimite.",
+      "onlineStatus": "Echipa noastră este online",
+      "hours": "Luni–Vineri, 9:00–18:00 CET",
+      "steps": [
+        {
+          "title": "Trimis",
+          "body": "Cartea poștală îți părăsește mâinile. Nimic altceva de făcut."
+        },
+        {
+          "title": "Citim fiecare cuvânt",
+          "body": "Nota ta aterizează cu un om în echipă — fără labirint de bilete, fără roboți."
+        },
+        {
+          "title": "Un răspuns în termen de o zi lucrătoare",
+          "body": "Răspunsuri reale de la cineva care lucrează la produs."
+        },
+        {
+          "title": "Un apel, dacă este util",
+          "body": "Pentru vânzări și întreprinderi, vom analiza fluxul dvs. de lucru real prin Elpino."
+        }
+      ]
+    },
+    "library": {
+      "titlePrefix": "Prefer să-l găsești ",
+      "titleHl": "însuți?",
+      "subtitle": "Cele mai multe întrebări au răspuns deja aici - și tot ce este mai jos trimite direct la sursă.",
+      "cardLabel": "Card {n}",
+      "items": [
+        {
+          "title": "Răspunsuri rapide",
+          "body": "Configurare, facturare, escaladare și securitate - răspuns la întrebările frecvente.",
+          "cta": "Răsfoiți întrebările frecvente"
+        },
+        {
+          "title": "Documentație",
+          "body": "Instalați ghiduri, configurarea conectorilor și configurarea spațiului de lucru.",
+          "cta": "Deschide documentele"
+        },
+        {
+          "title": "Securitate și confidențialitate",
+          "body": "Cum sunt criptate, stocate și utilizate niciodată datele dvs. pentru antrenament.",
+          "cta": "Citiți politicile"
+        }
+      ]
+    },
+    "search": {
+      "plansTitle": "Planuri și facturare",
+      "plansDetail": "Întrebări despre abonamente, facturi sau prețuri",
+      "accountTitle": "Cont și securitate",
+      "accountDetail": "Ajutor cu acces, confidențialitate sau setările contului"
     }
   },
   "auth": {
@@ -105,6 +193,3811 @@
         "lowercase": "Literă mică",
         "number": "Cifră"
       }
+    }
+  },
+  "home": {
+    "hero": {
+      "badge": "Suport pentru clienți bazat pe AI",
+      "titlePrefix": "Suport care",
+      "words": [
+        "răspunde.",
+        "rezolvă.",
+        "își amintește.",
+        "escaladează."
+      ],
+      "subtitle": "AI care răspunde din cunoștințele tale, verifică plăți și comenzi reale, și escaladează la echipa ta cu context complet atunci când e nevoie de un om.",
+      "ctaPrimary": "Începe gratuit",
+      "ctaSecondary": "Încearcă chiar tu",
+      "trust": [
+        "100 de mesaje AI gratuite pe lună",
+        "Nu e nevoie de card",
+        "Pregătit într-o după-amiază"
+      ],
+      "stickers": [
+        "Rezolvat de AI",
+        "Om în standby",
+        "Privat implicit",
+        "Nimic nu se pierde"
+      ],
+      "callouts": [
+        "Insignă AI pe fiecare conversație",
+        "Alătură-te pentru a prelua",
+        "Locația și dispozitivul vizitatorului"
+      ],
+      "widget": {
+        "name": "Elpino",
+        "subtitle": "Răspunde în câteva secunde",
+        "convo": [
+          "Am fost taxat de două ori pentru upgrade?",
+          "Am verificat istoricul plăților tale",
+          "Ai fost taxat o singură dată. A doua încercare a eșuat și nu a fost niciodată debitată."
+        ]
+      }
+    },
+    "marquee": {
+      "questions": [
+        "Unde este factura mea?",
+        "Cum îmi resetez parola?",
+        "Am fost taxat de două ori?",
+        "Pot obține o rambursare?",
+        "Unde este comanda mea?",
+        "Cum adaug un membru al echipei?",
+        "Sunt datele mele în siguranță?",
+        "De ce a eșuat plata mea?",
+        "Pot vorbi cu un om?"
+      ]
+    },
+    "tryit": {
+      "eyebrow": "Încearcă",
+      "titlePrefix": "Întreabă ceva.",
+      "titleHl": "Vezi ce face.",
+      "subtitle": "Alege o întrebare de client. Chatul în stânga, tot ce a făcut Elpino înainte de a răspunde în dreapta.",
+      "widgetName": "Elpino",
+      "widgetSubtitle": "Suport AI",
+      "whatItDid": "Ce a făcut Elpino",
+      "done": "Terminat",
+      "working": "Se procesează…",
+      "stepStart": "start",
+      "stepOther": "pas",
+      "person": "om",
+      "resolved": "rezolvat",
+      "humanNote": "A întrebat mai întâi · un membru al echipei se poate alătura, sau se creează un tichet",
+      "resolvedNote": "Răspuns și rezolvat, nu e nevoie de om",
+      "sampleNote": "Răspunsuri exemplu. Pașii afișați sunt tipul de instrumente pe care Elpino le folosește cu adevărat.",
+      "qas": [
+        {
+          "q": "Am fost taxat de două ori?",
+          "steps": [
+            "Te-a verificat cu un cod pe email",
+            "A verificat istoricul plăților tale"
+          ],
+          "a": "Ai fost taxat o singură dată. A doua încercare a eșuat și nu a fost niciodată debitată."
+        },
+        {
+          "q": "Unde este comanda mea?",
+          "steps": [
+            "Te-a verificat cu un cod pe email",
+            "A contactat magazinul prin MCP"
+          ],
+          "a": "Trimis ieri, ajunge joi. Ți-am trimis un link de urmărire pe email."
+        },
+        {
+          "q": "Cum îmi resetez parola?",
+          "steps": [
+            "A căutat în baza ta de cunoștințe"
+          ],
+          "a": "Alege „Ai uitat parola” pe pagina de autentificare și folosește linkul pe care îl trimitem prin email."
+        },
+        {
+          "q": "Pot obține o rambursare?",
+          "steps": [
+            "A verificat plata",
+            "Rambursările sunt dezactivate pentru acest spațiu de lucru"
+          ],
+          "a": "Nu pot face eu însumi această rambursare. Vrei să te conectez cu echipa noastră?"
+        },
+        {
+          "q": "Pot vorbi cu un om?",
+          "steps": [
+            "A întrebat înainte de transfer",
+            "A notificat întreaga echipă în același timp"
+          ],
+          "a": "Priya din echipa noastră s-a alăturat și vede întreaga conversație."
+        },
+        {
+          "q": "Vindeți carduri cadou?",
+          "steps": [
+            "A căutat în baza ta de cunoștințe",
+            "Nu s-a găsit nicio corespondență"
+          ],
+          "a": "Nu am această informație. Vrei să te conectez cu echipa noastră?"
+        }
+      ]
+    },
+    "customizer": {
+      "eyebrow": "Fă-l al tău",
+      "titlePrefix": "Un widget care",
+      "titleHl": "arată și vorbește ca tine.",
+      "subtitle": "Adaugă logo-ul tău, dă un nume AI-ului tău, alege o culoare și o temă, și limba de răspuns. Joacă-te cu setările și privește widgetul schimbându-se.",
+      "yourLogo": "Logo-ul tău",
+      "upload": "Încarcă logo",
+      "remove": "Elimină",
+      "fileTooBig": "Folosește o imagine sub 2 MB.",
+      "fileShown": "Se afișează doar aici. Nu se încarcă nicăieri.",
+      "aiName": "Numele AI-ului",
+      "greeting": "Salut",
+      "accentColour": "Culoare accent",
+      "theme": "Temă",
+      "light": "Luminos",
+      "dark": "Întunecat",
+      "customerWritesIn": "Clientul scrie în",
+      "theAi": "AI-ul",
+      "repliesIn": "răspunde în",
+      "autoMatch": "Automat: se potrivește cu clientul",
+      "seesUrl": "AI-ul vede URL-ul paginii",
+      "visitorOn": "Vizitatorul este pe",
+      "replyingIn": "Răspunde în",
+      "matched": "(potrivit)",
+      "writeMessage": "Scrie un mesaj…",
+      "previewNote": "Previzualizare cu text exemplu. Widgetul tău real folosește logo-ul, culorile și salutul tău.",
+      "support": "Suport",
+      "weReplyFast": "Răspundem în câteva secunde"
+    },
+    "tour": {
+      "eyebrow": "Produs",
+      "titlePrefix": "Tot ce are nevoie o echipă de suport,",
+      "titleHl": "într-un singur loc.",
+      "items": [
+        {
+          "tag": "Agent AI",
+          "title": "Un agent care știe cu cine vorbește",
+          "desc": "Își amintește clienții, verifică identitatea, verifică plățile și apelează instrumentele tale."
+        },
+        {
+          "tag": "Inbox partajat",
+          "title": "Un singur inbox pentru echipă și AI",
+          "desc": "Proprietate clară, notificări de alăturare, și context complet pentru fiecare conversație."
+        },
+        {
+          "tag": "Bază de cunoștințe",
+          "title": "Învață-l tot ce ai",
+          "desc": "Scanează site-ul tău, încarcă fișiere, scrie pagini. Cu comutatoare public/privat."
+        },
+        {
+          "tag": "Tichete",
+          "title": "Nimic nu se pierde",
+          "desc": "Dacă nimeni nu este disponibil, se creează un tichet și clientul este informat."
+        }
+      ]
+    },
+    "who": {
+      "eyebrow": "Pentru cine este",
+      "titlePrefix": "Construit pentru oameni",
+      "titleHl": "care fac suport.",
+      "items": [
+        {
+          "title": "Fondatori",
+          "desc": "Construiește produsul, nu răspunsuri de suport. Elpino te contactează doar când e nevoie cu adevărat de un fondator.",
+          "pts": [
+            "Plan gratuit, 100 de mesaje AI pe lună",
+            "Te notifică doar când e nevoie de un om",
+            "Configurare într-o după-amiază"
+          ]
+        },
+        {
+          "title": "Echipe ocupate",
+          "desc": "Orele de vârf sub control: AI-ul se ocupă de repetări, toată lumea primește aceeași notificare de alăturare, nimeni nu răspunde de două ori.",
+          "pts": [
+            "O notificare ajunge la toată echipa",
+            "Insigne de proprietate pe fiecare conversație",
+            "Un tichet când nimeni nu este disponibil"
+          ]
+        },
+        {
+          "title": "Dezvoltatori",
+          "desc": "Un tag, un token de identitate semnat și servere MCP. Tu alegi ce poate atinge AI-ul.",
+          "pts": [
+            "Un singur tag de script pentru widget",
+            "Tokenuri de identitate semnate, de scurtă durată",
+            "Servere MCP aprobate instrument cu instrument"
+          ]
+        }
+      ],
+      "founderVisual": [
+        {
+          "q": "Cum îmi exportez datele?",
+          "ok": true
+        },
+        {
+          "q": "De ce nu a fost acceptat cardul meu?",
+          "ok": true
+        },
+        {
+          "q": "Contract personalizat?",
+          "ok": false
+        }
+      ],
+      "handled": "Gestionat",
+      "needsYou": "Are nevoie de tine",
+      "joined": "Priya s-a alăturat"
+    },
+    "statement": "Elpino răspunde ce știe, face ce permiți, și întreabă un om pentru orice altceva.",
+    "integrations": {
+      "eyebrow": "Integrări",
+      "titlePrefix": "Se conectează la ce",
+      "titleHl": "folosești deja.",
+      "subtitle": "Sisteme de plată pentru verificări și linkuri, instrumente de proiect pentru tichete, și MCP pentru sistemele tale proprii. Elpino este la mijloc, și tot ce conectezi funcționează cu el.",
+      "tags": [
+        "Plăți",
+        "Tichete",
+        "Sistemele tale"
+      ],
+      "cta": "Vezi toate integrările"
+    },
+    "trust": {
+      "eyebrow": "Încredere",
+      "titlePrefix": "Puternic, cu",
+      "titleHl": "frâne la locul lor.",
+      "subtitle": "Acestea sunt regulile după care funcționează Elpino. Majoritatea sunt mereu activate. Părțile care implică bani, le activezi tu.",
+      "cta": "Citește ghidul de siguranță",
+      "rulebook": "Regulamentul Elpino",
+      "setByYou": "Setat de tine",
+      "guardrailsOn": "Măsuri de protecție activate",
+      "alwaysOn": "Mereu activat",
+      "rules": [
+        {
+          "title": "Răspunde doar din cunoștințe aprobate",
+          "desc": "Dacă nu este în baza ta de cunoștințe, spune asta și oferă un om."
+        },
+        {
+          "title": "Ascunde nume și email-uri de AI",
+          "desc": "Modelul vede coduri de referință, nu identitatea clienților tăi."
+        },
+        {
+          "title": "Verifică înainte de orice lucru personal",
+          "desc": "Un cod pe email sau un token semnat vine primul."
+        },
+        {
+          "title": "Doar instrumentele activate de tine",
+          "desc": "Fiecare instrument MCP este aprobat de tine, unul câte unul."
+        }
+      ],
+      "refundTitle": "Permite AI-ului să emită rambursări",
+      "refundOn": "Activat. AI-ul poate emite rambursări conform setării proprietarului spațiului de lucru.",
+      "refundOff": "Dezactivat implicit. Doar proprietarul spațiului de lucru îl poate activa."
+    },
+    "pricing": {
+      "eyebrow": "Prețuri",
+      "titlePrefix": "Plătește pentru ajutor,",
+      "titleHl": "nu pentru capete.",
+      "subtitle": "Începe gratuit. Planurile plătite sunt măsurate în funcție de volumul de muncă efectuat de AI.",
+      "cta": "Vezi toate prețurile",
+      "plans": [
+        {
+          "name": "Gratuit",
+          "big": "0 $",
+          "note": "100 de mesaje AI pe lună",
+          "pts": [
+            "Nu e nevoie de card",
+            "Widget, cunoștințe și inbox",
+            "Escaladările nu costă niciodată extra"
+          ]
+        },
+        {
+          "name": "Planuri plătite",
+          "big": "Bazat pe credit",
+          "note": "Credit AI lunar adaptat volumului tău",
+          "pts": [
+            "Instrumente de plată și cont",
+            "Spațiu pentru o echipă mai mare",
+            "Reîncarcă în orice moment"
+          ]
+        },
+        {
+          "name": "Membri extra",
+          "big": "Pachete de locuri",
+          "note": "Adaugă locuri care se reînnoiesc cu planul tău",
+          "pts": [
+            "Doar când crești",
+            "Același inbox, mai multe mâini",
+            "Anulează în orice moment"
+          ]
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Întrebări",
+      "titlePrefix": "Ce întreabă oamenii",
+      "titleHl": "primul.",
+      "items": [
+        {
+          "q": "Ce este Elpino?",
+          "a": "O platformă de suport pentru clienți bazată pe AI: un widget de chat pe site-ul tău, un agent AI care răspunde din cunoștințele tale și verifică plăți reale, un inbox de echipă partajat, și tichete când nimeni nu este disponibil."
+        },
+        {
+          "q": "Va inventa AI-ul lucruri?",
+          "a": "Răspunde din cunoștințele pe care le-ai aprobat, și un pas de verificare confruntă schițele cu rezultatele instrumentelor. Când nu știe, spune asta și oferă un om."
+        },
+        {
+          "q": "Ce se întâmplă când nu poate ajuta?",
+          "a": "Întreabă clientul mai întâi. Dacă răspunsul e da, toată echipa primește o notificare de alăturare și are 90 de secunde să reacționeze. Dacă nimeni nu se alătură, se creează un tichet și clientul primește un email."
+        },
+        {
+          "q": "Cât durează configurarea?",
+          "a": "Majoritatea echipelor sunt active în aceeași zi: adaugă cunoștințe, lipește codul widgetului, și invită-ți echipa."
+        },
+        {
+          "q": "Există un plan gratuit?",
+          "a": "Da: 100 de mesaje AI pe lună, nu e nevoie de card."
+        },
+        {
+          "q": "Funcționează pe alte canale?",
+          "a": "Chatul pe site funcționează deja. Suportul omnicanal vine în noiembrie."
+        }
+      ]
+    },
+    "closing": {
+      "title": "Dă-le clienților tăi răspunsul înainte să termine de scris.",
+      "subtitle": "Începe gratuit, învață-l afacerea ta, și lasă-l să se ocupe de întrebările repetitive.",
+      "ctaPrimary": "Începe gratuit",
+      "ctaSecondary": "Vorbește cu noi"
+    }
+  },
+  "pricing": {
+    "hero": {
+      "badge": "Prețuri",
+      "title": "Începe gratuit. Crește când ești pregătit.",
+      "subtitle": "Fiecare cont nou începe cu suport AI, o căsuță poștală partajată și transfer către un om — nu este necesar niciun card. Explorează Elpino cu echipa ta, apoi alege un plan când ai nevoie de mai mult.",
+      "stickerFree": "Gratuit pentru totdeauna ✓",
+      "stickerNoCard": "Nu e nevoie de card",
+      "ctaDashboard": "Mergi la panou",
+      "ctaStart": "Începe gratuit",
+      "billingPeriodLabel": "Perioadă de facturare",
+      "monthly": "Lunar",
+      "annually": "Anual"
+    },
+    "planCards": {
+      "mostPopular": "Cel mai popular",
+      "save": "economisește",
+      "freeForever": "Gratuit pentru totdeauna",
+      "discussCustomPlan": "sau discută despre un plan personalizat",
+      "compareAllFeatures": "Compară toate funcțiile",
+      "whatsIncluded": "Ce este inclus",
+      "builtForTeam": "Construit pentru toată echipa ta",
+      "builtForTeamDesc": "Cunoștințe partajate, o căsuță poștală și transfer către un om oricând este necesar."
+    },
+    "comparison": {
+      "eyebrow": "Comparație planuri",
+      "titlePrefix": "Vezi ce ",
+      "titleHl": "se potrivește echipei tale.",
+      "subtitle": "Compară capacitatea, locurile și accesul la produs pe toate planurile. Fă upgrade oricând operațiunea ta de suport are nevoie de mai mult spațiu.",
+      "featuresHeader": "Funcții",
+      "popular": "Popular",
+      "billedAnnually": "facturat anual",
+      "billedMonthly": "facturat lunar",
+      "showAll": "Arată toate funcțiile",
+      "showFewer": "Arată mai puține funcții",
+      "included": "Inclus",
+      "notIncluded": "Neinclus",
+      "categories": {
+        "aiRules": {
+          "name": "Ce îi este permis AI-ului să facă",
+          "rows": {
+            "allowance": {
+              "label": "Alocație AI lunară",
+              "description": "Free este limitat la 100 de mesaje AI. Planurile plătite includ un credit lunar în dolari pe care AI-ul îl cheltuie în timp ce lucrează, partajat de întreg spațiul de lucru."
+            },
+            "whenOut": {
+              "label": "Când alocația se epuizează",
+              "description": "AI-ul transferă conversațiile noi echipei tale. La planurile plătite poți reîncărca creditul în orice moment, sau activa reîncărcarea automată."
+            },
+            "escalations": {
+              "label": "Transferuri către un om",
+              "description": "Conversații pe care AI-ul le transferă pentru că nu a putut răspunde cu încredere. Transferul în sine nu costă niciodată în plus."
+            }
+          }
+        },
+        "seats": {
+          "name": "Cine poate să se autentifice",
+          "rows": {
+            "included": {
+              "label": "Locuri incluse",
+              "description": "Colegi de echipă acoperiți de prețul planului, inclusiv proprietarul spațiului de lucru."
+            },
+            "extra": {
+              "label": "Locuri extra",
+              "description": "Fiecare coleg de echipă dincolo de locurile incluse, pe orice plan."
+            },
+            "ceiling": {
+              "label": "Plafon de locuri",
+              "description": "Punctul în care ai nevoie de un plan mai mare în loc de încă un loc."
+            }
+          }
+        },
+        "product": {
+          "name": "Produsul",
+          "rows": {
+            "widget": {
+              "label": "Widget de chat pe site",
+              "description": "Chatul care poate fi încorporat cu care vizitatorii tăi vorbesc de fapt."
+            },
+            "knowledge": {
+              "label": "Bază de cunoștințe și răspunsuri AI",
+              "description": "Scanează site-ul tău sau încarcă documente; AI-ul răspunde din ele."
+            },
+            "storage": {
+              "label": "Stocare cunoștințe",
+              "description": "Câte conținuturi scanate și încărcate poate conține spațiul de lucru."
+            },
+            "inbox": {
+              "label": "Căsuță poștală partajată și transfer",
+              "description": "O căsuță poștală pentru echipă, cu transfer AI atunci când ar trebui."
+            },
+            "audit": {
+              "label": "Traseu de audit AI",
+              "description": "Fiecare răspuns, cu articolele și căutările din care a fost construit."
+            },
+            "analytics": {
+              "label": "Analiză vizitatori",
+              "description": "Vizitatori live, surse, țări și pagini."
+            },
+            "profiles": {
+              "label": "Profiluri și istoric clienți",
+              "description": "Înregistrări de clienți stocate și conversațiile lor anterioare."
+            },
+            "domain": {
+              "label": "Domeniu conectat",
+              "description": "Un spațiu de lucru, un site web — ai nevoie de un al doilea? pornește un al doilea spațiu de lucru."
+            },
+            "support": {
+              "label": "Suport",
+              "description": "Cum să ne contactezi când ceva necesită un om din partea noastră."
+            }
+          }
+        }
+      }
+    },
+    "values": {
+      "handsOff": "Transferă către un om",
+      "topUpOrHandoff": "Reîncarcă sau transferă",
+      "noExtraCharge": "Fără cost adițional",
+      "noLimit": "Fără limită",
+      "standard": "Standard",
+      "priority": "Prioritar",
+      "messages": "mesaje",
+      "credit": "credit",
+      "seatBundleSummary": "3 locuri pentru $2, 5 pentru $3"
+    },
+    "billing": {
+      "eyebrow": "Facturare clară și simplă",
+      "titleLine1": "Plătește pentru ce face AI-ul.",
+      "titleLine2": "Nu pentru transferuri.",
+      "subtitle": "Free include 100 de mesaje AI pe lună. Planurile plătite includ un credit AI lunar care acoperă cât mai multe conversații posibil, așa că o întrebare rapidă costă mai puțin decât un schimb lung. Transferul unei conversații către echipa ta este întotdeauna gratuit.",
+      "creditCard": {
+        "label": "Credit AI lunar",
+        "amount": "De la $7",
+        "note": "în fiecare lună pe Starter",
+        "chatsUseCredit": "conversațiile folosesc credit",
+        "refillsMonthly": "se reîncarcă lunar",
+        "desc": "Starter include $7, Growth $40 și Scale $240 de credit AI în fiecare lună. Ai nevoie de mai mult? Reîncarcă oricând sau activează reîncărcarea automată.",
+        "cta": "Compară planurile"
+      },
+      "handoffCard": {
+        "stamp": "Transfer = gratuit",
+        "label": "Cost adițional per transfer",
+        "note": "Pe fiecare plan. Întotdeauna."
+      },
+      "inboxCard": {
+        "title": "AI-ul tău și echipa ta, într-o singură căsuță poștală.",
+        "desc": "AI-ul răspunde din cunoștințele tale. Când este nevoie de o persoană, echipa ta continuă cu conversația completă deja vizibilă.",
+        "cta": "Descoperă cum funcționează"
+      }
+    },
+    "capacity": {
+      "eyebrow": "Adaugă capacitate",
+      "title": "Crește fără să schimbi modul în care lucrezi.",
+      "subtitle": "Adaugă persoane sau capacitate AI doar când ai nevoie. Căsuța poștală, cunoștințele și istoricul conversațiilor tale rămân exact acolo unde sunt.",
+      "teammatesTitle": "Colegi de echipă adiționali",
+      "teammatesDesc": "Dă mai multor persoane propria lor autentificare în timp ce partajează aceeași căsuță poștală, cunoștințe și credit AI. Rămân pe planul tău în fiecare lună până când îi elimini.",
+      "perMonth": "pe lună",
+      "seatsWord": "locuri",
+      "topUpAnytime": "Reîncarcă oricând",
+      "onAnyPaidPlan": "pe orice plan plătit",
+      "creditTitle": "Credit AI adițional",
+      "creditDesc": "Menține AI-ul răspunzând după ce creditul tău lunar este folosit. Transferul unei conversații către echipa ta nu costă niciodată în plus.",
+      "creditCards": [
+        {
+          "name": "Credit lunar",
+          "note": "Se resetează în fiecare lună"
+        },
+        {
+          "name": "Reîncărcări",
+          "note": "Nu expiră niciodată"
+        },
+        {
+          "name": "Reîncărcare automată",
+          "note": "Opțional"
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Întrebări",
+      "title": "Întrebări despre prețuri",
+      "subtitle": "Detaliile de facturare cele mai întrebate. Configurarea, AI-ul, integrările și securitatea sunt acoperite în FAQ-ul complet.",
+      "readFull": "Citește FAQ-ul complet",
+      "items": [
+        {
+          "q": "Cât costă planurile?",
+          "a": "Free este $0. Planurile lunare sunt Starter la $12 cu $7 credit AI pe lună, Growth la $59 cu $40, și Scale la $299 cu $240. Facturarea anuală oferă două luni gratuit — plătești pentru zece luni și primești douăsprezece: Starter costă $120 pe an ($10/lună), Growth $590 ($49.17/lună), și Scale $2.990 ($249.17/lună)."
+        },
+        {
+          "q": "Cum funcționează alocația AI?",
+          "a": "Free include 100 de mesaje AI pe lună. Fiecare răspuns trimis de AI contează ca un mesaj, așa că o conversație scurtă folosește puține și un schimb lung folosește mai multe. Planurile plătite funcționează diferit: includ un credit AI lunar pe care AI-ul îl cheltuie în timp ce lucrează, așa că o întrebare rapidă folosește mai puțin decât un schimb lung. Starter include $7 credit pe lună, Growth $40 și Scale $240."
+        },
+        {
+          "q": "Costă transferurile ceva?",
+          "a": "Fără cost adițional. Transferul în sine este gratuit pe fiecare plan, și AI-ul se oprește în momentul în care o persoană preia controlul. Pe Free, mesajele deja trimise de AI înainte de transfer se contorizează tot în cele 100 ale tale; pe planurile plătite, AI-ul cheltuie credit doar cât timp răspunde, și se oprește să cheltuie credit în momentul în care o persoană preia controlul."
+        },
+        {
+          "q": "Poate AI-ul să emită rambursări?",
+          "a": "Doar dacă proprietarul spațiului de lucru activează rambursările. Sunt dezactivate implicit. Chiar cu rambursările dezactivate, AI-ul poate verifica plata și poate propune conectarea clientului cu echipa ta."
+        },
+        {
+          "q": "Ce se întâmplă când îmi epuizez alocația AI?",
+          "a": "AI-ul transferă conversațiile noi direct echipei tale în loc să răspundă. Pe un plan plătit poți reîncărca creditul oricând, sau activa reîncărcarea automată pentru ca acesta să nu se oprească niciodată. Reîncărcările nu expiră niciodată. Creditul tău lunar se resetează la fiecare perioadă de facturare."
+        },
+        {
+          "q": "Cât costă un membru de echipă adițional?",
+          "a": "Locurile extra vin în pachete pe fiecare plan, inclusiv Free: 3 locuri pentru $2 pe lună, sau 5 pentru $3. Locurile și creditul AI sunt facturate complet separat — adăugarea unui membru de echipă nu îți afectează niciodată alocația AI."
+        },
+        {
+          "q": "Pot anula oricând?",
+          "a": "Da, din Setări → Facturare, fără obligații contractuale. Anularea intră în vigoare la finalul perioadei de facturare curente, așa că păstrezi ce ai plătit până atunci."
+        },
+        {
+          "q": "Ce se întâmplă dacă mă opresc din plată?",
+          "a": "Spațiul de lucru trece la planul Free la finalul perioadei. Baza ta de cunoștințe, istoricul conversațiilor și setările rămân complet intacte."
+        }
+      ]
+    },
+    "enterprise": {
+      "badge": "Enterprise",
+      "title": "Suport care crește odată cu tine.",
+      "subtitle": "Pentru organizații care susțin mai mulți clienți pe mai multe site-uri web și echipe. Să găsim capacitatea potrivită pentru suportul tău.",
+      "features": [
+        "Credit AI mult peste planul Scale",
+        "Mai multe site-uri web și echipe în creștere",
+        "Context și cunoștințe despre clienți partajate",
+        "Prețuri pe volum adaptate nevoilor tale"
+      ],
+      "talkTitle": "Să vorbim",
+      "customPricing": "Prețuri personalizate disponibile",
+      "contactCta": "Contactează vânzările",
+      "talkPoints": [
+        "Discută despre volumul tău de conversații",
+        "Planifică-ți spațiul de lucru și locurile",
+        "Definește domeniul cunoștințelor pe site-uri web",
+        "Explorează nevoile de integrare și SLA"
+      ]
+    },
+    "plans": {
+      "free": {
+        "name": "Free",
+        "description": "Pentru un fondator care își răspunde propriul suport. AI real, fără card.",
+        "cta": "Începe",
+        "features": [
+          "Până la 100 de mesaje AI/lună",
+          "2 locuri incluse",
+          "Pachete de locuri de la $0.60/loc",
+          "Bază de cunoștințe de 20 MB",
+          "Widget de chat pe site",
+          "Căsuță poștală partajată cu transfer"
+        ]
+      },
+      "starter": {
+        "name": "Starter",
+        "description": "Pentru o echipă mică al cărei suport a crescut dincolo de o căsuță poștală.",
+        "cta": "Începe",
+        "features": [
+          "Credit AI de $7 în fiecare lună",
+          "5 locuri incluse",
+          "Pachete de locuri de la $0.60/loc",
+          "Bază de cunoștințe de 200 MB",
+          "Reîncarcă creditul oricând",
+          "Analiză vizitatori"
+        ]
+      },
+      "growth": {
+        "name": "Growth",
+        "description": "Pentru echipe care conduc suportul ca o funcție reală, cu date pentru a o demonstra.",
+        "cta": "Începe",
+        "features": [
+          "Credit AI de $40 în fiecare lună",
+          "15 locuri incluse",
+          "Pachete de locuri de la $0.60/loc",
+          "Bază de cunoștințe de 1 GB",
+          "Reîncarcă creditul oricând",
+          "Traseu complet de audit AI",
+          "Suport prioritar"
+        ]
+      },
+      "scale": {
+        "name": "Scale",
+        "description": "Pentru suport de volum mare unde AI-ul duce cea mai mare parte a sarcinii.",
+        "cta": "Începe",
+        "features": [
+          "Credit AI de $240 în fiecare lună",
+          "40 de locuri incluse",
+          "Pachete de locuri de la $0.60/loc",
+          "Bază de cunoștințe de 5 GB",
+          "Reîncarcă creditul oricând",
+          "Integrări și acces API"
+        ]
+      }
+    }
+  },
+  "about": {
+    "typingLabel": "Elpino scrie",
+    "hero": {
+      "badge": "Despre Elpino",
+      "titlePrefix": "Suportul pentru clienți, ",
+      "titleHl": "făcut mai uman.",
+      "subtitle": "Elpino oferă clienților răspunsuri utile din cunoștințele pe care le ai deja, apoi îți ține echipa apropiată pentru momentele care necesită o persoană.",
+      "ctaMeet": "Descoperă Elpino",
+      "ctaReadStory": "Citește povestea noastră ↓",
+      "imageAlt": "Patru lenețe Elpino lucrând împreună pentru a sprijini clienții",
+      "bubble": "Salut, cu ce te putem ajuta? 👋"
+    },
+    "story": {
+      "eyebrow": "De unde a început",
+      "titlePrefix": "Povestea noastră începe cu o ",
+      "titleHl": "întrebare.",
+      "subtitle": "Ce ar fi dacă software-ul de suport pentru clienți ar ajuta ambele părți ale conversației—nu doar compania care îl gestionează?",
+      "chatTitle": "Elpino",
+      "chatSub": "Povestindu-ne istoria",
+      "sys1": "De unde a început",
+      "you1": "Ce ar fi dacă software-ul de suport pentru clienți ar ajuta ambele părți ale conversației, nu doar compania care îl gestionează?",
+      "elpino1": "Nimeni nu deschide un chat de suport de amuzament.",
+      "elpino2": "Cineva încearcă să finalizeze ceva. Ceva i-a stat în cale. Vrea un răspuns clar și să se întoarcă la ziua lui.",
+      "elpino3": "De cealaltă parte este o echipă care gestionează întrebări familiare, informații dispersate, și mai multe conversații decât timp. Elpino există pentru a face acest moment mai ușor pentru toată lumea.",
+      "sys2": "Așa arată",
+      "you2": "Pot să schimb adresa de email a contului meu?",
+      "aiLabel": "AI Elpino · din cunoștințele tale",
+      "aiAnswer": "Da. Deschide Setări, alege Profil, apoi actualizează emailul de contact.",
+      "aiGuideLabel": "Ghid setări cont",
+      "sys3": "Un coleg de echipă este mereu apropiat atunci când este nevoie"
+    },
+    "roles": {
+      "eyebrow": "Rolurile noastre",
+      "titlePrefix": "O echipă construită pentru ",
+      "titleHl": "această muncă.",
+      "subtitle": "Nu există fotografii ale angajaților aici. În schimb, cunoaște sarcinile pe care Elpino este proiectat să le facă—constant, cu grijă, și cu o echipă umană mereu implicată.",
+      "joinedChat": "{name} s-a alăturat conversației",
+      "items": [
+        {
+          "title": "Ascultătorul",
+          "task": "Înțelege fiecare întrebare a clientului",
+          "description": "Transformă cunoștințele pe care echipa ta le are deja într-un prim răspuns clar și util."
+        },
+        {
+          "title": "Sortatorul",
+          "task": "Menține căsuța poștală în mișcare",
+          "description": "Găsește semnalul în coadă, astfel încât conversațiile potrivite să primească atenția potrivită."
+        },
+        {
+          "title": "Protectorul",
+          "task": "Știe când să implice o persoană",
+          "description": "Gestionează munca de rutină cu grijă și transferă momentele care necesită judecată umană."
+        },
+        {
+          "title": "Cultivatorul",
+          "task": "Învață ce ajută cel mai mult clienții",
+          "description": "Scoate la iveală lacunele, tiparele și întrebările care îți îmbunătățesc suportul în timp."
+        }
+      ]
+    },
+    "remote": {
+      "eyebrow": "Construit de la distanță",
+      "titlePrefix": "Lucrăm de la distanță din ",
+      "titleHl": "prima zi.",
+      "subtitle": "Lucrăm printr-o scriere clară, context partajat, și timp concentrat. Locul în care lucrează cineva contează mai puțin decât grija și judecata pe care le aduce produsului.",
+      "cta": "Vezi posturile deschise",
+      "badge": "De la distanță din prima zi",
+      "imageAlt": "O echipă distribuită colaborând cu instrumente de suport AI partajate"
+    },
+    "team": {
+      "eyebrow": "O echipă mică, pentru acum",
+      "titleLine1": "Construit cu focus.",
+      "titleLine2Prefix": "Modelat cu ",
+      "titleHl": "tine.",
+      "subtitle": "Elpino este la început. Asta înseamnă că oamenii care îl folosesc pot încă influența ce devine. Ascultăm cu atenție, lansăm cu grijă, și păstrăm problema clientului în centru.",
+      "cta": "Vorbește cu noi",
+      "card1": "Ascultă cu atenție.",
+      "card2": "Construiește clar.",
+      "card3": "Fă suportul mai ușor pentru toată lumea."
+    },
+    "faqSection": {
+      "eyebrow": "Puțin mai multe despre noi",
+      "titlePrefix": "Ne bucurăm că ai ",
+      "titleHl": "întrebat.",
+      "subtitle": "Câteva răspunsuri înainte să îți începi propria conversație. Apasă pe o întrebare de mai jos și Elpino va răspunde.",
+      "exploreLink": "Explorează FAQ-ul complet →"
+    },
+    "faqChat": {
+      "title": "Întreabă Elpino",
+      "sub": "Online · răspunde instant",
+      "gladYouAsked": "Ne bucurăm că ai întrebat",
+      "tapQuestion": "Apasă pe o întrebare",
+      "doneText": "Asta e tot pentru acum. Vrei să continui?",
+      "exploreFull": "Explorează FAQ-ul complet"
+    },
+    "faqs": [
+      [
+        "Ce este Elpino?",
+        "Elpino este o platformă de suport pentru clienți bazată pe AI cu un widget de chat pe site, răspunsuri din baza ta de cunoștințe, o căsuță poștală de echipă partajată, și transfer către un om când AI-ul nu poate ajuta."
+      ],
+      [
+        "Elpino îmi înlocuiește echipa de suport?",
+        "Elpino gestionează întrebările de zi cu zi din cunoștințele tale și implică echipa ta atunci când o conversație are nevoie de o persoană. Echipa ta rămâne parte din experiența de suport."
+      ],
+      [
+        "Cum pot începe?",
+        "Începe cu planul gratuit, care include 100 de mesaje AI în fiecare lună fără card necesar. Adaugă-ți cunoștințele, conectează-ți site-ul, și adu-ți colegii de echipă."
+      ],
+      [
+        "Cum este structurat prețul?",
+        "Free include 100 de mesaje AI pe lună, și planurile plătite includ un credit AI lunar. Colegii de echipă adiționali vin în pachete de locuri de la $0.60 pe loc, și transferul unei conversații către un om nu costă niciodată extra. Pagina de prețuri explică locurile incluse și taxa minimă a planului gratuit."
+      ]
+    ],
+    "closing": {
+      "titleLine1": "Mai este multe de construit.",
+      "titleLine2": "Vino să modelezi ce urmează.",
+      "ctaTry": "Încearcă Elpino",
+      "ctaCareers": "Vezi posturile deschise"
+    }
+  },
+  "helpdesk": {
+    "hero": {
+      "badge": "Serviciu de asistență Elpino",
+      "titlePrefix": "Suport care ",
+      "titleHl": "își răspunde singur.",
+      "subtitle": "Un singur birou pentru o AI care rezolvă, o echipă care se alătură când e important, și tichete care nu se pierd niciodată. Vezi cum răspunde la o întrebare.",
+      "ctaStart": "Începe gratuit",
+      "ctaFeatures": "Vezi toate funcțiile"
+    },
+    "prompt": {
+      "customerLabel": "Client",
+      "listening": "Elpino ascultă…",
+      "asks": [
+        {
+          "q": "Am fost taxat de două ori pentru upgrade-ul meu?",
+          "steps": [
+            "A verificat istoricul plăților tale",
+            "A găsit o taxare și o încercare eșuată"
+          ],
+          "a": "Ai fost taxat o singură dată. A doua încercare a eșuat și nu a fost niciodată colectată."
+        },
+        {
+          "q": "Unde este comanda mea #4821?",
+          "steps": [
+            "Te-a verificat cu un cod pe email",
+            "A căutat comanda în magazinul tău"
+          ],
+          "a": "Trimisă ieri, ajunge joi. Link de urmărire trimis."
+        },
+        {
+          "q": "Pot vorbi cu cineva despre facturare?",
+          "steps": [
+            "Niciun instrument nu poate schimba detaliile de facturare",
+            "Te-a întrebat mai întâi, apoi a alertat echipa"
+          ],
+          "a": "Priya din echipa noastră s-a alăturat chiar acum acestei conversații."
+        }
+      ]
+    },
+    "marquee": {
+      "ariaLabel": "Ce este pe birou",
+      "words": [
+        "Agent AI",
+        "Căsuță poștală partajată",
+        "Tichete",
+        "Cunoștințe",
+        "Plăți",
+        "Instrumente MCP",
+        "Alerte de alăturare",
+        "Identitate verificată",
+        "Multicanal · noiembrie"
+      ]
+    },
+    "story": {
+      "eyebrow": "O conversație",
+      "titlePrefix": "Vezi cum o întrebare ",
+      "titleHl": "călătorește prin birou.",
+      "stepLabel": "Pasul {n} / 05",
+      "chapters": [
+        {
+          "title": "Un client scrie",
+          "body": "Din widgetul de chat de pe site-ul tău, cu locația, dispozitivul și pagina pe care se află deja atașate."
+        },
+        {
+          "title": "AI-ul face treaba",
+          "body": "Răspunde din cunoștințele tale, își amintește clientul, verifică cine este, și folosește plățile și instrumentele MCP pentru a rezolva efectiv problemele."
+        },
+        {
+          "title": "Echipa ta se alătură cu o apăsare",
+          "body": "Doar când nu poate ajuta, și doar după ce întreabă clientul. Toată lumea primește o alertă de alăturare, și prima persoană care apasă preia conversația."
+        },
+        {
+          "title": "Nimic nu se pierde",
+          "body": "Dacă nimeni nu este liber în 90 de secunde, se creează un tichet cu motivul și un rezumat, și clientul primește un număr de referință prin email."
+        },
+        {
+          "title": "O înveți o dată",
+          "body": "Adaugă ce a lipsit în baza ta de cunoștințe. Data viitoare, AI-ul pur și simplu o știe."
+        }
+      ],
+      "visuals": {
+        "ask": {
+          "bubble": "Salut, nu găsesc factura mea de luna trecută.",
+          "chips": [
+            "Pune, India",
+            "Chrome · macOS",
+            "Pe /billing"
+          ]
+        },
+        "ai": {
+          "rows": [
+            [
+              "search_knowledge",
+              "1 rezultat"
+            ],
+            [
+              "send_email_code",
+              "verificat"
+            ],
+            [
+              "get_receipt",
+              "găsit · trimis"
+            ]
+          ],
+          "bubble": "Aici este factura ta. Ți-am trimis și o copie prin email."
+        },
+        "team": {
+          "title": "O conversație nouă are nevoie de o persoană",
+          "sub": "Alertă trimisă la 4 colegi de echipă",
+          "join": "Alătură-te",
+          "note": "Prima persoană care apasă o preia. Alerta dispare pentru ceilalți."
+        },
+        "ticket": {
+          "label": "Tichet",
+          "title": "Escaladare suport · Aisha Khan",
+          "reason": "Motiv: schimbarea țării de facturare necesită o persoană.",
+          "chips": [
+            "Pagina de probleme",
+            "Client notificat prin email"
+          ]
+        },
+        "learn": {
+          "title": "Ghid facturi și chitanțe",
+          "added": "Adăugat",
+          "note": "Următorul client primește acest răspuns instant."
+        }
+      }
+    },
+    "bento": {
+      "eyebrow": "Sub capotă",
+      "titlePrefix": "Detalii mici, ",
+      "titleHl": "făcute corect.",
+      "subtitle": "Lucrurile pe care le-ai verifica înainte să îți încredințezi clienții unei AI.",
+      "redact": {
+        "prefix": "Salut, sunt",
+        "middle": "contactează-mă la"
+      },
+      "privacy": {
+        "title": "Modelul nu vede niciodată nume sau email-uri.",
+        "desc": "Identitățile sunt înlocuite cu coduri de referință înainte ca AI-ul să citească o conversație, iar secretele sunt eliminate."
+      },
+      "languages": {
+        "title": "Răspunde în limba clientului tău",
+        "note": "Alegi limba de răspuns în setări."
+      },
+      "verified": {
+        "title": "Verificat înainte de a acționa",
+        "note": "Un cod de email de unică folosință sau un token semnat din aplicația ta."
+      },
+      "tools": {
+        "title": "Instrumentele tale, regulile tale",
+        "rows": [
+          [
+            "get_order",
+            true
+          ],
+          [
+            "track_shipment",
+            true
+          ],
+          [
+            "delete_customer",
+            false
+          ]
+        ]
+      },
+      "handoff": {
+        "title": "Întreabă înainte de a transfera",
+        "ask": "Nu pot schimba asta eu singur. Te conectez cu echipa noastră?",
+        "reply": "Da, te rog"
+      }
+    },
+    "statement": "Elpino răspunde ce știe, face ce permiți, și întreabă un om pentru orice altceva.",
+    "start": {
+      "eyebrow": "Începe",
+      "titlePrefix": "Live într-o ",
+      "titleHl": "singură după-amiază.",
+      "note": "Chatul de pe site este deja live. Multicanalul vine în noiembrie.",
+      "steps": [
+        {
+          "title": "Înscrie-te gratuit",
+          "desc": "100 de mesaje AI pe lună. Fără card."
+        },
+        {
+          "title": "Învață-l",
+          "desc": "Adaugă site-ul, fișierele tale sau scrie pagini."
+        },
+        {
+          "title": "Lipește fragmentul de cod",
+          "desc": "Widgetul apare pe site-ul tău."
+        },
+        {
+          "title": "Invită-ți echipa",
+          "desc": "Ca oamenii să fie pregătiți când întreabă."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Întrebări",
+      "titlePrefix": "Bine de ",
+      "titleHl": "știut.",
+      "items": [
+        [
+          "Ce este serviciul de asistență Elpino?",
+          "Întreg spațiul de suport: un widget de chat, un agent AI, o căsuță poștală partajată, tichete și o bază de cunoștințe, toate lucrând împreună."
+        ],
+        [
+          "Trebuie să-mi păstrez vechiul serviciu de asistență?",
+          "Nu. Elpino cuprinde chatul, agentul AI, căsuța poștală partajată și tichetele. Tichetele pot fi totuși trimise către Trello sau Asana dacă echipa ta lucrează acolo."
+        ],
+        [
+          "Există un plan gratuit?",
+          "Da: 100 de mesaje AI pe lună, fără card necesar."
+        ],
+        [
+          "Ce canale sunt suportate?",
+          "Chatul de pe site este deja live. Multicanalul vine în noiembrie."
+        ],
+        [
+          "Poate echipa mea să îl folosească și ea?",
+          "Da. Invită colegi de echipă, adaugă locuri pe măsură ce crești, și vor primi alerte de alăturare când un client are nevoie de o persoană."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Dă-le clienților tăi un răspuns înainte să termine de scris.",
+      "ctaStart": "Începe gratuit",
+      "ctaFeatures": "Toate funcțiile"
+    }
+  },
+  "nav": {
+    "startFreeTrial": "Începe încercarea gratuită",
+    "groups": {
+      "product": "Produs",
+      "solutions": "Soluții",
+      "resources": "Resurse"
+    },
+    "sections": {
+      "getStarted": "Începe",
+      "capabilities": "Capacități",
+      "platform": "Platformă",
+      "whoItIsFor": "Pentru cine este",
+      "learningGuides": "Învățare și ghiduri",
+      "trustLegal": "Încredere și legal",
+      "community": "Comunitate",
+      "company": "Companie"
+    },
+    "items": {
+      "Elpino helpdesk": "Serviciu de asistență Elpino",
+      "Elpino AI Agent": "Agent AI Elpino",
+      "Inbox": "Căsuță poștală",
+      "Tickets": "Tichete",
+      "Knowledge Hub": "Centru de cunoștințe",
+      "Integrations": "Integrări",
+      "Safety & security": "Siguranță",
+      "All features": "Toate funcțiile",
+      "For Founders": "Pentru fondatori",
+      "For Busy Teams": "Pentru echipe ocupate",
+      "For Developers": "Pentru dezvoltatori",
+      "See Pricing": "Vezi prețurile",
+      "Talk to Us": "Vorbește cu noi",
+      "Documentation": "Documentație",
+      "Help & FAQ": "Ajutor și întrebări frecvente",
+      "Trust Center": "Centru de încredere",
+      "Privacy Policy": "Politica de confidențialitate",
+      "Terms of Service": "Termeni de utilizare",
+      "Blog": "Blog",
+      "Changelog": "Istoric modificări",
+      "Brand Kit": "Kit de brand",
+      "About Us": "Despre noi",
+      "Careers": "Cariere",
+      "Contact Sales": "Contactează vânzările"
+    },
+    "megaMenu": {
+      "explore": "Explorează",
+      "seePricing": "Vezi prețurile",
+      "seePricingNote": "Începe gratuit. Plătește pe măsură ce echipa ta crește.",
+      "freshFromBlog": "Noutăți de pe blog"
+    },
+    "featured": {
+      "product": {
+        "title": "AI mai întâi. Un om atunci când contează.",
+        "text": "Elpino răspunde din cunoștințele tale, apoi transferă conversația către un coleg cu întreaga poveste.",
+        "cta": "Cunoaște agentul AI"
+      },
+      "solutions": {
+        "title": "Creat pentru modul tău de lucru",
+        "text": "Fondatorii, magazinele și echipele ocupate primesc fiecare o configurare adaptată, live într-o singură după-amiază.",
+        "cta": "Găsește ce ți se potrivește"
+      },
+      "resources": {
+        "title": "Live în trei pași",
+        "text": "Lipește o linie, învață-l documentele tale, activează-l. Ghidurile te ghidează prin fiecare pas.",
+        "cta": "Deschide documentația"
+      }
+    },
+    "pricing": "Prețuri",
+    "contactSales": "Contactează vânzările",
+    "login": "Conectare",
+    "goToDashboard": "Mergi la panou",
+    "getStarted": "Începe"
+  },
+  "footer": {
+    "ticker": [
+      "Răspunsuri AI din cunoștințele tale",
+      "Transfer către un om, întotdeauna gratuit",
+      "100 de mesaje AI gratuite",
+      "O căsuță poștală partajată",
+      "Live într-o singură după-amiază"
+    ],
+    "cta": {
+      "badge": "Pregătiți când sunteți și voi",
+      "title": "Oferă fiecărui client un răspuns util.",
+      "subtitle": "Începe gratuit cu suport AI, o căsuță poștală partajată și transfer către un om. Nu este necesar niciun card.",
+      "ctaStart": "Începe gratuit",
+      "ctaPricing": "Vezi prețurile"
+    },
+    "description": "Elpino ajută echipele să răspundă clienților cu AI bazat pe cunoștințele lor proprii, apoi transferă conversațiile către o persoană atunci când este necesar.",
+    "blog": "Blog",
+    "contact": "Contact",
+    "copyright": "© {year} Elpino Inc. Toate drepturile rezervate.",
+    "privacy": "Politica de confidențialitate",
+    "terms": "Termeni de utilizare",
+    "security": "Securitate"
+  },
+  "aiAgent": {
+    "hero": {
+      "badge": "Agent AI",
+      "titlePrefix": "Cunoaște-ți cea mai nouă ",
+      "titleHl": "angajare pentru suport.",
+      "subtitle": "Elpino începe din prima zi cunoscând deja afacerea ta. Își amintește fiecare client, verifică cine este înainte de a acționa, lucrează cu sistemele tale de plăți și comenzi prin MCP, și întreabă întotdeauna înainte de a transfera o conversație către echipa ta.",
+      "ctaHire": "Angajează Elpino, gratuit",
+      "ctaFeatures": "Vezi toate funcțiile"
+    },
+    "badge": {
+      "staffLabel": "Elpino · Personal",
+      "subtitle": "Agent AI de suport",
+      "skills": [
+        "Răspunde din documentele tale",
+        "Verifică identitatea",
+        "Verifică plățile",
+        "Folosește instrumentele tale MCP",
+        "Întreabă înainte de transfer"
+      ],
+      "startDateLabel": "Data începerii",
+      "startDateValue": "Astăzi",
+      "clearanceLabel": "Nivel de acces",
+      "clearanceValue": "Tu decizi",
+      "barcodeNote": "EL-0001 · Nu pontează niciodată la ieșire"
+    },
+    "trace": {
+      "aiAgentLabel": "Agent AI",
+      "customerMsg": "Salut, unde este comanda mea #4821?",
+      "agentReply": "Vești bune, comanda Aishei a fost trimisă ieri și ajunge joi. Ți-am trimis și un link de urmărire prin email.",
+      "whatAgentDoing": "Ce face agentul",
+      "resolved": "Rezolvat",
+      "working": "În lucru",
+      "idle": "Inactiv",
+      "waiting": "Se așteaptă un mesaj de la client…",
+      "steps": [
+        {
+          "kind": "route",
+          "text": "router → specialist suport"
+        },
+        {
+          "kind": "tool",
+          "text": "recall_conversation(“comanda 4821”)",
+          "result": "2 mesaje anterioare"
+        },
+        {
+          "kind": "tool",
+          "text": "get_past_conversations",
+          "result": "1 conversație rezolvată luna trecută"
+        },
+        {
+          "kind": "verify",
+          "text": "send_email_code → check_email_code",
+          "result": "identitate verificată"
+        },
+        {
+          "kind": "mcp",
+          "text": "mcp_shop__get_order(“4821”)",
+          "result": "trimis · ajunge joi"
+        },
+        {
+          "kind": "review",
+          "text": "verificare",
+          "result": "faptele corespund cu rezultatele instrumentelor"
+        },
+        {
+          "kind": "done",
+          "text": "răspuns trimis · mark_resolved"
+        }
+      ]
+    },
+    "watchIt": {
+      "eyebrow": "Prima sarcină",
+      "titlePrefix": "Vezi cum gestionează ",
+      "titleHl": "o cerere reală.",
+      "subtitle": "Un client întreabă unde este comanda lui. În dreapta este tot ce face agentul înainte de a răspunde.",
+      "note": "Conversație exemplu. Numele instrumentelor afișate sunt cele pe care agentul le apelează cu adevărat."
+    },
+    "onboard": {
+      "eyebrow": "Integrare",
+      "titlePrefix": "Șase pași până la ",
+      "titleHl": "prima zi.",
+      "subtitle": "Bifează-le. Nu există o perioadă de instruire, și fiecare este o setare pe care tu o controlezi.",
+      "readyBadge": "Pregătit de lucru!",
+      "items": [
+        {
+          "t": "Învață-l site-ul și fișierele tale",
+          "d": "Scanează pagini, încarcă documente, scrie-ți propriile.",
+          "href": "/product/knowledge-hub"
+        },
+        {
+          "t": "Lipește fragmentul de widget",
+          "d": "O linie și chatul apare pe site-ul tău."
+        },
+        {
+          "t": "Conectează Stripe sau Razorpay",
+          "d": "Ca să poată verifica plăți și abonamente."
+        },
+        {
+          "t": "Conectează-ți instrumentele MCP",
+          "d": "Activează doar instrumentele pe care le poate folosi."
+        },
+        {
+          "t": "Decide asupra rambursărilor",
+          "d": "Sunt dezactivate până le activezi."
+        },
+        {
+          "t": "Invită-ți echipa",
+          "d": "Ca oamenii să fie pregătiți când îi cere.",
+          "href": "/product/inbox"
+        }
+      ]
+    },
+    "customerFile": {
+      "eyebrow": "Cunoașterea clientului tău",
+      "titlePrefix": "Dosarul său ",
+      "titleHl": "pentru fiecare client.",
+      "subtitle": "Înainte de a răspunde, agentul construiește un dosar despre persoana pe care o ajută. Apasă pe o sursă pentru a vedea ce adaugă.",
+      "sourcesLabel": "Dosar client · {n} din {total} surse",
+      "sampleNote": "Date exemplu. În realitate, AI-ul vede coduri de referință în loc de numele și emailul clientului.",
+      "sources": [
+        {
+          "key": "conv",
+          "title": "Această conversație",
+          "how": "Își amintește ce s-a spus și poate reveni la detaliile necesare, chiar și într-o conversație lungă.",
+          "rows": [
+            [
+              "A întrebat despre",
+              "Comanda #4821"
+            ],
+            [
+              "Vrea",
+              "O dată de livrare"
+            ]
+          ]
+        },
+        {
+          "key": "hist",
+          "title": "Conversații anterioare",
+          "how": "Cunoaște conversațiile anterioare cu aceeași persoană, așa că nu se repetă niciodată.",
+          "rows": [
+            [
+              "Ultima conversație",
+              "Problemă de autentificare, rezolvată"
+            ],
+            [
+              "De câte ori a contactat",
+              "2"
+            ]
+          ]
+        },
+        {
+          "key": "id",
+          "title": "Identitate verificată",
+          "how": "Confirmă cine este cu un cod de email de unică folosință sau un token semnat din aplicația ta înainte de a se ocupa de ceva personal.",
+          "rows": [
+            [
+              "Identitate",
+              "Verificată prin cod email"
+            ]
+          ]
+        },
+        {
+          "key": "pay",
+          "title": "Plăți",
+          "how": "Caută plăți și abonamente reale în Stripe sau Razorpay, și poate trimite chitanțe și linkuri de plată.",
+          "rows": [
+            [
+              "Plan",
+              "Growth · activ"
+            ],
+            [
+              "Ultima plată",
+              "Plătit, chitanță trimisă"
+            ]
+          ]
+        },
+        {
+          "key": "mcp",
+          "title": "Sistemele tale (MCP)",
+          "how": "Apelează instrumentele pe care le aprobi pe propriile tale servere MCP: comenzi, conturi, rezervări, orice expui.",
+          "rows": [
+            [
+              "Comanda #4821",
+              "Trimis · ajunge joi"
+            ]
+          ]
+        },
+        {
+          "key": "kb",
+          "title": "Cunoștințele tale",
+          "how": "Caută în tot ce l-ai învățat și poate citi o pagină actuală a site-ului tău pentru detalii noi.",
+          "rows": [
+            [
+              "Politica de livrare",
+              "3–5 zile lucrătoare"
+            ]
+          ]
+        }
+      ]
+    },
+    "mcp": {
+      "eyebrow": "Plugin-uri MCP",
+      "titlePrefix": "Cerere de acces: ",
+      "titleHl": "sistemele tale.",
+      "subtitle": "Conectează până la cinci servere MCP, fie că este magazinul tău, CRM-ul tău sau sistemul tău de rezervări. Elpino descoperă instrumentele lor, și tu activezi exact cele pe care agentul le poate folosi. Încearcă panoul de control de mai jos.",
+      "serverTitle": "Serverul MCP al magazinului tău",
+      "toolsDiscovered": "{n} instrumente descoperite",
+      "verifiedCustomers": "Clienți verificați",
+      "anyVisitor": "Orice vizitator",
+      "destructive": "Distructiv",
+      "changesData": "Modifică date",
+      "readOnly": "Doar citire",
+      "needsVerified": "Necesită client verificat",
+      "whatAgentSees": "Ce poate vedea agentul",
+      "toolsAvailable": "instrumente disponibile acum",
+      "tools": [
+        {
+          "name": "get_order",
+          "desc": "Caută o comandă și starea ei",
+          "write": false,
+          "on": true
+        },
+        {
+          "name": "track_shipment",
+          "desc": "Urmărire live pentru un colet",
+          "write": false,
+          "on": true
+        },
+        {
+          "name": "list_products",
+          "desc": "Catalog și niveluri de stoc",
+          "write": false,
+          "on": true
+        },
+        {
+          "name": "update_address",
+          "desc": "Schimbă o adresă de livrare",
+          "write": true,
+          "on": true
+        },
+        {
+          "name": "cancel_order",
+          "desc": "Anulează o comandă care nu a fost expediată",
+          "write": true,
+          "on": false
+        },
+        {
+          "name": "delete_customer",
+          "desc": "Șterge o înregistrare de client",
+          "write": true,
+          "on": false,
+          "danger": true
+        }
+      ],
+      "bullets": [
+        "Un instrument dezactivat este invizibil pentru agent",
+        "Fiecare apel este reverificat față de lista ta de pe server",
+        "Instrumentele care modifică date necesită întotdeauna un client verificat",
+        "Credențialele serverului sunt stocate criptat"
+      ],
+      "features": [
+        {
+          "title": "Plăți, integrate",
+          "desc": "Conectează Stripe sau Razorpay și agentul poate căuta plăți și abonamente, trimite chitanțe și linkuri de plată, și anula un abonament."
+        },
+        {
+          "title": "Adu orice server MCP",
+          "desc": "Orice vorbește MCP funcționează, așa că tu decizi ce instrumente primește agentul."
+        },
+        {
+          "title": "Propriul server MCP al Elpino",
+          "desc": "Instrumentele proprii ale clienților tăi pot citi planul, utilizarea și plățile lor Elpino prin MCP."
+        }
+      ]
+    },
+    "orgChart": {
+      "eyebrow": "Echipa din spate",
+      "titlePrefix": "Un agent. ",
+      "titleHl": "O organigramă întreagă.",
+      "subtitle": "Fiecare mesaj este direcționat către specialistul potrivit, și nimic nu iese înainte ca un verificator să confirme faptele.",
+      "router": "Router",
+      "routerNote": "alege specialistul",
+      "reviewer": "Verificator",
+      "reviewerNote": "verifică ciorna în raport cu rezultatele instrumentelor",
+      "polish": "Finisare",
+      "polishNote": "apoi clientul o vede",
+      "footer": "Cazurile dificile sunt escaladate către un model de raționament mai puternic, și un model de rezervă acoperă întreruperile furnizorului.",
+      "lanes": [
+        {
+          "k": "Vânzări",
+          "d": "Planuri, prețuri, adecvare"
+        },
+        {
+          "k": "Suport",
+          "d": "Conturi, plăți, cum se face"
+        },
+        {
+          "k": "Tehnic",
+          "d": "Erori, configurare, integrare"
+        }
+      ]
+    },
+    "shift": {
+      "eyebrow": "O zi de muncă",
+      "titlePrefix": "O tură, ",
+      "titleHl": "de la început până la sfârșit.",
+      "subtitle": "O zi exemplu, folosind doar lucruri pe care agentul le face cu adevărat.",
+      "items": [
+        {
+          "time": "2:14",
+          "t": "Răspunde la o întrebare despre preț",
+          "d": "Echipa ta doarme. Elpino răspunde din baza ta de cunoștințe."
+        },
+        {
+          "time": "9:05",
+          "t": "Verifică un client, repară o plată",
+          "d": "Îl confirmă cu un cod de email, găsește plata eșuată, trimite un nou link de plată."
+        },
+        {
+          "time": "11:20",
+          "t": "Verifică o comandă în magazinul tău",
+          "d": "Apelează serverul tău MCP, citește starea și partajează urmărirea."
+        },
+        {
+          "time": "13:30",
+          "t": "Se întâlnește cu ceva ce nu poate face",
+          "d": "Spune asta, întreabă întâi clientul, apoi alertează întreaga echipă."
+        },
+        {
+          "time": "15:42",
+          "t": "Nimeni liber? Nu abandonează",
+          "d": "Îi spune adevărul clientului și creează un tichet cu urmărire prin email."
+        }
+      ]
+    },
+    "review": {
+      "eyebrow": "Evaluare de performanță",
+      "titlePrefix": "Un ",
+      "titleHl": "raport onest.",
+      "subtitle": "Evaluări ilustrative, cu punctul slab inclus.",
+      "employeeBadge": "Angajat: Elpino",
+      "quote": "“Excelent cu întrebările de rutină și nu își depășește niciodată limitele. Păstrează baza de cunoștințe actualizată și va continua să se îmbunătățească.”",
+      "items": [
+        {
+          "k": "Respectă politica ta",
+          "n": 5,
+          "note": "Răspunde doar din ce ai aprobat."
+        },
+        {
+          "k": "Știe când să ceară ajutor",
+          "n": 5,
+          "note": "Întreabă întâi clientul, apoi implică echipa ta."
+        },
+        {
+          "k": "Rămâne în limitele permisiunilor sale",
+          "n": 5,
+          "note": "Doar instrumentele pe care le-ai activat. Rambursările dezactivate implicit."
+        },
+        {
+          "k": "Știe ce nu i-ai spus niciodată",
+          "n": 2,
+          "note": "Nu poate răspunde la ce nu este în cunoștințele tale. Adaugă mai mult pentru a crește asta."
+        }
+      ]
+    },
+    "guards": {
+      "eyebrow": "Măsuri de protecție",
+      "titlePrefix": "Manualul ",
+      "titleHl": "companiei.",
+      "subtitle": "Regulile după care funcționează Elpino. Fiecare este un control pe care îl deții.",
+      "items": [
+        {
+          "t": "Modelul nu vede niciodată nume sau emailuri",
+          "d": "Identitățile dintr-o conversație sunt înlocuite cu coduri de referință înainte ca AI-ul să o citească, iar secretele precum chei și token-uri sunt eliminate."
+        },
+        {
+          "t": "Rambursările sunt dezactivate până spui tu",
+          "d": "Acțiunile care mișcă bani sunt opționale și controlate de proprietarul spațiului de lucru."
+        },
+        {
+          "t": "Aprobi fiecare instrument",
+          "d": "Agentul vede doar instrumentele MCP pe care le-ai activat, și cele care modifică date necesită un client verificat."
+        },
+        {
+          "t": "Întreabă întâi, apoi transferă",
+          "d": "Când nu are un instrument pentru sarcină, spune asta și întreabă înainte de a implica echipa ta."
+        },
+        {
+          "t": "Faptele sunt verificate",
+          "d": "Un pas de verificare confruntă ciorna cu rezultatele instrumentelor înainte de trimitere."
+        },
+        {
+          "t": "Identitate înainte de orice personal",
+          "d": "Codul de email sau token-ul semnat vine primul, astfel încât nu discută niciodată despre un cont cu un străin."
+        }
+      ]
+    },
+    "compare": {
+      "eyebrow": "Nu un chatbot",
+      "titlePrefix": "Chatbot vs. ",
+      "titleHl": "agent Elpino.",
+      "headerA": "Un chatbot tipic",
+      "headerB": "Agent AI Elpino",
+      "rows": [
+        [
+          "Caută articole și se oprește",
+          "Caută, verifică înregistrări și acționează"
+        ],
+        [
+          "Tratează pe toți ca pe un străin",
+          "Verifică identitatea, își amintește conversații anterioare"
+        ],
+        [
+          "“Vă rugăm contactați suportul” când e blocat",
+          "Întreabă întâi, alertează echipa, creează un tichet dacă nimeni nu este liber"
+        ],
+        [
+          "Nu îți poate vedea sistemele",
+          "Apelează instrumentele MCP pe care le aprobi"
+        ],
+        [
+          "Răspunsurile nu sunt de încredere",
+          "Faptele verificate în raport cu rezultatele instrumentelor"
+        ]
+      ]
+    },
+    "faq": {
+      "eyebrow": "Întrebări",
+      "titlePrefix": "Bine de ",
+      "titleHl": "știut.",
+      "items": [
+        [
+          "Ce este MCP?",
+          "Model Context Protocol, o modalitate standard pentru un AI de a apela instrumente pe un alt sistem. Conectează un server MCP și Elpino descoperă instrumentele lui. Apoi alegi pe care le poate folosi agentul."
+        ],
+        [
+          "Câte servere MCP pot conecta?",
+          "Până la cinci, cu până la 15 instrumente activate per server."
+        ],
+        [
+          "Poate agentul schimba lucruri în sistemele mele?",
+          "Doar prin instrumentele pe care le-ai activat, și cele care modifică date necesită întotdeauna un client cu emailul verificat."
+        ],
+        [
+          "Cum știe cine este clientul?",
+          "Din conversație, conversații anterioare cu el, și un pas de verificare: un cod de email de unică folosință sau un token semnat din aplicația ta."
+        ],
+        [
+          "Poate emite rambursări?",
+          "Doar dacă proprietarul spațiului de lucru activează rambursările. Sunt dezactivate implicit."
+        ],
+        [
+          "Ce se întâmplă când nu poate rezolva ceva?",
+          "Spune asta și întreabă clientul dacă vrea să fie conectat cu echipa ta. Toată echipa primește o alertă de alăturare timp de 90 de secunde, și dacă nimeni nu se alătură, un tichet este creat automat."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Cel mai nou angajat al tău este pregătit să înceapă.",
+      "subtitle": "Învață-l afacerea ta, conectează-ți instrumentele, și stabilește limitele.",
+      "ctaStart": "Începe gratuit",
+      "ctaKnowledgeHub": "Vezi Centrul de Cunoștințe"
+    }
+  },
+  "inbox": {
+    "hero": {
+      "badge": "Inbox partajat",
+      "titlePrefix": "O conversație. ",
+      "titleHl": "Toți cei care ar trebui să fie în ea.",
+      "subtitle": "AI-ul păstrează firul până când e nevoie de o persoană, întreaga echipă este alertată simultan, iar oricine se alătură primește tot istoricul. Urmărește o conversație reală, de la primul mesaj până la rezolvare.",
+      "ctaOpen": "Deschide inboxul tău",
+      "ctaPricing": "Vezi prețurile"
+    },
+    "filters": [
+      "Toate",
+      "Necitite",
+      "Citite",
+      "Rezolvate"
+    ],
+    "desk": {
+      "stages": [
+        {
+          "key": "ai",
+          "label": "AI-ul răspunde",
+          "badge": "AI",
+          "banner": "Elpino gestionează această conversație"
+        },
+        {
+          "key": "ask",
+          "label": "Are nevoie de o persoană",
+          "badge": "Necesită om",
+          "banner": "Fiecare coleg a primit o alertă de Alăturare. 90 de secunde pentru a interveni"
+        },
+        {
+          "key": "join",
+          "label": "Un coleg se alătură",
+          "badge": "Priya",
+          "banner": "Priya s-a alăturat. Alerta a fost anulată pentru toată lumea"
+        },
+        {
+          "key": "back",
+          "label": "Predare înapoi",
+          "badge": "AI",
+          "banner": "Priya a predat conversația înapoi lui Elpino"
+        },
+        {
+          "key": "done",
+          "label": "Rezolvat",
+          "badge": "Rezolvat",
+          "banner": "Rezolvat. Poate fi reactivată oricând dacă scriu din nou"
+        }
+      ],
+      "lines": [
+        {
+          "at": 0,
+          "from": "you",
+          "text": "Salut, m-am mutat în altă țară. Puteți actualiza țara de facturare din contul meu?"
+        },
+        {
+          "at": 1,
+          "from": "ai",
+          "text": "Nu pot modifica eu detaliile de facturare. Vrei să te pun în legătură cu echipa noastră?"
+        },
+        {
+          "at": 1,
+          "from": "you",
+          "text": "Da, te rog"
+        },
+        {
+          "at": 2,
+          "from": "sys",
+          "text": "Priya s-a alăturat conversației"
+        },
+        {
+          "at": 2,
+          "from": "team",
+          "text": "Salut! Mă ocup eu de asta. Am actualizat țara de facturare."
+        },
+        {
+          "at": 3,
+          "from": "sys",
+          "text": "Priya a predat conversația înapoi lui Elpino"
+        },
+        {
+          "at": 3,
+          "from": "ai",
+          "text": "Totul e pregătit. Mai pot ajuta cu altceva?"
+        },
+        {
+          "at": 4,
+          "from": "you",
+          "text": "Atât, mulțumesc!"
+        },
+        {
+          "at": 4,
+          "from": "sys",
+          "text": "Conversație rezolvată"
+        }
+      ],
+      "rail": [
+        "Spațiu",
+        "Inbox",
+        "Analiză",
+        "Contacte",
+        "Bază de cunoștințe",
+        "Setări"
+      ],
+      "list": [
+        {
+          "name": "Harnoor Singh",
+          "date": "21 sept.",
+          "prev": "Nu pot să dezvălui adresa IP a nimănui"
+        },
+        {
+          "name": "Aisha Khan",
+          "date": "Astăzi",
+          "prev": ""
+        },
+        {
+          "name": "Tom Becker",
+          "date": "19 sept.",
+          "prev": "Widgetul nu se încarcă la finalizarea comenzii"
+        },
+        {
+          "name": "Meera Iyer",
+          "date": "18 sept.",
+          "prev": "Trecem echipa la plan anual?"
+        }
+      ],
+      "teamInbox": "Inbox echipă",
+      "aiAssist": "Asistență AI",
+      "searchPlaceholder": "Caută conversații",
+      "verified": "Verificat",
+      "joined": "S-a alăturat",
+      "join": "Alătură-te",
+      "priyaReplying": "Priya răspunde",
+      "resolvedLabel": "Rezolvat",
+      "aiReplying": "Elpino răspunde, tu doar vizualizezi",
+      "elpinoAi": "Elpino AI",
+      "priyaTeam": "Priya · echipă",
+      "writeReply": "Scrie răspunsul tău…",
+      "send": "Trimite",
+      "reopenNote": "Rezolvat. Reactivează-o dacă scriu din nou.",
+      "lockedNote": "Alătură-te acestei conversații pentru a răspunde. Până atunci, Elpino continuă să discute cu clientul.",
+      "websiteVisitor": "Vizitator al site-ului",
+      "locationDevice": "Locație și dispozitiv",
+      "location": "Pune, India",
+      "device": "Chrome · macOS",
+      "onPage": "Pe /pricing",
+      "lastSeen": "Văzut ultima dată chiar acum",
+      "identityVerified": "Identitate verificată",
+      "signedIn": "Autentificat pe site",
+      "otherConvos": "Alte conversații",
+      "noOtherConvos": "Încă nu există alte conversații de la acest vizitator."
+    },
+    "realThing": {
+      "eyebrow": "Lucrul real",
+      "titlePrefix": "Acesta este ",
+      "titleHl": "inboxul real.",
+      "subtitle": "Nicio machetă. Fiecare conversație, răspunsurile AI-ului, detaliile vizitatorului și butonul de Alăturare, toate pe un singur ecran.",
+      "imageAlt": "Inboxul echipei Elpino: o listă de conversații, un fir gestionat de AI și locația și dispozitivul vizitatorului",
+      "callouts": [
+        {
+          "label": "Alătură-te pentru a prelua"
+        },
+        {
+          "label": "Filtru: Toate · Necitite · Citite · Rezolvate"
+        },
+        {
+          "label": "Locație și dispozitiv"
+        },
+        {
+          "label": "Se închide automat după 24h de liniște"
+        }
+      ]
+    },
+    "twoTabs": {
+      "eyebrow": "Două vizualizări",
+      "titlePrefix": "Urmărește AI-ul. ",
+      "titleHl": "Coordonează echipa.",
+      "subtitle": "Inboxul tău are o filă pentru ce gestionează oamenii și o filă pentru ce gestionează Elpino, ca nimic să nu se ascundă.",
+      "tabs": [
+        {
+          "label": "Inbox echipă",
+          "title": "Conversații pe care le deține echipa ta",
+          "body": "Tot ce a fost alăturat, preluat sau asignat unei persoane. Aici lucrează echipa ta: răspunsuri, urmăriri și fire rezolvate.",
+          "rows": [
+            [
+              "Harnoor Singh",
+              "Poți retrimite factura?",
+              "Priya"
+            ],
+            [
+              "Meera Iyer",
+              "Trecem echipa la facturare anuală?",
+              "Sam"
+            ],
+            [
+              "Jo Alvarez",
+              "Mulțumesc, asta a rezolvat problema!",
+              "Rezolvat"
+            ]
+          ]
+        },
+        {
+          "label": "Asistență AI",
+          "title": "Conversații gestionate de Elpino",
+          "body": "Urmărește AI-ul lucrând în timp real. Un contor arată câte sunt active, și te poți alătura oricărui fir în momentul în care vrei să intervii.",
+          "rows": [
+            [
+              "Aisha Khan",
+              "Elpino răspunde…",
+              "AI"
+            ],
+            [
+              "Tom Becker",
+              "Verifică înregistrarea plății tale…",
+              "AI"
+            ],
+            [
+              "Ravi Menon",
+              "A trimis un link securizat de plată",
+              "AI"
+            ]
+          ]
+        }
+      ]
+    },
+    "holders": {
+      "eyebrow": "Mereu clar",
+      "titlePrefix": "Știi mereu ",
+      "titleHl": "cine se ocupă.",
+      "subtitle": "Fiecare conversație are o insignă în listă, astfel încât nimeni nu răspunde de două ori și nimic nu se pierde.",
+      "items": [
+        {
+          "tag": "AI",
+          "title": "Elpino se ocupă",
+          "body": "Răspunde folosind baza ta de cunoștințe și instrumentele tale. Poți urmări fiecare mesaj live."
+        },
+        {
+          "tag": "Coleg",
+          "title": "O persoană se ocupă",
+          "body": "Apasă pe Alătură-te conversației, sau pe Preia, dacă e la un coleg. AI-ul se retrage."
+        },
+        {
+          "tag": "Rezolvat",
+          "title": "S-a terminat",
+          "body": "Firele rezolvate rămân căutabile și le poți reactiva cu o singură apăsare."
+        }
+      ]
+    },
+    "baton": {
+      "eyebrow": "Predă ștafeta",
+      "titlePrefix": "Alătură-te. Preia-o. ",
+      "titleHl": "Predă-o înapoi.",
+      "subtitle": "O conversație se mișcă între AI și oamenii tăi cu o singură apăsare, iar istoricul călătorește împreună cu ea.",
+      "items": [
+        {
+          "who": "Elpino AI",
+          "note": "Răspunde primul"
+        },
+        {
+          "who": "Priya",
+          "note": "A apăsat pe Alătură-te"
+        },
+        {
+          "who": "Sam",
+          "note": "A preluat de la Priya"
+        },
+        {
+          "who": "Elpino AI",
+          "note": "Predată înapoi"
+        }
+      ],
+      "holdingNow": "O deține acum",
+      "stepLabel": "Pasul {n}"
+    },
+    "teamAlert": {
+      "eyebrow": "Alerte pentru toată echipa",
+      "titlePrefix": "Alertează toată echipa. ",
+      "titleHl": "O singură persoană răspunde.",
+      "subtitle": "Când un client cere o persoană, fiecare coleg primește o alertă de Alăturare în același timp. Primul care apasă Alătură-te preia conversația, alerta dispare pentru ceilalți, iar clientul vede cine s-a alăturat.",
+      "bullets": [
+        "Nimeni nu este ales special, deci nimeni nu devine blocaj",
+        "90 de secunde pentru a interveni înainte ca un tichet să fie creat pentru tine",
+        "Te-ai alăturat din greșeală? Predă-o înapoi AI-ului cu o apăsare"
+      ],
+      "panelLabel": "Alerte inbox",
+      "joinedStatus": "S-a alăturat",
+      "alertCleared": "Alertă anulată",
+      "joinChatStatus": "Alătură-te conversației",
+      "quietStatus": "Liniște",
+      "bannerJoined": "Priya s-a alăturat. Clientul îi vede numele.",
+      "bannerAlerting": "Se alertează toți cei 4 colegi…",
+      "bannerAsked": "Clientul a cerut o persoană"
+    },
+    "nobodyFree": {
+      "eyebrow": "Nimic nu se pierde",
+      "titlePrefix": "Chiar și când toată lumea ",
+      "titleHl": "e ocupată.",
+      "subtitle": "Dacă nimeni nu se alătură la timp, clientul nu rămâne să se uite la un indicator de încărcare.",
+      "marks": [
+        {
+          "t": "0s",
+          "h": "Alerta este trimisă",
+          "d": "Fiecare coleg vede o alertă de Alăturare."
+        },
+        {
+          "t": "≤ 90s",
+          "h": "Primul care se alătură câștigă",
+          "d": "Alerta se anulează pentru toți ceilalți."
+        },
+        {
+          "t": "90s",
+          "h": "Nimeni liber? Tichet",
+          "d": "Un tichet este creat automat."
+        },
+        {
+          "t": "24h",
+          "h": "Urmărire prin email",
+          "d": "Clientul este informat că va primi un răspuns prin email în 24 de ore."
+        }
+      ]
+    },
+    "findAnything": {
+      "eyebrow": "Căutare și filtre",
+      "titlePrefix": "Găsește orice conversație ",
+      "titleHl": "într-o secundă.",
+      "subtitle": "Caută după nume sau mesaj și restrânge la Toate, Necitite, Citite sau Rezolvate. Încearcă în dreapta.",
+      "noMatch": "Nimic nu se potrivește. Încearcă alt cuvânt.",
+      "convos": [
+        {
+          "n": "Harnoor Singh",
+          "p": "Nu pot să dezvălui adresa IP a nimănui",
+          "s": "resolved"
+        },
+        {
+          "n": "Aisha Khan",
+          "p": "S-a mutat în altă țară, întrebare de facturare",
+          "s": "unread"
+        },
+        {
+          "n": "Tom Becker",
+          "p": "Widgetul nu se încarcă la finalizarea comenzii",
+          "s": "unread"
+        },
+        {
+          "n": "Meera Iyer",
+          "p": "Trecem echipa la facturare anuală?",
+          "s": "read"
+        },
+        {
+          "n": "Ravi Menon",
+          "p": "Unde găsesc chitanța mea?",
+          "s": "resolved"
+        },
+        {
+          "n": "Jo Alvarez",
+          "p": "Pot adăuga un alt coleg?",
+          "s": "read"
+        }
+      ]
+    },
+    "context": {
+      "eyebrow": "Context, integrat",
+      "titlePrefix": "Nu întreba niciodată ",
+      "titleHl": "„cine erai, mai exact?”",
+      "subtitle": "Echipa ta deschide un fir și cunoaște deja esențialul.",
+      "items": [
+        {
+          "t": "Unde se află",
+          "d": "Locație și context local pentru fiecare vizitator."
+        },
+        {
+          "t": "Ce folosesc",
+          "d": "Dispozitiv, browser și pagina pe care se aflau."
+        },
+        {
+          "t": "Cine sunt",
+          "d": "O insignă Verificat atunci când identitatea este confirmată printr-un token semnat sau un cod prin email."
+        },
+        {
+          "t": "Lucruri sensibile, în siguranță",
+          "d": "Cere detalii private printr-o cerere sigură, unică, nu în chat."
+        },
+        {
+          "t": "Tot istoricul",
+          "d": "Conversațiile anterioare cu aceeași persoană, chiar acolo."
+        }
+      ],
+      "extraTitle": "Plus scriere live pe ambele părți",
+      "extraDesc": "Clienții văd când răspunzi, iar tu vezi când răspund ei."
+    },
+    "secureRequest": {
+      "eyebrow": "Cereri securizate",
+      "titlePrefix": "Detaliile private ",
+      "titleHl": "rămân în afara chatului.",
+      "subtitle": "Cere informații sensibile printr-un formular securizat, unic, astfel încât să nu rămână niciodată în transcript.",
+      "steps": [
+        {
+          "t": "Ai nevoie de ceva privat",
+          "d": "Pentru detalii care nu ar trebui scrise într-o fereastră de chat."
+        },
+        {
+          "t": "Trimite o cerere securizată",
+          "d": "Clientul primește un formular privat, unic, în loc de o casetă de chat."
+        },
+        {
+          "t": "Înapoi în conversație",
+          "d": "Îl trimit o singură dată, iar echipa ta continuă conversația."
+        }
+      ],
+      "stepLabel": "Pasul {n}"
+    },
+    "afterLeave": {
+      "eyebrow": "După ce pleacă",
+      "titlePrefix": "Închiderea filei ",
+      "titleHl": "nu este finalul.",
+      "subtitle": "Elpino îți spune sincer dacă un răspuns îi mai poate ajunge.",
+      "steps": [
+        {
+          "t": "Vizitatorul pleacă",
+          "d": "Închid chatul, sau trec 24 de ore fără niciun mesaj."
+        },
+        {
+          "t": "Există un email verificat înregistrat?",
+          "d": "Dacă și-au confirmat adresa, mai pot fi contactați."
+        },
+        {
+          "t": "Răspuns prin email",
+          "d": "Răspunsul tău ajunge în inboxul lor. Fără un email verificat, niciun răspuns nu este posibil, iar editorul de mesaje afișează acest lucru."
+        }
+      ],
+      "stepLabel": "Pasul {n}"
+    },
+    "compare": {
+      "eyebrow": "Înainte și după",
+      "titlePrefix": "De la haos la ",
+      "titleHl": "calm.",
+      "headerA": "Fără un inbox partajat",
+      "headerB": "Cu Elpino",
+      "rows": [
+        [
+          "Clienții așteaptă până când cineva este liber",
+          "AI-ul răspunde în secunde, apoi o persoană se alătură dacă e nevoie"
+        ],
+        [
+          "Nimeni nu știe cine răspunde",
+          "O insignă arată AI, coleg sau rezolvat pe fiecare fir"
+        ],
+        [
+          "Echipa se contactează între ei pentru a găsi un responsabil",
+          "O singură alertă de Alăturare ajunge la toată lumea, primul care se alătură o preia"
+        ],
+        [
+          "Contextul trăiește în zece locuri",
+          "Istoric, locație, dispozitiv și verificare într-un singur panou"
+        ],
+        [
+          "Clienții care închid fila se pierd",
+          "Vizitatorii verificați mai pot primi răspunsul tău prin email"
+        ]
+      ]
+    },
+    "faq": {
+      "eyebrow": "Întrebări",
+      "titlePrefix": "Bine de ",
+      "titleHl": "știut.",
+      "items": [
+        [
+          "Cine poate vedea o conversație?",
+          "Toată echipa ta poate vedea inboxul partajat. Fiecare conversație arată cine se ocupă de ea: AI-ul, un coleg, sau este rezolvată."
+        ],
+        [
+          "Ce este fereastra de 90 de secunde?",
+          "Când un client cere o persoană, fiecare coleg primește o alertă de Alăturare. Dacă nimeni nu se alătură în 90 de secunde, clientul este informat și un tichet este creat automat, cu o urmărire prin email."
+        ],
+        [
+          "Pot să predau o conversație înapoi AI-ului?",
+          "Da. Dacă te-ai alăturat și este o urmărire simplă, predă conversația înapoi lui Elpino cu o singură apăsare."
+        ],
+        [
+          "Pot răspunde după ce vizitatorul pleacă?",
+          "Dacă au oferit o adresă de email verificată, răspunsul tău este trimis prin email. Fără una, niciun răspuns nu îi poate ajunge."
+        ],
+        [
+          "Funcționează pe mai mult decât chatul de pe site?",
+          "Widgetul de chat pentru site este disponibil deja. Omnichannel vine în noiembrie."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Oferă echipei tale un singur loc de unde să ajute.",
+      "subtitle": "Începe gratuit și invită-ți colegii când ești pregătit.",
+      "ctaStart": "Începe gratuit",
+      "ctaMeetAgent": "Cunoaște agentul AI"
+    }
+  },
+  "tickets": {
+    "hero": {
+      "badge": "Tichete",
+      "titlePrefix": "Fiecare predare lasă ",
+      "titleHl": "un tichet.",
+      "subtitle": "Când AI-ul nu poate finaliza o sarcină și nimeni nu este disponibil, Elpino nu ridică din umeri. Completează un tichet cu motivul și un rezumat, îl trimite acolo unde lucrează echipa ta și oferă clientului un cod de referință pe care îl poate menționa.",
+      "ctaStart": "Începe gratuit",
+      "ctaInbox": "Vezi inboxul"
+    },
+    "printed": {
+      "ticketBadge": "Tichet",
+      "filedAt": "Creat la predarea către AI",
+      "printing": "Se printează…",
+      "referenceLabel": "Referință",
+      "referenceNote": "Clientul poate menționa acest cod",
+      "fields": [
+        [
+          "Titlu",
+          "Escaladare suport · Aisha Khan"
+        ],
+        [
+          "Motiv",
+          "Schimbarea țării de facturare necesită o persoană"
+        ],
+        [
+          "Rezumat",
+          "S-a mutat în altă țară și dorește actualizarea țării de facturare din cont."
+        ],
+        [
+          "Client",
+          "Aisha Khan · aisha@example.com"
+        ],
+        [
+          "Conversație",
+          "Conectată, se deschide cu un tap"
+        ],
+        [
+          "Trimis la",
+          "Pagina de probleme"
+        ]
+      ]
+    },
+    "origins": {
+      "eyebrow": "De unde vin tichetele",
+      "titlePrefix": "Trei moduri în care ",
+      "titleHl": "se creează un tichet.",
+      "subtitle": "Nu trebuie niciodată să-ți amintești să notezi unul.",
+      "items": [
+        {
+          "tag": "Manual",
+          "t": "Un coleg îl creează",
+          "d": "Observi ceva ce trebuie urmărit? Transformă conversația într-un tichet chiar tu.",
+          "sample": [
+            "Schimbarea adresei de facturare",
+            "Meera ne-a cerut să actualizăm adresa de facturare pe facturile ei."
+          ]
+        },
+        {
+          "tag": "Creat la predarea către AI",
+          "t": "AI-ul îl creează la predare",
+          "d": "Când Elpino predă o conversație și nimeni nu se alătură la timp, creează un tichet cu motivul și un rezumat.",
+          "sample": [
+            "Escaladare suport · Aisha Khan",
+            "Motiv: schimbarea țării de facturare necesită o persoană."
+          ]
+        },
+        {
+          "tag": "Semnalat de verificarea AI",
+          "t": "AI-ul observă ce rămâne datorat",
+          "d": "După ce o conversație se închide, AI-ul o revizuiește. Dacă echipa ta mai datorează ceva clientului, semnalează un tichet și explică de ce.",
+          "sample": [
+            "Urmărire cerere de rambursare",
+            "Motiv: clientului i s-a spus că se va verifica; nimic nu a fost înregistrat."
+          ]
+        }
+      ]
+    },
+    "anatomy": {
+      "eyebrow": "Anatomia unui tichet",
+      "titlePrefix": "Tot ce are nevoie echipa ta, ",
+      "titleHl": "deja scris.",
+      "subtitle": "Apasă pe o linie pentru a vedea de ce este acolo.",
+      "fieldLabel": "Câmpul {n} din {total}",
+      "fields": [
+        {
+          "k": "Titlu",
+          "v": "Escaladare suport · Aisha Khan",
+          "why": "Numit după client, ca să-l poți identifica dintr-o privire într-o listă lungă."
+        },
+        {
+          "k": "Motiv",
+          "v": "Schimbarea țării de facturare necesită o persoană",
+          "why": "De ce a predat AI-ul conversația, sau de ce a semnalat-o revizuirea sa. Nimeni nu trebuie să ghicească ce nu a funcționat."
+        },
+        {
+          "k": "Rezumat",
+          "v": "S-a mutat în altă țară, dorește actualizarea țării de facturare.",
+          "why": "AI-ul scrie un rezumat scurt al conversației, astfel încât cel care se ocupă de tichet să înceapă informat."
+        },
+        {
+          "k": "Client",
+          "v": "Aisha Khan · aisha@example.com",
+          "why": "Nume și e-mail, dacă le-a oferit, ca să știi cui să răspunzi."
+        },
+        {
+          "k": "Conversație",
+          "v": "Conectată, deschide conversația",
+          "why": "Un tap pentru a reveni la conversația completă, cu fiecare mesaj."
+        },
+        {
+          "k": "Sursă",
+          "v": "Creat la predarea către AI",
+          "why": "Arată dacă tichetul a fost creat de un coleg, de AI la predare sau de revizuirea AI-ului."
+        },
+        {
+          "k": "Trimis la",
+          "v": "Trello, Asana sau pagina de probleme",
+          "why": "Unde a fost trimis tichetul. Fără niciun instrument de proiect conectat, rămâne pe pagina de probleme."
+        },
+        {
+          "k": "Referință",
+          "v": "7F3A9C21",
+          "why": "Un cod scurt pe care clientul îl poate menționa dacă ne contactează din nou."
+        }
+      ]
+    },
+    "scrubber": {
+      "eyebrow": "Ceasul de 90 de secunde",
+      "titlePrefix": "Trage timpul. ",
+      "titleHl": "Vezi ce se întâmplă.",
+      "subtitle": "Dacă cineva se alătură în orice moment, nu este nevoie de tichet. Dacă timpul expiră, aceasta este succesiunea.",
+      "seconds": "secunde",
+      "dragMe": "Trage-mă",
+      "secondsAriaLabel": "Secunde de la alertă",
+      "clock": [
+        {
+          "t": "Clientul spune da unei persoane",
+          "d": "Elpino întreabă mai întâi și continuă doar dacă răspunsul este da."
+        },
+        {
+          "t": "Fiecare coleg primește o alertă de alăturare",
+          "d": "Întreaga echipă este întrebată în același moment."
+        },
+        {
+          "t": "Nimeni nu s-a alăturat: tichet creat",
+          "d": "Titlu, motiv, rezumat și un link către conversație."
+        },
+        {
+          "t": "Clientul a fost notificat prin e-mail, echipa a fost informată",
+          "d": "Clientul primește referința prin e-mail."
+        }
+      ]
+    },
+    "connect": {
+      "eyebrow": "Configurare într-un minut",
+      "titlePrefix": "Conectează-l cu ",
+      "titleHl": "unde lucrezi.",
+      "subtitle": "Opțional. Poți renunța, iar tichetele vor rămâne pe pagina de probleme.",
+      "stepLabel": "Pasul {n}",
+      "steps": [
+        {
+          "t": "Conectează Trello sau Asana",
+          "d": "Adaugă instrumentul tău de proiect din setările spațiului de lucru."
+        },
+        {
+          "t": "Tichetele apar acolo",
+          "d": "Fiecare tichet nou devine un card sau o sarcină, deja scrisă."
+        },
+        {
+          "t": "Rămân urmărite și în Elpino",
+          "d": "Pagina de probleme păstrează lista și te lasă să bifezi elementele."
+        }
+      ]
+    },
+    "reviewScan": {
+      "badge": "Verificare AI",
+      "titlePrefix": "După închiderea conversației, ",
+      "titleHl": "Elpino o recitește.",
+      "subtitle": "Conversațiile se închid politicos, dar promisiunile rămân deschise. Când o conversație se închide, AI-ul o revizuiește, iar dacă echipa ta mai datorează ceva clientului, semnalează un tichet și îți spune de ce.",
+      "bullets": [
+        "Detectează „voi verifica și te contactez”",
+        "Explică de ce a semnalat, ca să poți decide rapid",
+        "Marcat ca semnalat de verificarea AI pe pagina de probleme"
+      ],
+      "closedConvo": "Conversație închisă",
+      "statusFlagged": "Semnalat",
+      "statusReviewing": "Se verifică…",
+      "statusResolved": "Rezolvat",
+      "chat": [
+        [
+          "cust",
+          "Bună, comanda mea a ajuns deteriorată."
+        ],
+        [
+          "agent",
+          "Îmi pare foarte rău! Voi verifica rambursarea și te contactez."
+        ],
+        [
+          "cust",
+          "Perfect, mulțumesc."
+        ],
+        [
+          "agent",
+          "Mai pot ajuta cu altceva?"
+        ],
+        [
+          "cust",
+          "Nu, asta e tot."
+        ]
+      ],
+      "flaggedTicketLabel": "Tichet · Semnalat de verificarea AI",
+      "flaggedTitle": "Urmărire cerere de rambursare · Tom Becker",
+      "flaggedDesc": "Clientului i s-a spus că rambursarea va fi verificată; nimic nu a fost înregistrat după aceea."
+    },
+    "destinations": {
+      "eyebrow": "Unde ajunge",
+      "titlePrefix": "Trimis către instrumentul ",
+      "titleHl": "pe care echipa ta îl folosește deja.",
+      "subtitle": "Conectează Trello sau Asana și tichetele ajung direct acolo. Nu conectezi nimic și rămân în siguranță pe pagina de probleme.",
+      "cardTitle": "Escaladare suport · Aisha Khan",
+      "cardReason": "Motiv: schimbarea țării de facturare necesită o persoană",
+      "fromElpino": "De la Elpino",
+      "items": [
+        {
+          "key": "trello",
+          "label": "Trello",
+          "note": "Devine un card pe tabloul tău Trello.",
+          "cols": [
+            "De făcut",
+            "În lucru",
+            "Finalizat"
+          ]
+        },
+        {
+          "key": "asana",
+          "label": "Asana",
+          "note": "Devine o sarcină în proiectul tău Asana.",
+          "cols": [
+            "Neînceput",
+            "În curs",
+            "Complet"
+          ]
+        },
+        {
+          "key": "issues",
+          "label": "Pagina de probleme",
+          "note": "Nu ai niciun instrument de proiect conectat? Rămâne pe pagina de probleme, fără nicio configurare.",
+          "cols": [
+            "Deschis",
+            "",
+            "Rezolvat"
+          ]
+        }
+      ]
+    },
+    "customerSide": {
+      "badge": "Bonul de tichet",
+      "titlePrefix": "Clienții știu ",
+      "titleHl": "că nu au fost uitați.",
+      "subtitle": "Dacă nimeni nu a putut să se alăture la timp, Elpino îi spune sincer clientului, îi trimite un e-mail ca să nu se pierdă și îi oferă o referință scurtă pe care o poate menționa. Întreaga echipă este notificată despre noul tichet.",
+      "bullets": [
+        "Clientul este informat despre ce urmează",
+        "Primește un e-mail cu referința sa",
+        "Fiecare coleg este notificat despre tichet"
+      ],
+      "inChat": "În conversație",
+      "chatMsgPrefix": "Echipa noastră este ocupată momentan, așa că am creat un tichet. Referința ta este ",
+      "chatMsgSuffix": ". Vei primi un răspuns prin e-mail în 24 de ore.",
+      "inInbox": "În inboxul lor",
+      "emailSubject": "Am primit cererea ta",
+      "emailBodyPrefix": "Tichetul ",
+      "emailBodySuffix": " este la echipa noastră. Răspunde la acest e-mail dacă ai ceva de adăugat.",
+      "teamNotified": "Echipă notificată: tichet nou de la Aisha Khan"
+    },
+    "issuesBoard": {
+      "badge": "Pagina de probleme",
+      "titlePrefix": "O listă. ",
+      "titleHl": "Bifeaz-o.",
+      "subtitle": "Fiecare tichet arată de unde a venit și unde a fost trimis. Verificarea AI îți spune chiar și de ce a semnalat unul. Apasă pe casetă pentru a-l marca rezolvat.",
+      "openWord": "deschis",
+      "resolvedWord": "rezolvat",
+      "panelTitle": "Probleme",
+      "panelSubtitle": "Tichete create din conversații de suport.",
+      "markResolved": "Marchează ca rezolvat",
+      "markUnresolved": "Marchează ca nerezolvat",
+      "rows": [
+        {
+          "t": "Escaladare suport · Aisha Khan",
+          "who": "Creat la predarea către AI",
+          "where": "Netrimis către un instrument de proiect",
+          "done": false
+        },
+        {
+          "t": "Urmărire cerere de rambursare · Tom Becker",
+          "who": "Semnalat de verificarea AI",
+          "where": "Tichet Trello",
+          "reason": "Clientului i s-a spus că rambursarea va fi verificată; nimic nu a fost înregistrat după aceea.",
+          "done": false
+        },
+        {
+          "t": "Schimbarea adresei de facturare · Meera Iyer",
+          "where": "Tichet Asana",
+          "done": false
+        },
+        {
+          "t": "Escaladare suport · Ravi Menon",
+          "who": "Creat la predarea către AI",
+          "where": "Netrimis către un instrument de proiect",
+          "done": true
+        }
+      ]
+    },
+    "lifecycle": {
+      "eyebrow": "Viața unui tichet",
+      "titlePrefix": "De la „pot vorbi cu cineva?” ",
+      "titleHl": "la finalizat.",
+      "stepLabel": "Pasul {n}",
+      "items": [
+        {
+          "t": "Clientul cere o persoană",
+          "d": "AI-ul întreabă mai întâi, apoi alertează echipa."
+        },
+        {
+          "t": "90 de secunde, nimeni nu se alătură",
+          "d": "Toată lumea a avut ocazia să preia conversația."
+        },
+        {
+          "t": "Tichet creat",
+          "d": "Titlu, motiv, rezumat și un link înapoi la conversație."
+        },
+        {
+          "t": "Clientul este notificat prin e-mail",
+          "d": "Cu referința sa, ca nimic să nu pară pierdut."
+        },
+        {
+          "t": "Rezolvat și finalizat",
+          "d": "Echipa ta îl bifează când este finalizat."
+        }
+      ]
+    },
+    "compare": {
+      "eyebrow": "Înainte și după",
+      "titlePrefix": "Nu mai există ",
+      "titleHl": "promisiuni pierdute.",
+      "headerA": "Fără tichete",
+      "headerB": "Cu Elpino",
+      "rows": [
+        [
+          "„Cineva te va contacta”, apoi tăcere",
+          "Un tichet cu o referință pe care clientul o poate menționa"
+        ],
+        [
+          "Echipa copiază manual detaliile într-un alt instrument",
+          "Motivul, rezumatul și linkul conversației ajung deja scrise"
+        ],
+        [
+          "Promisiunile făcute în conversație sunt uitate",
+          "O verificare AI semnalează ce mai datorează echipa ta după închiderea conversației"
+        ],
+        [
+          "Nicio idee dacă se ocupă cineva de asta",
+          "Stare de rezolvare bifabilă și locul unde a fost trimis, într-o singură listă"
+        ]
+      ]
+    },
+    "faq": {
+      "eyebrow": "Întrebări",
+      "titlePrefix": "Bine de ",
+      "titleHl": "știut.",
+      "items": [
+        [
+          "Când creează Elpino un tichet?",
+          "Când predă o conversație și nimeni nu se alătură în 90 de secunde, și când verificarea unei conversații închise găsește ceva ce echipa ta mai datorează. Colegii pot crea unul și manual."
+        ],
+        [
+          "Unde ajung tichetele?",
+          "La Trello sau Asana, dacă ai conectat unul. Dacă nu, rămân pe pagina de probleme, ca nimic să nu se pierdă."
+        ],
+        [
+          "Ce conține un tichet?",
+          "Un titlu, motivul, un rezumat scurt, detaliile clientului și un link înapoi la conversație."
+        ],
+        [
+          "Află clientul?",
+          "Da. Este informat în conversație, primește un e-mail și i se oferă o referință scurtă pe care o poate menționa."
+        ],
+        [
+          "Pot marca un tichet ca rezolvat?",
+          "Da, bifează-l din pagina de probleme."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Nu lăsa nimic să-ți scape.",
+      "subtitle": "Începe gratuit, iar Elpino va scrie tichetele pentru tine.",
+      "ctaStart": "Începe gratuit",
+      "ctaMeetAgent": "Cunoaște agentul AI"
+    }
+  },
+  "knowledgeHub": {
+    "hero": {
+      "badge": "Centrul de Cunoștințe",
+      "titlePrefix": "Întreabă orice. ",
+      "titleHl": "Îți verifică baza de cunoștințe.",
+      "subtitle": "Elpino răspunde doar din cunoștințele pe care i le oferi. Nu ne crede pe cuvânt. Urmărește cum caută în baza ta de cunoștințe în stânga și răspunde clientului în dreapta. Când nu găsește nimic, spune asta.",
+      "privateNote": "Sursele private nu sunt niciodată folosite pentru a răspunde clienților."
+    },
+    "playground": {
+      "yourKnowledge": "Cunoștințele tale",
+      "customer": "Client",
+      "elpinoAi": "Elpino AI",
+      "statusWaiting": "Se așteaptă o întrebare",
+      "statusSearching": "Se caută în cunoștințele tale…",
+      "statusFound": "S-a găsit o potrivire",
+      "statusNoMatch": "Nicio potrivire găsită",
+      "privateBadge": "Privat",
+      "matchBadge": "Potrivire",
+      "offersHuman": "Oferă un om",
+      "sources": [
+        {
+          "name": "Politica de rambursare.pdf",
+          "kind": "Document"
+        },
+        {
+          "name": "Timpi de livrare",
+          "kind": "Pagină scrisă"
+        },
+        {
+          "name": "Ajutor: resetare parolă",
+          "kind": "Pagină web"
+        },
+        {
+          "name": "Ghid de escaladare",
+          "kind": "Notițe interne"
+        }
+      ],
+      "scenes": [
+        {
+          "q": "În cât timp pot cere o rambursare?",
+          "hit": "refund",
+          "a": "Poți solicita o rambursare în termen de 30 de zile de la achiziție."
+        },
+        {
+          "q": "Cum îmi resetez parola?",
+          "hit": "reset",
+          "a": "Alege „Am uitat parola” pe pagina de conectare și urmează linkul trimis prin e-mail."
+        },
+        {
+          "q": "Oferiți reduceri pentru organizații de caritate?",
+          "hit": null,
+          "a": "Nu am această informație. Vrei să te pun în legătură cu echipa noastră?"
+        },
+        {
+          "q": "Cât durează livrarea?",
+          "hit": "ship",
+          "a": "Comenzile ajung de obicei în 3–5 zile lucrătoare."
+        }
+      ]
+    },
+    "crawlWeb": {
+      "eyebrow": "Descoperă",
+      "titlePrefix": "Un singur link introdus. ",
+      "titleHl": "Un site întreg obținut.",
+      "subtitle": "Oferă-i Elpino pagina ta principală și acesta urmează singur linkurile, până la 50 de pagini. Citește mai întâi paginile de ajutor, prețuri și politici și omite imaginile, descărcările și alt zgomot. Paginile construite cu JavaScript sunt redate într-un browser real, astfel încât nimic nu rămâne gol.",
+      "pagesKept": "Pagini reținute",
+      "filesSkipped": "Fișiere omise",
+      "svgAlt": "O parcurgere care se răspândește dintr-o pagină către paginile legate",
+      "startLabel": "START"
+    },
+    "otherWays": {
+      "eyebrow": "Alte moduri de a adăuga",
+      "titlePrefix": "Nu totul se află ",
+      "titleHl": "pe un site web.",
+      "subtitle": "Alte trei moduri de a învăța Elpino, pentru cunoștințele care nu au avut niciodată un URL.",
+      "items": [
+        {
+          "title": "Sitemap",
+          "big": "20",
+          "note": "de pagini importate din sitemap-ul tău dintr-o singură dată"
+        },
+        {
+          "title": "Fișiere",
+          "big": ".pdf",
+          "note": "de asemenea .docx, .txt și .md. Textul este extras pentru tine"
+        },
+        {
+          "title": "Scrie-l",
+          "big": "Aa",
+          "note": "politici și pagini de tipul „cum procedăm”, scrise direct în editor"
+        }
+      ]
+    },
+    "mill": {
+      "eyebrow": "Ce se întâmplă apoi",
+      "titlePrefix": "Fiecare pagină face ",
+      "titleHl": "aceeași călătorie.",
+      "items": [
+        {
+          "t": "Preluată în siguranță",
+          "d": "Ca ElpinoBot, cu protecție împotriva accesării rețelelor private."
+        },
+        {
+          "t": "Curățată",
+          "d": "Meniurile și textul repetitiv scoase, textul util păstrat."
+        },
+        {
+          "t": "Fragmentată și vectorizată",
+          "d": "Împărțită în pasaje și indexată după sens, nu doar după cuvinte cheie."
+        },
+        {
+          "t": "Găsită la nevoie",
+          "d": "Cele mai apropiate pasaje sunt aduse în clipa în care un client întreabă."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Întrebări",
+      "titlePrefix": "Bine de ",
+      "titleHl": "știut.",
+      "items": [
+        [
+          "Ce pot adăuga?",
+          "Pagini web după URL, un sitemap (până la 20 de pagini), o parcurgere de la un singur link (până la 50 de pagini), fișiere PDF, Word, text și Markdown, precum și pagini scrise chiar de tine."
+        ],
+        [
+          "Citește pagini construite cu JavaScript?",
+          "Da. Dacă o pagină are puțin text lizibil, este mai întâi redată într-un browser, iar rezultatul este citit."
+        ],
+        [
+          "Pot păstra conținutul privat?",
+          "Da. Fiecare sursă are un comutator de vizibilitate, astfel încât notițele interne rămân interne."
+        ],
+        [
+          "Pot conecta Notion, Zendesk sau Confluence?",
+          "Încă nu. În prezent adaugi surse prin URL, sitemap, încărcare de fișiere sau prin scrierea paginilor."
+        ],
+        [
+          "Ce se întâmplă dacă răspunsul nu există?",
+          "Elpino spune că nu are acea informație și oferă să pună clientul în legătură cu echipa ta, în loc să ghicească."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Umple-ți raftul real.",
+      "subtitle": "Lipește un link, iar Elpino începe să răspundă din el.",
+      "ctaStart": "Începe gratuit",
+      "ctaMeetAgent": "Cunoaște agentul AI"
+    }
+  },
+  "integrations": {
+    "hero": {
+      "badge": "Integrări",
+      "titlePrefix": "Conectează-te. ",
+      "titleHl": "Treci la nivelul următor.",
+      "subtitle": "Conectează-ți plățile, sistemul de tichete și propriile sisteme și urmărește cum crește ce poate face Elpino. Apasă pe prize pentru a le conecta."
+    },
+    "board": {
+      "pluggedInCount": "{on} / {total} conectate",
+      "pluggedIn": "Conectat",
+      "tapToPlugIn": "Apasă pentru a conecta",
+      "on": "Activ",
+      "off": "Inactiv",
+      "whatCanDo": "Ce poate face Elpino acum",
+      "empty": "Nimic conectat încă. Apasă pe o priză de mai sus."
+    },
+    "conns": [
+      {
+        "name": "Stripe",
+        "blurb": "AI-ul verifică plăți și abonamente reale.",
+        "abilities": [
+          "Caută plăți și abonamente",
+          "Trimite chitanțe și linkuri de plată",
+          "Anulează un abonament la cerere",
+          "Rambursări, doar dacă le activezi"
+        ]
+      },
+      {
+        "name": "Razorpay",
+        "blurb": "Aceleași instrumente de plată, pentru conturi Razorpay.",
+        "abilities": [
+          "Caută plăți și abonamente",
+          "Trimite chitanțe și linkuri de plată",
+          "Anulează un abonament la cerere",
+          "Rambursări, doar dacă le activezi"
+        ]
+      },
+      {
+        "name": "Cashfree",
+        "blurb": "Istoric de plăți și decontări pentru echipa ta.",
+        "abilities": [
+          "Găsește o comandă sau o plată dintr-o conversație",
+          "Vezi starea decontării și a rambursării"
+        ]
+      },
+      {
+        "name": "Paystack",
+        "blurb": "Starea tranzacțiilor și rambursărilor pentru echipa ta.",
+        "abilities": [
+          "Caută o tranzacție dintr-o conversație",
+          "Verifică starea plății și a rambursării"
+        ]
+      },
+      {
+        "name": "Trello",
+        "blurb": "Tichetele ajung ca fișe pe panoul tău.",
+        "abilities": [
+          "Tichetele devin fișe Trello",
+          "Rezumatul și un link către conversație sunt atașate"
+        ]
+      },
+      {
+        "name": "Asana",
+        "blurb": "Tichetele ajung ca sarcini în proiectul tău.",
+        "abilities": [
+          "Tichetele devin sarcini Asana",
+          "Rezumatul și un link către conversație sunt atașate"
+        ]
+      },
+      {
+        "name": "Serverele tale MCP",
+        "blurb": "Orice comunică prin MCP, cu instrumente pe care le aprobi.",
+        "abilities": [
+          "Apelează instrumente pe serverele tale proprii",
+          "Până la 5 servere, câte 15 instrumente activate fiecare",
+          "Sunt vizibile doar instrumentele pe care le aprobi",
+          "Instrumentele care modifică date necesită un client verificat"
+        ]
+      }
+    ],
+    "how": {
+      "eyebrow": "Conectare",
+      "titlePrefix": "Un minut pentru fiecare. ",
+      "titleHl": "Fără ingineri.",
+      "stepLabel": "Pasul {n}",
+      "steps": [
+        {
+          "t": "Alege un instrument",
+          "d": "Deschide Conectare din panoul tău și alege conectorul dorit."
+        },
+        {
+          "t": "Lipește o cheie sau autorizează",
+          "d": "Instrumentele cu cheie API iau cheile tale. Asana folosește o autentificare normală și un ecran de permisiuni."
+        },
+        {
+          "t": "Verificăm mai întâi",
+          "d": "Elpino îți testează cheile la furnizor înainte de a le salva și le stochează criptat."
+        }
+      ]
+    },
+    "families": {
+      "eyebrow": "Catalogul",
+      "titlePrefix": "Trei tipuri de ",
+      "titleHl": "conexiune.",
+      "tabs": {
+        "payments": "Plăți",
+        "tickets": "Tichete",
+        "systems": "Sistemele tale"
+      },
+      "paymentsNote": "Acțiunile de plată ale AI-ului funcționează astăzi cu Stripe și Razorpay. Cashfree și Paystack aduc context de plată echipei tale."
+    },
+    "safe": {
+      "badge": "Sigur din start",
+      "titlePrefix": "Conectat, ",
+      "titleHl": "nu expus.",
+      "items": [
+        {
+          "t": "Cheile rămân criptate",
+          "d": "Datele de acces sunt stocate criptat, iar Elpino le verifică la furnizor înainte de a le salva."
+        },
+        {
+          "t": "Accesul de citire e suficient pentru căutări",
+          "d": "Pentru Stripe, folosește o cheie restricționată cu acces de citire la clienți și plăți."
+        },
+        {
+          "t": "Banii se mișcă doar dacă permiți",
+          "d": "Rambursările sunt dezactivate implicit. Proprietarul spațiului de lucru decide dacă AI-ul le poate emite."
+        },
+        {
+          "t": "Aprobi fiecare instrument MCP",
+          "d": "AI-ul vede doar instrumentele pe care le-ai activat, iar fiecare apel este verificat din nou pe server."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Întrebări",
+      "titlePrefix": "Bine de ",
+      "titleHl": "știut.",
+      "items": [
+        [
+          "Ce instrumente pot conecta?",
+          "Stripe, Razorpay, Cashfree și Paystack pentru plăți, Trello și Asana pentru tichete, și propriile servere MCP pentru orice altceva."
+        ],
+        [
+          "Ce poate face AI-ul cu plățile?",
+          "Cu Stripe sau Razorpay conectate, poate căuta plăți și abonamente, trimite chitanțe și linkuri de plată și anula un abonament la cerere. Rambursările sunt dezactivate, cu excepția cazului în care le activezi."
+        ],
+        [
+          "Trebuie să fiu tehnic?",
+          "Nu pentru plăți sau tichete. Lipești o cheie sau te autentifici în Asana. Serverele MCP necesită ca cineva să construiască unul."
+        ],
+        [
+          "Sunt suportate Shopify, Slack sau HubSpot?",
+          "Nu ca conectori instant, momentan. Dacă sistemul tău are un server MCP, îl poți conecta, și ne poți spune ce ai dori în continuare."
+        ],
+        [
+          "Unde ajung tichetele?",
+          "În Trello sau Asana, dacă sunt conectate. În caz contrar, rămân pe pagina ta de Probleme."
+        ]
+      ]
+    },
+    "closing": {
+      "title": "Îți lipsește ceva de care ai nevoie?",
+      "subtitle": "Spune-ne ce instrument ai dori în continuare, sau conectează-l tu însuți prin MCP.",
+      "ctaStart": "Începe gratuit",
+      "ctaRequest": "Solicită o integrare"
+    }
+  },
+  "securityGuide": {
+    "sticky": {
+      "securityLabel": "Securitate",
+      "reportIssue": "Raportează o problemă"
+    },
+    "hero": {
+      "badge": "Ghid de securitate",
+      "title1": "Construit pentru a-ți ",
+      "title2": "proteja datele.",
+      "subtitle": "Acest ghid trece prin ceea ce este protejat în aplicația web, în gateway și în serviciile de autentificare, workspace și AI — ce garantăm și de ce te poți baza pe asta, fără o descriere pas cu pas a mecanismelor interne.",
+      "ctaBlueprint": "Vezi schema",
+      "ctaChapters": "Citește capitolele",
+      "ctaTrust": "Centrul de încredere",
+      "register": {
+        "label": "Registrul schemei",
+        "chapters": "Capitole",
+        "controlsDescribed": "Controale descrise",
+        "componentsCovered": "Componente acoperite",
+        "componentsValue": "6",
+        "reviewedAgainst": "Verificat în raport cu",
+        "reviewedValue": "produsul"
+      }
+    },
+    "blueprint": {
+      "fig": "Fig. 00 · Dintr-o privire",
+      "title": "Ce se întâmplă cu o cerere",
+      "subtitle": "Fiecare săgeată este criptată sau autentificată. Indică orice element pentru a vedea ce înseamnă asta în practică.",
+      "readChapter": "Citește capitolul"
+    },
+    "nodes": {
+      "widget": {
+        "label": "Vizitator",
+        "sub": "Widget de chat",
+        "guards": "Vizitatorii neautentificați rămân neautentificați. Vizitatorii autentificați își dovedesc identitatea printr-o credențială semnată sau un cod trimis pe e-mail, păstrat doar în memoria proprie a widgetului."
+      },
+      "team": {
+        "label": "Echipa ta",
+        "sub": "Panou de control",
+        "guards": "Parolele nu sunt niciodată stocate într-o formă care poate fi citită, autentificarea prin Google este verificată pe serverul nostru, iar tu poți încheia orice sesiune de la distanță."
+      },
+      "elpino": {
+        "label": "Elpino",
+        "sub": "Verifică, protejează, răspunde",
+        "guards": "Fiecare cerere este verificată înainte de a fi executată, detaliile private sunt înlocuite înainte ca un model AI să le vadă, iar AI-ul funcționează în limite pe care nu le poate depăși prin nicio formulare."
+      },
+      "google": {
+        "label": "Google",
+        "sub": "Autentificare",
+        "guards": "Este considerat de încredere doar după ce serverul nostru îl verifică independent."
+      },
+      "pay": {
+        "label": "Plăți",
+        "sub": "Razorpay · Stripe",
+        "guards": "Notificările de plată sunt acceptate doar cu o semnătură verificată și nu pot fi niciodată retransmise pentru a reseta utilizarea ta."
+      },
+      "models": {
+        "label": "Furnizori de AI",
+        "sub": "Modele",
+        "guards": "Aceștia văd doar substituenți siguri în locul detaliilor reale, niciodată secrete, iar datele tale nu sunt folosite pentru a instrui modele generale."
+      }
+    },
+    "chaptersSection": {
+      "label": "Capitolele",
+      "title1": "Douăsprezece capitole. ",
+      "title2": "Nimic omis.",
+      "subtitle": "Fiecare control indică partea din sistem în care se află și garanția pe care o oferă — nu mecanismul exact din spatele lui.",
+      "contents": "Cuprins"
+    },
+    "chapters": {
+      "accounts": {
+        "title": "Conturi și sesiuni",
+        "kicker": "Cine este în echipa ta și cum știm că este chiar acea persoană.",
+        "intro": "Înregistrarea, autentificarea și fiecare sesiune de după. Parolele nu sunt niciodată stocate într-o formă care poate fi citită, codurile de verificare expiră rapid, iar o sesiune poate fi încheiată de la server în orice moment.",
+        "stats": [
+          "Parole cu hash, niciodată stocate",
+          "Codurile expiră rapid",
+          "Sesiuni pe care le poți revoca"
+        ],
+        "controls": {
+          "1.1": {
+            "title": "Parolele sunt criptate prin hash, niciodată stocate",
+            "text": "Parola ta nu este ținută nicăieri într-o formă pe care cineva ar putea să o citească — nici măcar noi. Verificarea ei nu poate dezvălui cât de apropiată a fost o încercare greșită."
+          },
+          "1.2": {
+            "title": "Coduri de verificare pe e-mail",
+            "text": "Conturile noi confirmă adresa cu un cod valabil pentru scurt timp. Se stochează doar un hash securizat al acestuia, expiră rapid, iar înainte de a avea nevoie de unul nou sunt permise doar câteva încercări greșite."
+          },
+          "1.3": {
+            "title": "Autentificarea prin Google este verificată pe server",
+            "text": "Fereastra pop-up de autentificare Google se rulează în browserul tău, dar serverul nostru o verifică independent înainte de a se baza pe ea și te conectează mereu la același cont, în funcție de e-mailul tău verificat — niciodată la un al doilea cont, neasociat."
+          },
+          "1.4": {
+            "title": "Token-uri de sesiune semnate",
+            "text": "Sesiunea ta este un token semnat pe care serverul nostru îl poate verifica întotdeauna singur — nu poate fi falsificat, modificat sau reluat ca ceva ce nu este."
+          },
+          "1.5": {
+            "title": "Un cookie de sesiune blocat",
+            "text": "Cookie-ul sesiunii tale nu poate fi citit de scripturile paginii și circulă întotdeauna doar printr-o conexiune securizată."
+          },
+          "1.6": {
+            "title": "Deconectare de pe toate dispozitivele",
+            "text": "Deconectarea invalidează rapid toate sesiunile tale. Dacă nu putem confirma că o sesiune este încă validă, este refuzată, nu lăsată să treacă."
+          },
+          "1.7": {
+            "title": "Redirecționări sigure",
+            "text": "După autentificare, ești trimis mereu doar către o pagină de pe site-ul nostru — niciodată altundeva, indiferent de cum este construit link-ul."
+          },
+          "1.8": {
+            "title": "Invitații de echipă",
+            "text": "Link-urile de invitație sunt imposibil de ghicit și expiră automat, iar proprietarul decide dacă membrii pot invita și alte persoane."
+          }
+        }
+      },
+      "front-door": {
+        "title": "Ușa din față",
+        "kicker": "Ce face site-ul înainte ca o cerere să ajungă mai departe.",
+        "intro": "Aplicația web este primul lucru cu care interacționează browserul. Aceasta întărește browserul, limitează abuzurile și validează datele înainte ca ele să fie transmise mai departe.",
+        "stats": [
+          "Fără încadrare în iframe",
+          "Abuz limitat",
+          "Blocare implicită la eșec"
+        ],
+        "controls": {
+          "2.1": {
+            "title": "Anteturi de întărire a browserului",
+            "text": "Fiecare pagină, cu excepția widgetului de chat, este protejată împotriva clickjacking-ului, protejată împotriva detectării incorecte a tipului de conținut și are permisiuni sensibile ale dispozitivului, precum camera și locația, dezactivate implicit. Widgetul este singura excepție deliberată, deoarece trebuie să funcționeze într-un iframe pe site-ul tău."
+          },
+          "2.2": {
+            "title": "Limite de abuz comune",
+            "text": "Formularele publice sunt protejate de limite de frecvență comune tuturor serverelor pe care le operăm, astfel încât abuzul dintr-un loc nu poate trece pur și simplu atacând altul."
+          },
+          "2.3": {
+            "title": "Se blochează la eșec",
+            "text": "Dacă limitatorul de abuz nu poate fi contactat, cererea este refuzată, nu lăsată să treacă."
+          },
+          "2.4": {
+            "title": "Date validate și cu dimensiune limitată",
+            "text": "Fiecare formular este verificat și limitat ca dimensiune pe server înainte de a fi procesat — niciodată doar pe încrederea că browserul l-a validat deja."
+          }
+        }
+      },
+      "gateway": {
+        "title": "Gateway-ul",
+        "kicker": "O singură ușă către backend, închisă implicit.",
+        "intro": "Fiecare apel către backend trece printr-un singur gateway. Regula este simplă: dacă o rută nu este marcată explicit ca publică, trebuie să dovedească că are dreptul.",
+        "stats": [
+          "Închis implicit",
+          "Listă publică explicită",
+          "Conexiuni live verificate"
+        ],
+        "controls": {
+          "3.1": {
+            "title": "Închis implicit",
+            "text": "Fiecare rută necesită dovada că este un apel intern autorizat, cu excepția cazului în care este marcată explicit ca publică. Dacă această verificare nu este configurată, gateway-ul refuză totul, în loc să permită accesul din eroare."
+          },
+          "3.2": {
+            "title": "O listă publică scurtă și explicită",
+            "text": "Sunt publice doar acele apeluri care într-adevăr nu pot deține credențiale interne: widgetul de chat, analiza paginii, webhook-ul de plăți și link-urile sigure de utilizare unică. Fiecare este marcat deliberat, rută cu rută."
+          },
+          "3.3": {
+            "title": "Doar origini explicite",
+            "text": "API-ul răspunde browserelor doar dintr-o listă cunoscută și aprobată de origini — niciodată de oriunde întâmplă să ceară."
+          },
+          "3.4": {
+            "title": "Conexiuni live verificate",
+            "text": "Conexiunile de vizualizare live necesită o credențială verificată, limitată la workspace și cu o expirare stabilită. Orice altceva este respins imediat."
+          },
+          "3.5": {
+            "title": "Trimiterile interne sunt și ele protejate",
+            "text": "Endpoint-urile pe care serviciile le folosesc pentru a trimite notificări live către panouri necesită aceeași dovadă internă, astfel încât nimeni din exterior nu poate declanșa o alertă pe ecranul unui coleg."
+          }
+        }
+      },
+      "visitors": {
+        "title": "Vizitatori și identitate",
+        "kicker": "Diferența dintre un client autentificat și cineva care a scris pur și simplu un e-mail.",
+        "intro": "Un nume, un e-mail sau un număr de comandă nu reprezintă dovadă de identitate. Asistența pentru cont se deblochează doar după o dovadă reală de identitate, iar acea dovadă expiră rapid.",
+        "stats": [
+          "Dovadă reală necesară",
+          "Sesiunile expiră automat",
+          "Verificare cu timp limitat"
+        ],
+        "controls": {
+          "4.1": {
+            "title": "Vizitatorii neautentificați rămân neautentificați",
+            "text": "Un nume, e-mail, telefon sau referință de plată introdusă nu contează niciodată ca dovadă de identitate. Vizitatorii neautentificați pot conversa și pot lăsa date de contact, dar asta nu deblochează niciun instrument privat și nu se combină niciodată cu istoricul altcuiva."
+          },
+          "4.2": {
+            "title": "Identitate semnată de pe propriul tău site",
+            "text": "Pentru clienții autentificați, propriul tău server confirmă identitatea lor printr-o credențială semnată, valabilă pentru scurt timp, pe care doar tu și Elpino o puteți crea împreună. Datele de contact contează ca verificate doar atunci când sistemul tău spune asta."
+          },
+          "4.3": {
+            "title": "Un schimb, o sesiune",
+            "text": "Fiecare dovadă de identitate este folosită o singură dată, apoi este schimbată pentru o sesiune nouă, proprie — nimic reutilizabil nu rămâne stocat, iar ceea ce este păstrat nu poate fi transformat înapoi în valoarea originală."
+          },
+          "4.4": {
+            "title": "Sesiuni de scurtă durată",
+            "text": "O sesiune expiră automat după o perioadă de inactivitate, sau la un timp fix de la autentificare — orice apare mai întâi. Este păstrată doar în memoria proprie a widgetului, niciodată în stocarea browserului sau într-un URL."
+          },
+          "4.5": {
+            "title": "Rotație și deconectare",
+            "text": "Rotirea credențialei tale de identitate invalidează imediat orice sesiune care a folosit-o pe cea veche. Deconectarea revocă sesiunea pe serverul nostru, iar sesiunile vechi sunt eliminate automat."
+          },
+          "4.6": {
+            "title": "Coduri pe e-mail pentru vizitatori",
+            "text": "Un vizitator se poate verifica și prin e-mail cu un cod scurt, de utilizare unică, limitat ca frecvență pentru a preveni abuzul. Verificarea deblochează doar acea conversație și doar pentru un timp limitat."
+          },
+          "4.7": {
+            "title": "Fiecare cerere este reverificată",
+            "text": "Fiecare citire și scriere autentificată reverifică independent cine cere, cărui workspace îi este limitat și dacă accesul respectiv este încă valid — nimic nu este considerat de încredere doar pentru că a fost valid cu puțin timp înainte."
+          }
+        }
+      },
+      "ai": {
+        "title": "Lesa AI-ului",
+        "kicker": "Ce poate și ce nu poate face AI-ul, impus de backend, nu prin simpla rugăminte.",
+        "intro": "Modelul propune; backend-ul decide. Instrumentele, identitatea, limitele și banii se află toate în afara modelului, unde un mesaj ingenios nu le poate depăși prin formulare.",
+        "stats": [
+          "Muncă limitată",
+          "Instrumente controlate de backend",
+          "Verificare independentă"
+        ],
+        "controls": {
+          "5.1": {
+            "title": "Un răspuns, un proprietar",
+            "text": "Înainte ca un răspuns AI să fie salvat, sistemul confirmă independent că conversația este încă deținută de AI și că întrebarea la care se răspunde este încă cea mai recentă. AI-ul nu poate vorbi peste echipa ta și nu poate răspunde la ceva care s-a schimbat deja."
+          },
+          "5.2": {
+            "title": "Muncă limitată",
+            "text": "Fiecare tură a AI-ului are un plafon strict pentru cât poate face. O execuție blocată sau într-o buclă este întreruptă automat, nu este lăsată niciodată să continue."
+          },
+          "5.3": {
+            "title": "Backend-ul alege instrumentele",
+            "text": "Ce instrumente poate folosi AI-ul este decis integral de configurația propriului tău workspace și de verificarea clientului — modelul nu își poate acorda singur un instrument, nu poate declara date publice și nu poate ajunge în alt workspace."
+          },
+          "5.4": {
+            "title": "Instrumentele de cont necesită un client verificat",
+            "text": "Căutările de plăți și sistemele conectate devin disponibile doar după ce clientul își dovedește identitatea și acționează mereu pe baza identității deja înregistrate — niciodată pe baza a ceea ce i se spune modelului."
+          },
+          "5.5": {
+            "title": "Mesajele sunt date, nu instrucțiuni",
+            "text": "Mesajele clienților, documentele și rezultatele instrumentelor ajung la model marcate clar ca informații nesigure. Instrucțiunile ascunse în ele nu sunt urmate."
+          },
+          "5.6": {
+            "title": "O a doua opinie",
+            "text": "O verificare separată și independentă analizează fiecare ciornă de răspuns în raport cu dovezile pe care AI-ul le-a adunat efectiv. O afirmație nesusținută este trimisă înapoi pentru rescriere, iar cea care încă nu trece este predată unei persoane."
+          },
+          "5.7": {
+            "title": "Mișcările de bani trec prin blocaje",
+            "text": "Rambursările făcute de AI sunt dezactivate până când un proprietar de workspace le activează, și chiar și atunci sunt limitate și plafonate automat. O rambursare reluată nu poate fi emisă niciodată de două ori, iar anularea unui abonament nu îți retrage niciodată timpul deja plătit."
+          },
+          "5.8": {
+            "title": "O pistă de audit pentru fiecare execuție",
+            "text": "Fiecare execuție a AI-ului păstrează o înregistrare a ceea ce a făcut și a ceea ce a folosit pentru a face asta. Orice implică bani este de asemenea înregistrat ca o notă pe care echipa ta o poate vedea."
+          }
+        }
+      },
+      "private-data": {
+        "title": "Date private",
+        "kicker": "Ce vede de fapt modelul.",
+        "intro": "Înainte ca o cerere să ajungă la un model AI, detaliile de identificare sunt înlocuite cu substituenți siguri. Încearcă mai jos cu propriul tău text.",
+        "stats": [
+          "Detaliile sunt înlocuite mai întâi",
+          "Secretele sunt eliminate complet",
+          "Aceleași reguli, pentru fiecare furnizor"
+        ],
+        "controls": {
+          "6.1": {
+            "title": "Detaliile reale nu ajung niciodată la model",
+            "text": "Nume, e-mailuri, numere de telefon, adrese și detalii de comandă sau plată nu sunt niciodată trimise modelului AI așa cum sunt. Le înlocuim mai întâi cu substituenți siguri și restaurăm valoarea reală abia după aceea, pe propriile noastre servere — niciodată în nimic din ce vede modelul."
+          },
+          "6.2": {
+            "title": "Secretele sunt eliminate, nu doar ascunse",
+            "text": "Parolele, cheile API, token-urile și codurile de utilizare unică sunt eliminate complet înainte ca ceva să ajungă la un model — nu deghizate, pur și simplu dispărute."
+          },
+          "6.3": {
+            "title": "Link-urile sensibile sunt curățate",
+            "text": "Link-urile care conțin token-uri de acces sau alți parametri sensibili sunt curățate înainte ca un model să le citească vreodată."
+          },
+          "6.4": {
+            "title": "Fapte despre plată, nu evidențe de plată",
+            "text": "Instrumentele de plată returnează doar rezumate sigure — status și date — niciodată detalii brute despre card sau cont, iar motivele de eșec sunt simplificate, nu transmise ca text liber."
+          },
+          "6.5": {
+            "title": "Aceleași reguli pentru fiecare model",
+            "text": "Aceeași protecție funcționează indiferent de furnizorul de AI care răspunde, inclusiv atunci când trecem la un altul de rezervă. Conversațiile și documentele tale nu sunt niciodată folosite pentru a instrui modele generale."
+          }
+        }
+      },
+      "integrations": {
+        "title": "Integrări și cereri de ieșire",
+        "kicker": "Când Elpino trebuie să contacteze un URL pe care ni l-ai dat.",
+        "intro": "Crawlarea site-ului tău, citirea unei pagini sau apelarea unui sistem conectat înseamnă, toate, preluarea unui URL introdus de o persoană. Fiecare astfel de cerere este blocată astfel încât să nu poată fi folosită împotriva rețelei noastre — sau a ta.",
+        "stats": [
+          "Criptat în repaus",
+          "Nu poate ajunge la rețele private",
+          "Limitat și cu durată stabilită"
+        ],
+        "controls": {
+          "7.1": {
+            "title": "Credențialele sunt criptate în repaus",
+            "text": "Orice cheie sau token pe care îl conectezi — Stripe, Razorpay, Trello și altele asemenea — este criptat înainte de a fi stocat. O simplă copie a bazei de date nu le poate recupera."
+          },
+          "7.2": {
+            "title": "Cererile de ieșire nu pot fi direcționate spre interior",
+            "text": "Când preluăm un URL în numele tău — crawlând site-ul tău, apelând un sistem conectat — ne asigurăm că nu poate fi redirecționat către o rețea privată sau infrastructură internă, inclusiv a noastră."
+          },
+          "7.3": {
+            "title": "Redirecționările sunt verificate la fiecare pas",
+            "text": "Urmărim redirecționările cu atenție, verificând fiecare etapă, în loc să ne bazăm pe destinația finală, și mereu doar prin conexiuni standard și securizate."
+          },
+          "7.4": {
+            "title": "Sistemele conectate sunt limitate",
+            "text": "Conexiunile către propriile tale instrumente sunt limitate ca dimensiune și timp, astfel încât nu pot fi folosite pentru a extrage date nelimitate sau a rămâne blocate la nesfârșit."
+          },
+          "7.5": {
+            "title": "Administratorii aprobă fiecare instrument",
+            "text": "Instrumentele conectate sunt dezactivate până când un administrator le aprobă. Un instrument care poate modifica date este marcat separat și necesită în continuare un client verificat, chiar și atunci când serverul în sine este public."
+          },
+          "7.6": {
+            "title": "Deconectarea înseamnă ștergerea completă",
+            "text": "Când deconectezi o integrare, token-urile și credențialele stocate sunt șterse imediat."
+          }
+        }
+      },
+      "secure-links": {
+        "title": "Transferuri sigure",
+        "kicker": "Când un client trebuie să trimită ceva sensibil.",
+        "intro": "Nu introduce niciodată o cheie într-un chat. Un coleg poate să o ceară printr-un link de utilizare unică, iar chatul păstrează doar link-ul.",
+        "stats": [
+          "Link imposibil de ghicit",
+          "Expiră automat",
+          "Criptat separat"
+        ],
+        "controls": {
+          "8.1": {
+            "title": "Chatul nu deține niciodată secretul",
+            "text": "Notificarea din conversație indică ce a fost solicitat și include un link — niciodată valoarea în sine."
+          },
+          "8.2": {
+            "title": "Un link imposibil de ghicit și cu valabilitate scurtă",
+            "text": "Link-ul în sine reprezintă întreaga dovadă de autorizare a clientului, deci este făcut imposibil de ghicit și expiră automat înainte de a putea deveni un risc permanent."
+          },
+          "8.3": {
+            "title": "Criptat cu propria cheie",
+            "text": "Tot ceea ce este trimis este securizat folosind o cheie păstrată complet separat de cea care protejează celelalte credențiale ale tale, astfel încât fiecare poate fi rotită — sau, în cel mai rău caz, expusă — fără a afecta cealaltă."
+          },
+          "8.4": {
+            "title": "Limitat și șters periodic",
+            "text": "Trimiterile sunt limitate ca dimensiune, iar tot ce a expirat este șters automat și permanent conform unui program regulat, lăsând doar o înregistrare că s-a întâmplat ceva — niciodată ce anume."
+          }
+        }
+      },
+      "money": {
+        "title": "Bani și facturare",
+        "kicker": "Plăți, reînnoiri și limitele legate de acestea.",
+        "intro": "Orice mișcare de bani este verificată de două ori: o dată că mesajul provine cu adevărat de la furnizorul de plăți, și o dată că nu poate fi aplicat de două ori.",
+        "stats": [
+          "Doar semnături verificate",
+          "Sigur la reluare",
+          "Nu poate factura de două ori"
+        ],
+        "controls": {
+          "9.1": {
+            "title": "Webhook-uri și checkout-uri semnate",
+            "text": "Notificările de plată sunt acceptate doar cu o semnătură validă și verificată din partea furnizorului — orice altceva, inclusiv o încercare aproape corectă, este respins direct."
+          },
+          "9.2": {
+            "title": "Reluările nu pot reseta utilizarea",
+            "text": "O notificare de plată care ajunge de mai multe ori — retransmisă sau pur și simplu livrată de două ori — nu poate niciodată să readucă la zero utilizarea deja consumată și nici să acorde din nou credit."
+          },
+          "9.3": {
+            "title": "Reîncărcarea automată nu poate factura de două ori",
+            "text": "Verificarea faptului că o reîncărcare se află în limita permisă și rezervarea ei efectivă au loc ca un singur pas atomic, iar soldul tău este creditat abia după ce o plată este confirmată și capturată."
+          },
+          "9.4": {
+            "title": "Fiecare mișcare de bani este înregistrată",
+            "text": "Fiecare eveniment de plată de la furnizor este scris într-o pistă de audit, iar orice acțiune de plată efectuată de AI primește propria sa înregistrare separată."
+          },
+          "9.5": {
+            "title": "Limitele planului sunt aplicate pe server",
+            "text": "Funcțiile condiționate de plan sunt verificate în backend, nu doar ascunse în interfață, iar limitele de locuri sunt calculate din calitatea reală de membru — nu din ceea ce declară browserul."
+          }
+        }
+      },
+      "lifecycle": {
+        "title": "Ciclul de viață al datelor",
+        "kicker": "Unde locuiesc datele, cât timp și cum dispar.",
+        "intro": "Datele tale sunt limitate la workspace-ul tău, expiră atunci când trebuie și pot fi șterse de tine.",
+        "stats": [
+          "Limitat la workspace",
+          "Curățat automat",
+          "Îl poți șterge"
+        ],
+        "controls": {
+          "10.1": {
+            "title": "Limitat la workspace-ul tău",
+            "text": "Conversațiile, cunoștințele, clienții și setările apartin toate unui workspace, și fiecare căutare este limitată la acesta — nimic nu trece dincolo din greșeală."
+          },
+          "10.2": {
+            "title": "Ce este doar pentru echipă rămâne doar pentru echipă",
+            "text": "Notele marcate ca fiind doar pentru echipă sunt filtrate înainte ca o conversație să fie afișată în widgetul vizitatorului."
+          },
+          "10.3": {
+            "title": "Lucrurile de scurtă durată expiră",
+            "text": "Codurile de verificare, credențialele de sesiune și conținutul link-urilor sigure sunt toate expirate și șterse automat — nimic de scurtă durată nu este păstrat pe termen nelimitat."
+          },
+          "10.4": {
+            "title": "Șterge-ți workspace-ul",
+            "text": "Ștergerea unui workspace anulează imediat abonamentul acestuia și elimină înregistrările sale, cu un termen limită ferm stabilit în politica de confidențialitate pentru eliminarea completă."
+          },
+          "10.5": {
+            "title": "Ieși din cont sau șterge-l",
+            "text": "Oamenii pot ieși dintr-un workspace, iar un cont poate fi șters complet din Setări."
+          }
+        }
+      },
+      "infrastructure": {
+        "title": "Infrastructură",
+        "kicker": "Cum sunt operate propriu-zis serviciile.",
+        "intro": "Igienă simplă și fără efecte speciale, care împiedică un serviciu intern să devină public.",
+        "stats": [
+          "Inaccesibil public",
+          "Amprentă minimă",
+          "Monitorizat"
+        ],
+        "controls": {
+          "11.1": {
+            "title": "Serviciile interne nu sunt accesibile public",
+            "text": "Serviciile noastre backend și baza de date nu sunt expuse deloc pe internetul public — doar un singur punct de acces, întărit, este."
+          },
+          "11.2": {
+            "title": "Build-uri de producție minimale",
+            "text": "Ceea ce rulează efectiv în producție nu conține nimic în plus — niciun instrument de dezvoltare, nicio dependență neutilizată."
+          },
+          "11.3": {
+            "title": "Limite, verificări de sănătate și rotație a jurnalelor",
+            "text": "Fiecare serviciu rulează cu limite de resurse, verificări de sănătate automate și o politică de restart, iar jurnalele sunt rotite astfel încât să nu poată crește nelimitat."
+          },
+          "11.4": {
+            "title": "Secretele rămân în afara codului sursă",
+            "text": "Cheile și secretele nu sunt niciodată incluse în codul nostru sursă — sunt furnizate fiecărui serviciu separat, iar fișierele sensibile cu credențiale sunt montate doar în citire."
+          },
+          "11.5": {
+            "title": "Implementări repetabile",
+            "text": "Fiecare implementare trece prin aceleași verificări automate, astfel încât o lansare nu este niciodată un proces manual, unic."
+          }
+        }
+      },
+      "verification": {
+        "title": "Cum ne verificăm propria muncă",
+        "kicker": "Testele care încearcă să încalce regulile de mai sus.",
+        "intro": "Afirmațiile privind securitatea valorează doar cât pot demonstra testele. Acestea sunt acoperite de teste automate în propriul nostru cod.",
+        "stats": [
+          "Teste de credențiale falsificate",
+          "Teste de reluare",
+          "Teste de izolare"
+        ],
+        "controls": {
+          "12.1": {
+            "title": "Regresii de identitate",
+            "text": "Testele automate acoperă credențiale falsificate, sesiuni expirate și reluate, deconectare, rotația credențialelor și faptul că un workspace nu poate vedea niciodată datele altuia."
+          },
+          "12.2": {
+            "title": "Teste ale cererilor de ieșire",
+            "text": "Verificările care împiedică cererile de ieșire să ajungă la rețelele interne au propriile lor teste dedicate."
+          },
+          "12.3": {
+            "title": "Teste ale filtrului de confidențialitate",
+            "text": "Sistemul care înlocuiește detaliile private înainte ca acestea să ajungă la un model, precum și regulile privind faptele de plată care limitează ce poate fi afișat, sunt ambele testate direct."
+          },
+          "12.4": {
+            "title": "Teste de corectitudine a facturării",
+            "text": "Reluările reînnoirilor și verificarea semnăturilor sunt acoperite de teste, astfel încât o corecție de facturare nu poate reactiva pe tăcute o breșă care fusese deja închisă."
+          }
+        }
+      }
+    },
+    "demo": {
+      "customerLabel": "Ce scrie clientul",
+      "resetSample": "Resetează exemplul",
+      "modelLabel": "Ce citește modelul",
+      "inputAriaLabel": "Mesaj de filtrat",
+      "caption": "Doar o simulare, care rulează în browserul tău: nimic din ce scrii aici nu este trimis nicăieri. Filtrul real rulează pe serverele noastre, iar corespondența înapoi la detaliile reale nu ajunge niciodată într-un prompt."
+    },
+    "about": {
+      "label": "Despre acest ghid",
+      "textBefore": "Aceasta este o descriere a modului în care este construită platforma, nu o certificare. Cuprinde controalele care există în produs în prezent și se va schimba pe măsură ce produsul se schimbă. Dacă ai nevoie de un răspuns la un chestionar de securitate sau de semnarea unui acord de procesare a datelor, trimite un e-mail la ",
+      "textAfter": "."
+    },
+    "report": {
+      "label": "Raportează o vulnerabilitate",
+      "stamp": "Ai găsit ceva?",
+      "title": "Crezi că ai găsit un punct vulnerabil? Vrem să fim primii care aflăm.",
+      "subtitle": "Trimite detaliile și modul de reproducere. O persoană din echipă citește fiecare raport.",
+      "privacy": "Politica de confidențialitate",
+      "terms": "Termeni",
+      "securityPolicy": "Politica de securitate"
+    }
+  },
+  "founders": {
+    "stream": {
+      "incomingLive": "Intră, în timp real",
+      "onDuty": "Elpino este de gardă",
+      "needsYou": "Are nevoie de tine",
+      "handled": "Rezolvat",
+      "askedFirst": "{why}. Elpino a întrebat mai întâi, apoi te-a alertat.",
+      "handledWithoutYou": "Rezolvat fără tine",
+      "actuallyNeededYou": "A avut nevoie reală de tine",
+      "items": [
+        {
+          "q": "Cum îmi export datele?"
+        },
+        {
+          "q": "De ce mi-a fost refuzat cardul?"
+        },
+        {
+          "q": "Oferiți o reducere pentru startup-uri?"
+        },
+        {
+          "q": "Putem obține un contract personalizat?",
+          "why": "A cerut să vorbească cu o persoană"
+        },
+        {
+          "q": "Unde este factura mea din martie?"
+        },
+        {
+          "q": "Cum îmi resetez parola?"
+        },
+        {
+          "q": "Pot vorbi cu fondatorul?",
+          "why": "A cerut să vorbească cu o persoană"
+        },
+        {
+          "q": "Funcționează cu Shopify?"
+        }
+      ]
+    },
+    "hero": {
+      "badge": "Pentru fondatori",
+      "titlePrefix": "Lansează produsul. ",
+      "titleHl": "Nu răspunsuri de suport.",
+      "subtitle": "Ai pornit o companie ca să construiești ceva, nu ca să răspunzi de patruzeci de ori pe săptămână la „cum îmi resetez parola?”. Elpino se ocupă de întrebările repetitive și te implică doar când e nevoie cu adevărat de un fondator.",
+      "ctaStart": "Începe gratuit",
+      "ctaPricing": "Vezi prețurile",
+      "freeNote": "Plan gratuit: 100 de mesaje AI pe lună. Fără card."
+    },
+    "calculator": {
+      "eyebrow": "Fă calculul",
+      "titlePrefix": "Recuperează-ți ",
+      "titleHl": "după-amiezile.",
+      "subtitle": "Introduce-ți propriile cifre. Procentul rezolvat de AI e o estimare a ta, nu o promisiune, și depinde de ce ai în baza de cunoștințe.",
+      "sliderQuestions": "Întrebări de la clienți pe zi",
+      "sliderMinutes": "Minute pentru a răspunde la fiecare",
+      "unitMin": "min",
+      "sliderShare": "Procentul pe care estimezi că AI îl rezolvă",
+      "yourDay": "Ziua ta de 8 ore",
+      "today": "Astăzi",
+      "withElpinoAt": "Cu Elpino la {pct}%",
+      "backEachWeek": "Recuperate în fiecare săptămână",
+      "chatsUntouched": "Conversații pe zi, neatinse",
+      "volumeNote": "La acest volum, doar suportul înseamnă mai mult decât o zi întreagă.",
+      "supportLabel": "{h}h de suport",
+      "buildingLabel": "{h}h de construit"
+    },
+    "setup": {
+      "eyebrow": "Configurare",
+      "titlePrefix": "Funcțional înainte să ți se ",
+      "titleHl": "răcească cafeaua.",
+      "subtitle": "Fără ingineri, fără perioadă de instruire. Patru pași, iar ultimul este opțional.",
+      "stepLabel": "Pasul {n}",
+      "steps": [
+        {
+          "t": "Lipește site-ul tău",
+          "d": "Elpino îți parcurge paginile, inclusiv cele generate cu JavaScript, și îți învață produsul.",
+          "meter": "Citește site-ul tău"
+        },
+        {
+          "t": "Adaugă restul",
+          "d": "Încarcă documente sau scrie politicile care există doar în mintea ta.",
+          "meter": "Adaugă cunoștințe"
+        },
+        {
+          "t": "Adaugă widgetul",
+          "d": "Un fragment de cod și chatul este activ pe site-ul tău.",
+          "meter": "Instalează widgetul"
+        },
+        {
+          "t": "Conectează plățile (opțional)",
+          "d": "Stripe sau Razorpay, ca să poată verifica facturarea pentru tine.",
+          "meter": "Se conectează"
+        }
+      ]
+    },
+    "reaches": {
+      "badge": "Filtrul",
+      "titlePrefix": "Doar ce e cu adevărat ",
+      "titleHl": "important",
+      "titleSuffix": " ajunge la tine.",
+      "subtitle": "Tu decizi ce poate face AI. Restul e o regulă clară: întreabă mai întâi, alertează împreună și nu lasă niciodată clientul fără răspuns.",
+      "rules": [
+        {
+          "t": "Răspunsuri din documentele tale",
+          "d": "Rezolvat. Nu vezi niciodată."
+        },
+        {
+          "t": "Verificări de plăți și cont",
+          "d": "Rezolvat cu instrumentele pe care le-ai activat."
+        },
+        {
+          "t": "„Pot vorbi cu cineva?”",
+          "d": "Întreabă mai întâi clientul, apoi te alertează pe tine și echipa ta."
+        },
+        {
+          "t": "Ești ocupat cu altceva?",
+          "d": "După 90 de secunde, se deschide un tichet și clientul este informat."
+        }
+      ]
+    },
+    "money": {
+      "eyebrow": "Întrebări despre facturare",
+      "titlePrefix": "Verifică plata reală. ",
+      "titleHl": "Tu rămâi cu cheile.",
+      "subtitle": "Conectează Stripe sau Razorpay, iar AI poate verifica plăți și abonamente, trimite chitanțe și linkuri de plată și anula un abonament la cerere. Rambursările rămân dezactivate până activezi tu opțiunea.",
+      "chatAsk": "Pot să fiu rambursat pentru ultima plată?",
+      "chatYes": "Am găsit plata ta și am inițiat rambursarea. De obicei ajunge în cont în 5 până la 7 zile lucrătoare.",
+      "chatNo": "Văd plata, dar nu o pot rambursa singur. Vrei să te conectez cu echipa noastră?",
+      "toggleLabel": "Permite AI să efectueze rambursări",
+      "toggleNote": "Dezactivat implicit. Încearcă comutatorul."
+    },
+    "grows": {
+      "eyebrow": "Loc de creștere",
+      "titlePrefix": "Începe cu tine. ",
+      "titleHl": "Se extinde cu echipa ta.",
+      "stageLabel": "Etapa {n}",
+      "stages": [
+        {
+          "t": "Doar tu",
+          "d": "Plan gratuit, 100 de mesaje AI pe lună, o căsuță de mesaje pe care rar o deschizi."
+        },
+        {
+          "t": "Prima angajare",
+          "d": "Invit-o prin e-mail. Va primi alerte de alăturare și va prelua conversațiile de la AI."
+        },
+        {
+          "t": "O echipă mică",
+          "d": "Alocă conversații, împărtășiți căsuța de mesaje, adăugați locuri când aveți nevoie."
+        },
+        {
+          "t": "Scalare",
+          "d": "Planuri plătite cu credit lunar de AI, instrumente MCP pentru sistemele tale proprii."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Întrebări de la fondatori",
+      "titlePrefix": "Răspunsuri ",
+      "titleHl": "directe.",
+      "items": [
+        {
+          "q": "Cu ce diferă asta de un chatbot generic?",
+          "a": "Elpino răspunde doar din cunoștințele pe care i le-ai dat, poate verifica plăți reale și folosi propriile tale instrumente, verifică identitatea înainte de a accesa orice date personale și predă conversația unei persoane, cu tot istoricul, atunci când nu poate ajuta."
+        },
+        {
+          "q": "Cât de rapid îl pot configura singur?",
+          "a": "Majoritatea fondatorilor sunt funcționali chiar în aceeași zi: adaugă site-ul sau fișierele, lipesc fragmentul de cod al widgetului și, opțional, conectează Stripe sau Razorpay."
+        },
+        {
+          "q": "Cum decide între a răspunde și a mă alerta?",
+          "a": "Dacă poate răspunde din cunoștințele tale sau dintr-un instrument, o face. Dacă nu poate, spune asta și întreabă clientul dacă vrea să fie conectat cu echipa ta. Doar atunci tu și echipa ta sunteți alertați."
+        },
+        {
+          "q": "O să inventeze lucruri?",
+          "a": "Răspunde din ce ai aprobat tu, iar o verificare suplimentară compară răspunsurile cu rezultatele instrumentelor. Când nu știe, spune asta."
+        },
+        {
+          "q": "Contul meu Stripe sau Razorpay este în siguranță?",
+          "a": "Datele de acces sunt stocate criptat, iar acțiunile care mișcă bani, cum ar fi rambursările, sunt dezactivate până le activezi tu."
+        },
+        {
+          "q": "Ce se întâmplă când angajez o persoană pentru suport?",
+          "a": "Invit-o și va primi alerte de alăturare, va putea prelua conversații de la AI și le poate preda înapoi."
+        }
+      ]
+    },
+    "closing": {
+      "title": "Revino la construit.",
+      "subtitle": "Începe gratuit, învață-l pe Elpino produsul tău și lasă-l să se ocupe de întrebările repetitive.",
+      "ctaStart": "Începe gratuit",
+      "ctaMeetAgent": "Cunoaște agentul AI"
+    }
+  },
+  "developers": {
+    "hero": {
+      "badge": "Pentru dezvoltatori",
+      "titlePrefix": "De la ",
+      "titleMiddle": " la ",
+      "titleHl": "rezolvat.",
+      "subtitle": "O etichetă pentru widget, un token semnat pentru ca Elpino să știe cine e autentificat, un server MCP pentru ca AI-ul să vă poată citi datele. Urmăriți cei trei pași derulându-se pe o pagină.",
+      "ctaStart": "Începe gratuit",
+      "ctaDocs": "Citește documentația"
+    },
+    "ide": {
+      "comment1": "<!-- 1. Lipiți eticheta -->",
+      "comment2": "<!-- 2. Spuneți-i lui Elpino cine e autentificat -->",
+      "comment3": "  // elpinoToken: semnat de backend-ul dumneavoastră",
+      "mcpComment": "// În panoul de control: conectați un server MCP și activați get_order.",
+      "stepEmbed": "Inserare",
+      "stepIdentify": "Identificare",
+      "stepResolve": "Rezolvare",
+      "previewSupport": "Suport",
+      "previewVerified": "Verificat",
+      "previewGreeting": "Bună Aisha, cu ce te pot ajuta?",
+      "previewQuestion": "Unde e comanda mea?",
+      "previewAnswer": "A fost expediată ieri și ajunge joi."
+    },
+    "sequence": {
+      "eyebrow": "Fluxul cererii",
+      "titlePrefix": "O întrebare, ",
+      "titleHl": "patru sisteme.",
+      "subtitle": "Cine vorbește cu cine când un client autentificat întreabă despre comanda sa. Parcurgeți pas cu pas sau lăsați-l să ruleze.",
+      "actors": [
+        "Browser",
+        "Serverul dumneavoastră",
+        "Elpino",
+        "Serverul dumneavoastră MCP"
+      ],
+      "steps": [
+        {
+          "label": "Clientul se autentifică"
+        },
+        {
+          "label": "JWT semnat",
+          "note": "≤ 5 min · o singură dată"
+        },
+        {
+          "label": "$elpino identify(token)"
+        },
+        {
+          "label": "Verifică semnătura + claims ✓"
+        },
+        {
+          "label": "„Unde e comanda mea?”"
+        },
+        {
+          "label": "get_order",
+          "note": "doar clienți verificați"
+        },
+        {
+          "label": "Starea comenzii"
+        },
+        {
+          "label": "Răspunde clientului"
+        }
+      ],
+      "stepCounter": "Pasul {n} / {total}",
+      "nextStep": "Pasul următor",
+      "replay": "Repetă"
+    },
+    "tokenExplorer": {
+      "eyebrow": "Token-ul de identitate",
+      "titlePrefix": "Anatomia unui token, ",
+      "titleHl": "și cum se strică.",
+      "subtitle": "HS256, semnat cu secretul spațiului dumneavoastră de lucru. Atingeți un claim pentru regula lui, apoi stricați token-ul pentru a vedea ce spune widget-ul.",
+      "payload": "Payload",
+      "optional": "opțional",
+      "required": "Obligatoriu",
+      "optionalCap": "Opțional",
+      "breakIt": "Stricați-l",
+      "notAccepted": "[Elpino] Token-ul de identitate nu a fost acceptat: {code}",
+      "fix": "Remediere:",
+      "claimDescriptions": [
+        "ID-ul stabil de cont al acestui utilizator.",
+        "Exact \"elpino-widget\".",
+        "Un ID aleatoriu nou pentru fiecare token, între 16 și 128 de caractere sigure pentru URL. Un UUID e potrivit.",
+        "Momentul emiterii în secunde întregi (nu milisecunde).",
+        "Expirarea în secunde întregi, cel mult 5 minute după iat.",
+        "Omiteți-l când nu există. null este respins.",
+        "true doar dacă sistemul dumneavoastră de autentificare a confirmat proprietatea.",
+        "Numele afișat echipei dumneavoastră."
+      ]
+    },
+    "server": {
+      "eyebrow": "Backend-ul dumneavoastră",
+      "titlePrefix": "Copiați, lipiți, ",
+      "titleHl": "lansați.",
+      "subtitle": "Aceleași fragmente afișate în panoul dumneavoastră, în limbajul pe care îl folosiți deja.",
+      "copy": "Copiază",
+      "copied": "Copiat",
+      "codeTitle": "token de identitate"
+    },
+    "mcp": {
+      "badge": "Servere MCP",
+      "titlePrefix": "Oferiți instrumente AI-ului. ",
+      "titleHl": "Păstrați cheile.",
+      "subtitle": "Conectați până la cinci servere MCP, activați până la 15 instrumente pe fiecare și alegeți cui le deschideți. Comutați întrerupătoarele pentru a vedea ce poate folosi agentul.",
+      "shopServerName": "Serverul dumneavoastră MCP al magazinului",
+      "toolsDiscovered": "{n} instrumente descoperite",
+      "toggleLabel": "Deschide instrumentele doar-citire oricărui vizitator",
+      "changesData": "Modifică date",
+      "readOnly": "Doar citire",
+      "needsVerified": "Necesită client verificat",
+      "agentCanCall": "Agentul poate apela",
+      "toolDescriptions": [
+        "Caută o comandă și starea ei",
+        "Urmărire în timp real a unui colet",
+        "Schimbă o adresă de livrare",
+        "Anulează o comandă care nu a fost expediată"
+      ],
+      "bullets": [
+        "Fiecare apel este reverificat cu lista dumneavoastră pe server",
+        "Instrumentele care modifică date au mereu nevoie de un client verificat",
+        "Datele de acces sunt stocate criptat"
+      ]
+    },
+    "sees": {
+      "eyebrow": "Confidențialitate implicită",
+      "titlePrefix": "Modelul ",
+      "titleHl": "nu vede niciodată",
+      "titleSuffix": " cine sunt.",
+      "subtitle": "Înainte ca AI-ul să citească o conversație, numele, e-mailurile și ID-urile sunt înlocuite cu coduri de referință, iar secretele precum token-urile și cheile sunt eliminate. Instrumentele primesc în continuare valorile reale de partea dumneavoastră.",
+      "toggleTeam": "Ce vede echipa dumneavoastră",
+      "toggleModel": "Ce vede modelul AI",
+      "chatRaw1": "Bună, sunt Aisha Khan (aisha@example.com). Unde e comanda mea?",
+      "chatMasked1": "Bună, sunt ref_name_9f2c (ref_email_41ab). Unde e comanda mea?",
+      "chatRaw2": "Bună Aisha, comanda ta a fost expediată ieri.",
+      "chatMasked2": "Bună, comanda ta a fost expediată ieri."
+    },
+    "faq": {
+      "eyebrow": "Întrebări",
+      "titlePrefix": "Bine de ",
+      "titleHl": "știut.",
+      "items": [
+        {
+          "q": "Trebuie să folosesc verificarea identității?",
+          "a": "Nu, dar aceasta permite AI-ului să afișeze în siguranță date private. Oricine poate introduce orice e-mail într-un chat, așa că un token semnat de propriul dumneavoastră sistem de autentificare este modul în care un client devine Verificat."
+        },
+        {
+          "q": "Cât durează un token?",
+          "a": "Cel mult cinci minute și funcționează o singură dată. Sesiunea de chat în sine durează până la 8 ore, cu o limită de inactivitate de 30 de minute."
+        },
+        {
+          "q": "Ce algoritm de semnare?",
+          "a": "HS256. Alte algoritme, inclusiv none și RS256, sunt refuzate."
+        },
+        {
+          "q": "Ce limbaje au fragmente de cod?",
+          "a": "Node.js, Python, PHP și Ruby, în setările de identitate ale panoului dumneavoastră și în documentație."
+        },
+        {
+          "q": "Ce este un server MCP?",
+          "a": "Un serviciu care expune instrumente prin Model Context Protocol. Elpino descoperă instrumentele lui, iar dumneavoastră activați pe cele pe care AI-ul le poate folosi."
+        },
+        {
+          "q": "Poate AI-ul să modifice date în sistemele mele?",
+          "a": "Doar prin instrumentele pe care le-ați activat, iar instrumentele care modifică date au mereu nevoie de un client verificat."
+        },
+        {
+          "q": "Există un API?",
+          "a": "SDK-ul widget-ului, token-urile de identitate și MCP reprezintă astăzi suprafața de integrare."
+        }
+      ],
+      "linkLabels": [
+        "Documentație identitate",
+        "Documentație widget",
+        "Agent AI",
+        "Ghid de securitate"
+      ]
+    },
+    "closing": {
+      "title": "Lansați-l într-o după-amiază.",
+      "subtitle": "Începeți gratuit, lipiți eticheta și configurați identitatea când sunteți gata.",
+      "ctaStart": "Începe gratuit",
+      "ctaDocs": "Deschide documentația"
+    }
+  },
+  "busyOperators": {
+    "rush": {
+      "badgeLabel": "Ora de vârf · simulare ilustrativă",
+      "reset": "Resetează",
+      "waitingForPerson": "În așteptarea unei persoane",
+      "levelCalm": "Calm",
+      "levelBusy": "Sunt ocupat",
+      "levelFire": "Coadă în flăcări",
+      "inboxZero": "Inbox zero. Frumos.",
+      "chatsWaiting": "chat-uri în așteptare",
+      "aiToggleLabel": "Elpino AI",
+      "teammatesOnline": "Coechipieri online",
+      "resolvedByAi": "Rezolvată de AI",
+      "resolvedByTeam": "Rezolvată de echipă",
+      "disclaimer": "Un model de jucărie: sosesc 3 discuții la fiecare bifă, iar AI ia un exemplu de distribuire. Rezultatele reale depind de baza de cunoștințe și de instrumentele dvs.",
+      "online": "online",
+      "offline": "offline"
+    },
+    "hero": {
+      "badge": "Pentru echipe ocupate",
+      "titlePrefix": "Ora de vârf, ",
+      "titleHl": "gestionate.",
+      "subtitle": "Când coada crește, AI preia întrebările repetate, echipa ta preia restul și nimeni nu se împiedică unul de celălalt. Apăsați comutatorul de mai jos și simțiți diferența.",
+      "ctaStart": "Începe gratuit",
+      "ctaInbox": "Vezi căsuța de e-mail"
+    },
+    "race": {
+      "badge": "Nu există răspunsuri duble",
+      "titlePrefix": "Două persoane, un chat. ",
+      "titleHl": "Se alătură doar unul.",
+      "subtitle": "Toată lumea primește aceeași alertă de înscriere. Prima persoană care atinge conversația preia conversația, alerta se șterge pentru toți ceilalți, iar căsuța de e-mail arată cine o are. Un coleg mai poate prelua mai târziu, intenționat.",
+      "askedForPerson": "Aisha Khan a cerut o persoană",
+      "alertSent": "Alerta trimisă întregii echipe",
+      "waiting": "Se așteaptă...",
+      "joined": "S-a alăturat",
+      "joinChat": "Alăturați-vă chatului",
+      "priyaHasThis": "Priya are asta",
+      "priyaJoinedFirst": "Priya s-a alăturat prima. Insigna de inbox scrie acum Priya.",
+      "bothSee": "Ambii colegi de echipă văd alerta...",
+      "customerSaidYes": "Clientul a spus da unei persoane"
+    },
+    "context": {
+      "eyebrow": "Predarea",
+      "titlePrefix": "Nimeni nu repetă ",
+      "titleHl": "ei înșiși.",
+      "subtitle": "Comutați pentru a compara o transferare rece cu cea pe care o face Elpino.",
+      "toggleCold": "Predare rece",
+      "toggleElpino": "Elpino transfer",
+      "coldGreeting": "Bună, sunt Priya. Cum pot ajuta?",
+      "coldComplaint": "…Am explicat deja toate acestea botului. Mi-am mutat țări și am nevoie ca țara mea de facturare să fie schimbată. Din nou.",
+      "coldNote": "Clientul începe de la capăt, iar membrul echipei începe orb.",
+      "whatPersonSees": "Ce vede persoana",
+      "reasonLabel": "Motiv",
+      "reasonValue": "Schimbarea țării de facturare necesită o persoană",
+      "summaryLabel": "Rezumat",
+      "summaryValue": "Țările mutate, dorește să fie actualizată țara de facturare. Verificat prin codul de e-mail.",
+      "fullThreadLabel": "Firul complet",
+      "fullThreadValue": "Fiecare mesaj de până acum, chiar deasupra compozitorului",
+      "visitorLabel": "Vizitator",
+      "visitorLocation": "Pune, India",
+      "visitorPage": "Pe /facturare",
+      "identityVerified": "Identitate verificată"
+    },
+    "around": {
+      "eyebrow": "Non-stop",
+      "titlePrefix": "Acoperă fiecare oră, ",
+      "titleHl": "fără ture.",
+      "subtitle": "Trageți printr-o zi exemplu. Orele echipei sunt de la 9 la 6 aici; a ta va fi a ta.",
+      "teamOnline": "Echipa online",
+      "aiOnWatch": "AI la ceas",
+      "hourAriaLabel": "Ora din zi",
+      "am": "AM",
+      "pm": "PM",
+      "dayItems": [
+        {
+          "t": "AI răspunde mai întâi",
+          "d": "Întrebările repetate nu ajung niciodată în coadă."
+        },
+        {
+          "t": "Echipa primește alerte de alăturare",
+          "d": "Primul care atinge accesează chatul."
+        },
+        {
+          "t": "Înapoi oricând",
+          "d": "Oferă urmăriri simple înapoi AI."
+        }
+      ],
+      "nightItems": [
+        {
+          "t": "AI răspunde mai întâi",
+          "d": "Se răspunde la întrebările la care poate răspunde."
+        },
+        {
+          "t": "Nimeni e liber? bilet",
+          "d": "După 90 de secunde este depus un bilet cu motivul și rezumatul."
+        },
+        {
+          "t": "Dimineața începe organizată",
+          "d": "Clientul a primit un e-mail, iar biletele vă așteaptă."
+        }
+      ]
+    },
+    "toolkit": {
+      "eyebrow": "Calm prin design",
+      "titlePrefix": "Lucrurile mici care ",
+      "titleHl": "păstrați o coadă sănătoasă.",
+      "items": [
+        {
+          "t": "Insigne de proprietate",
+          "d": "AI, coechipier sau rezolvat, pe fiecare subiect."
+        },
+        {
+          "t": "Căutare și filtre",
+          "d": "Toate, Necitite, Citite, Rezolvate."
+        },
+        {
+          "t": "Tastare live",
+          "d": "Vedeți când clientul scrie și lăsați-i să vă vadă."
+        },
+        {
+          "t": "Insigna verificată",
+          "d": "Aflați cine a dovedit cine sunt."
+        },
+        {
+          "t": "Detaliile vizitatorilor",
+          "d": "Locația, dispozitivul și pagina în care se află."
+        },
+        {
+          "t": "Preia, dă înapoi",
+          "d": "Mutați un chat între AI și oameni dintr-o atingere."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Întrebări",
+      "titlePrefix": "Bun de ",
+      "titleHl": "stiu.",
+      "items": [
+        {
+          "q": "Cum împiedici doi oameni să răspundă aceluiași client?",
+          "a": "Toată lumea primește aceeași alertă de înscriere, iar prima persoană care atinge accesează chatul. Alerta se șterge pentru toți ceilalți, iar căsuța de e-mail arată cine o are."
+        },
+        {
+          "q": "Îmi va înlocui Elpino echipa?",
+          "a": "Nu. Se ocupă de întrebările repetate, iar oamenii tăi preiau conversațiile care necesită judecată. De asemenea, puteți returna orice chat înapoi AI."
+        },
+        {
+          "q": "Din ce poate învăța?",
+          "a": "Paginile site-ului dvs. web (inclusiv cele create de JavaScript), fișierele PDF, Word, text și Markdown încărcate și paginile pe care le scrieți. Tu controlezi care sunt publice."
+        },
+        {
+          "q": "Ce se întâmplă când nimeni nu este online?",
+          "a": "AI răspunde ce poate. Dacă un client solicită o persoană și nimeni nu se alătură în 90 de secunde, se depune un bilet cu motivul și rezumatul, iar clientul este trimis prin e-mail."
+        },
+        {
+          "q": "Cât durează lansarea?",
+          "a": "Cele mai multe echipe sunt live în aceeași zi: adăugați cunoștințe, lipiți widgetul și invitați colegii de echipă."
+        }
+      ],
+      "footNote": "Chatul pe site este live astăzi. Omnicanalul vine în noiembrie."
+    },
+    "closing": {
+      "title": "Faceți coada problema altcuiva.",
+      "subtitle": "Începe gratuit și invită-ți echipa când ești gata.",
+      "ctaStart": "Începe gratuit",
+      "ctaTickets": "Vezi bilete"
     }
   }
 }
