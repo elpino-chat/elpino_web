@@ -26,7 +26,7 @@ type HelpArticleBody = { id: string; title: string; content: string; sourceUrl: 
 type MessageGroup =
   | { kind: "system"; message: WidgetMessage }
   | { kind: "thread"; fromVisitor: boolean; messages: WidgetMessage[] };
-type StartResult = { suggestions?: string[]; allowed: boolean; visitorToken?: string; conversationId?: string; botName?: string; botAvatarUrl?: string | null; greetingLines?: string[]; removeBranding?: boolean; topic?: string | null; customerName?: string | null; customerEmail?: string | null; customerPhone?: string | null; contactCollection?: "chat" | "off"; identified?: boolean; identityError?: string; messages?: WidgetMessage[]; error?: string };
+type StartResult = { logoUrl?: string | null; suggestions?: string[]; allowed: boolean; visitorToken?: string; conversationId?: string; botName?: string; botAvatarUrl?: string | null; greetingLines?: string[]; removeBranding?: boolean; topic?: string | null; customerName?: string | null; customerEmail?: string | null; customerPhone?: string | null; contactCollection?: "chat" | "off"; identified?: boolean; identityError?: string; messages?: WidgetMessage[]; error?: string };
 type ConversationSummary = { id: string; status: string; topic?: string | null; preview: string; time: string };
 // "home" is the greeting/start screen — no separate top-level tab for it (see
 // `tab` below), just the Chat tab's own default view when there's nothing to
@@ -195,6 +195,19 @@ function collectionOf(article: { sourceUrl: string | null }): string {
   return GENERAL_COLLECTION;
 }
 
+// The website this widget is on, top-left of the home screen (the AI has its own avatar next to the team's): the
+// workspace's logo if it set one, else the site's own favicon, else the first letter of its domain.
+function SiteMark({ logoUrl, hostname }: { logoUrl: string | null; hostname: string }) {
+  const [failed, setFailed] = useState(false);
+  const source = logoUrl || (hostname ? `https://${hostname}/favicon.ico` : "");
+  const letter = (hostname.replace(/^www\./, "").charAt(0) || "?").toUpperCase();
+  return (
+    <span className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl border-2 border-[#11120f] bg-white text-[15px] font-bold text-[#11120f]">
+      {source && !failed ? <img src={source} alt="" onError={() => setFailed(true)} className="h-full w-full object-contain p-1" /> : letter}
+    </span>
+  );
+}
+
 function WidgetContent() {
   const searchParams = useSearchParams();
   const key = searchParams.get("key")?.trim() ?? "";
@@ -228,6 +241,8 @@ function WidgetContent() {
   const [greetingLines, setGreetingLines] = useState<string[]>(["Hi there 👋", "How can I help you today?"]);
   // Questions other visitors like this one keep asking, offered as tap-to-send chips in a new chat.
   const [suggestions, setSuggestions] = useState<string[]>([]);
+  // The workspace's own logo, for the home screen; null falls back to the website's favicon.
+  const [siteLogoUrl, setSiteLogoUrl] = useState<string | null>(null);
   // First name of an identified visitor (ElpinoTag.identify()/getIdentityToken
   // on the host page), so the greeting can say "Hi Alex" instead of the
   // generic "Hi there" — null for an anonymous visitor, or one the site
@@ -689,6 +704,7 @@ function WidgetContent() {
         if (data.identityError) console.warn(`[Elpino] Identity token was not accepted: ${data.identityError}`);
         setBotName(data.botName || "Elpino Support");
         setBotAvatarUrl(data.botAvatarUrl ?? null);
+        setSiteLogoUrl(data.logoUrl ?? null);
         setShowBranding(!data.removeBranding);
         const realName = data.identified && data.customerName && data.customerName !== "Website visitor" ? data.customerName.trim().split(/\s+/)[0] : null;
         setGreetingName(realName || null);
@@ -1525,9 +1541,7 @@ function WidgetContent() {
           <div className="flex h-full flex-col">
             <div className="px-5 pb-6 pt-5">
               <div className="flex items-center justify-between">
-                <span className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl text-[15px] font-bold text-white" style={{ backgroundColor: ACCENT }}>
-                  {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
-                </span>
+                <SiteMark key={siteLogoUrl ?? hostname} logoUrl={siteLogoUrl} hostname={hostname} />
                 <div className="flex items-center gap-3">
                   {/* The AI agent first, then the people on the team: "AI Agent and team can help". */}
                   <div className="flex -space-x-2.5" aria-label="The AI agent and the team are here to help you">
