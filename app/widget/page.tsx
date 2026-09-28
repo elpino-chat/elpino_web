@@ -1143,7 +1143,7 @@ function WidgetContent() {
   }, [conversationId, chatView]);
   useEffect(() => {
     if (stickToBottomRef.current) scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
-  }, [messages, tab, chatView, agentTyping, revealMap]);
+  }, [messages, tab, chatView, agentTyping, revealMap, contactFields, contactAskId, contactDoneFor]);
 
   async function sendPayload(body: string, attachment: Attachment | null, options?: { restoreDraft?: boolean }): Promise<boolean> {
     if (sending || !visitorToken || (!body && !attachment)) return false;
@@ -1781,12 +1781,12 @@ function WidgetContent() {
                 // single item in the thread's own space-y-5 list, so that
                 // 20px gap only ever falls *between* runs — a sender switch,
                 // a visitor reply, a pause long enough to be a new group.
-                // Bubbles within the run share a tight gap-1 instead.
+                // Bubbles within the run sit almost touching (gap-0.5): the gap is for a change of sender.
                 const { fromVisitor, messages: groupMessages } = group;
                 const first = groupMessages[0];
 
                 return (
-                  <div key={first.id} className="flex flex-col gap-1">
+                  <div key={first.id} className="flex flex-col gap-0.5">
                     {groupMessages.map((message, messageIndex) => {
                       const hasImage = message.attachmentUrl && (message.attachmentType === "image" || message.attachmentType === "gif");
                       const hasFile = message.attachmentUrl && message.attachmentType === "file";
@@ -1819,7 +1819,7 @@ function WidgetContent() {
                               </div>
                             )
                           )}
-                          {!fromVisitor && messageIndex === groupMessages.length - 1 && (
+                          {!fromVisitor && messageIndex === groupMessages.length - 1 && !(contactActive && message.id === contactAskId) && (
                             <p className="px-1 text-[11px] leading-4" style={{ color: MUTED }}>
                               {/* So a visitor can tell an AI answer from a teammate's: "AI agent" vs the person's name. */}
                               {message.senderType === "ai" ? "AI agent" : `${agentName ?? "Support team"} · Support team`} · {timeAgo(Date.parse(message.createdAt) || clock + serverOffset, clock + serverOffset)}
@@ -1853,6 +1853,43 @@ function WidgetContent() {
                   </div>
                 );
               })()}
+              {contactActive && contactField && (
+                // The answer to the AI's question above, in the conversation itself, like a reply. The message
+                // box below stays usable, so typing there instead is simply not answering.
+                <div className="w-full max-w-[85%]">
+                  <div className="flex items-center rounded-md border py-1.5 pl-3 pr-2" style={{ borderColor: contactError ? "#e5626a" : "rgba(255,255,255,0.7)", backgroundColor: SURFACE }}>
+                    <input
+                      key={contactField}
+                      autoFocus
+                      type={CONTACT_PROMPTS[contactField].type}
+                      value={contactValue}
+                      onChange={(event) => { setContactValue(event.target.value); setContactError(""); }}
+                      onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); void submitContactStep(); } }}
+                      placeholder={CONTACT_PROMPTS[contactField].placeholder}
+                      aria-label={CONTACT_PROMPTS[contactField].label}
+                      autoComplete={contactField === "email" ? "email" : contactField === "phone" ? "tel" : "name"}
+                      className="h-8 min-w-0 flex-1 bg-transparent px-1 text-[14px] outline-none placeholder:text-[#777b82]"
+                      style={{ color: INK }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => void submitContactStep()}
+                      disabled={!contactValue.trim() || contactSaving}
+                      aria-label="Send"
+                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition disabled:opacity-100"
+                      style={{ backgroundColor: contactValue.trim() ? ACCENT : "rgba(255,255,255,0.10)", color: contactValue.trim() ? "#fff" : "rgba(255,255,255,0.35)" }}
+                    >
+                      <ArrowUp size={15} strokeWidth={2.2} />
+                    </button>
+                  </div>
+                  {contactError && <p className="mt-1.5 px-1 text-[11px] text-[#e5626a]">{contactError}</p>}
+                  {/* The attribution that would sit under the question, moved below the field so the two read as one block. */}
+                  <div className="mt-1.5 flex items-center justify-between px-1 text-[11px] leading-4" style={{ color: MUTED }}>
+                    <span>AI agent · {timeAgo(Date.parse(messages.find((m) => m.id === contactAskId)?.createdAt ?? "") || clock + serverOffset, clock + serverOffset)}</span>
+                    <button type="button" onClick={skipContactStep} className="underline underline-offset-2 hover:opacity-80">Skip</button>
+                  </div>
+                </div>
+              )}
               {agentTyping && (
                 <div className="flex items-center">
                   <div className="flex items-center rounded-2xl px-3.5 py-3" style={{ backgroundColor: BUBBLE, width: "fit-content" }}>
@@ -1927,44 +1964,8 @@ function WidgetContent() {
                 <p className="mb-2 px-1 text-[11.5px]" style={{ color: MUTED }}>Thanks — we&apos;ll reach you there if we get disconnected.</p>
               )}
 
-              {contactActive && contactField ? (
-                <div>
-                  <div className="mb-1.5 flex items-center justify-between px-2">
-                    <p className="text-[13.5px] font-normal" style={{ color: INK }}>
-                      {CONTACT_PROMPTS[contactField].label}
-                      {contactFields!.length > 1 && <span className="font-normal" style={{ color: MUTED }}>{` · ${contactStep + 1} of ${contactFields!.length}`}</span>}
-                    </p>
-                    <button type="button" onClick={skipContactStep} className="text-[13.5px] font-normal underline underline-offset-2 hover:opacity-80" style={{ color: MUTED }}>
-                      Skip
-                    </button>
-                  </div>
-                  <div className="flex items-center rounded-md border py-2 pl-3 pr-2.5 shadow-[0_3px_16px_rgba(0,0,0,.35)]" style={{ borderColor: contactError ? "#e5626a" : "rgba(255,255,255,0.7)", backgroundColor: SURFACE }}>
-                    <input
-                      key={contactField}
-                      autoFocus
-                      type={CONTACT_PROMPTS[contactField].type}
-                      value={contactValue}
-                      onChange={(event) => { setContactValue(event.target.value); setContactError(""); }}
-                      onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); void submitContactStep(); } }}
-                      placeholder={CONTACT_PROMPTS[contactField].placeholder}
-                      autoComplete={contactField === "email" ? "email" : contactField === "phone" ? "tel" : "name"}
-                      className="h-8 min-w-0 flex-1 bg-transparent px-1 text-[14px] outline-none placeholder:text-[#777b82]"
-                      style={{ color: INK }}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => void submitContactStep()}
-                      disabled={!contactValue.trim() || contactSaving}
-                      aria-label="Send"
-                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition disabled:opacity-100"
-                      style={{ backgroundColor: contactValue.trim() ? ACCENT : "rgba(255,255,255,0.10)", color: contactValue.trim() ? "#fff" : "rgba(255,255,255,0.35)" }}
-                    >
-                      <ArrowUp size={15} strokeWidth={2.2} />
-                    </button>
-                  </div>
-                  {contactError && <p className="mt-1.5 px-2 text-[11px] text-[#e5626a]">{contactError}</p>}
-                </div>
-              ) : (
+              {/* While the AI is asking for a detail, the answer field in the conversation is the only input. */}
+              {!(contactActive && contactField) && (
               <div className="rounded-[24px] border px-3 pb-2.5 pt-3 shadow-[0_3px_16px_rgba(0,0,0,.35)]" style={{ borderColor: "rgba(255,255,255,0.7)", backgroundColor: SURFACE }}>
                 <input ref={fileInputRef} type="file" hidden onChange={handleFileSelect} />
                 <textarea
