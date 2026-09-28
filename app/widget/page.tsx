@@ -1930,11 +1930,11 @@ function WidgetContent() {
               {contactActive && contactField ? (
                 <div>
                   <div className="mb-1.5 flex items-center justify-between px-2">
-                    <p className="text-[11.5px] font-normal" style={{ color: INK }}>
+                    <p className="text-[13.5px] font-normal" style={{ color: INK }}>
                       {CONTACT_PROMPTS[contactField].label}
                       {contactFields!.length > 1 && <span className="font-normal" style={{ color: MUTED }}>{` · ${contactStep + 1} of ${contactFields!.length}`}</span>}
                     </p>
-                    <button type="button" onClick={skipContactStep} className="text-[11.5px] font-normal underline underline-offset-2 hover:opacity-80" style={{ color: MUTED }}>
+                    <button type="button" onClick={skipContactStep} className="text-[13.5px] font-normal underline underline-offset-2 hover:opacity-80" style={{ color: MUTED }}>
                       Skip
                     </button>
                   </div>
