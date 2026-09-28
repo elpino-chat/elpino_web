@@ -1552,14 +1552,15 @@ function WidgetContent() {
               <button
                 type="button"
                 onClick={startNewChat}
-                className="flex w-full items-center gap-3 rounded-xl border p-4 text-left shadow-sm transition hover:border-[#c7cbd1]"
-                style={{ backgroundColor: SURFACE, borderColor: BORDER }}
+                // Same look as the pricing page: a solid ink border, no shadow, a flat colour fill.
+                className="flex w-full items-center gap-3 rounded-2xl border-2 border-[#11120f] p-4 text-left transition hover:-translate-y-0.5"
+                style={{ backgroundColor: "#ffd84d" }}
               >
                 <span className="min-w-0 flex-1">
-                  <span className="block text-[14px] font-semibold">Ask a question</span>
-                  <span className="mt-0.5 block text-[12px]" style={{ color: MUTED }}>AI Agent and team can help</span>
+                  <span className="block text-[14px] font-semibold text-[#11120f]">Ask a question</span>
+                  <span className="mt-0.5 block text-[12px] text-[#11120f]/70">AI Agent and team can help</span>
                 </span>
-                <SendHorizontal size={18} className="shrink-0" style={{ color: INK }} />
+                <SendHorizontal size={18} className="shrink-0 text-[#11120f]" />
               </button>
 
               {(() => {
@@ -1573,8 +1574,8 @@ function WidgetContent() {
                   <button
                     type="button"
                     onClick={() => openThread(target)}
-                    className="w-full rounded-xl border p-4 text-left shadow-sm transition hover:border-[#c7cbd1]"
-                    style={{ backgroundColor: SURFACE, borderColor: BORDER }}
+                    className="w-full rounded-2xl border-2 border-[#11120f] p-4 text-left text-[#11120f] transition hover:-translate-y-0.5"
+                    style={{ backgroundColor: "#fff8ec" }}
                   >
                     <span className="block text-[14px] font-semibold">Recent message</span>
                     <span className="mt-2.5 flex items-center gap-3">
