@@ -2141,7 +2141,7 @@ function WidgetContent() {
       {/* Home, Messages and Help. Not shown inside a conversation, where the message box needs the room,
           or while reading a help article. */}
       {!preChatNeeded && ((tab === "chat" && (chatView === "home" || chatView === "list")) || (tab === "help" && !openArticle && !articleLoading)) && (
-        <nav aria-label="Widget sections" className="flex shrink-0 border-t" style={{ borderColor: BORDER, backgroundColor: SURFACE }}>
+        <nav aria-label="Widget sections" className="flex shrink-0 border-t-2 border-[#11120f]" style={{ backgroundColor: SURFACE }}>
           {([
             { id: "home", label: "Home", Icon: House, active: tab === "chat" && chatView === "home", go: () => { setTab("chat"); setChatView("home"); } },
             { id: "messages", label: "Messages", Icon: MessageSquare, active: tab === "chat" && chatView === "list", go: openChatList },
