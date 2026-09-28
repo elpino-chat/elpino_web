@@ -240,6 +240,9 @@ function WidgetContent() {
   // Drives the "5 minutes ago" labels under the assistant's replies so they keep counting while the chat is open.
   const [clock, setClock] = useState(() => Date.now());
   const [greetedAt] = useState(() => Date.now());
+  // Message times are the server's; the visitor's own clock can be minutes off. The poll reports the server's
+  // current time, so ages are measured against that instead. 0 until the first poll answers.
+  const [serverOffset, setServerOffset] = useState(0);
   useEffect(() => {
     const timer = window.setInterval(() => setClock(Date.now()), 15000);
     return () => window.clearInterval(timer);
@@ -1014,6 +1017,10 @@ function WidgetContent() {
           setAgentName(data.agent?.name?.trim() || null);
           // Convert the server's deadline into this device's clock so a wrong
           // local time can't shorten or stretch the countdown.
+          if (data.serverNow) {
+            const serverNow = Date.parse(data.serverNow);
+            if (!Number.isNaN(serverNow)) setServerOffset(serverNow - Date.now());
+          }
           if (data.joinDeadlineAt && data.serverNow) {
             setJoinDeadline(Date.now() + (Date.parse(data.joinDeadlineAt) - Date.parse(data.serverNow)));
           } else {
@@ -1156,8 +1163,17 @@ function WidgetContent() {
           topic: conversationId ? undefined : pendingTopicRef.current ?? undefined,
         }),
       });
-      const data = (await response.json()) as { conversationId?: string; greeting?: WidgetMessage | null; message?: WidgetMessage; error?: string };
+      const data = (await response.json().catch(() => ({}))) as { conversationId?: string; greeting?: WidgetMessage | null; message?: WidgetMessage; error?: string };
       if (epoch !== sessionEpochRef.current) return;
+      // A server error body ({"statusCode":500,"message":"Internal server error"}) has a `message` too, but it is a
+      // string, not a chat message. Only an object with an id is one; anything else is a failed send.
+      const sentMessage = data.message && typeof data.message === "object" && typeof data.message.id === "string" ? data.message : null;
+      if (!data.error && (!response.ok || !sentMessage)) {
+        if (body) setDraft(body);
+        if (attachment) setPendingAttachment(attachment);
+        setAttachError("Couldn't send that. Please try again.");
+        return;
+      }
       if (data.error) {
         // Not sent: give the text back rather than losing it. If the session
         // ended, restart (keeping the draft) and ask the page for a fresh token.
@@ -1176,10 +1192,10 @@ function WidgetContent() {
         // typing pings, etc. start targeting the real id.
         setConversationId(data.conversationId);
         pendingTopicRef.current = null;
-        const opening = [data.greeting, data.message].filter((item): item is WidgetMessage => !!item);
+        const opening = [data.greeting, sentMessage].filter((item): item is WidgetMessage => !!item);
         setMessages(opening);
-      } else if (data.message) {
-        setMessages((current) => [...current, data.message as WidgetMessage]);
+      } else if (sentMessage) {
+        setMessages((current) => [...current, sentMessage]);
       }
     } finally {
       if (epoch === sessionEpochRef.current) setSending(false);
@@ -1801,7 +1817,7 @@ function WidgetContent() {
                           {!fromVisitor && messageIndex === groupMessages.length - 1 && (
                             <p className="px-1 text-[11px] leading-4" style={{ color: MUTED }}>
                               {/* So a visitor can tell an AI answer from a teammate's: "AI agent" vs the person's name. */}
-                              {message.senderType === "ai" ? "AI agent" : `${agentName ?? "Support team"} · Support team`} · {timeAgo(Date.parse(message.createdAt) || clock, clock)}
+                              {message.senderType === "ai" ? "AI agent" : `${agentName ?? "Support team"} · Support team`} · {timeAgo(Date.parse(message.createdAt) || clock + serverOffset, clock + serverOffset)}
                             </p>
                           )}
                         </div>
