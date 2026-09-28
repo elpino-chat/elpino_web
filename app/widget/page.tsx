@@ -1828,11 +1828,11 @@ function WidgetContent() {
                 })
               )}
             </div>
-            <div className="shrink-0 px-4 pb-3 pt-1">
+            <div className="flex shrink-0 justify-center px-4 pb-3 pt-1">
               <button
                 type="button"
                 onClick={startNewChat}
-                className="flex h-10 w-full cursor-pointer items-center justify-center gap-2 rounded-full border border-[#11120f] bg-[#ffd84d] text-[13px] font-semibold text-[#11120f]"
+                className="flex h-10 cursor-pointer items-center justify-center gap-2 rounded-full border border-[#11120f] bg-[#ffd84d] px-5 text-[13px] font-semibold text-[#11120f]"
               >
                 Ask a question
                 <SendHorizontal size={15} />
