@@ -1832,7 +1832,7 @@ function WidgetContent() {
               <button
                 type="button"
                 onClick={startNewChat}
-                className="flex h-10 cursor-pointer items-center justify-center gap-2 rounded-full border border-[#11120f] bg-[#11120f] px-5 text-[13px] font-semibold text-white"
+                className="flex h-10 cursor-pointer items-center justify-center gap-2 rounded-md border border-[#11120f] bg-[#11120f] px-5 text-[13px] font-semibold text-white"
               >
                 <CircleHelp size={15} />
                 Ask a question
