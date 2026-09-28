@@ -1944,7 +1944,7 @@ function WidgetContent() {
                   {contactError && <p className="mt-1.5 px-2 text-[11px] text-[#e5626a]">{contactError}</p>}
                 </div>
               ) : (
-              <div className="rounded-[24px] border px-3 pb-2.5 pt-3 shadow-[0_3px_16px_rgba(0,0,0,.35)] transition focus-within:border-white/25" style={{ borderColor: BORDER, backgroundColor: SURFACE }}>
+              <div className="rounded-[24px] border px-3 pb-2.5 pt-3 shadow-[0_3px_16px_rgba(0,0,0,.35)]" style={{ borderColor: "rgba(255,255,255,0.7)", backgroundColor: SURFACE }}>
                 <input ref={fileInputRef} type="file" hidden onChange={handleFileSelect} />
                 <textarea
                   ref={composerRef}
