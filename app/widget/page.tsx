@@ -2,7 +2,7 @@
 
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { ArrowUp, ChevronDown, ChevronLeft, ChevronRight, CircleHelp, ExternalLink, File as FileIcon, LayoutGrid, Maximize2, MessageCircle, MessageSquarePlus, Minimize2, MoreHorizontal, Plus, Search, Smile, ThumbsDown, ThumbsUp, Volume2, VolumeX, X } from "lucide-react";
+import { ArrowUp, ChevronDown, ChevronLeft, ChevronRight, CircleHelp, ExternalLink, File as FileIcon, LayoutGrid, Maximize2, MessageCircle, MessageSquarePlus, Minimize2, MoreHorizontal, Paperclip, Plus, Search, Smile, ThumbsDown, ThumbsUp, Volume2, VolumeX, X } from "lucide-react";
 import MessageMarkdown from "@/app/components/MessageMarkdown";
 import TypingDots from "@/app/components/TypingDots";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -94,7 +94,10 @@ const REPLY_WAIT_MAX_MS = 60000;
 const MAX_ATTACHMENT_BYTES = 4 * 1024 * 1024;
 // Giphy's well-known public "beta" test key — fine for demo-scale traffic,
 // rate-limited; swap for a real key before any real production usage.
-const GIPHY_KEY = "dc6zaTOxFJmzC";
+// Giphy retired its shared demo key (it now answers 403 "BANNED"), so GIF search needs the workspace
+// operator's own key (free at developers.giphy.com). Giphy keys are meant to ship in the browser and are
+// rate limited per key. Without one the GIF button is hidden rather than opening an empty picker.
+const GIPHY_KEY = process.env.NEXT_PUBLIC_GIPHY_API_KEY?.trim() ?? "";
 const EMOJI = [
   "😀","😂","🥰","😍","😊","🙂","😉","😢","😭","😮","😅","🙏","👍","👎","👏","🙌","🤝","💪","🔥","✨",
   "🎉","❤️","💙","💯","👀","🤔","😴","😎","🥳","😇","🙃","😬","😱","🤗","👋","✅","❌","⚡","⭐","💡",
@@ -1728,7 +1731,7 @@ function WidgetContent() {
                       <div className="rounded-2xl px-3.5 py-2.5 text-[13.5px] leading-6" style={{ backgroundColor: BUBBLE, color: INK }}>
                         {line}
                       </div>
-                      <p className="px-1 text-[11px] leading-4" style={{ color: MUTED }}>{timeAgo(greetedAt, clock)}</p>
+                      <p className="px-1 text-[11px] leading-4" style={{ color: MUTED }}>{botName.trim() || "Elpino AI"} · AI agent · {timeAgo(greetedAt, clock)}</p>
                     </div>
                   ))}
                 </div>
@@ -1794,7 +1797,10 @@ function WidgetContent() {
                             )
                           )}
                           {!fromVisitor && messageIndex === groupMessages.length - 1 && (
-                            <p className="px-1 text-[11px] leading-4" style={{ color: MUTED }}>{timeAgo(Date.parse(message.createdAt) || clock, clock)}</p>
+                            <p className="px-1 text-[11px] leading-4" style={{ color: MUTED }}>
+                              {/* So a visitor can tell an AI answer from a teammate's: "Elpino AI · AI agent" vs the person's name. */}
+                              {message.senderType === "ai" ? `${botName.trim() || "Elpino AI"} · AI agent` : `${agentName ?? "Support team"} · Support team`} · {timeAgo(Date.parse(message.createdAt) || clock, clock)}
+                            </p>
                           )}
                         </div>
                       );
@@ -1951,11 +1957,14 @@ function WidgetContent() {
                 <div className="mt-2 flex items-center justify-between">
                   <div className="flex items-center gap-1">
                     <button type="button" aria-label="Attach file" onClick={() => fileInputRef.current?.click()} className="flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-white/10" style={{ color: ICON_MUTED }}>
-                      <Plus size={20} strokeWidth={1.8} />
+                      <Paperclip size={19} strokeWidth={1.8} />
                     </button>
                     <button type="button" aria-label="Emoji" onClick={() => togglePanel("emoji")} className="flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-white/10" style={{ color: activePanel === "emoji" ? ACCENT : ICON_MUTED }}>
                       <Smile size={20} strokeWidth={1.8} />
                     </button>
+                    {GIPHY_KEY && <button type="button" aria-label="GIF" aria-pressed={activePanel === "gif"} onClick={() => togglePanel("gif")} className="flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-white/10" style={{ color: activePanel === "gif" ? ACCENT : ICON_MUTED }}>
+                      <span className="flex h-[18px] items-center rounded-[5px] border-[1.5px] px-1 text-[9px] font-extrabold leading-none tracking-tight">GIF</span>
+                    </button>}
                   </div>
                   <button
                     type="button"
