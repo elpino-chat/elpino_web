@@ -1802,7 +1802,7 @@ function WidgetContent() {
                               href={message.attachmentUrl!}
                               download={message.attachmentName ?? "file"}
                               className="flex items-center gap-2.5 rounded-2xl px-3.5 py-2.5 text-[12.5px] font-medium"
-                              style={fromVisitor ? { backgroundColor: ACCENT, color: "#fff" } : { backgroundColor: BUBBLE, color: INK }}
+                              style={fromVisitor ? { backgroundColor: "transparent", border: `1px solid ${BORDER}`, color: INK } : { backgroundColor: BUBBLE, color: INK }}
                             >
                               <FileIcon size={15} className="shrink-0" />
                               <span className="min-w-0 truncate">{message.attachmentName ?? "Attachment"}</span>
@@ -1810,7 +1810,8 @@ function WidgetContent() {
                           )}
                           {message.body && (
                             fromVisitor ? (
-                              <div className="rounded-2xl px-3.5 py-2.5 text-[13px] leading-5" style={{ backgroundColor: ACCENT, color: "#fff" }}>
+                              // No background: the visitor's own words sit on the plain widget, right-aligned.
+                              <div className="px-0.5 py-1 text-[13px] leading-5" style={{ color: INK }}>
                                 <MessageMarkdown text={displayBody} />
                               </div>
                             ) : (
