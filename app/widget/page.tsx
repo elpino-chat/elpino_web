@@ -32,10 +32,11 @@ type ConversationSummary = { id: string; status: string; topic?: string | null; 
 // resume. Matches Crisp/Intercom: land in an existing conversation, or greet.
 type ChatView = "home" | "list" | "thread";
 type ContactField = "email" | "name" | "phone";
+// The question shown above the field, worded as the AI would ask it; the placeholder is only an example of the answer.
 const CONTACT_PROMPTS: Record<ContactField, { label: string; placeholder: string; type: string }> = {
-  email: { label: "Your email", placeholder: "you@example.com", type: "email" },
-  name: { label: "Your name", placeholder: "Your name", type: "text" },
-  phone: { label: "Your phone (optional)", placeholder: "+1 555 123 4567", type: "tel" },
+  email: { label: "What's your email, just in case we get disconnected?", placeholder: "you@example.com", type: "email" },
+  name: { label: "May I know your name?", placeholder: "Your name", type: "text" },
+  phone: { label: "What's the best phone number to reach you, just in case we get disconnected?", placeholder: "+1 555 123 4567", type: "tel" },
 };
 type GifResult = { id: string; url: string; preview: string };
 type TeamMember = { id: string; name: string | null; avatarUrl: string | null; online: boolean };
