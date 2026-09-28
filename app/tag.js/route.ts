@@ -293,11 +293,11 @@ export function GET(request: Request) {
     // the full-screen layout by default instead of a shrunk-down panel.
     // Only the loader can touch this — the iframe is a different origin and
     // can't resize itself, only ask via postMessage.
-    var PANEL_STYLE = 'position:fixed;bottom:88px;right:20px;width:420px;max-width:calc(100vw - 16px);height:640px;max-height:calc(100vh - 104px);border:none;border-radius:26px;box-shadow:0 18px 48px rgba(15,23,42,0.24);z-index:2147483000;background:#111214;';
+    var PANEL_STYLE = 'position:fixed;bottom:88px;right:20px;width:420px;max-width:calc(100vw - 16px);height:640px;max-height:calc(100vh - 104px);border:none;border-radius:26px;box-shadow:0 18px 48px rgba(15,23,42,0.24);z-index:2147483000;background:#f7f7f8;';
     // A reply preview is rendered by the cross-origin widget iframe itself.
     // The host page can resize the frame but never receives the reply text.
     var PREVIEW_STYLE = 'position:fixed;bottom:88px;right:20px;width:340px;max-width:calc(100vw - 32px);height:132px;border:none;border-radius:18px;box-shadow:0 16px 40px rgba(15,23,42,0.25);z-index:2147483000;background:transparent;';
-    var FULLSCREEN_STYLE = 'position:fixed;inset:0;width:100%;height:100%;max-width:100%;max-height:100%;border:none;border-radius:0;box-shadow:none;z-index:2147483000;background:#111214;';
+    var FULLSCREEN_STYLE = 'position:fixed;inset:0;width:100%;height:100%;max-width:100%;max-height:100%;border:none;border-radius:0;box-shadow:none;z-index:2147483000;background:#f7f7f8;';
     var MOBILE_BREAKPOINT = 640;
     function isMobile() {
       return (window.innerWidth || document.documentElement.clientWidth || 0) <= MOBILE_BREAKPOINT;

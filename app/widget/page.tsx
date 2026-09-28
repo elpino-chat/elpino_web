@@ -54,19 +54,19 @@ const ACCENT = "#428ce5";
 // Ink: the widget's primary text/icon color on its light surface. A few
 // interactive accents (the pre-chat radio dot) key off ACCENT instead so
 // they read as "selected", not just "text".
-// The widget is dark: these are its palette. Anything light-only added to this page needs a dark value too.
-const INK = "#f4f4f5";
-const BG = "#111214";
-const SURFACE = "#1a1b1e";
+// The widget is light: these are its palette. Anything colour-specific added to this page belongs here or in a token like these.
+const INK = "#18181b";
+const BG = "#f7f7f8";
+const SURFACE = "#ffffff";
 // Neutral chip background — the customer's own reply bubble uses ACCENT
 // instead; this is for everything else that needs a soft fill (attachment
 // preview, disabled composer state, the typing indicator).
-const BUBBLE = "#26272b";
-const BORDER = "rgba(255,255,255,0.10)";
-const MUTED = "rgba(244,244,245,.60)";
-const ICON_MUTED = "rgba(244,244,245,.68)";
-// The message box toolbar icons (attach, emoji, GIF): white at 75%.
-const COMPOSER_ICON = "rgba(255,255,255,0.75)";
+const BUBBLE = "#eef1f4";
+const BORDER = "#e4e6ea";
+const MUTED = "rgba(24,24,27,.55)";
+const ICON_MUTED = "rgba(24,24,27,.62)";
+// The message box toolbar icons (attach, emoji, GIF).
+const COMPOSER_ICON = "rgba(24,24,27,0.72)";
 const POLL_MS = 2000;
 // "Just now", "5 minutes ago", "1 hour ago" — same wording as the launcher popup in app/tag.js/route.ts.
 function timeAgo(then: number, now: number): string {
@@ -1430,7 +1430,7 @@ function WidgetContent() {
     return (
       <div className="h-full bg-transparent p-1">
         <div
-          className="group relative flex h-full cursor-pointer items-start gap-3 overflow-hidden rounded-[16px] border bg-[#1a1b1e] px-4 py-3.5 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+          className="group relative flex h-full cursor-pointer items-start gap-3 overflow-hidden rounded-[16px] border bg-white px-4 py-3.5 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
           style={{ borderColor: BORDER, color: INK }}
           role="button"
           tabIndex={0}
@@ -1445,14 +1445,14 @@ function WidgetContent() {
           </span>
           <div className="min-w-0 flex-1 pr-7">
             <p className="text-[12px] font-semibold leading-5">{botName}</p>
-            <p className="line-clamp-3 text-[13px] leading-[18px]" style={{ color: "rgba(244,244,245,.78)" }}>
+            <p className="line-clamp-3 text-[13px] leading-[18px]" style={{ color: "rgba(24,24,27,.76)" }}>
               {replyPreview.body || "Sent you a new reply"}
             </p>
           </div>
           <button
             type="button"
             aria-label="Dismiss reply preview"
-            className="absolute right-2.5 top-2.5 flex h-7 w-7 items-center justify-center rounded-full text-white/40 transition hover:bg-white/10 hover:text-white/80"
+            className="absolute right-2.5 top-2.5 flex h-7 w-7 items-center justify-center rounded-full text-black/40 transition hover:bg-black/5 hover:text-black/70"
             onClick={(event) => {
               event.stopPropagation();
               setReplyPreview(null);
@@ -1471,12 +1471,12 @@ function WidgetContent() {
     return (
       <div className="flex h-full flex-col" style={{ backgroundColor: BG, color: INK }}>
         <div className="shrink-0 px-5 pb-6 pt-5">
-          <button type="button" aria-label="Back to home" onClick={() => { setPreChatNeeded(false); setTab("chat"); setChatView("thread"); }} className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-white/10">
+          <button type="button" aria-label="Back to home" onClick={() => { setPreChatNeeded(false); setTab("chat"); setChatView("thread"); }} className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-black/5">
             <ChevronLeft size={20} />
           </button>
           <p className="mt-3 text-[17px] font-semibold leading-6">Please share a few details here so {botName} can connect you with the right person.</p>
         </div>
-        <div className="min-h-0 flex-1 overflow-y-auto rounded-t-[28px] px-5 pb-6 pt-6 shadow-[0_-1px_0_rgba(16,24,40,.04)]" style={{ backgroundColor: SURFACE, color: "#f4f4f5" }}>
+        <div className="min-h-0 flex-1 overflow-y-auto rounded-t-[28px] px-5 pb-6 pt-6 shadow-[0_-1px_0_rgba(16,24,40,.04)]" style={{ backgroundColor: SURFACE, color: "#1c1c1e" }}>
           <form className="space-y-3.5" onSubmit={(event) => { event.preventDefault(); void submitPreChat(); }}>
             {preChatFields.map((field) => (
               <PreChatFieldInput
@@ -1504,7 +1504,7 @@ function WidgetContent() {
   }
 
   return (
-    <div className="relative flex h-full flex-col" style={{ backgroundColor: BG, color: INK, colorScheme: "dark" }}>
+    <div className="relative flex h-full flex-col" style={{ backgroundColor: BG, color: INK, colorScheme: "light" }}>
       <div className="min-h-0 flex-1 overflow-hidden">
         {tab === "chat" && chatView === "home" ? (
           <div className="flex h-full flex-col">
@@ -1542,7 +1542,7 @@ function WidgetContent() {
               <button
                 type="button"
                 onClick={startNewChat}
-                className="flex w-full items-center gap-3 rounded-xl border p-3.5 text-left shadow-sm transition hover:border-white/30"
+                className="flex w-full items-center gap-3 rounded-xl border p-3.5 text-left shadow-sm transition hover:border-[#c7cbd1]"
                 style={{ backgroundColor: SURFACE, borderColor: BORDER }}
               >
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white" style={{ backgroundColor: ACCENT }}><MessageSquarePlus size={16} /></span>
@@ -1556,7 +1556,7 @@ function WidgetContent() {
                 <button
                   type="button"
                   onClick={() => openThread(conversationId)}
-                  className="flex w-full items-center gap-3 rounded-xl border p-3.5 text-left shadow-sm transition hover:border-white/30"
+                  className="flex w-full items-center gap-3 rounded-xl border p-3.5 text-left shadow-sm transition hover:border-[#c7cbd1]"
                   style={{ backgroundColor: SURFACE, borderColor: BORDER }}
                 >
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: BUBBLE, color: INK }}><MessageCircle size={16} /></span>
@@ -1577,7 +1577,7 @@ function WidgetContent() {
             {openArticle || articleLoading ? (
               <>
                 <div className="flex shrink-0 items-center gap-2 border-b px-3 py-3" style={{ borderColor: BORDER }}>
-                  <button type="button" aria-label="Back to help" onClick={() => { setOpenArticle(null); setArticleLoading(false); }} className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full hover:bg-white/10">
+                  <button type="button" aria-label="Back to help" onClick={() => { setOpenArticle(null); setArticleLoading(false); }} className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full hover:bg-black/5">
                     <ChevronLeft size={19} />
                   </button>
                   <p className="min-w-0 flex-1 truncate text-[14px] font-semibold">{openArticle?.title ?? "Help"}</p>
@@ -1610,7 +1610,7 @@ function WidgetContent() {
               <>
                 <div className="relative flex shrink-0 items-center justify-center border-b px-4 py-4" style={{ borderColor: BORDER }}>
                   <p className="text-[15px] font-semibold">Help</p>
-                  <button type="button" aria-label="Close" onClick={() => requestLeave()} className="absolute right-3 flex h-7 w-7 items-center justify-center rounded-full hover:bg-white/10">
+                  <button type="button" aria-label="Close" onClick={() => requestLeave()} className="absolute right-3 flex h-7 w-7 items-center justify-center rounded-full hover:bg-black/5">
                     <X size={16} />
                   </button>
                 </div>
@@ -1662,7 +1662,7 @@ function WidgetContent() {
           <div className="flex h-full flex-col">
             <div className="relative flex items-center justify-center border-b px-4 py-4" style={{ borderColor: BORDER }}>
               <p className="text-[15px] font-semibold">Messages</p>
-              <button type="button" aria-label="Close" onClick={() => requestLeave()} className="absolute right-3 flex h-7 w-7 items-center justify-center rounded-full hover:bg-white/10">
+              <button type="button" aria-label="Close" onClick={() => requestLeave()} className="absolute right-3 flex h-7 w-7 items-center justify-center rounded-full hover:bg-black/5">
                 <X size={16} />
               </button>
             </div>
@@ -1680,7 +1680,7 @@ function WidgetContent() {
                     key={conversation.id}
                     type="button"
                     onClick={() => openThread(conversation.id)}
-                    className="flex w-full items-start gap-3 border-b px-4 py-3.5 text-left transition hover:bg-white/[0.05]"
+                    className="flex w-full items-start gap-3 border-b px-4 py-3.5 text-left transition hover:bg-black/[0.03]"
                     style={{ borderColor: BORDER }}
                   >
                     <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl text-white" style={{ backgroundColor: ACCENT }}>
@@ -1713,7 +1713,7 @@ function WidgetContent() {
           <div className="flex h-full flex-col">
             <div className="relative flex shrink-0 items-center justify-between px-3 py-2" style={{ backgroundColor: BG }}>
               <div className="flex items-center gap-2">
-                <button type="button" aria-label="Back to chats" onClick={() => requestLeave("list")} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/[0.10] transition hover:bg-white/[0.16]"><ChevronLeft size={19} /></button>
+                <button type="button" aria-label="Back to chats" onClick={() => requestLeave("list")} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-black/[0.07] transition hover:bg-black/[0.12]"><ChevronLeft size={19} /></button>
                 <div className="relative flex max-w-[220px] flex-col items-start gap-0.5 py-0.5">
                   <h2 className="min-w-0 truncate text-[14px] font-bold leading-5" style={{ color: INK }}>{agentName ?? botName}</h2>
                   <p className="min-w-0 text-[11.5px] leading-4" style={{ color: MUTED }}>{agentName ? "Support team" : "AI Assistant"}</p>
@@ -1721,15 +1721,15 @@ function WidgetContent() {
               </div>
               <div className="ml-auto flex gap-2">
                 <Popover>
-                  <PopoverTrigger aria-label="More options" className="flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.10] transition hover:bg-white/[0.16]">
+                  <PopoverTrigger aria-label="More options" className="flex h-9 w-9 items-center justify-center rounded-full bg-black/[0.07] transition hover:bg-black/[0.12]">
                     <MoreHorizontal size={20} />
                   </PopoverTrigger>
-                  <PopoverContent align="end" sideOffset={6} className="w-52 border-white/10 bg-[#1a1b1e] p-1.5 text-[#f4f4f5] shadow-[0_18px_45px_rgba(0,0,0,0.5)]">
-                    <button type="button" onClick={toggleSound} className="flex h-9 w-full items-center gap-2.5 rounded-lg px-2.5 text-left text-[13px] font-medium hover:bg-white/10">
+                  <PopoverContent align="end" sideOffset={6} className="w-52 p-1.5">
+                    <button type="button" onClick={toggleSound} className="flex h-9 w-full items-center gap-2.5 rounded-lg px-2.5 text-left text-[13px] font-medium hover:bg-black/5">
                       {soundOn ? <VolumeX size={16} /> : <Volume2 size={16} />}
                       {soundOn ? "Mute notifications" : "Unmute notifications"}
                     </button>
-                    <button type="button" onClick={toggleMaximize} className="flex h-9 w-full items-center gap-2.5 rounded-lg px-2.5 text-left text-[13px] font-medium hover:bg-white/10">
+                    <button type="button" onClick={toggleMaximize} className="flex h-9 w-full items-center gap-2.5 rounded-lg px-2.5 text-left text-[13px] font-medium hover:bg-black/5">
                       {isMaximized ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
                       {isMaximized ? "Restore size" : "Maximize"}
                     </button>
@@ -1857,7 +1857,7 @@ function WidgetContent() {
                 // The answer to the AI's question above, in the conversation itself, like a reply. The message
                 // box below stays usable, so typing there instead is simply not answering.
                 <div className="w-full max-w-[85%]">
-                  <div className="flex items-center rounded-md border py-1.5 pl-3 pr-2" style={{ borderColor: contactError ? "#e5626a" : "rgba(255,255,255,0.7)", backgroundColor: SURFACE }}>
+                  <div className="flex items-center rounded-md border py-1.5 pl-3 pr-2" style={{ borderColor: contactError ? "#e5626a" : "rgba(24,24,27,0.28)", backgroundColor: SURFACE }}>
                     <input
                       key={contactField}
                       autoFocus
@@ -1877,7 +1877,7 @@ function WidgetContent() {
                       disabled={!contactValue.trim() || contactSaving}
                       aria-label="Send"
                       className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition disabled:opacity-100"
-                      style={{ backgroundColor: contactValue.trim() ? ACCENT : "rgba(255,255,255,0.10)", color: contactValue.trim() ? "#fff" : "rgba(255,255,255,0.35)" }}
+                      style={{ backgroundColor: contactValue.trim() ? ACCENT : "#eceef0", color: contactValue.trim() ? "#fff" : "#b5b8bd" }}
                     >
                       <ArrowUp size={15} strokeWidth={2.2} />
                     </button>
@@ -1893,7 +1893,7 @@ function WidgetContent() {
               {agentTyping && (
                 <div className="flex items-center">
                   <div className="flex items-center rounded-2xl px-3.5 py-3" style={{ backgroundColor: BUBBLE, width: "fit-content" }}>
-                    <TypingDots color="rgba(244,244,245,.50)" />
+                    <TypingDots color="rgba(24,24,27,.45)" />
                   </div>
                 </div>
               )}
@@ -1903,11 +1903,11 @@ function WidgetContent() {
                 <div className="absolute bottom-full left-3 right-3 mb-2 rounded-2xl border p-2.5 shadow-xl" style={{ borderColor: BORDER, backgroundColor: SURFACE }}>
                   <div className="mb-1 flex items-center justify-between px-0.5">
                     <p className="text-[10.5px] font-semibold" style={{ color: MUTED }}>Emoji</p>
-                    <button type="button" onClick={() => setActivePanel(null)} className="rounded-full p-1 hover:bg-white/10"><X size={13} /></button>
+                    <button type="button" onClick={() => setActivePanel(null)} className="rounded-full p-1 hover:bg-black/5"><X size={13} /></button>
                   </div>
                   <div className="grid grid-cols-8 gap-0.5">
                     {EMOJI.map((emoji) => (
-                      <button key={emoji} type="button" onClick={() => insertEmoji(emoji)} className="rounded-lg p-1.5 text-[17px] leading-none hover:bg-white/10">
+                      <button key={emoji} type="button" onClick={() => insertEmoji(emoji)} className="rounded-lg p-1.5 text-[17px] leading-none hover:bg-black/5">
                         {emoji}
                       </button>
                     ))}
@@ -1928,7 +1928,7 @@ function WidgetContent() {
                         style={{ color: INK }}
                       />
                     </div>
-                    <button type="button" onClick={() => setActivePanel(null)} className="rounded-full p-1 hover:bg-white/10"><X size={13} /></button>
+                    <button type="button" onClick={() => setActivePanel(null)} className="rounded-full p-1 hover:bg-black/5"><X size={13} /></button>
                   </div>
                   <div className="min-h-0 flex-1 overflow-y-auto">
                     {gifLoading ? (
@@ -1956,7 +1956,7 @@ function WidgetContent() {
                     <span className="flex h-9 w-9 items-center justify-center rounded-lg" style={{ backgroundColor: BUBBLE, color: INK }}><FileIcon size={15} /></span>
                   )}
                   <span className="min-w-0 flex-1 truncate text-[11.5px]" style={{ color: MUTED }}>{pendingAttachment.name ?? "Attachment"}</span>
-                  <button type="button" onClick={() => setPendingAttachment(null)} className="rounded-full p-1 hover:bg-white/10"><X size={13} /></button>
+                  <button type="button" onClick={() => setPendingAttachment(null)} className="rounded-full p-1 hover:bg-black/5"><X size={13} /></button>
                 </div>
               )}
               {attachError && <p className="mb-2 px-1 text-[11px] text-[#e5626a]">{attachError}</p>}
@@ -1966,7 +1966,7 @@ function WidgetContent() {
 
               {/* While the AI is asking for a detail, the answer field in the conversation is the only input. */}
               {!(contactActive && contactField) && (
-              <div className="rounded-[24px] border px-3 pb-2.5 pt-3 shadow-[0_3px_16px_rgba(0,0,0,.35)]" style={{ borderColor: "rgba(255,255,255,0.7)", backgroundColor: SURFACE }}>
+              <div className="rounded-[24px] border px-3 pb-2.5 pt-3 shadow-[0_3px_12px_rgba(15,23,42,.10)]" style={{ borderColor: "rgba(24,24,27,0.28)", backgroundColor: SURFACE }}>
                 <input ref={fileInputRef} type="file" hidden onChange={handleFileSelect} />
                 <textarea
                   ref={composerRef}
@@ -1980,13 +1980,13 @@ function WidgetContent() {
                 />
                 <div className="mt-2 flex items-center justify-between">
                   <div className="flex items-center gap-1">
-                    <button type="button" aria-label="Attach file" onClick={() => fileInputRef.current?.click()} className="flex h-7 w-7 items-center justify-center rounded-full transition hover:bg-white/10" style={{ color: COMPOSER_ICON }}>
+                    <button type="button" aria-label="Attach file" onClick={() => fileInputRef.current?.click()} className="flex h-7 w-7 items-center justify-center rounded-full transition hover:bg-black/5" style={{ color: COMPOSER_ICON }}>
                       <Paperclip size={16} strokeWidth={1.8} />
                     </button>
-                    <button type="button" aria-label="Emoji" onClick={() => togglePanel("emoji")} className="flex h-7 w-7 items-center justify-center rounded-full transition hover:bg-white/10" style={{ color: activePanel === "emoji" ? ACCENT : COMPOSER_ICON }}>
+                    <button type="button" aria-label="Emoji" onClick={() => togglePanel("emoji")} className="flex h-7 w-7 items-center justify-center rounded-full transition hover:bg-black/5" style={{ color: activePanel === "emoji" ? ACCENT : COMPOSER_ICON }}>
                       <Smile size={17} strokeWidth={1.8} />
                     </button>
-                    {GIPHY_KEY && <button type="button" aria-label="GIF" aria-pressed={activePanel === "gif"} onClick={() => togglePanel("gif")} className="flex h-7 w-7 items-center justify-center rounded-full transition hover:bg-white/10" style={{ color: activePanel === "gif" ? ACCENT : COMPOSER_ICON }}>
+                    {GIPHY_KEY && <button type="button" aria-label="GIF" aria-pressed={activePanel === "gif"} onClick={() => togglePanel("gif")} className="flex h-7 w-7 items-center justify-center rounded-full transition hover:bg-black/5" style={{ color: activePanel === "gif" ? ACCENT : COMPOSER_ICON }}>
                       <span className="flex h-[15px] items-center rounded-[4px] border-[1.5px] px-[3px] text-[8px] font-extrabold leading-none tracking-tight">GIF</span>
                     </button>}
                   </div>
@@ -1996,7 +1996,7 @@ function WidgetContent() {
                     disabled={(!draft.trim() && !pendingAttachment) || sending || sendBlockedByReply}
                     aria-label="Send"
                     className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition disabled:opacity-100"
-                    style={{ backgroundColor: (draft.trim() || pendingAttachment) && !sendBlockedByReply ? ACCENT : "rgba(255,255,255,0.10)", color: (draft.trim() || pendingAttachment) && !sendBlockedByReply ? "#fff" : "rgba(255,255,255,0.35)" }}
+                    style={{ backgroundColor: (draft.trim() || pendingAttachment) && !sendBlockedByReply ? ACCENT : "#eceef0", color: (draft.trim() || pendingAttachment) && !sendBlockedByReply ? "#fff" : "#b5b8bd" }}
                   >
                     <ArrowUp size={15} strokeWidth={2.2} />
                   </button>
@@ -2009,7 +2009,7 @@ function WidgetContent() {
       </div>
 
       {showBranding && (
-        <a href="https://elpino.chat" target="_blank" rel="noreferrer" className="block shrink-0 pb-2 pt-0 text-center text-[10px] font-medium transition hover:text-white" style={{ color: MUTED, backgroundColor: BG }}>
+        <a href="https://elpino.chat" target="_blank" rel="noreferrer" className="block shrink-0 pb-2 pt-0 text-center text-[10px] font-medium transition hover:text-[#18181b]" style={{ color: MUTED, backgroundColor: BG }}>
           Powered by <span className="underline underline-offset-2">elpino.chat</span>
         </a>
       )}
@@ -2078,13 +2078,13 @@ function PreChatFieldInput({
   if (field.type === "phone") {
     return (
       <label className="block">
-        <span className="mb-1 block px-1 text-[11.5px] font-semibold text-white/70">{field.label}</span>
-        <div className="flex items-stretch overflow-hidden rounded-full border border-white/[0.14] focus-within:border-white/70">
-          <div className="relative shrink-0 border-r border-white/[0.14]">
+        <span className="mb-1 block px-1 text-[11.5px] font-semibold text-[#4a4f57]">{field.label}</span>
+        <div className="flex items-stretch overflow-hidden rounded-full border border-[#e1e3e6] focus-within:border-[#18181b]">
+          <div className="relative shrink-0 border-r border-[#e1e3e6]">
             <select
               value={formCountry}
               onChange={(event) => setFormCountry(Number(event.target.value))}
-              className="h-full appearance-none bg-transparent py-3 pl-4 pr-7 text-[13px] text-[#f4f4f5] outline-none"
+              className="h-full appearance-none bg-transparent py-3 pl-4 pr-7 text-[13px] text-[#1c1c1e] outline-none"
             >
               {COUNTRIES.map((country, index) => (
                 <option key={country.name} value={index}>
@@ -2100,7 +2100,7 @@ function PreChatFieldInput({
             onChange={(event) => onChange(event.target.value)}
             placeholder={field.placeholder || "555 000 0000"}
             required={field.required}
-            className="min-w-0 flex-1 bg-transparent px-4 py-3 text-[13px] text-[#f4f4f5] outline-none placeholder:text-[#9aa0a6]"
+            className="min-w-0 flex-1 bg-transparent px-4 py-3 text-[13px] text-[#1c1c1e] outline-none placeholder:text-[#9aa0a6]"
           />
         </div>
       </label>
@@ -2110,14 +2110,14 @@ function PreChatFieldInput({
   if (field.type === "textarea") {
     return (
       <label className="block">
-        <span className="mb-1 block px-1 text-[11.5px] font-semibold text-white/70">{field.label}</span>
+        <span className="mb-1 block px-1 text-[11.5px] font-semibold text-[#4a4f57]">{field.label}</span>
         <textarea
           value={value}
           onChange={(event) => onChange(event.target.value)}
           placeholder={field.placeholder}
           required={field.required}
           rows={3}
-          className="w-full resize-none rounded-2xl border border-white/[0.14] px-4 py-3 text-[13px] text-[#f4f4f5] outline-none placeholder:text-[#9aa0a6] focus:border-white/70"
+          className="w-full resize-none rounded-2xl border border-[#e1e3e6] px-4 py-3 text-[13px] text-[#1c1c1e] outline-none placeholder:text-[#9aa0a6] focus:border-[#18181b]"
         />
       </label>
     );
@@ -2127,13 +2127,13 @@ function PreChatFieldInput({
     const options = field.options ?? [];
     return (
       <label className="block">
-        <span className="mb-1 block px-1 text-[11.5px] font-semibold text-white/70">{field.label}</span>
+        <span className="mb-1 block px-1 text-[11.5px] font-semibold text-[#4a4f57]">{field.label}</span>
         <div className="relative">
           <select
             value={value}
             onChange={(event) => onChange(event.target.value)}
             required={field.required}
-            className="w-full appearance-none rounded-full border border-white/[0.14] bg-transparent px-4 py-3 pr-9 text-[13px] text-[#f4f4f5] outline-none focus:border-white/70"
+            className="w-full appearance-none rounded-full border border-[#e1e3e6] bg-transparent px-4 py-3 pr-9 text-[13px] text-[#1c1c1e] outline-none focus:border-[#18181b]"
           >
             <option value="" disabled>{field.placeholder || "Choose an option"}</option>
             {options.map((option) => (
@@ -2153,10 +2153,10 @@ function PreChatFieldInput({
         <p className="mb-2 text-[13px] font-bold">{field.label}</p>
         <div className="space-y-0.5">
           {options.map((option) => (
-            <label key={option} className="flex cursor-pointer items-center gap-2.5 rounded-lg px-1 py-2 hover:bg-white/[0.05]">
+            <label key={option} className="flex cursor-pointer items-center gap-2.5 rounded-lg px-1 py-2 hover:bg-black/[0.03]">
               <span
                 className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2"
-                style={{ borderColor: value === option ? ACCENT : "rgba(255,255,255,0.30)" }}
+                style={{ borderColor: value === option ? ACCENT : "#c7cbd1" }}
               >
                 {value === option && <span className="h-2 w-2 rounded-full" style={{ backgroundColor: ACCENT }} />}
               </span>
@@ -2181,8 +2181,8 @@ function PreChatFieldInput({
         <p className="mb-2 text-[13px] font-bold">{field.label}</p>
         <div className="space-y-0.5">
           {options.map((option) => (
-            <label key={option} className="flex cursor-pointer items-center gap-2.5 rounded-lg px-1 py-2 hover:bg-white/[0.05]">
-              <input type="checkbox" checked={selected.includes(option)} onChange={() => toggleOption(option)} className="h-4 w-4 shrink-0 rounded border-white/30" />
+            <label key={option} className="flex cursor-pointer items-center gap-2.5 rounded-lg px-1 py-2 hover:bg-black/[0.03]">
+              <input type="checkbox" checked={selected.includes(option)} onChange={() => toggleOption(option)} className="h-4 w-4 shrink-0 rounded border-[#c7cbd1]" />
               <span className="text-[13px]">{option}</span>
             </label>
           ))}
@@ -2199,23 +2199,23 @@ function PreChatFieldInput({
           checked={value === "true"}
           onChange={(event) => onChange(event.target.checked ? "true" : "")}
           required={field.required}
-          className="mt-0.5 h-4 w-4 shrink-0 rounded border-white/30"
+          className="mt-0.5 h-4 w-4 shrink-0 rounded border-[#c7cbd1]"
         />
-        <span className="text-[13px] text-[#f4f4f5]">{field.label}</span>
+        <span className="text-[13px] text-[#1c1c1e]">{field.label}</span>
       </label>
     );
   }
 
   return (
     <label className="block">
-      <span className="mb-1 block px-1 text-[11.5px] font-semibold text-white/70">{field.label}</span>
+      <span className="mb-1 block px-1 text-[11.5px] font-semibold text-[#4a4f57]">{field.label}</span>
       <input
         type={field.type === "email" ? "email" : "text"}
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={field.placeholder}
         required={field.required}
-        className="w-full rounded-full border border-white/[0.14] px-4 py-3 text-[13px] text-[#f4f4f5] outline-none placeholder:text-[#9aa0a6] focus:border-white/70"
+        className="w-full rounded-full border border-[#e1e3e6] px-4 py-3 text-[13px] text-[#1c1c1e] outline-none placeholder:text-[#9aa0a6] focus:border-[#18181b]"
       />
     </label>
   );
