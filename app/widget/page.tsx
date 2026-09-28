@@ -1552,9 +1552,9 @@ function WidgetContent() {
               <button
                 type="button"
                 onClick={startNewChat}
-                // Same look as the pricing page: a solid ink border, no shadow, a flat colour fill.
+                // Same look as the pricing page: a solid ink border and no shadow, on white.
                 className="flex w-full items-center gap-3 rounded-2xl border-2 border-[#11120f] p-4 text-left transition hover:-translate-y-0.5"
-                style={{ backgroundColor: "#ffd84d" }}
+                style={{ backgroundColor: "#ffffff" }}
               >
                 <span className="min-w-0 flex-1">
                   <span className="block text-[14px] font-semibold text-[#11120f]">Ask a question</span>
