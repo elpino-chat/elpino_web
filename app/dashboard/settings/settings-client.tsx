@@ -2157,6 +2157,8 @@ function BillingSettingsPage() {
   );
 }
 
+const DEFAULT_GREETING = "Hi there 👋 How can I help you today?";
+const GREETING_MAX_LENGTH = 300;
 type AiPersona = { id: string; name: string; aiName: string; aiAvatarUrl: string | null; aiPersona: string | null; chatbotAccent: string; chatbotTheme: "light" | "dark" | "auto"; chatbotReplyLanguage: string; greetingLines: string[] };
 
 type Account = { email: string; name: string | null; avatarUrl: string | null; emailVerified: boolean; twoFactorEnabled: boolean };
@@ -3303,7 +3305,8 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
   const [theme, setTheme] = useState<"light" | "dark" | "auto">("light");
   const [replyLanguage, setReplyLanguage] = useState("auto");
   const [replyLanguageOpen, setReplyLanguageOpen] = useState(false);
-  const [greetingLines, setGreetingLines] = useState<string[]>(["Hi there 👋", "How can I help you today?"]);
+  // One greeting message. Workspaces saved with several lines are shown joined into one.
+  const [greeting, setGreeting] = useState(DEFAULT_GREETING);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -3331,13 +3334,14 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
         setAccent(data.persona.chatbotAccent ?? "#202225");
         setTheme(data.persona.chatbotTheme ?? "light");
         setReplyLanguage(data.persona.chatbotReplyLanguage ?? "auto");
-        setGreetingLines(Array.isArray(data.persona.greetingLines) && data.persona.greetingLines.length > 0 ? data.persona.greetingLines : ["Hi there 👋", "How can I help you today?"]);
+        const saved = Array.isArray(data.persona.greetingLines) ? data.persona.greetingLines.map((line) => line.trim()).filter(Boolean).join(" ") : "";
+        setGreeting(saved || DEFAULT_GREETING);
       })
       .catch(() => undefined)
       .finally(() => setLoading(false));
   }, []);
 
-  const cleanGreetingLines = greetingLines.map((line) => line.trim()).filter(Boolean);
+  const cleanGreetingLines = greeting.trim() ? [greeting.trim()] : [];
 
   async function save() {
     if (!aiName.trim() || cleanGreetingLines.length === 0 || saving) return;
@@ -3382,22 +3386,7 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
     const timer = window.setTimeout(() => { void save(); }, 700);
     return () => window.clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accent, theme, replyLanguage, aiName, aiAvatarUrl, greetingLines, loading]);
-
-  function updateGreetingLine(index: number, value: string) {
-    setGreetingLines((current) => current.map((line, i) => (i === index ? value : line)));
-    setSaved(false);
-  }
-
-  function addGreetingLine() {
-    setGreetingLines((current) => [...current, ""]);
-    setSaved(false);
-  }
-
-  function removeGreetingLine(index: number) {
-    setGreetingLines((current) => (current.length > 1 ? current.filter((_, i) => i !== index) : current));
-    setSaved(false);
-  }
+  }, [accent, theme, replyLanguage, aiName, aiAvatarUrl, greeting, loading]);
 
   return (
     <div className="dashboard-chatbot-settings-page mx-auto w-full max-w-[1280px] px-7 pb-20 pt-8 text-white/90 sm:px-9 lg:px-10">
@@ -3497,27 +3486,18 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
                   <p className="mt-1 max-w-[200px] text-[12px] leading-5 text-[#667069]">Shown before a visitor starts chatting, on the launcher and at the top of a new conversation.</p>
                 </div>
                 <div className="w-full min-w-0">
-                  <div className="w-full space-y-2">
-                    {greetingLines.map((line, index) => (
-                      <div key={index} className="flex items-center gap-2">
-                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#f1f1f1] text-[#666]"><MessageCircle size={15} /></span>
-                        <input
-                          value={line}
-                          onChange={(event) => updateGreetingLine(index, event.target.value)}
-                          placeholder={index === 0 ? "Hi there 👋" : "How can I help you today?"}
-                          className="h-9 w-full rounded-lg border border-[#DDE4E8] px-3 text-[13px] outline-none transition focus:border-[#11120f] focus:ring-2 focus:ring-[#11120f]/8"
-                        />
-                        {greetingLines.length > 1 && (
-                          <button type="button" aria-label="Remove line" onClick={() => removeGreetingLine(index)} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[#8b8d90] hover:bg-[#f7f8f8] hover:text-black">
-                            <X size={15} />
-                          </button>
-                        )}
-                      </div>
-                    ))}
-                    <button type="button" onClick={addGreetingLine} className="dashboard-greeting-add-button flex h-9 items-center gap-2 rounded-lg border border-dashed border-[#DDE4E8] px-3 text-[12px] font-semibold text-[#666] transition hover:border-[#b9c0c5] hover:text-black">
-                      <Plus size={14} /> Add message
-                    </button>
+                  <div className="flex w-full items-center gap-2">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#f1f1f1] text-[#666]"><MessageCircle size={15} /></span>
+                    <input
+                      aria-label="Greeting message"
+                      value={greeting}
+                      maxLength={GREETING_MAX_LENGTH}
+                      onChange={(event) => { setGreeting(event.target.value); setSaved(false); }}
+                      placeholder={DEFAULT_GREETING}
+                      className="h-9 w-full rounded-lg border border-[#DDE4E8] px-3 text-[13px] outline-none transition focus:border-[#11120f] focus:ring-2 focus:ring-[#11120f]/8"
+                    />
                   </div>
+                  <p className="mt-1.5 text-[11px] text-[#8b8d90]">{greeting.length}/{GREETING_MAX_LENGTH}</p>
                 </div>
               </div>
             </div>
@@ -3620,7 +3600,7 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
       )}
 
       {!loading && previewContainer && createPortal(
-        <WidgetPreviewCard accent={accent} aiName={aiName} aiAvatarUrl={aiAvatarUrl} greetingLines={cleanGreetingLines.length > 0 ? cleanGreetingLines : ["Hi there 👋", "How can I help you today?"]} fields={previewFields} />,
+        <WidgetPreviewCard accent={accent} aiName={aiName} aiAvatarUrl={aiAvatarUrl} greetingLines={cleanGreetingLines.length > 0 ? cleanGreetingLines : [DEFAULT_GREETING]} fields={previewFields} />,
         previewContainer
       )}
 
@@ -3773,7 +3753,7 @@ function WidgetPreviewCard({
 
   const displayName = aiName.trim() || "Elpino AI";
   const initial = displayName.charAt(0).toUpperCase();
-  const lines = greetingLines.length > 0 ? greetingLines : ["Hi there 👋", "How can I help you today?"];
+  const lines = greetingLines.length > 0 ? greetingLines : [DEFAULT_GREETING];
   const showTabBar = screen === "home" || screen === "list";
 
   function openWidget() {
@@ -3844,11 +3824,10 @@ function WidgetPreviewCard({
             >
               <X size={12} />
             </button>
-            {lines.map((line, index) => (
-              <div key={index} className="w-fit max-w-full rounded-md border border-black/40 bg-white px-3.5 py-2.5 text-[12.5px] leading-5 text-[#18181b] shadow-2xl transition hover:brightness-95">
-                {line}
-              </div>
-            ))}
+            {/* One popup, like the real launcher (tag.js). */}
+            <div className="w-fit max-w-full rounded-md border border-black/40 bg-white px-3.5 py-2.5 text-[12.5px] leading-5 text-[#18181b] shadow-2xl transition hover:brightness-95">
+              {lines.join(" ")}
+            </div>
           </div>
         )}
 

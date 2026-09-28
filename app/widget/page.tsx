@@ -1308,13 +1308,17 @@ function WidgetContent() {
   }
 
   const initial = useMemo(() => (botName.trim() || "R").charAt(0).toUpperCase(), [botName]);
-  // The opening line is assumed to be the salutation ("Hi there 👋") —
-  // swapped for the identified visitor's first name, rest of the workspace's
-  // own greeting copy left untouched.
-  const displayGreetingLines = useMemo(
-    () => (greetingName ? [`Hi ${greetingName} 👋`, ...greetingLines.slice(1)] : greetingLines),
-    [greetingLines, greetingName],
-  );
+  // The salutation ("Hi there 👋") is swapped for the identified visitor's first
+  // name and the rest of the workspace's own greeting copy is left untouched.
+  // Kept identical to personalizedGreeting in workspace-service, which saves the
+  // same lines as real messages: a greeting is one message, so only its leading
+  // "Hi there" changes; an older several-line greeting swaps its whole first line.
+  const displayGreetingLines = useMemo(() => {
+    if (!greetingName) return greetingLines;
+    if (greetingLines.length > 1) return [`Hi ${greetingName} 👋`, ...greetingLines.slice(1)];
+    const salutation = /^Hi there(?:\s*👋)?/u;
+    return greetingLines.length === 1 && salutation.test(greetingLines[0]) ? [greetingLines[0].replace(salutation, `Hi ${greetingName} 👋`)] : greetingLines;
+  }, [greetingLines, greetingName]);
   // Consecutive messages from the same sender are one item in the thread
   // list, not one each — otherwise every bubble, even ones seconds apart
   // from the same reply, gets the full inter-group gap meant to separate

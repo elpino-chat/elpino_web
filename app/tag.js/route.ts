@@ -427,9 +427,8 @@ export function GET(request: Request) {
         greeting = document.createElement('div');
         greeting.style.cssText = 'position:fixed;bottom:88px;right:20px;width:300px;max-width:calc(100vw - 32px);z-index:2147483000;cursor:pointer;font-family:system-ui,-apple-system,sans-serif;display:flex;flex-direction:column;align-items:flex-end;gap:6px;';
 
-        var bubbles = greetingLines.map(function (line) {
-          return '<div style="background:#fff;color:#18181b;border:1px solid rgba(0,0,0,0.4);border-radius:6px;padding:10px 14px;box-shadow:0 16px 40px rgba(15,23,42,0.32);font-size:13px;line-height:1.4;width:fit-content;max-width:100%;">' + escapeHtml(line) + '</div>';
-        }).join('');
+        // One popup, however the greeting is stored: workspaces saved with several lines get them joined.
+        var bubbles = '<div style="background:#fff;color:#18181b;border:1px solid rgba(0,0,0,0.4);border-radius:6px;padding:10px 14px;box-shadow:0 16px 40px rgba(15,23,42,0.32);font-size:13px;line-height:1.4;width:fit-content;max-width:100%;">' + escapeHtml(greetingLines.join(' ')) + '</div>';
         greeting.innerHTML =
           '<button aria-label="Dismiss" style="align-self:flex-end;background:rgba(23,25,27,0.9);border-radius:9999px;border:none;color:rgba(255,255,255,.6);cursor:pointer;padding:4px;line-height:0;box-shadow:0 4px 12px rgba(15,23,42,0.24);">' + closeIcon(12) + '</button>' +
           bubbles;

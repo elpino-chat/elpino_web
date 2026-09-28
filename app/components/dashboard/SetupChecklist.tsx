@@ -24,7 +24,9 @@ type PersonaResult = {
 const DEFAULT_AI_NAME = "Elpino AI";
 const DEFAULT_CHATBOT_ACCENT = "#202225";
 const DEFAULT_CHATBOT_THEME = "light";
-const DEFAULT_GREETING_LINES = ["Hi there 👋", "How can I help you today?"];
+// Compared as one message: the settings page saves the greeting as a single line, so the untouched
+// default is the same text whether it is stored as two lines or one.
+const DEFAULT_GREETING = "Hi there 👋 How can I help you today?";
 const DEFAULT_AVATAR_FILENAME = "widget_5.png";
 type KnowledgeResult = { items?: unknown[] };
 type IntegrationsResult = { integrations?: { status?: string }[] };
@@ -85,7 +87,7 @@ export default function SetupChecklist() {
               (persona.persona.chatbotTheme && persona.persona.chatbotTheme !== DEFAULT_CHATBOT_THEME) ||
               (Array.isArray(persona.persona.greetingLines) &&
                 persona.persona.greetingLines.length > 0 &&
-                JSON.stringify(persona.persona.greetingLines) !== JSON.stringify(DEFAULT_GREETING_LINES))),
+                persona.persona.greetingLines.join(" ").trim() !== DEFAULT_GREETING)),
         ),
       },
       {
