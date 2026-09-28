@@ -11,7 +11,7 @@ function base64url(input: Buffer | string) {
   return Buffer.from(input).toString("base64url");
 }
 
-export function signAuthToken(payload: { email: string; name?: string; tokenVersion?: number }) {
+export function signAuthToken(payload: { email: string; name?: string; tokenVersion?: number; sid?: string }) {
   const secret = process.env.AUTH_JWT_SECRET;
   if (!secret) {
     throw new Error("AUTH_JWT_SECRET is missing");
@@ -24,6 +24,9 @@ export function signAuthToken(payload: { email: string; name?: string; tokenVers
     // Session epoch this token was minted at; checked against the user's current
     // epoch so a logout/"sign out everywhere" can revoke it server-side.
     sv: payload.tokenVersion ?? 0,
+    // Per-device session id (user_sessions row). Absent on tokens minted before
+    // device sessions existed, which then stay valid until they expire.
+    ...(payload.sid ? { sid: payload.sid } : {}),
     iat: now,
     exp: now + tokenTtlSeconds,
   };
@@ -60,12 +63,13 @@ export function verifyAuthToken(token: string) {
   const exp = Buffer.from(expected);
   if (sig.length !== exp.length || !timingSafeEqual(sig, exp)) return null;
 
-  let payload: { email?: string; name?: string; sv?: number; exp?: number };
+  let payload: { email?: string; name?: string; sv?: number; sid?: string; exp?: number };
   try {
     payload = JSON.parse(Buffer.from(encodedBody, "base64url").toString("utf8")) as {
       email?: string;
       name?: string;
       sv?: number;
+      sid?: string;
       exp?: number;
     };
   } catch {

@@ -51,6 +51,7 @@ export async function PATCH(request: Request) {
     email: result.identity.email,
     name: result.identity.name,
     tokenVersion: tokenVersion ?? 0,
+    sid: session.sid,
   });
   await setAuthCookie(jwt);
 

@@ -1,5 +1,6 @@
 import { callGateway } from "../../_lib/gateway";
-import { jsonError, setAuthCookie, signAuthToken } from "../../_lib/auth-store";
+import { jsonError, setAuthCookie } from "../../_lib/auth-store";
+import { startSession } from "../../_lib/sessions";
 
 type LoginResult = {
   identity?: { email: string; name?: string; needsOnboarding?: boolean; tokenVersion?: number };
@@ -28,7 +29,7 @@ export async function POST(request: Request) {
     return jsonError(result.error ?? "The email or password you entered may be incorrect.", 401);
   }
 
-  const jwt = signAuthToken(result.identity);
+  const jwt = await startSession(result.identity);
   await setAuthCookie(jwt);
   return Response.json({
     email: result.identity.email,

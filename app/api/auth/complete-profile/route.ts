@@ -1,5 +1,6 @@
 import { callGateway } from "../_lib/gateway";
-import { jsonError, setAuthCookie, signAuthToken } from "../_lib/auth-store";
+import { jsonError, setAuthCookie } from "../_lib/auth-store";
+import { startSession } from "../_lib/sessions";
 
 type CompleteProfileResult = {
   identity?: { email: string; name?: string; needsOnboarding?: boolean; tokenVersion?: number };
@@ -35,7 +36,7 @@ export async function POST(request: Request) {
   }
 
   // Account now exists with a password — this is where the session actually starts.
-  const jwt = signAuthToken(result.identity);
+  const jwt = await startSession(result.identity);
   await setAuthCookie(jwt);
 
   return Response.json({

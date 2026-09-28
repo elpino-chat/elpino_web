@@ -1,5 +1,6 @@
 import { callGateway } from "../_lib/gateway";
-import { sanitizeReturnPath, setAuthCookie, signAuthToken } from "../_lib/auth-store";
+import { sanitizeReturnPath, setAuthCookie } from "../_lib/auth-store";
+import { startSession } from "../_lib/sessions";
 
 type OAuthResult = {
   identity?: { email: string; name?: string; needsOnboarding?: boolean; tokenVersion?: number };
@@ -31,7 +32,7 @@ export async function POST(request: Request) {
 
   let jwt: string;
   try {
-    jwt = signAuthToken(result.identity);
+    jwt = await startSession(result.identity);
   } catch {
     return Response.json({ error: "Signed in with Google, but couldn't start your session. Please try again." }, { status: 500 });
   }

@@ -1,5 +1,6 @@
 import { callGateway } from "../../../_lib/gateway";
-import { sanitizeReturnPath, setAuthCookie, signAuthToken } from "../../../_lib/auth-store";
+import { sanitizeReturnPath, setAuthCookie } from "../../../_lib/auth-store";
+import { startSession } from "../../../_lib/sessions";
 import { getAuthRedirectBaseUrl } from "../../../_lib/redirect-url";
 
 type CompleteResult = {
@@ -36,7 +37,7 @@ export async function GET(request: Request) {
 
   let jwt: string;
   try {
-    jwt = signAuthToken(result.identity);
+    jwt = await startSession(result.identity);
   } catch {
     return Response.redirect(`${baseUrl}/login?error=linkedin_session_init_failed`);
   }

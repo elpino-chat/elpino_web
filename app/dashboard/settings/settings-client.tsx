@@ -15,6 +15,7 @@ import {
 } from "@/app/components/PricingCards";
 import { openRazorpayCheckout } from "@/lib/razorpay-checkout";
 import { Switch } from "@/components/ui/switch";
+import { Bone } from "@/app/components/dashboard/DashboardSkeleton";
 import { readDashboardTheme, saveDashboardTheme, type DashboardAppearance } from "@/app/components/dashboard/DashboardThemeProvider";
 import { InvitePeopleDialog } from "@/app/components/dashboard/InvitePeopleDialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -70,7 +71,9 @@ import {
   MessageCircle,
   MessagesSquare,
   MessageSquarePlus,
+  MapPin,
   Monitor,
+  Smartphone,
   MoreHorizontal,
   Paperclip,
   Pencil,
@@ -91,7 +94,6 @@ import {
   Trash2,
   Upload,
   UserRound,
-  UserCog,
   UserCheck,
   UserPlus,
   X,
@@ -129,6 +131,20 @@ function useMyRole() {
  * (owner) and "Remove workspace" (everyone else) and to name the workspace
  * in the confirmation copy.
  */
+/** Grey placeholder rows (avatar + two lines) shown while a settings section loads. */
+function SkeletonRows({ rows = 4, className = "" }: { rows?: number; className?: string }) {
+  return (
+    <div role="status" aria-busy="true" aria-label="Loading" className={`space-y-4 ${className}`}>
+      {Array.from({ length: rows }, (_, row) => (
+        <div key={row} className="flex items-center gap-3">
+          <Bone className="size-9 shrink-0" />
+          <div className="flex-1 space-y-2"><Bone className="h-3.5 w-2/5" /><Bone className="h-3 w-3/5" /></div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function useCurrentWorkspace() {
   const [workspace, setWorkspace] = useState<{ id: string; name: string; role: string } | null>(null);
   const [loading, setLoading] = useState(true);
@@ -417,7 +433,7 @@ function AIUsageSettingsPage() {
 
       <section className="mt-6 rounded-xl bg-white p-6">
         {!entitlement ? (
-          <div className="flex h-[140px] items-center justify-center text-[13px] text-[#8b9398]"><LoaderCircle size={15} className="mr-2 animate-spin" /> Loading plan</div>
+          <div role="status" aria-busy="true" aria-label="Loading plan" className="space-y-3 py-2"><Bone className="h-5 w-32" /><Bone className="h-3.5 w-3/5" /><Bone className="h-9 w-40" /></div>
         ) : (
           <>
             <div>
@@ -554,7 +570,7 @@ function AIUsageSettingsPage() {
             )}
           </>
         ) : (
-          <div className="flex h-[72px] items-center justify-center text-[13px] text-[#8b9398]"><LoaderCircle size={15} className="mr-2 animate-spin" /> Loading</div>
+          <div role="status" aria-busy="true" aria-label="Loading" className="space-y-2.5 py-1"><Bone className="h-4 w-1/3" /><Bone className="h-3.5 w-1/2" /></div>
         )}
       </section>
       )}
@@ -1026,7 +1042,7 @@ function TeamsSettingsPage() {
               </div>
 
               {loading ? (
-                <div className="flex h-24 items-center justify-center text-[13px] text-[var(--b-muted)]"><LoaderCircle size={15} className="mr-2 animate-spin" /> Loading members</div>
+                <SkeletonRows rows={4} className="px-5 py-5" />
               ) : totalShown === 0 ? (
                 <div className="px-5 py-10 text-center text-[13px] text-[var(--b-muted)]">No members match this search or filter.</div>
               ) : (
@@ -1635,9 +1651,23 @@ function BillingSettingsPage() {
       </header>
 
       {loading && (
-        <div className="mt-7 space-y-4">
-          <div className="h-64 animate-pulse rounded-3xl bg-[var(--b-surface-2)]" />
-          <div className="grid gap-4 md:grid-cols-3"><div className="h-28 animate-pulse rounded-2xl bg-[var(--b-surface-2)]" /><div className="h-28 animate-pulse rounded-2xl bg-[var(--b-surface-2)]" /><div className="h-28 animate-pulse rounded-2xl bg-[var(--b-surface-2)]" /></div>
+        <div role="status" aria-busy="true" aria-label="Loading billing" className="mt-7 space-y-4">
+          <div className="elpino-skel-card grid gap-8 p-7 md:grid-cols-[minmax(0,1fr)_auto] md:p-9">
+            <div className="space-y-4">
+              <div className="flex gap-2"><Bone className="h-6 w-28 rounded-full" /><Bone className="h-6 w-20 rounded-full" /></div>
+              <Bone className="h-11 w-44" />
+              <Bone className="h-6 w-56" />
+              <Bone className="h-4 w-full max-w-md" />
+              <div className="flex gap-2 pt-2"><Bone className="h-10 w-36" /><Bone className="h-10 w-28" /></div>
+            </div>
+            <Bone className="hidden size-36 rounded-full md:block" />
+          </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            {[0, 1, 2].map((card) => (
+              <div key={card} className="elpino-skel-card space-y-3 p-5"><Bone className="h-3.5 w-24" /><Bone className="h-7 w-28" /><Bone className="h-3 w-3/4" /></div>
+            ))}
+          </div>
+          <div className="elpino-skel-card p-5"><Bone className="mb-5 h-4 w-40" /><SkeletonRows rows={3} /></div>
         </div>
       )}
       {loadError && !loading && (
@@ -2392,7 +2422,7 @@ function UrlRuleSection({
 
       <div className="mt-4 overflow-hidden rounded-xl border border-[#e7e8ea]">
         {loading ? (
-          <p className="px-4 py-5 text-[12px] text-[#687178]">Loading…</p>
+          <SkeletonRows rows={3} className="px-4 py-5" />
         ) : paths.length === 0 ? (
           <p className="px-4 py-5 text-[12px] text-[#687178]">No URL added</p>
         ) : (
@@ -2614,7 +2644,7 @@ function WorkspaceInformationSettingsPage() {
       {error && <p role="alert" className="mt-3 text-[12px] font-medium text-[#A64A53]">{error}</p>}
 
       <div className="mt-6 overflow-hidden rounded-xl border border-[#e7e8ea]">
-        {loading && <p className="px-5 py-5 text-[12px] text-[#687178]">Loading…</p>}
+        {loading && <SkeletonRows rows={3} className="px-5 py-5" />}
         {!loading && workspace && (
           <>
             <div className="flex items-center justify-between gap-4 px-5 py-4">
@@ -3451,7 +3481,7 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
             <div className="min-h-0 flex-1 overflow-y-auto p-7">
               {avatarTab === "stock" ? (
                 stockIconsLoading ? (
-                  <div className="flex items-center justify-center py-16 text-[12px] text-[#8a9298]"><LoaderCircle size={15} className="mr-2 animate-spin" /> Loading icons</div>
+                  <div role="status" aria-busy="true" aria-label="Loading icons" className="grid grid-cols-4 gap-3 py-4 sm:grid-cols-6">{Array.from({ length: 12 }, (_, i) => <Bone key={i} className="aspect-square w-full" />)}</div>
                 ) : stockIconIds.length === 0 ? (
                   <p className="py-16 text-center text-[12.5px] text-[#8a9298]">No stock icons available yet.</p>
                 ) : (
@@ -4062,7 +4092,7 @@ function PeopleSettingsPage() {
 
       <div className="dashboard-people-table-surface mt-5 overflow-hidden rounded-xl border border-white/10 bg-white/[0.025]">
         {loadingInvitations ? (
-          <div className="flex items-center justify-center py-16 text-[12px] text-white/80"><LoaderCircle size={15} className="mr-2 animate-spin" /> Loading people</div>
+          <SkeletonRows rows={5} className="py-6" />
         ) : invitations.length === 0 ? (
           <div className="dashboard-people-empty flex flex-col items-center px-6 py-16 text-center">
             <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#428ce5]/10 text-[#5ca5fa]"><Mail size={19} /></span>
@@ -4330,15 +4360,7 @@ function SecuritySettingsPage() {
         <div className="flex items-center gap-2 rounded-lg border border-[#428ce5]/25 bg-[#428ce5]/10 px-3 py-2 text-xs font-medium text-[#b8d9ff]"><ShieldCheck size={15} /> Protected</div>
       </header>
 
-      <div className="mt-7 grid gap-3 sm:grid-cols-3">
-        {[{ icon: ShieldCheck, label: "Security status", value: "Good" }, { icon: UserCog, label: "Default role", value: "Member" }, { icon: Monitor, label: "Active sessions", value: "1 device" }].map(({ icon: Icon, label, value }) => (
-          <article key={label} className="rounded-xl border border-white/10 bg-white/[0.025] p-4">
-            <span className="flex size-9 items-center justify-center rounded-lg bg-[#428ce5]/10 text-[#5ca5fa]"><Icon size={17} /></span>
-            <p className="mt-4 text-[11px] font-medium text-white/80">{label}</p>
-            <p className="mt-1 text-lg font-semibold tracking-[-0.02em] text-white">{value}</p>
-          </article>
-        ))}
-      </div>
+      <ActiveSessionsSection />
 
       <SecuritySection title="Authentication policies" description="Set the minimum sign-in requirements for everyone in this workspace.">
         <SecurityRow icon={KeyRound} title="Require two-factor authentication" description="Members must configure an authenticator or SMS code before accessing workspace data." badge="Business">
@@ -4350,9 +4372,6 @@ function SecuritySettingsPage() {
       </SecuritySection>
 
       <SecuritySection title="Member permissions" description="Define safe defaults for members joining your workspace.">
-        <SecurityRow title="Default member role" description="Applied automatically to newly invited teammates.">
-          <button type="button" className="flex h-9 items-center gap-3 rounded-lg border border-white/10 bg-white/[0.04] px-3 text-xs font-medium text-white transition hover:bg-white/[0.08]">Member <ChevronRight size={13} className="text-white/60" /></button>
-        </SecurityRow>
         <SecurityRow title="Only admins can invite members" description="Prevent members from inviting additional people without administrator approval.">
           <Toggle checked={settings ? !settings.membersCanInvite : true} onChange={() => void update({ membersCanInvite: !settings?.membersCanInvite })} label="Only admins can invite members" disabled={toggleDisabled} />
         </SecurityRow>
@@ -4362,12 +4381,105 @@ function SecuritySettingsPage() {
         <p className="mt-4 rounded-lg border border-amber-400/20 bg-amber-400/10 px-3 py-2 text-[11.5px] font-medium text-amber-200">Only the workspace owner can change these settings.</p>
       )}
       {error && <p role="alert" className="mt-4 text-[12px] font-medium text-[#e0707c]">{error}</p>}
-
-      <div className="mt-5 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-white/10 bg-white/[0.025] px-5 py-4">
-        <div><p className="text-sm font-semibold text-white">Review account-level security</p><p className="mt-1 text-xs text-white/80">Manage your personal password and two-factor authentication in General settings.</p></div>
-        <Link href="/dashboard/settings" className="flex h-9 items-center gap-2 rounded-lg bg-[#428ce5] px-4 text-xs font-medium text-white transition hover:bg-[#347dce]">Open personal settings <ArrowRight size={13} /></Link>
-      </div>
     </div>
+  );
+}
+
+type DeviceSession = { id: string; device: string; mobile: boolean; location: string | null; ipAddress: string | null; createdAt: string; lastSeenAt: string; current: boolean };
+
+function relativeTime(iso: string): string {
+  const minutes = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
+  if (minutes < 5) return "Active now";
+  if (minutes < 60) return `${minutes} min ago`;
+  const hours = Math.round(minutes / 60);
+  if (hours < 24) return `${hours} hr ago`;
+  const days = Math.round(hours / 24);
+  return `${days} day${days === 1 ? "" : "s"} ago`;
+}
+
+/** Every browser/device currently signed in to this account, with where it signed in from and a way to sign it out. */
+function ActiveSessionsSection() {
+  const [sessions, setSessions] = useState<DeviceSession[] | null>(null);
+  const [currentKnown, setCurrentKnown] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  async function load() {
+    const response = await fetch("/api/auth/sessions", { cache: "no-store" }).catch(() => null);
+    if (!response?.ok) { setLoadError(true); return; }
+    const data = (await response.json()) as { sessions: DeviceSession[]; currentKnown: boolean };
+    setSessions(data.sessions);
+    setCurrentKnown(data.currentKnown);
+    setLoadError(false);
+  }
+  useEffect(() => { void load(); }, []);
+
+  async function signOut(target: "others" | string) {
+    if (busyId) return;
+    setBusyId(target);
+    setError(null);
+    const response = await fetch(target === "others" ? "/api/auth/sessions/others" : `/api/auth/sessions/${encodeURIComponent(target)}`, { method: "DELETE" }).catch(() => null);
+    if (!response?.ok) {
+      const data = response ? ((await response.json().catch(() => ({}))) as { message?: string }) : {};
+      setError(data.message ?? "Could not sign out. Try again.");
+    } else {
+      await load();
+    }
+    setBusyId(null);
+  }
+
+  const others = (sessions ?? []).filter((row) => !row.current);
+
+  return (
+    <section className="mt-7 overflow-hidden rounded-xl border border-white/10 bg-white/[0.025]">
+      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-white/10 px-5 py-4">
+        <div>
+          <h3 className="text-base font-medium text-white">Where you&apos;re signed in</h3>
+          <p className="mt-1 text-xs text-white/80">Browsers and devices signed in to your account. Sign out any you don&apos;t recognise.</p>
+        </div>
+        {others.length > 0 && (
+          <button type="button" disabled={busyId !== null} onClick={() => void signOut("others")} className="flex h-9 items-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-3 text-xs font-medium text-white transition hover:bg-white/[0.08] disabled:opacity-50">
+            {busyId === "others" ? <LoaderCircle size={13} className="animate-spin" /> : <LogOut size={13} />} Sign out all other devices
+          </button>
+        )}
+      </div>
+      {sessions === null && !loadError ? (
+        <SkeletonRows rows={3} className="px-5 py-5" />
+      ) : loadError ? (
+        <p className="px-5 py-5 text-xs text-white/80">Your sessions could not be loaded.</p>
+      ) : (
+        <ul className="divide-y divide-white/10">
+          {sessions?.map((row) => {
+            const Icon = row.mobile ? Smartphone : Monitor;
+            return (
+              <li key={row.id} className="flex items-center gap-4 px-5 py-4">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-white/[0.05] text-[#5ca5fa]"><Icon size={17} /></span>
+                <div className="min-w-0 flex-1">
+                  <p className="flex flex-wrap items-center gap-2 text-sm font-semibold text-white">
+                    {row.device}
+                    {row.current && <span className="rounded-md bg-[#2e8a5c]/15 px-2 py-0.5 text-[10px] font-medium text-[#3fb37b]">This device</span>}
+                  </p>
+                  <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-white/80">
+                    <span className="flex items-center gap-1"><MapPin size={12} />{row.location ?? "Unknown location"}{row.ipAddress ? ` · ${row.ipAddress}` : ""}</span>
+                    <span>{row.current ? "Active now" : relativeTime(row.lastSeenAt)}</span>
+                  </p>
+                </div>
+                {!row.current && (
+                  <button type="button" disabled={busyId !== null} onClick={() => void signOut(row.id)} className="flex h-8 shrink-0 items-center gap-1.5 rounded-lg px-3 text-xs font-medium text-[#e0707c] transition hover:bg-white/[0.06] disabled:opacity-50">
+                    {busyId === row.id ? <LoaderCircle size={12} className="animate-spin" /> : <LogOut size={12} />} Sign out
+                  </button>
+                )}
+              </li>
+            );
+          })}
+          {!currentKnown && (
+            <li className="px-5 py-4 text-xs text-white/80">This browser signed in before device tracking was added, so it isn&apos;t listed. Sign out and back in once and it will appear here.</li>
+          )}
+        </ul>
+      )}
+      {error && <p role="alert" className="border-t border-white/10 px-5 py-3 text-xs font-medium text-[#e0707c]">{error}</p>}
+    </section>
   );
 }
 
@@ -4603,8 +4715,10 @@ function AvailabilitySettingsPage() {
       </p>
 
       {loading ? (
-        <div className="mt-6 flex min-h-[220px] items-center justify-center text-[13px] text-white/80">
-          <LoaderCircle size={15} className="mr-2 animate-spin" /> Loading availability
+        <div role="status" aria-busy="true" aria-label="Loading availability" className="mt-6 space-y-3">
+          {Array.from({ length: 7 }, (_, i) => (
+            <div key={i} className="flex items-center gap-4"><Bone className="h-5 w-9" /><Bone className="h-4 w-24" /><Bone className="h-9 w-32" /><Bone className="h-9 w-32" /></div>
+          ))}
         </div>
       ) : (
         <>
@@ -4735,7 +4849,7 @@ function PresenceLogSettingsPage() {
           </div>
 
           {loading ? (
-            <div className="flex min-h-[220px] items-center justify-center text-[12px] text-[#7B858A]"><LoaderCircle size={15} className="mr-2 animate-spin" /> Loading presence log</div>
+            <SkeletonRows rows={5} className="px-5 py-5" />
           ) : visibleEvents.length ? (
             <div>
               {visibleEvents.map((event) => (
@@ -4908,7 +5022,7 @@ function TagManagerSettingsPage() {
 
       <div className="dashboard-tag-table-surface mt-5 bg-transparent">
         {tagError && !dialog && <div role="alert" className="mb-4 flex items-center justify-between rounded-lg bg-[#FFF2F2] px-3.5 py-2.5 text-[11px] font-medium text-[#A64A53]"><span>{tagError}</span><button type="button" onClick={() => setTagError(null)} aria-label="Dismiss error"><X size={14} /></button></div>}
-        {loadingTags ? <div className="flex items-center justify-center py-16 text-[12px] text-[#687178]"><LoaderCircle size={15} className="mr-2 animate-spin" /> Loading tags</div> : tags.length === 0 ? (
+        {loadingTags ? <SkeletonRows rows={4} className="px-5 py-6" /> : tags.length === 0 ? (
           <div className="flex flex-col items-center px-6 py-16 text-center"><span className="dashboard-tag-empty-icon flex h-11 w-11 items-center justify-center rounded-xl bg-[rgba(255,255,255,0.05)] text-[#667078]"><Code2 size={19} /></span><h4 className="mt-3 text-[14px] font-semibold">No website tags</h4><p className="mt-1 max-w-sm text-[11px] leading-5 text-[#687178]">Create a tag and install it on your website to begin receiving visitor activity.</p><button type="button" onClick={() => setDialog("create")} className="mt-4 h-9 rounded-lg border border-[#D8DDE1] px-4 text-[12px] font-semibold transition hover:bg-[#F7F8FA]">Create first tag</button></div>
         ) : (
           <div className="overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
