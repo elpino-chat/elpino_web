@@ -88,7 +88,6 @@ function timeAgo(then: number, now: number): string {
 const GATEWAY_WS_ORIGIN = (
   process.env.NEXT_PUBLIC_GATEWAY_URL || (process.env.NODE_ENV === "development" ? "http://localhost:4000" : "https://api.elpino.chat")
 ).replace(/^http/, "ws");
-const REVEAL_MS_PER_WORD = 45;
 const TEAM_POLL_MS = 15000;
 const START_TIMEOUT_MS = 12000;
 const TYPING_PING_MS = 2000;
@@ -487,45 +486,6 @@ function WidgetContent() {
     // A count only, never message content: the host page is a different site.
     window.parent.postMessage({ type: "elpino:unread", count }, "*");
   }
-
-  // Word-by-word reveal for a message pushed live over /rt/widget: the text
-  // itself was already generated and safety-reviewed before it ever reached
-  // the widget, so this is purely a client-side typing effect, not a token
-  // stream from the model. See the WebSocket effect below for where it's
-  // triggered, and revealMap for how the render picks it up.
-  const [revealMap, setRevealMap] = useState<Record<string, string>>({});
-  const revealTimersRef = useRef<Map<string, number>>(new Map());
-  function revealWordByWord(id: string, full: string) {
-    const existing = revealTimersRef.current.get(id);
-    if (existing) window.clearTimeout(existing);
-    const words = full.split(/(\s+)/);
-    let shown = 0;
-    setRevealMap((prev) => ({ ...prev, [id]: "" }));
-    const step = () => {
-      shown++;
-      let partial = words.slice(0, shown).join("");
-      // Close a half-revealed **bold** so it renders bold mid-reveal instead of flashing raw asterisks.
-      if ((partial.match(/\*\*/g)?.length ?? 0) % 2 === 1) partial += "**";
-      setRevealMap((prev) => (prev[id] === undefined ? prev : { ...prev, [id]: partial }));
-      if (shown < words.length) {
-        revealTimersRef.current.set(id, window.setTimeout(step, REVEAL_MS_PER_WORD));
-      } else {
-        revealTimersRef.current.delete(id);
-        setRevealMap((prev) => {
-          if (prev[id] === undefined) return prev;
-          const next = { ...prev };
-          delete next[id];
-          return next;
-        });
-      }
-    };
-    step();
-  }
-  useEffect(() => {
-    return () => {
-      for (const timer of revealTimersRef.current.values()) window.clearTimeout(timer);
-    };
-  }, []);
 
   const identityReadyRef = useRef(false);
   const rejectedIdentityRef = useRef<string | null>(null);
@@ -1097,7 +1057,6 @@ function WidgetContent() {
           // next poll (up to POLL_MS later) to clear it, or the dots sit
           // there under a reply that's already on screen.
           setAgentTyping(false);
-          revealWordByWord(message.id, message.body);
           announceReplies(1, message);
         }
       };
@@ -1161,7 +1120,7 @@ function WidgetContent() {
   }, [conversationId, chatView]);
   useEffect(() => {
     if (stickToBottomRef.current) scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
-  }, [messages, tab, chatView, agentTyping, revealMap, contactFields, contactAskId, contactDoneFor]);
+  }, [messages, tab, chatView, agentTyping, contactFields, contactAskId, contactDoneFor]);
 
   async function sendPayload(body: string, attachment: Attachment | null, options?: { restoreDraft?: boolean }): Promise<boolean> {
     if (sending || !visitorToken || (!body && !attachment)) return false;
@@ -1423,28 +1382,16 @@ function WidgetContent() {
   // count instead of a padded one.
   const paddedTeamTotal = useMemo(() => Math.floor(Math.random() * 6) + 6, []);
 
-  // The opening greeting of a new chat types itself out — dots, then word by word like the AI's live replies —
-  // instead of appearing fully formed, which read as canned. Client-side only: it is the same text the server
-  // saves as the first message once the visitor sends something.
+  // The opening greeting of a new chat shows typing dots for a beat and then appears whole, instead of being
+  // on screen the instant the chat opens, which read as canned. Client-side only: it is the same text the
+  // server saves as the first message once the visitor sends something.
   const greetingText = displayGreetingLines[0] ?? "";
   const showingGreeting = !loading && tab === "chat" && chatView === "thread" && messages.length === 0 && !conversationId;
-  const [greetingTyped, setGreetingTyped] = useState("");
-  const [greetingDone, setGreetingDone] = useState(false);
+  const [greetingReady, setGreetingReady] = useState(false);
   useEffect(() => {
-    setGreetingTyped("");
-    setGreetingDone(false);
+    setGreetingReady(false);
     if (!showingGreeting || !greetingText) return;
-    let timer: number | undefined;
-    let shown = 0;
-    const words = greetingText.split(/(\s+)/);
-    const step = () => {
-      shown += 1;
-      setGreetingTyped(words.slice(0, shown).join(""));
-      if (shown < words.length) timer = window.setTimeout(step, REVEAL_MS_PER_WORD);
-      else setGreetingDone(true);
-    };
-    // A beat of typing dots first, as if someone were writing it.
-    timer = window.setTimeout(step, 900);
+    const timer = window.setTimeout(() => setGreetingReady(true), 900);
     return () => window.clearTimeout(timer);
   }, [showingGreeting, greetingText]);
 
@@ -1812,16 +1759,16 @@ function WidgetContent() {
                 <div className="space-y-1">
                   {displayGreetingLines.map((line, index) => (
                     <div key={index} className="w-fit max-w-[85%] space-y-1">
-                      {greetingTyped === "" && !greetingDone ? (
+                      {!greetingReady ? (
                         <div className="flex w-fit items-center rounded-2xl px-3.5 py-3.5" style={{ backgroundColor: BUBBLE }} aria-label="Typing">
                           <TypingDots color="rgba(24,24,27,.45)" />
                         </div>
                       ) : (
                         <>
                           <div className="rounded-2xl px-3.5 py-2.5 text-[13.5px] leading-6" style={{ backgroundColor: BUBBLE, color: INK }}>
-                            {greetingDone ? line : greetingTyped}
+                            {line}
                           </div>
-                          {greetingDone && <p className="px-1 text-[11px] leading-4" style={{ color: MUTED }}>AI agent · {timeAgo(greetedAt, clock)}</p>}
+                          <p className="px-1 text-[11px] leading-4" style={{ color: MUTED }}>AI agent · {timeAgo(greetedAt, clock)}</p>
                         </>
                       )}
                     </div>
@@ -1859,7 +1806,7 @@ function WidgetContent() {
                     {groupMessages.map((message, messageIndex) => {
                       const hasImage = message.attachmentUrl && (message.attachmentType === "image" || message.attachmentType === "gif");
                       const hasFile = message.attachmentUrl && message.attachmentType === "file";
-                      const displayBody = revealMap[message.id] ?? message.body;
+                      const displayBody = message.body;
 
                       const bubble = (
                         <div className="w-fit max-w-[85%] space-y-1">
