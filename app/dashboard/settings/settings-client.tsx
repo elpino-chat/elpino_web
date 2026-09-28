@@ -185,6 +185,7 @@ function LanguageFlag({ countryCode }: { countryCode: string }) {
 
 const chatbotItems = [
   { label: "Chatbot Interface", slug: "chatbot", icon: Bot },
+  { label: "Tag Manager", slug: "tags", icon: Code2 },
   { label: "Identity Verification", slug: "identity", icon: UserCheck },
   { label: "Restrictions", slug: "chatbot-restrictions", icon: ShieldCheck },
 ];
