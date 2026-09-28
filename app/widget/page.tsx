@@ -218,7 +218,10 @@ function WidgetContent() {
   const [contactValue, setContactValue] = useState("");
   const [contactError, setContactError] = useState("");
   const [contactSaving, setContactSaving] = useState(false);
+  // The AI message whose question the visitor has answered or skipped. A new question is a new message, so it
+  // shows its own field again.
   const [contactDoneFor, setContactDoneFor] = useState("");
+  const [contactAskId, setContactAskId] = useState("");
   const [contactThanks, setContactThanks] = useState(false);
   const [agentTyping, setAgentTyping] = useState(false);
   // While a reply is being written the visitor can keep typing but not send: a second message
@@ -971,7 +974,7 @@ function WidgetContent() {
     const poll = () => {
       fetch("/api/widget/messages/read", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ key, hostname, visitorToken, conversationId }) })
         .then((response) => response.json())
-        .then((data: { messages?: WidgetMessage[]; agentTyping?: boolean; agent?: { name?: string } | null; joinDeadlineAt?: string | null; serverNow?: string; error?: string; ended?: boolean; contactAsk?: { fields?: ContactField[] } | null }) => {
+        .then((data: { messages?: WidgetMessage[]; agentTyping?: boolean; agent?: { name?: string } | null; joinDeadlineAt?: string | null; serverNow?: string; error?: string; ended?: boolean; contactAsk?: { fields?: ContactField[]; askId?: string } | null }) => {
           if (cancelled || epoch !== sessionEpochRef.current) return;
           // Left with Leave Chat (in another tab, say): drop the thread and go
           // back to the list rather than treating it as a broken session.
@@ -1027,8 +1030,9 @@ function WidgetContent() {
             setJoinDeadline(null);
           }
           const fields = data.contactAsk?.fields?.filter((field): field is ContactField => field in CONTACT_PROMPTS) ?? [];
-          // Keep a form already in progress; only a fresh ask starts at step 0.
-          setContactFields((current) => (fields.length ? current ?? fields : current));
+          // The newest AI message decides: while it is asking for a detail, the message box becomes a field for it.
+          setContactFields(fields.length ? fields : null);
+          setContactAskId(fields.length ? data.contactAsk?.askId ?? "" : "");
         })
         .catch(() => undefined);
     };
@@ -1140,8 +1144,9 @@ function WidgetContent() {
     if (stickToBottomRef.current) scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
   }, [messages, tab, chatView, agentTyping, revealMap]);
 
-  async function sendPayload(body: string, attachment: Attachment | null) {
-    if (sending || !visitorToken || (!body && !attachment)) return;
+  async function sendPayload(body: string, attachment: Attachment | null, options?: { restoreDraft?: boolean }): Promise<boolean> {
+    if (sending || !visitorToken || (!body && !attachment)) return false;
+    const restoreDraft = options?.restoreDraft !== false;
     // Sending a message is the visitor's own action — it should always
     // carry the view down to it, even if they'd scrolled up to read back.
     stickToBottomRef.current = true;
@@ -1164,20 +1169,20 @@ function WidgetContent() {
         }),
       });
       const data = (await response.json().catch(() => ({}))) as { conversationId?: string; greeting?: WidgetMessage | null; message?: WidgetMessage; error?: string };
-      if (epoch !== sessionEpochRef.current) return;
+      if (epoch !== sessionEpochRef.current) return false;
       // A server error body ({"statusCode":500,"message":"Internal server error"}) has a `message` too, but it is a
       // string, not a chat message. Only an object with an id is one; anything else is a failed send.
       const sentMessage = data.message && typeof data.message === "object" && typeof data.message.id === "string" ? data.message : null;
       if (!data.error && (!response.ok || !sentMessage)) {
-        if (body) setDraft(body);
+        if (body && restoreDraft) setDraft(body);
         if (attachment) setPendingAttachment(attachment);
         setAttachError("Couldn't send that. Please try again.");
-        return;
+        return false;
       }
       if (data.error) {
         // Not sent: give the text back rather than losing it. If the session
         // ended, restart (keeping the draft) and ask the page for a fresh token.
-        if (body) setDraft(body);
+        if (body && restoreDraft) setDraft(body);
         if (attachment) setPendingAttachment(attachment);
         if (activeVisitorRef.current.startsWith("ws_")) {
           identityTokenRef.current = null;
@@ -1185,7 +1190,7 @@ function WidgetContent() {
           setRetryCount((count) => count + 1);
           window.parent.postMessage({ type: "elpino:identity-refresh" }, "*");
         }
-        return;
+        return false;
       }
       if (data.conversationId && data.conversationId !== conversationId) {
         // This message just created the conversation — sync up so polling,
@@ -1197,16 +1202,19 @@ function WidgetContent() {
       } else if (sentMessage) {
         setMessages((current) => [...current, sentMessage]);
       }
+      return true;
     } finally {
       if (epoch === sessionEpochRef.current) setSending(false);
     }
   }
 
-  const contactActive = Boolean(contactFields?.length) && contactDoneFor !== conversationId && Boolean(conversationId);
+  const contactActive = Boolean(contactFields?.length) && contactDoneFor !== contactAskId && Boolean(conversationId);
   const contactField = contactActive ? contactFields![contactStep] : undefined;
 
   useEffect(() => {
     setContactFields(null);
+    setContactAskId("");
+    setContactDoneFor("");
     setContactStep(0);
     setContactValue("");
     setContactError("");
@@ -1220,7 +1228,7 @@ function WidgetContent() {
   }, [contactThanks]);
 
   function finishContact(saved: boolean) {
-    setContactDoneFor(conversationId);
+    setContactDoneFor(contactAskId);
     setContactFields(null);
     setContactStep(0);
     setContactValue("");
@@ -1247,25 +1255,21 @@ function WidgetContent() {
     }
     setContactSaving(true);
     try {
-      const response = await fetch("/api/widget/contact", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ key, hostname, visitorToken, [contactField]: value }),
-      });
-      const data = (await response.json().catch(() => ({}))) as { error?: string };
-      if (!response.ok || data.error) { setContactError("Couldn't save that — try again or skip."); return; }
-      nextContactStep(true);
+      // The answer goes into the chat like any message: the AI reads it, saves it and carries on (greeting
+      // them by name, or asking for the next detail). A failed send leaves the field open for another try.
+      const sent = await sendPayload(value, null, { restoreDraft: false });
+      if (!sent) { setContactError("Couldn't send that — try again or skip."); return; }
+      finishContact(false);
     } catch {
-      setContactError("Couldn't save that — try again or skip.");
+      setContactError("Couldn't send that — try again or skip.");
     } finally {
       setContactSaving(false);
     }
   }
 
-  // Skipping the email means they'd rather not share contact details at all.
+  // Skipping dismisses just this question; the normal message box comes back and the AI won't ask again.
   function skipContactStep() {
-    if (contactField === "email") finishContact(false);
-    else nextContactStep(contactStep > 0);
+    finishContact(false);
   }
 
   async function sendMessage() {
@@ -1930,10 +1934,10 @@ function WidgetContent() {
                       {contactFields!.length > 1 && <span className="font-normal" style={{ color: MUTED }}>{` · ${contactStep + 1} of ${contactFields!.length}`}</span>}
                     </p>
                     <button type="button" onClick={skipContactStep} className="text-[11.5px] font-medium hover:underline" style={{ color: MUTED }}>
-                      {contactField === "email" ? "Skip" : "Skip this"}
+                      Skip
                     </button>
                   </div>
-                  <div className="flex h-[54px] items-center rounded-[28px] border px-1.5 shadow-[0_3px_12px_rgba(15,23,42,.10)]" style={{ borderColor: contactError ? "#e5626a" : BORDER, backgroundColor: SURFACE }}>
+                  <div className="flex items-center rounded-[24px] border py-2 pl-3 pr-2.5 shadow-[0_3px_16px_rgba(0,0,0,.35)]" style={{ borderColor: contactError ? "#e5626a" : "rgba(255,255,255,0.7)", backgroundColor: SURFACE }}>
                     <input
                       key={contactField}
                       autoFocus
@@ -1943,18 +1947,18 @@ function WidgetContent() {
                       onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); void submitContactStep(); } }}
                       placeholder={CONTACT_PROMPTS[contactField].placeholder}
                       autoComplete={contactField === "email" ? "email" : contactField === "phone" ? "tel" : "name"}
-                      className="h-[42px] min-w-0 flex-1 bg-transparent px-3 text-[14px] outline-none placeholder:text-[#777b82]"
+                      className="h-8 min-w-0 flex-1 bg-transparent px-1 text-[14px] outline-none placeholder:text-[#777b82]"
                       style={{ color: INK }}
                     />
                     <button
                       type="button"
                       onClick={() => void submitContactStep()}
                       disabled={!contactValue.trim() || contactSaving}
-                      aria-label="Save"
-                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition disabled:opacity-100"
+                      aria-label="Send"
+                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition disabled:opacity-100"
                       style={{ backgroundColor: contactValue.trim() ? ACCENT : "rgba(255,255,255,0.10)", color: contactValue.trim() ? "#fff" : "rgba(255,255,255,0.35)" }}
                     >
-                      <ArrowUp size={21} strokeWidth={2.2} />
+                      <ArrowUp size={15} strokeWidth={2.2} />
                     </button>
                   </div>
                   {contactError && <p className="mt-1.5 px-2 text-[11px] text-[#e5626a]">{contactError}</p>}
