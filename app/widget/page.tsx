@@ -1770,52 +1770,71 @@ function WidgetContent() {
           </div>
         ) : chatView === "list" ? (
           <div className="flex h-full flex-col">
-            <div className="relative flex items-center justify-center border-b px-4 py-4" style={{ borderColor: BORDER }}>
-              <p className="text-[15px] font-semibold">Messages</p>
-              <button type="button" aria-label="Close" onClick={() => requestLeave()} className="absolute right-3 flex h-7 w-7 items-center justify-center rounded-full hover:bg-black/5">
-                <X size={16} />
+            <div className="flex shrink-0 items-center justify-between px-5 pb-3 pt-5">
+              <h2 className="text-[26px] font-semibold leading-8 tracking-[-0.01em]">Messages</h2>
+              <button type="button" aria-label="Close" onClick={() => requestLeave()} className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-black/5">
+                <X size={18} />
               </button>
             </div>
-            <div className="min-h-0 flex-1 overflow-y-auto">
-              {recentLoading ? (
-                <p className="px-4 py-6 text-[11.5px]" style={{ color: MUTED }}>Loading…</p>
+            <div className="min-h-0 flex-1 space-y-2.5 overflow-y-auto px-4 pb-3">
+              {recentLoading && recent.length === 0 ? (
+                // Placeholders while the list loads, in the shape of the cards that will replace them.
+                [0, 1].map((placeholder) => (
+                  <div key={placeholder} className="flex animate-pulse items-center gap-3 rounded-2xl border-2 border-[#11120f]/15 p-3.5">
+                    <span className="h-10 w-10 shrink-0 rounded-full bg-black/[0.07]" />
+                    <span className="min-w-0 flex-1 space-y-2">
+                      <span className="block h-3 w-1/3 rounded bg-black/[0.07]" />
+                      <span className="block h-3 w-3/4 rounded bg-black/[0.05]" />
+                    </span>
+                  </div>
+                ))
               ) : recent.length === 0 ? (
-                <div className="flex flex-col items-center px-4 py-10 text-center">
-                  <p className="text-[13px] font-semibold" style={{ color: INK }}>No messages</p>
-                  <p className="mt-1 text-[11.5px]" style={{ color: MUTED }}>Messages from the team will be shown here</p>
+                <div className="rounded-2xl border-2 border-dashed border-[#11120f]/40 px-5 py-10 text-center">
+                  <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl border-2 border-[#11120f] bg-[#ffd84d] text-[#11120f]">
+                    <MessageSquare size={22} />
+                  </span>
+                  <p className="mt-4 text-[15px] font-semibold">No messages yet</p>
+                  <p className="mt-1 text-[13px] leading-5" style={{ color: MUTED }}>Start a conversation and it will show up here.</p>
                 </div>
               ) : (
-                recent.map((conversation) => (
-                  <button
-                    key={conversation.id}
-                    type="button"
-                    onClick={() => openThread(conversation.id)}
-                    className="flex w-full items-start gap-3 border-b px-4 py-3.5 text-left transition hover:bg-black/[0.03]"
-                    style={{ borderColor: BORDER }}
-                  >
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl text-white" style={{ backgroundColor: ACCENT }}>
-                      {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : <LayoutGrid size={16} />}
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="flex items-center justify-between gap-2">
-                        <span className="truncate text-[13px] font-semibold">{botName}</span>
-                        <span className="shrink-0 text-[10.5px]" style={{ color: MUTED }}>{formatTime(conversation.time)}</span>
+                recent.map((conversation) => {
+                  const resolved = conversation.status === "resolved";
+                  const label = conversation.topic?.trim() || (resolved ? "Resolved" : "");
+                  return (
+                    <button
+                      key={conversation.id}
+                      type="button"
+                      onClick={() => openThread(conversation.id)}
+                      className="flex w-full cursor-pointer items-start gap-3 rounded-2xl border-2 border-[#11120f] bg-white p-3.5 text-left"
+                    >
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-[#11120f] text-[13px] font-bold text-white" style={{ backgroundColor: ACCENT }}>
+                        {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
                       </span>
-                      <span className="mt-0.5 block truncate text-[12px] leading-4" style={{ color: MUTED }}>{conversation.preview || "New conversation"}</span>
-                    </span>
-                  </button>
-                ))
+                      <span className="min-w-0 flex-1">
+                        <span className="flex items-center justify-between gap-2">
+                          <span className="truncate text-[14px] font-semibold text-[#11120f]">{botName}</span>
+                          <span className="shrink-0 text-[12px]" style={{ color: MUTED }}>{compactAgo(conversation.time, clock + serverOffset)}</span>
+                        </span>
+                        <span className="mt-0.5 block truncate text-[13px] leading-5" style={{ color: MUTED }}>{conversation.preview || "New conversation"}</span>
+                        {label && (
+                          <span className="mt-2 inline-block max-w-full truncate rounded-full border-2 border-[#11120f] px-2.5 py-0.5 font-mono text-[10.5px] font-medium uppercase tracking-[0.08em] text-[#11120f]" style={{ backgroundColor: resolved && !conversation.topic ? "#fff8ec" : "#ffd84d" }}>
+                            {label}
+                          </span>
+                        )}
+                      </span>
+                    </button>
+                  );
+                })
               )}
             </div>
-            <div className="flex shrink-0 justify-center px-4 pb-4 pt-2">
+            <div className="shrink-0 px-4 pb-3 pt-1">
               <button
                 type="button"
                 onClick={startNewChat}
-                className="flex items-center gap-2 rounded-full border px-4 py-2.5 text-[12.5px] font-semibold shadow-sm transition hover:opacity-90"
-                style={{ backgroundColor: INK, borderColor: INK, color: SURFACE }}
+                className="flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-[#11120f] bg-[#ffd84d] text-[14px] font-semibold text-[#11120f]"
               >
                 Ask a question
-                <span className="flex h-4 w-4 items-center justify-center rounded-full" style={{ backgroundColor: SURFACE, color: INK }}><CircleHelp size={11} /></span>
+                <SendHorizontal size={16} />
               </button>
             </div>
           </div>
