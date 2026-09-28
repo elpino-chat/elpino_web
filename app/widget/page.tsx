@@ -65,6 +65,17 @@ const BORDER = "rgba(255,255,255,0.10)";
 const MUTED = "rgba(244,244,245,.60)";
 const ICON_MUTED = "rgba(244,244,245,.68)";
 const POLL_MS = 2000;
+// "Just now", "5 minutes ago", "1 hour ago" — same wording as the launcher popup in app/tag.js/route.ts.
+function timeAgo(then: number, now: number): string {
+  const seconds = Math.max(0, Math.floor((now - then) / 1000));
+  if (seconds < 60) return "Just now";
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes} ${minutes === 1 ? "minute" : "minutes"} ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} ${hours === 1 ? "hour" : "hours"} ago`;
+  const days = Math.floor(hours / 24);
+  return `${days} ${days === 1 ? "day" : "days"} ago`;
+}
 // Same http->ws origin swap as app/tag.js/route.ts's gatewayWsOrigin() — kept
 // separate since that one runs server-side and this runs in the browser.
 // Missing the NODE_ENV fallback here meant local dev pointed this socket at
@@ -221,6 +232,13 @@ function WidgetContent() {
   // Ms-epoch deadline while the team is notified and nobody has joined yet.
   const [joinDeadline, setJoinDeadline] = useState<number | null>(null);
   const [joinNow, setJoinNow] = useState(() => Date.now());
+  // Drives the "5 minutes ago" labels under the assistant's replies so they keep counting while the chat is open.
+  const [clock, setClock] = useState(() => Date.now());
+  const [greetedAt] = useState(() => Date.now());
+  useEffect(() => {
+    const timer = window.setInterval(() => setClock(Date.now()), 15000);
+    return () => window.clearInterval(timer);
+  }, []);
   const [sending, setSending] = useState(false);
   const [recent, setRecent] = useState<ConversationSummary[]>([]);
   const [team, setTeam] = useState<TeamMember[]>([]);
@@ -1706,10 +1724,11 @@ function WidgetContent() {
                 // are further down.
                 <div className="space-y-1">
                   {displayGreetingLines.map((line, index) => (
-                    <div key={index} className="flex items-start">
-                      <div className="w-fit max-w-[90%] text-[14px] leading-6" style={{ color: INK }}>
+                    <div key={index} className="w-fit max-w-[85%] space-y-1">
+                      <div className="rounded-2xl px-3.5 py-2.5 text-[13.5px] leading-6" style={{ backgroundColor: BUBBLE, color: INK }}>
                         {line}
                       </div>
+                      <p className="px-1 text-[11px] leading-4" style={{ color: MUTED }}>{timeAgo(greetedAt, clock)}</p>
                     </div>
                   ))}
                 </div>
@@ -1742,7 +1761,7 @@ function WidgetContent() {
 
                 return (
                   <div key={first.id} className="flex flex-col gap-1">
-                    {groupMessages.map((message) => {
+                    {groupMessages.map((message, messageIndex) => {
                       const hasImage = message.attachmentUrl && (message.attachmentType === "image" || message.attachmentType === "gif");
                       const hasFile = message.attachmentUrl && message.attachmentType === "file";
                       const displayBody = revealMap[message.id] ?? message.body;
@@ -1769,10 +1788,13 @@ function WidgetContent() {
                                 <MessageMarkdown text={displayBody} />
                               </div>
                             ) : (
-                              <div className="px-0.5 text-[13.5px] leading-6" style={{ color: INK }}>
+                              <div className="rounded-2xl px-3.5 py-2.5 text-[13.5px] leading-6" style={{ backgroundColor: BUBBLE, color: INK }}>
                                 <MessageMarkdown text={displayBody} />
                               </div>
                             )
+                          )}
+                          {!fromVisitor && messageIndex === groupMessages.length - 1 && (
+                            <p className="px-1 text-[11px] leading-4" style={{ color: MUTED }}>{timeAgo(Date.parse(message.createdAt) || clock, clock)}</p>
                           )}
                         </div>
                       );
