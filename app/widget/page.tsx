@@ -1731,7 +1731,7 @@ function WidgetContent() {
                       <div className="rounded-2xl px-3.5 py-2.5 text-[13.5px] leading-6" style={{ backgroundColor: BUBBLE, color: INK }}>
                         {line}
                       </div>
-                      <p className="px-1 text-[11px] leading-4" style={{ color: MUTED }}>{botName.trim() || "Elpino AI"} · AI agent · {timeAgo(greetedAt, clock)}</p>
+                      <p className="px-1 text-[11px] leading-4" style={{ color: MUTED }}>AI agent · {timeAgo(greetedAt, clock)}</p>
                     </div>
                   ))}
                 </div>
@@ -1798,8 +1798,8 @@ function WidgetContent() {
                           )}
                           {!fromVisitor && messageIndex === groupMessages.length - 1 && (
                             <p className="px-1 text-[11px] leading-4" style={{ color: MUTED }}>
-                              {/* So a visitor can tell an AI answer from a teammate's: "Elpino AI · AI agent" vs the person's name. */}
-                              {message.senderType === "ai" ? `${botName.trim() || "Elpino AI"} · AI agent` : `${agentName ?? "Support team"} · Support team`} · {timeAgo(Date.parse(message.createdAt) || clock, clock)}
+                              {/* So a visitor can tell an AI answer from a teammate's: "AI agent" vs the person's name. */}
+                              {message.senderType === "ai" ? "AI agent" : `${agentName ?? "Support team"} · Support team`} · {timeAgo(Date.parse(message.createdAt) || clock, clock)}
                             </p>
                           )}
                         </div>
