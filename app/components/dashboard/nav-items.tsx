@@ -41,7 +41,6 @@ export function NavGlyph({ name, size = 22 }: { name: NavIcon; size?: number }) 
         <>
           <circle cx="12" cy="12" r="8.5" />
           <path d="M3.8 12h16.4M12 3.5c2.1 2.3 3.2 5.1 3.2 8.5S14.1 18.2 12 20.5C9.9 18.2 8.8 15.4 8.8 12S9.9 5.8 12 3.5Z" />
-          <circle cx="17.8" cy="6.2" r="2.2" fill="#35b92c" stroke="#111827" strokeWidth="1.2" />
         </>
       )}
       {name === "contacts" && (

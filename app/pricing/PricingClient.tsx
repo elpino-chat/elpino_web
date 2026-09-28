@@ -136,7 +136,7 @@ function buildComparisonCategories(t: T): FeatureCategory[] {
         {
           label: t('pricing.comparison.categories.product.rows.analytics.label', 'Visitor analytics'),
           description: t('pricing.comparison.categories.product.rows.analytics.description', 'Live visitors, sources, countries, and pages.'),
-          values: ['No', 'Yes', 'Yes', 'Yes'],
+          values: ['Yes', 'Yes', 'Yes', 'Yes'],
         },
         {
           label: t('pricing.comparison.categories.product.rows.profiles.label', 'Customer profiles & history'),

@@ -46,8 +46,8 @@ type HeaderUser = { email: string; name?: string };
 type SearchConversation = { id: string; name: string; preview: string; initials: string };
 type SearchPerson = { id: string; email: string };
 
-// Space's panel and the Visitors report nav (VisitorSidebar in
-// _visitors-client.tsx) are real drawers hidden below md, and the Contacts
+// Space's panel is a real drawer hidden below md (the Analytics reports use an
+// in-page tab bar instead, so they have none), and the Contacts
 // tools panel is one hidden below lg — none has any other way to reach it,
 // so the hamburger opens whichever one the current route has, at that
 // route's own breakpoint. The Team Inbox and AI Assist conversation lists
@@ -56,7 +56,6 @@ type SearchPerson = { id: string; email: string };
 // conversation on selection, WhatsApp-style — so they need no hamburger at
 // all, on any route.
 const SPACE_ROUTES = ["/dashboard", "/dashboard/notifications", "/dashboard/issues"];
-const VISITORS_ROUTE_PREFIX = "/dashboard/visitors";
 const CONTACTS_ROUTE = "/dashboard/contacts";
 // The editor routes (/knowledge/new, /knowledge/page/[id]) render their own
 // full-page editor with no sidebar at all, so they're deliberately excluded
@@ -69,7 +68,6 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
   const pathname = usePathname();
   const { toggle: toggleDrawer } = useMobileDrawer();
   const isSpaceRoute = SPACE_ROUTES.includes(pathname);
-  const isVisitorsRoute = pathname === VISITORS_ROUTE_PREFIX || pathname.startsWith(`${VISITORS_ROUTE_PREFIX}/`);
   const isContactsRoute = pathname === CONTACTS_ROUTE;
   const isKnowledgeRoute = KNOWLEDGE_ROUTES.includes(pathname);
   const isSettingsRoute = pathname === SETTINGS_ROUTE_PREFIX || pathname.startsWith(`${SETTINGS_ROUTE_PREFIX}/`);
@@ -78,7 +76,7 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
   // so this stays accurate without a separate "seen it" flag to maintain.
   const [spaceBadgeCount, setSpaceBadgeCount] = useState(0);
   const hamburgerBreakpoint =
-    isSpaceRoute || isVisitorsRoute || isKnowledgeRoute || isSettingsRoute ? "md:hidden" : isContactsRoute ? "lg:hidden" : null;
+    isSpaceRoute || isKnowledgeRoute || isSettingsRoute ? "md:hidden" : isContactsRoute ? "lg:hidden" : null;
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [selected, setSelected] = useState<Organization | null>(null);
   const [open, setOpen] = useState(false);

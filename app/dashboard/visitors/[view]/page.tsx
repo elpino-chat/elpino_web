@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { VisitorsClient, type VisitorView } from "../_visitors-client";
 
-const views = new Set<VisitorView>(["realtime", "analytics", "pages"]);
+const views = new Set<VisitorView>(["realtime", "analytics", "pages", "installation"]);
 
 export default async function VisitorDetailPage({ params }: { params: Promise<{ view: string }> }) {
   const { view } = await params;

@@ -3439,6 +3439,48 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
   color: rgb(255 255 255 / 0.9) !important;
 }
 
+/* Analytics report content is themed through these variables (see
+   _visitors-client.tsx / _components.tsx) instead of per-class overrides.
+   Dark is the default; light redefines them. */
+.dashboard-analytics-canvas {
+  --av-text: rgb(255 255 255 / 0.92);
+  --av-muted: rgb(255 255 255 / 0.58);
+  --av-line: rgb(255 255 255 / 0.1);
+  --av-grid: rgb(255 255 255 / 0.1);
+  --av-hover: rgb(255 255 255 / 0.06);
+  --av-card: rgb(255 255 255 / 0.035);
+  --av-tab: #ff7a3d;
+  --av-chart: #7b97ff;
+  --av-chart-prior: rgb(123 151 255 / 0.4);
+  --av-bar: rgb(123 151 255 / 0.16);
+  --av-map-empty: rgb(255 255 255 / 0.1);
+  --av-good: #3fb37b;
+  --av-good-soft: rgb(63 179 123 / 0.16);
+  --av-bad: #ff7a7a;
+  --av-bad-soft: rgb(255 122 122 / 0.16);
+  --av-solid: rgb(255 255 255 / 0.9);
+  --av-solid-text: #202020;
+}
+[data-dashboard-theme="light"] .dashboard-analytics-canvas {
+  --av-text: rgb(0 0 0 / 0.9);
+  --av-muted: rgb(0 0 0 / 0.56);
+  --av-line: rgb(0 0 0 / 0.1);
+  --av-grid: rgb(0 0 0 / 0.09);
+  --av-hover: rgb(0 0 0 / 0.04);
+  --av-card: #ffffff;
+  --av-tab: #f54e00;
+  --av-chart: #1d4aff;
+  --av-chart-prior: rgb(29 74 255 / 0.4);
+  --av-bar: rgb(29 74 255 / 0.09);
+  --av-map-empty: #dcded6;
+  --av-good: #2b8a2b;
+  --av-good-soft: #e6f4e1;
+  --av-bad: #d83a1f;
+  --av-bad-soft: #fdeae5;
+  --av-solid: #17191b;
+  --av-solid-text: #ffffff;
+}
+
 [data-dashboard-theme="light"] .dashboard-analytics-shell,
 [data-dashboard-theme="light"] .dashboard-shell .dashboard-page-surface.dashboard-visitors-main-surface {
   background: #f5f6f7 !important;
@@ -3448,7 +3490,7 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
    rather than the same light gray as the page behind it, so it reads as a
    surface rather than blending into the shell. */
 [data-dashboard-theme="light"] .dashboard-shell .dashboard-analytics-canvas {
-  background: #ffffff !important;
+  background: transparent !important;
   color: rgba(0, 0, 0, 0.85) !important;
 }
 [data-dashboard-theme="light"] .dashboard-shell .dashboard-analytics-sidebar {
@@ -4926,6 +4968,37 @@ body:has(.dashboard-ai-usage-page) .dashboard-add-credits-dialog [class*="hover:
 }
 [data-dashboard-theme="light"] .dashboard-shell .dashboard-chatbot-settings-page [class*="ring-offset-[#2f2f2f]"] {
   --tw-ring-offset-color: #ffffff !important;
+}
+/* White-on-colour bits (initial on the accent circle, check on the selected
+   swatch) must stay white: the blanket text-white -> black flip above is only
+   right for text sitting on the white page. */
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-chatbot-settings-page [style*="background-color"][class~="text-white"],
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-chatbot-settings-page [style*="background-color"] [class~="text-white"] {
+  color: #ffffff !important;
+}
+/* Selected accent swatch: its ring was white on the (now white) page. */
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-chatbot-settings-page [class*="ring-white/80"] {
+  --tw-ring-color: rgba(0, 0, 0, 0.75) !important;
+}
+/* Avatar upload button: a dark pill with a white icon in light theme, a light
+   pill with a dark icon in dark theme (dark-on-dark was invisible). */
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-chatbot-avatar-button,
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-chatbot-avatar-button:hover {
+  background: #17191b !important;
+  border-color: #ffffff !important;
+  color: #ffffff !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-chatbot-avatar-button svg {
+  color: #ffffff !important;
+}
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-chatbot-avatar-button,
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-chatbot-avatar-button:hover {
+  background: rgb(255 255 255 / 0.9) !important;
+  border-color: #262626 !important;
+  color: #202020 !important;
+}
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-chatbot-avatar-button svg {
+  color: #202020 !important;
 }
 [data-dashboard-theme="light"] .dashboard-shell .dashboard-avatar-picker {
   background: #ffffff !important;

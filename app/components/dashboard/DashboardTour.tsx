@@ -21,7 +21,6 @@ function pageSteps(path: string): Step[] {
     step('.dashboard-reply-composer', 'Reply with the full context', 'Write a reply here. Press space for AI assistance or / for commands, as shown in the composer.'),
     step('#dashboard-customer-details', 'Get to know your customer', 'Review the customer details alongside the conversation so you can help without losing your place.'), search];
   if (path.startsWith('/dashboard/visitors')) return [
-    step('#analytics-report-sidebar', 'Choose your report', 'Switch between the overview, real-time visitors, analytics and page reports.'),
     step('[data-tour="analytics-range"]', 'Choose the time period', 'Select a date range or set your own start and end dates to focus the report.'),
     step('[data-tour="analytics-compare"]', 'See what changed', 'Choose the comparison period to put the current results in context.'),
     step('[data-tour="analytics-site"]', 'Focus on one website', 'View all connected websites together or select a single website.'),

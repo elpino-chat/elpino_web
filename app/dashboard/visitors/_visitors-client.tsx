@@ -1,34 +1,19 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { useMobileDrawer } from "@/app/components/dashboard/mobile-drawer-context";
+import { Bone } from "@/app/components/dashboard/DashboardSkeleton";
+import { Activity, Bookmark, Check, ChevronDown, Clock3, Filter, Globe2, Link2, Lock, PieChart, Plus, RefreshCw, X } from "lucide-react";
+import { ChannelsTable, DevicesTable, KpiCard, PathsTable, Card, CardTitle, TrendChart, WorldMap } from "./_components";
 import {
-  Activity,
-  Bookmark,
-  Check,
-  ChevronDown,
-  Clock3,
-  Filter,
-  Globe2,
-  Link2,
-  Lock,
-  LoaderCircle,
-  RefreshCw,
-  Radio,
-  Sparkles,
-} from "lucide-react";
+  NO_FILTERS, METRICS, comparisonRange, defaultInterval, dropFuture, formatCompact, formatDuration, formatPercent, hasFilters, rangeDays,
+  type CompareMode, type Filters, type Interval, type MetricKey, type Preset, type ReportData,
+} from "./_report";
 
-export type VisitorView = "overview" | "realtime" | "analytics" | "pages";
+export type VisitorView = "overview" | "realtime" | "analytics" | "pages" | "installation";
 type SiteTag = { id: string; name: string; domain: string; status: "verified" | "unverified"; lastUsedAt: string | null };
-type CompareMode = "previous_period" | "previous_year" | "none";
-type Summary = { totalVisitors: number; totalPageviews: number; totalSessions: number };
-type TrendPoint = { date: string; pageviews: number; sessions: number };
 type Realtime = { activeUsers: number; perMinute: { minute: string; visitors: number }[] };
-type CountryRow = { country: string; visitors: number };
-type PageRow = { path: string; views: number };
-type SourceRow = { source: string; sessions: number };
 type LiveVisitor = {
   connId: string;
   siteId: string;
@@ -45,20 +30,6 @@ type LiveVisitor = {
   durationSeconds: number;
 };
 
-const views = [
-  { id: "overview", label: "Overview" },
-  { id: "realtime", label: "Real-time data" },
-  { id: "analytics", label: "Analytics" },
-  { id: "pages", label: "Visited pages" },
-] as const;
-
-const titles = {
-  overview: ["Overview", "Traffic and engagement for the selected website."],
-  realtime: ["Real-time data", "Visitors active during the last 30 minutes."],
-  analytics: ["Analytics", "Traffic, acquisition, and engagement over time."],
-  pages: ["Visited pages", "Pages opened during tracked visitor sessions."],
-} as const;
-
 const rangeOptions = [
   { value: "1", label: "Today" },
   { value: "7", label: "Last 7 days" },
@@ -71,6 +42,15 @@ const compareOptions: { value: CompareMode; label: string }[] = [
   { value: "previous_year", label: "Previous year" },
   { value: "none", label: "No comparison" },
 ];
+
+const intervalOptions: { value: Interval; label: string }[] = [
+  { value: "hour", label: "Hour" },
+  { value: "day", label: "Day" },
+  { value: "week", label: "Week" },
+  { value: "month", label: "Month" },
+];
+
+const PRESETS_KEY = "elpino.analytics.presets";
 
 // Holds a live WebSocket connection to the gateway's realtime module and
 // maintains the current set of active visitors for this workspace — pushed
@@ -130,6 +110,9 @@ function useLiveVisitors(enabled: boolean) {
   return useMemo(() => Object.values(visitors).sort((a, b) => b.startedAt - a.startedAt), [visitors]);
 }
 
+
+type ReportResponse = { report: ReportData | null; upgradeRequired?: boolean; error?: string };
+
 export function VisitorsClient({ view }: { view: VisitorView }) {
   const [sites, setSites] = useState<SiteTag[]>([]);
   const [selectedId, setSelectedId] = useState<string>("__all__");
@@ -148,28 +131,33 @@ export function VisitorsClient({ view }: { view: VisitorView }) {
   const [showCustomRange, setShowCustomRange] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [intervalOverride, setIntervalOverride] = useState<Interval | null>(null);
+  const [metric, setMetric] = useState<MetricKey>("visitors");
+  const [filters, setFilters] = useState<Filters>(NO_FILTERS);
+  const [draft, setDraft] = useState<Filters>(NO_FILTERS);
+  const [presets, setPresets] = useState<Preset[]>([]);
+  const [presetName, setPresetName] = useState("");
 
-  const [summary, setSummary] = useState<Summary | null>(null);
-  const [trend, setTrend] = useState<TrendPoint[]>([]);
+  const [report, setReport] = useState<ReportData | null>(null);
+  const [priorReport, setPriorReport] = useState<ReportData | null>(null);
   const [realtime, setRealtime] = useState<Realtime | null>(null);
-  const [countries, setCountries] = useState<CountryRow[]>([]);
-  const [pages, setPages] = useState<PageRow[]>([]);
-  const [sources, setSources] = useState<SourceRow[]>([]);
   const [analyticsLoading, setAnalyticsLoading] = useState(true);
   const [upgradeRequired, setUpgradeRequired] = useState<string | null>(null);
+  const requestId = useRef(0);
 
   function loadSites() {
     return fetch("/api/workspace/sites", { cache: "no-store" })
       .then((response) => response.json())
-      .then((data: { sites?: SiteTag[] }) => {
-        const next = data.sites ?? [];
-        setSites(next);
-      })
+      .then((data: { sites?: SiteTag[] }) => setSites(data.sites ?? []))
       .catch(() => setSites([]));
   }
 
   useEffect(() => {
     loadSites().finally(() => setLoading(false));
+    try {
+      const saved = JSON.parse(window.localStorage.getItem(PRESETS_KEY) ?? "[]") as Preset[];
+      if (Array.isArray(saved)) setPresets(saved);
+    } catch { /* unreadable presets — start empty */ }
   }, []);
 
   function rangeToDates() {
@@ -181,66 +169,60 @@ export function VisitorsClient({ view }: { view: VisitorView }) {
     return { from: fromDate.toISOString().slice(0, 10), to: toStr };
   }
 
-  function loadAnalytics() {
-    const { from, to } = rangeToDates();
-    if (range === "custom" && (!from || !to)) return;
-    const params = new URLSearchParams({ from, to });
-    if (selectedId !== "__all__") params.set("siteId", selectedId);
-    const realtimeParams = selectedId !== "__all__" ? `?siteId=${encodeURIComponent(selectedId)}` : "";
+  const { from, to } = rangeToDates();
+  const days = from && to ? rangeDays(from, to) : 7;
+  const interval: Interval = intervalOverride ?? defaultInterval(days);
 
+  function fetchReport(fromDate: string, toDate: string): Promise<ReportResponse> {
+    const params = new URLSearchParams({ from: fromDate, to: toDate, interval });
+    if (selectedId !== "__all__") params.set("siteId", selectedId);
+    if (filters.path.trim()) params.set("path", filters.path.trim());
+    if (filters.country.trim()) params.set("country", filters.country.trim());
+    if (filters.device) params.set("device", filters.device);
+    return fetch(`/api/workspace/analytics/report?${params.toString()}`).then((r) => (r.ok ? r.json() : { report: null }));
+  }
+
+  function loadAnalytics() {
+    if (!from || !to) return;
+    const ticket = ++requestId.current;
+    const prior = comparisonRange(from, to, compareMode);
     setAnalyticsLoading(true);
     setUpgradeRequired(null);
-    Promise.all([
-      fetch(`/api/workspace/analytics/summary?${params.toString()}`).then((r) => (r.ok ? r.json() : { summary: null })),
-      fetch(`/api/workspace/analytics/trend?${params.toString()}`).then((r) => (r.ok ? r.json() : { trend: [] })),
-      fetch(`/api/workspace/analytics/realtime${realtimeParams}`).then((r) => (r.ok ? r.json() : { realtime: null })),
-      fetch(`/api/workspace/analytics/countries?${params.toString()}`).then((r) => (r.ok ? r.json() : { countries: [] })),
-      fetch(`/api/workspace/analytics/pages?${params.toString()}`).then((r) => (r.ok ? r.json() : { pages: [] })),
-      fetch(`/api/workspace/analytics/sources?${params.toString()}`).then((r) => (r.ok ? r.json() : { sources: [] })),
-    ])
-      .then(([summaryRes, trendRes, realtimeRes, countriesRes, pagesRes, sourcesRes]) => {
-        // Every one of these routes returns the same { ok: false,
-        // upgradeRequired, error } shape (with a 200 status — see
-        // BillingService.requireFeature) when the plan doesn't include
-        // analytics, instead of the normal { summary: ... } etc. Checking
-        // just the first response is enough since they're all gated by the
-        // same plan flag and fail together.
-        const gate = summaryRes as { ok?: false; upgradeRequired?: true; error?: string };
-        if (gate.upgradeRequired) {
-          setUpgradeRequired(gate.error ?? "Visitor analytics is not included on your current plan.");
-          setSummary(null); setTrend([]); setRealtime(null); setCountries([]); setPages([]); setSources([]);
+    Promise.all([fetchReport(from, to), prior ? fetchReport(prior.from, prior.to) : Promise.resolve(null)])
+      .then(([current, before]) => {
+        if (ticket !== requestId.current) return; // a newer request superseded this one
+        if (current.upgradeRequired) {
+          setUpgradeRequired(current.error ?? "Visitor analytics is not included on your current plan.");
+          setReport(null);
+          setPriorReport(null);
           return;
         }
-        setSummary((summaryRes as { summary: Summary | null }).summary);
-        setTrend((trendRes as { trend?: TrendPoint[] }).trend ?? []);
-        setRealtime((realtimeRes as { realtime: Realtime | null }).realtime);
-        setCountries((countriesRes as { countries?: CountryRow[] }).countries ?? []);
-        setPages((pagesRes as { pages?: PageRow[] }).pages ?? []);
-        setSources((sourcesRes as { sources?: SourceRow[] }).sources ?? []);
+        setReport(current.report);
+        setPriorReport(before?.report ?? null);
       })
       .catch(() => undefined)
-      .finally(() => setAnalyticsLoading(false));
+      .finally(() => { if (ticket === requestId.current) setAnalyticsLoading(false); });
   }
 
   useEffect(() => {
     if (sites.length === 0) return;
     loadAnalytics();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sites.length, selectedId, range, startDate, endDate]);
+  }, [sites.length, selectedId, range, startDate, endDate, compareMode, interval, filters]);
 
-  // Realtime keeps polling on its own regardless of the selected report —
-  // Overview shows the same "last 30 minutes" panel as the dedicated tab.
+  // Realtime polls on its own, independent of the date range.
   useEffect(() => {
     if (sites.length === 0) return;
-    const realtimeParams = selectedId !== "__all__" ? `?siteId=${encodeURIComponent(selectedId)}` : "";
+    const query = selectedId !== "__all__" ? `?siteId=${encodeURIComponent(selectedId)}` : "";
     const poll = () => {
-      fetch(`/api/workspace/analytics/realtime${realtimeParams}`)
+      fetch(`/api/workspace/analytics/realtime${query}`)
         .then((r) => (r.ok ? r.json() : { realtime: null }))
         .then((data: { realtime: Realtime | null }) => setRealtime(data.realtime))
         .catch(() => undefined);
     };
-    const interval = window.setInterval(poll, 20000);
-    return () => window.clearInterval(interval);
+    poll();
+    const timer = window.setInterval(poll, 20000);
+    return () => window.clearInterval(timer);
   }, [sites.length, selectedId]);
 
   const liveVisitorsAll = useLiveVisitors(sites.length > 0);
@@ -264,9 +246,31 @@ export function VisitorsClient({ view }: { view: VisitorView }) {
       await navigator.clipboard.writeText(window.location.href);
       setCopied(true);
       setTimeout(() => setCopied(false), 1600);
-    } catch {
-      /* clipboard unavailable — ignore */
-    }
+    } catch { /* clipboard unavailable — ignore */ }
+  }
+
+  function savePresets(next: Preset[]) {
+    setPresets(next);
+    try { window.localStorage.setItem(PRESETS_KEY, JSON.stringify(next)); } catch { /* storage unavailable — keep in memory */ }
+  }
+
+  function saveCurrentPreset() {
+    const name = presetName.trim();
+    if (!name) return;
+    savePresets([...presets, { id: `${Date.now()}`, name, range, startDate, endDate, compare: compareMode, siteId: selectedId, filters }]);
+    setPresetName("");
+  }
+
+  function applyPreset(preset: Preset) {
+    setRange(preset.range as typeof range);
+    setStartDate(preset.startDate);
+    setEndDate(preset.endDate);
+    setShowCustomRange(false);
+    setCompareMode(preset.compare);
+    setSelectedId(sites.some((site) => site.id === preset.siteId) ? preset.siteId : "__all__");
+    setFilters(preset.filters);
+    setDraft(preset.filters);
+    setPresetsOpen(false);
   }
 
   const selectedSite = useMemo(() => (selectedId === "__all__" ? null : sites.find((site) => site.id === selectedId) ?? null), [selectedId, sites]);
@@ -274,200 +278,264 @@ export function VisitorsClient({ view }: { view: VisitorView }) {
     range === "custom" && startDate && endDate
       ? `${new Date(startDate).toLocaleDateString()} – ${new Date(endDate).toLocaleDateString()}`
       : rangeOptions.find((option) => option.value === range)?.label ?? "Custom range";
-  const domainLabel = selectedSite ? selectedSite.domain : "All websites";
+  const domainLabel = selectedSite ? selectedSite.domain : "All domains";
   const compareLabel = compareOptions.find((option) => option.value === compareMode)?.label ?? "Previous period";
+  const showFullToolbar = view === "overview" || view === "analytics" || view === "pages";
+  const showDomainOnly = view === "realtime";
+
+  const controlClass = "flex h-9 items-center gap-2 rounded-lg border border-[var(--av-line)] bg-[var(--av-card)] px-3 text-[13.5px] text-[var(--av-text)] shadow-[0_1px_0_var(--av-line)] transition hover:bg-[var(--av-hover)]";
+  const fieldClass = "mt-1 block h-9 w-full rounded-lg border border-[#DDE4E8] bg-white px-3 text-[13px] text-[#17181a] outline-none focus:border-[#8f989e]";
+  const menuItem = (active: boolean) => `flex h-9 w-full items-center justify-between rounded-lg px-2.5 text-left text-[13px] font-medium ${active ? "bg-[#f0f2f3]" : "hover:bg-[#f7f8f8]"}`;
+
+  const domainPicker = sites.length > 0 ? (
+    <Popover open={domainOpen} onOpenChange={setDomainOpen}>
+      <PopoverTrigger data-tour="analytics-site" className={controlClass}>
+        <Globe2 size={15} className="text-[var(--av-muted)]" /> {domainLabel} <ChevronDown size={13} className="text-[var(--av-muted)]" />
+      </PopoverTrigger>
+      <PopoverContent align="end" className="w-[260px]">
+        <button type="button" onClick={() => { setSelectedId("__all__"); setDomainOpen(false); }} className={menuItem(selectedId === "__all__")}>
+          All domains {selectedId === "__all__" && <Check size={14} className="text-[#11120f]" />}
+        </button>
+        <div className="my-1 border-t border-[#eceeef]" />
+        <SiteList sites={sites} selectedId={selectedId} onSelect={(id) => { setSelectedId(id); setDomainOpen(false); }} />
+      </PopoverContent>
+    </Popover>
+  ) : (
+    <Link href="/dashboard/connect" className="flex h-9 shrink-0 items-center gap-2 rounded-lg bg-[var(--av-solid)] px-4 text-[13px] font-medium text-[var(--av-solid-text)] transition hover:opacity-90">Connect website</Link>
+  );
+
+  const refreshButton = (
+    <button type="button" onClick={() => void refresh()} disabled={refreshing} aria-label="Refresh" className={`${controlClass} w-9 justify-center px-0 disabled:opacity-60`}>
+      <RefreshCw size={15} className={`text-[var(--av-text)] ${refreshing ? "animate-spin" : ""}`} />
+    </button>
+  );
 
   return (
     <div className="dashboard-analytics-shell flex h-full min-h-0 overflow-hidden bg-[#262626] text-white">
-      <VisitorSidebar view={view} />
       <main className="dashboard-page-surface dashboard-visitors-main-surface flex min-h-0 flex-1 flex-col overflow-y-auto bg-[#262626] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <div className="dashboard-analytics-canvas mx-auto w-full max-w-[1320px] px-6 pb-16 pt-7 sm:px-10 lg:px-12">
-          <div className="mb-7">
-            <p className="text-xs font-normal uppercase tracking-[0.16em] text-white/40">Reports</p>
-            <h1 className="mt-2 text-3xl font-normal tracking-[-0.03em] text-white/95">{titles[view][0]}</h1>
-            <p className="mt-2 text-sm text-white/45">{titles[view][1]}</p>
+        <div className="dashboard-analytics-canvas mx-auto w-full max-w-[1440px] px-4 pb-16 pt-6 sm:px-8">
+          <div className="flex items-center gap-3">
+            <PieChart size={22} className="text-[var(--av-good)]" />
+            <h1 className="text-[24px] font-medium tracking-[-0.02em] text-[var(--av-text)]">Web analytics</h1>
           </div>
-          <div className="flex flex-wrap items-center justify-between gap-2.5">
-            <div className="flex flex-wrap items-center gap-2">
-              <Popover open={rangeOpen} onOpenChange={setRangeOpen}>
-                <PopoverTrigger data-tour="analytics-range" className="flex h-9 items-center gap-2 rounded-lg border border-[#DDE4E8] bg-white px-3 text-[12.5px] font-medium text-[#3c4245] hover:bg-[#f7f8f8]">
-                  <Clock3 size={14} className="text-[#8a9298]" /> {rangeLabel} <ChevronDown size={13} className="text-[#9aa1a6]" />
-                </PopoverTrigger>
-                <PopoverContent align="start" className="w-[220px]">
-                  {rangeOptions.map((option) => (
-                    <button
-                      key={option.value}
-                      type="button"
-                      onClick={() => { setRange(option.value); setShowCustomRange(false); setRangeOpen(false); }}
-                      className={`flex h-9 w-full items-center justify-between rounded-lg px-2.5 text-left text-[13px] font-medium ${range === option.value ? "bg-[#f0f2f3]" : "hover:bg-[#f7f8f8]"}`}
-                    >
-                      {option.label} {range === option.value && <Check size={14} className="text-[#11120f]" />}
-                    </button>
-                  ))}
-                  <div className="my-1 border-t border-[#eceeef]" />
-                  <button
-                    type="button"
-                    onClick={() => { setRange("custom"); setShowCustomRange(true); setRangeOpen(false); }}
-                    className={`flex h-9 w-full items-center justify-between rounded-lg px-2.5 text-left text-[13px] font-medium ${range === "custom" ? "bg-[#f0f2f3]" : "hover:bg-[#f7f8f8]"}`}
-                  >
-                    Custom range… {range === "custom" && <Check size={14} className="text-[#11120f]" />}
-                  </button>
-                </PopoverContent>
-              </Popover>
+          <p className="mt-3 text-[15px] text-[var(--av-text)]">Analyze your web analytics data to understand website performance and user behavior.</p>
 
-              <Popover open={compareOpen} onOpenChange={setCompareOpen}>
-                <PopoverTrigger data-tour="analytics-compare" className="flex h-9 items-center gap-2 rounded-lg border border-[#DDE4E8] bg-white px-3 text-[12.5px] font-medium text-[#3c4245] hover:bg-[#f7f8f8]">
-                  <Activity size={14} className="text-[#8a9298]" /> {compareLabel} <ChevronDown size={13} className="text-[#9aa1a6]" />
-                </PopoverTrigger>
-                <PopoverContent align="start" className="w-[200px]">
-                  {compareOptions.map((option) => (
-                    <button
-                      key={option.value}
-                      type="button"
-                      onClick={() => { setCompareMode(option.value); setCompareOpen(false); }}
-                      className={`flex h-9 w-full items-center justify-between rounded-lg px-2.5 text-left text-[13px] font-medium ${compareMode === option.value ? "bg-[#f0f2f3]" : "hover:bg-[#f7f8f8]"}`}
-                    >
-                      {option.label} {compareMode === option.value && <Check size={14} className="text-[#11120f]" />}
+
+          {(showFullToolbar || showDomainOnly) && (
+            <div className="flex flex-wrap items-center justify-between gap-2.5 border-b border-[var(--av-line)] py-3.5">
+              <div className="flex flex-wrap items-center gap-2">
+                {refreshButton}
+                {showFullToolbar && (
+                  <>
+                    <Popover open={rangeOpen} onOpenChange={setRangeOpen}>
+                      <PopoverTrigger data-tour="analytics-range" className={controlClass}>
+                        <Clock3 size={15} className="text-[var(--av-muted)]" /> {rangeLabel} <ChevronDown size={13} className="text-[var(--av-muted)]" />
+                      </PopoverTrigger>
+                      <PopoverContent align="start" className="w-[220px]">
+                        {rangeOptions.map((option) => (
+                          <button key={option.value} type="button" onClick={() => { setRange(option.value); setShowCustomRange(false); setRangeOpen(false); }} className={menuItem(range === option.value)}>
+                            {option.label} {range === option.value && <Check size={14} className="text-[#11120f]" />}
+                          </button>
+                        ))}
+                        <div className="my-1 border-t border-[#eceeef]" />
+                        <button type="button" onClick={() => { setRange("custom"); setShowCustomRange(true); setRangeOpen(false); }} className={menuItem(range === "custom")}>
+                          Custom range… {range === "custom" && <Check size={14} className="text-[#11120f]" />}
+                        </button>
+                      </PopoverContent>
+                    </Popover>
+
+                    <Popover open={compareOpen} onOpenChange={setCompareOpen}>
+                      <PopoverTrigger data-tour="analytics-compare" className={controlClass}>
+                        <Activity size={15} className="text-[var(--av-muted)]" /> {compareLabel} <ChevronDown size={13} className="text-[var(--av-muted)]" />
+                      </PopoverTrigger>
+                      <PopoverContent align="start" className="w-[200px]">
+                        {compareOptions.map((option) => (
+                          <button key={option.value} type="button" onClick={() => { setCompareMode(option.value); setCompareOpen(false); }} className={menuItem(compareMode === option.value)}>
+                            {option.label} {compareMode === option.value && <Check size={14} className="text-[#11120f]" />}
+                          </button>
+                        ))}
+                      </PopoverContent>
+                    </Popover>
+                  </>
+                )}
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                {domainPicker}
+                {showFullToolbar && (
+                  <>
+                    <Popover open={filtersOpen} onOpenChange={(open) => { setFiltersOpen(open); if (open) setDraft(filters); }}>
+                      <PopoverTrigger className={controlClass}>
+                        <Filter size={15} className="text-[var(--av-muted)]" /> Filters
+                        {hasFilters(filters) && <span className="flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[var(--av-tab)] px-1 text-[11px] font-bold text-white">{[filters.path.trim(), filters.country.trim(), filters.device].filter(Boolean).length}</span>}
+                        <ChevronDown size={13} className="text-[var(--av-muted)]" />
+                      </PopoverTrigger>
+                      <PopoverContent align="end" className="w-[290px]">
+                        <div className="space-y-3 p-1.5">
+                          <label className="block text-[12px] font-medium text-[#68727a]">
+                            Path contains
+                            <input value={draft.path} onChange={(event) => setDraft({ ...draft, path: event.target.value })} placeholder="/pricing" className={fieldClass} />
+                          </label>
+                          <label className="block text-[12px] font-medium text-[#68727a]">
+                            Country code
+                            <input value={draft.country} maxLength={2} onChange={(event) => setDraft({ ...draft, country: event.target.value.toUpperCase() })} placeholder="IN" className={fieldClass} />
+                          </label>
+                          <label className="block text-[12px] font-medium text-[#68727a]">
+                            Device
+                            <select value={draft.device} onChange={(event) => setDraft({ ...draft, device: event.target.value as Filters["device"] })} className={fieldClass}>
+                              <option value="">All devices</option>
+                              <option value="Desktop">Desktop</option>
+                              <option value="Mobile">Mobile</option>
+                              <option value="Tablet">Tablet</option>
+                            </select>
+                          </label>
+                          <div className="flex items-center justify-between pt-1">
+                            <button type="button" onClick={() => { setFilters(NO_FILTERS); setDraft(NO_FILTERS); setFiltersOpen(false); }} className="h-8 rounded-lg px-2.5 text-[12.5px] font-medium text-[#68727a] hover:bg-[#f7f8f8]">Clear</button>
+                            <button type="button" onClick={() => { setFilters(draft); setFiltersOpen(false); }} className="h-8 rounded-lg bg-[#17191b] px-3.5 text-[12.5px] font-medium text-white hover:bg-black">Apply</button>
+                          </div>
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+
+                    <Popover open={presetsOpen} onOpenChange={setPresetsOpen}>
+                      <PopoverTrigger className={controlClass}>
+                        <Bookmark size={15} className="text-[var(--av-muted)]" /> Presets <ChevronDown size={13} className="text-[var(--av-muted)]" />
+                      </PopoverTrigger>
+                      <PopoverContent align="end" className="w-[280px]">
+                        <div className="p-1.5">
+                          {presets.length === 0 ? (
+                            <p className="px-1 py-2 text-[12px] leading-5 text-[#8a9298]">Save the current date range, comparison, website and filters to come back to them in one click.</p>
+                          ) : (
+                            <ul className="mb-2 max-h-52 overflow-y-auto">
+                              {presets.map((preset) => (
+                                <li key={preset.id} className="flex items-center gap-1">
+                                  <button type="button" onClick={() => applyPreset(preset)} className="min-w-0 flex-1 truncate rounded-lg px-2.5 py-2 text-left text-[13px] font-medium hover:bg-[#f7f8f8]">{preset.name}</button>
+                                  <button type="button" aria-label={`Delete preset ${preset.name}`} onClick={() => savePresets(presets.filter((item) => item.id !== preset.id))} className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-[#8a9298] hover:bg-[#f0f2f3] hover:text-[#a64a53]"><X size={13} /></button>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                          <div className="flex gap-2 border-t border-[#eceeef] pt-2.5">
+                            <input value={presetName} onChange={(event) => setPresetName(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") saveCurrentPreset(); }} placeholder="Preset name" maxLength={40} className="h-9 min-w-0 flex-1 rounded-lg border border-[#DDE4E8] bg-white px-3 text-[13px] text-[#17181a] outline-none focus:border-[#8f989e]" />
+                            <button type="button" disabled={!presetName.trim()} onClick={saveCurrentPreset} aria-label="Save preset" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#17191b] text-white hover:bg-black disabled:opacity-40"><Plus size={15} /></button>
+                          </div>
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+
+                    <button type="button" onClick={() => void copyLink()} aria-label="Copy link" className={`${controlClass} relative w-9 justify-center px-0`}>
+                      <Link2 size={15} className="text-[var(--av-text)]" />
+                      {copied && <span className="absolute -bottom-8 right-0 z-10 whitespace-nowrap rounded-md bg-[#11120f] px-2 py-1 text-[11px] font-medium text-white">Copied!</span>}
                     </button>
-                  ))}
-                </PopoverContent>
-              </Popover>
+                  </>
+                )}
+              </div>
             </div>
+          )}
 
-            <div className="flex flex-wrap items-center gap-2">
-              {sites.length > 0 ? (
-                <Popover open={domainOpen} onOpenChange={setDomainOpen}>
-                  <PopoverTrigger data-tour="analytics-site" className="flex h-9 items-center gap-2 rounded-lg border border-[#DDE4E8] bg-white px-3 text-[12.5px] font-medium text-[#3c4245] hover:bg-[#f7f8f8]">
-                    <Globe2 size={14} className="text-[#8a9298]" /> {domainLabel} <ChevronDown size={13} className="text-[#9aa1a6]" />
-                  </PopoverTrigger>
-                  <PopoverContent align="end" className="w-[260px]">
-                    <button
-                      type="button"
-                      onClick={() => { setSelectedId("__all__"); setDomainOpen(false); }}
-                      className={`flex h-9 w-full items-center justify-between rounded-lg px-2.5 text-left text-[13px] font-medium ${selectedId === "__all__" ? "bg-[#f0f2f3]" : "hover:bg-[#f7f8f8]"}`}
-                    >
-                      All websites {selectedId === "__all__" && <Check size={14} className="text-[#11120f]" />}
-                    </button>
-                    <div className="my-1 border-t border-[#eceeef]" />
-                    <SiteList sites={sites} selectedId={selectedId} onSelect={(id) => { setSelectedId(id); setDomainOpen(false); }} />
-                  </PopoverContent>
-                </Popover>
-              ) : (
-                <Link href="/dashboard/connect" className="flex h-9 shrink-0 items-center gap-2 rounded-lg bg-[#202225] px-4 text-[12px] font-semibold text-white transition hover:bg-black">Connect website</Link>
-              )}
-
-              <Popover open={filtersOpen} onOpenChange={setFiltersOpen}>
-                <PopoverTrigger className="flex h-9 items-center gap-2 rounded-lg border border-[#DDE4E8] bg-white px-3 text-[12.5px] font-medium text-[#3c4245] hover:bg-[#f7f8f8]">
-                  <Filter size={14} className="text-[#8a9298]" /> Filters <ChevronDown size={13} className="text-[#9aa1a6]" />
-                </PopoverTrigger>
-                <PopoverContent align="end" className="w-[260px]">
-                  <p className="px-2.5 py-2 text-[12px] leading-5 text-[#8a9298]">No filters available yet — filters will appear once visitor data is collected.</p>
-                </PopoverContent>
-              </Popover>
-
-              <Popover open={presetsOpen} onOpenChange={setPresetsOpen}>
-                <PopoverTrigger className="flex h-9 items-center gap-2 rounded-lg border border-[#DDE4E8] bg-white px-3 text-[12.5px] font-medium text-[#3c4245] hover:bg-[#f7f8f8]">
-                  <Bookmark size={14} className="text-[#8a9298]" /> Presets <ChevronDown size={13} className="text-[#9aa1a6]" />
-                </PopoverTrigger>
-                <PopoverContent align="end" className="w-[260px]">
-                  <p className="px-2.5 py-2 text-[12px] leading-5 text-[#8a9298]">Save common date-range and filter combinations here once you have live data to compare.</p>
-                </PopoverContent>
-              </Popover>
-
-              <button type="button" onClick={() => void copyLink()} aria-label="Copy link" className="relative flex h-9 w-9 items-center justify-center rounded-lg border border-[#DDE4E8] text-[#657078] transition hover:bg-[#f7f8f8]">
-                <Link2 size={14} />
-                {copied && <span className="absolute -bottom-8 right-0 whitespace-nowrap rounded-md bg-[#11120f] px-2 py-1 text-[10.5px] font-medium text-white">Copied!</span>}
-              </button>
-
-              <button
-                type="button"
-                onClick={() => void refresh()}
-                disabled={refreshing}
-                aria-label="Refresh"
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#DDE4E8] bg-white text-[#657078] transition hover:bg-[#f7f8f8] disabled:opacity-60"
-              >
-                <RefreshCw size={15} className={refreshing ? "animate-spin" : ""} />
-              </button>
-            </div>
-          </div>
-
-          {showCustomRange && (
-            <div className="mt-3 flex flex-wrap items-end justify-end gap-2.5 rounded-xl border border-[#DDE4E8] bg-white p-4 shadow-[0_8px_24px_rgba(15,23,42,0.06)]">
-              <label className="text-[10.5px] font-semibold text-[#68727a]">
+          {showFullToolbar && showCustomRange && (
+            <div className="mt-4 flex flex-wrap items-end justify-end gap-3 rounded-xl border border-[var(--av-line)] bg-[var(--av-card)] p-4">
+              <label className="text-[12px] font-medium text-[var(--av-muted)]">
                 Start date
-                <input type="date" value={startDate} max={endDate || undefined} onChange={(event) => setStartDate(event.target.value)} className="mt-1 block h-9 rounded-lg border border-[#DDE4E8] px-3 text-[11.5px] outline-none focus:border-[#11120f]" />
+                <input type="date" value={startDate} max={endDate || undefined} onChange={(event) => setStartDate(event.target.value)} className="mt-1 block h-9 rounded-lg border border-[var(--av-line)] bg-transparent px-3 text-[13px] text-[var(--av-text)] outline-none focus:border-[var(--av-muted)]" />
               </label>
-              <span className="pb-2 text-[#9aa1a6]">→</span>
-              <label className="text-[10.5px] font-semibold text-[#68727a]">
+              <span className="pb-2 text-[var(--av-muted)]">→</span>
+              <label className="text-[12px] font-medium text-[var(--av-muted)]">
                 End date
-                <input type="date" value={endDate} min={startDate || undefined} onChange={(event) => setEndDate(event.target.value)} className="mt-1 block h-9 rounded-lg border border-[#DDE4E8] px-3 text-[11.5px] outline-none focus:border-[#11120f]" />
+                <input type="date" value={endDate} min={startDate || undefined} onChange={(event) => setEndDate(event.target.value)} className="mt-1 block h-9 rounded-lg border border-[var(--av-line)] bg-transparent px-3 text-[13px] text-[var(--av-text)] outline-none focus:border-[var(--av-muted)]" />
               </label>
-              <button type="button" disabled={!startDate || !endDate} onClick={() => setShowCustomRange(false)} className="flex h-9 items-center gap-1.5 rounded-lg bg-[#11120f] px-4 text-[11.5px] font-semibold text-white transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-40">
+              <button type="button" disabled={!startDate || !endDate} onClick={() => setShowCustomRange(false)} className="flex h-9 items-center gap-1.5 rounded-lg bg-[var(--av-solid)] px-4 text-[13px] font-medium text-[var(--av-solid-text)] transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40">
                 <Check size={13} /> Apply
               </button>
             </div>
           )}
 
           {loading ? (
-            <div className="mt-7 flex items-center justify-center py-24 text-[12px] text-[#687178]"><LoaderCircle size={15} className="mr-2 animate-spin" /> Loading analytics</div>
+            <AnalyticsSkeleton view={view} />
           ) : sites.length === 0 ? (
-            <EmptyConnect />
+            <EmptyBlock icon={Globe2} title="Connect a website to view analytics" body="Add a site tag and install the snippet — visitor data will start appearing here automatically." href="/dashboard/connect" cta="Open Connect" />
+          ) : view === "installation" ? (
+            <InstallationHealth sites={sites} />
+          ) : view === "realtime" ? (
+            <LiveView realtime={realtime} liveVisitors={liveVisitors} scope={selectedSite ? selectedSite.domain : "All connected websites"} />
           ) : upgradeRequired ? (
-            <UpgradeRequired message={upgradeRequired} />
-          ) : view === "overview" ? (
-            <Overview
-              site={selectedSite}
-              loading={analyticsLoading}
-              summary={summary}
-              trend={trend}
-              realtime={realtime}
-              countries={countries}
-              pages={pages}
-              sources={sources}
-              rangeLabel={rangeLabel}
-            />
+            <EmptyBlock icon={Lock} title="Upgrade to unlock analytics" body={upgradeRequired} href="/pricing#plans" cta="View plans" />
+          ) : analyticsLoading && !report ? (
+            <AnalyticsSkeleton view={view} />
+          ) : !report ? (
+            <EmptyBlock icon={Activity} title="Analytics could not be loaded" body="Something went wrong fetching this report. Try refreshing." />
+          ) : view === "pages" ? (
+            <div className="mt-5">
+              <PathsTable title="Page reports" rows={report.pages} priorRows={priorReport?.pages ?? null} limit={50} />
+            </div>
           ) : (
-            <ReportView view={view} site={selectedSite} loading={analyticsLoading} summary={summary} trend={trend} realtime={realtime} liveVisitors={liveVisitors} countries={countries} pages={pages} sources={sources} />
+            <div className={`mt-5 space-y-4 transition-opacity ${analyticsLoading ? "opacity-60" : ""}`}>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+                <KpiCard label="Visitors" current={report.summary.visitors} prior={priorReport?.summary.visitors ?? null} format={formatCompact} />
+                <KpiCard label="Page views" current={report.summary.pageviews} prior={priorReport?.summary.pageviews ?? null} format={formatCompact} />
+                <KpiCard label="Sessions" current={report.summary.sessions} prior={priorReport?.summary.sessions ?? null} format={formatCompact} />
+                <KpiCard label="Session duration" current={report.summary.avgDurationSeconds} prior={priorReport?.summary.avgDurationSeconds ?? null} format={formatDuration} />
+                <KpiCard label="Bounce rate" current={report.summary.bounceRate} prior={priorReport?.summary.bounceRate ?? null} format={formatPercent} higherIsBetter={false} />
+              </div>
+
+              <Card className="pt-5">
+                <div className="flex flex-wrap items-center justify-between gap-3 px-5">
+                  <Popover>
+                    <PopoverTrigger className="flex items-center gap-1.5 text-[17px] font-medium text-[var(--av-text)]">
+                      <span className="underline decoration-dotted decoration-[var(--av-muted)] underline-offset-[5px]">{METRICS.find((m) => m.key === metric)?.label}</span>
+                      <ChevronDown size={15} className="text-[var(--av-muted)]" />
+                    </PopoverTrigger>
+                    <PopoverContent align="start" className="w-[200px]">
+                      {METRICS.map((option) => (
+                        <button key={option.key} type="button" onClick={() => setMetric(option.key)} className={menuItem(metric === option.key)}>
+                          {option.label} {metric === option.key && <Check size={14} className="text-[#11120f]" />}
+                        </button>
+                      ))}
+                    </PopoverContent>
+                  </Popover>
+                  <div className="flex items-center gap-2 text-[13px] text-[var(--av-muted)]">
+                    Interval
+                    <Popover>
+                      <PopoverTrigger className={`${controlClass} h-8`}>
+                        {intervalOptions.find((option) => option.value === interval)?.label} <ChevronDown size={13} className="text-[var(--av-muted)]" />
+                      </PopoverTrigger>
+                      <PopoverContent align="end" className="w-[150px]">
+                        {intervalOptions.map((option) => (
+                          <button key={option.value} type="button" onClick={() => setIntervalOverride(option.value)} className={menuItem(interval === option.value)}>
+                            {option.label} {interval === option.value && <Check size={14} className="text-[#11120f]" />}
+                          </button>
+                        ))}
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                </div>
+                <TrendChart
+                  series={dropFuture(report.trend, interval).map((point) => ({ date: point.date, value: point[metric] }))}
+                  prior={priorReport ? priorReport.trend.map((point) => ({ date: point.date, value: point[metric] })) : null}
+                  interval={interval}
+                  label={METRICS.find((m) => m.key === metric)?.label ?? ""}
+                />
+              </Card>
+
+              <PathsTable rows={report.pages} priorRows={priorReport?.pages ?? null} />
+
+              <div className="grid gap-4 lg:grid-cols-2">
+                <ChannelsTable rows={report.channels} priorRows={priorReport?.channels ?? null} />
+                <DevicesTable rows={report.devices} priorRows={priorReport?.devices ?? null} />
+              </div>
+
+              <WorldMap countries={report.countries} />
+
+              <p className="text-[12px] text-[var(--av-muted)]">
+                Showing <span className="text-[var(--av-text)]">{selectedSite ? selectedSite.domain : "all connected websites"}</span>
+                {hasFilters(filters) ? " with filters applied" : ""}. Data begins after the installed tag sends page events.
+                {report.truncated && " This range has more page views than can be summarised at once, so figures are a lower bound."}
+              </p>
+            </div>
           )}
         </div>
       </main>
     </div>
-  );
-}
-
-function VisitorSidebar({ view }: { view: VisitorView }) {
-  const { open, setOpen } = useMobileDrawer();
-  return (
-    <>
-      {/* Kept mounted (not `hidden`) below md so the slide has something to
-          animate — see SpacePanel.tsx for the same trick and why. */}
-      <div
-        className={`fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 md:hidden ${open ? "opacity-100" : "pointer-events-none opacity-0"}`}
-        onClick={() => setOpen(false)}
-      />
-      <div
-        id="analytics-report-sidebar"
-        className={`dashboard-secondary-sidebar dashboard-analytics-sidebar fixed inset-y-0 left-0 z-50 flex h-full w-64 shrink-0 flex-col overflow-hidden border-r border-white/10 bg-[#262626] shadow-[8px_0_30px_rgba(0,0,0,0.35)] transition-transform duration-300 ease-in-out md:static md:z-auto md:w-[240px] md:translate-x-0 md:shadow-none lg:w-[240px] ${
-          open ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-4 pt-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <p className="mb-2 mt-1 px-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#74787c]">Reports</p>
-          <nav className="space-y-0.5">
-            {views.map(({ id, label }) => (
-              <Link
-                key={id}
-                href={id === "overview" ? "/dashboard/visitors" : `/dashboard/visitors/${id}`}
-                aria-current={view === id ? "page" : undefined}
-                className={`flex h-10 items-center gap-3 rounded-lg px-3 text-[13px] font-normal transition ${view === id ? "dashboard-secondary-nav-active bg-white/10 text-white/90" : "text-white/60 hover:bg-white/[0.06] hover:text-white"}`}
-              >
-                {label}
-              </Link>
-            ))}
-          </nav>
-        </div>
-      </div>
-    </>
   );
 }
 
@@ -502,157 +570,8 @@ function SiteList({ sites, selectedId, onSelect }: { sites: SiteTag[]; selectedI
   );
 }
 
-function StatCard({ label, value }: { label: string; value: string }) {
-  return (
-    <article className="rounded-xl border border-[#DDE4E8] bg-white p-5">
-      <p className="text-[13.5px] font-medium text-[#3c4245]">{label}</p>
-      <p className="mt-4 text-[30px] font-bold tracking-[-0.02em] text-black">{value}</p>
-    </article>
-  );
-}
 
-// Builds a smooth-ish SVG path from daily counts, scaled into a 700x200
-// viewBox. Falls back to null (caller shows the empty state) when there's
-// nothing to plot.
-function trendPath(trend: TrendPoint[], key: "pageviews" | "sessions") {
-  if (trend.length === 0) return null;
-  const values = trend.map((point) => point[key]);
-  const max = Math.max(1, ...values);
-  const stepX = trend.length > 1 ? 700 / (trend.length - 1) : 0;
-  const points = values.map((value, index) => {
-    const x = trend.length > 1 ? index * stepX : 350;
-    const y = 190 - (value / max) * 170;
-    return [x, y] as const;
-  });
-  return points.map(([x, y], index) => `${index === 0 ? "M" : "L"}${x.toFixed(1)} ${y.toFixed(1)}`).join(" ");
-}
-
-function RealtimeSparkline({ realtime }: { realtime: Realtime | null }) {
-  const buckets = Array.from({ length: 30 }, (_, index) => {
-    const minute = new Date(Date.now() - (29 - index) * 60 * 1000);
-    minute.setSeconds(0, 0);
-    const match = realtime?.perMinute.find((row) => new Date(row.minute).getTime() === minute.getTime());
-    return match?.visitors ?? 0;
-  });
-  const max = Math.max(1, ...buckets);
-  return (
-    <div className="flex h-16 items-end gap-1">
-      {buckets.map((value, index) => (
-        <span key={index} className="flex-1 rounded-t-sm bg-[#428ce5]/70" style={{ height: `${Math.max(4, (value / max) * 100)}%` }} />
-      ))}
-    </div>
-  );
-}
-
-function Overview({
-  site, loading, summary, trend, realtime, countries, pages, sources, rangeLabel,
-}: {
-  site: SiteTag | null; loading: boolean; summary: Summary | null; trend: TrendPoint[]; realtime: Realtime | null;
-  countries: CountryRow[]; pages: PageRow[]; sources: SourceRow[]; rangeLabel: string;
-}) {
-  const path = trendPath(trend, "sessions");
-  return (
-    <div className="mt-6">
-      <div className="grid gap-3 sm:grid-cols-3">
-        <StatCard label="Visitors" value={loading ? "…" : String(summary?.totalVisitors ?? 0)} />
-        <StatCard label="Page views" value={loading ? "…" : String(summary?.totalPageviews ?? 0)} />
-        <StatCard label="Sessions" value={loading ? "…" : String(summary?.totalSessions ?? 0)} />
-      </div>
-
-      <div className="mt-4 grid gap-4 xl:grid-cols-[1.65fr_0.95fr]">
-        <section className="overflow-hidden rounded-xl border border-[#DDE4E8] bg-white">
-          <div className="border-b border-[#E5E9EB] px-6 py-5">
-            <h3 className="text-[16px] font-semibold">Visitor trend</h3>
-            <p className="mt-1 text-[12px] text-[#667069]">Sessions over the selected time range.</p>
-          </div>
-          <div className="px-6 py-6">
-            <div className="relative h-[200px]">
-              <div className="absolute inset-0 flex flex-col justify-between">
-                {[0, 1, 2, 3, 4].map((line) => <span key={line} className="block border-t border-[#EEF0F2]" />)}
-              </div>
-              {path ? (
-                <svg className="absolute inset-0 h-full w-full" viewBox="0 0 700 200" preserveAspectRatio="none" aria-label="Visitor trend">
-                  <path d={path} fill="none" stroke="#428ce5" strokeWidth="2" />
-                </svg>
-              ) : (
-                <span className="absolute bottom-1 left-1 rounded-md bg-white px-2 py-1 text-[10.5px] text-[#8A929C]">No visits recorded yet</span>
-              )}
-            </div>
-            <div className="flex items-center justify-between border-t border-[#EEF0F2] pt-4 text-[11.5px]">
-              <span className="text-[#6f7980]">{rangeLabel}</span>
-              <Link href="/dashboard/visitors/analytics" className="font-semibold text-[#2878ce] hover:underline">View analytics →</Link>
-            </div>
-          </div>
-        </section>
-
-        <section className="overflow-hidden rounded-xl border border-[#DDE4E8] bg-white">
-          <div className="border-b border-[#E5E9EB] px-6 py-5">
-            <div className="flex items-center justify-between">
-              <h3 className="text-[13px] font-semibold uppercase tracking-[0.06em] text-[#6D7D85]">Last 30 minutes</h3>
-              <span className="flex items-center gap-1.5 rounded-full bg-[#EAF5EE] px-2.5 py-1 text-[10px] font-semibold text-[#257A4D]">
-                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#2FA266]" /> Live
-              </span>
-            </div>
-          </div>
-          <div className="px-6 py-6">
-            <p className="text-[32px] font-semibold tracking-[-0.02em]">{realtime?.activeUsers ?? 0}</p>
-            <p className="mt-0.5 text-[11px] text-[#8A929C]">Active users right now</p>
-
-            <p className="mb-3 mt-6 text-[10px] font-bold uppercase tracking-[0.1em] text-[#8A929C]">Active users per minute</p>
-            <RealtimeSparkline realtime={realtime} />
-
-            {!realtime?.activeUsers && (
-              <div className="mt-6 flex flex-col items-center rounded-xl border border-dashed border-[#DDE4E8] py-6 text-center">
-                <Radio size={17} className="text-[#a0a8ae]" />
-                <p className="mt-2 text-[12px] text-[#8A929C]">No active visitors</p>
-              </div>
-            )}
-            <Link href="/dashboard/visitors/realtime" className="mt-4 block text-right text-[11.5px] font-semibold text-[#2878ce] hover:underline">View real-time →</Link>
-          </div>
-        </section>
-      </div>
-
-      <div className="mt-8 flex items-center gap-2">
-        <Sparkles size={15} className="text-[#7b66d9]" />
-        <h3 className="text-[15px] font-semibold">Suggested for you</h3>
-      </div>
-      <div className="mt-4 grid gap-4 lg:grid-cols-3">
-        <Insight title="Visitors by country" columns={["Country", "Users"]} rows={countries.map((row) => [row.country, String(row.visitors)] as [string, string])} />
-        <Insight title="Sessions by source" columns={["Channel", "Sessions"]} rows={sources.map((row) => [row.source, String(row.sessions)] as [string, string])} />
-        <Insight title="Views by page" columns={["Page title", "Views"]} rows={pages.map((row) => [row.path, String(row.views)] as [string, string])} />
-      </div>
-
-      <p className="mt-6 text-[11px] text-[#8A929C]">
-        Showing analytics for <span className="font-semibold text-[#555e64]">{site ? site.domain : "all connected websites"}</span>. Data begins after the installed tag sends page events.
-      </p>
-    </div>
-  );
-}
-
-function Insight({ title, columns, rows }: { title: string; columns: [string, string]; rows: [string, string][] }) {
-  return (
-    <section className="min-h-[220px] rounded-xl border border-[#DDE4E8] bg-white p-6">
-      <h4 className="text-[13.5px] font-semibold">{title}</h4>
-      <div className="mt-5 flex justify-between border-b border-[#EEF0F2] pb-2 text-[9.5px] font-bold uppercase tracking-[0.08em] text-[#8A929C]">
-        <span>{columns[0]}</span><span>{columns[1]}</span>
-      </div>
-      {rows.length === 0 ? (
-        <div className="flex h-28 items-center justify-center text-[11.5px] text-[#8A929C]">No data available</div>
-      ) : (
-        <div className="divide-y divide-[#EEF0F2]">
-          {rows.slice(0, 6).map(([label, value]) => (
-            <div key={label} className="flex items-center justify-between gap-3 py-2.5 text-[12px]">
-              <span className="min-w-0 truncate text-[#2b2923]">{label}</span>
-              <span className="shrink-0 font-medium text-[#555e64]">{value}</span>
-            </div>
-          ))}
-        </div>
-      )}
-    </section>
-  );
-}
-
-function formatDuration(seconds: number) {
+function formatSeconds(seconds: number) {
   const minutes = Math.floor(seconds / 60);
   const rest = seconds % 60;
   return `${minutes}:${String(rest).padStart(2, "0")}`;
@@ -667,6 +586,23 @@ function sourceFromReferrer(referrer: string | null) {
   }
 }
 
+function RealtimeSparkline({ realtime }: { realtime: Realtime | null }) {
+  const buckets = Array.from({ length: 30 }, (_, index) => {
+    const minute = new Date(Date.now() - (29 - index) * 60 * 1000);
+    minute.setSeconds(0, 0);
+    const match = realtime?.perMinute.find((row) => new Date(row.minute).getTime() === minute.getTime());
+    return match?.visitors ?? 0;
+  });
+  const max = Math.max(1, ...buckets);
+  return (
+    <div className="flex h-16 items-end gap-[3px]" aria-hidden="true">
+      {buckets.map((value, index) => (
+        <span key={index} className="flex-1 rounded-t-sm bg-[var(--av-chart)]" style={{ height: `${Math.max(6, (value / max) * 100)}%`, opacity: value > 0 ? 0.8 : 0.18 }} />
+      ))}
+    </div>
+  );
+}
+
 function LiveVisitorList({ visitors }: { visitors: LiveVisitor[] }) {
   // Re-renders every second purely to advance each visitor's running
   // duration — server pushes are join/update/leave only, not a per-second
@@ -678,116 +614,123 @@ function LiveVisitorList({ visitors }: { visitors: LiveVisitor[] }) {
   }, []);
 
   if (visitors.length === 0) {
-    return <p className="rounded-xl border border-dashed border-[#DDE4E8] px-4 py-6 text-center text-[12px] text-[#8A929C]">No one is on the site right now.</p>;
+    return <p className="px-5 py-10 text-center text-[13px] text-[var(--av-muted)]">No one is on the site right now.</p>;
   }
 
   return (
-    <div className="divide-y divide-[#EEF0F2] overflow-hidden rounded-xl border border-[#DDE4E8]">
+    <ul className="divide-y divide-[var(--av-line)]">
       {visitors.map((visitor) => {
         const location = [visitor.city, visitor.region, visitor.country].filter(Boolean).join(", ") || "Unknown location";
         const durationSeconds = Math.round((Date.now() - visitor.startedAt) / 1000);
         return (
-          <div key={visitor.connId} className="flex flex-wrap items-center gap-x-6 gap-y-1.5 px-4 py-3 text-[12.5px]">
-            <span className="flex items-center gap-2 font-medium text-[#17181a]">
-              <span className="h-2 w-2 shrink-0 rounded-full bg-[#2FA266]" /> {location}
-            </span>
-            <span className="min-w-0 flex-1 truncate text-[#555e64]">{visitor.path}</span>
-            <span className="flex items-center gap-1.5 text-[#8A929C]"><Clock3 size={12} /> {formatDuration(durationSeconds)}</span>
-            <span className="text-[#8A929C]">via {sourceFromReferrer(visitor.referrer)}</span>
-            <span className="w-full basis-full truncate text-[10.5px] text-[#9aa1a6]">
-              Path: {visitor.pathHistory.map((entry) => entry.path).join(" → ")}
-            </span>
-          </div>
+          <li key={visitor.connId} className="px-5 py-3.5">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-[13.5px]">
+              <span className="flex items-center gap-2 font-medium text-[var(--av-text)]"><span className="h-2 w-2 shrink-0 rounded-full bg-[var(--av-good)]" /> {location}</span>
+              <span className="min-w-0 flex-1 truncate text-[var(--av-muted)]">{visitor.path}</span>
+              <span className="flex items-center gap-1.5 tabular-nums text-[var(--av-muted)]"><Clock3 size={13} /> {formatSeconds(durationSeconds)}</span>
+              <span className="text-[var(--av-muted)]">via {sourceFromReferrer(visitor.referrer)}</span>
+            </div>
+            {visitor.pathHistory.length > 1 && (
+              <p className="mt-1 truncate pl-4 text-[12px] text-[var(--av-muted)]">{visitor.pathHistory.map((entry) => entry.path).join(" → ")}</p>
+            )}
+          </li>
         );
       })}
+    </ul>
+  );
+}
+
+function LiveView({ realtime, liveVisitors, scope }: { realtime: Realtime | null; liveVisitors: LiveVisitor[]; scope: string }) {
+  const active = realtime?.activeUsers ?? 0;
+  return (
+    <div className="mt-5 space-y-4">
+      <Card className="p-5">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <CardTitle subject="Active now" />
+            <p className="mt-1 text-[13px] text-[var(--av-muted)]">{scope} · last 30 minutes</p>
+          </div>
+          <span className="flex items-center gap-1.5 rounded-full bg-[var(--av-good-soft)] px-2.5 py-1 text-[12px] font-medium text-[var(--av-good)]">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--av-good)]" /> Live
+          </span>
+        </div>
+        <p className="mt-5 text-[40px] font-medium leading-none tracking-[-0.03em] tabular-nums text-[var(--av-text)]">{active.toLocaleString()}</p>
+        <p className="mt-1.5 text-[13px] text-[var(--av-muted)]">{active === 1 ? "person" : "people"} on your site right now</p>
+        <div className="mt-6"><RealtimeSparkline realtime={realtime} /></div>
+      </Card>
+      <Card className="pt-5">
+        <div className="px-5 pb-4"><CardTitle subject="Live visitors" /><p className="mt-1 text-[13px] text-[var(--av-muted)]">{liveVisitors.length.toLocaleString()} connected</p></div>
+        <div className="border-t border-[var(--av-line)]"><LiveVisitorList visitors={liveVisitors} /></div>
+      </Card>
     </div>
   );
 }
 
-function ReportView({
-  view, site, loading, summary, trend, realtime, liveVisitors, countries, pages, sources,
-}: {
-  view: Exclude<VisitorView, "overview">; site: SiteTag | null; loading: boolean; summary: Summary | null; trend: TrendPoint[]; realtime: Realtime | null; liveVisitors: LiveVisitor[];
-  countries: CountryRow[]; pages: PageRow[]; sources: SourceRow[];
-}) {
-  const hasData =
-    view === "realtime" ? Boolean(realtime?.activeUsers || liveVisitors.length > 0) :
-    view === "pages" ? pages.length > 0 :
-    Boolean(summary && (summary.totalPageviews > 0 || summary.totalSessions > 0));
-
+function InstallationHealth({ sites }: { sites: SiteTag[] }) {
   return (
-    <div className="mt-7 overflow-hidden rounded-xl border border-[#DDE4E8] bg-white">
-      <div className="border-b border-[#E5E9EB] px-6 py-5">
-        <h3 className="text-[16px] font-semibold">{titles[view][0]}</h3>
-        <p className="mt-1 text-[12px] text-[#667069]">{site ? site.domain : "All connected websites"}</p>
-      </div>
+    <div className="mt-5 space-y-4">
+      <Card className="pt-5">
+        <div className="px-5 pb-4"><CardTitle subject="Installation health" /><p className="mt-1 text-[13px] text-[var(--av-muted)]">Whether each website&apos;s tag has been seen sending data.</p></div>
+        <ul className="border-t border-[var(--av-line)]">
+          {sites.map((site) => {
+            const ok = site.status === "verified";
+            return (
+              <li key={site.id} className="flex flex-wrap items-center gap-x-6 gap-y-1 border-b border-[var(--av-line)] px-5 py-4 last:border-b-0">
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-[14px] font-medium text-[var(--av-text)]">{site.name}</p>
+                  <p className="truncate text-[13px] text-[var(--av-muted)]">{site.domain}</p>
+                </div>
+                <span className={`rounded-full px-2.5 py-1 text-[12px] font-medium ${ok ? "bg-[var(--av-good-soft)] text-[var(--av-good)]" : "bg-[var(--av-bad-soft)] text-[var(--av-bad)]"}`}>{ok ? "Verified" : "Not verified"}</span>
+                <span className="w-44 text-right text-[13px] text-[var(--av-muted)]">{site.lastUsedAt ? `Last seen ${new Date(site.lastUsedAt).toLocaleString()}` : "No data received yet"}</span>
+                {!ok && <Link href="/dashboard/connect" className="text-[13px] font-medium text-[var(--av-tab)] hover:underline">Finish setup →</Link>}
+              </li>
+            );
+          })}
+        </ul>
+      </Card>
+    </div>
+  );
+}
 
-      {loading ? (
-        <div className="flex min-h-[340px] items-center justify-center text-[12px] text-[#687178]"><LoaderCircle size={15} className="mr-2 animate-spin" /> Loading</div>
-      ) : !hasData ? (
-        <div className="flex min-h-[340px] flex-col items-center justify-center px-6 text-center">
-          <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F0F2F4] text-[#667078]"><Activity size={19} /></span>
-          <p className="mt-3 text-[14px] font-semibold">No analytics received yet</p>
-          <p className="mt-1 max-w-sm text-[11.5px] leading-5 text-[#687178]">This report will populate automatically when visitors open pages on the selected website.</p>
-        </div>
-      ) : view === "realtime" ? (
-        <div className="p-6">
-          <p className="text-[32px] font-semibold tracking-[-0.02em]">{realtime?.activeUsers ?? 0}</p>
-          <p className="mt-0.5 text-[11px] text-[#8A929C]">Active users right now</p>
-          <p className="mb-3 mt-6 text-[10px] font-bold uppercase tracking-[0.1em] text-[#8A929C]">Active users per minute (last 30 minutes)</p>
-          <RealtimeSparkline realtime={realtime} />
-          <p className="mb-3 mt-8 text-[10px] font-bold uppercase tracking-[0.1em] text-[#8A929C]">Live visitors</p>
-          <LiveVisitorList visitors={liveVisitors} />
-        </div>
-      ) : view === "pages" ? (
-        <div className="divide-y divide-[#EEF0F2]">
-          <div className="grid grid-cols-[1fr_100px] px-6 py-2.5 text-[9.5px] font-bold uppercase tracking-[0.08em] text-[#8A929C]"><span>Page</span><span>Views</span></div>
-          {pages.map((row) => (
-            <div key={row.path} className="grid grid-cols-[1fr_100px] items-center px-6 py-3 text-[13px]">
-              <span className="min-w-0 truncate text-[#2b2923]">{row.path}</span>
-              <span className="font-medium text-[#555e64]">{row.views}</span>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="p-6">
-          <div className="grid gap-3 sm:grid-cols-3">
-            <StatCard label="Visitors" value={String(summary?.totalVisitors ?? 0)} />
-            <StatCard label="Page views" value={String(summary?.totalPageviews ?? 0)} />
-            <StatCard label="Sessions" value={String(summary?.totalSessions ?? 0)} />
-          </div>
-          <div className="mt-4 grid gap-4 lg:grid-cols-2">
-            <Insight title="Visitors by country" columns={["Country", "Users"]} rows={countries.map((row) => [row.country, String(row.visitors)] as [string, string])} />
-            <Insight title="Sessions by source" columns={["Channel", "Sessions"]} rows={sources.map((row) => [row.source, String(row.sessions)] as [string, string])} />
-          </div>
-        </div>
+function EmptyBlock({ icon: Icon, title, body, href, cta }: { icon: typeof Activity; title: string; body: string; href?: string; cta?: string }) {
+  return (
+    <div className="mt-5 flex min-h-[380px] flex-col items-center justify-center rounded-xl border border-dashed border-[var(--av-line)] bg-[var(--av-card)] px-6 text-center">
+      <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--av-hover)] text-[var(--av-muted)]"><Icon size={19} /></span>
+      <p className="mt-3 text-[15px] font-medium text-[var(--av-text)]">{title}</p>
+      <p className="mt-1 max-w-sm text-[13px] leading-5 text-[var(--av-muted)]">{body}</p>
+      {href && cta && (
+        <Link href={href} className="mt-4 flex h-9 items-center gap-2 rounded-lg bg-[var(--av-solid)] px-4 text-[13px] font-medium text-[var(--av-solid-text)] transition hover:opacity-90">{cta}</Link>
       )}
     </div>
   );
 }
 
-function UpgradeRequired({ message }: { message: string }) {
+// Grey placeholder in the shape of the report being loaded.
+function AnalyticsSkeleton({ view }: { view: VisitorView }) {
+  const card = "rounded-xl border border-[var(--av-line)] bg-[var(--av-card)] p-5";
+  const rows = (count: number) => <div className="mt-5 space-y-3">{Array.from({ length: count }, (_, row) => <Bone key={row} className="h-8 w-full" />)}</div>;
+  if (view === "pages" || view === "installation") {
+    return <div role="status" aria-busy="true" aria-label="Loading" className={`mt-5 ${card}`}><Bone className="h-5 w-32" />{rows(8)}</div>;
+  }
+  if (view === "realtime") {
+    return (
+      <div role="status" aria-busy="true" aria-label="Loading" className="mt-5 space-y-4">
+        <div className={card}><Bone className="h-5 w-32" /><Bone className="mt-5 h-10 w-20" /><Bone className="mt-6 h-16 w-full" /></div>
+        <div className={card}><Bone className="h-5 w-36" />{rows(4)}</div>
+      </div>
+    );
+  }
   return (
-    <div className="mt-7 flex min-h-[420px] flex-col items-center justify-center rounded-xl border border-[#DDE4E8] bg-white text-center">
-      <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F0F2F4] text-[#667078]"><Lock size={20} /></span>
-      <p className="mt-3 text-[14px] font-semibold">Upgrade to unlock analytics</p>
-      <p className="mt-1 max-w-sm text-[11.5px] leading-5 text-[#687178]">{message}</p>
-      <Link href="/pricing#plans" className="mt-4 flex h-9 items-center gap-2 rounded-lg bg-[#202225] px-4 text-[12px] font-semibold text-white transition hover:bg-black">
-        <Lock size={14} /> View plans
-      </Link>
-    </div>
-  );
-}
-
-function EmptyConnect() {
-  return (
-    <div className="mt-7 flex min-h-[420px] flex-col items-center justify-center rounded-xl border border-[#DDE4E8] bg-white text-center">
-      <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F0F2F4] text-[#667078]"><Globe2 size={20} /></span>
-      <p className="mt-3 text-[14px] font-semibold">Connect a website to view analytics</p>
-      <p className="mt-1 max-w-sm text-[11.5px] leading-5 text-[#687178]">Add a site tag and install the snippet — visitor data will start appearing here automatically.</p>
-      <Link href="/dashboard/connect" className="mt-4 flex h-9 items-center gap-2 rounded-lg bg-[#202225] px-4 text-[12px] font-semibold text-white transition hover:bg-black">
-        <Globe2 size={14} /> Open Connect
-      </Link>
+    <div role="status" aria-busy="true" aria-label="Loading analytics" className="mt-5 space-y-4">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        {[0, 1, 2, 3, 4].map((tile) => <div key={tile} className={card}><Bone className="h-4 w-24" /><Bone className="mt-4 h-9 w-24" /><Bone className="mt-4 h-3 w-20" /></div>)}
+      </div>
+      <div className={card}><Bone className="h-5 w-40" /><Bone className="mt-5 h-[300px] w-full" /></div>
+      <div className={card}><Bone className="h-5 w-24" />{rows(6)}</div>
+      <div className="grid gap-4 lg:grid-cols-2">
+        <div className={card}><Bone className="h-5 w-40" />{rows(3)}</div>
+        <div className={card}><Bone className="h-5 w-40" />{rows(3)}</div>
+      </div>
     </div>
   );
 }
