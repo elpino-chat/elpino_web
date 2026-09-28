@@ -1,7 +1,7 @@
 "use client";
 
 import { Bone } from "../../components/dashboard/DashboardSkeleton";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import posthog from "posthog-js";
@@ -46,6 +46,9 @@ export function KnowledgeClient({ view }: { view: KnowledgeView }) {
   // stray click cost real content. This gates it behind an explicit choice.
   const [confirmDeleteItem, setConfirmDeleteItem] = useState<KnowledgeItem | null>(null);
   const [deleting, setDeleting] = useState(false);
+  // True while a newly verified website's first pages are being read into knowledge in the background.
+  const [importing, setImporting] = useState(false);
+  const importAsked = useRef(false);
 
   function resetEditor() {
     setTitle(""); setContent(""); setSiteId(selectedSiteId); setPendingFile(null); setError(null); setAddTab("text");
@@ -72,6 +75,43 @@ export function KnowledgeClient({ view }: { view: KnowledgeView }) {
   }
 
   useEffect(load, []);
+
+  // A verified website with nothing in knowledge yet is due its first automatic import (a site that was
+  // verified before this existed, or one whose import is still running). The server decides: it claims the
+  // import once per site and says whether one is starting or has just started, so a workspace that
+  // deliberately emptied its knowledge is left alone. Asked once per visit.
+  useEffect(() => {
+    if (loading || importAsked.current) return;
+    const verified = sites.filter((site) => site.verifiedAt);
+    if (items.length > 0 || verified.length === 0) return;
+    importAsked.current = true;
+    void Promise.all(
+      verified.map((site) =>
+        fetch("/api/workspace/knowledge/auto-import", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ siteId: site.id }) })
+          .then((response) => (response.ok ? (response.json() as Promise<{ started?: boolean; recent?: boolean }>) : null))
+          .catch(() => null),
+      ),
+    ).then((results) => {
+      if (results.some((result) => result && (result.started || result.recent))) setImporting(true);
+    });
+  }, [loading, items.length, sites]);
+
+  // While that runs, quietly re-read the list until pages show up (for up to two minutes).
+  useEffect(() => {
+    if (!importing) return;
+    let tries = 0;
+    const timer = window.setInterval(async () => {
+      tries += 1;
+      const data = await fetch("/api/workspace/knowledge", { cache: "no-store" }).then((response) => (response.ok ? response.json() : null)).catch(() => null) as { items?: KnowledgeItem[] } | null;
+      if (data?.items?.length) {
+        setItems(data.items);
+        setImporting(false);
+      } else if (tries >= 24) {
+        setImporting(false);
+      }
+    }, 5000);
+    return () => window.clearInterval(timer);
+  }, [importing]);
   // Mirrors the backend's search scoping: a selected domain shows its own
   // articles plus every workspace-wide article (siteId null), since those
   // are exactly what the AI draws on when answering for that domain.
@@ -159,7 +199,7 @@ export function KnowledgeClient({ view }: { view: KnowledgeView }) {
       : ["URLs", "Add website URLs and keep their content searchable."];
 
   return <div id="dashboard-knowledge-page" className="dashboard-knowledge-shell flex h-full min-h-0 overflow-hidden bg-[#262626] text-white">
-    <KnowledgeSidebar view={view} items={items} sites={sites} selectedSiteId={selectedSiteId} onOpen={openEditor} />
+    <KnowledgeSidebar view={view} items={items} sites={sites} selectedSiteId={selectedSiteId} onOpen={openEditor} loading={loading} />
     <main className="dashboard-page-surface dashboard-knowledge-main-surface min-w-0 flex-1 overflow-y-auto bg-[#262626] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       <div className="mx-auto w-full max-w-[1320px] px-6 pb-16 pt-7 sm:px-10 lg:px-12">
         <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
@@ -174,6 +214,12 @@ export function KnowledgeClient({ view }: { view: KnowledgeView }) {
         </div>
         {view !== "sources" && <Toolbar loading={loading} />}
         {error && <p className="mt-4 rounded-lg bg-[#fff1f1] px-3 py-2 text-[11px] font-medium text-[#a64a53]">{error}</p>}
+        {importing && (
+          <div role="status" className="mt-4 flex items-center gap-2.5 rounded-lg border border-white/10 bg-white/[0.04] px-3.5 py-3 text-[13px] text-white/70">
+            <LoaderCircle size={15} className="shrink-0 animate-spin" />
+            <span>We&apos;re reading your website and adding its most useful pages. They&apos;ll appear here in a moment.</span>
+          </div>
+        )}
         {loading ? <KnowledgeSkeleton view={view} /> : view === "overview" ? <Overview items={scopedItems} sites={sites} onNew={() => openEditor()} /> : view === "articles" ? <PagesTable items={filtered} sites={sites} query={query} setQuery={setQuery} onDelete={setConfirmDeleteItem} onNew={() => openEditor()} onOpen={openEditor} onToggleVisible={(item, visible) => void setArticleVisibility(item, visible)} /> : <Sources sites={sites} items={items} defaultSiteId={selectedSiteId} onReload={load} />}
       </div>
     </main>
@@ -378,9 +424,9 @@ function Favicon({ domain, size = 20 }: { domain?: string | null; size?: number 
 }
 
 function KnowledgeSidebar({
-  view, items, sites, selectedSiteId, onOpen,
+  view, items, sites, selectedSiteId, onOpen, loading,
 }: {
-  view: KnowledgeView; items: KnowledgeItem[]; sites: Site[]; selectedSiteId: string; onOpen: (item: KnowledgeItem) => void;
+  view: KnowledgeView; items: KnowledgeItem[]; sites: Site[]; selectedSiteId: string; onOpen: (item: KnowledgeItem) => void; loading: boolean;
 }) {
   const selected = sites.find((site) => site.id === selectedSiteId) ?? sites[0] ?? null;
   const { open, setOpen } = useMobileDrawer();
@@ -399,6 +445,18 @@ function KnowledgeSidebar({
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >
+      {loading ? (
+        // Same shape as the loaded sidebar: title, website chip, Library links, then Recent pages.
+        <div role="status" aria-busy="true" aria-label="Loading sidebar" className="min-h-0 flex-1 px-4 pt-3">
+          <Bone className="mb-3 ml-1 h-4 w-20" />
+          <Bone className="h-[38px] w-full" />
+          <Bone className="mb-3 ml-1 mt-5 h-3 w-14" />
+          <div className="space-y-1.5">{nav.map(({ id }) => <Bone key={id} className="h-10 w-full" />)}</div>
+          <div className="my-4 border-t border-white/10" />
+          <Bone className="mb-3 ml-1 h-3 w-14" />
+          <div className="space-y-1.5">{[0, 1, 2, 3, 4].map((row) => <Bone key={row} className="h-9 w-full" />)}</div>
+        </div>
+      ) : (
       <div className="min-h-0 flex-1 px-4 pt-3">
         <p className="mb-3 px-1 text-sm font-normal text-white/45">Knowledge</p>
         {/* One domain per workspace — no switcher needed, just show it. */}
@@ -434,6 +492,7 @@ function KnowledgeSidebar({
           {items.length === 0 && <p className="px-3 py-2 text-[12px] text-white/35">No recent pages</p>}
         </div>
       </div>
+      )}
       </div>
     </>
   );
@@ -668,6 +727,9 @@ function Sources({ sites, items, defaultSiteId, onReload }: { sites: Site[]; ite
   const [sitemapResult, setSitemapResult] = useState<{ pagesFound: number } | null>(null);
   const [urlOpen, setUrlOpen] = useState(false);
   const [sitemapOpen, setSitemapOpen] = useState(false);
+  // Pages are read in the background; this is polled while any are still waiting.
+  const [importing, setImporting] = useState<{ left: number; failed: { url: string; error: string }[] } | null>(null);
+  const [watchImports, setWatchImports] = useState(true);
 
   const activeSite = sites.find((site) => site.id === activeSiteId) ?? null;
 
@@ -676,6 +738,28 @@ function Sources({ sites, items, defaultSiteId, onReload }: { sites: Site[]; ite
     setSitemapInput("");
     setSitemapResult(null);
   }, [activeSiteId]);
+  useEffect(() => {
+    if (!watchImports) return;
+    let stopped = false;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let wasBusy = false;
+    async function poll() {
+      const response = await fetch("/api/workspace/knowledge/import-status", { cache: "no-store" }).catch(() => null);
+      if (stopped) return;
+      const data = response?.ok ? await response.json().catch(() => null) as { pending: number; active: number; failed: { url: string; error: string }[] } | null : null;
+      const left = data ? data.pending + data.active : 0;
+      if (data) setImporting(left || data.failed.length ? { left, failed: data.failed } : null);
+      if (left > 0) { wasBusy = true; onReload(); timer = setTimeout(() => void poll(), 3000); return; }
+      // Everything queued has finished: one last reload picks up the final pages.
+      if (wasBusy) onReload();
+      setWatchImports(false);
+    }
+    void poll();
+    return () => { stopped = true; if (timer) clearTimeout(timer); };
+    // onReload is stable enough for a poll loop; restarting on it would reset the timer every render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watchImports]);
+
   const rows = useMemo(
     () =>
       items
@@ -688,7 +772,7 @@ function Sources({ sites, items, defaultSiteId, onReload }: { sites: Site[]; ite
     if (!urlInput.trim() || !activeSiteId || adding) return;
     setAdding(true); setAddError(null);
     const response = await fetch("/api/workspace/knowledge/url", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ url: urlInput.trim(), siteId: activeSiteId }) });
-    if (response.ok) { posthog.capture("knowledge_item_created", { source_type: "url" }); setUrlInput(""); setUrlOpen(false); onReload(); }
+    if (response.ok) { posthog.capture("knowledge_item_created", { source_type: "url" }); setUrlInput(""); setUrlOpen(false); onReload(); setWatchImports(true); }
     else { const data = await response.json().catch(() => ({})) as { message?: string }; setAddError(data.message ?? "That page could not be crawled."); }
     setAdding(false);
   }
@@ -698,7 +782,7 @@ function Sources({ sites, items, defaultSiteId, onReload }: { sites: Site[]; ite
     setAddingSitemap(true); setSitemapError(null); setSitemapResult(null);
     const response = await fetch("/api/workspace/knowledge/sitemap", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ sitemapUrl: sitemapInput.trim(), siteId: activeSiteId }) });
     const data = await response.json().catch(() => ({})) as { message?: string; pagesFound?: number };
-    if (response.ok) { posthog.capture("knowledge_item_created", { source_type: "sitemap" }); setSitemapInput(""); setSitemapResult({ pagesFound: data.pagesFound ?? 0 }); onReload(); }
+    if (response.ok) { posthog.capture("knowledge_item_created", { source_type: "sitemap" }); setSitemapInput(""); setSitemapResult({ pagesFound: data.pagesFound ?? 0 }); onReload(); setWatchImports(true); }
     else { setSitemapError(data.message ?? "That sitemap could not be crawled."); }
     setAddingSitemap(false);
   }
@@ -773,6 +857,22 @@ function Sources({ sites, items, defaultSiteId, onReload }: { sites: Site[]; ite
           </PopoverContent>
         </Popover>
       </div>
+
+      {importing && (
+        <div className="mt-4 rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3 text-[12px] text-white/70" role="status">
+          {importing.left > 0 && (
+            <p className="flex items-center gap-2"><LoaderCircle size={12} className="animate-spin" /> Importing {importing.left} page{importing.left === 1 ? "" : "s"} in the background. You can leave this page.</p>
+          )}
+          {importing.failed.length > 0 && (
+            <div className={importing.left > 0 ? "mt-2" : ""}>
+              <p className="text-[#a64a53]">{importing.failed.length} page{importing.failed.length === 1 ? "" : "s"} could not be imported:</p>
+              <ul className="mt-1 space-y-0.5 text-[11px] text-white/50">
+                {importing.failed.slice(0, 5).map((page) => <li key={page.url} className="truncate">{page.url} — {page.error}</li>)}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="mt-6 overflow-hidden border-y border-white/10">
         {/* A 4-column grid has no honest way to fit a phone screen — below md
