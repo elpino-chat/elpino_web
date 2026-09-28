@@ -434,7 +434,7 @@ export function GET(request: Request) {
         var arrivedAt = greetingArrivedAt();
         var bubbles =
           '<div style="background:#111214;color:#fff;border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:14px 16px 12px;box-shadow:0 16px 40px rgba(15,23,42,0.4);width:fit-content;min-width:180px;max-width:100%;">' +
-            '<div style="font-size:16px;line-height:1.5;font-weight:400;color:#fff;">' + escapeHtml(greetingLines.join(' ')) + '</div>' +
+            '<div style="font-size:15px;line-height:1.5;font-weight:400;color:#fff;">' + escapeHtml(greetingLines.join(' ')) + '</div>' +
             '<div style="display:flex;align-items:baseline;gap:6px;margin-top:8px;font-size:12.5px;line-height:1.3;font-weight:400;color:rgba(255,255,255,0.6);">' +
               '<span style="color:rgba(255,255,255,0.85);">' + escapeHtml(botName) + '</span>' +
               '<span aria-hidden="true">·</span>' +
