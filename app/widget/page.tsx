@@ -1323,10 +1323,14 @@ function WidgetContent() {
   // same lines as real messages: a greeting is one message, so only its leading
   // "Hi there" changes; an older several-line greeting swaps its whole first line.
   const displayGreetingLines = useMemo(() => {
-    if (!greetingName) return greetingLines;
-    if (greetingLines.length > 1) return [`Hi ${greetingName} 👋`, ...greetingLines.slice(1)];
     const salutation = /^Hi there(?:\s*👋)?/u;
-    return greetingLines.length === 1 && salutation.test(greetingLines[0]) ? [greetingLines[0].replace(salutation, `Hi ${greetingName} 👋`)] : greetingLines;
+    let lines = greetingLines;
+    if (greetingName) {
+      if (greetingLines.length > 1) lines = [`Hi ${greetingName} 👋`, ...greetingLines.slice(1)];
+      else if (greetingLines.length === 1 && salutation.test(greetingLines[0])) lines = [greetingLines[0].replace(salutation, `Hi ${greetingName} 👋`)];
+    }
+    // One message, the same as the launcher popup: a greeting stored as several lines is joined.
+    return [lines.join(" ")];
   }, [greetingLines, greetingName]);
   // Consecutive messages from the same sender are one item in the thread
   // list, not one each — otherwise every bubble, even ones seconds apart
@@ -1464,10 +1468,7 @@ function WidgetContent() {
               <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full text-[16px] font-bold text-white" style={{ backgroundColor: ACCENT }}>
                 {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
               </span>
-              <h1 className="mt-4 text-[19px] font-semibold leading-6">{greetingLines[0]}</h1>
-              {greetingLines.length > 1 && (
-                <p className="mt-1.5 text-[13px] leading-5" style={{ color: MUTED }}>{greetingLines.slice(1).join(" ")}</p>
-              )}
+              <h1 className="mt-4 text-[19px] font-semibold leading-6">{greetingLines.join(" ")}</h1>
 
               {team.length > 0 && (() => {
                 const avatarsShown = Math.min(team.length, 4);
@@ -1705,13 +1706,8 @@ function WidgetContent() {
                 // are further down.
                 <div className="space-y-1">
                   {displayGreetingLines.map((line, index) => (
-                    <div key={index} className="flex items-start gap-2">
-                      {index === 0 && (
-                        <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full text-[10px] font-bold text-white" style={{ backgroundColor: botAvatarUrl ? undefined : ACCENT }}>
-                          {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
-                        </span>
-                      )}
-                      <div className={`w-fit max-w-[90%] text-[14px] leading-6 ${index > 0 ? "ml-8" : ""}`} style={{ color: INK }}>
+                    <div key={index} className="flex items-start">
+                      <div className="w-fit max-w-[90%] text-[14px] leading-6" style={{ color: INK }}>
                         {line}
                       </div>
                     </div>
@@ -1746,7 +1742,7 @@ function WidgetContent() {
 
                 return (
                   <div key={first.id} className="flex flex-col gap-1">
-                    {groupMessages.map((message, messageIndex) => {
+                    {groupMessages.map((message) => {
                       const hasImage = message.attachmentUrl && (message.attachmentType === "image" || message.attachmentType === "gif");
                       const hasFile = message.attachmentUrl && message.attachmentType === "file";
                       const displayBody = revealMap[message.id] ?? message.body;
@@ -1785,18 +1781,7 @@ function WidgetContent() {
                         return <div key={message.id} className="flex justify-end">{bubble}</div>;
                       }
                       return (
-                        <div key={message.id} className="flex items-start gap-2">
-                          {messageIndex === 0 ? (
-                            <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full text-[10px] font-bold text-white" style={{ backgroundColor: botAvatarUrl ? undefined : ACCENT }}>
-                              {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
-                            </span>
-                          ) : (
-                            // Same sender as the message above — the avatar
-                            // already introduced them, so later lines in the
-                            // run just line up under the first bubble instead
-                            // of repeating it.
-                            <span className="w-6 shrink-0" />
-                          )}
+                        <div key={message.id} className="flex items-start">
                           {bubble}
                         </div>
                       );
@@ -1818,10 +1803,7 @@ function WidgetContent() {
                 );
               })()}
               {agentTyping && (
-                <div className="flex items-center gap-2">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full text-[10px] font-bold text-white" style={{ backgroundColor: botAvatarUrl ? undefined : ACCENT }}>
-                    {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
-                  </span>
+                <div className="flex items-center">
                   <div className="flex items-center rounded-2xl px-3.5 py-3" style={{ backgroundColor: BUBBLE, width: "fit-content" }}>
                     <TypingDots color="rgba(244,244,245,.50)" />
                   </div>
