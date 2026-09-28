@@ -3301,6 +3301,8 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
   const [loading, setLoading] = useState(true);
   const [aiName, setAiName] = useState("Elpino AI");
   const [aiAvatarUrl, setAiAvatarUrl] = useState("");
+  // Read-only: customers can't pick a theme color. It is only loaded so the preview matches the live widget,
+  // and is never sent back when saving.
   const [accent, setAccent] = useState("#202225");
   const [theme, setTheme] = useState<"light" | "dark" | "auto">("light");
   const [replyLanguage, setReplyLanguage] = useState("auto");
@@ -3355,7 +3357,6 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
         body: JSON.stringify({
           aiName: aiName.trim(),
           aiAvatarUrl: aiAvatarUrl.trim(),
-          chatbotAccent: accent,
           chatbotTheme: theme,
           chatbotReplyLanguage: replyLanguage,
           greetingLines: cleanGreetingLines,
@@ -3386,7 +3387,7 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
     const timer = window.setTimeout(() => { void save(); }, 700);
     return () => window.clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accent, theme, replyLanguage, aiName, aiAvatarUrl, greeting, loading]);
+  }, [theme, replyLanguage, aiName, aiAvatarUrl, greeting, loading]);
 
   return (
     <div className="dashboard-chatbot-settings-page mx-auto w-full max-w-[1280px] px-7 pb-20 pt-8 text-white/90 sm:px-9 lg:px-10">
@@ -3498,24 +3499,6 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
                     />
                   </div>
                   <p className="mt-1.5 text-[11px] text-[#8b8d90]">{greeting.length}/{GREETING_MAX_LENGTH}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="overflow-hidden border-t border-white/10 py-5">
-              <div className="grid gap-6 sm:grid-cols-[220px_minmax(0,1fr)]">
-                <div>
-                  <h3 className="text-[16px] font-semibold">Theme color</h3>
-                  <p className="mt-1 max-w-[200px] text-[12px] leading-5 text-[#667069]">Choose the accent used by the chat launcher, buttons, and active states.</p>
-                </div>
-                <div className="w-full min-w-0">
-                  <div className="flex flex-wrap items-center gap-3">
-                    {["#202225", "#7467E8", "#1596D6", "#E6538D", "#A953D6", "#5878E8", "#E56812", "#11999D", "#A98E82", "#39B487"].map((color) => (
-                      <button key={color} type="button" aria-label={`Use ${color} theme`} onClick={() => { setAccent(color); setSaved(false); }} className={`flex h-9 w-9 items-center justify-center rounded-lg transition ${accent === color ? "ring-2 ring-white/80 ring-offset-2 ring-offset-[#2f2f2f]" : "hover:scale-105"}`} style={{ backgroundColor: color }}>
-                        {accent === color && <Check size={15} className="text-white" />}
-                      </button>
-                    ))}
-                  </div>
                 </div>
               </div>
             </div>
