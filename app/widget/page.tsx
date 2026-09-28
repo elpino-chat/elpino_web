@@ -1930,15 +1930,15 @@ function WidgetContent() {
               {contactActive && contactField ? (
                 <div>
                   <div className="mb-1.5 flex items-center justify-between px-2">
-                    <p className="text-[11.5px] font-semibold" style={{ color: INK }}>
+                    <p className="text-[11.5px] font-normal" style={{ color: INK }}>
                       {CONTACT_PROMPTS[contactField].label}
                       {contactFields!.length > 1 && <span className="font-normal" style={{ color: MUTED }}>{` · ${contactStep + 1} of ${contactFields!.length}`}</span>}
                     </p>
-                    <button type="button" onClick={skipContactStep} className="text-[11.5px] font-medium hover:underline" style={{ color: MUTED }}>
+                    <button type="button" onClick={skipContactStep} className="text-[11.5px] font-normal underline underline-offset-2 hover:opacity-80" style={{ color: MUTED }}>
                       Skip
                     </button>
                   </div>
-                  <div className="flex items-center rounded-[24px] border py-2 pl-3 pr-2.5 shadow-[0_3px_16px_rgba(0,0,0,.35)]" style={{ borderColor: contactError ? "#e5626a" : "rgba(255,255,255,0.7)", backgroundColor: SURFACE }}>
+                  <div className="flex items-center rounded-md border py-2 pl-3 pr-2.5 shadow-[0_3px_16px_rgba(0,0,0,.35)]" style={{ borderColor: contactError ? "#e5626a" : "rgba(255,255,255,0.7)", backgroundColor: SURFACE }}>
                     <input
                       key={contactField}
                       autoFocus
