@@ -26,7 +26,7 @@ type HelpArticleBody = { id: string; title: string; content: string; sourceUrl: 
 type MessageGroup =
   | { kind: "system"; message: WidgetMessage }
   | { kind: "thread"; fromVisitor: boolean; messages: WidgetMessage[] };
-type StartResult = { allowed: boolean; visitorToken?: string; conversationId?: string; botName?: string; botAvatarUrl?: string | null; greetingLines?: string[]; removeBranding?: boolean; topic?: string | null; customerName?: string | null; customerEmail?: string | null; customerPhone?: string | null; contactCollection?: "chat" | "off"; identified?: boolean; identityError?: string; messages?: WidgetMessage[]; error?: string };
+type StartResult = { suggestions?: string[]; allowed: boolean; visitorToken?: string; conversationId?: string; botName?: string; botAvatarUrl?: string | null; greetingLines?: string[]; removeBranding?: boolean; topic?: string | null; customerName?: string | null; customerEmail?: string | null; customerPhone?: string | null; contactCollection?: "chat" | "off"; identified?: boolean; identityError?: string; messages?: WidgetMessage[]; error?: string };
 type ConversationSummary = { id: string; status: string; topic?: string | null; preview: string; time: string };
 // "home" is the greeting/start screen — no separate top-level tab for it (see
 // `tab` below), just the Chat tab's own default view when there's nothing to
@@ -226,6 +226,8 @@ function WidgetContent() {
   const [botName, setBotName] = useState("Elpino Support");
   const [botAvatarUrl, setBotAvatarUrl] = useState<string | null>(null);
   const [greetingLines, setGreetingLines] = useState<string[]>(["Hi there 👋", "How can I help you today?"]);
+  // Questions other visitors like this one keep asking, offered as tap-to-send chips in a new chat.
+  const [suggestions, setSuggestions] = useState<string[]>([]);
   // First name of an identified visitor (ElpinoTag.identify()/getIdentityToken
   // on the host page), so the greeting can say "Hi Alex" instead of the
   // generic "Hi there" — null for an anonymous visitor, or one the site
@@ -692,6 +694,7 @@ function WidgetContent() {
         setGreetingName(realName || null);
         setHomeName(data.customerName && data.customerName !== "Website visitor" ? data.customerName.trim().split(/\s+/)[0] : null);
         if (Array.isArray(data.greetingLines) && data.greetingLines.length > 0) setGreetingLines(data.greetingLines);
+        setSuggestions(Array.isArray(data.suggestions) ? data.suggestions.filter((item): item is string => typeof item === "string" && item.trim().length > 0).slice(0, 3) : []);
         activeVisitorRef.current = data.visitorToken ?? "";
         // A different person than before (after an expiry that kept the
         // draft): nothing typed for the previous account carries over.
@@ -1860,6 +1863,21 @@ function WidgetContent() {
                       )}
                     </div>
                   ))}
+                  {greetingReady && !sending && draft.trim() === "" && suggestions.length > 0 && (
+                    <div className="flex flex-wrap gap-2 pt-3" role="group" aria-label="Suggested questions">
+                      {suggestions.map((question) => (
+                        <button
+                          key={question}
+                          type="button"
+                          onClick={() => void sendPayload(question, null)}
+                          className="rounded-full border px-3.5 py-2 text-left text-[13px] transition hover:bg-black/[0.04]"
+                          style={{ borderColor: BORDER, backgroundColor: SURFACE, color: INK }}
+                        >
+                          {question}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
               {messages.length === 0 && conversationId && (
@@ -2070,10 +2088,16 @@ function WidgetContent() {
 
               {/* While the AI is asking for a detail, the answer field in the conversation is the only input. */}
               {!(contactActive && contactField) && (
-              <div className="rounded-[24px] border px-3 pb-2.5 pt-3 shadow-[0_3px_12px_rgba(15,23,42,.10)]" style={{ borderColor: "rgba(24,24,27,0.28)", backgroundColor: SURFACE }}>
+              {/* While the AI is replying the box is dimmed and inert, not just quietly refusing to send. */}
+              <div
+                aria-disabled={sendBlockedByReply}
+                className={`rounded-[24px] border px-3 pb-2.5 pt-3 shadow-[0_3px_12px_rgba(15,23,42,.10)] transition-opacity duration-200 ${sendBlockedByReply ? "pointer-events-none select-none opacity-55" : ""}`}
+                style={{ borderColor: "rgba(24,24,27,0.28)", backgroundColor: SURFACE }}
+              >
                 <input ref={fileInputRef} type="file" hidden onChange={handleFileSelect} />
                 <textarea
                   ref={composerRef}
+                  disabled={sendBlockedByReply}
                   value={draft}
                   onChange={(event) => { setDraft(event.target.value); notifyTyping(); }}
                   onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); void sendMessage(); } }}
