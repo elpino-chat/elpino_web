@@ -64,6 +64,8 @@ const BUBBLE = "#26272b";
 const BORDER = "rgba(255,255,255,0.10)";
 const MUTED = "rgba(244,244,245,.60)";
 const ICON_MUTED = "rgba(244,244,245,.68)";
+// The message box toolbar icons (attach, emoji, GIF): white at 75%.
+const COMPOSER_ICON = "rgba(255,255,255,0.75)";
 const POLL_MS = 2000;
 // "Just now", "5 minutes ago", "1 hour ago" — same wording as the launcher popup in app/tag.js/route.ts.
 function timeAgo(then: number, now: number): string {
@@ -1956,13 +1958,13 @@ function WidgetContent() {
                 />
                 <div className="mt-2 flex items-center justify-between">
                   <div className="flex items-center gap-1">
-                    <button type="button" aria-label="Attach file" onClick={() => fileInputRef.current?.click()} className="flex h-7 w-7 items-center justify-center rounded-full transition hover:bg-white/10" style={{ color: ICON_MUTED }}>
+                    <button type="button" aria-label="Attach file" onClick={() => fileInputRef.current?.click()} className="flex h-7 w-7 items-center justify-center rounded-full transition hover:bg-white/10" style={{ color: COMPOSER_ICON }}>
                       <Paperclip size={16} strokeWidth={1.8} />
                     </button>
-                    <button type="button" aria-label="Emoji" onClick={() => togglePanel("emoji")} className="flex h-7 w-7 items-center justify-center rounded-full transition hover:bg-white/10" style={{ color: activePanel === "emoji" ? ACCENT : ICON_MUTED }}>
+                    <button type="button" aria-label="Emoji" onClick={() => togglePanel("emoji")} className="flex h-7 w-7 items-center justify-center rounded-full transition hover:bg-white/10" style={{ color: activePanel === "emoji" ? ACCENT : COMPOSER_ICON }}>
                       <Smile size={17} strokeWidth={1.8} />
                     </button>
-                    {GIPHY_KEY && <button type="button" aria-label="GIF" aria-pressed={activePanel === "gif"} onClick={() => togglePanel("gif")} className="flex h-7 w-7 items-center justify-center rounded-full transition hover:bg-white/10" style={{ color: activePanel === "gif" ? ACCENT : ICON_MUTED }}>
+                    {GIPHY_KEY && <button type="button" aria-label="GIF" aria-pressed={activePanel === "gif"} onClick={() => togglePanel("gif")} className="flex h-7 w-7 items-center justify-center rounded-full transition hover:bg-white/10" style={{ color: activePanel === "gif" ? ACCENT : COMPOSER_ICON }}>
                       <span className="flex h-[15px] items-center rounded-[4px] border-[1.5px] px-[3px] text-[8px] font-extrabold leading-none tracking-tight">GIF</span>
                     </button>}
                   </div>
