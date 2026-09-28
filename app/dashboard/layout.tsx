@@ -30,7 +30,7 @@ async function AuthedDashboard({ children }: { children: React.ReactNode }) {
 
   return <MobileDrawerProvider>
       <div className="dashboard-shell relative flex h-dvh w-full flex-row overflow-hidden">
-        <Sidebar user={{ email: session.email, name: session.name }} />
+        <Sidebar />
         {/* Top safe-area padding — without it, on a phone with a notch or
             Dynamic Island, the header renders underneath that cutout instead
             of below it, reading as if the header and the OS status bar have

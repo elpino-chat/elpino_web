@@ -15,7 +15,7 @@ export type DashboardUser = { email: string; name?: string };
 // Desktop-only rail — below md, MobileBottomNav (a fixed bottom tab bar)
 // carries the same primaryNavItems instead. Together they're the only two
 // places this nav is rendered.
-export default function Sidebar({ user }: { user: DashboardUser }) {
+export default function Sidebar() {
   const pathname = usePathname();
   const [aiHandledCount, setAiHandledCount] = useState(0);
 
@@ -82,9 +82,6 @@ export default function Sidebar({ user }: { user: DashboardUser }) {
       </nav>
       <div className="flex shrink-0 flex-col items-center gap-5 pb-5 pt-3">
         <Link href="/contact" aria-label="Help" className="rounded-lg p-2"><CircleHelp size={20} /></Link>
-        <Link href="/dashboard/settings" aria-label="Your profile" className="sidebar-account flex h-9 w-9 items-center justify-center rounded-full text-xs font-medium">
-          {(user.name || user.email).slice(0, 2).toUpperCase()}
-        </Link>
       </div>
     </aside>
   );

@@ -265,6 +265,158 @@ function formatResetDate(date: Date) {
   return date.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
 }
 
+type TimeSaved = {
+  replies: number;
+  humanSecondsPerReply: number;
+  avgResponseSeconds: number;
+  savedSeconds: number;
+  daily: { date: string; replies: number; savedSeconds: number }[];
+};
+
+const HUMAN_MINUTES_KEY = "elpino.timeSaved.minutes";
+const DEFAULT_HUMAN_MINUTES = 2;
+
+function formatSaved(seconds: number): string {
+  const total = Math.max(0, Math.round(seconds));
+  const h = Math.floor(total / 3600);
+  const m = Math.floor((total % 3600) / 60);
+  if (h > 0) return `${h}h ${m}m`;
+  if (m > 0) return `${m}m`;
+  return `${total}s`;
+}
+
+function dayLabel(date: string): string {
+  return new Date(`${date}T00:00:00Z`).toLocaleDateString(undefined, { month: "short", day: "numeric", timeZone: "UTC" });
+}
+
+/**
+ * How much sooner the AI's replies arrived than a person's would have: for each
+ * reply, (what a person would take) - (what the AI took). What a person would
+ * take is an estimate the workspace can change, kept in this browser.
+ */
+function TimeSavedSection() {
+  const [minutes, setMinutes] = useState(DEFAULT_HUMAN_MINUTES);
+  const [data, setData] = useState<TimeSaved | null>(null);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    try {
+      const saved = Number(window.localStorage.getItem(HUMAN_MINUTES_KEY));
+      if (saved >= 0.5 && saved <= 30) setMinutes(saved);
+    } catch { /* storage unavailable — keep the default */ }
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    // Debounced so typing a new estimate doesn't fire a request per keystroke.
+    const timer = window.setTimeout(() => {
+      const now = new Date();
+      const monthStart = new Date(now.getFullYear(), now.getMonth(), 1); // the viewer's own month, in their own timezone
+      const params = new URLSearchParams({
+        from: monthStart.toISOString(),
+        to: now.toISOString(),
+        humanSeconds: String(Math.round(minutes * 60)),
+        tzOffsetMinutes: String(-now.getTimezoneOffset()),
+      });
+      fetch(`/api/workspace/usage/time-saved?${params.toString()}`, { cache: "no-store" })
+        .then((response) => (response.ok ? response.json() : null))
+        .then((body: { timeSaved: TimeSaved | null } | null) => {
+          if (cancelled) return;
+          setData(body?.timeSaved ?? null);
+          setFailed(!body?.timeSaved);
+        })
+        .catch(() => { if (!cancelled) setFailed(true); });
+    }, 350);
+    return () => { cancelled = true; window.clearTimeout(timer); };
+  }, [minutes]);
+
+  function changeMinutes(raw: string) {
+    const value = Number(raw);
+    if (!Number.isFinite(value)) return;
+    const next = Math.min(30, Math.max(0.5, value));
+    setMinutes(next);
+    try { window.localStorage.setItem(HUMAN_MINUTES_KEY, String(next)); } catch { /* keep in memory only */ }
+  }
+
+  const localToday = new Date(Date.now() - new Date().getTimezoneOffset() * 60_000).toISOString().slice(0, 10);
+  const today = data?.daily.find((day) => day.date === localToday);
+  const peak = Math.max(1, ...(data?.daily.map((day) => day.savedSeconds) ?? [0]));
+  const replyWord = (count: number) => `${count.toLocaleString()} AI repl${count === 1 ? "y" : "ies"}`;
+
+  return (
+    <section className="mt-6 rounded-xl bg-white p-6">
+      <div>
+        <p className="text-[14px] font-medium">Time saved by AI</p>
+        <p className="mt-0.5 text-[12px] text-[#8b9398]">How much sooner your customers got an answer than if a person had written every reply.</p>
+      </div>
+
+      {!data && !failed ? (
+        <div role="status" aria-busy="true" aria-label="Loading time saved" className="mt-5 grid gap-4 sm:grid-cols-3">
+          {[0, 1, 2].map((tile) => <div key={tile} className="space-y-3"><Bone className="h-3 w-24" /><Bone className="h-8 w-28" /><Bone className="h-3 w-20" /></div>)}
+        </div>
+      ) : failed || !data ? (
+        <p className="mt-5 text-[12.5px] text-[#667069]">Time saved could not be loaded right now.</p>
+      ) : (
+        <>
+          <div className="mt-5 grid gap-5 sm:grid-cols-3">
+            <div>
+              <p className="text-[12px] text-[#8b9398]">Today</p>
+              <p className="mt-1 text-[28px] font-medium leading-none tracking-[-0.03em] tabular-nums">{formatSaved(today?.savedSeconds ?? 0)}</p>
+              <p className="mt-1.5 text-[12px] text-[#667069]">{replyWord(today?.replies ?? 0)}</p>
+            </div>
+            <div>
+              <p className="text-[12px] text-[#8b9398]">This month</p>
+              <p className="mt-1 text-[28px] font-medium leading-none tracking-[-0.03em] tabular-nums">{formatSaved(data.savedSeconds)}</p>
+              <p className="mt-1.5 text-[12px] text-[#667069]">{replyWord(data.replies)}</p>
+            </div>
+            <div>
+              <p className="text-[12px] text-[#8b9398]">Average AI response</p>
+              <p className="mt-1 text-[28px] font-medium leading-none tracking-[-0.03em] tabular-nums">{data.avgResponseSeconds ? `${data.avgResponseSeconds}s` : "—"}</p>
+              <p className="mt-1.5 text-[12px] text-[#667069]">from message received to reply sent</p>
+            </div>
+          </div>
+
+          {data.replies > 0 ? (
+            <div className="mt-6">
+              <div className="flex h-20 items-end gap-[3px]" role="img" aria-label="Time saved per day this month">
+                {data.daily.map((day) => (
+                  <span
+                    key={day.date}
+                    title={`${dayLabel(day.date)}: ${formatSaved(day.savedSeconds)} saved · ${replyWord(day.replies)}`}
+                    className="flex-1 rounded-t-sm bg-[#428ce5]"
+                    style={{ height: `${Math.max(day.savedSeconds ? 6 : 3, (day.savedSeconds / peak) * 100)}%`, opacity: day.savedSeconds ? 1 : 0.18 }}
+                  />
+                ))}
+              </div>
+              <div className="mt-1.5 flex justify-between text-[11px] text-[#8b9398]">
+                <span>{dayLabel(data.daily[0].date)}</span>
+                <span>{dayLabel(data.daily[data.daily.length - 1].date)}</span>
+              </div>
+            </div>
+          ) : (
+            <p className="mt-5 text-[12.5px] text-[#667069]">No AI replies yet this month. Time saved will appear here as the AI answers customers.</p>
+          )}
+        </>
+      )}
+
+      <p className="mt-5 flex flex-wrap items-center gap-x-1.5 gap-y-1 border-t border-[#eceeef] pt-4 text-[12px] text-[#667069]">
+        This is an estimate: it assumes a person would take
+        <input
+          type="number"
+          min={0.5}
+          max={30}
+          step={0.5}
+          value={minutes}
+          onChange={(event) => changeMinutes(event.target.value)}
+          aria-label="Minutes a person would take per reply"
+          className="h-7 w-16 rounded-md border border-[#dde3e6] bg-white px-2 text-center text-[12px] text-[#17181a] outline-none focus:border-[#8f989e]"
+        />
+        min per reply. Adjust it to match your team. Days are in your local time.
+      </p>
+    </section>
+  );
+}
+
 function AIUsageSettingsPage() {
   const [creditsCents, setCreditsCents] = useState<number | null>(null);
   // Free is limited by AI messages, not dollars, so the credit balance, "Add
@@ -430,6 +582,8 @@ function AIUsageSettingsPage() {
           </button>
         )}
       </header>
+
+      <TimeSavedSection />
 
       <section className="mt-6 rounded-xl bg-white p-6">
         {!entitlement ? (
@@ -3263,7 +3417,31 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
       </div>
 
       {loading ? (
-        <div className="mt-7 h-72 animate-pulse rounded-[20px] border border-white/10 bg-white/[0.035]" />
+        <div role="status" aria-busy="true" aria-label="Loading chatbot settings" className="mt-7 divide-y divide-[var(--skel-line,rgb(128_128_128/0.18))]">
+          {/* Same two-column shape as the real sections: label + hint on the left, controls on the right. */}
+          <div className="grid gap-6 py-5 sm:grid-cols-[220px_minmax(0,1fr)]">
+            <div className="space-y-2"><Bone className="h-4 w-36" /><Bone className="h-3 w-44" /><Bone className="h-3 w-32" /></div>
+            <div>
+              <Bone className="h-3 w-14" />
+              <Bone className="mt-3 size-16 rounded-full" />
+              <Bone className="mt-3 h-3 w-48" />
+              <Bone className="mt-5 h-3 w-24" />
+              <Bone className="mt-2 h-10 w-1/2 min-w-[220px]" />
+            </div>
+          </div>
+          <div className="grid gap-6 py-5 sm:grid-cols-[220px_minmax(0,1fr)]">
+            <div className="space-y-2"><Bone className="h-4 w-28" /><Bone className="h-3 w-40" /></div>
+            <div className="space-y-2.5"><Bone className="h-10 w-full" /><Bone className="h-10 w-full" /><Bone className="h-9 w-32" /></div>
+          </div>
+          <div className="grid gap-6 py-5 sm:grid-cols-[220px_minmax(0,1fr)]">
+            <div className="space-y-2"><Bone className="h-4 w-24" /><Bone className="h-3 w-36" /></div>
+            <div className="flex flex-wrap gap-2">{Array.from({ length: 8 }, (_, i) => <Bone key={i} className="size-9" />)}</div>
+          </div>
+          <div className="grid gap-6 py-5 sm:grid-cols-[220px_minmax(0,1fr)]">
+            <div className="space-y-2"><Bone className="h-4 w-32" /><Bone className="h-3 w-40" /></div>
+            <Bone className="h-10 w-full max-w-sm" />
+          </div>
+        </div>
       ) : (
         <div className="mt-7">
           <div className="min-w-0">
@@ -3287,7 +3465,7 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
                       type="button"
                       title="Change avatar"
                       onClick={() => setAvatarPickerOpen(true)}
-                      className="absolute -bottom-1 -right-1 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border-2 border-[#1c1c1c] bg-[#202225] text-white shadow-sm transition hover:bg-black"
+                      className="dashboard-chatbot-avatar-button absolute -bottom-1 -right-1 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border-2 border-[#1c1c1c] bg-[#202225] text-white shadow-sm transition hover:bg-black"
                     >
                       <Upload size={13} />
                     </button>
