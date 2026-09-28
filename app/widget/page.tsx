@@ -1423,6 +1423,31 @@ function WidgetContent() {
   // count instead of a padded one.
   const paddedTeamTotal = useMemo(() => Math.floor(Math.random() * 6) + 6, []);
 
+  // The opening greeting of a new chat types itself out — dots, then word by word like the AI's live replies —
+  // instead of appearing fully formed, which read as canned. Client-side only: it is the same text the server
+  // saves as the first message once the visitor sends something.
+  const greetingText = displayGreetingLines[0] ?? "";
+  const showingGreeting = !loading && tab === "chat" && chatView === "thread" && messages.length === 0 && !conversationId;
+  const [greetingTyped, setGreetingTyped] = useState("");
+  const [greetingDone, setGreetingDone] = useState(false);
+  useEffect(() => {
+    setGreetingTyped("");
+    setGreetingDone(false);
+    if (!showingGreeting || !greetingText) return;
+    let timer: number | undefined;
+    let shown = 0;
+    const words = greetingText.split(/(\s+)/);
+    const step = () => {
+      shown += 1;
+      setGreetingTyped(words.slice(0, shown).join(""));
+      if (shown < words.length) timer = window.setTimeout(step, REVEAL_MS_PER_WORD);
+      else setGreetingDone(true);
+    };
+    // A beat of typing dots first, as if someone were writing it.
+    timer = window.setTimeout(step, 900);
+    return () => window.clearTimeout(timer);
+  }, [showingGreeting, greetingText]);
+
   if (loading) {
     return <div className="flex h-full items-center justify-center text-[12px]" style={{ backgroundColor: BG, color: MUTED }}>Loading…</div>;
   }
@@ -1787,10 +1812,18 @@ function WidgetContent() {
                 <div className="space-y-1">
                   {displayGreetingLines.map((line, index) => (
                     <div key={index} className="w-fit max-w-[85%] space-y-1">
-                      <div className="rounded-2xl px-3.5 py-2.5 text-[13.5px] leading-6" style={{ backgroundColor: BUBBLE, color: INK }}>
-                        {line}
-                      </div>
-                      <p className="px-1 text-[11px] leading-4" style={{ color: MUTED }}>AI agent · {timeAgo(greetedAt, clock)}</p>
+                      {greetingTyped === "" && !greetingDone ? (
+                        <div className="flex w-fit items-center rounded-2xl px-3.5 py-3.5" style={{ backgroundColor: BUBBLE }} aria-label="Typing">
+                          <TypingDots color="rgba(24,24,27,.45)" />
+                        </div>
+                      ) : (
+                        <>
+                          <div className="rounded-2xl px-3.5 py-2.5 text-[13.5px] leading-6" style={{ backgroundColor: BUBBLE, color: INK }}>
+                            {greetingDone ? line : greetingTyped}
+                          </div>
+                          {greetingDone && <p className="px-1 text-[11px] leading-4" style={{ color: MUTED }}>AI agent · {timeAgo(greetedAt, clock)}</p>}
+                        </>
+                      )}
                     </div>
                   ))}
                 </div>
