@@ -1553,7 +1553,7 @@ function WidgetContent() {
                 type="button"
                 onClick={startNewChat}
                 // Same look as the pricing page: a solid ink border and no shadow, on white.
-                className="flex w-full items-center gap-3 rounded-2xl border-2 border-[#11120f] p-4 text-left transition hover:-translate-y-0.5"
+                className="flex w-full cursor-pointer items-center gap-3 rounded-2xl border-2 border-[#11120f] p-4 text-left"
                 style={{ backgroundColor: "#ffffff" }}
               >
                 <span className="min-w-0 flex-1">
@@ -1574,7 +1574,7 @@ function WidgetContent() {
                   <button
                     type="button"
                     onClick={() => openThread(target)}
-                    className="w-full rounded-2xl border-2 border-[#11120f] p-4 text-left text-[#11120f] transition hover:-translate-y-0.5"
+                    className="w-full cursor-pointer rounded-2xl border-2 border-[#11120f] p-4 text-left text-[#11120f]"
                     style={{ backgroundColor: "#fff8ec" }}
                   >
                     <span className="block text-[14px] font-semibold">Recent message</span>
