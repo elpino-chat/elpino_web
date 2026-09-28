@@ -141,7 +141,7 @@ function buildComparisonCategories(t: T): FeatureCategory[] {
         {
           label: t('pricing.comparison.categories.product.rows.profiles.label', 'Customer profiles & history'),
           description: t('pricing.comparison.categories.product.rows.profiles.description', 'Stored customer records and their past conversations.'),
-          values: ['No', 'Yes', 'Yes', 'Yes'],
+          values: ['Yes', 'Yes', 'Yes', 'Yes'],
         },
         {
           label: t('pricing.comparison.categories.product.rows.domain.label', 'Connected domain'),

@@ -50,7 +50,7 @@ export function KnowledgePageEditor({ pageId }: { pageId?: string }) {
   }
 
   return (
-    <main className="flex h-full min-h-0 flex-col overflow-hidden bg-[#262626] text-white">
+    <main className="dashboard-knowledge-editor flex h-full min-h-0 flex-col overflow-hidden bg-[#262626] text-white">
       <header className="flex h-14 shrink-0 items-center justify-between border-b border-white/10 px-3 sm:h-16 sm:px-5">
         <button type="button" onClick={() => router.push("/dashboard/knowledge")} className="flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm text-white/60 hover:bg-white/[0.06] hover:text-white/90 sm:gap-2">
           <ArrowLeft size={16} /> <span className="hidden sm:inline">Pages</span>
@@ -72,13 +72,18 @@ export function KnowledgePageEditor({ pageId }: { pageId?: string }) {
         <div className="min-h-0 flex-1 overflow-y-auto px-4 py-6 sm:px-6 sm:py-12">
           <article className="mx-auto max-w-[820px]">
             <input autoFocus value={title} onChange={(event) => { setTitle(event.target.value); setSaved(false); }} placeholder="Untitled page" className="w-full bg-transparent text-[26px] font-normal tracking-[-0.03em] text-white/95 outline-none placeholder:text-white/25 sm:text-4xl sm:tracking-[-0.035em]" />
-            <div className="mt-8 flex items-center gap-3 border-y border-white/10 py-3">
-              <span className="text-xs text-white/40">Attached to</span>
-              <select value={siteId} onChange={(event) => { setSiteId(event.target.value); setSaved(false); }} className="min-w-0 max-w-[65%] rounded-md border border-white/10 bg-[#262626] px-2.5 py-1.5 text-xs text-white/70 outline-none sm:max-w-none">
-                <option value="">All websites</option>
-                {sites.map((site) => <option key={site.id} value={site.id}>{site.name} — {site.domain}</option>)}
-              </select>
-            </div>
+            {/* Scope only means something with 2+ websites; with one, "All websites" and that site are the same. */}
+            {sites.length > 1 ? (
+              <div className="mt-8 flex items-center gap-3 border-y border-white/10 py-3">
+                <span className="text-xs text-white/40">Attached to</span>
+                <select value={siteId} onChange={(event) => { setSiteId(event.target.value); setSaved(false); }} className="min-w-0 max-w-[65%] rounded-md border border-white/10 bg-[#262626] px-2.5 py-1.5 text-xs text-white/70 outline-none sm:max-w-none">
+                  <option value="">All websites</option>
+                  {sites.map((site) => <option key={site.id} value={site.id}>{site.name} — {site.domain}</option>)}
+                </select>
+              </div>
+            ) : (
+              <div className="mt-6 border-b border-white/10" />
+            )}
             {error && <p className="mt-5 rounded-lg border border-red-400/20 bg-red-400/10 px-3 py-2 text-sm text-red-200">{error}</p>}
             <textarea value={content} onChange={(event) => { setContent(event.target.value); setSaved(false); }} placeholder="Start writing…" className="mt-6 min-h-[58vh] w-full resize-none bg-transparent text-[16px] leading-8 text-white/85 outline-none placeholder:text-white/25" />
           </article>

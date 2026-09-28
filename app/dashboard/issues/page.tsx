@@ -128,7 +128,7 @@ function IssueDrawer({ issue, onClose, onToggleResolved }: { issue: Issue; onClo
         <div className="min-h-0 flex-1 overflow-y-auto">
           <Section title="Description">
             <p className="whitespace-pre-wrap text-[13px] leading-6 text-white/85">
-              {issue.reason?.trim() || detail?.ticket.reason?.trim() || "No summary was saved with this ticket. The recent messages below show what happened."}
+              {issue.reason?.trim() || detail?.ticket.reason?.trim() || "No summary was saved with this ticket."}
             </p>
             <dl className="mt-3">
               <Field label="Raised by">{raisedBy(issue.source ?? "manual")}</Field>
@@ -170,22 +170,6 @@ function IssueDrawer({ issue, onClose, onToggleResolved }: { issue: Issue; onClo
                 {conversation.site && <Field label="Website">{conversation.site.name || conversation.site.domain}</Field>}
                 <Field label="Started">{formatDateTime(conversation.createdAt)}</Field>
               </dl>
-            </Section>
-          )}
-
-          {!!detail?.messages.length && (
-            <Section title="Recent messages">
-              <ul className="space-y-2.5">
-                {detail.messages.map((message, index) => (
-                  <li key={index} className="rounded-xl border border-white/[0.07] px-3.5 py-2.5">
-                    <p className="flex items-center justify-between text-[11px] text-white/40">
-                      <span className="font-semibold">{message.senderType === "customer" ? customer?.name || "Customer" : message.senderType === "ai" ? "AI" : "Team"}</span>
-                      <span>{formatDateTime(message.createdAt)}</span>
-                    </p>
-                    <p className="mt-1 whitespace-pre-wrap break-words text-[13px] leading-5 text-white/85">{message.body}</p>
-                  </li>
-                ))}
-              </ul>
             </Section>
           )}
         </div>

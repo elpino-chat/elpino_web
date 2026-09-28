@@ -458,7 +458,7 @@ function SessionThread({ session, onBack }: { session: ContactSession; onBack: (
 
 function EmptyState() {
   return (
-    <div className="mt-7 flex min-h-[420px] flex-col items-center justify-center rounded-xl border border-white/10 bg-[#292a2b] text-center">
+    <div className="mt-7 flex min-h-[420px] flex-col items-center justify-center bg-transparent text-center">
       <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F0F2F4] text-[#667078]"><Users size={20} /></span>
       <p className="mt-3 text-[14px] font-semibold">No contacts yet</p>
       <p className="mt-1 max-w-sm text-[11.5px] leading-5 text-[#687178]">Contacts appear here automatically once a visitor fills in their name and email or phone in the chat widget.</p>

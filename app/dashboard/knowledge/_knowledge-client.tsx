@@ -1,5 +1,6 @@
 "use client";
 
+import { Bone } from "../../components/dashboard/DashboardSkeleton";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -173,7 +174,7 @@ export function KnowledgeClient({ view }: { view: KnowledgeView }) {
         </div>
         {view !== "sources" && <Toolbar loading={loading} />}
         {error && <p className="mt-4 rounded-lg bg-[#fff1f1] px-3 py-2 text-[11px] font-medium text-[#a64a53]">{error}</p>}
-        {loading ? <div className="flex min-h-[420px] items-center justify-center text-[12px] text-white/45"><LoaderCircle size={15} className="mr-2 animate-spin" /> Loading knowledge</div> : view === "overview" ? <Overview items={scopedItems} sites={sites} onNew={() => openEditor()} /> : view === "articles" ? <PagesTable items={filtered} sites={sites} query={query} setQuery={setQuery} onDelete={setConfirmDeleteItem} onNew={() => openEditor()} onOpen={openEditor} onToggleVisible={(item, visible) => void setArticleVisibility(item, visible)} /> : <Sources sites={sites} items={items} defaultSiteId={selectedSiteId} onReload={load} />}
+        {loading ? <KnowledgeSkeleton view={view} /> : view === "overview" ? <Overview items={scopedItems} sites={sites} onNew={() => openEditor()} /> : view === "articles" ? <PagesTable items={filtered} sites={sites} query={query} setQuery={setQuery} onDelete={setConfirmDeleteItem} onNew={() => openEditor()} onOpen={openEditor} onToggleVisible={(item, visible) => void setArticleVisibility(item, visible)} /> : <Sources sites={sites} items={items} defaultSiteId={selectedSiteId} onReload={load} />}
       </div>
     </main>
     {editorOpen && (
@@ -438,6 +439,51 @@ function KnowledgeSidebar({
   );
 }
 
+/** Grey placeholder in the shape of the page being loaded: card grid for Overview, search + rows for Pages/Sources. */
+function KnowledgeSkeleton({ view }: { view: string }) {
+  if (view === "overview") {
+    return (
+      <div role="status" aria-busy="true" aria-label="Loading knowledge" className="grid gap-4 md:grid-cols-2">
+        {[0, 1].map((card) => (
+          <div key={card} className="elpino-skel-card min-h-[380px] p-5">
+            <Bone className="h-4 w-36" />
+            <div className="mt-6 space-y-4">
+              {[0, 1, 2, 3, 4].map((row) => (
+                <div key={row} className="flex items-center gap-3">
+                  <Bone className="size-8 shrink-0" />
+                  <div className="flex-1 space-y-2"><Bone className="h-3.5 w-3/5" /><Bone className="h-3 w-4/5" /></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+  return (
+    <div role="status" aria-busy="true" aria-label="Loading knowledge" className="mt-5">
+      {view === "articles" && <Bone className="ml-auto h-10 w-full max-w-sm" />}
+      <div className="mt-4 border-y border-[var(--skel-line,rgb(128_128_128/0.18))]">
+        <div className="hidden grid-cols-[minmax(0,1.4fr)_110px_minmax(130px,.7fr)_120px_42px] gap-4 px-5 py-3 md:grid">
+          <Bone className="h-3 w-16" /><Bone className="h-3 w-14" /><Bone className="h-3 w-20" /><Bone className="h-3 w-20" /><span />
+        </div>
+        {[0, 1, 2, 3, 4, 5].map((row) => (
+          <div key={row} className="grid grid-cols-[minmax(0,1fr)_42px] items-center gap-4 border-t border-[var(--skel-line,rgb(128_128_128/0.18))] px-4 py-4 md:grid-cols-[minmax(0,1.4fr)_110px_minmax(130px,.7fr)_120px_42px] md:px-5">
+            <div className="flex items-center gap-3">
+              <Bone className="size-7 shrink-0" />
+              <div className="flex-1 space-y-2"><Bone className="h-3.5 w-1/2" /><Bone className="h-3 w-3/4" /></div>
+            </div>
+            <Bone className="hidden h-5 w-9 md:block" />
+            <Bone className="hidden h-3 w-24 md:block" />
+            <Bone className="hidden h-3 w-16 md:block" />
+            <Bone className="size-7" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function Toolbar({ loading }: { loading: boolean }) {
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#e5e8ea] pb-4">
@@ -694,7 +740,7 @@ function Sources({ sites, items, defaultSiteId, onReload }: { sites: Site[]; ite
               onKeyDown={(event) => { if (event.key === "Enter") void addUrl(); }}
               placeholder="https://example.com/help/refunds"
               aria-label="Page URL"
-              className="h-10 w-full rounded-lg border border-[#dde3e6] px-3 text-[13px] outline-none focus:border-[#8f989e]"
+              className="h-10 w-full rounded-lg border border-[#dde3e6] bg-white px-3 text-[13px] text-[#17181a] outline-none placeholder:text-[#8a9298] focus:border-[#8f989e]"
             />
             {addError && <p className="mt-2 text-[11px] font-medium text-[#a64a53]">{addError}</p>}
             <button type="button" disabled={!urlInput.trim() || adding} onClick={() => void addUrl()} className="mt-2.5 flex h-9 w-full items-center justify-center gap-1.5 rounded-md bg-[#17191b] text-[12.5px] font-normal text-white disabled:opacity-40">
@@ -717,7 +763,7 @@ function Sources({ sites, items, defaultSiteId, onReload }: { sites: Site[]; ite
               onKeyDown={(event) => { if (event.key === "Enter") void addSitemap(); }}
               placeholder="https://example.com/sitemap.xml"
               aria-label="Sitemap URL"
-              className="h-10 w-full rounded-lg border border-[#dde3e6] px-3 text-[13px] outline-none focus:border-[#8f989e]"
+              className="h-10 w-full rounded-lg border border-[#dde3e6] bg-white px-3 text-[13px] text-[#17181a] outline-none placeholder:text-[#8a9298] focus:border-[#8f989e]"
             />
             {sitemapError && <p className="mt-2 text-[11px] font-medium text-[#a64a53]">{sitemapError}</p>}
             {sitemapResult && <p className="mt-2 text-[11px] font-medium text-[#2FA266]">Found {sitemapResult.pagesFound} page{sitemapResult.pagesFound === 1 ? "" : "s"} — crawling now.</p>}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent as ReactKeyboardEvent } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -1146,8 +1147,14 @@ const PLATFORMS: { id: PlatformId; label: string }[] = [
 ];
 
 function PlatformIcon({ id }: { id: PlatformId }) {
+  const [logoFailed, setLogoFailed] = useState(false);
   if (id === "html") return <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-[#3b82f6] text-white"><Code2 className="size-[18px]" /></span>;
-  return <span className="grid size-9 shrink-0 place-items-center rounded-lg text-[13px] font-bold text-white" style={{ backgroundColor: "#21759b" }}>W</span>;
+  if (logoFailed) return <span className="grid size-9 shrink-0 place-items-center rounded-lg text-[13px] font-bold text-white" style={{ backgroundColor: "#21759b" }}>W</span>;
+  return (
+    <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-white p-1 ring-1 ring-black/10">
+      <img src="https://cdn.brandfetch.io/wordpress.org?c=1bxec69tls8qaj83i3hc2bbf373tgfgTpns" alt="" onError={() => setLogoFailed(true)} className="size-full object-contain" />
+    </span>
+  );
 }
 
 type PagePriority = "high" | "medium" | "low";
@@ -1974,8 +1981,7 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
         <div className="mx-auto flex h-[76px] max-w-[1440px] items-center justify-between px-6 sm:px-10 lg:px-14">
           <div className="flex min-w-0 items-center gap-4">
             <Link href="/" aria-label="Elpino home" className="inline-flex shrink-0 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20">
-              <Image src="/icon.png" alt="" width={96} height={96} priority className="h-8 w-8 rounded-lg object-contain" />
-              <span className="ml-2 text-[15px] font-semibold tracking-[-0.01em] text-[#11120f]">elpino</span>
+              <Image src="/elpino.png" alt="Elpino" width={906} height={275} priority className="h-8 w-auto object-contain" />
             </Link>
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
@@ -2278,10 +2284,13 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
           </section>
         )}
 
-        {step === 5 && openPlatform && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" role="dialog" aria-modal="true" aria-label={`Integrate Elpino with ${PLATFORMS.find((p) => p.id === openPlatform)?.label}`}>
+        {/* Portalled to <body>: the step wrapper's onb-enter animation leaves a transform
+            on it, which would make this fixed overlay relative to the wrapper and put it
+            under the z-30 header. */}
+        {step === 5 && openPlatform && createPortal(
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 p-4" role="dialog" aria-modal="true" aria-label={`Integrate Elpino with ${PLATFORMS.find((p) => p.id === openPlatform)?.label}`}>
             <button type="button" aria-label="Close" onClick={() => setOpenPlatform(null)} className="absolute inset-0 cursor-default" />
-            <div className="relative max-h-[90vh] w-full max-w-[880px] overflow-y-auto rounded-2xl bg-white p-6 sm:p-8">
+            <div className="relative min-h-80 max-h-[85vh] w-full max-w-[80vw] overflow-y-auto rounded-2xl bg-white p-5 sm:p-6">
               <div className="mb-6 flex items-center gap-3">
                 <button type="button" onClick={() => setOpenPlatform(null)} aria-label="Back" className="flex size-8 items-center justify-center rounded-full text-black/50 transition hover:bg-black/5 hover:text-black">
                   <svg className="size-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2"><path d="m12 4-6 6 6 6" strokeLinecap="round" strokeLinejoin="round" /></svg>
@@ -2442,7 +2451,8 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
                 </aside>
               </div>
             </div>
-          </div>
+          </div>,
+          document.body
         )}
 
         {false && (() => {

@@ -3736,6 +3736,45 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
 .dashboard-shell .knowledge-editor-save :is(span, svg) {
   color: #202020 !important;
 }
+/* Full-page editor (/dashboard/knowledge/new and /page/[id]) is authored
+   dark-only — white text, literal bg-[#262626] — so light theme needs the same
+   blanket recolour the Knowledge list page gets. */
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-knowledge-editor,
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-knowledge-editor [class*="bg-[#262626]"] {
+  background-color: #f5f6f7 !important;
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-knowledge-editor [class*="text-white"] {
+  color: rgba(0, 0, 0, 0.7) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-knowledge-editor input[class*="text-white"] {
+  color: rgba(0, 0, 0, 0.9) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-knowledge-editor :is(input, textarea)::placeholder {
+  color: rgba(0, 0, 0, 0.35) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-knowledge-editor :is(input, textarea) {
+  background-color: transparent !important;
+  border: 0 !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-knowledge-editor [class*="border-white"] {
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-knowledge-editor [class*="hover:bg-white"]:hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-knowledge-editor [class*="text-red-200"] {
+  color: #b42318 !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-knowledge-editor .knowledge-editor-save,
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-knowledge-editor .knowledge-editor-save:hover,
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-knowledge-editor .knowledge-editor-save:focus-visible {
+  background: #17191b !important;
+  color: #ffffff !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-knowledge-editor .knowledge-editor-save :is(span, svg) {
+  color: #ffffff !important;
+}
 [data-dashboard-theme="dark"] .dashboard-shell .knowledge-source-add,
 [data-dashboard-theme="dark"] .dashboard-shell .knowledge-source-add:hover,
 [data-dashboard-theme="dark"] .dashboard-shell .knowledge-source-add:focus-visible {
@@ -3792,6 +3831,11 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
 }
 [data-dashboard-theme="light"] .dashboard-shell #dashboard-knowledge-page [class*="text-white"] {
   color: rgba(0, 0, 0, 0.7) !important;
+}
+/* The rule above recolours the element itself, but ::placeholder is a
+   separate pseudo-element that keeps its own placeholder:text-white/* colour. */
+[data-dashboard-theme="light"] .dashboard-shell #dashboard-knowledge-page :is(input, textarea)[class*="placeholder:text-white"]::placeholder {
+  color: rgba(0, 0, 0, 0.4) !important;
 }
 [data-dashboard-theme="light"] .dashboard-shell #dashboard-knowledge-page [class*="bg-white/"] {
   background-color: rgba(0, 0, 0, 0.05) !important;
