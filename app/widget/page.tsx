@@ -2088,7 +2088,7 @@ function WidgetContent() {
 
               {/* While the AI is asking for a detail, the answer field in the conversation is the only input. */}
               {!(contactActive && contactField) && (
-              {/* While the AI is replying the box is dimmed and inert, not just quietly refusing to send. */}
+              // While the AI is replying the box is dimmed and inert, not just quietly refusing to send.
               <div
                 aria-disabled={sendBlockedByReply}
                 className={`rounded-[24px] border px-3 pb-2.5 pt-3 shadow-[0_3px_12px_rgba(15,23,42,.10)] transition-opacity duration-200 ${sendBlockedByReply ? "pointer-events-none select-none opacity-55" : ""}`}
