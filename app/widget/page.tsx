@@ -1770,18 +1770,18 @@ function WidgetContent() {
           </div>
         ) : chatView === "list" ? (
           <div className="flex h-full flex-col">
-            <div className="flex shrink-0 items-center justify-between px-5 pb-3 pt-5">
-              <h2 className="text-[26px] font-semibold leading-8 tracking-[-0.01em]">Messages</h2>
+            <div className="flex shrink-0 items-center justify-between px-5 pb-2 pt-4">
+              <h2 className="text-[20px] font-semibold leading-7">Messages</h2>
               <button type="button" aria-label="Close" onClick={() => requestLeave()} className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-black/5">
                 <X size={18} />
               </button>
             </div>
-            <div className="min-h-0 flex-1 space-y-2.5 overflow-y-auto px-4 pb-3">
+            <div className="min-h-0 flex-1 space-y-2 overflow-y-auto px-4 pb-3">
               {recentLoading && recent.length === 0 ? (
                 // Placeholders while the list loads, in the shape of the cards that will replace them.
                 [0, 1].map((placeholder) => (
-                  <div key={placeholder} className="flex animate-pulse items-center gap-3 rounded-2xl border-2 border-[#11120f]/15 p-3.5">
-                    <span className="h-10 w-10 shrink-0 rounded-full bg-black/[0.07]" />
+                  <div key={placeholder} className="flex animate-pulse items-center gap-3 rounded-xl border p-3" style={{ borderColor: BORDER }}>
+                    <span className="h-9 w-9 shrink-0 rounded-full bg-black/[0.07]" />
                     <span className="min-w-0 flex-1 space-y-2">
                       <span className="block h-3 w-1/3 rounded bg-black/[0.07]" />
                       <span className="block h-3 w-3/4 rounded bg-black/[0.05]" />
@@ -1789,12 +1789,12 @@ function WidgetContent() {
                   </div>
                 ))
               ) : recent.length === 0 ? (
-                <div className="rounded-2xl border-2 border-dashed border-[#11120f]/40 px-5 py-10 text-center">
-                  <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl border-2 border-[#11120f] bg-[#ffd84d] text-[#11120f]">
-                    <MessageSquare size={22} />
+                <div className="rounded-xl border border-dashed px-5 py-8 text-center" style={{ borderColor: "rgba(24,24,27,.3)" }}>
+                  <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-[#ffd84d] text-[#11120f]">
+                    <MessageSquare size={18} />
                   </span>
-                  <p className="mt-4 text-[15px] font-semibold">No messages yet</p>
-                  <p className="mt-1 text-[13px] leading-5" style={{ color: MUTED }}>Start a conversation and it will show up here.</p>
+                  <p className="mt-3 text-[14px] font-semibold">No messages yet</p>
+                  <p className="mt-1 text-[12.5px] leading-5" style={{ color: MUTED }}>Start a conversation and it will show up here.</p>
                 </div>
               ) : (
                 recent.map((conversation) => {
@@ -1805,19 +1805,20 @@ function WidgetContent() {
                       key={conversation.id}
                       type="button"
                       onClick={() => openThread(conversation.id)}
-                      className="flex w-full cursor-pointer items-start gap-3 rounded-2xl border-2 border-[#11120f] bg-white p-3.5 text-left"
+                      className="flex w-full cursor-pointer items-start gap-3 rounded-xl border bg-white p-3 text-left"
+                      style={{ borderColor: BORDER }}
                     >
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-[#11120f] text-[13px] font-bold text-white" style={{ backgroundColor: ACCENT }}>
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full text-[12px] font-bold text-white" style={{ backgroundColor: ACCENT }}>
                         {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
                       </span>
                       <span className="min-w-0 flex-1">
                         <span className="flex items-center justify-between gap-2">
-                          <span className="truncate text-[14px] font-semibold text-[#11120f]">{botName}</span>
-                          <span className="shrink-0 text-[12px]" style={{ color: MUTED }}>{compactAgo(conversation.time, clock + serverOffset)}</span>
+                          <span className="truncate text-[13px] font-semibold">{botName}</span>
+                          <span className="shrink-0 text-[11.5px]" style={{ color: MUTED }}>{compactAgo(conversation.time, clock + serverOffset)}</span>
                         </span>
-                        <span className="mt-0.5 block truncate text-[13px] leading-5" style={{ color: MUTED }}>{conversation.preview || "New conversation"}</span>
+                        <span className="mt-0.5 block truncate text-[12.5px] leading-5" style={{ color: MUTED }}>{conversation.preview || "New conversation"}</span>
                         {label && (
-                          <span className="mt-2 inline-block max-w-full truncate rounded-full border-2 border-[#11120f] px-2.5 py-0.5 font-mono text-[10.5px] font-medium uppercase tracking-[0.08em] text-[#11120f]" style={{ backgroundColor: resolved && !conversation.topic ? "#fff8ec" : "#ffd84d" }}>
+                          <span className="mt-1.5 inline-block max-w-full truncate rounded-full px-2 py-0.5 text-[10.5px] font-medium text-[#11120f]" style={{ backgroundColor: resolved && !conversation.topic ? "#f1f1ee" : "#ffe680" }}>
                             {label}
                           </span>
                         )}
@@ -1831,10 +1832,10 @@ function WidgetContent() {
               <button
                 type="button"
                 onClick={startNewChat}
-                className="flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-[#11120f] bg-[#ffd84d] text-[14px] font-semibold text-[#11120f]"
+                className="flex h-10 w-full cursor-pointer items-center justify-center gap-2 rounded-full border border-[#11120f] bg-[#ffd84d] text-[13px] font-semibold text-[#11120f]"
               >
                 Ask a question
-                <SendHorizontal size={16} />
+                <SendHorizontal size={15} />
               </button>
             </div>
           </div>
