@@ -1977,7 +1977,7 @@ function WidgetContent() {
 
       {showBranding && (
         <a href="https://elpino.chat" target="_blank" rel="noreferrer" className="block shrink-0 pb-2 pt-0 text-center text-[10px] font-medium transition hover:text-white" style={{ color: MUTED, backgroundColor: BG }}>
-          Powered by <span className="underline underline-offset-2">Elpino</span>
+          Powered by <span className="underline underline-offset-2">elpino.chat</span>
         </a>
       )}
       {leaveOpen && (
