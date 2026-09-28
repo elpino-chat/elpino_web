@@ -3,6 +3,7 @@
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { ArrowUp, ChevronDown, ChevronLeft, ChevronRight, CircleHelp, ExternalLink, File as FileIcon, LayoutGrid, Maximize2, MessageCircle, MessageSquarePlus, Minimize2, House, MessageSquare, LogOut, MoreHorizontal, Paperclip, Plus, Search, SendHorizontal, Smile, ThumbsDown, ThumbsUp, Volume2, VolumeX, X } from "lucide-react";
+import ArticleMarkdown, { prepareArticle } from "@/app/components/ArticleMarkdown";
 import MessageMarkdown from "@/app/components/MessageMarkdown";
 import TypingDots from "@/app/components/TypingDots";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -21,7 +22,7 @@ type WidgetMessage = {
 };
 /** An article in the Help tab. `id` identifies the whole article, not one stored chunk of it. */
 type HelpArticle = { id: string; title: string; snippet: string; sourceUrl: string | null };
-type HelpArticleBody = { id: string; title: string; content: string; sourceUrl: string | null };
+type HelpArticleBody = { id: string; title: string; content: string; sourceUrl: string | null; createdAt?: string };
 type MessageGroup =
   | { kind: "system"; message: WidgetMessage }
   | { kind: "thread"; fromVisitor: boolean; messages: WidgetMessage[] };
@@ -1588,8 +1589,44 @@ function WidgetContent() {
                     <p className="text-[12px]" style={{ color: MUTED }}>Loading…</p>
                   ) : (
                     <>
-                      <h2 className="text-[17px] font-semibold leading-6">{openArticle.title}</h2>
-                      <div className="mt-3 whitespace-pre-line break-words text-[13.5px] leading-6" style={{ color: INK }}>{openArticle.content}</div>
+                      {(() => {
+                        const { summary, body, headings } = prepareArticle(openArticle.content);
+                        return (
+                          <>
+                            <h2 className="text-[26px] font-semibold leading-8 tracking-[-0.01em]">{openArticle.title}</h2>
+                            {summary && <p className="mt-2 text-[14.5px] leading-6" style={{ color: MUTED }}>{summary}</p>}
+                            {openArticle.createdAt && !Number.isNaN(Date.parse(openArticle.createdAt)) && (
+                              <p className="mt-3 text-[12px]" style={{ color: MUTED }}>
+                                {new Date(openArticle.createdAt).toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" })}
+                              </p>
+                            )}
+                            {headings.length > 1 && (
+                              <details className="group mt-4 rounded-lg border" style={{ borderColor: BORDER, backgroundColor: SURFACE }}>
+                                <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-3 text-[13.5px] [&::-webkit-details-marker]:hidden">
+                                  Table of contents
+                                  <ChevronDown size={16} className="transition group-open:rotate-180" />
+                                </summary>
+                                <ul className="border-t px-4 py-2" style={{ borderColor: BORDER }}>
+                                  {headings.map((heading) => (
+                                    <li key={heading.id} style={{ paddingLeft: heading.level === 3 ? 12 : 0 }}>
+                                      <button
+                                        type="button"
+                                        onClick={() => document.getElementById(heading.id)?.scrollIntoView({ behavior: "smooth", block: "start" })}
+                                        className="w-full py-1.5 text-left text-[13px] hover:underline"
+                                      >
+                                        {heading.text}
+                                      </button>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </details>
+                            )}
+                            <div className="mt-4" style={{ color: INK }}>
+                              <ArticleMarkdown text={body} />
+                            </div>
+                          </>
+                        );
+                      })()}
                       {openArticle.sourceUrl && /^https?:\/\//i.test(openArticle.sourceUrl) && (
                         <a href={openArticle.sourceUrl} target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center gap-1.5 text-[12.5px] font-semibold" style={{ color: ACCENT }}>
                           View original page <ExternalLink size={13} />
