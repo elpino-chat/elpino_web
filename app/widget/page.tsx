@@ -2,7 +2,7 @@
 
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { ArrowUp, ChevronDown, ChevronLeft, ChevronRight, CircleHelp, ExternalLink, File as FileIcon, LayoutGrid, Maximize2, MessageCircle, MessageSquarePlus, Minimize2, MoreHorizontal, Paperclip, Plus, Search, Smile, ThumbsDown, ThumbsUp, Volume2, VolumeX, X } from "lucide-react";
+import { ArrowUp, ChevronDown, ChevronLeft, ChevronRight, CircleHelp, ExternalLink, File as FileIcon, LayoutGrid, Maximize2, MessageCircle, MessageSquarePlus, Minimize2, House, MessageSquare, MoreHorizontal, Paperclip, Plus, Search, SendHorizontal, Smile, ThumbsDown, ThumbsUp, Volume2, VolumeX, X } from "lucide-react";
 import MessageMarkdown from "@/app/components/MessageMarkdown";
 import TypingDots from "@/app/components/TypingDots";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -167,6 +167,18 @@ function formatTime(iso: string) {
   return isToday ? date.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }) : date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
 }
 
+// "now", "2m", "3h", "1d": the short age shown beside the recent message on the home screen.
+function compactAgo(iso: string, now: number): string {
+  const then = Date.parse(iso);
+  if (Number.isNaN(then)) return "";
+  const minutes = Math.max(0, Math.floor((now - then) / 60000));
+  if (minutes < 1) return "now";
+  if (minutes < 60) return `${minutes}m`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h`;
+  return `${Math.floor(hours / 24)}d`;
+}
+
 function WidgetContent() {
   const searchParams = useSearchParams();
   const key = searchParams.get("key")?.trim() ?? "";
@@ -203,6 +215,8 @@ function WidgetContent() {
   // generic "Hi there" — null for an anonymous visitor, or one the site
   // identified without a real name on file yet ("Website visitor").
   const [greetingName, setGreetingName] = useState<string | null>(null);
+  // First name for the home screen ("Hello Jagdeep."): any real name on file, or one just given in the chat.
+  const [homeName, setHomeName] = useState<string | null>(null);
   // Paid plans drop the badge. Starts true so a slow or failed config load
   // shows it rather than silently white-labelling a Free workspace.
   const [showBranding, setShowBranding] = useState(true);
@@ -701,6 +715,7 @@ function WidgetContent() {
         setShowBranding(!data.removeBranding);
         const realName = data.identified && data.customerName && data.customerName !== "Website visitor" ? data.customerName.trim().split(/\s+/)[0] : null;
         setGreetingName(realName || null);
+        setHomeName(data.customerName && data.customerName !== "Website visitor" ? data.customerName.trim().split(/\s+/)[0] : null);
         if (Array.isArray(data.greetingLines) && data.greetingLines.length > 0) setGreetingLines(data.greetingLines);
         activeVisitorRef.current = data.visitorToken ?? "";
         // A different person than before (after an expiry that kept the
@@ -816,6 +831,11 @@ function WidgetContent() {
       .catch(() => setRecent([]))
       .finally(() => setRecentLoading(false));
   }
+
+  useEffect(() => {
+    if (tab === "chat" && chatView === "home" && visitorToken && !loading) loadRecent();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tab, chatView, visitorToken, loading]);
 
   function openChatList() {
     setTab("chat");
@@ -1260,6 +1280,7 @@ function WidgetContent() {
       // them by name, or asking for the next detail). A failed send leaves the field open for another try.
       const sent = await sendPayload(value, null, { restoreDraft: false });
       if (!sent) { setContactError("Couldn't send that — try again or skip."); return; }
+      if (contactField === "name") setHomeName(value.split(/\s+/)[0]);
       finishContact(false);
     } catch {
       setContactError("Couldn't send that — try again or skip.");
@@ -1508,68 +1529,76 @@ function WidgetContent() {
       <div className="min-h-0 flex-1 overflow-hidden">
         {tab === "chat" && chatView === "home" ? (
           <div className="flex h-full flex-col">
-            <div className="px-5 pb-5 pt-7">
-              <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full text-[16px] font-bold text-white" style={{ backgroundColor: ACCENT }}>
-                {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
-              </span>
-              <h1 className="mt-4 text-[19px] font-semibold leading-6">{greetingLines.join(" ")}</h1>
-
-              {team.length > 0 && (() => {
-                const avatarsShown = Math.min(team.length, 4);
-                const displayTotal = Math.max(team.length, paddedTeamTotal);
-                const badgeCount = displayTotal - avatarsShown;
-                return (
-                  <div className="mt-4 flex items-center gap-2.5">
-                    <div className="flex -space-x-2.5">
-                      {team.slice(0, avatarsShown).map((member) => (
-                        <span key={member.id} className="relative flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full text-[11px] font-bold text-white ring-2" style={{ backgroundColor: ACCENT, borderColor: BG, ["--tw-ring-color" as string]: BG }}>
+            <div className="px-5 pb-6 pt-5">
+              <div className="flex items-center justify-between">
+                <span className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl text-[15px] font-bold text-white" style={{ backgroundColor: ACCENT }}>
+                  {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
+                </span>
+                <div className="flex items-center gap-3">
+                  {team.length > 0 && (
+                    <div className="flex -space-x-2.5" aria-label="People here to help you">
+                      {team.slice(0, 3).map((member) => (
+                        <span key={member.id} className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full text-[12px] font-bold text-white ring-2" style={{ backgroundColor: ACCENT, ["--tw-ring-color" as string]: BG }}>
                           {member.avatarUrl ? <img src={member.avatarUrl} alt="" className="h-full w-full object-cover" /> : (member.name?.trim().charAt(0).toUpperCase() || "?")}
                           {member.online && <span className="absolute -bottom-px -right-px h-2.5 w-2.5 rounded-full ring-2" style={{ backgroundColor: "#3ecf6a", ["--tw-ring-color" as string]: BG }} />}
                         </span>
                       ))}
-                      {badgeCount > 0 && (
-                        <span className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ring-2" style={{ backgroundColor: BUBBLE, color: INK, ["--tw-ring-color" as string]: BG }}>
-                          +{badgeCount}
-                        </span>
-                      )}
                     </div>
-                    <p className="text-[11.5px]" style={{ color: MUTED }}>People here to help you</p>
-                  </div>
-                );
-              })()}
+                  )}
+                  <button type="button" aria-label="Close" onClick={() => requestLeave()} className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-black/5">
+                    <X size={18} />
+                  </button>
+                </div>
+              </div>
+              <h1 className="mt-12 text-[26px] font-semibold leading-[32px] tracking-[-0.01em]">
+                <span className="block" style={{ color: MUTED }}>{`Hello${homeName ? ` ${homeName}` : ""}.`}</span>
+                <span className="block">How can we help?</span>
+              </h1>
             </div>
             <div className="flex-1 space-y-2.5 overflow-y-auto p-4 pt-0">
               <button
                 type="button"
                 onClick={startNewChat}
-                className="flex w-full items-center gap-3 rounded-xl border p-3.5 text-left shadow-sm transition hover:border-[#c7cbd1]"
+                className="flex w-full items-center gap-3 rounded-xl border p-4 text-left shadow-sm transition hover:border-[#c7cbd1]"
                 style={{ backgroundColor: SURFACE, borderColor: BORDER }}
               >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white" style={{ backgroundColor: ACCENT }}><MessageSquarePlus size={16} /></span>
                 <span className="min-w-0 flex-1">
-                  <span className="block text-[13px] font-semibold">Start a new conversation</span>
-                  <span className="block text-[11px]" style={{ color: MUTED }}>We typically reply in a few minutes</span>
+                  <span className="block text-[14px] font-semibold">Ask a question</span>
+                  <span className="mt-0.5 block text-[12px]" style={{ color: MUTED }}>AI Agent and team can help</span>
                 </span>
+                <SendHorizontal size={18} className="shrink-0" style={{ color: INK }} />
               </button>
 
-              {conversationId && (
-                <button
-                  type="button"
-                  onClick={() => openThread(conversationId)}
-                  className="flex w-full items-center gap-3 rounded-xl border p-3.5 text-left shadow-sm transition hover:border-[#c7cbd1]"
-                  style={{ backgroundColor: SURFACE, borderColor: BORDER }}
-                >
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: BUBBLE, color: INK }}><MessageCircle size={16} /></span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block text-[13px] font-semibold">Continue the conversation</span>
-                    <span className="block truncate text-[11px]" style={{ color: MUTED }}>{messages[messages.length - 1]?.body || "Pick up where you left off"}</span>
-                  </span>
-                </button>
-              )}
-
-              <button type="button" onClick={openChatList} className="w-full py-1 text-center text-[11.5px] font-semibold" style={{ color: ACCENT }}>
-                View past conversations
-              </button>
+              {(() => {
+                // The latest conversation, if there is one: the list when it has loaded, otherwise the open thread.
+                const latest = recent[0];
+                const target = latest?.id ?? conversationId;
+                if (!target) return null;
+                const preview = latest ? latest.preview : messages[messages.length - 1]?.body;
+                const ago = latest ? compactAgo(latest.time, clock + serverOffset) : "";
+                return (
+                  <button
+                    type="button"
+                    onClick={() => openThread(target)}
+                    className="w-full rounded-xl border p-4 text-left shadow-sm transition hover:border-[#c7cbd1]"
+                    style={{ backgroundColor: SURFACE, borderColor: BORDER }}
+                  >
+                    <span className="block text-[14px] font-semibold">Recent message</span>
+                    <span className="mt-2.5 flex items-center gap-3">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full text-[12px] font-bold text-white" style={{ backgroundColor: ACCENT }}>
+                        {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="flex items-center justify-between gap-2">
+                          <span className="truncate text-[13px] font-medium">{botName}</span>
+                          {ago && <span className="shrink-0 text-[12px]" style={{ color: MUTED }}>{ago}</span>}
+                        </span>
+                        <span className="block truncate text-[12.5px]" style={{ color: MUTED }}>{preview || "Pick up where you left off"}</span>
+                      </span>
+                    </span>
+                  </button>
+                );
+              })()}
             </div>
           </div>
         ) : tab === "help" ? (
@@ -2008,6 +2037,30 @@ function WidgetContent() {
           </div>
         )}
       </div>
+
+      {/* Home, Messages and Help. Not shown inside a conversation, where the message box needs the room,
+          or while reading a help article. */}
+      {!preChatNeeded && ((tab === "chat" && (chatView === "home" || chatView === "list")) || (tab === "help" && !openArticle && !articleLoading)) && (
+        <nav aria-label="Widget sections" className="flex shrink-0 border-t" style={{ borderColor: BORDER, backgroundColor: SURFACE }}>
+          {([
+            { id: "home", label: "Home", Icon: House, active: tab === "chat" && chatView === "home", go: () => { setTab("chat"); setChatView("home"); } },
+            { id: "messages", label: "Messages", Icon: MessageSquare, active: tab === "chat" && chatView === "list", go: openChatList },
+            { id: "help", label: "Help", Icon: CircleHelp, active: tab === "help", go: () => setTab("help") },
+          ]).map(({ id, label, Icon, active, go }) => (
+            <button
+              key={id}
+              type="button"
+              onClick={go}
+              aria-current={active ? "page" : undefined}
+              className="flex flex-1 flex-col items-center gap-1 pb-2 pt-2.5 text-[11px] transition hover:opacity-80"
+              style={{ color: active ? INK : MUTED, fontWeight: active ? 600 : 400 }}
+            >
+              <Icon size={20} strokeWidth={active ? 2.2 : 1.8} />
+              {label}
+            </button>
+          ))}
+        </nav>
+      )}
 
       {showBranding && (
         <a href="https://elpino.chat" target="_blank" rel="noreferrer" className="block shrink-0 pb-2 pt-0 text-center text-[10px] font-medium transition hover:text-[#18181b]" style={{ color: MUTED, backgroundColor: BG }}>
