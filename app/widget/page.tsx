@@ -1547,6 +1547,7 @@ function WidgetContent() {
                 <span className="block" style={{ color: MUTED }}>{`Hello${homeName ? ` ${homeName}` : ""}.`}</span>
                 <span className="block">How can we help?</span>
               </h1>
+              <p className="mt-3 text-[13.5px] leading-5" style={{ color: MUTED }}>Our team will reach out to you within 24 hours.</p>
             </div>
             <div className="flex-1 space-y-2.5 overflow-y-auto p-4 pt-0">
               <button
