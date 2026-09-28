@@ -1533,16 +1533,18 @@ function WidgetContent() {
                   {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
                 </span>
                 <div className="flex items-center gap-3">
-                  {team.length > 0 && (
-                    <div className="flex -space-x-2.5" aria-label="People here to help you">
-                      {team.slice(0, 3).map((member) => (
-                        <span key={member.id} className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full text-[12px] font-bold text-white ring-2" style={{ backgroundColor: ACCENT, ["--tw-ring-color" as string]: BG }}>
-                          {member.avatarUrl ? <img src={member.avatarUrl} alt="" className="h-full w-full object-cover" /> : (member.name?.trim().charAt(0).toUpperCase() || "?")}
-                          {member.online && <span className="absolute -bottom-px -right-px h-2.5 w-2.5 rounded-full ring-2" style={{ backgroundColor: "#3ecf6a", ["--tw-ring-color" as string]: BG }} />}
-                        </span>
-                      ))}
-                    </div>
-                  )}
+                  {/* The AI agent first, then the people on the team: "AI Agent and team can help". */}
+                  <div className="flex -space-x-2.5" aria-label="The AI agent and the team are here to help you">
+                    <span className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full text-[12px] font-bold text-white ring-2" style={{ backgroundColor: ACCENT, ["--tw-ring-color" as string]: BG }} title={botName}>
+                      {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
+                    </span>
+                    {team.slice(0, 2).map((member) => (
+                      <span key={member.id} className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full text-[12px] font-bold text-white ring-2" style={{ backgroundColor: "#6b7280", ["--tw-ring-color" as string]: BG }}>
+                        {member.avatarUrl ? <img src={member.avatarUrl} alt="" className="h-full w-full object-cover" /> : (member.name?.trim().charAt(0).toUpperCase() || "?")}
+                        {member.online && <span className="absolute -bottom-px -right-px h-2.5 w-2.5 rounded-full ring-2" style={{ backgroundColor: "#3ecf6a", ["--tw-ring-color" as string]: BG }} />}
+                      </span>
+                    ))}
+                  </div>
                   <button type="button" aria-label="Close" onClick={() => requestLeave()} className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-black/5">
                     <X size={18} />
                   </button>
