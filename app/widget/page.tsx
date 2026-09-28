@@ -270,7 +270,8 @@ function WidgetContent() {
   // shows its own field again.
   const [contactDoneFor, setContactDoneFor] = useState("");
   const [contactAskId, setContactAskId] = useState("");
-  const [contactThanks, setContactThanks] = useState(false);
+  // A short confirmation shown once a detail is saved ("Nice to meet you, Jagdeep."); null when there is none.
+  const [contactThanks, setContactThanks] = useState<string | null>(null);
   const [agentTyping, setAgentTyping] = useState(false);
   // While a reply is being written the visitor can keep typing but not send: a second message
   // mid-turn starts a second, overlapping answer. The block lifts by itself after a while so a
@@ -1233,30 +1234,22 @@ function WidgetContent() {
     setContactStep(0);
     setContactValue("");
     setContactError("");
-    setContactThanks(false);
+    setContactThanks(null);
   }, [conversationId]);
 
   useEffect(() => {
     if (!contactThanks) return;
-    const timer = window.setTimeout(() => setContactThanks(false), 5000);
+    const timer = window.setTimeout(() => setContactThanks(null), 5000);
     return () => window.clearTimeout(timer);
   }, [contactThanks]);
 
-  function finishContact(saved: boolean) {
+  function finishContact(note: string | null = null) {
     setContactDoneFor(contactAskId);
     setContactFields(null);
     setContactStep(0);
     setContactValue("");
     setContactError("");
-    setContactThanks(saved);
-  }
-
-  function nextContactStep(saved: boolean) {
-    const fields = contactFields ?? [];
-    setContactValue("");
-    setContactError("");
-    if (contactStep + 1 >= fields.length) finishContact(saved);
-    else setContactStep(contactStep + 1);
+    setContactThanks(note);
   }
 
   async function submitContactStep() {
@@ -1270,14 +1263,31 @@ function WidgetContent() {
     }
     setContactSaving(true);
     try {
-      // The answer goes into the chat like any message: the AI reads it, saves it and carries on (greeting
-      // them by name, or asking for the next detail). A failed send leaves the field open for another try.
-      const sent = await sendPayload(value, null, { restoreDraft: false });
-      if (!sent) { setContactError("Couldn't send that — try again or skip."); return; }
+      // Saved to the customer's record and handed to the AI as a hidden message: an email, number or name typed
+      // into the field doesn't appear as a bubble in the visitor's chat.
+      const response = await fetch("/api/widget/contact", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ key, hostname, visitorToken, conversationId: conversationId || undefined, [contactField]: value }),
+      });
+      const data = (await response.json().catch(() => ({}))) as { error?: string; aiWillReply?: boolean };
+      if (!response.ok || data.error) { setContactError("Couldn't save that. Try again or skip."); return; }
       if (contactField === "name") setHomeName(value.split(/\s+/)[0]);
-      finishContact(false);
+      if (data.aiWillReply) {
+        // The AI answers it like any reply (greeting them by name and carrying on with their question), so the
+        // typing dots show straight away instead of after the next poll, and no separate note is needed.
+        setAgentTyping(true);
+        finishContact();
+      } else {
+        // Nobody is answering right now (the team has the conversation): just confirm it was saved.
+        finishContact(
+          contactField === "name" ? `Nice to meet you, ${value.split(/\s+/)[0]}.`
+            : contactField === "email" ? "Thanks. We'll use that email to reach you."
+            : "Thanks. We'll use that number to reach you.",
+        );
+      }
     } catch {
-      setContactError("Couldn't send that — try again or skip.");
+      setContactError("Couldn't save that. Try again or skip.");
     } finally {
       setContactSaving(false);
     }
@@ -1285,7 +1295,7 @@ function WidgetContent() {
 
   // Skipping dismisses just this question; the normal message box comes back and the AI won't ask again.
   function skipContactStep() {
-    finishContact(false);
+    finishContact();
   }
 
   async function sendMessage() {
@@ -1532,6 +1542,14 @@ function WidgetContent() {
   }
 
   // Home, Messages and Help show the tab bar; a conversation and a help article need the room.
+  // While the team has been notified and nobody has joined (the countdown), the AI is not answering: a detail the
+  // team still needs is asked for in the field, and otherwise the message box is locked until they join or the
+  // countdown ends, so nothing can be typed into a void.
+  const teamWaiting = joinDeadline !== null && joinDeadline > joinNow;
+  const composerLocked = sendBlockedByReply || teamWaiting;
+  // The AI message the open question belongs to; a question raised by the wait itself has none.
+  const contactAskedMessage = messages.find((message) => message.id === contactAskId);
+
   const showTabBar = !preChatNeeded && ((tab === "chat" && (chatView === "home" || chatView === "list")) || (tab === "help" && !openArticle && !articleLoading));
 
   return (
@@ -2018,6 +2036,7 @@ function WidgetContent() {
                 // The answer to the AI's question above, in the conversation itself, like a reply. The message
                 // box below stays usable, so typing there instead is simply not answering.
                 <div className="w-full max-w-[85%]">
+                  {!contactAskedMessage && <p className="mb-1.5 px-1 text-[13.5px] leading-5">{CONTACT_PROMPTS[contactField].label}</p>}
                   <div className="flex items-center rounded-md border py-1.5 pl-3 pr-2" style={{ borderColor: contactError ? "#e5626a" : "rgba(24,24,27,0.28)", backgroundColor: SURFACE }}>
                     <input
                       key={contactField}
@@ -2046,7 +2065,7 @@ function WidgetContent() {
                   {contactError && <p className="mt-1.5 px-1 text-[11px] text-[#e5626a]">{contactError}</p>}
                   {/* The attribution that would sit under the question, moved below the field so the two read as one block. */}
                   <div className="mt-1.5 flex items-center justify-between px-1 text-[11px] leading-4" style={{ color: MUTED }}>
-                    <span>AI agent · {timeAgo(Date.parse(messages.find((m) => m.id === contactAskId)?.createdAt ?? "") || clock + serverOffset, clock + serverOffset)}</span>
+                    <span>{contactAskedMessage ? `AI agent · ${timeAgo(Date.parse(contactAskedMessage.createdAt) || clock + serverOffset, clock + serverOffset)}` : "For the team"}</span>
                     <button type="button" onClick={skipContactStep} className="underline underline-offset-2 hover:opacity-80">Skip</button>
                   </div>
                 </div>
@@ -2122,25 +2141,25 @@ function WidgetContent() {
               )}
               {attachError && <p className="mb-2 px-1 text-[11px] text-[#e5626a]">{attachError}</p>}
               {contactThanks && !contactActive && (
-                <p className="mb-2 px-1 text-[11.5px]" style={{ color: MUTED }}>Thanks — we&apos;ll reach you there if we get disconnected.</p>
+                <p className="mb-2 px-1 text-[12.5px]" style={{ color: MUTED }}>{contactThanks}</p>
               )}
 
               {/* While the AI is asking for a detail, the answer field in the conversation is the only input. */}
               {!(contactActive && contactField) && (
               // While the AI is replying the box is dimmed and inert, not just quietly refusing to send.
               <div
-                aria-disabled={sendBlockedByReply}
-                className={`rounded-[24px] border px-3 pb-2.5 pt-3 shadow-[0_3px_12px_rgba(15,23,42,.10)] transition-opacity duration-200 ${sendBlockedByReply ? "pointer-events-none select-none opacity-55" : ""}`}
+                aria-disabled={composerLocked}
+                className={`rounded-[24px] border px-3 pb-2.5 pt-3 shadow-[0_3px_12px_rgba(15,23,42,.10)] transition-opacity duration-200 ${composerLocked ? "pointer-events-none select-none opacity-55" : ""}`}
                 style={{ borderColor: "rgba(24,24,27,0.28)", backgroundColor: SURFACE }}
               >
                 <input ref={fileInputRef} type="file" hidden onChange={handleFileSelect} />
                 <textarea
                   ref={composerRef}
-                  disabled={sendBlockedByReply}
+                  disabled={composerLocked}
                   value={draft}
                   onChange={(event) => { setDraft(event.target.value); notifyTyping(); }}
                   onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); void sendMessage(); } }}
-                  placeholder={sendBlockedByReply ? `${botName.trim() || "Elpino"} is replying…` : "Ask anything…"}
+                  placeholder={sendBlockedByReply ? `${botName.trim() || "Elpino"} is replying…` : teamWaiting ? "The team will join any moment…" : "Ask anything…"}
                   rows={1}
                   className="block max-h-[132px] min-h-[24px] w-full resize-none bg-transparent px-1 text-[14px] leading-6 outline-none placeholder:text-[#777b82]"
                   style={{ color: INK }}
@@ -2160,10 +2179,10 @@ function WidgetContent() {
                   <button
                     type="button"
                     onClick={() => void sendMessage()}
-                    disabled={(!draft.trim() && !pendingAttachment) || sending || sendBlockedByReply}
+                    disabled={(!draft.trim() && !pendingAttachment) || sending || composerLocked}
                     aria-label="Send"
                     className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition disabled:opacity-100"
-                    style={{ backgroundColor: (draft.trim() || pendingAttachment) && !sendBlockedByReply ? ACCENT : "#eceef0", color: (draft.trim() || pendingAttachment) && !sendBlockedByReply ? "#fff" : "#b5b8bd" }}
+                    style={{ backgroundColor: (draft.trim() || pendingAttachment) && !composerLocked ? ACCENT : "#eceef0", color: (draft.trim() || pendingAttachment) && !composerLocked ? "#fff" : "#b5b8bd" }}
                   >
                     <ArrowUp size={15} strokeWidth={2.2} />
                   </button>
