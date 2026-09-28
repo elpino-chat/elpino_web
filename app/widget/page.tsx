@@ -1667,10 +1667,10 @@ function WidgetContent() {
           </div>
         ) : (
           <div className="flex h-full flex-col">
-            <div className="relative flex h-[82px] shrink-0 items-start justify-between px-3 pt-3" style={{ backgroundColor: BG }}>
+            <div className="relative flex shrink-0 items-center justify-between px-3 py-2" style={{ backgroundColor: BG }}>
               <div className="flex items-center gap-2">
                 <button type="button" aria-label="Back to chats" onClick={() => requestLeave("list")} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/[0.10] transition hover:bg-white/[0.16]"><ChevronLeft size={19} /></button>
-                <div className="relative flex max-w-[220px] flex-col items-start gap-0.5 rounded-[28px] py-2.5">
+                <div className="relative flex max-w-[220px] flex-col items-start gap-0.5 py-0.5">
                   <h2 className="min-w-0 truncate text-[14px] font-bold leading-5" style={{ color: INK }}>{agentName ?? botName}</h2>
                   <p className="min-w-0 text-[11.5px] leading-4" style={{ color: MUTED }}>{agentName ? "Support team" : "AI Assistant"}</p>
                 </div>
