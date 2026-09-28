@@ -428,7 +428,17 @@ export function GET(request: Request) {
         greeting.style.cssText = 'position:fixed;bottom:88px;right:20px;width:300px;max-width:calc(100vw - 32px);z-index:2147483000;cursor:pointer;font-family:system-ui,-apple-system,sans-serif;display:flex;flex-direction:column;align-items:flex-end;gap:6px;';
 
         // One popup, however the greeting is stored: workspaces saved with several lines get them joined.
-        var bubbles = '<div style="background:#fff;color:#18181b;border:1px solid rgba(0,0,0,0.4);border-radius:6px;padding:10px 14px;box-shadow:0 16px 40px rgba(15,23,42,0.32);font-size:13px;line-height:1.4;width:fit-content;max-width:100%;">' + escapeHtml(greetingLines.join(' ')) + '</div>';
+        // Headed by the assistant's name and the time it "arrived", on a dark card.
+        var botName = (config.botName && String(config.botName).trim()) || 'Elpino';
+        var sentAt = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+        var bubbles =
+          '<div style="background:#111214;color:#fff;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:10px 14px 12px;box-shadow:0 16px 40px rgba(15,23,42,0.4);width:fit-content;min-width:150px;max-width:100%;">' +
+            '<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px;font-size:11.5px;line-height:1.3;">' +
+              '<span style="font-weight:600;color:#fff;">' + escapeHtml(botName) + '</span>' +
+              '<span style="color:rgba(255,255,255,0.55);">' + escapeHtml(sentAt) + '</span>' +
+            '</div>' +
+            '<div style="font-size:13px;line-height:1.45;color:rgba(255,255,255,0.92);">' + escapeHtml(greetingLines.join(' ')) + '</div>' +
+          '</div>';
         greeting.innerHTML =
           '<button aria-label="Dismiss" style="align-self:flex-end;background:rgba(23,25,27,0.9);border-radius:9999px;border:none;color:rgba(255,255,255,.6);cursor:pointer;padding:4px;line-height:0;box-shadow:0 4px 12px rgba(15,23,42,0.24);">' + closeIcon(12) + '</button>' +
           bubbles;
