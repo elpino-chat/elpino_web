@@ -1515,6 +1515,9 @@ function WidgetContent() {
     );
   }
 
+  // Home, Messages and Help show the tab bar; a conversation and a help article need the room.
+  const showTabBar = !preChatNeeded && ((tab === "chat" && (chatView === "home" || chatView === "list")) || (tab === "help" && !openArticle && !articleLoading));
+
   return (
     <div className="relative flex h-full flex-col" style={{ backgroundColor: BG, color: INK, colorScheme: "light" }}>
       <div className="min-h-0 flex-1 overflow-hidden">
@@ -2140,7 +2143,7 @@ function WidgetContent() {
 
       {/* Home, Messages and Help. Not shown inside a conversation, where the message box needs the room,
           or while reading a help article. */}
-      {!preChatNeeded && ((tab === "chat" && (chatView === "home" || chatView === "list")) || (tab === "help" && !openArticle && !articleLoading)) && (
+      {showTabBar && (
         <nav aria-label="Widget sections" className="flex shrink-0 border-t-2 border-[#11120f]" style={{ backgroundColor: SURFACE }}>
           {([
             { id: "home", label: "Home", Icon: House, active: tab === "chat" && chatView === "home", go: () => { setTab("chat"); setChatView("home"); } },
@@ -2163,7 +2166,7 @@ function WidgetContent() {
       )}
 
       {showBranding && (
-        <a href="https://elpino.chat" target="_blank" rel="noreferrer" className="block shrink-0 pb-2 pt-0 text-center text-[10px] font-medium transition hover:text-[#18181b]" style={{ color: MUTED, backgroundColor: BG }}>
+        <a href="https://elpino.chat" target="_blank" rel="noreferrer" className="block shrink-0 pb-2 pt-0 text-center text-[10px] font-medium transition hover:text-[#18181b]" style={{ color: MUTED, backgroundColor: showTabBar ? SURFACE : BG }}>
           Powered by <span className="underline underline-offset-2">elpino.chat</span>
         </a>
       )}
