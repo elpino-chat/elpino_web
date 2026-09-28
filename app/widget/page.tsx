@@ -1956,14 +1956,14 @@ function WidgetContent() {
                 />
                 <div className="mt-2 flex items-center justify-between">
                   <div className="flex items-center gap-1">
-                    <button type="button" aria-label="Attach file" onClick={() => fileInputRef.current?.click()} className="flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-white/10" style={{ color: ICON_MUTED }}>
-                      <Paperclip size={19} strokeWidth={1.8} />
+                    <button type="button" aria-label="Attach file" onClick={() => fileInputRef.current?.click()} className="flex h-7 w-7 items-center justify-center rounded-full transition hover:bg-white/10" style={{ color: ICON_MUTED }}>
+                      <Paperclip size={16} strokeWidth={1.8} />
                     </button>
-                    <button type="button" aria-label="Emoji" onClick={() => togglePanel("emoji")} className="flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-white/10" style={{ color: activePanel === "emoji" ? ACCENT : ICON_MUTED }}>
-                      <Smile size={20} strokeWidth={1.8} />
+                    <button type="button" aria-label="Emoji" onClick={() => togglePanel("emoji")} className="flex h-7 w-7 items-center justify-center rounded-full transition hover:bg-white/10" style={{ color: activePanel === "emoji" ? ACCENT : ICON_MUTED }}>
+                      <Smile size={17} strokeWidth={1.8} />
                     </button>
-                    {GIPHY_KEY && <button type="button" aria-label="GIF" aria-pressed={activePanel === "gif"} onClick={() => togglePanel("gif")} className="flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-white/10" style={{ color: activePanel === "gif" ? ACCENT : ICON_MUTED }}>
-                      <span className="flex h-[18px] items-center rounded-[5px] border-[1.5px] px-1 text-[9px] font-extrabold leading-none tracking-tight">GIF</span>
+                    {GIPHY_KEY && <button type="button" aria-label="GIF" aria-pressed={activePanel === "gif"} onClick={() => togglePanel("gif")} className="flex h-7 w-7 items-center justify-center rounded-full transition hover:bg-white/10" style={{ color: activePanel === "gif" ? ACCENT : ICON_MUTED }}>
+                      <span className="flex h-[15px] items-center rounded-[4px] border-[1.5px] px-[3px] text-[8px] font-extrabold leading-none tracking-tight">GIF</span>
                     </button>}
                   </div>
                   <button
@@ -1971,10 +1971,10 @@ function WidgetContent() {
                     onClick={() => void sendMessage()}
                     disabled={(!draft.trim() && !pendingAttachment) || sending || sendBlockedByReply}
                     aria-label="Send"
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition disabled:opacity-100"
+                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition disabled:opacity-100"
                     style={{ backgroundColor: (draft.trim() || pendingAttachment) && !sendBlockedByReply ? ACCENT : "rgba(255,255,255,0.10)", color: (draft.trim() || pendingAttachment) && !sendBlockedByReply ? "#fff" : "rgba(255,255,255,0.35)" }}
                   >
-                    <ArrowUp size={18} strokeWidth={2.2} />
+                    <ArrowUp size={15} strokeWidth={2.2} />
                   </button>
                 </div>
               </div>
