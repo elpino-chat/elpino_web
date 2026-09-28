@@ -179,6 +179,22 @@ function compactAgo(iso: string, now: number): string {
   return `${Math.floor(hours / 24)}d`;
 }
 
+// Help centre collections, taken from the article's URL: https://site.com/customer-stories/acme belongs to
+// "Customer stories". Pages directly under the domain, and articles written in the dashboard, are "General".
+const GENERAL_COLLECTION = "General";
+function collectionOf(article: { sourceUrl: string | null }): string {
+  try {
+    const segments = new URL(article.sourceUrl ?? "").pathname.split("/").filter(Boolean);
+    if (segments.length >= 2) {
+      const name = decodeURIComponent(segments[0]).replace(/[-_]+/g, " ").trim();
+      if (name) return name.charAt(0).toUpperCase() + name.slice(1);
+    }
+  } catch {
+    // no usable URL
+  }
+  return GENERAL_COLLECTION;
+}
+
 function WidgetContent() {
   const searchParams = useSearchParams();
   const key = searchParams.get("key")?.trim() ?? "";
@@ -820,19 +836,20 @@ function WidgetContent() {
   // visitor types, debounced so each keystroke isn't a request.
   const [helpArticles, setHelpArticles] = useState<HelpArticle[] | null>(null);
   const [helpQuery, setHelpQuery] = useState("");
+  const [helpCollection, setHelpCollection] = useState<string | null>(null);
   const [helpResults, setHelpResults] = useState<HelpArticle[] | null>(null);
   const [helpSearching, setHelpSearching] = useState(false);
   const [openArticle, setOpenArticle] = useState<HelpArticleBody | null>(null);
   const [articleLoading, setArticleLoading] = useState(false);
 
   useEffect(() => {
-    if (tab !== "help" || helpArticles !== null || !key || !hostname) return;
+    if (helpArticles !== null || !key || !hostname) return;
     const params = new URLSearchParams({ key, hostname });
     fetch(`/api/widget/help/articles?${params.toString()}`)
       .then((response) => response.json())
       .then((data: { articles?: HelpArticle[] }) => setHelpArticles(data.articles ?? []))
       .catch(() => setHelpArticles([]));
-  }, [tab, helpArticles, key, hostname]);
+  }, [helpArticles, key, hostname]);
 
   useEffect(() => {
     const query = helpQuery.trim();
@@ -1682,15 +1699,48 @@ function WidgetContent() {
                         </div>
                       );
                     }
-                    return shown.map((article) => (
-                      <button key={article.id} type="button" onClick={() => openHelpArticle(article.id)} className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition hover:bg-black/[0.035]">
-                        <span className="min-w-0 flex-1">
-                          <span className="block truncate text-[13px] font-semibold">{article.title}</span>
-                          <span className="mt-0.5 line-clamp-2 block text-[11.5px] leading-4" style={{ color: MUTED }}>{article.snippet}</span>
-                        </span>
-                        <ChevronRight size={15} className="shrink-0" style={{ color: MUTED }} />
-                      </button>
-                    ));
+                    // Group by collection only when there is more than one; a single group reads better as a plain list.
+                    const groups = new Map<string, HelpArticle[]>();
+                    for (const article of helpArticles ?? []) {
+                      const name = collectionOf(article);
+                      groups.set(name, [...(groups.get(name) ?? []), article]);
+                    }
+                    const names = [...groups.keys()].sort((x, y) => (x === GENERAL_COLLECTION ? 1 : 0) - (y === GENERAL_COLLECTION ? 1 : 0));
+                    const grouped = !searching && names.length > 1;
+                    if (grouped && helpCollection === null) {
+                      return names.map((name) => {
+                        const count = groups.get(name)!.length;
+                        return (
+                          <button key={name} type="button" onClick={() => setHelpCollection(name)} className="flex w-full items-center gap-3 rounded-xl px-3 py-3.5 text-left transition hover:bg-black/[0.035]">
+                            <span className="min-w-0 flex-1">
+                              <span className="block truncate text-[14px] font-semibold">{name}</span>
+                              <span className="mt-0.5 block text-[12px]" style={{ color: MUTED }}>{count} {count === 1 ? "article" : "articles"}</span>
+                            </span>
+                            <ChevronRight size={15} className="shrink-0" style={{ color: MUTED }} />
+                          </button>
+                        );
+                      });
+                    }
+                    const list = grouped && helpCollection !== null ? groups.get(helpCollection) ?? [] : shown;
+                    return (
+                      <>
+                        {grouped && helpCollection !== null && (
+                          <button type="button" onClick={() => setHelpCollection(null)} className="mb-1 flex items-center gap-1.5 px-3 py-2 text-[13px] font-semibold">
+                            <ChevronLeft size={16} />
+                            {helpCollection}
+                          </button>
+                        )}
+                        {list.map((article) => (
+                          <button key={article.id} type="button" onClick={() => openHelpArticle(article.id)} className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition hover:bg-black/[0.035]">
+                            <span className="min-w-0 flex-1">
+                              <span className="block truncate text-[13px] font-semibold">{article.title}</span>
+                              <span className="mt-0.5 line-clamp-2 block text-[11.5px] leading-4" style={{ color: MUTED }}>{article.snippet}</span>
+                            </span>
+                            <ChevronRight size={15} className="shrink-0" style={{ color: MUTED }} />
+                          </button>
+                        ))}
+                      </>
+                    );
                   })()}
                 </div>
               </>
@@ -2070,7 +2120,7 @@ function WidgetContent() {
             { id: "home", label: "Home", Icon: House, active: tab === "chat" && chatView === "home", go: () => { setTab("chat"); setChatView("home"); } },
             { id: "messages", label: "Messages", Icon: MessageSquare, active: tab === "chat" && chatView === "list", go: openChatList },
             { id: "help", label: "Help", Icon: CircleHelp, active: tab === "help", go: () => setTab("help") },
-          ]).map(({ id, label, Icon, active, go }) => (
+          ]).filter(({ id }) => id !== "help" || tab === "help" || (helpArticles?.length ?? 0) > 0).map(({ id, label, Icon, active, go }) => (
             <button
               key={id}
               type="button"
