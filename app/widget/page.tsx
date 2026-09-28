@@ -2,7 +2,7 @@
 
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { ArrowUp, ChevronDown, ChevronLeft, ChevronRight, CircleHelp, ExternalLink, File as FileIcon, LayoutGrid, Maximize2, MessageCircle, MessageSquarePlus, Minimize2, House, MessageSquare, MoreHorizontal, Paperclip, Plus, Search, SendHorizontal, Smile, ThumbsDown, ThumbsUp, Volume2, VolumeX, X } from "lucide-react";
+import { ArrowUp, ChevronDown, ChevronLeft, ChevronRight, CircleHelp, ExternalLink, File as FileIcon, LayoutGrid, Maximize2, MessageCircle, MessageSquarePlus, Minimize2, House, MessageSquare, LogOut, MoreHorizontal, Paperclip, Plus, Search, SendHorizontal, Smile, ThumbsDown, ThumbsUp, Volume2, VolumeX, X } from "lucide-react";
 import MessageMarkdown from "@/app/components/MessageMarkdown";
 import TypingDots from "@/app/components/TypingDots";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -389,13 +389,11 @@ function WidgetContent() {
     window.parent.postMessage({ type: "elpino:maximize", maximized: next }, "*");
   }
 
-  // "Did we help you?" — shown by the X button, the in-thread back arrow,
-  // and the browser/phone Back button (see the elpino:back-pressed handler
-  // below) whenever there's an actual conversation to leave. One screen, not
-  // a confirm-then-rate sequence: picking a thumb is optional, "Leave Chat"
-  // resolves the conversation and submits whatever rating (if any) was
-  // picked in a single step.
+  // "Did we help you?" — shown by "End chat" in the conversation's menu. One screen, not a
+  // confirm-then-rate sequence: picking a thumb is optional, "Leave Chat" resolves the
+  // conversation and submits whatever rating (if any) was picked in a single step.
   const [leaveOpen, setLeaveOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
   const [ratingChoice, setRatingChoice] = useState<1 | -1 | null>(null);
   const [leaving, setLeaving] = useState(false);
 
@@ -406,17 +404,17 @@ function WidgetContent() {
   // question. A ref since it's only read once the flow finishes, never
   // rendered.
   const leaveTargetRef = useRef<"close" | "list">("close");
+  // Back and close only navigate: the conversation stays open, and the visitor can return to it from Home or
+  // Messages. Ending it is a deliberate action, endChat, from the menu in the conversation header.
   function requestLeave(target: "close" | "list" = "close") {
     if (leaveOpen) return;
-    const hasActiveConversation = tab === "chat" && chatView === "thread" && Boolean(conversationId) && messages.some((m) => m.senderType !== "system");
-    if (hasActiveConversation) {
-      leaveTargetRef.current = target;
-      setLeaveOpen(true);
-    } else if (target === "list") {
-      openChatList();
-    } else {
-      closeWidget();
-    }
+    if (target === "list") openChatList();
+    else closeWidget();
+  }
+  function endChat() {
+    if (leaveOpen) return;
+    leaveTargetRef.current = "list";
+    setLeaveOpen(true);
   }
   function goBack() {
     setLeaveOpen(false);
@@ -1749,7 +1747,7 @@ function WidgetContent() {
                 </div>
               </div>
               <div className="ml-auto flex gap-2">
-                <Popover>
+                <Popover open={moreOpen} onOpenChange={setMoreOpen}>
                   <PopoverTrigger aria-label="More options" className="flex h-9 w-9 items-center justify-center rounded-full bg-black/[0.07] transition hover:bg-black/[0.12]">
                     <MoreHorizontal size={20} />
                   </PopoverTrigger>
@@ -1762,6 +1760,13 @@ function WidgetContent() {
                       {isMaximized ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
                       {isMaximized ? "Restore size" : "Maximize"}
                     </button>
+                    {/* Only a chat that has actually started can be ended. */}
+                    {conversationId && messages.some((message) => message.senderType !== "system") && (
+                      <button type="button" onClick={() => { setMoreOpen(false); endChat(); }} className="flex h-9 w-full items-center gap-2.5 rounded-lg px-2.5 text-left text-[13px] font-medium hover:bg-black/5">
+                        <LogOut size={16} />
+                        End chat
+                      </button>
+                    )}
                   </PopoverContent>
                 </Popover>
               </div>
