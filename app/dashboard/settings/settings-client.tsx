@@ -3809,12 +3809,12 @@ function WidgetPreviewCard({
               <X size={12} />
             </button>
             {/* One popup, like the real launcher (tag.js). */}
-            <div className="w-fit min-w-[150px] max-w-full rounded-[10px] border border-white/10 bg-[#111214] px-3.5 pb-3 pt-2.5 text-white shadow-2xl transition hover:brightness-110">
-              <div className="mb-1 flex items-baseline gap-2 text-[11.5px] leading-[1.3]">
-                <span className="font-semibold">{displayName}</span>
+            <div className="w-fit min-w-[170px] max-w-full rounded-xl border border-white/10 bg-[#111214] px-4 pb-3 pt-3.5 text-white shadow-2xl transition hover:brightness-110">
+              <div className="text-[15px] font-medium leading-6 text-white">{lines.join(" ")}</div>
+              <div className="mt-2 flex items-baseline gap-2 text-[12px] leading-[1.3]">
+                <span className="font-semibold text-white/90">{displayName}</span>
                 <span className="text-white/55">{new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</span>
               </div>
-              <div className="text-[12.5px] leading-[1.45] text-white/90">{lines.join(" ")}</div>
             </div>
           </div>
         )}
