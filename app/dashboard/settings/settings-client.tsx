@@ -3810,10 +3810,11 @@ function WidgetPreviewCard({
             </button>
             {/* One popup, like the real launcher (tag.js). */}
             <div className="w-fit min-w-[170px] max-w-full rounded-xl border border-white/10 bg-[#111214] px-4 pb-3 pt-3.5 text-white shadow-2xl transition hover:brightness-110">
-              <div className="text-[15px] font-medium leading-6 text-white">{lines.join(" ")}</div>
-              <div className="mt-2 flex items-baseline gap-2 text-[12px] leading-[1.3]">
-                <span className="font-semibold text-white/90">{displayName}</span>
-                <span className="text-white/55">{new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</span>
+              <div className="text-[15px] font-normal leading-6 text-white">{lines.join(" ")}</div>
+              <div className="mt-2 flex items-baseline gap-1.5 text-[12px] font-normal leading-[1.3] text-white/60">
+                <span className="text-white/85">{displayName}</span>
+                <span aria-hidden="true">·</span>
+                <span>Just now</span>
               </div>
             </div>
           </div>

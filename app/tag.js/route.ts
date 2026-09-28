@@ -367,6 +367,7 @@ export function GET(request: Request) {
         : ['Hi there \\u{1F44B}', 'How can I help you today?'];
       var botAvatarUrl = config.botAvatarUrl || null;
       var greeting = null;
+      var greetingTimer = null;
       var badge = null;
 
       var button = document.createElement('button');
@@ -428,15 +429,16 @@ export function GET(request: Request) {
         greeting.style.cssText = 'position:fixed;bottom:88px;right:20px;width:300px;max-width:calc(100vw - 32px);z-index:2147483000;cursor:pointer;font-family:system-ui,-apple-system,sans-serif;display:flex;flex-direction:column;align-items:flex-end;gap:6px;';
 
         // One popup, however the greeting is stored: workspaces saved with several lines get them joined.
-        // The message leads, in larger text; the assistant's name and the time it "arrived" sit underneath.
+        // The message leads, in larger text; the assistant's name and how long ago it "arrived" sit underneath.
         var botName = (config.botName && String(config.botName).trim()) || 'Elpino AI';
-        var sentAt = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+        var arrivedAt = greetingArrivedAt();
         var bubbles =
           '<div style="background:#111214;color:#fff;border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:14px 16px 12px;box-shadow:0 16px 40px rgba(15,23,42,0.4);width:fit-content;min-width:180px;max-width:100%;">' +
-            '<div style="font-size:16px;line-height:1.5;font-weight:500;color:#fff;">' + escapeHtml(greetingLines.join(' ')) + '</div>' +
-            '<div style="display:flex;align-items:baseline;gap:8px;margin-top:8px;font-size:12.5px;line-height:1.3;">' +
-              '<span style="font-weight:600;color:rgba(255,255,255,0.9);">' + escapeHtml(botName) + '</span>' +
-              '<span style="color:rgba(255,255,255,0.55);">' + escapeHtml(sentAt) + '</span>' +
+            '<div style="font-size:16px;line-height:1.5;font-weight:400;color:#fff;">' + escapeHtml(greetingLines.join(' ')) + '</div>' +
+            '<div style="display:flex;align-items:baseline;gap:6px;margin-top:8px;font-size:12.5px;line-height:1.3;font-weight:400;color:rgba(255,255,255,0.6);">' +
+              '<span style="color:rgba(255,255,255,0.85);">' + escapeHtml(botName) + '</span>' +
+              '<span aria-hidden="true">·</span>' +
+              '<span data-elpino-ago>' + escapeHtml(timeAgo(arrivedAt)) + '</span>' +
             '</div>' +
           '</div>';
         greeting.innerHTML =
@@ -448,10 +450,39 @@ export function GET(request: Request) {
         };
         greeting.onclick = function () { dismissGreeting(); if (!open) toggle(true); };
         document.body.appendChild(greeting);
+        // "Just now" ages while the popup stays up.
+        greetingTimer = setInterval(function () {
+          var label = greeting && greeting.querySelector('[data-elpino-ago]');
+          if (label) label.textContent = timeAgo(arrivedAt);
+        }, 30000);
+      }
+
+      // When this visitor was first greeted in this browser tab, so the label keeps counting up as
+      // they move between pages ("Just now", then "3 minutes ago") instead of restarting every load.
+      function greetingArrivedAt() {
+        var now = Date.now();
+        try {
+          var saved = Number(sessionStorage.getItem('elpino:greeting-at'));
+          if (saved > 0 && saved <= now) return saved;
+          sessionStorage.setItem('elpino:greeting-at', String(now));
+        } catch (error) { /* storage blocked: always "Just now" */ }
+        return now;
+      }
+
+      function timeAgo(then) {
+        var seconds = Math.max(0, Math.floor((Date.now() - then) / 1000));
+        if (seconds < 60) return 'Just now';
+        var minutes = Math.floor(seconds / 60);
+        if (minutes < 60) return minutes + (minutes === 1 ? ' minute ago' : ' minutes ago');
+        var hours = Math.floor(minutes / 60);
+        if (hours < 24) return hours + (hours === 1 ? ' hour ago' : ' hours ago');
+        var days = Math.floor(hours / 24);
+        return days + (days === 1 ? ' day ago' : ' days ago');
       }
 
       function dismissGreeting() {
         if (!greeting) return;
+        clearInterval(greetingTimer);
         greeting.remove();
         greeting = null;
       }
