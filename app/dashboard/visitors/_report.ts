@@ -6,7 +6,7 @@ export type CompareMode = "previous_period" | "previous_year" | "none";
 export type DeviceFilter = "" | "Desktop" | "Mobile" | "Tablet";
 export type MetricKey = "visitors" | "pageviews" | "sessions";
 
-export type Summary = { visitors: number; pageviews: number; sessions: number; bounceRate: number; avgDurationSeconds: number };
+export type Summary = { visitors: number; pageviews: number; sessions: number; bounceRate: number; avgDurationSeconds: number; botVisitors?: number };
 export type TrendPoint = { date: string; visitors: number; pageviews: number; sessions: number };
 export type PathRow = { path: string; visitors: number; views: number; bounceRate: number | null };
 export type ChannelRow = { channel: string; visitors: number; views: number };
@@ -20,6 +20,8 @@ export type ReportData = {
   devices: DeviceRow[];
   countries: CountryRow[];
   truncated: boolean;
+  /** True on a plan without the bot split: the API withholds the bot count. */
+  botsLocked?: boolean;
 };
 
 export type Filters = { path: string; country: string; device: DeviceFilter };

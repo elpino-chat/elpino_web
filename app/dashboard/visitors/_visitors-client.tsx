@@ -4,7 +4,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Bone } from "@/app/components/dashboard/DashboardSkeleton";
-import { Activity, Bookmark, Check, ChevronDown, Clock3, Filter, Globe2, Link2, Lock, PieChart, Plus, RefreshCw, X } from "lucide-react";
+import { Activity, Bookmark, Check, ChevronDown, Clock3, Filter, Globe2, Link2, PieChart, Plus, RefreshCw, X } from "lucide-react";
+import { LockedSample, LockedUpgradeCard } from "./_locked-preview";
 import { ChannelsTable, DevicesTable, KpiCard, PathsTable, Card, CardTitle, TrendChart, WorldMap } from "./_components";
 import {
   NO_FILTERS, METRICS, comparisonRange, defaultInterval, dropFuture, formatCompact, formatDuration, formatPercent, hasFilters, rangeDays,
@@ -134,6 +135,7 @@ export function VisitorsClient({ view }: { view: VisitorView }) {
   const [intervalOverride, setIntervalOverride] = useState<Interval | null>(null);
   const [metric, setMetric] = useState<MetricKey>("visitors");
   const [filters, setFilters] = useState<Filters>(NO_FILTERS);
+  const [includeBots, setIncludeBots] = useState(true);
   const [draft, setDraft] = useState<Filters>(NO_FILTERS);
   const [presets, setPresets] = useState<Preset[]>([]);
   const [presetName, setPresetName] = useState("");
@@ -179,6 +181,7 @@ export function VisitorsClient({ view }: { view: VisitorView }) {
     if (filters.path.trim()) params.set("path", filters.path.trim());
     if (filters.country.trim()) params.set("country", filters.country.trim());
     if (filters.device) params.set("device", filters.device);
+    if (!includeBots) params.set("bots", "exclude");
     return fetch(`/api/workspace/analytics/report?${params.toString()}`).then((r) => (r.ok ? r.json() : { report: null }));
   }
 
@@ -208,7 +211,7 @@ export function VisitorsClient({ view }: { view: VisitorView }) {
     if (sites.length === 0) return;
     loadAnalytics();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sites.length, selectedId, range, startDate, endDate, compareMode, interval, filters]);
+  }, [sites.length, selectedId, range, startDate, endDate, compareMode, interval, filters, includeBots]);
 
   // Realtime polls on its own, independent of the date range.
   useEffect(() => {
@@ -225,7 +228,7 @@ export function VisitorsClient({ view }: { view: VisitorView }) {
     return () => window.clearInterval(timer);
   }, [sites.length, selectedId]);
 
-  const liveVisitorsAll = useLiveVisitors(sites.length > 0);
+  const liveVisitorsAll = useLiveVisitors(sites.length > 0 && !upgradeRequired);
   const liveVisitors = useMemo(
     () => (selectedId === "__all__" ? liveVisitorsAll : liveVisitorsAll.filter((visitor) => visitor.siteId === selectedId)),
     [liveVisitorsAll, selectedId],
@@ -280,8 +283,9 @@ export function VisitorsClient({ view }: { view: VisitorView }) {
       : rangeOptions.find((option) => option.value === range)?.label ?? "Custom range";
   const domainLabel = selectedSite ? selectedSite.domain : "All domains";
   const compareLabel = compareOptions.find((option) => option.value === compareMode)?.label ?? "Previous period";
-  const showFullToolbar = view === "overview" || view === "analytics" || view === "pages";
-  const showDomainOnly = view === "realtime";
+  const locked = Boolean(upgradeRequired) && view !== "installation";
+  const showFullToolbar = !locked && (view === "overview" || view === "analytics" || view === "pages");
+  const showDomainOnly = !locked && view === "realtime";
 
   const controlClass = "flex h-9 items-center gap-2 rounded-lg border border-[var(--av-line)] bg-[var(--av-card)] px-3 text-[13.5px] text-[var(--av-text)] shadow-[0_1px_0_var(--av-line)] transition hover:bg-[var(--av-hover)]";
   const fieldClass = "mt-1 block h-9 w-full rounded-lg border border-[#DDE4E8] bg-white px-3 text-[13px] text-[#17181a] outline-none focus:border-[#8f989e]";
@@ -313,7 +317,10 @@ export function VisitorsClient({ view }: { view: VisitorView }) {
   return (
     <div className="dashboard-analytics-shell flex h-full min-h-0 overflow-hidden bg-[#262626] text-white">
       <main className="dashboard-page-surface dashboard-visitors-main-surface flex min-h-0 flex-1 flex-col overflow-y-auto bg-[#262626] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <div className="dashboard-analytics-canvas mx-auto w-full max-w-[1440px] px-4 pb-16 pt-6 sm:px-8">
+        <div className="dashboard-analytics-canvas relative mx-auto min-h-full w-full max-w-[1440px] px-4 pb-16 pt-6 sm:px-8">
+          {/* When the plan has no analytics the whole canvas — title included — is blurred and inert,
+              with the upgrade card floating over it. */}
+          <div aria-hidden={locked || undefined} inert={locked || undefined} className={locked ? "pointer-events-none select-none blur-[7px]" : undefined}>
           <div className="flex items-center gap-3">
             <PieChart size={22} className="text-[var(--av-good)]" />
             <h1 className="text-[24px] font-medium tracking-[-0.02em] text-[var(--av-text)]">Web analytics</h1>
@@ -456,12 +463,14 @@ export function VisitorsClient({ view }: { view: VisitorView }) {
             <EmptyBlock icon={Globe2} title="Connect a website to view analytics" body="Add a site tag and install the snippet — visitor data will start appearing here automatically." href="/dashboard/connect" cta="Open Connect" />
           ) : view === "installation" ? (
             <InstallationHealth sites={sites} />
+          ) : upgradeRequired ? (
+            <LockedSample />
+          ) : analyticsLoading && !report ? (
+            // Every analytics view waits for the plan check, so a plan without analytics never
+            // sees live data flash up before the lock.
+            <AnalyticsSkeleton view={view} />
           ) : view === "realtime" ? (
             <LiveView realtime={realtime} liveVisitors={liveVisitors} scope={selectedSite ? selectedSite.domain : "All connected websites"} />
-          ) : upgradeRequired ? (
-            <EmptyBlock icon={Lock} title="Upgrade to unlock analytics" body={upgradeRequired} href="/pricing#plans" cta="View plans" />
-          ) : analyticsLoading && !report ? (
-            <AnalyticsSkeleton view={view} />
           ) : !report ? (
             <EmptyBlock icon={Activity} title="Analytics could not be loaded" body="Something went wrong fetching this report. Try refreshing." />
           ) : view === "pages" ? (
@@ -471,7 +480,40 @@ export function VisitorsClient({ view }: { view: VisitorView }) {
           ) : (
             <div className={`mt-5 space-y-4 transition-opacity ${analyticsLoading ? "opacity-60" : ""}`}>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-                <KpiCard label="Visitors" current={report.summary.visitors} prior={priorReport?.summary.visitors ?? null} format={formatCompact} />
+                <KpiCard
+                  label="Visitors"
+                  current={report.summary.visitors}
+                  prior={priorReport?.summary.visitors ?? null}
+                  format={formatCompact}
+                  footer={(() => {
+                    if (report.botsLocked) {
+                      // Placeholder digits only — the real count is never sent to this plan.
+                      return (
+                        <div className="mt-2 flex items-center justify-between gap-2 border-t border-[var(--av-line)] pt-2 text-[12.5px] text-[var(--av-muted)]">
+                          <span aria-hidden className="select-none tabular-nums blur-[5px]">88 real + 88 bots</span>
+                          <Link href="/pricing#plans" className="rounded-full border border-[var(--av-line)] px-2 py-0.5 text-[11.5px] font-medium text-[var(--av-text)] hover:bg-[var(--av-hover)]">
+                            Upgrade to see bots
+                          </Link>
+                        </div>
+                      );
+                    }
+                    const bots = report.summary.botVisitors ?? 0;
+                    const real = includeBots ? Math.max(0, report.summary.visitors - bots) : report.summary.visitors;
+                    return (
+                      <div className="mt-2 flex items-center justify-between gap-2 border-t border-[var(--av-line)] pt-2 text-[12.5px] text-[var(--av-muted)]">
+                        <span className="tabular-nums">{real.toLocaleString()} real + {bots.toLocaleString()} {bots === 1 ? "bot" : "bots"}</span>
+                        <button
+                          type="button"
+                          onClick={() => setIncludeBots((value) => !value)}
+                          aria-pressed={includeBots}
+                          className="rounded-full border border-[var(--av-line)] px-2 py-0.5 text-[11.5px] font-medium text-[var(--av-text)] hover:bg-[var(--av-hover)]"
+                        >
+                          {includeBots ? "Bots included" : "Bots excluded"}
+                        </button>
+                      </div>
+                    );
+                  })()}
+                />
                 <KpiCard label="Page views" current={report.summary.pageviews} prior={priorReport?.summary.pageviews ?? null} format={formatCompact} />
                 <KpiCard label="Sessions" current={report.summary.sessions} prior={priorReport?.summary.sessions ?? null} format={formatCompact} />
                 <KpiCard label="Session duration" current={report.summary.avgDurationSeconds} prior={priorReport?.summary.avgDurationSeconds ?? null} format={formatDuration} />
@@ -531,6 +573,14 @@ export function VisitorsClient({ view }: { view: VisitorView }) {
                 {hasFilters(filters) ? " with filters applied" : ""}. Data begins after the installed tag sends page events.
                 {report.truncated && " This range has more page views than can be summarised at once, so figures are a lower bound."}
               </p>
+            </div>
+          )}
+          </div>
+          {locked && (
+            <div className="absolute inset-0 px-4">
+              <div className="top-6 mx-auto w-full max-w-[1000px] pt-4 sm:pt-8 [@media(min-height:860px)]:sticky">
+                <LockedUpgradeCard />
+              </div>
             </div>
           )}
         </div>

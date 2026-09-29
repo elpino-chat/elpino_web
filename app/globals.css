@@ -3449,6 +3449,7 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
   --av-grid: rgb(255 255 255 / 0.1);
   --av-hover: rgb(255 255 255 / 0.06);
   --av-card: rgb(255 255 255 / 0.035);
+  --av-panel: #2d2d2d;
   --av-tab: #ff7a3d;
   --av-chart: #7b97ff;
   --av-chart-prior: rgb(123 151 255 / 0.4);
@@ -3468,6 +3469,7 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
   --av-grid: rgb(0 0 0 / 0.09);
   --av-hover: rgb(0 0 0 / 0.04);
   --av-card: #ffffff;
+  --av-panel: #ffffff;
   --av-tab: #f54e00;
   --av-chart: #1d4aff;
   --av-chart-prior: rgb(29 74 255 / 0.4);

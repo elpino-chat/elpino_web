@@ -41,9 +41,9 @@ function TrendArrow({ current, prior, higherIsBetter = true }: { current: number
 // ── KPI card ───────────────────────────────────────────────────────────────
 
 export function KpiCard({
-  label, current, prior, format, higherIsBetter = true,
+  label, current, prior, format, higherIsBetter = true, footer,
 }: {
-  label: string; current: number; prior: number | null; format: (value: number) => string; higherIsBetter?: boolean;
+  label: string; current: number; prior: number | null; format: (value: number) => string; higherIsBetter?: boolean; footer?: React.ReactNode;
 }) {
   const pct = prior === null ? null : deltaPercent(current, prior);
   const tone = prior === null ? "flat" : toneFor(direction(current, prior), higherIsBetter);
@@ -61,6 +61,7 @@ export function KpiCard({
       </div>
       <p className="mt-3 text-[34px] font-medium leading-none tracking-[-0.03em] tabular-nums text-[var(--av-text)]">{format(current)}</p>
       <p className="mt-3 text-[13px] text-[var(--av-muted)]">{prior === null ? " " : `vs. ${format(prior)} prior`}</p>
+      {footer}
     </article>
   );
 }

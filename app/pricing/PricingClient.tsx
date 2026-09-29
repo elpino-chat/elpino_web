@@ -139,6 +139,11 @@ function buildComparisonCategories(t: T): FeatureCategory[] {
           values: ['Yes', 'Yes', 'Yes', 'Yes'],
         },
         {
+          label: t('pricing.comparison.categories.product.rows.bots.label', 'Bot traffic split'),
+          description: t('pricing.comparison.categories.product.rows.bots.description', 'See how many visitors are real people and how many are bots.'),
+          values: ['No', 'Yes', 'Yes', 'Yes'],
+        },
+        {
           label: t('pricing.comparison.categories.product.rows.profiles.label', 'Customer profiles & history'),
           description: t('pricing.comparison.categories.product.rows.profiles.description', 'Stored customer records and their past conversations.'),
           values: ['Yes', 'Yes', 'Yes', 'Yes'],
