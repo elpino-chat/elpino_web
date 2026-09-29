@@ -105,7 +105,7 @@ export function ContactForm({ desk, onDeskChange }: { desk: Desk; onDeskChange: 
           {/* stamp and postmark */}
           <div aria-hidden="true" className="absolute right-0 top-0 hidden h-24 w-20 rotate-3 items-center justify-center rounded-sm border-2 border-[#11120f] bg-white outline-2 outline-offset-[3px] outline-[#11120f]/50 [outline-style:dashed] md:flex md:right-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/icon.png" alt="" className="h-14 w-14 object-contain" />
+            <img src="/images/contact-support-sloth.png" alt="" className="h-14 w-14 object-cover object-top" />
           </div>
           <div aria-hidden="true" className="absolute right-[64px] top-2 hidden h-20 w-20 -rotate-12 items-center justify-center rounded-full border-2 border-dashed border-[#11120f]/45 text-center font-mono text-[8.5px] font-bold uppercase leading-tight tracking-[0.06em] text-[#11120f]/55 md:flex">
             Elpino<br />mail<br />{today}

@@ -81,7 +81,7 @@ function LiveTrace() {
       <div className={`${card} flex min-h-[420px] flex-col bg-[#fffdf5]`}>
         <div className="flex items-center gap-2.5 border-b-2 border-[#11120f] px-4 py-3" style={{ backgroundColor: BLUE }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/icon.png" alt="" className="size-9 rounded-full border-2 border-[#11120f] bg-white object-contain p-0.5" />
+          <img src="/images/contact-support-sloth.png" alt="" className="size-9 rounded-full border-2 border-[#11120f] bg-white object-cover object-top" />
           <div className="text-white"><p className="text-sm font-semibold leading-tight">Elpino</p><p className="text-[11px] opacity-90">AI agent</p></div>
         </div>
         <div className="flex flex-1 flex-col justify-end gap-2.5 p-4 text-[14px]">
@@ -123,7 +123,7 @@ function Badge() {
         <div className="border-b-2 border-[#11120f] px-4 py-2.5 text-center" style={{ backgroundColor: BLUE }}><span className={`${mono} text-white`}>Elpino · Staff</span></div>
         <div className="px-5 pb-5 pt-5 text-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/icon.png" alt="" className="mx-auto size-28 rounded-full border-2 border-[#11120f] bg-[#ffd84d] object-contain p-2" />
+          <img src="/images/founders-sloth-v2.png" alt="Elpino's AI support sloth" className="mx-auto size-28 rounded-full border-2 border-[#11120f] bg-[#ffd84d] object-cover object-top" />
           <p className="mt-4 text-3xl font-semibold tracking-[-0.04em]">Elpino</p>
           <p className={`${mono} mt-1 text-[#11120f]/55`}>AI support agent</p>
           <div className="mt-4 flex flex-wrap justify-center gap-1.5">

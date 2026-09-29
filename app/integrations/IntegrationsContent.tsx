@@ -104,7 +104,7 @@ function Board() {
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
             <div className="relative mx-auto grid size-32 place-items-center rounded-full border-2 border-[#11120f] bg-white" style={{ boxShadow: `0 0 0 ${6 + on.length * 3}px ${YELLOW}88`, transition: "box-shadow .5s" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/icon.png" alt="" className="size-24 object-contain" style={{ animation: "elpino-float 4s ease-in-out infinite" }} />
+              <img src="/images/community-sloths.png" alt="Elpino sloths connecting the tools" className="size-24 rounded-full object-cover object-center" style={{ animation: "elpino-float 4s ease-in-out infinite" }} />
             </div>
             <p className={`${mono} mt-3 rounded-full border-2 border-[#11120f] bg-white px-3 py-1`}>{on.length} / {CONNS.length} plugged in</p>
           </div>
@@ -126,7 +126,7 @@ function Board() {
         <div className="relative lg:hidden">
           <div className="mb-4 flex items-center justify-center gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/icon.png" alt="" className="size-14 rounded-full border-2 border-[#11120f] bg-white object-contain p-1" />
+            <img src="/images/community-sloths.png" alt="" className="size-14 rounded-full border-2 border-[#11120f] bg-white object-cover object-center" />
             <p className={`${mono} rounded-full border-2 border-[#11120f] bg-white px-3 py-1`}>{on.length} / {CONNS.length} plugged in</p>
           </div>
           <div className="grid grid-cols-2 gap-2.5">

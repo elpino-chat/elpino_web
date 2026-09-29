@@ -215,7 +215,7 @@ function Loop() {
             })}
             <div className="absolute left-1/2 top-1/2 w-[46%] -translate-x-1/2 -translate-y-1/2 text-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/icon.png" alt="" className="mx-auto size-16 rounded-full border-2 border-[#11120f] bg-white object-contain p-1" style={{ animation: "elpino-float 4s ease-in-out infinite" }} />
+              <img src="/images/help-center-sloth.png" alt="A sloth organizing support knowledge" className="mx-auto size-16 rounded-full border-2 border-[#11120f] bg-white object-cover object-top" style={{ animation: "elpino-float 4s ease-in-out infinite" }} />
               <p className={`${mono} mt-2 text-[#11120f]/50`}>Elpino</p>
             </div>
           </div>
@@ -288,7 +288,7 @@ function Stack() {
           <Rv variant="deal" delay={300}>
             <div className={`${card} bg-[#fffdf5] p-7 text-center text-[#11120f]`}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/icon.png" alt="" className="mx-auto size-16 rounded-full border-2 border-[#11120f] bg-white object-contain p-1" style={{ animation: "elpino-float 4s ease-in-out infinite" }} />
+              <img src="/images/contact-support-sloth.png" alt="A sloth handling customer support" className="mx-auto size-16 rounded-full border-2 border-[#11120f] bg-white object-cover object-top" style={{ animation: "elpino-float 4s ease-in-out infinite" }} />
               <p className="mt-3 text-3xl font-semibold tracking-[-0.04em]">Elpino</p>
               <p className="mt-1 text-[15px] text-[#11120f]/60">Widget · Inbox · Knowledge · AI agent · Tools · Handoff</p>
             </div>

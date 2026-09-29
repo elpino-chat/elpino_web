@@ -71,7 +71,7 @@ function MiniWidget() {
     <div className={`${card} w-[290px] overflow-hidden bg-white`}>
       <div className="flex items-center gap-2.5 border-b-2 border-[#11120f] px-3.5 py-2.5 text-white" style={{ backgroundColor: BLUE }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/icon.png" alt="" className="size-8 rounded-full border-2 border-[#11120f] bg-white object-contain p-0.5" />
+        <img src="/images/elpino-mascot-0.png" alt="" className="size-8 rounded-full border-2 border-[#11120f] bg-[#ffd84d] object-cover object-top" />
         <div><p className="text-[13px] font-semibold leading-tight">Elpino</p><p className="text-[10.5px] opacity-90">Answers in seconds</p></div>
       </div>
       <div className="flex h-[188px] flex-col justify-end gap-2 bg-[#fffdf5] p-3 text-[12.5px]">
@@ -230,7 +230,7 @@ function TryIt() {
           <div className={`${card} flex min-h-[380px] flex-col overflow-hidden bg-[#fffdf5]`}>
             <div className="flex items-center gap-2.5 border-b-2 border-[#11120f] px-4 py-3 text-white" style={{ backgroundColor: BLUE }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/icon.png" alt="" className="size-9 rounded-full border-2 border-[#11120f] bg-white object-contain p-0.5" />
+              <img src="/images/elpino-mascot-0.png" alt="" className="size-9 rounded-full border-2 border-[#11120f] bg-[#ffd84d] object-cover object-top" />
               <div><p className="text-sm font-semibold leading-tight">Elpino</p><p className="text-[11px] opacity-90">AI support</p></div>
             </div>
             <div key={sel} className="flex flex-1 flex-col justify-end gap-2.5 p-4 text-[14px]">
@@ -296,7 +296,7 @@ function Customizer() {
     <img src={logo} alt="" className="size-full object-cover" />
   ) : (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src="/icon.png" alt="" className="size-full object-contain p-0.5" />
+    <img src="/images/elpino-mascot-1.png" alt="" className="size-full object-cover object-top" />
   );
 
   const field = "mt-2 w-full rounded-xl border-2 border-[#11120f] bg-white px-3.5 py-2.5 text-[15px] outline-none focus:bg-[#fff6cf]";
@@ -581,9 +581,9 @@ function Integrations() {
             <div aria-hidden="true" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-dashed border-[#11120f]/40" style={{ width: "calc(var(--r-out) * 2)", height: "calc(var(--r-out) * 2)" }} />
             <div className="absolute inset-0" style={{ animation: "elp-orb 46s linear infinite" }}>{INNER.map((n, i) => <OrbitNode key={n.id} n={n} i={i} total={INNER.length} ring="in" />)}</div>
             <div className="absolute inset-0" style={{ animation: "elp-orb 62s linear infinite reverse" }}>{OUTER.map((n, i) => <OrbitNode key={n.id} n={n} i={i} total={OUTER.length} ring="out" />)}</div>
-            <div className="absolute left-1/2 top-1/2 grid size-24 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-2 border-[#11120f] bg-white sm:size-28" style={{ boxShadow: `0 0 0 10px ${YELLOW}88` }}>
+            <div className="absolute left-1/2 top-1/2 grid size-24 -translate-x-1/2 -translate-y-1/2 place-items-center overflow-hidden rounded-full border-2 border-[#11120f] bg-[#ffd84d] sm:size-28" style={{ boxShadow: `0 0 0 10px ${YELLOW}88` }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/icon.png" alt="Elpino" className="size-[78%] object-contain" style={{ animation: "elpino-float 4s ease-in-out infinite" }} />
+              <img src="/images/elpino-mascot-2.png" alt="A cartoon Elpino sloth connecting the tools" className="size-full scale-125 object-cover object-top" style={{ animation: "elpino-float 4s ease-in-out infinite" }} />
             </div>
           </div>
         </Rv>
@@ -617,7 +617,7 @@ function Trust() {
           <div className={`${card} overflow-hidden bg-[#fffdf5] text-[#11120f]`}>
             <div className="flex items-center gap-3 border-b-2 border-[#11120f] bg-white px-5 py-4">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/icon.png" alt="" className="size-9 rounded-full border-2 border-[#11120f] bg-white object-contain p-0.5" />
+              <img src="/images/elpino-mascot-3.png" alt="" className="size-9 rounded-full border-2 border-[#11120f] bg-[#ffd84d] object-cover object-top" />
               <div><p className="font-semibold leading-tight">Elpino&apos;s rulebook</p><p className={`${mono} text-[#11120f]/50`}>Set by you</p></div>
               <span className={`${mono} ml-auto inline-flex items-center gap-1.5 rounded-full border-2 border-[#11120f] px-2.5 py-1 text-[9px] text-white`} style={{ backgroundColor: GREEN }}><ShieldCheck size={11} />Guardrails on</span>
             </div>
@@ -715,7 +715,7 @@ function Closing() {
       <Rv variant="pop">
         <div className={`${card} relative mx-auto max-w-6xl overflow-hidden px-6 py-16 text-center text-white sm:px-12`} style={{ backgroundColor: BLUE }}>
           <div aria-hidden="true" className="absolute inset-0 opacity-[0.16]" style={dots} />
-          <Image src="/icon.png" alt="" width={96} height={96} className="relative mx-auto size-24 rounded-full border-2 border-[#11120f] bg-white p-1.5" style={{ animation: "elpino-float 4.5s ease-in-out infinite" }} />
+          <Image src="/images/elpino-mascot-4.png" alt="A friendly cartoon Elpino sloth ready to support customers" width={434} height={724} className="relative mx-auto size-24 rounded-full border-2 border-[#11120f] bg-[#ffd84d] object-cover object-top" style={{ animation: "elpino-float 4.5s ease-in-out infinite" }} />
           <h2 className="relative mx-auto mt-6 max-w-3xl text-[clamp(2.3rem,5.4vw,4.4rem)] font-semibold leading-[1.02] tracking-[-0.05em]">Give your customers the answer before they finish typing.</h2>
           <p className="relative mx-auto mt-5 max-w-xl text-lg leading-8 text-white/85">Start free, teach it your business, and let it take the repeat questions.</p>
           <div className="relative mt-8 flex flex-wrap justify-center gap-3">

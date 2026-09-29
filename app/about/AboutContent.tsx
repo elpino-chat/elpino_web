@@ -31,7 +31,7 @@ const faqs: [string, string][] = [
 function Avatar({ size = 36 }: { size?: number }) {
   return (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src="/icon.png" alt="" style={{ height: size, width: size }} className="shrink-0 rounded-full border-2 border-[#11120f] bg-white object-contain p-0.5" />
+    <img src="/images/contact-support-sloth.png" alt="" style={{ height: size, width: size }} className="shrink-0 rounded-full border-2 border-[#11120f] bg-white object-cover object-top" />
   );
 }
 

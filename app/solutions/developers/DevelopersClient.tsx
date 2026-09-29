@@ -132,7 +132,7 @@ function Ide() {
             {/* launcher */}
             <div className="absolute bottom-4 right-4 transition-all duration-500" style={{ opacity: step === 0 ? 1 : 0, transform: step === 0 ? "scale(1)" : "scale(0.6)" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/icon.png" alt="" className="size-14 rounded-full border-2 border-[#11120f] bg-white object-contain p-1" style={{ animation: step === 0 ? "elpino-rv-pop .5s both" : undefined }} />
+              <img src="/images/founders-sloth-v2.png" alt="" className="size-14 rounded-full border-2 border-[#11120f] bg-white object-cover object-top" style={{ animation: step === 0 ? "elpino-rv-pop .5s both" : undefined }} />
             </div>
             {/* chat */}
             <div className={`${card} absolute bottom-4 right-4 w-[250px] overflow-hidden bg-white transition-all duration-500`} style={{ opacity: step >= 1 ? 1 : 0, transform: step >= 1 ? "none" : "translateY(20px) scale(.95)", pointerEvents: "none" }}>
