@@ -13,8 +13,11 @@ if (!posthogToken || !posthogHost) {
     const missingVariable = posthogToken
       ? "NEXT_PUBLIC_POSTHOG_HOST"
       : "NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN";
-    throw new Error(
-      `${missingVariable} variable required by PostHog is missing or un-configured, this causes events to be silently missed. This error stops appearing once ${missingVariable} is configured`,
+    // A warning, not a throw: an uncaught error here aborts this whole module
+    // and pops Next's dev error overlay over the page, and local dev has no
+    // PostHog project to point at.
+    console.warn(
+      `${missingVariable} is not set, so PostHog analytics are off. Set it in .env.local to enable them.`,
     );
   }
 } else {
