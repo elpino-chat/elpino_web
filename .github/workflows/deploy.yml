@@ -1,0 +1,46 @@
+name: Deploy
+
+# Ships main to Cloud Run. The CI workflow only checks that the app builds; nothing
+# else deployed it, so a push to GitHub never reached production.
+#
+# One-time setup, in this repo's Settings > Secrets and variables > Actions:
+#   GCP_SA_KEY      JSON key of a service account with roles Cloud Run Admin,
+#                   Cloud Build Editor, Artifact Registry Writer and Service Account User
+#   GCP_PROJECT_ID  the Google Cloud project id that owns the Cloud Run service
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+env:
+  SERVICE: elpino
+  REGION: us-central1
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      # Builds from source with Cloud Build, so no Dockerfile is needed. Runtime
+      # environment variables already set on the service are kept. NEXT_PUBLIC_*
+      # values are inlined at build time, so they are passed as build variables.
+      - uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ env.SERVICE }}
+          region: ${{ env.REGION }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          source: .
+          flags: --set-build-env-vars=NEXT_PUBLIC_GATEWAY_URL=https://api.elpino.chat
