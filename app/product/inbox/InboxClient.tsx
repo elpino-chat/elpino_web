@@ -210,7 +210,7 @@ function Desk({ t }: { t: T }) {
                 <div key={i} className="flex flex-row-reverse items-end gap-2" style={{ animation: "elpino-rv-pop .35s both" }}>
                   {l.from === "ai"
                     // eslint-disable-next-line @next/next/no-img-element
-                    ? <img src="/icon.png" alt="" className="size-7 shrink-0 rounded-full bg-white object-contain p-0.5" />
+                    ? <img src="/images/contact-support-sloth.png" alt="" className="size-7 shrink-0 rounded-full bg-white object-cover object-top" />
                     : <span className="grid size-7 shrink-0 place-items-center rounded-full text-[10px] font-bold" style={{ backgroundColor: GREEN }}>P</span>}
                   <div className="max-w-[80%] rounded-2xl bg-[#363636] px-3.5 py-2.5 leading-[1.5]"><span className="mb-0.5 block text-[10px] font-medium text-white/45">{l.from === "ai" ? t("inbox.desk.elpinoAi", "Elpino AI") : t("inbox.desk.priyaTeam", "Priya · team")}</span>{l.text}</div>
                 </div>

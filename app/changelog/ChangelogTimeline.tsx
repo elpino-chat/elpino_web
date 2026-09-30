@@ -335,7 +335,7 @@ export function ChangelogTimeline() {
           {/* Latest release, as the "next departure" board */}
           <a href="#line" className="group relative animate-[elpino-focus_0.9s_ease-out_0.3s_both] rounded-[24px] border-2 border-[#11120f] bg-[#11120f] p-6 text-[#fff8ec] transition duration-300 hover:-translate-y-1.5 hover:-rotate-[0.6deg]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/icon.png" alt="" className="absolute -right-4 -top-6 h-16 w-16 rotate-6 rounded-full border-2 border-[#11120f] bg-white object-contain p-1.5" />
+            <img src="/images/changelog-sloth.png" alt="" className="absolute -right-4 -top-6 h-16 w-16 rotate-6 rounded-full border-2 border-[#11120f] bg-white object-cover object-top" />
             <p className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-[#ffd84d]">Latest departure</p>
             <p className="mt-3 font-mono text-4xl font-bold tracking-[-0.03em]">{latest.version}</p>
             <p className="mt-2 text-lg leading-6">{latest.type}</p>
@@ -385,7 +385,7 @@ export function ChangelogTimeline() {
             {/* the train */}
             <div aria-hidden="true" className="absolute left-[15px] z-20 -translate-x-1/2 -translate-y-1/2 transition-[top] duration-200 ease-out md:left-1/2" style={{ top: trainTop }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/icon.png" alt="" className="h-12 w-12 rounded-full border-2 border-[#11120f] bg-white object-contain p-1" />
+              <img src="/images/changelog-sloth.png" alt="" className="h-12 w-12 rounded-full border-2 border-[#11120f] bg-white object-cover object-top" />
             </div>
 
             <ol className="relative">

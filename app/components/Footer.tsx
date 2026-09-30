@@ -68,7 +68,7 @@ export function Footer({ editorial = false }: { editorial?: boolean }) {
           </div>
           {/* peek-a-boo */}
           <div aria-hidden="true" className="pointer-events-none absolute -bottom-1 right-8 hidden h-40 w-40 animate-[elpino-peek_7s_cubic-bezier(0.3,1.3,0.5,1)_infinite] sm:block lg:right-20 lg:h-52 lg:w-52">
-            <Image src="/icon.png" alt="" width={208} height={208} className="h-full w-full rounded-full border-2 border-[#11120f] bg-white object-contain p-4" />
+            <Image src="/images/community-sloths.png" alt="Elpino sloths working together" width={1448} height={1086} className="h-full w-full rounded-full border-2 border-[#11120f] bg-white object-cover object-center" />
           </div>
         </div>
       </div>

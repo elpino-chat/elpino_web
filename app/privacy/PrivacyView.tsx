@@ -299,7 +299,7 @@ export function PrivacyView() {
           <div className="mx-auto flex h-14 max-w-[1300px] items-center gap-4 px-5 sm:px-8">
             <Link href="/" aria-label="Elpino home" className="flex shrink-0 items-center gap-2">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/icon.png" alt="" className="h-8 w-8 rounded-full border-2 border-[#11120f] bg-white object-contain p-0.5" />
+              <img src="/images/privacy-sloth.png" alt="" className="h-8 w-8 rounded-full border-2 border-[#11120f] bg-white object-cover object-top" />
               <span className="hidden text-[15px] font-semibold sm:inline">{t("privacyPage.shortTitle", "Privacy")}</span>
             </Link>
             <span className="hidden h-5 w-px bg-black/15 sm:block" />

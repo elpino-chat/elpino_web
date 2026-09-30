@@ -191,7 +191,7 @@ export function FaqClient({ categories }: { categories: FaqCategory[] }) {
           <div className={`${card} relative mx-auto max-w-6xl overflow-hidden px-6 py-14 text-center text-white sm:px-12`} style={{ backgroundColor: BLUE }}>
             <div aria-hidden="true" className="absolute inset-0 opacity-[0.16]" style={dots} />
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/icon.png" alt="" className="relative mx-auto size-20 rounded-full border-2 border-[#11120f] bg-white object-contain p-1.5" style={{ animation: "elpino-float 4.5s ease-in-out infinite" }} />
+            <img src="/images/help-center-sloth.png" alt="A helpful sloth with answers" className="relative mx-auto size-20 rounded-full border-2 border-[#11120f] bg-white object-cover object-top" style={{ animation: "elpino-float 4.5s ease-in-out infinite" }} />
             <h2 className="relative mx-auto mt-5 max-w-2xl text-[clamp(2.1rem,4.8vw,3.6rem)] font-semibold leading-[1.03] tracking-[-0.045em]">Still have a question?</h2>
             <p className="relative mx-auto mt-4 max-w-lg text-lg text-white/90">Ask Elpino in the chat bubble on this page, or start free and try it yourself.</p>
             <div className="relative mt-8 flex flex-wrap justify-center gap-3">
