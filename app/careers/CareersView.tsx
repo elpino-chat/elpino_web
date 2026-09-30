@@ -255,7 +255,7 @@ export function CareersView() {
             <div className="absolute left-1/2 top-[-130px] flex origin-top -translate-x-1/2 animate-[elpino-swing_5s_ease-in-out_infinite_alternate] flex-col items-center">
               <span className="h-[300px] w-[3px] rounded-full bg-[repeating-linear-gradient(to_bottom,#11120f_0_7px,transparent_7px_12px)]" />
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/icon.png" alt="" className="-mt-1 h-36 w-36 rounded-full border-2 border-[#11120f] bg-white object-contain p-3" />
+              <img src="/images/busy-teams-sloth-v2.png" alt="" className="-mt-1 h-36 w-36 rounded-full border-2 border-[#11120f] bg-white object-cover object-top" />
               <span className="mt-3 -rotate-3 rounded-full border-2 border-[#11120f] bg-[#ffd84d] px-3.5 py-1 font-mono text-[12px] font-bold uppercase tracking-[0.1em]">Now hiring</span>
             </div>
             {/* stickers that pop in beside the sloth */}

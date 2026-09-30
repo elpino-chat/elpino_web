@@ -104,7 +104,7 @@ function StickersArt() {
   return (
     <div className="relative h-full w-full">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/icon.png" alt="" className="absolute right-6 top-3 h-20 w-20 animate-[elpino-float_5s_ease-in-out_infinite] rounded-full border-2 border-[#11120f] bg-white object-contain p-1.5" />
+      <img src="/images/community-sloths.png" alt="" className="absolute right-6 top-3 h-20 w-20 animate-[elpino-float_5s_ease-in-out_infinite] rounded-full border-2 border-[#11120f] bg-white object-cover object-center" />
       {stickers.map(({ icon: Icon, label, bg, pos, tilt }, i) => (
         <div key={label} className={`absolute ${pos} ${tilt}`}>
           <div

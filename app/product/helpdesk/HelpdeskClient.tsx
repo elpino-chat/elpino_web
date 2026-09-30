@@ -467,7 +467,7 @@ function Closing({ t }: { t: T }) {
         <div className={`${card} relative mx-auto max-w-6xl overflow-hidden px-6 py-16 text-center text-white sm:px-12`} style={{ backgroundColor: BLUE }}>
           <div aria-hidden="true" className="absolute inset-0 opacity-[0.16]" style={{ backgroundImage: "radial-gradient(#000 1.2px, transparent 1.2px)", backgroundSize: "16px 16px" }} />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/icon.png" alt="" className="relative mx-auto size-20 rounded-full border-2 border-[#11120f] bg-white object-contain p-1.5" style={{ animation: "elpino-float 4.5s ease-in-out infinite" }} />
+          <img src="/images/contact-support-sloth.png" alt="A support sloth ready to help" className="relative mx-auto size-20 rounded-full border-2 border-[#11120f] bg-white object-cover object-top" style={{ animation: "elpino-float 4.5s ease-in-out infinite" }} />
           <h2 className="relative mx-auto mt-5 max-w-3xl text-[clamp(2.3rem,5.4vw,4.4rem)] font-semibold leading-[1.02] tracking-[-0.05em]">{t("helpdesk.closing.title", "Give your customers an answer before they finish typing.")}</h2>
           <div className="relative mt-8 flex flex-wrap justify-center gap-3">
             <Link href="/signup" className="inline-flex h-13 items-center gap-2 rounded-full border-2 border-[#11120f] px-8 font-semibold text-[#11120f] transition hover:-translate-y-0.5" style={{ backgroundColor: YELLOW }}>{t("helpdesk.closing.ctaStart", "Start free")} <ArrowRight size={16} /></Link>

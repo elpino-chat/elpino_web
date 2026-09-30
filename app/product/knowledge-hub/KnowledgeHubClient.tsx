@@ -152,7 +152,7 @@ function Playground({ t }: { t: T }) {
           <div className="relative">
             {searching && <span aria-hidden="true" className="absolute -inset-3 rounded-full border-2 border-dashed border-[#7060bd]" style={{ animation: "elpino-orbit 3s linear infinite" }} />}
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/icon.png" alt="" className="relative size-24 rounded-full border-2 border-[#11120f] bg-white object-contain p-1.5" style={{ animation: "elpino-float 4s ease-in-out infinite" }} />
+            <img src="/images/help-center-sloth.png" alt="A sloth learning from the knowledge hub" className="relative size-24 rounded-full border-2 border-[#11120f] bg-white object-cover object-top" style={{ animation: "elpino-float 4s ease-in-out infinite" }} />
           </div>
           <p className="text-lg font-semibold tracking-tight">{t("knowledgeHub.playground.elpinoAi", "Elpino AI")}</p>
           <span className={`${mono} inline-flex items-center gap-2 rounded-full border-2 border-[#11120f] px-3 py-1.5 text-[10px] text-white`} style={{ backgroundColor: phase < 2 ? "#8a8676" : searching ? PURPLE : sc.hit ? GREEN : ORANGE }}>
