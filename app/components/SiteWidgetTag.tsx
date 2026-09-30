@@ -36,6 +36,13 @@ const EXCLUDED_PREFIXES = [
 // whatever's running locally instead of production's cdn.elpino.chat.
 const TAG_SRC = process.env.NODE_ENV === "development" ? "/tag.js" : "https://cdn.elpino.chat/tag.js";
 
+// Production's site key is only valid for elpino.chat. Local dev uses its own,
+// registered for localhost by scripts/seed-dev-widget.sh.
+const SITE_KEY =
+  process.env.NODE_ENV === "development"
+    ? (process.env.NEXT_PUBLIC_WIDGET_SITE_KEY ?? "rz_site_devlocalhost00000000000000")
+    : "rz_site_22006bb0f7f000862ef24b9f240420";
+
 // Lets the widget recognise a logged-in visitor so the AI can look up their
 // account without asking who they are. tag.js reads ElpinoSettings once when
 // it loads and calls getIdentityToken whenever the chat asks, so this has to
@@ -62,7 +69,7 @@ export function SiteWidgetTag() {
   return (
     <Script
       src={TAG_SRC}
-      data-site-key="rz_site_22006bb0f7f000862ef24b9f240420"
+      data-site-key={SITE_KEY}
       strategy="afterInteractive"
     />
   );
