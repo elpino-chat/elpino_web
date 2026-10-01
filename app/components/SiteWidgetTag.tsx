@@ -29,6 +29,8 @@ declare global {
 const EXCLUDED_PREFIXES = [
   "/dashboard",
   "/widget",
+  // The demo page loads its own widget, wired to the visitor's website, and must not also show Elpino's.
+  "/demo",
 ];
 
 // Same origin as tag.js/route.ts's own dev/prod split: in local dev, load the
