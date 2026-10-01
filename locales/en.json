@@ -5,7 +5,7 @@
     "login": "Log in",
     "goToDashboard": "Go to dashboard",
     "getStarted": "Get started",
-    "startFreeTrial": "Start free trial",
+    "startFreeTrial": "Start free",
     "groups": {
       "product": "Product",
       "solutions": "Solutions",
@@ -312,7 +312,7 @@
       },
       "emailPlaceholder": "Enter your work email",
       "emailLabel": "Email address",
-      "ctaSignUp": "Start free trial",
+      "ctaSignUp": "Start free",
       "ctaDemo": "View demo",
       "stage": {
         "step0": "Reading the question",
@@ -722,8 +722,8 @@
         "skip": "Skip",
         "thanks": "Thanks, Maya! Is there anything else I can help you with?"
       },
-      "eyebrow": "A place for every team",
-      "title": "Deliver real productivity for every team",
+      "eyebrow": "Built for trust",
+      "title": "Know who is asking, and see what the AI says",
       "cards": [
         {
           "tag": "Identity verification",
@@ -766,7 +766,7 @@
           "points": [
             "Leads captured right in the chat",
             "History and plan beside every contact",
-            "Synced with the CRM you already use"
+            "Synced with HubSpot"
           ]
         },
         {
@@ -801,7 +801,7 @@
       "perMonth": "Per month",
       "perYearLabel": "Per year",
       "compareWith": "Compare with",
-      "footnote": "Public list prices in USD, checked 1 October 2026, annual billing where shown, for the same number of seats and AI conversations on every product. Excludes taxes, add-ons and enterprise discounts. Intercom and Zendesk charge only for conversations the AI resolves; Elpino charges for every AI conversation it handles, resolved or not. This comparison assumes every AI conversation is resolved, which is the most those two would bill. Elpino: Starter plan on annual billing ($10 a month, $7 of AI credit included), unlimited seats, and AI credit topped up at up to $0.03 a conversation.",
+      "footnote": "Public list prices in USD, checked 1 October 2026 (Zendesk Suite Team, the first Zendesk tier with AI agents; Intercom Essential; Crisp Mini, Essentials or Plus by team size), annual billing where shown, for the same number of seats and AI conversations on every product. Excludes taxes, add-ons and enterprise discounts. Intercom and Zendesk charge only for conversations the AI resolves; Elpino charges for every AI conversation it handles, resolved or not. This comparison assumes every AI conversation is resolved, which is the most those two would bill. Elpino: Starter plan on annual billing ($10 a month, $7 of AI credit included), unlimited seats, and AI credit topped up at up to $0.03 a conversation.",
       "cta": "See pricing"
     },
     "saved": {
@@ -1532,7 +1532,7 @@
     "copyright": "© {year} Elpino Inc. All rights reserved.",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
-    "security": "Security"
+    "security": "Security policy"
   },
   "aiAgent": {
     "hero": {

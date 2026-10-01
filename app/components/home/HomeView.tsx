@@ -97,7 +97,7 @@ function HeroSignup({ t }: { t: T }) {
         className="h-12 min-w-0 flex-1 bg-white px-4 text-[#11120f] outline-none placeholder:text-[#11120f]/45"
       />
       <button type="submit" className="inline-flex h-12 shrink-0 items-center justify-center gap-2 bg-black px-5 font-normal text-white transition hover:bg-[#262626] sm:px-6">
-        {t("home.hero.ctaSignUp", "Start free trial")} <ArrowRight size={17} />
+        {t("home.hero.ctaSignUp", "Start free")} <ArrowRight size={17} />
       </button>
     </form>
     <Link href="#product-tour" className="inline-flex h-12 shrink-0 items-center justify-center rounded-md border-2 border-[#11120f] bg-white px-5 text-[#11120f] transition hover:bg-[#f4f4f4]">
@@ -282,7 +282,7 @@ function TourVisual({ k, t, p }: { k: string; t: T; p: number }) {
     <div className="w-[min(100%,340px)] space-y-3">
       <div className="rounded-lg bg-[#11120f] p-3 font-mono text-[11px] leading-5 text-white/90" style={fade(0, 0.2)}>{"<script src=\"https://cdn.elpino.chat/tag.js\""}<br />{"        async></script>"}</div>
       <div className="flex flex-wrap items-center gap-2">
-        {["Website", "iOS", "Android", "React"].map((x, i) => <span key={x} className={chip} style={fade(0.35 + i * 0.12, 0.47 + i * 0.12)}>{x}</span>)}
+        {["Website", "Mobile web", "React"].map((x, i) => <span key={x} className={chip} style={fade(0.35 + i * 0.12, 0.47 + i * 0.12)}>{x}</span>)}
         <span className={`${chip} bg-[#1aa37a] text-white`} style={fade(0.88, 1)}>Live ✓</span>
       </div>
     </div>
@@ -601,14 +601,14 @@ function Teams({ t }: { t: T }) {
     { tag: "Identity verification", title: "Nobody gets in just by claiming a name", desc: "A name or an email typed into a chat proves nothing. Elpino opens private account data only for visitors your own website has signed in and vouched for, so a guest pretending to be someone else gets nothing.", note: "Payment and order lookups use only the verified email from your login, and logging out ends the chat session straight away.", points: ["Your site signs the user in, and Elpino trusts only that", "Guests can chat, but private tools stay locked", "Logging out ends the session at once"] },
     { tag: "AI replies", title: "See exactly what the AI replies", desc: "Every reply shows its working: the pages of your knowledge it drew on and the payment or order it looked up in your connected tools. Nothing the AI says is a black box.", note: "Watch the conversation live from the inbox and step in when a person is needed. Your team gets the full story, so nobody asks the customer to repeat themselves.", points: ["See the pages and tools behind each reply", "Read each reply as the customer sees it", "Join in one click with the full context"] },
     { tag: "Analytics", title: "See who visits and what they do", desc: "Web analytics sits right next to your inbox. Track visitors, page views, sessions, time on site and bounce rate for the last 7 days or any period, and compare it with the one before.", note: "Real visitors are counted apart from bots, so the numbers describe people. Filter by domain and save presets for the views you check most.", points: ["Visitors, page views, sessions and bounce rate", "Compare with the previous period", "Filter by domain and save your favourite views"] },
-    { tag: "Contacts", title: "Turn chats into contacts", desc: "Every visitor who shares an email or phone number lands in your built-in CRM, with their whole conversation history attached.", note: "Whenever you speak to someone you see who they are and what they asked before, so every reply feels personal.", points: ["Leads captured right in the chat", "History and plan beside every contact", "Synced with the CRM you already use"] },
+    { tag: "Contacts", title: "Turn chats into contacts", desc: "Every visitor who shares an email or phone number lands in your built-in CRM, with their whole conversation history attached.", note: "Whenever you speak to someone you see who they are and what they asked before, so every reply feels personal.", points: ["Leads captured right in the chat", "History and plan beside every contact", "Synced with HubSpot"] },
     { tag: "Plugins", title: "Plug into the tools you already use", desc: "Connect payments, stores, CRMs and ticketing tools in minutes, so every answer comes from live data instead of a guess.", note: "Elpino reads and acts through the plugins you switch on, and only with the permissions you give it.", points: ["Payments, orders and plans, looked up live", "Tickets filed in Asana or Trello", "Switch a plugin off at any time"] },
   ]).map((item, i) => ({ ...item, href: hrefs[i] }));
   return (
     <section className="bg-white px-5 pb-24 pt-20 sm:px-8 sm:pb-32 sm:pt-28 lg:px-16">
       <div>
-        <Rv><p className="text-[15px] text-[#11120f]/55">{t("home.teams.eyebrow", "A place for every team")}</p></Rv>
-        <Rv delay={80}><h2 className="mt-3 max-w-[22ch] text-[clamp(1.9rem,3.4vw,3rem)] font-normal leading-[1.08] tracking-[-0.035em] text-[#11120f]">{t("home.teams.title", "Deliver real productivity for every team")}</h2></Rv>
+        <Rv><p className="text-[15px] text-[#11120f]/55">{t("home.teams.eyebrow", "Built for trust")}</p></Rv>
+        <Rv delay={80}><h2 className="mt-3 max-w-[22ch] text-[clamp(1.9rem,3.4vw,3rem)] font-normal leading-[1.08] tracking-[-0.035em] text-[#11120f]">{t("home.teams.title", "Know who is asking, and see what the AI says")}</h2></Rv>
         <div className="mt-14 space-y-20 lg:mt-20 lg:space-y-28">
           {items.map((it, i) => (
             <div key={it.tag} className="grid items-center gap-10 lg:grid-cols-2 lg:gap-20">
@@ -640,6 +640,9 @@ function Teams({ t }: { t: T }) {
 // -------------------------------------------------------------- autopilot
 
 const money = (v: number) => `$${Math.round(v).toLocaleString("en-US")}`;
+// Cents only when there are some, so a receipt's lines add up to its total exactly.
+const moneyC = (v: number) => `$${v.toLocaleString("en-US", { minimumFractionDigits: Number.isInteger(v) ? 0 : 2, maximumFractionDigits: 2 })}`;
+const cents = (v: number) => Math.round(v * 100) / 100;
 
 // A number that glides to its new value instead of jumping.
 function useTween(target: number) {
@@ -672,7 +675,7 @@ type Line = { label: string; detail?: string; amount: string };
 type Bill = { name: string; month: number; lines: Line[] };
 
 // One month's bill from each helpdesk for the same team and the same AI work, itemised. Rivals' figures are their public
-// list prices (checked 1 Oct 2026, USD): Zendesk Support Team $19 per agent with 5 automated resolutions per agent
+// list prices (checked 1 Oct 2026, USD): Zendesk Suite Team $55 per agent (the first tier with AI agents) with 5 automated resolutions per agent
 // included then $1.50 each, Intercom Essential $29 per seat plus $0.99 per Fin outcome, Crisp Mini/Essentials/Plus flat
 // per workspace with about 5.6 cents per conversation beyond the AI credit the plan includes. Elpino has no commitment: a
 // team stays on the Starter plan ($10 a month on annual billing, $7 of AI credit included, seats unlimited) and tops up AI
@@ -680,13 +683,17 @@ type Bill = { name: string; month: number; lines: Line[] };
 function bills(seats: number, conversations: number): Record<Rival | "elpino", Bill> {
   const topUp = Math.max(0, conversations * 0.03 - 7);
   const crisp = seats <= 4 ? { name: "Mini", price: 45, included: 90 } : seats <= 10 ? { name: "Essentials", price: 95, included: 450 } : { name: "Plus", price: 295, included: 1350 };
-  const zAi = Math.max(0, conversations - 5 * seats) * 1.5;
-  const cAi = Math.max(0, conversations - crisp.included) * (5 / 90);
+  const cSeats = Math.max(0, seats - 20) * 10; // Plus includes 20 seats, $10 a month for each one after that
+  const zExtra = Math.max(0, conversations - 5 * seats);
+  const cExtra = Math.max(0, conversations - crisp.included);
+  const zAi = cents(zExtra * 1.5);
+  const cAi = cents(cExtra * (5 / 90));
+  const iAi = cents(conversations * 0.99);
   return {
     elpino: { name: "Elpino", month: 10 + topUp, lines: [{ label: "Starter plan", detail: "annual billing", amount: "$10" }, { label: "Seats", detail: "unlimited", amount: "$0" }, { label: "AI top-up", detail: topUp > 0 ? `${conversations.toLocaleString("en-US")} × $0.03, less $7 included` : "covered by the $7 included", amount: money(topUp) }] },
-    zendesk: { name: "Zendesk", month: seats * 19 + zAi, lines: [{ label: "Seats", detail: `${seats} × $19`, amount: money(seats * 19) }, { label: "AI", detail: `${Math.max(0, conversations - 5 * seats).toLocaleString("en-US")} × $1.50`, amount: money(zAi) }] },
-    intercom: { name: "Intercom", month: seats * 29 + conversations * 0.99, lines: [{ label: "Seats", detail: `${seats} × $29`, amount: money(seats * 29) }, { label: "AI", detail: `${conversations.toLocaleString("en-US")} × $0.99`, amount: money(conversations * 0.99) }] },
-    crisp: { name: "Crisp", month: crisp.price + cAi, lines: [{ label: `${crisp.name} plan`, amount: money(crisp.price) }, { label: "AI extra", detail: `${Math.max(0, conversations - crisp.included).toLocaleString("en-US")} × $0.06`, amount: money(cAi) }] },
+    zendesk: { name: "Zendesk", month: seats * 55 + zAi, lines: [{ label: "Suite Team seats", detail: `${seats} × $55`, amount: money(seats * 55) }, { label: "AI", detail: `${zExtra.toLocaleString("en-US")} beyond ${5 * seats} included × $1.50`, amount: moneyC(zAi) }] },
+    intercom: { name: "Intercom", month: seats * 29 + iAi, lines: [{ label: "Seats", detail: `${seats} × $29`, amount: money(seats * 29) }, { label: "AI", detail: `${conversations.toLocaleString("en-US")} × $0.99`, amount: moneyC(iAi) }] },
+    crisp: { name: "Crisp", month: crisp.price + cSeats + cAi, lines: [{ label: `${crisp.name} plan`, amount: money(crisp.price) }, ...(cSeats > 0 ? [{ label: "Extra seats", detail: `${seats - 20} × $10`, amount: money(cSeats) }] : []), { label: "AI extra", detail: `${cExtra.toLocaleString("en-US")} beyond ${crisp.included} included × $5 ÷ 90`, amount: moneyC(cAi) }] },
   };
 }
 
@@ -774,9 +781,9 @@ function Autopilot({ t }: { t: T }) {
                         </div>
                         <div className="mt-4 border-t border-dashed border-black/25 pt-3">
                           <p className="text-[10.5px] uppercase tracking-wider text-[#11120f]/55">{t("home.autopilot.perMonth", "Per month")}</p>
-                          <p className="text-[18px] font-semibold tabular-nums">{money(bill.month)}</p>
+                          <p className="text-[18px] font-semibold tabular-nums">{moneyC(bill.month)}</p>
                           <p className="mt-2 text-[10.5px] uppercase tracking-wider text-[#11120f]/55">{t("home.autopilot.perYearLabel", "Per year")}</p>
-                          <p className="text-[22px] font-semibold leading-none tabular-nums" style={{ color: own ? GREEN_INK : undefined }}>{money(bill.month * 12)}</p>
+                          <p className="text-[22px] font-semibold leading-none tabular-nums" style={{ color: own ? GREEN_INK : undefined }}>{moneyC(cents(bill.month * 12))}</p>
                         </div>
                       </div>
                     );
@@ -787,7 +794,7 @@ function Autopilot({ t }: { t: T }) {
                 </div>
               </div>
               <div className="mt-6 flex flex-wrap items-start justify-between gap-4">
-                <p className="max-w-xl text-[12.5px] leading-5 text-white/50">{t("home.autopilot.footnote", "Public list prices in USD, checked 1 October 2026, annual billing where shown, for the same number of seats and AI conversations on every product. Excludes taxes, add-ons and enterprise discounts. Intercom and Zendesk charge only for conversations the AI resolves; Elpino charges for every AI conversation it handles, resolved or not. This comparison assumes every AI conversation is resolved, which is the most those two would bill. Elpino: Starter plan on annual billing ($10 a month, $7 of AI credit included), unlimited seats, and AI credit topped up at up to $0.03 a conversation.")}</p>
+                <p className="max-w-xl text-[12.5px] leading-5 text-white/50">{t("home.autopilot.footnote", "Public list prices in USD, checked 1 October 2026 (Zendesk Suite Team, the first Zendesk tier with AI agents; Intercom Essential; Crisp Mini, Essentials or Plus by team size), annual billing where shown, for the same number of seats and AI conversations on every product. Excludes taxes, add-ons and enterprise discounts. Intercom and Zendesk charge only for conversations the AI resolves; Elpino charges for every AI conversation it handles, resolved or not. This comparison assumes every AI conversation is resolved, which is the most those two would bill. Elpino: Starter plan on annual billing ($10 a month, $7 of AI credit included), unlimited seats, and AI credit topped up at up to $0.03 a conversation.")}</p>
                 <Link href="/pricing" className="inline-flex shrink-0 items-center gap-2.5 text-[15px] text-white underline decoration-1 underline-offset-4 hover:opacity-75">{t("home.autopilot.cta", "See pricing")} <ArrowRight size={18} strokeWidth={1.5} /></Link>
               </div>
             </div>

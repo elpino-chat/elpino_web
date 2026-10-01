@@ -87,7 +87,7 @@ export function Footer({ editorial = false }: { editorial?: boolean }) {
           <div className="flex flex-wrap items-center gap-x-7 gap-y-3">
             <Link href="/privacy" className="transition hover:text-white hover:underline">{t("footer.privacy", "Privacy Policy")}</Link>
             <Link href="/terms" className="transition hover:text-white hover:underline">{t("footer.terms", "Terms of Service")}</Link>
-            <Link href="/security-policy" className="transition hover:text-white hover:underline">{t("footer.security", "Security")}</Link>
+            <Link href="/security-policy" className="transition hover:text-white hover:underline">{t("footer.security", "Security policy")}</Link>
             <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" })} className="inline-flex items-center gap-1.5 rounded-full border border-white/25 px-3.5 py-1.5 text-white/80 transition hover:border-white/70 hover:text-white">
               {t("footer.top", "Back to top")} <ArrowUp size={14} aria-hidden="true" />
             </button>
