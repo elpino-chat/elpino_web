@@ -4,24 +4,15 @@ import Image from "next/image";
 import {
   ArrowRight,
   BookOpen,
-  Bot,
   Check,
-  ChevronRight,
+  CheckCircle2,
   Code2,
-  FileText,
-  Globe,
-  Inbox,
-  KeyRound,
   LifeBuoy,
-  MessageSquareText,
-  Plug,
-  RefreshCw,
+  Lightbulb,
+  Rocket,
   ShieldCheck,
   Sparkles,
-  Terminal,
-  Users,
-  Webhook,
-  Zap,
+  Tag,
 } from "lucide-react";
 import { DocsSearch } from "@/app/components/docs/DocsSearch";
 import { AskAiMenu } from "@/app/components/docs/AskAiMenu";
@@ -32,269 +23,117 @@ import { InteractiveSloth } from "@/app/components/docs/InteractiveSloth";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://elpino.chat";
 
 export const metadata: Metadata = {
-  title: "Documentation",
+  title: "Step-by-step setup guide",
   description:
-    "Elpino developer documentation. Learn how to set up your AI support agent, install the chat widget, use the REST API, manage webhooks, and integrate with your stack.",
+    "Install the Elpino chat widget on your website, step by step: create your organization, add the widget, turn on identity verification, create your first site tag, paste the snippet, wire up your backend, verify everything works, and teach the AI with knowledge.",
   alternates: { canonical: `${SITE_URL}/docs` },
 };
 
 /* ─────────────── Navigation ─────────────── */
+const steps = [
+  { id: "step-1", label: "1. Create your organization" },
+  { id: "step-2", label: "2. Add the widget" },
+  { id: "step-3", label: "3. Complete the setup" },
+  { id: "step-4", label: "4. Identity verification & secret key" },
+  { id: "step-5", label: "5. Create your first tag" },
+  { id: "step-6", label: "6. Install the snippet" },
+  { id: "step-7", label: "7. Wire up your backend" },
+  { id: "step-8", label: "8. Publish and verify" },
+  { id: "step-9", label: "9. Teach the AI (add knowledge)" },
+] as const;
+
 const navigation = [
   {
-    title: "Get started",
-    links: [
-      ["Introduction", "#introduction"],
-      ["Quickstart", "#quickstart"],
-      ["How Elpino works", "#how-it-works"],
-      ["Core concepts", "#core-concepts"],
-    ],
+    title: "Step-by-step setup",
+    links: steps.map(({ id, label }) => [label, `#${id}`] as const),
   },
   {
-    title: "AI support",
+    title: "Go deeper",
     links: [
       ["Knowledge base", "/docs/knowledge"],
       ["AI answers", "/docs/ai-answers"],
-      ["Human handoff", "/docs/inbox"],
-      ["Confidence & fallbacks", "#confidence"],
-    ],
-  },
-  {
-    title: "Chat widget",
-    links: [
-      ["Install the widget", "/docs/chat-widget"],
-      ["Pre-chat form", "/dashboard/connect/prechat-form"],
-      ["Widget customization", "#widget-customization"],
+      ["Chat widget", "/docs/chat-widget"],
       ["Identity verification", "/docs/identity-verification"],
-    ],
-  },
-  {
-    title: "Team workspace",
-    links: [
-      ["Shared inbox", "/docs/inbox"],
-      ["Invite teammates", "/dashboard/settings/people"],
-      ["Availability", "/dashboard/settings/availability"],
-      ["Conversation routing", "#routing"],
-    ],
-  },
-  {
-    title: "API reference",
-    links: [
-      ["Overview", "/docs/api-webhooks"],
-      ["Authentication", "#api-auth"],
-      ["Conversations", "#api-conversations"],
-      ["Contacts", "#api-contacts"],
-      ["Knowledge", "#api-knowledge"],
-    ],
-  },
-  {
-    title: "SDKs & libraries",
-    links: [
-      ["JavaScript SDK", "#sdk-js"],
-      ["REST API libraries", "#sdk-rest"],
-      ["Widget SDK", "#sdk-widget"],
-    ],
-  },
-  {
-    title: "Webhooks",
-    links: [
-      ["Overview", "/docs/api-webhooks#webhooks"],
-      ["Event reference", "#webhook-events"],
-      ["Retry policy", "#webhook-retry"],
-    ],
-  },
-  {
-    title: "Connect",
-    links: [
+      ["Team inbox", "/docs/inbox"],
       ["Integrations", "/docs/integrations"],
-      ["Site tags", "#install-widget"],
-      ["Security", "/docs/security"],
-    ],
-  },
-  {
-    title: "Platform",
-    links: [
       ["Billing and usage", "/docs/billing"],
+      ["Security", "/docs/security"],
       ["Troubleshooting", "/docs/troubleshooting"],
+      ["API reference", "/docs/api-webhooks"],
     ],
   },
 ] as const;
 
-/* ─────────────── Hero cards ─────────────── */
-const cards = [
-  {
-    icon: Sparkles,
-    title: "Quickstart",
-    text: "Go from an empty workspace to your first AI-assisted customer conversation.",
-    href: "#quickstart",
-    tone: "bg-[#efe9ff] text-[#6f4bb2]",
-    bg: "bg-[#f3edfb]",
-  },
-  {
-    icon: BookOpen,
-    title: "Build your knowledge base",
-    text: "Add website pages, files, and help articles that Elpino can answer from.",
-    href: "/docs/knowledge",
-    tone: "bg-[#e8f4ee] text-[#28745a]",
-    bg: "bg-[#edf5ec]",
-  },
-  {
-    icon: MessageSquareText,
-    title: "Install the chat widget",
-    text: "Create a site tag, add one script to your website, and verify the connection.",
-    href: "/docs/chat-widget",
-    tone: "bg-[#e9f1ff] text-[#3569ad]",
-    bg: "bg-[#eaf2fb]",
-  },
-  {
-    icon: KeyRound,
-    title: "Verify customer identity",
-    text: "Safely identify signed-in users before looking up private account information.",
-    href: "/docs/identity-verification",
-    tone: "bg-[#fff0df] text-[#98622a]",
-    bg: "bg-[#fff1e3]",
-  },
-  {
-    icon: Code2,
-    title: "REST API reference",
-    text: "Full API reference for conversations, contacts, knowledge, and workspace management.",
-    href: "/docs/api-webhooks",
-    tone: "bg-[#ffe8e8] text-[#a83232]",
-    bg: "bg-[#fff5f5]",
-  },
-  {
-    icon: Webhook,
-    title: "Webhooks",
-    text: "Receive real-time event notifications when conversations, contacts, or messages change.",
-    href: "/docs/api-webhooks#webhooks",
-    tone: "bg-[#e8f8ff] text-[#2174a3]",
-    bg: "bg-[#edf8ff]",
-  },
-] as const;
-
-/* ─────────────── Quickstart steps ─────────────── */
-const steps = [
-  {
-    number: "01",
-    title: "Create your workspace",
-    text: "Sign up, name your workspace, choose your timezone, and tell Elpino what kind of business you support.",
-    href: "/signup",
-    action: "Create a workspace",
-  },
-  {
-    number: "02",
-    title: "Add trusted knowledge",
-    text: "Crawl your website, upload a document, add a URL, or write a help page. This is the information the AI uses for its answers.",
-    href: "/dashboard/knowledge",
-    action: "Open Knowledge",
-  },
-  {
-    number: "03",
-    title: "Install your site tag",
-    text: "Create a tag for your domain and paste the generated script before the closing head tag on every page where chat should appear.",
-    href: "#install-widget",
-    action: "View installation",
-  },
-  {
-    number: "04",
-    title: "Bring in your team",
-    text: "Invite teammates, set availability, and use the shared inbox for conversations that need a person.",
-    href: "/dashboard/settings/people",
-    action: "Invite teammates",
-  },
-] as const;
-
-/* ─────────────── API endpoint rows ─────────────── */
-const apiEndpoints = [
-  { method: "GET", path: "/v1/conversations", description: "List all conversations in your workspace" },
-  { method: "GET", path: "/v1/conversations/:id", description: "Retrieve a single conversation with messages" },
-  { method: "POST", path: "/v1/conversations/:id/messages", description: "Send a message to a conversation" },
-  { method: "PATCH", path: "/v1/conversations/:id", description: "Update conversation status, assignee, or tags" },
-  { method: "GET", path: "/v1/contacts", description: "List all contacts" },
-  { method: "POST", path: "/v1/contacts", description: "Create or upsert a contact by email" },
-  { method: "GET", path: "/v1/knowledge", description: "List all knowledge sources in the workspace" },
-  { method: "POST", path: "/v1/knowledge", description: "Add a new knowledge source (URL, file, or text)" },
-] as const;
-
-/* ─────────────── Webhook events ─────────────── */
-const webhookEvents = [
-  { event: "conversation.created", description: "A new conversation was started by a visitor or teammate." },
-  { event: "conversation.resolved", description: "A conversation was marked resolved." },
-  { event: "message.created", description: "A new message was sent in a conversation." },
-  { event: "contact.created", description: "A new contact was identified." },
-  { event: "contact.updated", description: "A contact's attributes were updated." },
-  { event: "knowledge.indexed", description: "A knowledge source finished indexing and is available to the AI." },
-] as const;
-
-/* ─────────────── SDK languages ─────────────── */
-const sdks = [
-  { lang: "JavaScript / Node.js", badge: "Official", color: "bg-yellow-400", href: "#sdk-js" },
-  { lang: "Python", badge: "Official", color: "bg-blue-500", href: "#sdk-rest" },
-  { lang: "PHP", badge: "Official", color: "bg-indigo-500", href: "#sdk-rest" },
-  { lang: "Ruby", badge: "Community", color: "bg-red-500", href: "#sdk-rest" },
-  { lang: "Go", badge: "Community", color: "bg-cyan-500", href: "#sdk-rest" },
-] as const;
-
-/* ─────────────── Code samples ─────────────── */
-function WidgetCodeSample() {
+/* ─────────────── Shared building blocks ─────────────── */
+function StepHeader({ id, icon: Icon, title, intro }: { id: string; icon: React.ComponentType<{ size?: number | string; className?: string }>; title: string; intro: string }) {
+  const number = id.replace("step-", "");
   return (
-    <div className="overflow-hidden rounded-xl border border-[#2d3038] bg-[#17191f] text-white shadow-[0_18px_45px_rgba(27,31,43,0.18)]">
-      <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
-        <span className="text-xs font-medium text-white/65">HTML</span>
-        <span className="rounded-md bg-white/8 px-2 py-1 text-[10px] text-white/50">Before &lt;/head&gt;</span>
+    <div className="max-w-3xl">
+      <div className="flex items-center gap-3">
+        <span className="flex size-11 items-center justify-center rounded-full bg-[#192016] text-sm font-bold text-white">{number}</span>
+        <span className="flex size-11 items-center justify-center rounded-full bg-[#efe9ff] text-[#6f4bb2]">
+          <Icon size={20} />
+        </span>
+        <h2 className="text-3xl font-semibold tracking-[-0.035em]">{title}</h2>
       </div>
-      <pre className="overflow-x-auto p-5 text-[13px] leading-7 text-[#d8e3ef]"><code>{`<script
-  async
-  src="https://elpino.chat/tag.js"
-  data-site-key="YOUR_SITE_KEY">
-</script>`}</code></pre>
+      <p className="mt-5 text-lg leading-8 text-black/70">{intro}</p>
     </div>
   );
 }
 
-function ApiAuthCodeSample() {
+function StepList({ children }: { children: React.ReactNode }) {
   return (
-    <div className="overflow-hidden rounded-xl border border-[#2d3038] bg-[#17191f] text-white shadow-[0_18px_45px_rgba(27,31,43,0.18)]">
-      <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
-        <span className="text-xs font-medium text-white/65">cURL</span>
-        <span className="rounded-md bg-white/8 px-2 py-1 text-[10px] text-white/50">Authentication</span>
-      </div>
-      <pre className="overflow-x-auto p-5 text-[13px] leading-7 text-[#d8e3ef]"><code>{`curl -X GET https://api.elpino.chat/v1/conversations \\
-  -H "Authorization: Bearer YOUR_API_KEY" \\
-  -H "Content-Type: application/json"`}</code></pre>
+    <ol className="mt-8 max-w-3xl space-y-3">
+      {Array.isArray(children)
+        ? children.map((child, index) => (
+            <li key={index} className="flex gap-4 rounded-2xl border border-black/10 bg-[#faf9f6] px-5 py-4">
+              <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#dceee8] text-xs font-bold text-[#1e6e4e]">{index + 1}</span>
+              <div className="min-w-0 flex-1 text-base leading-7 text-[#3b423c]">{child}</div>
+            </li>
+          ))
+        : children}
+    </ol>
+  );
+}
+
+function Screenshot({ src, alt, width, height, caption }: { src: string; alt: string; width: number; height: number; caption: string }) {
+  return (
+    <figure className="mt-8 overflow-hidden rounded-2xl border border-black/10 bg-[#faf9f6]">
+      <Image src={src} alt={alt} width={width} height={height} className="h-auto w-full" />
+      <figcaption className="border-t border-black/10 px-5 py-3 text-sm text-[#626c78]">{caption}</figcaption>
+    </figure>
+  );
+}
+
+function ResultBox({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="mt-8 flex max-w-3xl gap-3 rounded-2xl border border-[#cfe7dc] bg-[#eef7f1] p-5 text-sm leading-6 text-[#1e6e4e]">
+      <CheckCircle2 size={18} className="mt-0.5 shrink-0" />
+      <div>{children}</div>
     </div>
   );
 }
 
-function WebhookPayloadSample() {
+function CodeBlock({ title, code }: { title: string; code: string }) {
   return (
-    <div className="overflow-hidden rounded-xl border border-[#2d3038] bg-[#17191f] text-white shadow-[0_18px_45px_rgba(27,31,43,0.18)]">
+    <div className="mt-6 max-w-3xl overflow-hidden rounded-2xl border border-[#2d3038] bg-[#17191f] shadow-[0_18px_45px_rgba(27,31,43,0.18)]">
       <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
-        <span className="text-xs font-medium text-white/65">JSON</span>
-        <span className="rounded-md bg-white/8 px-2 py-1 text-[10px] text-white/50">Webhook payload</span>
+        <span className="text-xs font-medium text-white/65">{title}</span>
+        <span className="rounded-md bg-white/8 px-2 py-1 text-[10px] text-white/50">Copy-paste ready</span>
       </div>
-      <pre className="overflow-x-auto p-5 text-[13px] leading-7 text-[#d8e3ef]"><code>{`{
-  "event": "message.created",
-  "created_at": "2024-11-14T10:32:00Z",
-  "data": {
-    "conversation_id": "conv_abc123",
-    "message_id": "msg_xyz789",
-    "from": "visitor",
-    "body": "Hi, how do I reset my password?"
-  },
-  "workspace_id": "ws_elpino01"
-}`}</code></pre>
+      <pre className="overflow-x-auto p-5 text-[13px] leading-7 text-[#d8e3ef]"><code>{code}</code></pre>
     </div>
   );
 }
 
-/* ─────────────── Method badge helper ─────────────── */
-const methodColor: Record<string, string> = {
-  GET: "bg-[#dceee8] text-[#1e6e4e]",
-  POST: "bg-[#e8f1ff] text-[#2a5cbd]",
-  PATCH: "bg-[#fff3dc] text-[#8a5d12]",
-  PUT: "bg-[#f0e8ff] text-[#5e3dad]",
-  DELETE: "bg-[#ffe8e8] text-[#a83232]",
-};
+function TipBox({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="mt-8 flex max-w-3xl gap-3 rounded-2xl border border-[#e5d9fb] bg-[#f6f1fe] p-5 text-sm leading-6 text-[#5f4c79]">
+      <Lightbulb size={18} className="mt-0.5 shrink-0" />
+      <div>{children}</div>
+    </div>
+  );
+}
 
 /* ─────────────── Page ─────────────── */
 export default function DocsPage() {
@@ -335,8 +174,7 @@ export default function DocsPage() {
             <Link href="/docs" aria-current="page" className="border-b border-black px-3 py-1.5 text-black">Help center</Link>
             <Link href="/docs/identity-verification" className="transition hover:text-black">Identity verification</Link>
             <Link href="/docs/api-webhooks" className="transition hover:text-black">API reference</Link>
-            <Link href="#sdk-js" className="transition hover:text-black">SDKs</Link>
-            <Link href="/docs/api-webhooks#webhooks" className="transition hover:text-black">Webhooks</Link>
+            <Link href="/docs/troubleshooting" className="transition hover:text-black">Troubleshooting</Link>
             <Link href="/changelog" className="transition hover:text-black">Changelog</Link>
           </nav>
           <nav className="flex items-center gap-5" aria-label="Elpino resources">
@@ -346,20 +184,11 @@ export default function DocsPage() {
         </div>
       </div>
 
-      {/* ── Mobile scroll nav ── */}
+      {/* ── Mobile step nav ── */}
       <div className="border-b border-black/10 bg-white px-5 py-3 lg:hidden">
-        <nav aria-label="Documentation topics" className="mx-auto flex max-w-3xl gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {[
-            ["Start here", "#quickstart"],
-            ["Knowledge", "/docs/knowledge"],
-            ["Install widget", "/docs/chat-widget"],
-            ["Inbox", "/docs/inbox"],
-            ["API", "/docs/api-webhooks"],
-            ["Webhooks", "/docs/api-webhooks#webhooks"],
-            ["SDKs", "#sdk-js"],
-            ["Security", "/docs/security"],
-          ].map(([label, href], index) => (
-            <Link key={label} href={href} className={`shrink-0 rounded-full px-3.5 py-2 text-xs font-medium ${index === 0 ? "bg-[#192016] text-white" : "border border-black/10 bg-white text-[#59615a]"}`}>
+        <nav aria-label="Setup steps" className="mx-auto flex max-w-3xl gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {steps.map(({ id, label }, index) => (
+            <Link key={id} href={`#${id}`} className={`shrink-0 rounded-full px-3.5 py-2 text-xs font-medium ${index === 0 ? "bg-[#192016] text-white" : "border border-black/10 bg-white text-[#59615a]"}`}>
               {label}
             </Link>
           ))}
@@ -371,16 +200,16 @@ export default function DocsPage() {
 
         {/* Left sidebar */}
         <aside className="hidden border-r border-black/30 bg-white px-5 py-9 lg:block">
-          <nav className="sticky top-[132px] space-y-5" aria-label="Documentation navigation">
+          <nav className="sticky top-[132px] space-y-4" aria-label="Documentation navigation">
             {navigation.map((group) => (
               <div key={group.title}>
-                <p className="mb-1 px-0 text-[10px] font-bold uppercase tracking-[0.12em] text-[#59615a]">{group.title}</p>
-                <ul className="space-y-[0.5px]">
-                  {group.links.map(([label, href], index) => (
+                <p className="mb-1.5 px-0 text-[10px] font-bold uppercase tracking-[0.12em] text-[#59615a]">{group.title}</p>
+                <ul className="space-y-0.5">
+                  {group.links.map(([label, href]) => (
                     <li key={`${group.title}-${label}`}>
                       <Link
                         href={href}
-                        className={`block rounded-lg px-3 py-2 text-sm transition ${group.title === "Get started" && index === 0 ? "font-bold text-black" : "text-[#575d56] hover:bg-white hover:text-black"}`}
+                        className="block rounded-lg px-3 py-1.5 text-sm leading-5 text-[#575d56] transition hover:bg-black/[0.03] hover:text-black"
                       >
                         {label}
                       </Link>
@@ -406,487 +235,416 @@ export default function DocsPage() {
         {/* ── Main content ── */}
         <main className="min-w-0 bg-white px-5 py-6 sm:px-12">
 
-          {/* ── Introduction ── */}
-          <section id="introduction" className="scroll-mt-40 py-0 text-black/90">
+          {/* ── Hero ── */}
+          <section id="overview" className="scroll-mt-40 py-0 text-black/90">
             <div className="grid items-end gap-8 lg:grid-cols-[minmax(0,1fr)_220px]">
               <div>
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-black/[0.03] px-3 py-1 text-xs font-medium text-black/70">
-                  <Sparkles size={12} />Elpino documentation
+                  <Sparkles size={12} />Elpino setup guide
                 </span>
-                <h1 className="mt-5 max-w-2xl text-[clamp(2.5rem,6vw,4.5rem)] font-medium leading-[1.02] tracking-[-0.055em]">Build better customer support.</h1>
-                <p className="mt-6 max-w-2xl text-lg leading-8 text-black/70">Set up the AI, teach it from your knowledge, install the chat widget, and bring your team into one shared inbox. Full API, webhooks, and SDKs for every integration.</p>
+                <h1 className="mt-5 max-w-2xl text-[clamp(2.5rem,6vw,4.5rem)] font-medium leading-[1.02] tracking-[-0.055em]">Install Elpino on your website, step by step.</h1>
+                <p className="mt-6 max-w-2xl text-lg leading-8 text-black/70">Follow the nine steps below in order. Each one tells you exactly what to click, what to copy and paste, and what you should see when it worked — no guessing.</p>
                 <div className="mt-8 flex flex-wrap gap-3">
-                  <Link href="#quickstart" className="inline-flex h-11 items-center gap-2 rounded-full bg-[#bf91ff] px-5 text-sm font-semibold text-black transition hover:bg-[#cfaeff]">
-                    Start the quickstart <ArrowRight size={15} />
-                  </Link>
-                  <Link href="#api-overview" className="inline-flex h-11 items-center gap-2 rounded-full border border-black/20 px-5 text-sm font-medium text-black transition hover:bg-black/5">
-                    API reference
+                  <Link href="#step-1" className="inline-flex h-11 items-center gap-2 rounded-full bg-[#bf91ff] px-5 text-sm font-semibold text-black transition hover:bg-[#cfaeff]">
+                    Start with step 1 <ArrowRight size={15} />
                   </Link>
                   <Link href="/dashboard" className="inline-flex h-11 items-center gap-2 rounded-full border border-black/20 px-5 text-sm font-medium text-black transition hover:bg-black/5">
                     Open dashboard
                   </Link>
                 </div>
+                <p className="mt-6 max-w-2xl text-sm leading-6 text-[#626c78]">
+                  <strong className="text-[#313943]">Before you start:</strong> all you need is a live website and about 15 minutes. If your site has user logins, you&apos;ll also need access to its backend code for steps 4 and 7.
+                </p>
               </div>
               <InteractiveSloth />
             </div>
-          </section>
 
-          {/* ── Hero cards ── */}
-          <section className="grid gap-4 border-b border-black/10 py-12 sm:grid-cols-2 lg:grid-cols-3">
-            {cards.map((card, index) => (
-              <Link
-                key={card.title}
-                href={card.href}
-                className={`group rounded-2xl border border-black/10 p-5 transition hover:-translate-y-1 hover:shadow-[0_16px_34px_rgba(25,32,22,0.10)] ${card.bg}`}
-              >
-                <span className={`flex size-10 items-center justify-center rounded-xl bg-white/80 ${card.tone.split(" ")[1]}`}>
-                  <card.icon size={19} />
-                </span>
-                <h2 className="mt-5 text-base font-semibold">{card.title}</h2>
-                <p className="mt-2 text-sm leading-6 text-[#667069]">{card.text}</p>
-                <span className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-[#7651b0]">
-                  Read guide <ArrowRight size={13} className="transition group-hover:translate-x-1" />
-                </span>
-              </Link>
-            ))}
-          </section>
-
-          {/* ── Quickstart ── */}
-          <section id="quickstart" className="scroll-mt-40 border-b border-[#e8eaed] py-14">
-            <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[#7058d5]">Quickstart</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em]">Your first conversation in four steps</h2>
-            <p className="mt-4 max-w-2xl text-base leading-7 text-[#626c78]">Set up the useful parts first. You can customize the widget, connect tools, and add advanced controls after your first test conversation works.</p>
-            <ol className="mt-9 space-y-3">
-              {steps.map((step) => (
-                <li key={step.number} className="group grid gap-3 rounded-2xl border border-black/10 bg-[#faf9f6] px-4 py-5 transition hover:border-[#bf91ff] hover:bg-[#f8f3ff] sm:grid-cols-[52px_1fr_auto] sm:items-start">
-                  <span className="flex size-10 items-center justify-center rounded-full bg-[#192016] font-mono text-xs font-semibold text-white">{step.number}</span>
-                  <div>
-                    <h3 className="font-semibold">{step.title}</h3>
-                    <p className="mt-1.5 text-sm leading-6 text-[#667069]">{step.text}</p>
-                  </div>
-                  <Link href={step.href} className="ml-[52px] inline-flex items-center gap-1 text-xs font-semibold text-[#7651b0] sm:ml-3 sm:mt-1">
-                    {step.action}<ChevronRight size={13} />
+            {/* Step overview strip */}
+            <ol className="mt-10 grid gap-2 sm:grid-cols-2">
+              {steps.map(({ id, label }) => (
+                <li key={id}>
+                  <Link href={`#${id}`} className="flex items-center gap-3 rounded-xl border border-black/10 px-4 py-3 text-sm transition hover:border-[#bf91ff] hover:bg-[#f8f3ff]">
+                    <Check size={14} className="shrink-0 text-[#2d8b66]" />
+                    {label}
                   </Link>
                 </li>
               ))}
             </ol>
           </section>
 
-          {/* ── How Elpino works ── */}
-          <section id="how-it-works" className="scroll-mt-40 border-b border-[#e8eaed] py-14">
-            <h2 className="text-3xl font-semibold tracking-[-0.035em]">How Elpino works</h2>
-            <p className="mt-4 max-w-2xl text-base leading-7 text-[#626c78]">Elpino combines a curated knowledge base, an AI reasoning layer, and a human inbox into a single platform. Conversations move fluidly between automated answers and live agents without restarting the context.</p>
-            <div className="mt-8 grid gap-4 sm:grid-cols-3">
-              {[
-                { icon: BookOpen, title: "Learn", text: "Elpino indexes only the knowledge you add to the workspace — website pages, uploaded documents, and help articles you write directly in the editor." },
-                { icon: Bot, title: "Answer", text: "The AI finds the most relevant sources and responds inside your chat widget. It cites its sources and signals confidence level, so agents can trust or escalate its answers." },
-                { icon: Users, title: "Hand off", text: "When the AI is uncertain or the customer requests a human, the full conversation thread transfers to your shared inbox with zero context loss." },
-              ].map((item, i) => (
-                <div key={item.title} className={`relative rounded-2xl p-5 ${["bg-[#dceee8]", "bg-[#e7ddf3]", "bg-[#fff1e3]"][i]}`}>
-                  <span className="text-[10px] font-bold text-black/40">0{i + 1}</span>
-                  <item.icon size={21} className="mt-5 text-[#192016]" />
-                  <h3 className="mt-4 font-semibold">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-[#5f685f]">{item.text}</p>
-                </div>
-              ))}
-            </div>
+          {/* ══════════ STEP 1 — Organization ══════════ */}
+          <section id="step-1" className="scroll-mt-40 border-b border-black/10 py-14">
+            <StepHeader
+              id="step-1"
+              icon={Sparkles}
+              title="Create your organization"
+              intro="Elpino keeps everything for one company in one organization (also called a workspace): your tags, knowledge, inbox, and keys. Start by creating yours."
+            />
+            <StepList>
+              <>Go to <Link href="/signup" className="font-semibold text-[#6b55d8] underline underline-offset-4">elpino.chat</Link> and click <strong className="text-[#313943]">Get started</strong> (top right).</>
+              <>Sign up with your name, work email, and a password, then confirm your email with the code or link we send you.</>
+              <>Create your organization: enter your <strong className="text-[#313943]">company name</strong>, your <strong className="text-[#313943]">website URL</strong>, and your <strong className="text-[#313943]">timezone</strong>.</>
+              <>You land straight in the Elpino <strong className="text-[#313943]">dashboard</strong>.</>
+            </StepList>
+            <ResultBox>
+              <strong>Done when:</strong> you are logged in and looking at your dashboard, with a setup guide in the bottom-right corner.
+            </ResultBox>
           </section>
 
-          {/* ── Core concepts ── */}
-          <section id="core-concepts" className="scroll-mt-40 border-b border-[#e8eaed] py-14">
-            <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[#59615a]">Core concepts</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em]">Key terms and how they connect</h2>
-            <p className="mt-4 text-base leading-7 text-[#626c78]">Understanding these six objects covers 90% of what you will work with in the dashboard and API.</p>
-            <dl className="mt-8 grid gap-4 sm:grid-cols-2">
-              {[
-                { term: "Workspace", def: "The top-level container for your team. Each workspace has its own site tags, knowledge base, inbox, and API keys." },
-                { term: "Site tag", def: "A unique identifier tied to a domain. The tag script loads the chat widget and routes conversations to the right workspace." },
-                { term: "Knowledge source", def: "Any content you add — a crawled URL, uploaded file, or hand-written article. The AI only answers from sources you approve." },
-                { term: "Conversation", def: "An exchange between a visitor (or contact) and Elpino (AI or human). Every message is stored with full context." },
-                { term: "Contact", def: "A person identified by email or ID. A contact can have multiple conversations and custom attributes." },
-                { term: "Teammate", def: "A user you invite to the workspace who can reply in the inbox, manage knowledge, and configure settings." },
-              ].map(({ term, def }) => (
-                <div key={term} className="rounded-xl border border-black/10 bg-[#faf9f7] p-4">
-                  <dt className="text-sm font-semibold">{term}</dt>
-                  <dd className="mt-1 text-sm leading-6 text-[#626c78]">{def}</dd>
-                </div>
-              ))}
-            </dl>
+          {/* ══════════ STEP 2 — Add the widget ══════════ */}
+          <section id="step-2" className="scroll-mt-40 border-b border-black/10 py-14">
+            <StepHeader
+              id="step-2"
+              icon={Rocket}
+              title="Add the widget"
+              intro="From your dashboard, start the widget install. Elpino walks you through it."
+            />
+            <StepList>
+              <>On the dashboard home, find the card that says <strong className="text-[#313943]">&ldquo;Install the Elpino chat widget&rdquo;</strong>.</>
+              <>Click the <strong className="text-[#313943]">Install widget &rarr;</strong> button on the right of that card.</>
+            </StepList>
+            <Screenshot
+              src="/images/docs/Screenshot_20261001_215332.png"
+              alt="Elpino dashboard with the Install widget button highlighted"
+              width={1487}
+              height={756}
+              caption="Dashboard home → the “Install the Elpino chat widget” card → press Install widget."
+            />
+            <ResultBox>
+              <strong>Done when:</strong> the widget setup flow opens and your onboarding progress starts being saved.
+            </ResultBox>
           </section>
 
-          {/* ── Confidence & fallbacks ── */}
-          <section id="confidence" className="scroll-mt-40 border-b border-[#e8eaed] py-14">
-            <h2 className="text-3xl font-semibold tracking-[-0.035em]">Confidence &amp; fallbacks</h2>
-            <p className="mt-4 text-base leading-7 text-[#626c78]">You can configure what happens when the AI is not confident enough to answer. Options include forwarding to a teammate, showing a custom fallback message, or collecting the visitor&apos;s email for follow-up.</p>
-            <div className="mt-7 grid gap-3 sm:grid-cols-3">
-              {[
-                { title: "Human handoff", text: "Route the conversation to an available teammate automatically.", icon: Users },
-                { title: "Custom message", text: "Show a pre-written response when no answer meets your confidence threshold.", icon: MessageSquareText },
-                { title: "Email capture", text: "Ask the visitor for their email so a teammate can follow up asynchronously.", icon: FileText },
-              ].map(({ title, text, icon: Icon }) => (
-                <div key={title} className="rounded-xl border border-black/10 bg-[#fafafa] p-4">
-                  <Icon size={17} className="text-[#7651b0]" />
-                  <h3 className="mt-3 text-sm font-semibold">{title}</h3>
-                  <p className="mt-1 text-sm leading-6 text-[#626c78]">{text}</p>
-                </div>
-              ))}
-            </div>
-            <Link href="/docs/ai-answers" className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-[#6b55d8]">
-              Full AI answers &amp; handoff guide <ArrowRight size={14} />
-            </Link>
+          {/* ══════════ STEP 3 — Complete the setup ══════════ */}
+          <section id="step-3" className="scroll-mt-40 border-b border-black/10 py-14">
+            <StepHeader
+              id="step-3"
+              icon={CheckCircle2}
+              title="Complete the setup"
+              intro="The setup asks a few quick questions and gets your workspace ready for its first conversation."
+            />
+            <StepList>
+              <>Answer each prompt: confirm your <strong className="text-[#313943]">website</strong>, give your <strong className="text-[#313943]">AI agent</strong> a name, and set the <strong className="text-[#313943]">greeting</strong> visitors will see.</>
+              <>Work through the rest of the checklist. Your answers save as you go — if you stop halfway, the <strong className="text-[#313943]">Setup guide</strong> button in the bottom-right corner remembers exactly where you left off (for example 2/5).</>
+              <>Come back any time and pick up from that same Setup guide button.</>
+            </StepList>
+            <TipBox>
+              This guide follows the same order as the setup checklist, so you can keep both open side by side.
+            </TipBox>
+            <ResultBox>
+              <strong>Done when:</strong> every checklist item is ticked — or you&apos;ve reached the &ldquo;install the tag&rdquo; item, which is the next step.
+            </ResultBox>
           </section>
 
-          {/* ── Widget customization ── */}
-          <section id="widget-customization" className="scroll-mt-40 border-b border-[#e8eaed] py-14">
-            <h2 className="text-3xl font-semibold tracking-[-0.035em]">Widget customization</h2>
-            <p className="mt-4 text-base leading-7 text-[#626c78]">Customize the widget&apos;s appearance, position, launcher text, and pre-chat form from <strong className="font-semibold text-[#313943]">Settings → Widget</strong>. Changes are applied immediately — no redeploy required.</p>
-            <div className="mt-7 grid gap-3 sm:grid-cols-2">
-              {[
-                { label: "Brand color", detail: "Match the widget launcher and header to your brand palette." },
-                { label: "Position", detail: "Place the widget in any corner of the screen. Offset from the edge with pixel values." },
-                { label: "Launcher text", detail: "Replace the default icon with a text button or a custom SVG." },
-                { label: "Pre-chat form", detail: "Collect name, email, or custom fields before the first message is sent." },
-                { label: "Language", detail: "Set a default language or let the widget auto-detect from the browser locale." },
-                { label: "Allowed domains", detail: "Restrict which domains can render the widget for a given site tag." },
-              ].map(({ label, detail }) => (
-                <div key={label} className="flex items-start gap-3 rounded-lg border border-black/10 p-4">
-                  <Check size={15} className="mt-0.5 shrink-0 text-[#2d8b66]" />
-                  <div>
-                    <p className="text-sm font-semibold">{label}</p>
-                    <p className="mt-0.5 text-xs leading-5 text-[#626c78]">{detail}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <Link href="/docs/chat-widget" className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-[#6b55d8]">
-              Full chat widget guide <ArrowRight size={14} />
-            </Link>
-          </section>
-
-          {/* ── Conversation routing ── */}
-          <section id="routing" className="scroll-mt-40 border-b border-[#e8eaed] py-14">
-            <h2 className="text-3xl font-semibold tracking-[-0.035em]">Conversation routing</h2>
-            <p className="mt-4 text-base leading-7 text-[#626c78]">Set rules to automatically assign incoming conversations based on availability, topic keywords, or the visitor&apos;s attributes. Routing rules execute in order; the first match wins.</p>
-            <div className="mt-7 space-y-3">
-              {[
-                { title: "Round robin", text: "Distribute new conversations evenly across all available teammates." },
-                { title: "Keyword routing", text: "Route conversations containing specific words (e.g. ‘refund’, ‘cancel’) to designated teammates or teams." },
-                { title: "Contact attribute routing", text: "Send conversations from contacts with a specific plan or region to the right specialist." },
-                { title: "Fallback", text: "If no rule matches, conversations land in a shared unassigned queue." },
-              ].map(({ title, text }) => (
-                <div key={title} className="rounded-xl border border-black/10 bg-[#faf9f6] p-4">
-                  <h3 className="text-sm font-semibold">{title}</h3>
-                  <p className="mt-1 text-sm leading-6 text-[#626c78]">{text}</p>
-                </div>
-              ))}
-            </div>
-            <Link href="/docs/inbox" className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-[#6b55d8]">
-              Full team inbox guide <ArrowRight size={14} />
-            </Link>
-          </section>
-
-          {/* ── API overview ── */}
-          <section id="api-overview" className="scroll-mt-40 border-b border-[#e8eaed] py-14">
-            <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[#a83232]">REST API</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em]">REST API reference</h2>
-            <p className="mt-4 text-base leading-7 text-[#626c78]">The Elpino REST API lets you read and write workspace data from your own servers. All endpoints use HTTPS, accept JSON, and return JSON. The base URL is <code className="rounded bg-[#f0f2f4] px-1.5 py-0.5 font-mono text-sm">https://api.elpino.chat/v1</code>.</p>
-
-            <div className="mt-3 flex gap-3 rounded-xl border border-[#d6e8fe] bg-[#eef4ff] p-4 text-sm leading-6 text-[#2a4f94]">
-              <Sparkles size={16} className="mt-0.5 shrink-0" />
-              <p>API keys are workspace-scoped. Generate and rotate them in <strong>Settings → API Keys</strong>. Never expose keys in client-side code.</p>
-            </div>
-          </section>
-
-          {/* ── API auth ── */}
-          <section id="api-auth" className="scroll-mt-40 border-b border-[#e8eaed] py-14">
-            <h2 className="text-3xl font-semibold tracking-[-0.035em]">Authentication</h2>
-            <p className="mt-4 text-base leading-7 text-[#626c78]">Authenticate every request by passing your API key in the <code className="rounded bg-[#f0f2f4] px-1.5 py-0.5 font-mono text-sm">Authorization</code> header as a Bearer token.</p>
-            <div className="mt-7"><ApiAuthCodeSample /></div>
-            <div className="mt-6 rounded-xl border border-[#f0dcae] bg-[#fff9e9] p-4 text-sm leading-6 text-[#695b37]">
-              <p><strong>Rate limits:</strong> The API allows up to <strong>120 requests per minute</strong> per workspace. Exceeding this limit returns a <code className="font-mono">429 Too Many Requests</code> response with a <code className="font-mono">Retry-After</code> header.</p>
-            </div>
-          </section>
-
-          {/* ── API endpoints ── */}
-          <section id="api-conversations" className="scroll-mt-40 border-b border-[#e8eaed] py-14">
-            <h2 className="text-3xl font-semibold tracking-[-0.035em]">Endpoint reference</h2>
-            <p className="mt-4 text-base leading-7 text-[#626c78]">Core endpoints across conversations, contacts, and knowledge. Full parameter and response schemas are available in the interactive API explorer.</p>
-            <div className="mt-7 overflow-hidden rounded-xl border border-black/10">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-black/10 bg-[#f5f5f3] text-left">
-                    <th className="px-4 py-3 font-semibold">Method</th>
-                    <th className="px-4 py-3 font-semibold">Endpoint</th>
-                    <th className="hidden px-4 py-3 font-semibold sm:table-cell">Description</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-black/5">
-                  {apiEndpoints.map(({ method, path, description }) => (
-                    <tr key={`${method}-${path}`} className="hover:bg-[#fafafa]">
-                      <td className="px-4 py-3">
-                        <span className={`inline-flex rounded-md px-2 py-0.5 font-mono text-xs font-semibold ${methodColor[method] ?? "bg-gray-100 text-gray-700"}`}>{method}</span>
-                      </td>
-                      <td className="px-4 py-3 font-mono text-xs text-[#3a3f4b]">{path}</td>
-                      <td className="hidden px-4 py-3 text-[#626c78] sm:table-cell">{description}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <Link href="/docs/api-webhooks" className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-[#6b55d8]">
-              View full API reference <ArrowRight size={14} />
-            </Link>
-          </section>
-
-          {/* ── SDKs ── */}
-          <section id="sdk-js" className="scroll-mt-40 border-b border-[#e8eaed] py-14">
-            <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[#7058d5]">SDKs &amp; libraries</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em]">Use your favourite language</h2>
-            <p className="mt-4 text-base leading-7 text-[#626c78]">Official SDKs wrap the REST API and handle authentication, retries, and pagination for you. Community-maintained libraries are available for additional runtimes.</p>
-            <div className="mt-7 grid gap-3 sm:grid-cols-2">
-              {sdks.map(({ lang, badge, color, href }) => (
-                <Link key={lang} href={href} className="group flex items-center justify-between rounded-xl border border-black/10 bg-[#fafafa] p-4 transition hover:border-[#bf91ff] hover:bg-[#f8f3ff]">
-                  <div className="flex items-center gap-3">
-                    <span className={`size-3 rounded-full ${color}`} />
-                    <span className="text-sm font-medium">{lang}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${badge === "Official" ? "bg-[#dceee8] text-[#1e6e4e]" : "bg-[#f0e8ff] text-[#5e3dad]"}`}>{badge}</span>
-                    <ChevronRight size={14} className="text-[#7651b0] transition group-hover:translate-x-0.5" />
-                  </div>
-                </Link>
-              ))}
-            </div>
-
-            <div className="mt-7">
-              <h3 className="text-lg font-semibold">JavaScript / Node.js</h3>
-              <p className="mt-2 text-sm leading-6 text-[#626c78]">Install the official SDK via npm:</p>
-              <div className="mt-4 overflow-hidden rounded-xl border border-[#2d3038] bg-[#17191f] text-white">
-                <div className="border-b border-white/10 px-4 py-3">
-                  <span className="text-xs font-medium text-white/65">Terminal</span>
-                </div>
-                <pre className="overflow-x-auto p-5 text-[13px] leading-7 text-[#d8e3ef]"><code>{`npm install @elpino/sdk
-
-# or with yarn
-yarn add @elpino/sdk`}</code></pre>
-              </div>
-              <div className="mt-4 overflow-hidden rounded-xl border border-[#2d3038] bg-[#17191f] text-white">
-                <div className="border-b border-white/10 px-4 py-3">
-                  <span className="text-xs font-medium text-white/65">JavaScript</span>
-                </div>
-                <pre className="overflow-x-auto p-5 text-[13px] leading-7 text-[#d8e3ef]"><code>{`import { ElpinoClient } from "@elpino/sdk";
-
-const elpino = new ElpinoClient({
-  apiKey: process.env.ELPINO_API_KEY,
-});
-
-const conversations = await elpino.conversations.list();
-console.log(conversations.data);`}</code></pre>
+          {/* ══════════ STEP 4 — Identity verification & secret key ══════════ */}
+          <section id="step-4" className="scroll-mt-40 border-b border-black/10 py-14">
+            <StepHeader
+              id="step-4"
+              icon={ShieldCheck}
+              title="Turn on identity verification and get the secret key"
+              intro="This step lets your own login system prove who is chatting — so nobody can pretend to be one of your customers just by typing their email. It also gives you the secret key your backend will need in step 7."
+            />
+            <StepList>
+              <>In the dashboard, find the <strong className="text-[#313943]">&ldquo;Verify signed-in customers&rdquo;</strong> card and click <strong className="text-[#313943]">Set up</strong>.</>
+              <>Switch <strong className="text-[#313943]">Identity verification</strong> <strong className="text-[#313943]">ON</strong>.</>
+              <>Click <strong className="text-[#313943]">Copy</strong> next to the <strong className="text-[#313943]">Identity secret</strong> — it starts with <code className="rounded bg-black/5 px-1 font-mono text-sm">elid_</code>.</>
+              <>Save it for step 7, where it goes into your backend <code className="rounded bg-black/5 px-1 font-mono text-sm">.env</code> file as <code className="rounded bg-black/5 px-1 font-mono text-sm">ELPINO_IDENTITY_SECRET</code>.</>
+            </StepList>
+            <Screenshot
+              src="/images/docs/Screenshot_20261001_215450.png"
+              alt="Verify signed-in customers card with the Set up button highlighted"
+              width={1487}
+              height={756}
+              caption="The “Verify signed-in customers” card → press Set up."
+            />
+            <Screenshot
+              src="/images/docs/Screenshot_20261001_215523.png"
+              alt="Identity verification toggle switched on with the identity secret below it"
+              width={1487}
+              height={697}
+              caption="Toggle Identity verification ON, then copy the elid_… secret."
+            />
+            <div className="mt-8 flex max-w-3xl gap-3 rounded-2xl border border-[#f0dcae] bg-[#fff9e9] p-5 text-sm leading-6 text-[#695b37]">
+              <ShieldCheck size={18} className="mt-0.5 shrink-0" />
+              <div>
+                <strong>This secret is for your server only.</strong> Anyone who has it can chat as any of your users. Never put it in HTML, frontend JavaScript, or a git commit. If it ever leaks, press <strong>Rotate</strong> next to it, then update your backend with the new value.
               </div>
             </div>
+            <ResultBox>
+              <strong>Done when:</strong> the toggle is ON and the <code className="rounded bg-black/5 px-1 font-mono text-sm">elid_…</code> secret is copied somewhere safe on your side.
+            </ResultBox>
           </section>
 
-          {/* ── Widget SDK ── */}
-          <section id="sdk-widget" className="scroll-mt-40 border-b border-[#e8eaed] py-14">
-            <h2 className="text-3xl font-semibold tracking-[-0.035em]">Widget JavaScript API</h2>
-            <p className="mt-4 text-base leading-7 text-[#626c78]">After the widget script loads, <code className="rounded bg-[#f0f2f4] px-1.5 py-0.5 font-mono text-sm">window.Elpino</code> is available. Use it to identify users, open or close the widget programmatically, and listen for events.</p>
-            <div className="mt-7 overflow-hidden rounded-xl border border-[#2d3038] bg-[#17191f] text-white">
-              <div className="border-b border-white/10 px-4 py-3">
-                <span className="text-xs font-medium text-white/65">JavaScript</span>
-              </div>
-              <pre className="overflow-x-auto p-5 text-[13px] leading-7 text-[#d8e3ef]"><code>{`// Identify a signed-in user
-window.Elpino("identify", {
-  user_id: "user_12345",
-  email: "jane@example.com",
-  name: "Jane Smith",
-  plan: "pro",
-});
+          {/* ══════════ STEP 5 — Tag manager ══════════ */}
+          <section id="step-5" className="scroll-mt-40 border-b border-black/10 py-14">
+            <StepHeader
+              id="step-5"
+              icon={Tag}
+              title="Create your first tag in Tag manager"
+              intro="A site tag connects one website to your workspace — and the chat bubble only appears on the domain you register here. So type your URL carefully."
+            />
+            <StepList>
+              <>Open <strong className="text-[#313943]">Website tags</strong> (the tag manager) from your dashboard.</>
+              <>Create your <strong className="text-[#313943]">first tag</strong>.</>
+              <>When asked for the website, enter your <strong className="text-[#313943]">website URL</strong> exactly as visitors see it — for example <code className="rounded bg-black/5 px-1 font-mono text-sm">https://yourdomain.com</code>. Use your real, live domain — not localhost.</>
+              <>Elpino creates the tag with a <strong className="text-[#313943]">public site key</strong> (starts with <code className="rounded bg-black/5 px-1 font-mono text-sm">rz_site_</code>). The status shows <strong className="text-[#313943]">Pending</strong> until the snippet is live on your site and verified.</>
+            </StepList>
+            <Screenshot
+              src="/images/docs/Screenshot_20261001_215450.png"
+              alt="Website tags table showing a tag with Pending status and its public rz_site_ key"
+              width={1487}
+              height={756}
+              caption="Tag manager: one tag per website. Status starts as Pending; the public key (rz_site_…) is what goes in the snippet."
+            />
+            <TipBox>
+              A workspace connects one website. To support another domain, create a separate workspace for it.
+            </TipBox>
+            <ResultBox>
+              <strong>Done when:</strong> your tag exists in the table with your correct domain and you can open its installation snippet.
+            </ResultBox>
+          </section>
 
-// Open the chat widget
-window.Elpino("open");
+          {/* ══════════ STEP 6 — Install the snippet ══════════ */}
+          <section id="step-6" className="scroll-mt-40 border-b border-black/10 py-14">
+            <StepHeader
+              id="step-6"
+              icon={Code2}
+              title="Install the snippet"
+              intro="This is the only code that makes the chat bubble appear. Each tag has its own snippet — open your tag in the Tag manager and copy it. It looks like this:"
+            />
+            <CodeBlock
+              title="HTML — paste before </head>"
+              code={`<script async src="https://cdn.elpino.chat/tag.js" data-site-key="rz_site_f37c5236bc635e2dcf24a03c3d4a16"></script>`}
+            />
+            <h3 className="mt-10 max-w-3xl text-xl font-semibold tracking-[-0.02em]">Installation steps</h3>
+            <StepList>
+              <>Copy the snippet above — from <strong className="text-[#313943]">your own</strong> Tag manager, so it carries your tag&apos;s key.</>
+              <>Paste it into <strong className="text-[#313943]">every page</strong> before <code className="rounded bg-black/5 px-1 font-mono text-sm">&lt;/head&gt;</code>.</>
+              <>Publish your website, then <strong className="text-[#313943]">verify the tag</strong> in the Tag manager.</>
+            </StepList>
+            <TipBox>
+              The <code className="rounded bg-black/5 px-1 font-mono text-sm">rz_site_…</code> key is public by design — it is visible in your page source anyway. It identifies your website; it is not a secret.
+            </TipBox>
 
-// Listen for conversation created
-window.Elpino("on", "conversation:created", (data) => {
-  console.log("New conversation:", data.conversation_id);
-});
-
-// Update custom attributes
-window.Elpino("update", { mrr: 299 });`}</code></pre>
+            <h3 className="mt-10 max-w-3xl text-xl font-semibold tracking-[-0.02em]">Have a Content-Security-Policy?</h3>
+            <p className="mt-3 max-w-3xl text-base leading-7 text-[#626c78]">
+              Add these to your existing policy — a strict CSP is enforced by your site, so this is the one thing we can&apos;t fix from our side. Without it the tag loads but the chat bubble silently never appears.
+            </p>
+            <CodeBlock
+              title="CSP — add to script-src / connect-src / frame-src"
+              code={`script-src https://cdn.elpino.chat;
+connect-src https://cdn.elpino.chat https://api.elpino.chat wss://api.elpino.chat;
+frame-src https://elpino-web-927489744703.europe-west1.run.app;`}
+            />
+            <div className="mt-4 max-w-3xl space-y-2 text-sm leading-6 text-[#626c78]">
+              <p>What each line allows, in plain English:</p>
+              <ul className="space-y-1">
+                <li className="flex gap-2"><code className="shrink-0 rounded bg-black/5 px-1 font-mono text-xs">script-src</code><span>lets the browser download <code className="rounded bg-black/5 px-1 font-mono text-xs">tag.js</code> (the widget loader).</span></li>
+                <li className="flex gap-2"><code className="shrink-0 rounded bg-black/5 px-1 font-mono text-xs">connect-src</code><span>lets the widget check your key, call Elpino&apos;s API, and keep the live chat connection open (that&apos;s the <code className="rounded bg-black/5 px-1 font-mono text-xs">wss://</code> websocket).</span></li>
+                <li className="flex gap-2"><code className="shrink-0 rounded bg-black/5 px-1 font-mono text-xs">frame-src</code><span>lets the chat window itself load — it runs inside an iframe.</span></li>
+              </ul>
             </div>
+            <ResultBox>
+              <strong>Done when:</strong> the page source of your <em>live</em> site shows the script tag with your key, and the tag is no longer &ldquo;Pending&rdquo; after you verify it.
+            </ResultBox>
           </section>
 
-          {/* ── Webhooks ── */}
-          <section id="webhooks" className="scroll-mt-40 border-b border-[#e8eaed] py-14">
-            <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[#2174a3]">Webhooks</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em]">React to events in real time</h2>
-            <p className="mt-4 text-base leading-7 text-[#626c78]">Register a webhook endpoint in <strong className="font-semibold text-[#313943]">Settings → Webhooks</strong>. Elpino will send an HTTP POST to your URL whenever a subscribed event occurs. Payloads are signed with HMAC-SHA256 using your webhook secret.</p>
-            <div className="mt-7"><WebhookPayloadSample /></div>
+          {/* ══════════ STEP 7 — Backend ══════════ */}
+          <section id="step-7" className="scroll-mt-40 border-b border-black/10 py-14">
+            <StepHeader
+              id="step-7"
+              icon={Code2}
+              title="Wire up your backend"
+              intro="Two things live on your server: the identity secret from step 4, and a small function that creates a short-lived token for each logged-in user. No login system on your site? Skip this step — the widget works fine for guest visitors without it."
+            />
 
-            <div className="mt-6 flex gap-3 rounded-xl border border-[#d6e8fe] bg-[#eef4ff] p-4 text-sm leading-6 text-[#2a4f94]">
-              <ShieldCheck size={16} className="mt-0.5 shrink-0" />
-              <p>Verify the <code className="font-mono">X-Elpino-Signature</code> header on every incoming webhook to ensure the payload originated from Elpino and has not been tampered with.</p>
+            <h3 className="mt-8 max-w-3xl text-xl font-semibold tracking-[-0.02em]">1. Store the secret in your backend environment</h3>
+            <p className="mt-3 max-w-3xl text-base leading-7 text-[#626c78]">Put the <code className="rounded bg-black/5 px-1 font-mono text-sm">elid_…</code> secret from step 4 into your server&apos;s <code className="rounded bg-black/5 px-1 font-mono text-sm">.env</code> file. Keep that file out of git:</p>
+            <CodeBlock
+              title=".env — server-side only"
+              code={`# Elpino identity secret — SERVER-SIDE ONLY. Never expose to the browser.
+ELPINO_IDENTITY_SECRET=elid_your_secret_here`}
+            />
+
+            <h3 className="mt-10 max-w-3xl text-xl font-semibold tracking-[-0.02em]">2. Sign a short-lived token for logged-in users</h3>
+            <p className="mt-3 max-w-3xl text-base leading-7 text-[#626c78]">Think of the token as a wristband your server hands to the browser: Elpino checks the signature before trusting anything it says. Create it in your existing login handler or page render. Node.js example (the full guide has Python, PHP, and Ruby versions):</p>
+            <CodeBlock
+              title="Node.js — npm install jsonwebtoken"
+              code={`import jwt from "jsonwebtoken";
+import { randomUUID } from "node:crypto";
+
+// Call this from your existing authenticated page or login handler.
+function elpinoIdentityToken(user) {
+  const now = Math.floor(Date.now() / 1000);
+  return jwt.sign({
+    sub: String(user.id),          // stable account ID, required
+    aud: "elpino-widget",
+    jti: randomUUID(),             // fresh for every token
+    iat: now,
+    exp: now + 300,                // five minutes at most
+    email: user.email,             // omit this line if the user has none
+    email_verified: user.emailVerified === true,
+    name: user.name,               // omit this line if the user has none
+  }, process.env.ELPINO_IDENTITY_SECRET, { algorithm: "HS256" });
+}`}
+            />
+
+            <h3 className="mt-10 max-w-3xl text-xl font-semibold tracking-[-0.02em]">3. Pass the token to the widget</h3>
+            <p className="mt-3 max-w-3xl text-base leading-7 text-[#626c78]">On pages where the visitor is logged in, pass the token from your server to the Elpino tag you installed in step 6:</p>
+            <CodeBlock
+              title="HTML — after the tag snippet"
+              code={`<!-- Use the token from your server's page data or login response -->
+<script>
+  window.$elpino = window.$elpino || [];
+  // elpinoToken is the signed string generated by your backend.
+  $elpino.push(["identify", { token: elpinoToken }]);
+</script>`}
+            />
+            <p className="mt-4 max-w-3xl text-base leading-7 text-[#626c78]">For single-page apps, tell the widget when login state changes without a reload:</p>
+            <CodeBlock
+              title="JavaScript — SPA login / logout"
+              code={`// After login, pass the fresh token included in your login response:
+$elpino.push(["identify", { token: loginResponse.elpinoToken }]);
+
+// On logout or account switch, immediately:
+$elpino.push(["logout"]);`}
+            />
+            <ResultBox>
+              <strong>Done when:</strong> your server returns a fresh token for logged-in users and your pages pass it to <code className="rounded bg-black/5 px-1 font-mono text-sm">$elpino</code>. Full details and token claims: <Link href="/docs/identity-verification" className="font-semibold text-[#6b55d8] underline underline-offset-4">Identity verification guide</Link>.
+            </ResultBox>
+          </section>
+
+          {/* ══════════ STEP 8 — Publish and verify ══════════ */}
+          <section id="step-8" className="scroll-mt-40 border-b border-black/10 py-14">
+            <StepHeader
+              id="step-8"
+              icon={CheckCircle2}
+              title="Publish and verify"
+              intro="Run through this checklist on your live site. Every item should pass before you call the install done."
+            />
+            <StepList>
+              <>Hard-refresh your live site (<strong className="text-[#313943]">Ctrl+Shift+R</strong>) — the Elpino chat bubble appears in the bottom corner.</>
+              <>Click the bubble — the widget opens with your greeting.</>
+              <>Send a test message — the Elpino AI replies.</>
+              <>Open your dashboard <strong className="text-[#313943]">Inbox</strong> — the test conversation is there.</>
+              <>Back in the <strong className="text-[#313943]">Tag manager</strong>, the tag&apos;s status is no longer &ldquo;Pending&rdquo;.</>
+            </StepList>
+            <Screenshot
+              src="/images/docs/Screenshot_20261001_234234.png"
+              alt="Website with the Elpino chat bubble in the bottom right corner"
+              width={1889}
+              height={981}
+              caption="1–2. The chat bubble on your live site; click it to open the widget."
+            />
+            <div className="mt-4 grid gap-4 md:grid-cols-2">
+              <Screenshot
+                src="/images/docs/Screenshot_20261001_234250.png"
+                alt="Elpino widget open with the greeting How can we help"
+                width={1889}
+                height={981}
+                caption="3. The widget opens with your greeting."
+              />
+              <Screenshot
+                src="/images/docs/Screenshot_20261001_233839.png"
+                alt="Elpino team inbox showing the test conversation"
+                width={1838}
+                height={885}
+                caption="4. The conversation appears in your Team Inbox."
+              />
             </div>
-          </section>
 
-          {/* ── Webhook events ── */}
-          <section id="webhook-events" className="scroll-mt-40 border-b border-[#e8eaed] py-14">
-            <h2 className="text-3xl font-semibold tracking-[-0.035em]">Webhook event reference</h2>
-            <p className="mt-4 text-base leading-7 text-[#626c78]">Subscribe to one or more events per endpoint. Each event payload includes a <code className="rounded bg-[#f0f2f4] px-1.5 py-0.5 font-mono text-sm">workspace_id</code>, <code className="rounded bg-[#f0f2f4] px-1.5 py-0.5 font-mono text-sm">event</code>, <code className="rounded bg-[#f0f2f4] px-1.5 py-0.5 font-mono text-sm">created_at</code>, and <code className="rounded bg-[#f0f2f4] px-1.5 py-0.5 font-mono text-sm">data</code> object.</p>
-            <div className="mt-7 overflow-hidden rounded-xl border border-black/10">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-black/10 bg-[#f5f5f3] text-left">
-                    <th className="px-4 py-3 font-semibold">Event</th>
-                    <th className="hidden px-4 py-3 font-semibold sm:table-cell">Description</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-black/5">
-                  {webhookEvents.map(({ event, description }) => (
-                    <tr key={event} className="hover:bg-[#fafafa]">
-                      <td className="px-4 py-3 font-mono text-xs text-[#3a3f4b]">{event}</td>
-                      <td className="hidden px-4 py-3 text-[#626c78] sm:table-cell">{description}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </section>
-
-          {/* ── Webhook retry ── */}
-          <section id="webhook-retry" className="scroll-mt-40 border-b border-[#e8eaed] py-14">
-            <h2 className="text-3xl font-semibold tracking-[-0.035em]">Retry policy</h2>
-            <p className="mt-4 text-base leading-7 text-[#626c78]">Elpino expects a <code className="rounded bg-[#f0f2f4] px-1.5 py-0.5 font-mono text-sm">2xx</code> HTTP response within <strong>10 seconds</strong>. If the endpoint times out or returns a non-2xx status, the delivery is retried with exponential backoff.</p>
-            <div className="mt-7 grid gap-3 sm:grid-cols-3">
+            <h3 className="mt-10 max-w-3xl text-xl font-semibold tracking-[-0.02em]">If something doesn&apos;t work</h3>
+            <div className="mt-6 max-w-3xl space-y-3">
               {[
-                { attempt: "1st retry", delay: "5 seconds", tone: "bg-[#f3f8f5]" },
-                { attempt: "2nd retry", delay: "30 seconds", tone: "bg-[#f3f8f5]" },
-                { attempt: "3rd retry", delay: "5 minutes", tone: "bg-[#f3f8f5]" },
-              ].map(({ attempt, delay, tone }) => (
-                <div key={attempt} className={`rounded-xl border border-[#dfe5e2] p-4 ${tone}`}>
-                  <p className="text-sm font-semibold">{attempt}</p>
-                  <p className="mt-1 font-mono text-sm text-[#626c78]">{delay} after failure</p>
+                { problem: "The bubble never appears.", fix: "Open your live page's source (right-click → View page source) and check that the script tag is there, before </head>, with your own rz_site_ key. Then make sure the domain in the Tag manager matches the domain you're browsing. Ad blockers can hide it too — test in a clean/incognito window." },
+                { problem: "The page source shows YOUR_SITE_KEY or a placeholder.", fix: "You copied the example snippet instead of your own. Open the Tag manager, open your tag, and copy its snippet." },
+                { problem: "The browser console shows “Tag is not allowed on this domain”.", fix: "The domain you're browsing isn't registered on the tag. Fix the tag's website URL in the Tag manager — no rebuild needed." },
+                { problem: "Your site sends a strict Content-Security-Policy.", fix: "Add the script-src, connect-src, and frame-src entries from step 6. Without them the tag loads but the bubble silently never appears." },
+                { problem: "Identity tokens are refused.", fix: "The widget falls back to guest chat and logs “[Elpino] Identity token was not accepted: <reason>” in the console. Check that ELPINO_IDENTITY_SECRET on your server matches the dashboard secret, then see the identity verification guide's troubleshooting table." },
+              ].map(({ problem, fix }) => (
+                <div key={problem} className="rounded-2xl border border-black/10 bg-[#faf9f6] p-5">
+                  <p className="font-semibold text-[#313943]">{problem}</p>
+                  <p className="mt-1.5 text-sm leading-6 text-[#626c78]">{fix}</p>
                 </div>
               ))}
             </div>
-            <p className="mt-4 text-sm text-[#626c78]">After three failed attempts, the event is marked as failed and logged in the webhook delivery history in your dashboard.</p>
-          </section>
-
-          {/* ── Integrations ── */}
-          <section id="integrations" className="scroll-mt-40 border-b border-[#e8eaed] py-14">
-            <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[#98622a]">Connect</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em]">Bring useful context into support</h2>
-            <p className="mt-4 text-base leading-7 text-[#626c78]">Connect supported payment and work tools from the Connect screen. Payment connections are used for read-only lookups, while follow-up tools can carry conversation context into your team&apos;s workflow.</p>
-
-            <div className="mt-7 grid gap-3 sm:grid-cols-2">
-              {[
-                { name: "Stripe", category: "Payments", desc: "Look up subscription status, recent charges, and invoice history directly from a conversation." },
-                { name: "Shopify", category: "Commerce", desc: "Pull order details and fulfilment status into the conversation panel without leaving the inbox." },
-                { name: "Slack", category: "Notifications", desc: "Get notified in Slack when a high-priority conversation is opened or escalated." },
-                { name: "Zapier", category: "Automation", desc: "Connect Elpino events to thousands of apps via Zapier triggers and actions." },
-                { name: "HubSpot", category: "CRM", desc: "Sync contact attributes and conversation history into HubSpot deals and contacts." },
-                { name: "Intercom", category: "Migration", desc: "Import historical conversations and contacts from Intercom into Elpino." },
-              ].map(({ name, category, desc }) => (
-                <div key={name} className="rounded-xl border border-[#e4e7ea] p-4">
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm font-semibold">{name}</p>
-                    <span className="rounded-full bg-[#f0f2f4] px-2.5 py-0.5 text-[11px] font-medium text-[#59615a]">{category}</span>
-                  </div>
-                  <p className="mt-2 text-sm leading-6 text-[#626c78]">{desc}</p>
-                </div>
-              ))}
-            </div>
-
-            <Link href="/docs/integrations" className="mt-6 inline-flex items-center gap-2 rounded-lg border border-[#dadddf] px-4 py-2.5 text-sm font-medium hover:bg-[#f7f8f9]">
-              <Plug size={16} />Browse integrations
+            <Link href="/docs/troubleshooting" className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-[#6b55d8]">
+              Full troubleshooting guide <ArrowRight size={14} />
             </Link>
+            <ResultBox>
+              <strong>All items pass?</strong> Installation is complete — Elpino is live on your website.
+            </ResultBox>
           </section>
 
-          {/* ── Security ── */}
-          <section id="security" className="scroll-mt-40 border-b border-[#e8eaed] py-14">
-            <h2 className="text-3xl font-semibold tracking-[-0.035em]">Security and customer identity</h2>
-            <p className="mt-4 text-base leading-7 text-[#626c78]">Credentials are encrypted at rest and used server-side only. For signed-in customers, identity verification lets your own server vouch for the user with a short-lived HMAC token before Elpino accesses customer-specific records.</p>
+          {/* ══════════ STEP 9 — Knowledge ══════════ */}
+          <section id="step-9" className="scroll-mt-40 border-b border-black/10 py-14">
+            <StepHeader
+              id="step-9"
+              icon={BookOpen}
+              title="Teach the AI (add knowledge)"
+              intro="The AI only answers from the knowledge you add and publish. An empty knowledge base means it has nothing to say — visitors get &ldquo;I couldn&apos;t find any pricing info for this site&rdquo; instead of real answers."
+            />
+            <StepList>
+              <>In the dashboard, open <strong className="text-[#313943]">Knowledge</strong>.</>
+              <>Pick a source type: <strong className="text-[#313943]">Pages</strong> to write or paste help articles, <strong className="text-[#313943]">URLs</strong> to let Elpino read pages from your website, or upload files.</>
+              <>Create the page or add the URL, and attach it to your site (the &ldquo;Attached to&rdquo; column shows which site uses it).</>
+              <>Switch on the <strong className="text-[#313943]">Shown</strong> toggle to publish the source. Anything not shown — or still being read by Elpino — is never used for answers.</>
+              <>Test it: open the widget on your live site and ask a question your new knowledge should answer.</>
+            </StepList>
+            <Screenshot
+              src="/images/docs/Screenshot_20261001_233950.png"
+              alt="Knowledge pages list with the Create page button and the Shown toggle"
+              width={1838}
+              height={885}
+              caption="Knowledge → Pages: create pages or add URLs, then use the Shown toggle to publish each source for the AI."
+            />
+            <TipBox>
+              Write the knowledge the way customers ask: pricing, refunds, shipping, account issues. Short, factual pages answer better than one long page covering everything.
+            </TipBox>
+            <ResultBox>
+              <strong>Done when:</strong> your sources show as Shown in Knowledge, and the live widget answers questions using them.
+            </ResultBox>
+          </section>
 
+          {/* ── Next steps ── */}
+          <section id="next" className="scroll-mt-40 py-14">
+            <h2 className="text-3xl font-semibold tracking-[-0.035em]">After you&apos;re live</h2>
+            <p className="mt-4 max-w-2xl text-base leading-7 text-[#626c78]">All nine steps done? Your AI answers from your knowledge and lands conversations in your inbox. Go deeper when you&apos;re ready:</p>
             <div className="mt-7 grid gap-4 sm:grid-cols-2">
-              {[
-                { title: "Credentials", text: "API keys and tokens for connected tools are encrypted before they are stored, and are wiped when you disconnect an integration." },
-                { title: "Identity verification", text: "Generate a signed token on your server using your workspace secret. The token verifies the visitor's identity without exposing credentials to the browser." },
-                { title: "GDPR & privacy", text: "Elpino supports data deletion requests, conversation export, and consent-based contact creation. See our Privacy Policy for full detail." },
-                { title: "Security", text: "Elpino does not hold a third-party security certification today. The Security guide describes the controls built into the product, and questions are welcome at security@elpino.chat." },
-              ].map(({ title, text }) => (
-                <div key={title} className="rounded-xl border border-black/10 bg-[#fafafa] p-4">
-                  <h3 className="flex items-center gap-2 text-sm font-semibold">
-                    <ShieldCheck size={14} className="text-[#2d8b66]" />{title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-6 text-[#626c78]">{text}</p>
-                </div>
-              ))}
+              <Link href="/docs/inbox" className="group rounded-2xl border border-black/10 p-5 transition hover:border-[#bf91ff] hover:bg-[#f8f3ff]">
+                <h3 className="font-semibold">Work conversations as a team</h3>
+                <p className="mt-1.5 text-sm leading-6 text-[#667069]">Claim, route, reply to, and resolve conversations that need a human in the shared Team Inbox.</p>
+                <span className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-[#7651b0]">Team inbox guide <ArrowRight size={13} className="transition group-hover:translate-x-1" /></span>
+              </Link>
+              <Link href="/docs/ai-answers" className="group rounded-2xl border border-black/10 p-5 transition hover:border-[#bf91ff] hover:bg-[#f8f3ff]">
+                <h3 className="font-semibold">Tune AI answers and handoff</h3>
+                <p className="mt-1.5 text-sm leading-6 text-[#667069]">Understand how answers are generated, when the AI escalates to a human, and how to prepare better sources.</p>
+                <span className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-[#7651b0]">AI answers guide <ArrowRight size={13} className="transition group-hover:translate-x-1" /></span>
+              </Link>
             </div>
 
-            <div className="mt-7 flex flex-wrap gap-3">
-              <Link href="/docs/identity-verification" className="inline-flex items-center gap-2 rounded-lg bg-[#17191f] px-4 py-2.5 text-sm font-medium text-white">
-                <Code2 size={16} />Identity verification guide
-              </Link>
-              <Link href="/docs/security" className="inline-flex items-center gap-2 rounded-lg border border-[#dadddf] px-4 py-2.5 text-sm font-medium">
-                <ShieldCheck size={16} />Full security guide
-              </Link>
-              <Link href="/privacy" className="inline-flex items-center gap-2 rounded-lg border border-[#dadddf] px-4 py-2.5 text-sm font-medium">
-                <FileText size={16} />Privacy policy
+            <div className="mt-10 flex flex-col justify-between gap-4 border-t border-[#e8eaed] pt-8 text-sm sm:flex-row sm:items-center">
+              <div>
+                <p className="font-medium">Stuck on a step?</p>
+                <p className="mt-1 text-xs text-[#757d87]">Tell us where you are in the guide and we&apos;ll help you finish it.</p>
+              </div>
+              <Link href="/contact" className="inline-flex items-center gap-1 font-medium text-[#6b55d8]">
+                Contact support <ArrowRight size={14} />
               </Link>
             </div>
           </section>
-
-          {/* ── Billing & troubleshooting ── */}
-          <section id="platform" className="scroll-mt-40 border-b border-[#e8eaed] py-14">
-            <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[#59615a]">Platform</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em]">Billing and troubleshooting</h2>
-            <p className="mt-4 max-w-2xl text-base leading-7 text-[#626c78]">Understand plans, AI credit, and recharge, or diagnose common widget, knowledge, identity, and handoff issues.</p>
-            <div className="mt-7 grid gap-3 sm:grid-cols-2">
-              <Link href="/docs/billing" className="group rounded-xl border border-black/10 p-4 transition hover:border-[#bf91ff] hover:bg-[#f8f3ff]">
-                <h3 className="text-sm font-semibold">Billing and usage</h3>
-                <p className="mt-1 text-sm leading-6 text-[#626c78]">Credits, plans, seats, and automatic recharge.</p>
-              </Link>
-              <Link href="/docs/troubleshooting" className="group rounded-xl border border-black/10 p-4 transition hover:border-[#bf91ff] hover:bg-[#f8f3ff]">
-                <h3 className="text-sm font-semibold">Troubleshooting</h3>
-                <p className="mt-1 text-sm leading-6 text-[#626c78]">Fix widget, knowledge, identity, and realtime issues.</p>
-              </Link>
-            </div>
-          </section>
-
-          {/* ── Footer CTA ── */}
-          <div className="flex flex-col justify-between gap-4 border-t border-[#e8eaed] py-8 text-sm sm:flex-row sm:items-center">
-            <div>
-              <p className="font-medium">Couldn't find what you need?</p>
-              <p className="mt-1 text-xs text-[#757d87]">Tell us which guide would help you.</p>
-            </div>
-            <Link href="/contact" className="inline-flex items-center gap-1 font-medium text-[#6b55d8]">
-              Contact support <ArrowRight size={14} />
-            </Link>
-          </div>
         </main>
 
         {/* ── Right "On this page" sidebar ── */}
         <aside className="hidden border-l border-black/30 bg-white px-6 py-16 xl:block">
           <div className="sticky top-[132px]">
             <p className="mb-3 text-xs font-semibold text-[#343b45]">On this page</p>
-            <nav className="space-y-[0.5px] border-l border-black/30 pl-4 text-sm text-[#757d87]">
-              <Link className="block font-semibold text-[#7651b0]" href="#introduction">Introduction</Link>
-              <Link className="block hover:text-black" href="#quickstart">Quickstart</Link>
-              <Link className="block hover:text-black" href="#how-it-works">How Elpino works</Link>
-              <Link className="block hover:text-black" href="#core-concepts">Core concepts</Link>
-              <Link className="block hover:text-black" href="#confidence">Confidence &amp; fallbacks</Link>
-              <Link className="block hover:text-black" href="#widget-customization">Widget customization</Link>
-              <Link className="block hover:text-black" href="#routing">Conversation routing</Link>
-              <Link className="block hover:text-black" href="#api-overview">REST API</Link>
-              <Link className="block hover:text-black" href="#api-auth">Authentication</Link>
-              <Link className="block hover:text-black" href="#api-conversations">Endpoints</Link>
-              <Link className="block hover:text-black" href="#sdk-js">SDKs</Link>
-              <Link className="block hover:text-black" href="#sdk-widget">Widget JS API</Link>
-              <Link className="block hover:text-black" href="#webhooks">Webhooks</Link>
-              <Link className="block hover:text-black" href="#webhook-events">Event reference</Link>
-              <Link className="block hover:text-black" href="#webhook-retry">Retry policy</Link>
-              <Link className="block hover:text-black" href="#integrations">Integrations</Link>
-              <Link className="block hover:text-black" href="#security">Security</Link>
-              <Link className="block hover:text-black" href="#platform">Billing &amp; troubleshooting</Link>
+            <nav className="space-y-0.5 pl-4 text-sm text-[#757d87]">
+              <Link className="block hover:text-black" href="#overview">Overview</Link>
+              {steps.map(({ id, label }) => (
+                <Link key={id} className="block hover:text-black" href={`#${id}`}>{label}</Link>
+              ))}
+              <Link className="block hover:text-black" href="#next">After you&apos;re live</Link>
             </nav>
           </div>
         </aside>

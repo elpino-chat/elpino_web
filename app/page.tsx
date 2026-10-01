@@ -4,17 +4,16 @@ import { HomeView } from "./components/home/HomeView";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://elpino.chat";
 
 export const metadata: Metadata = {
+  title: "Elpino | The AI-native customer support platform that takes real action",
+  description:
+    "Most AI support tools fall apart when things get complicated. Elpino takes real action: resolves repetitive tickets, checks live payments, executes warm handoffs, and files fail-safe tickets.",
   alternates: { canonical: SITE_URL },
 };
 
 // Kept in sync with the site's real product by hand rather than by import,
 // since JSON-LD has to be a plain serialisable object — but the two must
 // never drift: Google's structured-data guidelines require markup to
-// describe what the business actually is. This previously described an
-// internal-automation "operator" product; Elpino is an AI customer support
-// platform (chat widget, knowledge base, human handoff, seat + resolution
-// pricing) — see /pricing and /features for the parts of the site already
-// rewritten to match. Update this block if the product's shape changes.
+// describe what the business actually is.
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -22,7 +21,7 @@ const organizationSchema = {
   url: SITE_URL,
   logo: `${SITE_URL}/elpino.png`,
   description:
-    "Elpino is an AI customer support platform. Its AI agent answers customers instantly from your own knowledge base and hands off to a human teammate the moment it can't help.",
+    "Elpino is the AI-native customer support platform that takes real action. Resolves repetitive tickets, executes live payment checks, and hands off warm to human teammates with zero context lost.",
   sameAs: [],
 };
 
@@ -40,7 +39,7 @@ const softwareSchema = {
   applicationCategory: "BusinessApplication",
   operatingSystem: "Web",
   description:
-    "AI customer support with a live chat widget, a knowledge base the AI answers from, and automatic handoff to a human teammate when it can't help — plus seats, visitor analytics, and secure one-time information requests.",
+    "AI customer support that acts: resolves repetitive tickets from approved knowledge, checks live orders and payments, executes warm human handoffs with full context, and automatically files tickets when teammates are busy.",
   url: SITE_URL,
   offers: {
     "@type": "Offer",
@@ -49,12 +48,12 @@ const softwareSchema = {
     description: "Free plan available, no card required",
   },
   featureList: [
-    "AI agent that answers from your own knowledge base",
-    "Automatic handoff to a human teammate when the AI can't help",
-    "Embeddable website chat widget",
-    "Shared team inbox with seat-based pricing",
-    "Visitor location and device details on every conversation",
-    "Secure one-time requests for sensitive customer information",
+    "Autonomous AI agent that resolves repeat tickets from approved knowledge",
+    "Grounded AI with zero hallucinations and real system tools",
+    "100% warm human handoff with full conversation dossier and visitor context",
+    "90-second ticket fail-safe so no customer conversation is ever dropped",
+    "Real-time payment and order checks via Stripe, Razorpay, and MCP",
+    "Shared team inbox with no per-seat penalty",
   ],
 };
 

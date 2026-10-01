@@ -18,7 +18,19 @@ export const docsPages = [
 export type DocsHref = (typeof docsPages)[number]["href"];
 
 export const docsToc: Record<DocsHref, ReadonlyArray<{ id: string; label: string }>> = {
-  "/docs": [{ id: "start", label: "Start with the essentials" }, { id: "quickstart", label: "Quickstart" }],
+  "/docs": [
+    { id: "overview", label: "Overview" },
+    { id: "step-1", label: "1. Create your organization" },
+    { id: "step-2", label: "2. Add the widget" },
+    { id: "step-3", label: "3. Complete the setup" },
+    { id: "step-4", label: "4. Identity verification & secret key" },
+    { id: "step-5", label: "5. Create your first tag" },
+    { id: "step-6", label: "6. Install the snippet" },
+    { id: "step-7", label: "7. Wire up your backend" },
+    { id: "step-8", label: "8. Publish and verify" },
+    { id: "step-9", label: "9. Teach the AI (add knowledge)" },
+    { id: "next", label: "After you're live" },
+  ],
   "/docs/knowledge": [{ id: "sources", label: "Source of truth" }, { id: "quality", label: "Accurate retrieval" }, { id: "next", label: "Next step" }],
   "/docs/ai-answers": [{ id: "answer-flow", label: "Answer flow" }, { id: "handoff", label: "Human handoff" }, { id: "prepare", label: "Prepare better answers" }],
   "/docs/chat-widget": [{ id: "install", label: "Add the site tag" }, { id: "details", label: "Collect visitor details" }, { id: "identity", label: "Signed-in customers" }],
