@@ -599,20 +599,7 @@
         },
         "seats": {
           "name": "Quem pode iniciar sessão",
-          "rows": {
-            "included": {
-              "label": "Lugares incluídos",
-              "description": "Colegas de equipa cobertos pelo preço do plano, incluindo o proprietário do espaço de trabalho."
-            },
-            "extra": {
-              "label": "Lugares extra",
-              "description": "Cada colega além dos lugares incluídos, em qualquer plano."
-            },
-            "ceiling": {
-              "label": "Limite de lugares",
-              "description": "O ponto em que precisa de um plano maior em vez de outro lugar."
-            }
-          }
+          "rows": {}
         },
         "product": {
           "name": "O produto",
@@ -665,8 +652,7 @@
       "standard": "Padrão",
       "priority": "Prioritário",
       "messages": "mensagens",
-      "credit": "crédito",
-      "seatBundleSummary": "3 lugares por $2, 5 por $3"
+      "credit": "crédito"
     },
     "billing": {
       "eyebrow": "Faturação clara e simples",
@@ -697,10 +683,7 @@
       "eyebrow": "Adicionar capacidade",
       "title": "Cresça sem mudar a forma como trabalha.",
       "subtitle": "Adicione pessoas ou capacidade de IA apenas quando precisar. A sua caixa de entrada, conhecimento e histórico de conversas permanecem exatamente onde estão.",
-      "teammatesTitle": "Colegas de equipa adicionais",
-      "teammatesDesc": "Dê a mais pessoas o seu próprio acesso enquanto partilham a mesma caixa de entrada, conhecimento e crédito de IA. Permanecem no seu plano todos os meses até os remover.",
       "perMonth": "por mês",
-      "seatsWord": "lugares",
       "topUpAnytime": "Recarregue em qualquer momento",
       "onAnyPaidPlan": "em qualquer plano pago",
       "creditTitle": "Crédito de IA adicional",
@@ -728,7 +711,7 @@
       "items": [
         {
           "q": "Quanto custam os planos?",
-          "a": "O Free é $0. Os planos mensais são o Starter a $12 com $7 de crédito de IA por mês, o Growth a $59 com $40, e o Scale a $299 com $240. A faturação anual dá dois meses gratuitos — paga dez meses e recebe doze: o Starter custa $120 por ano ($10/mês), o Growth $590 ($49.17/mês), e o Scale $2.990 ($249.17/mês)."
+          "a": "O Free é $0. Os planos mensais são o Starter a $12 com $7 de crédito de IA por mês, o Growth a $59 com $40, e o Scale a $299 com $240. A faturação anual dá dois meses gratuitos — paga dez meses e recebe doze: o Starter custa $120 por ano ($10/mês), o Growth $588 ($49/mês), e o Scale $2.990 ($249/mês)."
         },
         {
           "q": "Como funciona o limite de IA?",
@@ -747,8 +730,8 @@
           "a": "A IA transfere as novas conversas diretamente para a sua equipa em vez de responder. Num plano pago pode recarregar crédito em qualquer momento, ou ativar a recarga automática para que nunca pare. As recargas nunca expiram. O seu crédito mensal reinicia em cada período de faturação."
         },
         {
-          "q": "Quanto custa um colega adicional?",
-          "a": "Os lugares extra vêm em pacotes em todos os planos, incluindo o Free: 3 lugares por $2 por mês, ou 5 por $3. Os lugares e o crédito de IA são faturados de forma completamente separada — adicionar um colega nunca afeta o seu limite de IA."
+          "q": "Do I pay for each teammate?",
+          "a": "No. Seats are unlimited on every plan, including Free, so adding a teammate costs nothing. Seats and AI credit are billed completely separately — adding a teammate never touches your AI allowance."
         },
         {
           "q": "Posso cancelar em qualquer momento?",
@@ -787,8 +770,7 @@
         "cta": "Comece já",
         "features": [
           "Até 100 mensagens de IA/mês",
-          "2 lugares incluídos",
-          "Pacotes de lugares a partir de $0,60/lugar",
+          "Lugares ilimitados",
           "Base de conhecimento de 20 MB",
           "Widget de chat no site",
           "Caixa de entrada partilhada com transferência"
@@ -800,8 +782,7 @@
         "cta": "Comece já",
         "features": [
           "$7 de crédito de IA todos os meses",
-          "5 lugares incluídos",
-          "Pacotes de lugares a partir de $0,60/lugar",
+          "Lugares ilimitados",
           "Base de conhecimento de 200 MB",
           "Recarregue crédito em qualquer momento",
           "Análise de visitantes"
@@ -813,8 +794,7 @@
         "cta": "Comece já",
         "features": [
           "$40 de crédito de IA todos os meses",
-          "15 lugares incluídos",
-          "Pacotes de lugares a partir de $0,60/lugar",
+          "Lugares ilimitados",
           "Base de conhecimento de 1 GB",
           "Recarregue crédito em qualquer momento",
           "Registo de auditoria de IA completo",
@@ -827,8 +807,7 @@
         "cta": "Comece já",
         "features": [
           "$240 de crédito de IA todos os meses",
-          "40 lugares incluídos",
-          "Pacotes de lugares a partir de $0,60/lugar",
+          "Lugares ilimitados",
           "Base de conhecimento de 5 GB",
           "Recarregue crédito em qualquer momento",
           "Integrações e acesso à API"
@@ -946,7 +925,7 @@
       ],
       [
         "Como é estruturado o preço?",
-        "O Free inclui 100 mensagens de IA por mês, e os planos pagos incluem um crédito de IA mensal. Colegas adicionais vêm em pacotes de lugares a partir de $0,60 por lugar, e transferir uma conversa para um humano nunca custa mais. A página de preços explica os lugares incluídos e a taxa mínima do plano gratuito."
+        "Free includes 100 AI messages a month, and paid plans include a monthly AI credit. Seats are unlimited on every plan, and handing a conversation to a human never costs extra. The pricing page explains the details."
       ]
     ],
     "closing": {
@@ -1176,7 +1155,7 @@
         ],
         [
           "A minha equipa também pode usá-lo?",
-          "Sim. Convide colegas de equipa, adicione lugares conforme cresce, e eles receberão alertas de adesão quando um cliente precisar de uma pessoa."
+          "Yes. Invite as many teammates as you like, since seats are unlimited, and they'll get Join alerts when a customer needs a person."
         ]
       ]
     },
@@ -3602,7 +3581,7 @@
         },
         {
           "t": "Uma equipa pequena",
-          "d": "Atribui conversas, partilha a caixa de entrada, adiciona lugares quando precisares."
+          "d": "Assign conversations, share the inbox, invite the whole team."
         },
         {
           "t": "A crescer",

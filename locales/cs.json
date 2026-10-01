@@ -599,20 +599,7 @@
         },
         "seats": {
           "name": "Kdo se může přihlásit",
-          "rows": {
-            "included": {
-              "label": "Zahrnutá místa",
-              "description": "Členové týmu zahrnutí v ceně plánu, včetně vlastníka pracovního prostoru."
-            },
-            "extra": {
-              "label": "Extra místa",
-              "description": "Každý člen týmu nad zahrnutá místa, na jakémkoli plánu."
-            },
-            "ceiling": {
-              "label": "Strop míst",
-              "description": "Bod, kde potřebujete větší plán, ne další místo."
-            }
-          }
+          "rows": {}
         },
         "product": {
           "name": "Produkt",
@@ -665,8 +652,7 @@
       "standard": "Standardní",
       "priority": "Prioritní",
       "messages": "zpráv",
-      "credit": "kredit",
-      "seatBundleSummary": "3 místa za $2, 5 za $3"
+      "credit": "kredit"
     },
     "billing": {
       "eyebrow": "Jasné, jednoduché účtování",
@@ -697,10 +683,7 @@
       "eyebrow": "Přidat kapacitu",
       "title": "Rostěte bez změny způsobu práce.",
       "subtitle": "Přidávejte lidi nebo kapacitu AI pouze tehdy, když potřebujete. Vaše schránka, znalosti a historie konverzací zůstávají přesně tam, kde jsou.",
-      "teammatesTitle": "Další členové týmu",
-      "teammatesDesc": "Dejte více lidem vlastní přihlášení, zatímco sdílí stejnou schránku, znalosti a kredit AI. Zůstávají ve vašem plánu každý měsíc, dokud je neodstraníte.",
       "perMonth": "za měsíc",
-      "seatsWord": "míst",
       "topUpAnytime": "Dobijte kdykoli",
       "onAnyPaidPlan": "na jakémkoli placeném plánu",
       "creditTitle": "Další kredit AI",
@@ -728,7 +711,7 @@
       "items": [
         {
           "q": "Kolik stojí plány?",
-          "a": "Free je $0. Měsíční plány jsou Starter za $12 s $7 kreditu AI měsíčně, Growth za $59 s $40, a Scale za $299 s $240. Roční fakturace dává dva měsíce zdarma — platíte za deset měsíců a dostanete dvanáct: Starter stojí $120 za rok ($10/měsíc), Growth $590 ($49.17/měsíc), a Scale $2,990 ($249.17/měsíc)."
+          "a": "Free je $0. Měsíční plány jsou Starter za $12 s $7 kreditu AI měsíčně, Growth za $59 s $40, a Scale za $299 s $240. Roční fakturace dává dva měsíce zdarma — platíte za deset měsíců a dostanete dvanáct: Starter stojí $120 za rok ($10/měsíc), Growth $588 ($49/měsíc), a Scale $2,988 ($249/měsíc)."
         },
         {
           "q": "Jak funguje limit AI?",
@@ -747,8 +730,8 @@
           "a": "AI předává nové konverzace přímo vašemu týmu, místo aby odpovídalo. U placeného plánu můžete kredit kdykoli dobít nebo zapnout automatické dobíjení, aby se nikdy nezastavil. Dobití nikdy nevyprší. Váš měsíční kredit se resetuje každé fakturační období."
         },
         {
-          "q": "Kolik stojí extra člen týmu?",
-          "a": "Extra místa přicházejí v balíčcích na každém plánu, včetně Free: 3 místa za $2 za měsíc, nebo 5 za $3. Místa a kredit AI se účtují zcela oddělene — přidání člena týmu nikdy neovlivní váš limit AI."
+          "q": "Do I pay for each teammate?",
+          "a": "No. Seats are unlimited on every plan, including Free, so adding a teammate costs nothing. Seats and AI credit are billed completely separately — adding a teammate never touches your AI allowance."
         },
         {
           "q": "Mohu zrušit kdykoli?",
@@ -787,8 +770,7 @@
         "cta": "Začít",
         "features": [
           "Až 100 zpráv AI/měsíc",
-          "2 místa zahrnuta",
-          "Balíčky míst od $0.60/místo",
+          "Neomezený počet míst",
           "Znalostní databáze 20 MB",
           "Widget chatu na webu",
           "Sdílená schránka s předáním"
@@ -800,8 +782,7 @@
         "cta": "Začít",
         "features": [
           "Kredit AI $7 každý měsíc",
-          "5 míst zahrnuto",
-          "Balíčky míst od $0.60/místo",
+          "Neomezený počet míst",
           "Znalostní databáze 200 MB",
           "Dobijte kredit kdykoli",
           "Analýza návštěvníků"
@@ -813,8 +794,7 @@
         "cta": "Začít",
         "features": [
           "Kredit AI $40 každý měsíc",
-          "15 míst zahrnuto",
-          "Balíčky míst od $0.60/místo",
+          "Neomezený počet míst",
           "Znalostní databáze 1 GB",
           "Dobijte kredit kdykoli",
           "Plná auditní stopa AI",
@@ -827,8 +807,7 @@
         "cta": "Začít",
         "features": [
           "Kredit AI $240 každý měsíc",
-          "40 míst zahrnuto",
-          "Balíčky míst od $0.60/místo",
+          "Neomezený počet míst",
           "Znalostní databáze 5 GB",
           "Dobijte kredit kdykoli",
           "Integrace a přístup k API"
@@ -946,7 +925,7 @@
       ],
       [
         "Jak je strukturována cena?",
-        "Free zahrnuje 100 zpráv AI za měsíc, a placené plány zahrnují měsíční kredit AI. Další členové týmu přicházejí v balíčcích míst od $0.60 za místo, a předání konverzace člověku nikdy nestojí navíc. Stránka s cenami vysvětluje zahrnutá místa a minimální poplatek bezplatného plánu."
+        "Free includes 100 AI messages a month, and paid plans include a monthly AI credit. Seats are unlimited on every plan, and handing a conversation to a human never costs extra. The pricing page explains the details."
       ]
     ],
     "closing": {
@@ -1176,7 +1155,7 @@
         ],
         [
           "Může to používat i můj tým?",
-          "Ano. Pozvěte spolupracovníky, přidávejte místa, jak rostete, a dostanou upozornění na připojení, když zákazník potřebuje člověka."
+          "Yes. Invite as many teammates as you like, since seats are unlimited, and they'll get Join alerts when a customer needs a person."
         ]
       ]
     },
@@ -3533,7 +3512,7 @@
       },
       {
         "name": "Pozvánky do týmu",
-        "body": "Zvěte členy týmu e-mailem a přidávejte místa podle toho, jak váš tým roste."
+        "body": "Invite as many teammates by email as you like: seats are unlimited."
       },
       {
         "name": "Automatické tikety",
@@ -3629,7 +3608,7 @@
       },
       {
         "name": "Plány s kreditem",
-        "body": "Placené plány zahrnují měsíční AI kredit a další místa jsou jednoduché doplňky."
+        "body": "Paid plans include a monthly AI credit, and seats are unlimited."
       },
       {
         "name": "Odpovědi e-mailem",
@@ -3764,7 +3743,7 @@
         },
         {
           "q": "Jak fungují placené plány?",
-          "a": "Placené plány zahrnují měsíční AI kredit a další místa jsou jednoduché doplňky. Podrobnosti najdete na stránce s ceníkem."
+          "a": "Paid plans include a monthly AI credit, and seats are unlimited. See the pricing page for details."
         }
       ]
     },
@@ -3921,7 +3900,7 @@
         },
         {
           "t": "Malý tým",
-          "d": "Přidělujte konverzace, sdílejte schránku, přidávejte licence, když je potřebujete."
+          "d": "Assign conversations, share the inbox, invite the whole team."
         },
         {
           "t": "Rozšiřování",

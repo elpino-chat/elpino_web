@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { CareersView } from "./CareersView";
-import { CareersSlothGuide } from "./components/CareersSlothGuide";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://elpino.chat";
 
@@ -37,8 +36,6 @@ export default function CareersPage() {
   return (
     <main className="relative min-h-screen w-full bg-white text-[#111] antialiased selection:bg-black selection:text-white">
       <CareersView />
-      {/* Interactive floating sloth companion (unchanged) */}
-      <CareersSlothGuide />
     </main>
   );
 }

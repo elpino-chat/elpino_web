@@ -7,6 +7,7 @@ import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { CookieNotice } from "./CookieNotice";
 import { GeoLanguagePrompt } from "./GeoLanguagePrompt";
+import { ScrollFx } from "./ScrollFx";
 import { useStoredLanguage } from "../hooks/useStoredLanguage";
 
 type Session = { email: string; name?: string; userId: string };
@@ -82,8 +83,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           space itself — pad it back in here, using the height Header measures
           into --elpino-header-h. The home, pricing, privacy, terms, careers, contact, changelog, security-guide, brand-kit and about pages skip it: their hero artwork runs
           behind the header, and each hero pads its own content down instead. */}
-      <main className="flex flex-1 flex-col" style={pathname === '/' || pathname === '/pricing' || pathname === '/privacy' || pathname === '/terms' || pathname === '/careers' || pathname === '/contact' || pathname === '/changelog' || pathname === '/security-guide' || pathname === '/brand-kit' || pathname === '/about' || pathname === '/product/knowledge-hub' || pathname === '/product/inbox' || pathname === '/product/ai-agent' || pathname === '/features' || pathname === '/faq' || pathname === '/blog' || pathname.startsWith('/blog/') || pathname === '/product/tickets' || pathname === '/product/helpdesk' || pathname === '/solutions/founders' || pathname === '/solutions/busy-operators' || pathname === '/solutions/busy' || pathname === '/solutions/developers' || pathname === '/integrations' ? undefined : { paddingTop: 'var(--elpino-header-h, 64px)' }}>{children}</main>
+      <main className="flex flex-1 flex-col">{children}</main>
       <Footer editorial={pathname === '/pricing' || pathname === '/about'} />
+      <ScrollFx />
       <CookieNotice />
       <GeoLanguagePrompt />
     </>

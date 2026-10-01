@@ -599,20 +599,7 @@
         },
         "seats": {
           "name": "Ai có thể đăng nhập",
-          "rows": {
-            "included": {
-              "label": "Số ghế bao gồm",
-              "description": "Đồng nghiệp được bao gồm trong giá gói, kể cả chủ sở hữu không gian làm việc."
-            },
-            "extra": {
-              "label": "Ghế bổ sung",
-              "description": "Mỗi đồng nghiệp vượt quá số ghế bao gồm, trên bất kỳ gói nào."
-            },
-            "ceiling": {
-              "label": "Giới hạn ghế",
-              "description": "Điểm mà bạn cần một gói lớn hơn thay vì thêm một ghế khác."
-            }
-          }
+          "rows": {}
         },
         "product": {
           "name": "Sản phẩm",
@@ -665,8 +652,7 @@
       "standard": "Tiêu chuẩn",
       "priority": "Ưu tiên",
       "messages": "tin nhắn",
-      "credit": "tín dụng",
-      "seatBundleSummary": "3 ghế $2, 5 ghế $3"
+      "credit": "tín dụng"
     },
     "billing": {
       "eyebrow": "Thanh toán rõ ràng, đơn giản",
@@ -697,10 +683,7 @@
       "eyebrow": "Thêm dung lượng",
       "title": "Phát triển mà không thay đổi cách bạn làm việc.",
       "subtitle": "Chỉ thêm người hoặc dung lượng AI khi bạn cần. Hộp thư, kiến thức và lịch sử hội thoại của bạn vẫn giữ nguyên như hiện tại.",
-      "teammatesTitle": "Đồng nghiệp bổ sung",
-      "teammatesDesc": "Cho nhiều người quyền đăng nhập riêng khi vẫn chia sẻ cùng hộp thư, kiến thức và tín dụng AI. Họ vẫn ở trong gói của bạn mỗi tháng cho đến khi bạn xóa họ.",
       "perMonth": "mỗi tháng",
-      "seatsWord": "ghế",
       "topUpAnytime": "Nạp thêm bất cứ lúc nào",
       "onAnyPaidPlan": "trên bất kỳ gói trả phí nào",
       "creditTitle": "Tín dụng AI bổ sung",
@@ -728,7 +711,7 @@
       "items": [
         {
           "q": "Các gói có giá bao nhiêu?",
-          "a": "Free là $0. Các gói hàng tháng là Starter $12 với $7 tín dụng AI mỗi tháng, Growth $59 với $40, và Scale $299 với $240. Thanh toán hàng năm được miễn phí hai tháng—bạn trả cho mười tháng và nhận mười hai: Starter là $120 mỗi năm ($10/tháng), Growth là $590 ($49.17/tháng), và Scale là $2,990 ($249.17/tháng)."
+          "a": "Free là $0. Các gói hàng tháng là Starter $12 với $7 tín dụng AI mỗi tháng, Growth $59 với $40, và Scale $299 với $240. Thanh toán hàng năm được miễn phí hai tháng—bạn trả cho mười tháng và nhận mười hai: Starter là $120 mỗi năm ($10/tháng), Growth là $588 ($49/tháng), và Scale là $2,988 ($249/tháng)."
         },
         {
           "q": "Hạn mức AI hoạt động như thế nào?",
@@ -747,8 +730,8 @@
           "a": "AI chuyển các cuộc hội thoại mới trực tiếp cho nhóm của bạn thay vì trả lời. Trên gói trả phí bạn có thể nạp thêm tín dụng bất cứ lúc nào, hoặc bật tự động nạp lại để không bao giờ dừng. Các lần nạp thêm không bao giờ hết hạn. Tín dụng hàng tháng của bạn đặt lại mỗi kỳ thanh toán."
         },
         {
-          "q": "Thêm một đồng nghiệp tốn bao nhiêu?",
-          "a": "Ghế bổ sung có sẵn theo gói trên mọi kế hoạch bao gồm Free: 3 ghế với $2 mỗi tháng, hoặc 5 ghế với $3. Ghế và tín dụng AI được thanh toán hoàn toàn riêng biệt—thêm một đồng nghiệp không bao giờ ảnh hưởng đến hạn mức AI của bạn."
+          "q": "Do I pay for each teammate?",
+          "a": "No. Seats are unlimited on every plan, including Free, so adding a teammate costs nothing. Seats and AI credit are billed completely separately — adding a teammate never touches your AI allowance."
         },
         {
           "q": "Tôi có thể hủy bất cứ lúc nào không?",
@@ -787,8 +770,7 @@
         "cta": "Bắt đầu",
         "features": [
           "Tối đa 100 tin nhắn AI/tháng",
-          "Bao gồm 2 ghế",
-          "Gói ghế từ $0.60/ghế",
+          "Ghế không giới hạn",
           "Cơ sở kiến thức 20 MB",
           "Tiện ích chat website",
           "Hộp thư chung với chuyển tiếp"
@@ -800,8 +782,7 @@
         "cta": "Bắt đầu",
         "features": [
           "$7 tín dụng AI mỗi tháng",
-          "Bao gồm 5 ghế",
-          "Gói ghế từ $0.60/ghế",
+          "Ghế không giới hạn",
           "Cơ sở kiến thức 200 MB",
           "Nạp thêm tín dụng bất cứ lúc nào",
           "Phân tích khách truy cập"
@@ -813,8 +794,7 @@
         "cta": "Bắt đầu",
         "features": [
           "$40 tín dụng AI mỗi tháng",
-          "Bao gồm 15 ghế",
-          "Gói ghế từ $0.60/ghế",
+          "Ghế không giới hạn",
           "Cơ sở kiến thức 1 GB",
           "Nạp thêm tín dụng bất cứ lúc nào",
           "Nhật ký kiểm tra AI đầy đủ",
@@ -827,8 +807,7 @@
         "cta": "Bắt đầu",
         "features": [
           "$240 tín dụng AI mỗi tháng",
-          "Bao gồm 40 ghế",
-          "Gói ghế từ $0.60/ghế",
+          "Ghế không giới hạn",
           "Cơ sở kiến thức 5 GB",
           "Nạp thêm tín dụng bất cứ lúc nào",
           "Tích hợp & truy cập API"
@@ -946,7 +925,7 @@
       ],
       [
         "Giá cả được cấu trúc như thế nào?",
-        "Free bao gồm 100 tin nhắn AI mỗi tháng, và các gói trả phí bao gồm tín dụng AI hàng tháng. Đồng nghiệp bổ sung có sẵn theo gói ghế từ $0.60 một ghế, và chuyển tiếp một cuộc hội thoại cho con người không bao giờ tốn thêm phí. Trang giá cả giải thích số ghế bao gồm và phí tối thiểu của gói miễn phí."
+        "Free includes 100 AI messages a month, and paid plans include a monthly AI credit. Seats are unlimited on every plan, and handing a conversation to a human never costs extra. The pricing page explains the details."
       ]
     ],
     "closing": {
@@ -1176,7 +1155,7 @@
         ],
         [
           "Nhóm của tôi cũng có thể sử dụng nó không?",
-          "Có. Mời đồng nghiệp, thêm ghế khi bạn phát triển, và họ sẽ nhận được cảnh báo tham gia khi khách hàng cần một người."
+          "Yes. Invite as many teammates as you like, since seats are unlimited, and they'll get Join alerts when a customer needs a person."
         ]
       ]
     },
@@ -3516,7 +3495,7 @@
       },
       {
         "name": "Mời thành viên nhóm",
-        "body": "Mời thành viên qua email và thêm chỗ ngồi khi nhóm của bạn phát triển."
+        "body": "Invite as many teammates by email as you like: seats are unlimited."
       },
       {
         "name": "Ticket tự động",
@@ -3612,7 +3591,7 @@
       },
       {
         "name": "Gói dựa trên tín dụng",
-        "body": "Các gói trả phí bao gồm một khoản tín dụng AI hằng tháng, và chỗ ngồi thêm chỉ là các gói bổ sung đơn giản."
+        "body": "Paid plans include a monthly AI credit, and seats are unlimited."
       },
       {
         "name": "Trả lời qua email",
@@ -3747,7 +3726,7 @@
         },
         {
           "q": "Các gói trả phí hoạt động như thế nào?",
-          "a": "Các gói trả phí bao gồm một khoản tín dụng AI hằng tháng, và chỗ ngồi thêm chỉ là các gói bổ sung đơn giản. Xem trang giá để biết chi tiết."
+          "a": "Paid plans include a monthly AI credit, and seats are unlimited. See the pricing page for details."
         }
       ]
     },
@@ -3904,7 +3883,7 @@
         },
         {
           "t": "Một nhóm nhỏ",
-          "d": "Phân công cuộc trò chuyện, chia sẻ hộp thư, thêm chỗ ngồi khi cần."
+          "d": "Assign conversations, share the inbox, invite the whole team."
         },
         {
           "t": "Mở rộng quy mô",

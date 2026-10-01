@@ -28,15 +28,15 @@ function tList<Item>(t: T, key: string, fallback: Item[]): Item[] {
 }
 
 const INK = "#11120f";
-const BLUE = "#3784ff";
+const BLUE = "#0078f4";
 const YELLOW = "#ffd84d";
 const PURPLE = "#7060bd";
 const ORANGE = "#fc7b33";
 const GREEN = "#1aa37a";
 const PINK = "#d9508a";
 
-const card = "rounded-[22px] border-2 border-[#11120f]";
-const mono = "font-mono text-[11px] font-semibold uppercase tracking-[0.14em]";
+const card = "rounded-[10px] border border-black/40";
+const mono = "font-mono text-[11px] font-medium uppercase tracking-[0.08em]";
 const onDark = (c: string) => (c === YELLOW ? INK : "#fff");
 const dots = { backgroundImage: "radial-gradient(#000 1.2px, transparent 1.2px)", backgroundSize: "14px 14px" };
 
@@ -48,18 +48,19 @@ function useReduced() {
 
 function Stamp({ color, children }: { color: string; children: ReactNode }) {
   return (
-    <span className={`${mono} inline-flex items-center gap-1.5 rounded-full border-2 border-[#11120f] px-3 py-1.5`} style={{ backgroundColor: color, color: onDark(color) }}>
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-black/25 bg-white px-3 py-1 text-[12.5px] font-medium normal-case tracking-normal text-black/70">
+      <span aria-hidden="true" className="size-1.5 rounded-full" style={{ backgroundColor: color }} />
       {children}
     </span>
   );
 }
 
-function Heading({ eyebrow, color, title, sub, left = false }: { eyebrow: string; color: string; title: ReactNode; sub?: string; left?: boolean }) {
+function Heading({ eyebrow, color, title, sub }: { eyebrow: string; color: string; title: ReactNode; sub?: string; left?: boolean }) {
   return (
-    <div className={left ? "max-w-3xl" : "mx-auto max-w-3xl text-center"}>
+    <div className="max-w-3xl">
       <Rv variant="drop"><Stamp color={color}>{eyebrow}</Stamp></Rv>
-      <Rv delay={80}><h2 className="mt-5 text-[clamp(2.2rem,5vw,3.9rem)] font-semibold leading-[1.02] tracking-[-0.045em]">{title}</h2></Rv>
-      {sub && <Rv delay={160}><p className="mt-5 text-lg leading-8 text-[#11120f]/65">{sub}</p></Rv>}
+      <Rv delay={80}><h2 className="mt-5 text-4xl font-normal leading-[1.05] tracking-[-0.04em] sm:text-5xl">{title}</h2></Rv>
+      {sub && <Rv delay={160}><p className="mt-5 text-lg leading-8 text-black/65">{sub}</p></Rv>}
     </div>
   );
 }
@@ -94,43 +95,43 @@ function RushHour({ t }: { t: T }) {
   const level = s.queue < 8 ? { t: t("busyOperators.rush.levelCalm", "Calm"), c: GREEN } : s.queue < 20 ? { t: t("busyOperators.rush.levelBusy", "Getting busy"), c: ORANGE } : { t: t("busyOperators.rush.levelFire", "Queue on fire"), c: PINK };
 
   return (
-    <div className={`${card} overflow-hidden bg-[#fffdf5]`}>
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-[#11120f] bg-white px-4 py-3">
+    <div className={`${card} overflow-hidden bg-white`}>
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-black/15 bg-[#f4f4f2] px-4 py-3">
         <span className={`${mono} text-[#11120f]/55`}>{t("busyOperators.rush.badgeLabel", "Rush hour · illustrative simulation")}</span>
-        <button type="button" onClick={() => setS({ queue: 6, ai: 0, human: 0 })} className="inline-flex items-center gap-1.5 rounded-full border-2 border-[#11120f] bg-white px-3 py-1 text-xs font-semibold transition hover:bg-[#ffd84d]"><RotateCcw size={12} />{t("busyOperators.rush.reset", "Reset")}</button>
+        <button type="button" onClick={() => setS({ queue: 6, ai: 0, human: 0 })} className="inline-flex items-center gap-1.5 rounded-full border border-black/25 bg-white px-3 py-1 text-xs font-medium transition hover:border-black/60"><RotateCcw size={12} />{t("busyOperators.rush.reset", "Reset")}</button>
       </div>
 
       <div className="grid gap-0 md:grid-cols-[1fr_260px]">
         <div className="p-5">
           <div className="flex items-center justify-between">
             <p className="text-[15px] font-semibold">{t("busyOperators.rush.waitingForPerson", "Waiting for a person")}</p>
-            <span className={`${mono} rounded-full border-2 border-[#11120f] px-2.5 py-1 text-[10px] text-white transition-colors`} style={{ backgroundColor: level.c }}>{level.t}</span>
+            <span className={`${mono} rounded-full px-2.5 py-1 text-[10px] text-white transition-colors`} style={{ backgroundColor: level.c }}>{level.t}</span>
           </div>
           <div className="mt-4 flex min-h-[132px] flex-wrap content-start gap-1.5">
-            {Array.from({ length: shown }).map((_, i) => <span key={i} className="size-7 rounded-lg border-2 border-[#11120f]" style={{ backgroundColor: i % 5 === 0 ? ORANGE : YELLOW, animation: "elpino-rv-pop .3s both" }} />)}
+            {Array.from({ length: shown }).map((_, i) => <span key={i} className="size-7 rounded-md" style={{ backgroundColor: i % 5 === 0 ? ORANGE : "#cfe3ff", animation: "elpino-rv-pop .3s both" }} />)}
             {s.queue > 30 && <span className="grid h-7 place-items-center px-2 font-mono text-xs font-bold">+{s.queue - 30}</span>}
             {s.queue === 0 && <p className="w-full pt-10 text-center text-[#11120f]/45">{t("busyOperators.rush.inboxZero", "Inbox zero. Nice.")}</p>}
           </div>
-          <p className="mt-3 font-mono text-4xl font-bold tabular-nums tracking-[-0.04em]">{s.queue}<span className="ml-2 text-sm font-medium text-[#11120f]/45"> {t("busyOperators.rush.chatsWaiting", "chats waiting")}</span></p>
+          <p className="mt-3 font-mono text-4xl font-medium tabular-nums tracking-[-0.04em]">{s.queue}<span className="ml-2 text-sm font-medium text-[#11120f]/45"> {t("busyOperators.rush.chatsWaiting", "chats waiting")}</span></p>
         </div>
 
-        <div className="space-y-4 border-t-2 border-[#11120f] bg-[#fff8ec] p-5 md:border-l-2 md:border-t-0">
-          <button type="button" role="switch" aria-checked={aiOn} onClick={() => setAiOn(!aiOn)} className="flex w-full items-center justify-between rounded-2xl border-2 border-[#11120f] bg-white px-4 py-3 font-semibold transition hover:-translate-y-0.5">
+        <div className="space-y-4 border-t border-black/15 bg-[#f4f4f2] p-5 md:border-l md:border-t-0">
+          <button type="button" role="switch" aria-checked={aiOn} onClick={() => setAiOn(!aiOn)} className="flex w-full items-center justify-between rounded-xl border border-black/25 bg-white px-4 py-3 font-medium transition hover:border-black/60">
             <span className="flex items-center gap-2"><Bot size={18} />{t("busyOperators.rush.aiToggleLabel", "Elpino AI")}</span>
-            <span className="relative h-7 w-12 rounded-full border-2 border-[#11120f] transition-colors" style={{ backgroundColor: aiOn ? GREEN : "#e7e2d6" }}><span className="absolute top-0.5 size-5 rounded-full border-2 border-[#11120f] bg-white transition-all" style={{ left: aiOn ? "calc(100% - 22px)" : "2px" }} /></span>
+            <span className="relative h-7 w-12 rounded-full transition-colors" style={{ backgroundColor: aiOn ? GREEN : "#d4d4d0" }}><span className="absolute top-0.5 size-6 rounded-full bg-white transition-all" style={{ left: aiOn ? "calc(100% - 26px)" : "2px" }} /></span>
           </button>
           <div>
             <p className="text-[13px] font-semibold">{t("busyOperators.rush.teammatesOnline", "Teammates online")}</p>
             <div className="mt-2 flex gap-2">
               {TEAM.map(([n, c], i) => {
                 const on = i < team;
-                return <button key={n} type="button" aria-label={`${n} ${on ? "online" : "offline"}`} aria-pressed={on} onClick={() => setTeam(on && team === i + 1 ? i : i + 1)} className="grid size-11 place-items-center rounded-full border-2 border-[#11120f] text-sm font-bold text-white transition" style={{ backgroundColor: on ? c : "#d9d5c7", opacity: on ? 1 : 0.6, animation: on ? "elpino-float 3s ease-in-out infinite" : undefined }}>{n[0]}</button>;
+                return <button key={n} type="button" aria-label={`${n} ${on ? "online" : "offline"}`} aria-pressed={on} onClick={() => setTeam(on && team === i + 1 ? i : i + 1)} className="grid size-11 place-items-center rounded-full text-sm font-medium text-white transition" style={{ backgroundColor: on ? c : "#d4d4d0", opacity: on ? 1 : 0.6, animation: on ? "elpino-float 3s ease-in-out infinite" : undefined }}>{n[0]}</button>;
               })}
             </div>
           </div>
           <div className="grid grid-cols-2 gap-2 text-center">
-            <div className="rounded-xl border-2 border-[#11120f] p-2.5 text-white" style={{ backgroundColor: PURPLE }}><p className="text-2xl font-semibold tabular-nums">{s.ai}</p><p className={`${mono} text-[8.5px] text-white/80`}>{t("busyOperators.rush.resolvedByAi", "Resolved by AI")}</p></div>
-            <div className="rounded-xl border-2 border-[#11120f] p-2.5 text-white" style={{ backgroundColor: GREEN }}><p className="text-2xl font-semibold tabular-nums">{s.human}</p><p className={`${mono} text-[8.5px] text-white/80`}>{t("busyOperators.rush.resolvedByTeam", "Resolved by team")}</p></div>
+            <div className="rounded-xl p-2.5 text-white" style={{ backgroundColor: INK }}><p className="text-2xl font-medium tabular-nums">{s.ai}</p><p className={`${mono} text-[8.5px] text-white/80`}>{t("busyOperators.rush.resolvedByAi", "Resolved by AI")}</p></div>
+            <div className="rounded-xl p-2.5 text-white" style={{ backgroundColor: GREEN }}><p className="text-2xl font-medium tabular-nums">{s.human}</p><p className={`${mono} text-[8.5px] text-white/80`}>{t("busyOperators.rush.resolvedByTeam", "Resolved by team")}</p></div>
           </div>
           <p className="text-[11.5px] leading-5 text-[#11120f]/50">{t("busyOperators.rush.disclaimer", "A toy model: 3 chats arrive each tick and the AI takes an example share. Real results depend on your knowledge base and tools.")}</p>
         </div>
@@ -141,19 +142,16 @@ function RushHour({ t }: { t: T }) {
 
 function Hero({ t }: { t: T }) {
   return (
-    <section className="relative isolate overflow-hidden bg-white text-[#11120f]">
-      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-cover bg-top" style={{ backgroundImage: "url(/piliar-1-grandient.png)", maskImage: "linear-gradient(to bottom, #000 50%, transparent)", WebkitMaskImage: "linear-gradient(to bottom, #000 50%, transparent)" }} />
-      <div className="mx-auto max-w-6xl px-5 pb-24 pt-[124px] sm:px-8 lg:pt-[140px]">
+    <section className="bg-white px-5 pb-16 pt-16 text-[#11120f] sm:px-8 lg:px-20 lg:pt-24">
+      <div className="mx-auto max-w-[1500px]">
         <div className="mx-auto max-w-4xl text-center">
-          <Rv variant="drop"><Stamp color={YELLOW}><Users size={13} />{t("busyOperators.hero.badge", "For busy teams")}</Stamp></Rv>
-          <Rv delay={80}><h1 className="mt-6 text-[clamp(2.9rem,7vw,5.8rem)] font-semibold leading-[0.96] tracking-[-0.058em]">{t("busyOperators.hero.titlePrefix", "Rush hour, ")}<span className="hl">{t("busyOperators.hero.titleHl", "handled.")}</span></h1></Rv>
-          <Rv delay={170}><p className="mx-auto mt-6 max-w-[56ch] text-lg leading-8 text-[#11120f]/70">{t("busyOperators.hero.subtitle", "When the queue spikes, the AI takes the repeat questions, your team takes the rest, and nobody trips over each other. Flip the switch below and feel the difference.")}</p></Rv>
-          <Rv delay={240}>
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Link href="/signup" className="inline-flex h-13 items-center gap-2 rounded-full border-2 border-[#11120f] px-7 font-semibold text-white transition hover:-translate-y-0.5" style={{ backgroundColor: BLUE }}>{t("busyOperators.hero.ctaStart", "Start free")} <ArrowRight size={17} /></Link>
-              <Link href="/product/inbox" className="inline-flex h-13 items-center rounded-full border-2 border-[#11120f] bg-white px-7 font-semibold transition hover:-translate-y-0.5 hover:bg-[#ffd84d]">{t("busyOperators.hero.ctaInbox", "See the inbox")}</Link>
-            </div>
-          </Rv>
+          <p className="text-[14px] text-black/50">{t("busyOperators.hero.badge", "For busy teams")}</p>
+          <h1 className="mt-4 animate-[elpino-focus_0.9s_ease-out_both] text-5xl font-normal leading-[1.02] tracking-[-0.045em] sm:text-6xl lg:text-[4.6rem]">{t("busyOperators.hero.titlePrefix", "Rush hour, ")}{t("busyOperators.hero.titleHl", "handled.")}</h1>
+          <p className="mx-auto mt-6 max-w-2xl animate-[elpino-focus_0.9s_ease-out_0.15s_both] text-lg leading-8 text-black/65">{t("busyOperators.hero.subtitle", "When the queue spikes, the AI takes the repeat questions, your team takes the rest, and nobody trips over each other. Flip the switch below and feel the difference.")}</p>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <Link href="/signup" className="group inline-flex h-14 items-center gap-3 rounded-full bg-[#11120f] px-9 text-[18px] font-medium text-white transition hover:opacity-85">{t("busyOperators.hero.ctaStart", "Start free")} <ArrowRight size={20} className="transition-transform group-hover:translate-x-1" /></Link>
+            <Link href="/product/inbox" className="inline-flex h-14 items-center rounded-full border border-black/25 bg-white px-9 text-[18px] font-medium transition hover:border-black/60">{t("busyOperators.hero.ctaInbox", "See the inbox")}</Link>
+          </div>
         </div>
         <Rv variant="deal" delay={300} className="mt-14"><RushHour t={t} /></Rv>
       </div>
@@ -176,16 +174,16 @@ function Race({ t }: { t: T }) {
   const samBlocked = ti >= 4;
 
   return (
-    <section className="bg-[#11120f] px-5 py-24 text-white sm:px-8 sm:py-28">
-      <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
+    <section className="bg-[#11120f] px-5 py-16 text-white sm:px-8 lg:px-20 lg:py-24">
+      <div className="mx-auto grid max-w-[1500px] items-center gap-12 lg:grid-cols-2">
         <div>
           <Rv variant="drop"><Stamp color={ORANGE}><Eye size={13} />{t("busyOperators.race.badge", "No double replies")}</Stamp></Rv>
-          <Rv delay={80}><h2 className="mt-5 text-[clamp(2.2rem,5vw,3.9rem)] font-semibold leading-[1.02] tracking-[-0.045em]">{t("busyOperators.race.titlePrefix", "Two people, one chat. ")}<span className="rounded-md px-2" style={{ backgroundColor: YELLOW, color: INK }}>{t("busyOperators.race.titleHl", "Only one joins.")}</span></h2></Rv>
+          <Rv delay={80}><h2 className="mt-5 text-4xl font-normal leading-[1.05] tracking-[-0.04em] sm:text-5xl">{t("busyOperators.race.titlePrefix", "Two people, one chat. ")}<span style={{ color: "#6db3ff" }}>{t("busyOperators.race.titleHl", "Only one joins.")}</span></h2></Rv>
           <Rv delay={160}><p className="mt-5 max-w-[48ch] text-lg leading-8 text-white/65">{t("busyOperators.race.subtitle", "Everyone gets the same Join alert. The first person to tap takes the conversation, the alert clears for everyone else, and the inbox shows who has it. A colleague can still Take over later, on purpose.")}</p></Rv>
         </div>
         <Rv variant="deal" delay={100}>
-          <div className={`${card} bg-[#fffdf5] p-5 text-[#11120f]`}>
-            <div className="rounded-2xl border-2 border-[#11120f] bg-white p-3.5">
+          <div className="rounded-[10px] bg-white p-5 text-[#11120f]">
+            <div className="rounded-xl border border-black/15 bg-white p-3.5">
               <p className="text-[15px] font-semibold">{t("busyOperators.race.askedForPerson", "Aisha Khan asked for a person")}</p>
               <p className="text-[12.5px] text-[#11120f]/55">{alerted ? t("busyOperators.race.alertSent", "Alert sent to the whole team") : t("busyOperators.race.waiting", "Waiting…")}</p>
             </div>
@@ -193,19 +191,19 @@ function Race({ t }: { t: T }) {
               {[["Priya", GREEN, priyaJoined], ["Sam", BLUE, false]].map(([n, c, won], k) => {
                 const isSam = k === 1;
                 return (
-                  <div key={n as string} className="rounded-2xl border-2 border-[#11120f] p-3.5 transition-all duration-500" style={{ backgroundColor: isSam && samBlocked ? "#f1efe7" : "#fff" }}>
-                    <div className="flex items-center gap-2.5"><span className="grid size-9 place-items-center rounded-full border-2 border-[#11120f] text-sm font-bold text-white" style={{ backgroundColor: c as string }}>{(n as string)[0]}</span><span className="font-semibold">{n as string}</span></div>
+                  <div key={n as string} className="rounded-xl border border-black/15 p-3.5 transition-all duration-500" style={{ backgroundColor: isSam && samBlocked ? "#f4f4f2" : "#fff" }}>
+                    <div className="flex items-center gap-2.5"><span className="grid size-9 place-items-center rounded-full text-sm font-medium text-white" style={{ backgroundColor: c as string }}>{(n as string)[0]}</span><span className="font-semibold">{n as string}</span></div>
                     <div className="mt-3 h-12">
-                      {!isSam && (won ? <span className={`${mono} flex h-full items-center justify-center rounded-lg border-2 border-[#11120f] text-[10px] text-white`} style={{ backgroundColor: GREEN, animation: "elpino-slam .35s both" }}>{t("busyOperators.race.joined", "Joined")}</span>
-                        : alerted ? <span className={`${mono} flex h-full items-center justify-center rounded-lg border-2 border-[#11120f] text-[10px]`} style={{ backgroundColor: YELLOW, animation: "elpino-ring 1.4s ease-out infinite" }}>{t("busyOperators.race.joinChat", "Join chat")}</span> : <span className="block h-full" />)}
+                      {!isSam && (won ? <span className={`${mono} flex h-full items-center justify-center rounded-lg text-[10px] text-white`} style={{ backgroundColor: GREEN, animation: "elpino-slam .35s both" }}>{t("busyOperators.race.joined", "Joined")}</span>
+                        : alerted ? <span className={`${mono} flex h-full items-center justify-center rounded-lg text-[10px] text-white`} style={{ backgroundColor: BLUE, animation: "elpino-ring 1.4s ease-out infinite" }}>{t("busyOperators.race.joinChat", "Join chat")}</span> : <span className="block h-full" />)}
                       {isSam && (samBlocked ? <span className="flex h-full items-center justify-center text-center text-[11.5px] leading-tight text-[#11120f]/60">{t("busyOperators.race.priyaHasThis", "Priya has this")}</span>
-                        : alerted ? <span className={`${mono} flex h-full items-center justify-center rounded-lg border-2 border-[#11120f] text-[10px]`} style={{ backgroundColor: YELLOW, animation: "elpino-ring 1.4s ease-out infinite" }}>{t("busyOperators.race.joinChat", "Join chat")}</span> : <span className="block h-full" />)}
+                        : alerted ? <span className={`${mono} flex h-full items-center justify-center rounded-lg text-[10px] text-white`} style={{ backgroundColor: BLUE, animation: "elpino-ring 1.4s ease-out infinite" }}>{t("busyOperators.race.joinChat", "Join chat")}</span> : <span className="block h-full" />)}
                     </div>
                   </div>
                 );
               })}
             </div>
-            <div className="mt-4 rounded-xl border-2 border-[#11120f] px-4 py-3 text-sm font-medium" style={{ backgroundColor: samBlocked ? "#d8f3e9" : "#fff1e6" }}>{samBlocked ? t("busyOperators.race.priyaJoinedFirst", "Priya joined first. The inbox badge now says Priya.") : alerted ? t("busyOperators.race.bothSee", "Both teammates see the alert…") : t("busyOperators.race.customerSaidYes", "Customer said yes to a person")}</div>
+            <div className="mt-4 rounded-lg px-4 py-3 text-sm font-medium" style={{ backgroundColor: samBlocked ? "#e3f5ee" : "#f4f4f2" }}>{samBlocked ? t("busyOperators.race.priyaJoinedFirst", "Priya joined first. The inbox badge now says Priya.") : alerted ? t("busyOperators.race.bothSee", "Both teammates see the alert…") : t("busyOperators.race.customerSaidYes", "Customer said yes to a person")}</div>
           </div>
         </Rv>
       </div>
@@ -218,23 +216,23 @@ function Race({ t }: { t: T }) {
 function Context({ t }: { t: T }) {
   const [seen, setSeen] = useState(true);
   return (
-    <section className="bg-[#fff8ec] px-5 py-24 sm:px-8 sm:py-28">
-      <div className="mx-auto max-w-6xl">
-        <Heading eyebrow={t("busyOperators.context.eyebrow", "The handoff")} color={PURPLE} title={<>{t("busyOperators.context.titlePrefix", "Nobody repeats ")}<span className="hl">{t("busyOperators.context.titleHl", "themselves.")}</span></>} sub={t("busyOperators.context.subtitle", "Toggle to compare a cold handoff with the one Elpino makes.")} />
-        <div className="mx-auto mt-10 flex w-fit rounded-full border-2 border-[#11120f] bg-white p-1">
-          {[[false, t("busyOperators.context.toggleCold", "Cold handoff")], [true, t("busyOperators.context.toggleElpino", "Elpino handoff")]].map(([v, l]) => <button key={String(v)} type="button" onClick={() => setSeen(v as boolean)} aria-pressed={seen === v} className="rounded-full px-5 py-2.5 text-[15px] font-semibold transition" style={seen === v ? { backgroundColor: v ? GREEN : PINK, color: "#fff" } : undefined}>{l as string}</button>)}
+    <section className="bg-white px-5 py-16 sm:px-8 lg:px-20 lg:py-24">
+      <div className="mx-auto max-w-[1500px]">
+        <Heading eyebrow={t("busyOperators.context.eyebrow", "The handoff")} color={PURPLE} title={<>{t("busyOperators.context.titlePrefix", "Nobody repeats ")}{t("busyOperators.context.titleHl", "themselves.")}</>} sub={t("busyOperators.context.subtitle", "Toggle to compare a cold handoff with the one Elpino makes.")} />
+        <div className="mt-10 flex w-fit rounded-full border border-black/25 bg-[#f4f4f2] p-1">
+          {[[false, t("busyOperators.context.toggleCold", "Cold handoff")], [true, t("busyOperators.context.toggleElpino", "Elpino handoff")]].map(([v, l]) => <button key={String(v)} type="button" onClick={() => setSeen(v as boolean)} aria-pressed={seen === v} className="rounded-full px-5 py-2.5 text-[15px] font-semibold transition" style={seen === v ? { backgroundColor: INK, color: "#fff" } : undefined}>{l as string}</button>)}
         </div>
         <div key={String(seen)} className="mt-8" style={{ animation: "elpino-rv-deal .5s both" }}>
           {!seen ? (
-            <div className={`${card} mx-auto max-w-3xl bg-white p-6`}>
+            <div className={`${card} max-w-3xl bg-white p-6`}>
               <div className="space-y-3 text-[15px]">
-                <div className="max-w-[80%] rounded-2xl rounded-bl-sm border-2 border-[#11120f] bg-[#f1efe7] px-4 py-2.5">{t("busyOperators.context.coldGreeting", "Hi, I'm Priya. How can I help?")}</div>
-                <div className="ml-auto max-w-[85%] rounded-2xl rounded-br-sm border-2 border-[#11120f] px-4 py-2.5 text-white" style={{ backgroundColor: PURPLE }}>{t("busyOperators.context.coldComplaint", "…I already explained all this to the bot. I moved countries and need my billing country changed. Again.")}</div>
+                <div className="max-w-[80%] rounded-2xl rounded-bl-sm bg-[#f4f4f2] px-4 py-2.5">{t("busyOperators.context.coldGreeting", "Hi, I'm Priya. How can I help?")}</div>
+                <div className="ml-auto max-w-[85%] rounded-2xl rounded-br-sm px-4 py-2.5 text-white" style={{ backgroundColor: INK }}>{t("busyOperators.context.coldComplaint", "…I already explained all this to the bot. I moved countries and need my billing country changed. Again.")}</div>
               </div>
               <p className="mt-4 text-center text-sm text-[#11120f]/55">{t("busyOperators.context.coldNote", "The customer starts over, and the team member starts blind.")}</p>
             </div>
           ) : (
-            <div className="mx-auto grid max-w-4xl gap-4 md:grid-cols-[1.2fr_.8fr]">
+            <div className="grid max-w-4xl gap-4 md:grid-cols-[1.2fr_.8fr]">
               <div className={`${card} bg-white p-5`}>
                 <p className={`${mono} text-[#11120f]/50`}>{t("busyOperators.context.whatPersonSees", "What the person sees")}</p>
                 <div className="mt-3 space-y-2.5">
@@ -243,11 +241,11 @@ function Context({ t }: { t: T }) {
                     [Bot, t("busyOperators.context.summaryLabel", "Summary"), t("busyOperators.context.summaryValue", "Moved countries, wants billing country updated. Verified by email code.")],
                     [Clock3, t("busyOperators.context.fullThreadLabel", "Full thread"), t("busyOperators.context.fullThreadValue", "Every message so far, right above the composer")],
                   ].map(([Ic, k, v]) => { const I = Ic as typeof Bot; return (
-                    <div key={k as string} className="flex items-start gap-3 rounded-xl border-2 border-[#11120f] bg-[#fffdf5] p-3"><span className="grid size-8 shrink-0 place-items-center rounded-lg border-2 border-[#11120f]" style={{ backgroundColor: YELLOW }}><I size={15} /></span><div><p className={`${mono} text-[9px] text-[#11120f]/45`}>{k as string}</p><p className="text-[14.5px] font-medium leading-snug">{v as string}</p></div></div>
+                    <div key={k as string} className="flex items-start gap-3 rounded-xl bg-[#f4f4f2] p-3"><span className="grid size-8 shrink-0 place-items-center rounded-lg bg-white"><I size={15} /></span><div><p className={`${mono} text-[9px] text-[#11120f]/45`}>{k as string}</p><p className="text-[14.5px] font-medium leading-snug">{v as string}</p></div></div>
                   ); })}
                 </div>
               </div>
-              <div className={`${card} bg-[#262626] p-5 text-white`}>
+              <div className={`rounded-[10px] bg-[#11120f] p-5 text-white`}>
                 <p className={`${mono} text-white/50`}>{t("busyOperators.context.visitorLabel", "Visitor")}</p>
                 <div className="mt-3 space-y-3 text-[13.5px]">
                   <p className="flex items-center gap-2.5"><MapPin size={15} className="text-white/55" />{t("busyOperators.context.visitorLocation", "Pune, India")}</p>
@@ -298,21 +296,21 @@ function Around({ t }: { t: T }) {
   const am = t("busyOperators.around.am", "AM");
   const pm = t("busyOperators.around.pm", "PM");
   return (
-    <section className="bg-white px-5 py-24 sm:px-8 sm:py-28">
-      <div className="mx-auto max-w-5xl">
-        <Heading eyebrow={t("busyOperators.around.eyebrow", "Round the clock")} color={BLUE} title={<>{t("busyOperators.around.titlePrefix", "Cover every hour, ")}<span className="hl">{t("busyOperators.around.titleHl", "without shifts.")}</span></>} sub={t("busyOperators.around.subtitle", "Drag through an example day. Team hours are 9 to 6 here; yours will be your own.")} />
-        <div className={`${card} mt-14 bg-[#fffdf5] p-6 sm:p-8`}>
+    <section className="bg-white px-5 py-16 sm:px-8 lg:px-20 lg:py-24">
+      <div className="mx-auto max-w-[1500px]">
+        <Heading eyebrow={t("busyOperators.around.eyebrow", "Round the clock")} color={BLUE} title={<>{t("busyOperators.around.titlePrefix", "Cover every hour, ")}{t("busyOperators.around.titleHl", "without shifts.")}</>} sub={t("busyOperators.around.subtitle", "Drag through an example day. Team hours are 9 to 6 here; yours will be your own.")} />
+        <div className={`${card} mt-14 bg-white p-6 sm:p-8`}>
           <div className="flex items-center justify-between">
-            <p className="flex items-center gap-2 font-mono text-3xl font-bold tabular-nums tracking-[-0.03em]">{day ? <Sun size={26} color={ORANGE} /> : <Moon size={26} color={PURPLE} />}{fmt(h, am, pm)}</p>
+            <p className="flex items-center gap-2 font-mono text-3xl font-medium tabular-nums tracking-[-0.03em]">{day ? <Sun size={26} color={ORANGE} /> : <Moon size={26} color={PURPLE} />}{fmt(h, am, pm)}</p>
             <Stamp color={day ? GREEN : PURPLE}>{day ? t("busyOperators.around.teamOnline", "Team online") : t("busyOperators.around.aiOnWatch", "AI on watch")}</Stamp>
           </div>
-          <div className="mt-6 flex h-10 overflow-hidden rounded-xl border-2 border-[#11120f]" aria-hidden="true">
-            {Array.from({ length: 24 }).map((_, i) => <div key={i} className="flex-1 border-r border-[#11120f]/15 transition-colors" style={{ backgroundColor: i >= 9 && i < 18 ? "#d8f3e9" : "#e4dffa", outline: i === h ? `3px solid ${INK}` : "none", outlineOffset: -3 }} />)}
+          <div className="mt-6 flex h-10 overflow-hidden rounded-lg border border-black/20" aria-hidden="true">
+            {Array.from({ length: 24 }).map((_, i) => <div key={i} className="flex-1 border-r border-[#11120f]/15 transition-colors" style={{ backgroundColor: i >= 9 && i < 18 ? "#e3f5ee" : "#eceaf5", outline: i === h ? `2px solid ${INK}` : "none", outlineOffset: -2 }} />)}
           </div>
           <input type="range" min={0} max={23} value={h} onChange={(e) => setH(Number(e.target.value))} aria-label={t("busyOperators.around.hourAriaLabel", "Hour of the day")} className="mt-3 w-full" style={{ accentColor: day ? GREEN : PURPLE }} />
           <div key={String(day)} className="mt-6 grid gap-3 md:grid-cols-3" style={{ animation: "elpino-rv-up .4s both" }}>
             {items.map((it, i) => (
-              <div key={i} className={`${card} bg-white p-4`}><span className="grid size-10 place-items-center rounded-full border-2 border-[#11120f]" style={{ backgroundColor: it.c }}><it.icon size={18} color="#fff" /></span><p className="mt-3 font-semibold leading-snug">{it.t}</p><p className="mt-1 text-[14px] leading-6 text-[#11120f]/60">{it.d}</p></div>
+              <div key={i} className={`${card} bg-white p-4`}><span className="grid size-10 place-items-center rounded-full" style={{ backgroundColor: `${it.c}1a` }}><it.icon size={18} style={{ color: it.c }} /></span><p className="mt-3 font-medium leading-snug">{it.t}</p><p className="mt-1 text-[14px] leading-6 text-[#11120f]/60">{it.d}</p></div>
             ))}
           </div>
         </div>
@@ -352,17 +350,16 @@ function useTools(t: T) {
 function Toolkit({ t }: { t: T }) {
   const TOOLS = useTools(t);
   return (
-    <section className="bg-[#fff8ec] px-5 py-24 sm:px-8 sm:py-28">
-      <div className="mx-auto max-w-6xl">
-        <Heading eyebrow={t("busyOperators.toolkit.eyebrow", "Calm by design")} color={ORANGE} title={<>{t("busyOperators.toolkit.titlePrefix", "The small things that ")}<span className="hl">{t("busyOperators.toolkit.titleHl", "keep a queue sane.")}</span></>} />
+    <section className="bg-white px-5 py-16 sm:px-8 lg:px-20 lg:py-24">
+      <div className="mx-auto max-w-[1500px]">
+        <Heading eyebrow={t("busyOperators.toolkit.eyebrow", "Calm by design")} color={ORANGE} title={<>{t("busyOperators.toolkit.titlePrefix", "The small things that ")}{t("busyOperators.toolkit.titleHl", "keep a queue sane.")}</>} />
         <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {TOOLS.map((tool, i) => (
             <Rv key={i} variant="pop" delay={(i % 3) * 80}>
-              <div className={`${card} group relative h-full overflow-hidden p-6 transition duration-300 hover:-translate-y-1.5`} style={{ backgroundColor: tool.c, color: onDark(tool.c) }}>
-                <div aria-hidden="true" className="absolute inset-0 opacity-[0.14]" style={dots} />
-                <span className="relative grid size-12 place-items-center rounded-2xl border-2 border-[#11120f] bg-white transition-transform duration-300 group-hover:-rotate-12"><tool.icon size={22} color={INK} /></span>
-                <h3 className="relative mt-5 text-2xl font-semibold tracking-tight">{tool.t}</h3>
-                <p className="relative mt-2 text-[16px] leading-7 opacity-90">{tool.d}</p>
+              <div className={`${card} group relative h-full bg-white p-6 transition-colors duration-300 hover:bg-[#fafaf9]`}>
+                <span className="grid size-11 place-items-center rounded-full" style={{ backgroundColor: `${tool.c}1a` }}><tool.icon size={21} style={{ color: tool.c }} /></span>
+                <h3 className="mt-5 text-2xl font-medium tracking-[-0.025em]">{tool.t}</h3>
+                <p className="mt-2 text-[16px] leading-7 text-black/65">{tool.d}</p>
               </div>
             </Rv>
           ))}
@@ -388,25 +385,32 @@ function Faq({ t }: { t: T }) {
   const FAQS = tList<Faq>(t, "busyOperators.faq.items", FAQS_EN);
   const [open, setOpen] = useState(0);
   return (
-    <section className="bg-white px-5 py-24 sm:px-8 sm:py-28">
-      <div className="mx-auto max-w-3xl">
-        <Heading eyebrow={t("busyOperators.faq.eyebrow", "Questions")} color={YELLOW} title={<>{t("busyOperators.faq.titlePrefix", "Good to ")}<span className="hl">{t("busyOperators.faq.titleHl", "know.")}</span></>} />
-        <div className="mt-12 space-y-3">
-          {FAQS.map((item, i) => (
-            <Rv key={i} variant="up" delay={i * 50}>
-              <div className={`${card} overflow-hidden ${open === i ? "bg-[#fffdf5]" : "bg-white"}`}>
-                <button type="button" aria-expanded={open === i} onClick={() => setOpen(open === i ? -1 : i)} className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left text-[17px] font-semibold">
-                  {item.q}
-                  <span className="grid size-8 shrink-0 place-items-center rounded-full border-2 border-[#11120f] transition-transform duration-300" style={{ backgroundColor: open === i ? YELLOW : "#fff", transform: open === i ? "rotate(45deg)" : "none" }}><Plus size={16} /></span>
-                </button>
-                <div className="grid transition-[grid-template-rows] duration-300" style={{ gridTemplateRows: open === i ? "1fr" : "0fr" }}>
-                  <div className="overflow-hidden"><p className="px-5 pb-5 text-[16px] leading-7 text-[#11120f]/70">{item.a}</p></div>
-                </div>
-              </div>
-            </Rv>
-          ))}
+    <section className="bg-white px-5 py-16 sm:px-8 lg:px-20 lg:py-24">
+      <div className="mx-auto grid max-w-[1500px] gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+        <div>
+          <Rv><h2 className="text-4xl font-normal leading-[1.05] tracking-[-0.04em] sm:text-5xl">{t("busyOperators.faq.titlePrefix", "Good to ")}{t("busyOperators.faq.titleHl", "know.")}</h2></Rv>
+          <Rv delay={100}><p className="mt-5 text-sm text-black/55">{t("busyOperators.faq.footNote", "Website chat is live today. Omnichannel is coming in November.")}</p></Rv>
         </div>
-        <Rv delay={100}><p className="mt-8 text-center text-sm text-[#11120f]/55">{t("busyOperators.faq.footNote", "Website chat is live today. Omnichannel is coming in November.")}</p></Rv>
+        <Rv delay={80}>
+          <div className="border-b border-black/20">
+            {FAQS.map((item, i) => {
+              const isOpen = open === i;
+              return (
+                <div key={i} className="border-t border-black/20">
+                  <h3>
+                    <button type="button" aria-expanded={isOpen} onClick={() => setOpen(isOpen ? -1 : i)} className="flex w-full items-center justify-between gap-6 py-6 text-left">
+                      <span className="text-[clamp(1.1rem,1.6vw,1.35rem)] font-medium leading-snug tracking-[-0.015em]">{item.q}</span>
+                      <span aria-hidden="true" className={`grid size-9 shrink-0 place-items-center rounded-full border transition-all duration-300 ${isOpen ? "rotate-45 border-[#11120f] bg-[#11120f] text-white" : "border-black/25 text-[#11120f]"}`}><Plus size={18} /></span>
+                    </button>
+                  </h3>
+                  <div className={`grid transition-[grid-template-rows] duration-300 ${isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
+                    <div className="overflow-hidden"><p className="max-w-2xl pb-7 text-[17px] leading-7 text-black/65">{item.a}</p></div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </Rv>
       </div>
     </section>
   );
@@ -414,16 +418,14 @@ function Faq({ t }: { t: T }) {
 
 function Closing({ t }: { t: T }) {
   return (
-    <section className="bg-white px-5 pb-24 pt-4 sm:px-8">
-      <Rv variant="pop">
-        <div className={`${card} relative mx-auto max-w-6xl overflow-hidden px-6 py-16 text-center text-white sm:px-12`} style={{ backgroundColor: GREEN }}>
-          <div aria-hidden="true" className="absolute inset-0 opacity-[0.16]" style={dots} />
-          <Users size={38} className="relative mx-auto" aria-hidden="true" />
-          <h2 className="relative mx-auto mt-5 max-w-3xl text-[clamp(2.3rem,5.4vw,4.4rem)] font-semibold leading-[1.02] tracking-[-0.05em]">{t("busyOperators.closing.title", "Make the queue someone else's problem.")}</h2>
-          <p className="relative mx-auto mt-4 max-w-lg text-lg text-white/90">{t("busyOperators.closing.subtitle", "Start free and invite your team when you're ready.")}</p>
-          <div className="relative mt-8 flex flex-wrap justify-center gap-3">
-            <Link href="/signup" className="inline-flex h-13 items-center gap-2 rounded-full border-2 border-[#11120f] px-8 font-semibold text-[#11120f] transition hover:-translate-y-0.5" style={{ backgroundColor: YELLOW }}>{t("busyOperators.closing.ctaStart", "Start free")} <ArrowRight size={16} /></Link>
-            <Link href="/product/tickets" className="inline-flex h-13 items-center rounded-full border-2 border-[#11120f] bg-white px-8 font-semibold text-[#11120f] transition hover:-translate-y-0.5">{t("busyOperators.closing.ctaTickets", "See tickets")}</Link>
+    <section className="bg-white px-5 pb-24 pt-4 sm:px-8 lg:px-20">
+      <Rv className="mx-auto max-w-[1500px]">
+        <div className="rounded-tl-[2rem] border border-black/20 bg-[#f4f4f2] px-7 py-14 sm:px-14 sm:py-20">
+          <h2 className="max-w-3xl text-4xl font-normal leading-[1.04] tracking-[-0.035em] sm:text-5xl">{t("busyOperators.closing.title", "Make the queue someone else's problem.")}</h2>
+          <p className="mt-5 max-w-xl text-lg leading-8 text-black/65">{t("busyOperators.closing.subtitle", "Start free and invite your team when you're ready.")}</p>
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <Link href="/signup" className="group inline-flex h-12 items-center gap-2.5 rounded-full bg-[#11120f] px-8 text-[15px] font-medium text-white transition hover:opacity-85">{t("busyOperators.closing.ctaStart", "Start free")} <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" /></Link>
+            <Link href="/product/tickets" className="inline-flex h-12 items-center rounded-full border border-black/25 bg-white px-8 text-[15px] font-medium transition hover:border-black/60">{t("busyOperators.closing.ctaTickets", "See tickets")}</Link>
           </div>
         </div>
       </Rv>
@@ -435,7 +437,7 @@ export function BusyTeamsClient() {
   const language = useStoredLanguage();
   const { t } = useTranslation(language as any);
   return (
-    <main className="font-[family-name:var(--font-rethink-sans)]">
+    <main className="bg-white font-[family-name:var(--font-rethink-sans)] text-[#11120f]">
       <Hero t={t} />
       <Race t={t} />
       <Context t={t} />

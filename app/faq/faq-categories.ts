@@ -12,7 +12,7 @@ export const categories: FaqCategory[] = [
       },
       {
         q: "How does the Free plan work?",
-        a: "It's a real plan, not a countdown — 100 AI messages a month and 2 seats, no credit card. Upgrade when your volume outgrows it, not on a deadline.",
+        a: "It's a real plan, not a countdown — 100 AI messages a month and unlimited seats, no credit card. Upgrade when your volume outgrows it, not on a deadline.",
       },
       {
         q: "Do I need a support team already?",
@@ -87,7 +87,7 @@ export const categories: FaqCategory[] = [
     items: [
       {
         q: "What do the plans cost?",
-        a: "Free is $0. Monthly plans are Starter at $12 with $7 of AI credit each month, Growth at $59 with $40, and Scale at $299 with $240. Annual billing is two months free — you pay for ten months and get twelve: Starter is $120 a year ($10/month), Growth is $590 ($49.17/month), and Scale is $2,990 ($249.17/month).",
+        a: "Free is $0. Monthly plans are Starter at $12 with $7 of AI credit each month, Growth at $59 with $40, and Scale at $299 with $240. Annual billing is about two months free — you pay for roughly ten months and get twelve: Starter is $120 a year ($10/month), Growth is $588 ($49/month), and Scale is $2,988 ($249/month).",
       },
       {
         q: "How does the AI allowance work?",
@@ -106,8 +106,8 @@ export const categories: FaqCategory[] = [
         a: "The AI hands new conversations straight to your team instead of answering. On a paid plan you can top up credit at any time, or turn on automatic recharge so it never stops. Top-ups never expire. Your monthly credit resets each billing period.",
       },
       {
-        q: "How much does an extra teammate cost?",
-        a: "Extra seats come in packs on every plan including Free: 3 seats for $2 a month, or 5 for $3. Seats and AI credit are billed completely separately — adding a teammate never touches your AI allowance.",
+        q: "Do I pay for each teammate?",
+        a: "No. Seats are unlimited on every plan, including Free, so adding a teammate costs nothing. Seats and AI credit are billed completely separately — adding a teammate never touches your AI allowance.",
       },
       {
         q: "Can I cancel anytime?",

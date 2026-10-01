@@ -599,20 +599,7 @@
         },
         "seats": {
           "name": "Hvem kan logge ind",
-          "rows": {
-            "included": {
-              "label": "Inkluderede pladser",
-              "description": "Teammedlemmer dækket af planens pris, inklusive arbejdsområdets ejer."
-            },
-            "extra": {
-              "label": "Ekstra pladser",
-              "description": "Hvert teammedlem ud over de inkluderede pladser, på enhver plan."
-            },
-            "ceiling": {
-              "label": "Pladsloft",
-              "description": "Punktet, hvor du behøver en større plan i stedet for en anden plads."
-            }
-          }
+          "rows": {}
         },
         "product": {
           "name": "Produktet",
@@ -665,8 +652,7 @@
       "standard": "Standard",
       "priority": "Prioritet",
       "messages": "beskeder",
-      "credit": "kredit",
-      "seatBundleSummary": "3 pladser for $2, 5 for $3"
+      "credit": "kredit"
     },
     "billing": {
       "eyebrow": "Klar, enkel fakturering",
@@ -697,10 +683,7 @@
       "eyebrow": "Tilføj kapacitet",
       "title": "Voks uden at ændre din arbejdsmåde.",
       "subtitle": "Tilføj mennesker eller AI-kapacitet kun, når du behøver det. Din indbakke, viden og samtalehistorik forbliver præcis, hvor de er.",
-      "teammatesTitle": "Yderligere teammedlemmer",
-      "teammatesDesc": "Giv flere mennesker deres egen login, mens de deler den samme indbakke, viden og AI-kredit. De forbliver på din plan hver måned, indtil du fjerner dem.",
       "perMonth": "om måneden",
-      "seatsWord": "pladser",
       "topUpAnytime": "Fyld op når som helst",
       "onAnyPaidPlan": "på enhver betalt plan",
       "creditTitle": "Yderligere AI-kredit",
@@ -728,7 +711,7 @@
       "items": [
         {
           "q": "Hvad koster planerne?",
-          "a": "Free er $0. Månedlige planer er Starter til $12 med $7 AI-kredit om måneden, Growth til $59 med $40, og Scale til $299 med $240. Årlig fakturering giver to måneder gratis — du betaler for ti måneder og får tolv: Starter er $120 om året ($10/måned), Growth er $590 ($49.17/måned), og Scale er $2.990 ($249.17/måned)."
+          "a": "Free er $0. Månedlige planer er Starter til $12 med $7 AI-kredit om måneden, Growth til $59 med $40, og Scale til $299 med $240. Årlig fakturering giver to måneder gratis — du betaler for ti måneder og får tolv: Starter er $120 om året ($10/måned), Growth er $588 ($49/måned), og Scale er $2.990 ($249/måned)."
         },
         {
           "q": "Hvordan fungerer AI-kvoten?",
@@ -747,8 +730,8 @@
           "a": "AI'en overdrager nye samtaler direkte til dit team i stedet for at svare. På en betalt plan kan du fylde kredit op når som helst, eller aktivere automatisk genopfyldning, så den aldrig stopper. Opfyldninger udløber aldrig. Din månedlige kredit nulstilles hver betalingsperiode."
         },
         {
-          "q": "Hvor meget koster et ekstra teammedlem?",
-          "a": "Ekstra pladser kommer i pakker på hver plan, inklusive Free: 3 pladser for $2 om måneden, eller 5 for $3. Pladser og AI-kredit faktureres helt separat — at tilføje et teammedlem påvirker aldrig din AI-kvote."
+          "q": "Do I pay for each teammate?",
+          "a": "No. Seats are unlimited on every plan, including Free, so adding a teammate costs nothing. Seats and AI credit are billed completely separately — adding a teammate never touches your AI allowance."
         },
         {
           "q": "Kan jeg opsige når som helst?",
@@ -787,8 +770,7 @@
         "cta": "Kom i gang",
         "features": [
           "Op til 100 AI-beskeder/måned",
-          "2 pladser inkluderet",
-          "Pladspakker fra $0.60/plads",
+          "Ubegrænsede pladser",
           "20 MB videnbase",
           "Chat-widget på webstedet",
           "Delt indbakke med overdragelse"
@@ -800,8 +782,7 @@
         "cta": "Kom i gang",
         "features": [
           "$7 AI-kredit hver måned",
-          "5 pladser inkluderet",
-          "Pladspakker fra $0.60/plads",
+          "Ubegrænsede pladser",
           "200 MB videnbase",
           "Fyld kredit op når som helst",
           "Besøgsanalyse"
@@ -813,8 +794,7 @@
         "cta": "Kom i gang",
         "features": [
           "$40 AI-kredit hver måned",
-          "15 pladser inkluderet",
-          "Pladspakker fra $0.60/plads",
+          "Ubegrænsede pladser",
           "1 GB videnbase",
           "Fyld kredit op når som helst",
           "Fuldt AI-revisionsspor",
@@ -827,8 +807,7 @@
         "cta": "Kom i gang",
         "features": [
           "$240 AI-kredit hver måned",
-          "40 pladser inkluderet",
-          "Pladspakker fra $0.60/plads",
+          "Ubegrænsede pladser",
           "5 GB videnbase",
           "Fyld kredit op når som helst",
           "Integrationer og API-adgang"
@@ -946,7 +925,7 @@
       ],
       [
         "Hvordan er priserne struktureret?",
-        "Free inkluderer 100 AI-beskeder om måneden, og betalte planer inkluderer en månedlig AI-kredit. Ekstra holdkammerater kommer i pladspakker fra $0.60 pr. plads, og at overdrage en samtale til et menneske koster aldrig ekstra. Prissiden forklarer inkluderede pladser og den gratis plans minimumsgebyr."
+        "Free includes 100 AI messages a month, and paid plans include a monthly AI credit. Seats are unlimited on every plan, and handing a conversation to a human never costs extra. The pricing page explains the details."
       ]
     ],
     "closing": {
@@ -1176,7 +1155,7 @@
         ],
         [
           "Kan mit team også bruge det?",
-          "Ja. Inviter holdkammerater, tilføj pladser, når du vokser, og de får deltagelsesmeddelelser, når en kunde behøver en person."
+          "Yes. Invite as many teammates as you like, since seats are unlimited, and they'll get Join alerts when a customer needs a person."
         ]
       ]
     },
@@ -3516,7 +3495,7 @@
       },
       {
         "name": "Teaminvitationer",
-        "body": "Inviter kolleger via e-mail, og tilføj pladser i takt med at teamet vokser."
+        "body": "Invite as many teammates by email as you like: seats are unlimited."
       },
       {
         "name": "Automatiske tickets",
@@ -3612,7 +3591,7 @@
       },
       {
         "name": "Kreditbaserede planer",
-        "body": "Betalte planer inkluderer en månedlig AI-kredit, og ekstra pladser er enkle tilkøb."
+        "body": "Paid plans include a monthly AI credit, and seats are unlimited."
       },
       {
         "name": "E-mailsvar",
@@ -3747,7 +3726,7 @@
         },
         {
           "q": "Hvordan fungerer betalte planer?",
-          "a": "Betalte planer inkluderer en månedlig AI-kredit, og ekstra pladser er enkle tilkøb. Se prissiden for detaljer."
+          "a": "Paid plans include a monthly AI credit, and seats are unlimited. See the pricing page for details."
         }
       ]
     },
@@ -3904,7 +3883,7 @@
         },
         {
           "t": "Et lille team",
-          "d": "Fordel samtaler, del indbakken, tilføj pladser når du har brug for dem."
+          "d": "Assign conversations, share the inbox, invite the whole team."
         },
         {
           "t": "Skalerer op",

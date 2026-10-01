@@ -599,20 +599,7 @@
         },
         "seats": {
           "name": "Chi può accedere",
-          "rows": {
-            "included": {
-              "label": "Posti inclusi",
-              "description": "Colleghi coperti dal prezzo del piano, proprietario del workspace incluso."
-            },
-            "extra": {
-              "label": "Posti extra",
-              "description": "Ogni collega oltre i posti inclusi, su qualsiasi piano."
-            },
-            "ceiling": {
-              "label": "Limite posti",
-              "description": "Il punto in cui hai bisogno di un piano più grande piuttosto che di un altro posto."
-            }
-          }
+          "rows": {}
         },
         "product": {
           "name": "Il prodotto",
@@ -665,8 +652,7 @@
       "standard": "Standard",
       "priority": "Prioritario",
       "messages": "messaggi",
-      "credit": "credito",
-      "seatBundleSummary": "3 posti per $2, 5 per $3"
+      "credit": "credito"
     },
     "billing": {
       "eyebrow": "Fatturazione chiara e semplice",
@@ -697,10 +683,7 @@
       "eyebrow": "Aggiungi capacità",
       "title": "Crescere senza cambiare il tuo modo di lavorare.",
       "subtitle": "Aggiungi persone o capacità IA solo quando ne hai bisogno. La tua casella, conoscenza e storico conversazioni restano esattamente dove sono.",
-      "teammatesTitle": "Colleghi aggiuntivi",
-      "teammatesDesc": "Dai a più persone il proprio accesso condividendo la stessa casella, conoscenza e credito IA. Restano nel tuo piano ogni mese finché non li rimuovi.",
       "perMonth": "al mese",
-      "seatsWord": "posti",
       "topUpAnytime": "Ricarica in qualsiasi momento",
       "onAnyPaidPlan": "su qualsiasi piano a pagamento",
       "creditTitle": "Credito IA aggiuntivo",
@@ -728,7 +711,7 @@
       "items": [
         {
           "q": "Quanto costano i piani?",
-          "a": "Free è $0. I piani mensili sono Starter a $12 con $7 di credito IA ogni mese, Growth a $59 con $40, e Scale a $299 con $240. La fatturazione annuale offre due mesi gratis — paghi per dieci mesi e ne ottieni dodici: Starter costa $120 all'anno ($10/mese), Growth $590 ($49,17/mese), e Scale $2.990 ($249,17/mese)."
+          "a": "Free è $0. I piani mensili sono Starter a $12 con $7 di credito IA ogni mese, Growth a $59 con $40, e Scale a $299 con $240. La fatturazione annuale offre due mesi gratis — paghi per dieci mesi e ne ottieni dodici: Starter costa $120 all'anno ($10/mese), Growth $588 ($49,17/mese), e Scale $2.990 ($249,17/mese)."
         },
         {
           "q": "Come funziona il limite IA?",
@@ -747,8 +730,8 @@
           "a": "L'IA passa le nuove conversazioni direttamente al tuo team invece di rispondere. Su un piano a pagamento puoi ricaricare il credito in qualsiasi momento, o attivare la ricarica automatica affinché non si fermi mai. Le ricariche non scadono mai. Il tuo credito mensile si azzera a ogni periodo di fatturazione."
         },
         {
-          "q": "Quanto costa un collega in più?",
-          "a": "I posti extra arrivano in pacchetti su ogni piano, incluso Free: 3 posti per $2 al mese, o 5 per $3. Posti e credito IA sono fatturati completamente separati — aggiungere un collega non tocca mai il tuo limite IA."
+          "q": "Do I pay for each teammate?",
+          "a": "No. Seats are unlimited on every plan, including Free, so adding a teammate costs nothing. Seats and AI credit are billed completely separately — adding a teammate never touches your AI allowance."
         },
         {
           "q": "Posso annullare in qualsiasi momento?",
@@ -787,8 +770,7 @@
         "cta": "Inizia ora",
         "features": [
           "Fino a 100 messaggi IA/mese",
-          "2 posti inclusi",
-          "Pacchetti posti da $0,60/posto",
+          "Posti illimitati",
           "Base di conoscenza di 20 MB",
           "Widget di chat sul sito",
           "Casella condivisa con passaggio"
@@ -800,8 +782,7 @@
         "cta": "Inizia ora",
         "features": [
           "$7 di credito IA ogni mese",
-          "5 posti inclusi",
-          "Pacchetti posti da $0,60/posto",
+          "Posti illimitati",
           "Base di conoscenza di 200 MB",
           "Ricarica credito in qualsiasi momento",
           "Analisi visitatori"
@@ -813,8 +794,7 @@
         "cta": "Inizia ora",
         "features": [
           "$40 di credito IA ogni mese",
-          "15 posti inclusi",
-          "Pacchetti posti da $0,60/posto",
+          "Posti illimitati",
           "Base di conoscenza di 1 GB",
           "Ricarica credito in qualsiasi momento",
           "Registro di controllo IA completo",
@@ -827,8 +807,7 @@
         "cta": "Inizia ora",
         "features": [
           "$240 di credito IA ogni mese",
-          "40 posti inclusi",
-          "Pacchetti posti da $0,60/posto",
+          "Posti illimitati",
           "Base di conoscenza di 5 GB",
           "Ricarica credito in qualsiasi momento",
           "Integrazioni e accesso API"
@@ -946,7 +925,7 @@
       ],
       [
         "Come è strutturato il prezzo?",
-        "Free include 100 messaggi IA al mese, e i piani a pagamento includono un credito IA mensile. I colleghi aggiuntivi arrivano in pacchetti di posti da $0,60 a posto, e passare una conversazione a un umano non costa mai extra. La pagina dei prezzi spiega i posti inclusi e la spesa minima del piano gratuito."
+        "Free includes 100 AI messages a month, and paid plans include a monthly AI credit. Seats are unlimited on every plan, and handing a conversation to a human never costs extra. The pricing page explains the details."
       ]
     ],
     "closing": {
@@ -1176,7 +1155,7 @@
         ],
         [
           "Il mio team può usarlo anche?",
-          "Sì. Invita colleghi, aggiungi posti man mano che crescete, e riceveranno avvisi di partecipazione quando un cliente ha bisogno di una persona."
+          "Yes. Invite as many teammates as you like, since seats are unlimited, and they'll get Join alerts when a customer needs a person."
         ]
       ]
     },
@@ -3516,7 +3495,7 @@
       },
       {
         "name": "Inviti al team",
-        "body": "Invita colleghi via email e aggiungi posti man mano che il tuo team cresce."
+        "body": "Invite as many teammates by email as you like: seats are unlimited."
       },
       {
         "name": "Ticket automatici",
@@ -3612,7 +3591,7 @@
       },
       {
         "name": "Piani a crediti",
-        "body": "I piani a pagamento includono un credito AI mensile, e i posti extra sono semplici componenti aggiuntivi."
+        "body": "Paid plans include a monthly AI credit, and seats are unlimited."
       },
       {
         "name": "Risposte via email",
@@ -3747,7 +3726,7 @@
         },
         {
           "q": "Come funzionano i piani a pagamento?",
-          "a": "I piani a pagamento includono un credito AI mensile, e i posti extra sono semplici componenti aggiuntivi. Consulta la pagina prezzi per i dettagli."
+          "a": "Paid plans include a monthly AI credit, and seats are unlimited. See the pricing page for details."
         }
       ]
     },
@@ -3904,7 +3883,7 @@
         },
         {
           "t": "Un piccolo team",
-          "d": "Assegna le conversazioni, condividi la casella, aggiungi posti quando servono."
+          "d": "Assign conversations, share the inbox, invite the whole team."
         },
         {
           "t": "In espansione",

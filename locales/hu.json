@@ -599,20 +599,7 @@
         },
         "seats": {
           "name": "Ki tud bejelentkezni",
-          "rows": {
-            "included": {
-              "label": "Tartalmazott helyek",
-              "description": "A csomag árában szereplő csapattagok, beleértve a munkaterület tulajdonosát."
-            },
-            "extra": {
-              "label": "Extra helyek",
-              "description": "Minden csapattag a tartalmazott helyeken túl, bármely csomagon."
-            },
-            "ceiling": {
-              "label": "Helyplafon",
-              "description": "Az a pont, ahol nagyobb csomagra van szükséged egy másik hely helyett."
-            }
-          }
+          "rows": {}
         },
         "product": {
           "name": "A termék",
@@ -665,8 +652,7 @@
       "standard": "Standard",
       "priority": "Prioritásos",
       "messages": "üzenet",
-      "credit": "egyenleg",
-      "seatBundleSummary": "3 hely $2, 5 hely $3"
+      "credit": "egyenleg"
     },
     "billing": {
       "eyebrow": "Átlátható, egyszerű számlázás",
@@ -697,10 +683,7 @@
       "eyebrow": "Kapacitás hozzáadása",
       "title": "Növekedj anélkül, hogy megváltoztatnád a munkamódodat.",
       "subtitle": "Csak akkor adj hozzá embereket vagy AI-kapacitást, amikor szükséged van rá. A postafiókod, tudásod és beszélgetési előzményeid pontosan ott maradnak, ahol vannak.",
-      "teammatesTitle": "További csapattagok",
-      "teammatesDesc": "Adj több embernek saját bejelentkezést, amíg megosztják ugyanazt a postafiókot, tudást és AI-egyenleget. Havonta a csomagodon maradnak, amíg el nem távolítod őket.",
       "perMonth": "havonta",
-      "seatsWord": "hely",
       "topUpAnytime": "Töltsd fel bármikor",
       "onAnyPaidPlan": "bármely fizetős csomagon",
       "creditTitle": "További AI-egyenleg",
@@ -728,7 +711,7 @@
       "items": [
         {
           "q": "Mennyibe kerülnek a csomagok?",
-          "a": "A Free $0. A havi csomagok: Starter $12, havi $7 AI-egyenleggel, Growth $59, $40-nel, és Scale $299, $240-nel. Az éves számlázásnál két hónap ingyenes — tíz hónapért fizetsz, tizenkettőt kapsz: a Starter $120 évente ($10/hó), a Growth $590 ($49.17/hó), a Scale $2 990 ($249.17/hó)."
+          "a": "A Free $0. A havi csomagok: Starter $12, havi $7 AI-egyenleggel, Growth $59, $40-nel, és Scale $299, $240-nel. Az éves számlázásnál két hónap ingyenes — tíz hónapért fizetsz, tizenkettőt kapsz: a Starter $120 évente ($10/hó), a Growth $588 ($49/hó), a Scale $2 990 ($249/hó)."
         },
         {
           "q": "Hogyan működik az AI-kvóta?",
@@ -747,8 +730,8 @@
           "a": "Az AI válaszadás helyett közvetlenül a csapatodnak adja át az új beszélgetéseket. Fizetős csomagon bármikor feltöltheted az egyenleget, vagy bekapcsolhatod az automatikus feltöltést, hogy soha ne álljon meg. A feltöltések soha nem járnak le. A havi egyenleged minden számlázási időszakban visszaáll."
         },
         {
-          "q": "Mennyibe kerül egy extra csapattag?",
-          "a": "Az extra helyek csomagokban érkeznek minden csomagon, beleértve a Free-t is: 3 hely havi $2-ért, vagy 5 hely $3-ért. A helyek és az AI-egyenleg teljesen külön kerülnek számlázásra — egy csapattag hozzáadása soha nem érinti az AI-kvótádat."
+          "q": "Do I pay for each teammate?",
+          "a": "No. Seats are unlimited on every plan, including Free, so adding a teammate costs nothing. Seats and AI credit are billed completely separately — adding a teammate never touches your AI allowance."
         },
         {
           "q": "Bármikor lemondhatom?",
@@ -787,8 +770,7 @@
         "cta": "Kezdés",
         "features": [
           "Havi 100 AI-üzenetig",
-          "2 hely tartalmazva",
-          "Helypaketek $0.60/helytől",
+          "Korlátlan számú hely",
           "20 MB tudásbázis",
           "Weboldal chat widget",
           "Megosztott postafiók átadással"
@@ -800,8 +782,7 @@
         "cta": "Kezdés",
         "features": [
           "$7 AI-egyenleg havonta",
-          "5 hely tartalmazva",
-          "Helypaketek $0.60/helytől",
+          "Korlátlan számú hely",
           "200 MB tudásbázis",
           "Töltsd fel az egyenleget bármikor",
           "Látogatói elemzés"
@@ -813,8 +794,7 @@
         "cta": "Kezdés",
         "features": [
           "$40 AI-egyenleg havonta",
-          "15 hely tartalmazva",
-          "Helypaketek $0.60/helytől",
+          "Korlátlan számú hely",
           "1 GB tudásbázis",
           "Töltsd fel az egyenleget bármikor",
           "Teljes AI auditnyomvonal",
@@ -827,8 +807,7 @@
         "cta": "Kezdés",
         "features": [
           "$240 AI-egyenleg havonta",
-          "40 hely tartalmazva",
-          "Helypaketek $0.60/helytől",
+          "Korlátlan számú hely",
           "5 GB tudásbázis",
           "Töltsd fel az egyenleget bármikor",
           "Integrációk és API-hozzáférés"
@@ -946,7 +925,7 @@
       ],
       [
         "Hogyan épül fel az árazás?",
-        "A Free havi 100 AI üzenetet tartalmaz, a fizetős csomagok havi AI egyenleget tartalmaznak. A további csapattagok $0.60/helytől kezdődő helypaketekben érkeznek, és egy beszélgetés emberhez való átadása soha nem kerül extra pénzbe. Az árazási oldal elmagyarázza a tartalmazott helyeket és az ingyenes csomag minimum díját."
+        "Free includes 100 AI messages a month, and paid plans include a monthly AI credit. Seats are unlimited on every plan, and handing a conversation to a human never costs extra. The pricing page explains the details."
       ]
     ],
     "closing": {
@@ -1176,7 +1155,7 @@
         ],
         [
           "A csapatom is használhatja?",
-          "Igen. Hívd meg a csapattagjaidat, adj hozzá helyeket, amikor növekszel, és csatlakozási értesítéseket kapnak, amikor egy ügyfélnek emberre van szüksége."
+          "Yes. Invite as many teammates as you like, since seats are unlimited, and they'll get Join alerts when a customer needs a person."
         ]
       ]
     },
@@ -3516,7 +3495,7 @@
       },
       {
         "name": "Csapatmeghívók",
-        "body": "Hívj meg csapattagokat e-mailben, és adj hozzá helyeket, amint a csapatod növekszik."
+        "body": "Invite as many teammates by email as you like: seats are unlimited."
       },
       {
         "name": "Automatikus jegyek",
@@ -3612,7 +3591,7 @@
       },
       {
         "name": "Kreditalapú csomagok",
-        "body": "A fizetős csomagok havi AI kreditet tartalmaznak, és az extra helyek egyszerű kiegészítők."
+        "body": "Paid plans include a monthly AI credit, and seats are unlimited."
       },
       {
         "name": "E-mail válaszok",
@@ -3747,7 +3726,7 @@
         },
         {
           "q": "Hogyan működnek a fizetős csomagok?",
-          "a": "A fizetős csomagok havi AI kreditet tartalmaznak, és az extra helyek egyszerű kiegészítők. A részletekért nézd meg az árazási oldalt."
+          "a": "Paid plans include a monthly AI credit, and seats are unlimited. See the pricing page for details."
         }
       ]
     },
@@ -3904,7 +3883,7 @@
         },
         {
           "t": "Kis csapat",
-          "d": "Osszd ki a beszélgetéseket, ossz meg egy postaládát, adj hozzá helyeket, amikor szükséges."
+          "d": "Assign conversations, share the inbox, invite the whole team."
         },
         {
           "t": "Növekedés",

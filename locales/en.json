@@ -270,22 +270,23 @@
     }
   },
   "home": {
+    "platform": {
+      "title": "AI that checks the way your best agent would",
+      "subtitle": "It verifies who it is talking to, looks up the real payment or order, keeps private details out of the model, then replies. When a person is needed, your team gets everything it found."
+    },
+    "toolsLine": {
+      "title": "Connects to the payment, store, CRM and ticketing tools you already use, in minutes, not sprints."
+    },
     "hero": {
       "badge": "AI customer support",
-      "titlePrefix": "Support that",
-      "words": [
-        "answers.",
-        "resolves.",
-        "remembers.",
-        "hands off."
-      ],
-      "subtitle": "An AI that answers from your own knowledge, checks real payments and orders, and hands over to your team with the full story when a person is needed.",
+      "headLead": "Let AI answer the repeated questions,",
+      "headEmphasis": "so your team handles the ones that matter.",
+      "subtitle": "Elpino answers, checks payments and orders, and hands off to your team with the full story.",
       "ctaPrimary": "Start free",
       "ctaSecondary": "Try it yourself",
       "trust": [
         "100 free AI messages a month",
-        "No card required",
-        "Live in an afternoon"
+        "No card required"
       ],
       "stickers": [
         "Resolved by AI",
@@ -421,6 +422,7 @@
       "eyebrow": "The product",
       "titlePrefix": "Everything a support desk needs,",
       "titleHl": "in one place.",
+      "title3": "Everything a support desk needs, in 3 steps",
       "items": [
         {
           "tag": "AI agent",
@@ -498,9 +500,9 @@
     "statement": "Elpino answers what it knows, does what you allow, and asks a person for the rest.",
     "integrations": {
       "eyebrow": "Integrations",
-      "titlePrefix": "Plugs into what",
-      "titleHl": "you already use.",
-      "subtitle": "Payments for lookups and links, project tools for tickets, and MCP for your own systems. Elpino sits in the middle, and everything you connect works with it.",
+      "titlePrefix": "Works with the tools you already use.",
+      "titleHl": "Plug and play.",
+      "subtitle": "Connect your payments, store, CRM and ticketing in a few clicks, or plug in anything else with MCP.",
       "tags": [
         "Payments",
         "Tickets",
@@ -674,17 +676,9 @@
         "seats": {
           "name": "Who can log in",
           "rows": {
-            "included": {
-              "label": "Seats included",
-              "description": "Teammates covered by the plan price, workspace owner included."
-            },
-            "extra": {
-              "label": "Extra seats",
-              "description": "Every teammate past the included seats, on any plan."
-            },
-            "ceiling": {
-              "label": "Seat ceiling",
-              "description": "The point where you need a bigger plan rather than another seat."
+            "unlimited": {
+              "label": "Seats",
+              "description": "Teammates who can log in, workspace owner included. Every plan has unlimited seats, Free too, and adding one never changes your price or your AI allowance."
             }
           }
         },
@@ -740,7 +734,7 @@
       "priority": "Priority",
       "messages": "messages",
       "credit": "credit",
-      "seatBundleSummary": "3 seats for $2, 5 for $3"
+      "unlimited": "Unlimited"
     },
     "billing": {
       "eyebrow": "Clear, simple billing",
@@ -771,10 +765,7 @@
       "eyebrow": "Add capacity",
       "title": "Grow without changing how you work.",
       "subtitle": "Add people or AI capacity only when you need it. Your inbox, knowledge, and conversation history stay exactly where they are.",
-      "teammatesTitle": "Additional teammates",
-      "teammatesDesc": "Give more people their own login while sharing the same inbox, knowledge, and AI credit. They stay on your plan every month until you remove them.",
       "perMonth": "per month",
-      "seatsWord": "seats",
       "topUpAnytime": "Top up any time",
       "onAnyPaidPlan": "on any paid plan",
       "creditTitle": "Additional AI credit",
@@ -792,7 +783,11 @@
           "name": "Auto-recharge",
           "note": "Optional"
         }
-      ]
+      ],
+      "unlimitedSummary": "Unlimited seats",
+      "unlimitedPer": "on every plan, Free too",
+      "unlimitedTitle": "Bring your whole team",
+      "unlimitedDesc": "Give everyone their own login while you share one inbox, one knowledge base and one AI credit. Seats are never counted or charged, so growing your team never grows your bill."
     },
     "faq": {
       "eyebrow": "FAQ",
@@ -802,7 +797,7 @@
       "items": [
         {
           "q": "What do the plans cost?",
-          "a": "Free is $0. Monthly plans are Starter at $12 with $7 of AI credit each month, Growth at $59 with $40, and Scale at $299 with $240. Annual billing is two months free — you pay for ten months and get twelve: Starter is $120 a year ($10/month), Growth is $590 ($49.17/month), and Scale is $2,990 ($249.17/month)."
+          "a": "Free is $0. Monthly plans are Starter at $12 with $7 of AI credit each month, Growth at $59 with $40, and Scale at $299 with $240. Annual billing is about two months free — you pay for roughly ten months and get twelve: Starter is $120 a year ($10/month), Growth is $588 ($49/month), and Scale is $2,988 ($249/month)."
         },
         {
           "q": "How does the AI allowance work?",
@@ -821,8 +816,8 @@
           "a": "The AI hands new conversations straight to your team instead of answering. On a paid plan you can top up credit at any time, or turn on automatic recharge so it never stops. Top-ups never expire. Your monthly credit resets each billing period."
         },
         {
-          "q": "How much does an extra teammate cost?",
-          "a": "Extra seats come in packs on every plan including Free: 3 seats for $2 a month, or 5 for $3. Seats and AI credit are billed completely separately — adding a teammate never touches your AI allowance."
+          "q": "Do I pay for each teammate?",
+          "a": "No. Seats are unlimited on every plan, including Free, so adding a teammate costs nothing. Seats and AI credit are billed completely separately — adding a teammate never touches your AI allowance."
         },
         {
           "q": "Can I cancel anytime?",
@@ -861,8 +856,7 @@
         "cta": "Get started",
         "features": [
           "Up to 100 AI messages/month",
-          "2 seats included",
-          "Seat packs from $0.60/seat",
+          "Unlimited seats",
           "20 MB knowledge base",
           "Website chat widget",
           "Shared inbox with handoff"
@@ -874,8 +868,7 @@
         "cta": "Get started",
         "features": [
           "$7 AI credit every month",
-          "5 seats included",
-          "Seat packs from $0.60/seat",
+          "Unlimited seats",
           "200 MB knowledge base",
           "Top up credit any time",
           "Visitor analytics"
@@ -887,8 +880,7 @@
         "cta": "Get started",
         "features": [
           "$40 AI credit every month",
-          "15 seats included",
-          "Seat packs from $0.60/seat",
+          "Unlimited seats",
           "1 GB knowledge base",
           "Top up credit any time",
           "Full AI audit trail",
@@ -901,8 +893,7 @@
         "cta": "Get started",
         "features": [
           "$240 AI credit every month",
-          "40 seats included",
-          "Seat packs from $0.60/seat",
+          "Unlimited seats",
           "5 GB knowledge base",
           "Top up credit any time",
           "Integrations & API access"
@@ -1020,7 +1011,7 @@
       ],
       [
         "How is pricing structured?",
-        "Free includes 100 AI messages a month, and paid plans include a monthly AI credit. Extra teammates come in seat packs from $0.60 a seat, and handing a conversation to a human never costs extra. The pricing page explains included seats and the free-plan minimum charge."
+        "Free includes 100 AI messages a month, and paid plans include a monthly AI credit. Seats are unlimited on every plan, and handing a conversation to a human never costs extra. The pricing page explains the details."
       ]
     ],
     "closing": {
@@ -1250,7 +1241,7 @@
         ],
         [
           "Can my team use it too?",
-          "Yes. Invite teammates, add seats as you grow, and they'll get Join alerts when a customer needs a person."
+          "Yes. Invite as many teammates as you like, since seats are unlimited, and they'll get Join alerts when a customer needs a person."
         ]
       ]
     },
@@ -3535,7 +3526,7 @@
       },
       {
         "name": "Team invites",
-        "body": "Invite teammates by email and add seats as your team grows."
+        "body": "Invite as many teammates by email as you like: seats are unlimited."
       },
       {
         "name": "Auto tickets",
@@ -3631,7 +3622,7 @@
       },
       {
         "name": "Credit-based plans",
-        "body": "Paid plans include a monthly AI credit, and extra seats are simple add-ons."
+        "body": "Paid plans include a monthly AI credit, and seats are unlimited."
       },
       {
         "name": "Email replies",
@@ -3766,7 +3757,7 @@
         },
         {
           "q": "How do paid plans work?",
-          "a": "Paid plans include a monthly AI credit, and extra seats are simple add-ons. See the pricing page for details."
+          "a": "Paid plans include a monthly AI credit, and seats are unlimited. See the pricing page for details."
         }
       ]
     },
@@ -3923,7 +3914,7 @@
         },
         {
           "t": "A small team",
-          "d": "Assign conversations, share the inbox, add seats when you need them."
+          "d": "Assign conversations, share the inbox, invite the whole team."
         },
         {
           "t": "Scaling up",

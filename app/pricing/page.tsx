@@ -6,12 +6,12 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://elpino.chat";
 export const metadata: Metadata = {
   title: "Pricing",
   description:
-    "Elpino pricing: 100 free AI messages, then a monthly AI credit on paid plans. Extra teammates come in seat packs from $0.60 a seat. Handing off to a human never costs extra.",
+    "Elpino pricing: 100 free AI messages, then a monthly AI credit on paid plans. Seats are unlimited. Handing off to a human never costs extra.",
   alternates: { canonical: `${SITE_URL}/pricing` },
   openGraph: {
     title: "Pricing",
     description:
-      "Start with 100 free AI messages. Paid plans include a monthly AI credit; extra teammates come in seat packs from $0.60 a seat.",
+      "Start with 100 free AI messages. Paid plans include a monthly AI credit; seats are unlimited.",
     url: `${SITE_URL}/pricing`,
     type: "website",
   },
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Pricing",
     description:
-      "100 free AI messages, then a monthly AI credit — teammates come in seat packs from $0.60 a seat.",
+      "100 free AI messages, then a monthly AI credit — seats are unlimited.",
   },
 };
 
@@ -36,8 +36,8 @@ const productSchema = {
     { "@type": "Offer", name: "Free", price: "0", priceCurrency: "USD" },
     { "@type": "Offer", name: "Starter (monthly)", price: "12", priceCurrency: "USD" },
     { "@type": "Offer", name: "Starter (annual)", price: "120", priceCurrency: "USD" },
-    { "@type": "Offer", name: "Growth (annual)", price: "590", priceCurrency: "USD" },
-    { "@type": "Offer", name: "Scale (annual)", price: "2990", priceCurrency: "USD" },
+    { "@type": "Offer", name: "Growth (annual)", price: "588", priceCurrency: "USD" },
+    { "@type": "Offer", name: "Scale (annual)", price: "2988", priceCurrency: "USD" },
     { "@type": "Offer", name: "Growth", price: "59", priceCurrency: "USD" },
     { "@type": "Offer", name: "Scale", price: "299", priceCurrency: "USD" },
   ],

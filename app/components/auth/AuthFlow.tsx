@@ -428,25 +428,19 @@ export function AuthFlow({ initialMode }: { initialMode: "login" | "signup" }) {
     setExistingAccountEmail(null);
   };
 
-  const loginDots = { backgroundImage: "radial-gradient(#000 1.2px, transparent 1.2px)", backgroundSize: "14px 14px" };
-
   const loginExperience = mode === "login" ? (
-    <main lang={language} className="relative min-h-screen overflow-hidden bg-[#fff8ec] font-display text-[#11120f] antialiased">
-      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 opacity-[0.35]" style={loginDots} />
-      <span aria-hidden className="pointer-events-none absolute left-[8%] top-[16%] hidden -rotate-6 rounded-2xl border-2 border-[#11120f] bg-[#ffd84d] px-4 py-2 text-[14px] font-semibold sm:block">{t("auth.signup.loginScreen.title")}</span>
-      <span aria-hidden className="pointer-events-none absolute right-[9%] top-[22%] hidden rotate-3 rounded-2xl border-2 border-[#11120f] bg-white px-4 py-2 text-[14px] font-semibold sm:block">{t("auth.signup.formTitle")}</span>
+    <main lang={language} className="relative min-h-screen overflow-hidden bg-white font-display text-[#11120f] antialiased">
 
-      <section className="relative z-10 mx-auto flex min-h-screen w-full max-w-[500px] flex-col items-center justify-center px-6 py-16 text-center">
+      <section className="relative z-10 mx-auto flex min-h-screen w-full max-w-[460px] flex-col items-start justify-center px-6 py-16 text-left">
         <Link href="/" aria-label="Elpino home" className="mb-6 flex w-fit items-center">
           <Image src="/elpino.png" alt="Elpino" width={906} height={275} priority className="h-8 w-auto object-contain" />
         </Link>
 
-        <div className="w-full animate-[fadeIn_.55s_ease-out_both] rounded-[22px] border-2 border-[#11120f] bg-white p-8 text-left shadow-[6px_6px_0_0_#11120f]">
+        <div className="w-full animate-[fadeIn_.55s_ease-out_both] text-left">
           {!pendingVerifyEmail && (
-            <div className="text-center">
-              <p className="mx-auto w-fit rounded-full border-2 border-[#11120f] bg-[#ffd84d] px-3.5 py-1 font-mono text-[11px] font-medium uppercase tracking-[0.12em]">{t("auth.signup.signIn")}</p>
-              <h1 className="mt-4 text-[24px] font-semibold leading-[1.1] tracking-[-0.03em]">{t("auth.signup.loginScreen.title")}</h1>
-              <p className="mt-1 text-[24px] font-semibold leading-[1.1] tracking-[-0.03em] text-[#11120f]/35">{t("auth.signup.loginScreen.subtitle")}</p>
+            <div>
+              <h1 className="text-[28px] font-semibold leading-[1.1] tracking-[-0.03em]">{t("auth.signup.loginScreen.title")}</h1>
+              <p className="mt-1 text-[28px] font-semibold leading-[1.1] tracking-[-0.03em] text-[#11120f]/35">{t("auth.signup.loginScreen.subtitle")}</p>
             </div>
           )}
 
@@ -454,28 +448,28 @@ export function AuthFlow({ initialMode }: { initialMode: "login" | "signup" }) {
             {pendingVerifyEmail ? (
               <form onSubmit={handleVerifyOtp} className="w-full text-center">
                 <h1 className="text-center text-[22px] font-semibold tracking-[-0.02em]">{t("auth.signup.enterCode")}</h1>
-                <p className="mt-2 text-center text-[14px] text-[#11120f]/50">{pendingVerifyEmail}{" "}<button type="button" onClick={handleChangeEmail} className="font-semibold text-[#3784ff] hover:underline">{t("auth.signup.changeEmail")}</button></p>
+                <p className="mt-2 text-center text-[14px] text-[#11120f]/50">{pendingVerifyEmail}{" "}<button type="button" onClick={handleChangeEmail} className="font-semibold text-[#0078f4] hover:underline">{t("auth.signup.changeEmail")}</button></p>
                 <OtpInput value={otp} onChange={setOtp} disabled={Boolean(loading)} />
-                <button type="submit" disabled={Boolean(loading) || otp.length !== 6} className="mt-7 flex h-12 w-full items-center justify-center gap-2 rounded-full border-2 border-[#11120f] bg-[#3784ff] text-[15px] font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[#2f77ea] disabled:pointer-events-none disabled:opacity-40">
+                <button type="submit" disabled={Boolean(loading) || otp.length !== 6} className="mt-7 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#11120f] text-[15px] font-semibold text-white transition hover:opacity-90 hover:bg-[#2f77ea] disabled:pointer-events-none disabled:opacity-40">
                   {loading === "email" && <Spinner />}{t("auth.signup.verifyBtn")}
                 </button>
-                <button type="button" onClick={handleResendOtp} disabled={resending} className="mt-5 w-full text-center text-[14px] font-semibold text-[#3784ff] hover:underline disabled:opacity-50">{resent ? t("auth.signup.codeSent") : resending ? t("auth.signup.sending") : t("auth.signup.resendCode")}</button>
+                <button type="button" onClick={handleResendOtp} disabled={resending} className="mt-5 w-full text-center text-[14px] font-semibold text-[#0078f4] hover:underline disabled:opacity-50">{resent ? t("auth.signup.codeSent") : resending ? t("auth.signup.sending") : t("auth.signup.resendCode")}</button>
               </form>
             ) : (
               <>
                 <form onSubmit={handleEmailLogin} className="w-full space-y-4">
                   <div>
                     <label htmlFor="login-email" className="mb-2 block text-[13px] font-semibold text-[#11120f]/70">{t("auth.signup.emailLabel")}</label>
-                    <input id="login-email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder={t("auth.signup.emailPlaceholder")} type="email" autoComplete="email" required autoFocus className="h-12 w-full rounded-xl border-2 border-[#11120f] bg-white px-4 text-[15px] outline-none transition placeholder:text-[#11120f]/30 focus:ring-4 focus:ring-[#3784ff]/20" />
+                    <input id="login-email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder={t("auth.signup.emailPlaceholder")} type="email" autoComplete="email" required autoFocus className="h-12 w-full rounded-[10px] border border-black/30 bg-white px-4 text-[15px] outline-none transition placeholder:text-[#11120f]/30 focus:border-[#0078f4] focus:ring-0" />
                   </div>
                   <div>
                     <div className="mb-2 flex items-center justify-between">
                       <label htmlFor="login-password" className="text-[13px] font-semibold text-[#11120f]/70">{t("auth.signup.passwordLabel")}</label>
-                      <Link href="/forgot-password" className="text-[12px] font-semibold text-[#3784ff] hover:underline">{t("auth.signup.forgotPassword")}</Link>
+                      <Link href="/forgot-password" className="text-[12px] font-semibold text-[#0078f4] hover:underline">{t("auth.signup.forgotPassword")}</Link>
                     </div>
-                    <input id="login-password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder={t("auth.signup.passwordPlaceholder")} type="password" autoComplete="current-password" minLength={8} required className="h-12 w-full rounded-xl border-2 border-[#11120f] bg-white px-4 text-[15px] outline-none transition placeholder:text-[#11120f]/30 focus:ring-4 focus:ring-[#3784ff]/20" />
+                    <input id="login-password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder={t("auth.signup.passwordPlaceholder")} type="password" autoComplete="current-password" minLength={8} required className="h-12 w-full rounded-[10px] border border-black/30 bg-white px-4 text-[15px] outline-none transition placeholder:text-[#11120f]/30 focus:border-[#0078f4] focus:ring-0" />
                   </div>
-                  <button type="submit" disabled={Boolean(loading)} className="flex h-12 w-full items-center justify-center gap-2 rounded-full border-2 border-[#11120f] bg-[#3784ff] text-[15px] font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[#2f77ea] disabled:pointer-events-none disabled:cursor-wait disabled:opacity-50">
+                  <button type="submit" disabled={Boolean(loading)} className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#11120f] text-[15px] font-semibold text-white transition hover:opacity-90 hover:bg-[#2f77ea] disabled:pointer-events-none disabled:cursor-wait disabled:opacity-50">
                     {loading === "email" && <Spinner />}{t("auth.signup.signIn")}
                   </button>
                 </form>
@@ -489,7 +483,7 @@ export function AuthFlow({ initialMode }: { initialMode: "login" | "signup" }) {
                   type="button"
                   onClick={handleGoogleLogin}
                   disabled={Boolean(loading)}
-                  className="flex h-12 w-full items-center justify-center gap-3 rounded-full border-2 border-[#11120f] bg-white text-[15px] font-medium text-[#11120f] transition hover:-translate-y-0.5 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60"
+                  className="flex h-12 w-full items-center justify-center gap-3 rounded-full border border-black/25 bg-white text-[15px] font-medium text-[#11120f] transition hover:opacity-90 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   <span className="flex h-5 w-5 items-center justify-center">{loading === "google" ? <Spinner dark /> : <GoogleIcon />}</span>
                   <span>{t("auth.signup.continueGoogle")}</span>
@@ -507,7 +501,7 @@ export function AuthFlow({ initialMode }: { initialMode: "login" | "signup" }) {
                     onClick={() => setLanguageOpen((open) => !open)}
                     aria-expanded={languageOpen}
                     aria-haspopup="listbox"
-                    className="flex h-9 items-center gap-2 rounded-full border-2 border-[#11120f] bg-white px-3 text-[13px] text-[#11120f]/60 transition hover:bg-[#fff8ec]"
+                    className="flex h-9 items-center gap-2 rounded-full border border-black/25 bg-white px-3 text-[13px] text-[#11120f]/60 transition hover:bg-[#fff8ec]"
                   >
                     <FlagImage countryCode={LANGUAGES.find((item) => item.code === language)?.countryCode || "gb"} alt="" />
                     <span>{signupLabels.choose}: {LANGUAGES.find((item) => item.code === language)?.name}</span>
@@ -534,7 +528,7 @@ export function AuthFlow({ initialMode }: { initialMode: "login" | "signup" }) {
                             >
                               <FlagImage countryCode={item.countryCode} alt="" />
                               <span>{item.name}</span>
-                              {language === item.code && <span className="ml-auto text-[#3784ff]">✓</span>}
+                              {language === item.code && <span className="ml-auto text-[#0078f4]">✓</span>}
                             </button>
                           ))}
                         </div>
@@ -548,27 +542,24 @@ export function AuthFlow({ initialMode }: { initialMode: "login" | "signup" }) {
         </div>
       </section>
 
+
     </main>
   ) : null;
 
   if (loginExperience) return loginExperience;
 
   return (
-    <main lang={language} className="relative min-h-screen overflow-hidden bg-[#fff8ec] font-display text-[#11120f] antialiased">
-      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 opacity-[0.35]" style={loginDots} />
-      <span aria-hidden className="pointer-events-none absolute left-[8%] top-[16%] hidden -rotate-6 rounded-2xl border-2 border-[#11120f] bg-[#ffd84d] px-4 py-2 text-[14px] font-semibold sm:block">{t("auth.signup.subtitle")}</span>
-      <span aria-hidden className="pointer-events-none absolute right-[9%] top-[22%] hidden rotate-3 rounded-2xl border-2 border-[#11120f] bg-white px-4 py-2 text-[14px] font-semibold sm:block">{t("auth.signup.formTitle")}</span>
+    <main lang={language} className="relative min-h-screen overflow-hidden bg-white font-display text-[#11120f] antialiased">
 
-      <section className="relative z-10 mx-auto flex min-h-screen w-full max-w-[500px] flex-col items-center justify-center px-6 py-16 text-center">
+      <section className="relative z-10 mx-auto flex min-h-screen w-full max-w-[460px] flex-col items-start justify-center px-6 py-16 text-left">
         <Link href="/" aria-label="Elpino home" className="mb-6 flex w-fit items-center">
           <Image src="/elpino.png" alt="Elpino" width={906} height={275} priority className="h-8 w-auto object-contain" />
         </Link>
 
-        <div className="w-full animate-[fadeIn_.55s_ease-out_both] rounded-[22px] border-2 border-[#11120f] bg-white p-8 text-left shadow-[6px_6px_0_0_#11120f]">
+        <div className="w-full animate-[fadeIn_.55s_ease-out_both] text-left">
           {!pendingVerifyEmail && !verifiedEmail && (
-            <div className="text-center">
-              <p className="mx-auto w-fit rounded-full border-2 border-[#11120f] bg-[#ffd84d] px-3.5 py-1 font-mono text-[11px] font-medium uppercase tracking-[0.12em]">{t("auth.signup.signup")}</p>
-              <h1 className="mt-4 text-[24px] font-semibold leading-[1.1] tracking-[-0.03em]">{t("auth.signup.title")}</h1>
+            <div>
+              <h1 className="text-[28px] font-semibold leading-[1.1] tracking-[-0.03em]">{t("auth.signup.title")}</h1>
               <p className="mt-1.5 text-[14px] leading-6 text-[#11120f]/50">{t("auth.signup.subtitle")}</p>
             </div>
           )}
@@ -591,7 +582,7 @@ export function AuthFlow({ initialMode }: { initialMode: "login" | "signup" }) {
                   autoComplete="name"
                   required
                   autoFocus
-                  className="h-12 w-full rounded-xl border-2 border-[#11120f] bg-white px-4 text-[15px] outline-none transition placeholder:text-[#11120f]/30 focus:ring-4 focus:ring-[#3784ff]/20"
+                  className="h-12 w-full rounded-[10px] border border-black/30 bg-white px-4 text-[15px] outline-none transition placeholder:text-[#11120f]/30 focus:border-[#0078f4] focus:ring-0"
                 />
 
                 <label htmlFor="profile-password" className="mb-2 mt-4 block text-[13px] font-semibold text-[#11120f]/70">
@@ -606,12 +597,12 @@ export function AuthFlow({ initialMode }: { initialMode: "login" | "signup" }) {
                     type={showNewPassword ? "text" : "password"}
                     autoComplete="new-password"
                     required
-                    className="h-12 w-full rounded-xl border-2 border-[#11120f] bg-white px-4 pr-14 text-[15px] outline-none transition placeholder:text-[#11120f]/30 focus:ring-4 focus:ring-[#3784ff]/20"
+                    className="h-12 w-full rounded-[10px] border border-black/30 bg-white px-4 pr-14 text-[15px] outline-none transition placeholder:text-[#11120f]/30 focus:border-[#0078f4] focus:ring-0"
                   />
                   <button
                     type="button"
                     onClick={() => setShowNewPassword((value) => !value)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-[#3784ff] hover:underline"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-[#0078f4] hover:underline"
                   >
                     {showNewPassword ? t("auth.signup.hidePassword") : t("auth.signup.showPassword")}
                   </button>
@@ -628,7 +619,7 @@ export function AuthFlow({ initialMode }: { initialMode: "login" | "signup" }) {
                   type={showNewPassword ? "text" : "password"}
                   autoComplete="new-password"
                   required
-                  className="h-12 w-full rounded-xl border-2 border-[#11120f] bg-white px-4 text-[15px] outline-none transition placeholder:text-[#11120f]/30 focus:ring-4 focus:ring-[#3784ff]/20"
+                  className="h-12 w-full rounded-[10px] border border-black/30 bg-white px-4 text-[15px] outline-none transition placeholder:text-[#11120f]/30 focus:border-[#0078f4] focus:ring-0"
                 />
                 {confirmNewPassword.length > 0 && confirmNewPassword !== newPassword && (
                   <p className="mt-1.5 text-[12px] font-medium text-[#c1424a]">{t("auth.signup.passwordsDontMatch")}</p>
@@ -642,7 +633,7 @@ export function AuthFlow({ initialMode }: { initialMode: "login" | "signup" }) {
                     newPassword.length < 8 ||
                     newPassword !== confirmNewPassword
                   }
-                  className="mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-full border-2 border-[#11120f] bg-[#3784ff] text-[15px] font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[#2f77ea] disabled:pointer-events-none disabled:opacity-50"
+                  className="mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#11120f] text-[15px] font-semibold text-white transition hover:opacity-90 hover:bg-[#2f77ea] disabled:pointer-events-none disabled:opacity-50"
                 >
                   {loading === "profile" && <Spinner />}
                   {t("auth.signup.continueBtn")}
@@ -656,15 +647,15 @@ export function AuthFlow({ initialMode }: { initialMode: "login" | "signup" }) {
                 <h1 className="text-center text-[22px] font-semibold tracking-[-0.02em]">{t("auth.signup.enterCode")}</h1>
                 <p className="mt-2 text-center text-[14px] text-[#11120f]/50">
                   {pendingVerifyEmail}{" "}
-                  <button type="button" onClick={handleChangeEmail} className="font-semibold text-[#3784ff] hover:underline">
+                  <button type="button" onClick={handleChangeEmail} className="font-semibold text-[#0078f4] hover:underline">
                     {t("auth.signup.changeEmail")}
                   </button>
                 </p>
                 <OtpInput value={otp} onChange={setOtp} disabled={Boolean(loading)} />
-                <button type="submit" disabled={Boolean(loading) || otp.length !== 6} className="mt-7 flex h-12 w-full items-center justify-center gap-2 rounded-full border-2 border-[#11120f] bg-[#3784ff] text-[15px] font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[#2f77ea] disabled:pointer-events-none disabled:opacity-40">
+                <button type="submit" disabled={Boolean(loading) || otp.length !== 6} className="mt-7 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#11120f] text-[15px] font-semibold text-white transition hover:opacity-90 hover:bg-[#2f77ea] disabled:pointer-events-none disabled:opacity-40">
                   {loading === "email" && <Spinner />}{t("auth.signup.verifyBtn")}
                 </button>
-                <button type="button" onClick={handleResendOtp} disabled={resending} className="mt-5 w-full text-center text-[14px] font-semibold text-[#3784ff] hover:underline disabled:opacity-50">
+                <button type="button" onClick={handleResendOtp} disabled={resending} className="mt-5 w-full text-center text-[14px] font-semibold text-[#0078f4] hover:underline disabled:opacity-50">
                   {resent ? t("auth.signup.codeSent") : resending ? t("auth.signup.sending") : t("auth.signup.resendCode")}
                 </button>
               </form>
@@ -676,17 +667,17 @@ export function AuthFlow({ initialMode }: { initialMode: "login" | "signup" }) {
                       <label htmlFor="signup-email" className="mb-2 block text-[13px] font-semibold text-[#11120f]/70">
                         {t("auth.signup.emailLabel")}
                       </label>
-                      <input id="signup-email" value={email} onChange={(event) => { setEmail(event.target.value); setExistingAccountEmail(null); }} placeholder={t("auth.signup.emailPlaceholder")} type="email" autoComplete="email" required autoFocus className="h-12 w-full rounded-xl border-2 border-[#11120f] bg-white px-4 text-[15px] outline-none transition placeholder:text-[#11120f]/30 focus:ring-4 focus:ring-[#3784ff]/20" />
+                      <input id="signup-email" value={email} onChange={(event) => { setEmail(event.target.value); setExistingAccountEmail(null); }} placeholder={t("auth.signup.emailPlaceholder")} type="email" autoComplete="email" required autoFocus className="h-12 w-full rounded-[10px] border border-black/30 bg-white px-4 text-[15px] outline-none transition placeholder:text-[#11120f]/30 focus:border-[#0078f4] focus:ring-0" />
                     </div>
                   ) : (
                     <div>
-                      <button type="button" onClick={() => setShowPassword(false)} className="mb-3 text-sm font-semibold text-[#3784ff] hover:underline">← {signupLabels.change}</button>
+                      <button type="button" onClick={() => setShowPassword(false)} className="mb-3 text-sm font-semibold text-[#0078f4] hover:underline">← {signupLabels.change}</button>
                       <div className="rounded-xl border-2 border-[#11120f]/15 bg-[#fafafa] px-4 py-3 text-sm text-[#11120f]/60">{email}</div>
                       <label className="mb-2 mt-4 block text-[13px] font-semibold text-[#11120f]/70" htmlFor="signup-password">{t("auth.signup.passwordLabel")}</label>
-                      <input id="signup-password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder={t("auth.signup.passwordPlaceholder")} type="password" autoComplete="new-password" minLength={8} required autoFocus className="h-12 w-full rounded-xl border-2 border-[#11120f] bg-white px-4 text-[15px] outline-none transition placeholder:text-[#11120f]/30 focus:ring-4 focus:ring-[#3784ff]/20" />
+                      <input id="signup-password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder={t("auth.signup.passwordPlaceholder")} type="password" autoComplete="new-password" minLength={8} required autoFocus className="h-12 w-full rounded-[10px] border border-black/30 bg-white px-4 text-[15px] outline-none transition placeholder:text-[#11120f]/30 focus:border-[#0078f4] focus:ring-0" />
                     </div>
                   )}
-                  <button type="submit" disabled={Boolean(loading)} className="flex h-12 w-full items-center justify-center gap-2 rounded-full border-2 border-[#11120f] bg-[#3784ff] text-[15px] font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[#2f77ea] disabled:pointer-events-none disabled:cursor-wait disabled:opacity-50">
+                  <button type="submit" disabled={Boolean(loading)} className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#11120f] text-[15px] font-semibold text-white transition hover:opacity-90 hover:bg-[#2f77ea] disabled:pointer-events-none disabled:cursor-wait disabled:opacity-50">
                     {loading === "email" && <Spinner />}
                     {showPassword ? t("auth.signup.createWorkspace") : t("auth.signup.continueBtn")}
                   </button>
@@ -712,7 +703,7 @@ export function AuthFlow({ initialMode }: { initialMode: "login" | "signup" }) {
                       type="button"
                       onClick={handleGoogleLogin}
                       disabled={Boolean(loading)}
-                      className="flex h-12 w-full items-center justify-center gap-3 rounded-full border-2 border-[#11120f] bg-white text-[15px] font-medium text-[#11120f] transition hover:-translate-y-0.5 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60"
+                      className="flex h-12 w-full items-center justify-center gap-3 rounded-full border border-black/25 bg-white text-[15px] font-medium text-[#11120f] transition hover:opacity-90 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       <span className="flex h-5 w-5 items-center justify-center">{loading === "google" ? <Spinner dark /> : <GoogleIcon />}</span>
                       <span>{t("auth.signup.continueGoogle")}</span>
@@ -735,7 +726,7 @@ export function AuthFlow({ initialMode }: { initialMode: "login" | "signup" }) {
                     onClick={() => setLanguageOpen((open) => !open)}
                     aria-expanded={languageOpen}
                     aria-haspopup="listbox"
-                    className="flex h-9 items-center gap-2 rounded-full border-2 border-[#11120f] bg-white px-3 text-[13px] text-[#11120f]/60 transition hover:bg-[#fff8ec]"
+                    className="flex h-9 items-center gap-2 rounded-full border border-black/25 bg-white px-3 text-[13px] text-[#11120f]/60 transition hover:bg-[#fff8ec]"
                   >
                     <FlagImage countryCode={LANGUAGES.find((item) => item.code === language)?.countryCode || "gb"} alt="" />
                     <span>{signupLabels.choose}: {LANGUAGES.find((item) => item.code === language)?.name}</span>
@@ -762,7 +753,7 @@ export function AuthFlow({ initialMode }: { initialMode: "login" | "signup" }) {
                             >
                               <FlagImage countryCode={item.countryCode} alt="" />
                               <span>{item.name}</span>
-                              {language === item.code && <span className="ml-auto text-[#3784ff]">✓</span>}
+                              {language === item.code && <span className="ml-auto text-[#0078f4]">✓</span>}
                             </button>
                           ))}
                         </div>
@@ -775,6 +766,7 @@ export function AuthFlow({ initialMode }: { initialMode: "login" | "signup" }) {
           </div>
         </div>
       </section>
+
 
     </main>
   );

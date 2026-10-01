@@ -32,15 +32,15 @@ function tList<Item>(t: T, key: string, fallback: Item[]): Item[] {
 }
 
 const INK = "#11120f";
-const BLUE = "#3784ff";
+const BLUE = "#0078f4";
 const YELLOW = "#ffd84d";
 const PURPLE = "#7060bd";
 const ORANGE = "#fc7b33";
 const GREEN = "#1aa37a";
 const PINK = "#d9508a";
 
-const card = "rounded-[22px] border-2 border-[#11120f]";
-const mono = "font-mono text-[11px] font-semibold uppercase tracking-[0.14em]";
+const card = "rounded-[10px] border border-black/40";
+const mono = "font-mono text-[11px] font-medium uppercase tracking-[0.08em]";
 const onDark = (c: string) => (c === YELLOW ? INK : "#fff");
 
 function useReduced() {
@@ -51,7 +51,8 @@ function useReduced() {
 
 function Stamp({ color, children }: { color: string; children: ReactNode }) {
   return (
-    <span className={`${mono} inline-flex items-center gap-1.5 rounded-full border-2 border-[#11120f] px-3 py-1.5`} style={{ backgroundColor: color, color: onDark(color) }}>
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-black/25 bg-white px-3 py-1 text-[12.5px] font-medium normal-case tracking-normal text-black/70">
+      <span aria-hidden="true" className="size-1.5 rounded-full" style={{ backgroundColor: color }} />
       {children}
     </span>
   );
@@ -59,10 +60,10 @@ function Stamp({ color, children }: { color: string; children: ReactNode }) {
 
 function Heading({ eyebrow, color, title, sub }: { eyebrow: string; color: string; title: ReactNode; sub?: string }) {
   return (
-    <div className="mx-auto max-w-3xl text-center">
+    <div className="max-w-3xl">
       <Rv variant="drop"><Stamp color={color}>{eyebrow}</Stamp></Rv>
-      <Rv delay={80}><h2 className="mt-5 text-[clamp(2.1rem,4.6vw,3.6rem)] font-semibold leading-[1.03] tracking-[-0.045em]">{title}</h2></Rv>
-      {sub && <Rv delay={160}><p className="mt-5 text-lg leading-8 text-[#11120f]/65">{sub}</p></Rv>}
+      <Rv delay={80}><h2 className="mt-5 text-4xl font-normal leading-[1.05] tracking-[-0.04em] sm:text-5xl">{title}</h2></Rv>
+      {sub && <Rv delay={160}><p className="mt-5 text-lg leading-8 text-black/65">{sub}</p></Rv>}
     </div>
   );
 }
@@ -140,7 +141,7 @@ function Desk({ t }: { t: T }) {
     <div onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
       <div className="mb-4 flex flex-wrap justify-center gap-2">
         {stages.map((x, i) => (
-          <button key={x.key} type="button" onClick={() => setS(i)} aria-pressed={i === s} className="inline-flex items-center gap-1.5 rounded-full border-2 border-[#11120f] px-3.5 py-2 text-[13px] font-semibold transition hover:-translate-y-0.5" style={{ backgroundColor: i === s ? x.color : "#fff", color: i === s ? onDark(x.color) : INK }}>
+          <button key={x.key} type="button" onClick={() => setS(i)} aria-pressed={i === s} className="inline-flex items-center gap-1.5 rounded-full border border-black/25 px-3.5 py-2 text-[13px] font-medium transition hover:border-black/60" style={i === s ? { backgroundColor: INK, color: "#fff", borderColor: INK } : undefined}>
             <x.icon size={14} />{i + 1}. {x.label}
           </button>
         ))}
@@ -246,7 +247,7 @@ function Desk({ t }: { t: T }) {
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-2 border-t-2 border-[#11120f] px-4 py-3 text-[13px] font-semibold transition-colors duration-500" style={{ backgroundColor: st.color, color: onDark(st.color) }}>
+        <div className="flex items-center gap-2 border-t border-black/20 px-4 py-3 text-[13px] font-semibold transition-colors duration-500" style={{ backgroundColor: st.color, color: onDark(st.color) }}>
           <st.icon size={15} />{st.banner}
         </div>
       </div>
@@ -256,23 +257,18 @@ function Desk({ t }: { t: T }) {
 
 function Hero({ t }: { t: T }) {
   return (
-    <section className="relative isolate overflow-hidden bg-white text-[#11120f]">
-      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-cover bg-top" style={{ backgroundImage: "url(/piliar-1-grandient.png)", maskImage: "linear-gradient(to bottom, #000 50%, transparent)", WebkitMaskImage: "linear-gradient(to bottom, #000 50%, transparent)" }} />
-      <div className="mx-auto max-w-6xl px-5 pb-24 pt-[124px] sm:px-8 lg:pt-[140px]">
+    <section className="bg-white px-5 pb-16 pt-16 text-[#11120f] sm:px-8 lg:px-20 lg:pt-24">
+      <div className="mx-auto max-w-[1500px]">
         <div className="mx-auto max-w-4xl text-center">
-          <Rv variant="drop"><Stamp color={YELLOW}><Inbox size={13} />{t("inbox.hero.badge", "Shared inbox")}</Stamp></Rv>
-          <Rv delay={80}>
-            <h1 className="mt-6 text-[clamp(2.7rem,6.4vw,5.2rem)] font-semibold leading-[0.98] tracking-[-0.055em]">
-              {t("inbox.hero.titlePrefix", "One conversation. ")}<span className="hl">{t("inbox.hero.titleHl", "Everyone who should be in it.")}</span>
-            </h1>
-          </Rv>
-          <Rv delay={170}><p className="mx-auto mt-6 max-w-[58ch] text-lg leading-8 text-[#11120f]/70">{t("inbox.hero.subtitle", "The AI keeps the thread until a person is needed, your whole team is alerted at once, and whoever joins gets the full history. Follow one real conversation from first message to resolved.")}</p></Rv>
-          <Rv delay={250}>
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Link href="/signup" className="inline-flex h-13 items-center gap-2 rounded-full border-2 border-[#11120f] px-7 font-semibold text-white transition hover:-translate-y-0.5" style={{ backgroundColor: BLUE }}>{t("inbox.hero.ctaOpen", "Open your inbox")} <ArrowRight size={17} /></Link>
-              <Link href="/pricing" className="inline-flex h-13 items-center rounded-full border-2 border-[#11120f] bg-white px-7 font-semibold transition hover:-translate-y-0.5 hover:bg-[#ffd84d]">{t("inbox.hero.ctaPricing", "See pricing")}</Link>
-            </div>
-          </Rv>
+          <p className="text-[14px] text-black/50">{t("inbox.hero.badge", "Shared inbox")}</p>
+          <h1 className="mt-4 animate-[elpino-focus_0.9s_ease-out_both] text-5xl font-normal leading-[1.02] tracking-[-0.045em] sm:text-6xl lg:text-[4.6rem]">
+            {t("inbox.hero.titlePrefix", "One conversation. ")}{t("inbox.hero.titleHl", "Everyone who should be in it.")}
+          </h1>
+          <p className="mx-auto mt-6 max-w-2xl animate-[elpino-focus_0.9s_ease-out_0.15s_both] text-lg leading-8 text-black/65">{t("inbox.hero.subtitle", "The AI keeps the thread until a person is needed, your whole team is alerted at once, and whoever joins gets the full history. Follow one real conversation from first message to resolved.")}</p>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <Link href="/signup" className="group inline-flex h-14 items-center gap-3 rounded-full bg-[#11120f] px-9 text-[18px] font-medium text-white transition hover:opacity-85">{t("inbox.hero.ctaOpen", "Open your inbox")} <ArrowRight size={20} className="transition-transform group-hover:translate-x-1" /></Link>
+            <Link href="/pricing" className="inline-flex h-14 items-center rounded-full border border-black/25 bg-white px-9 text-[18px] font-medium transition hover:border-black/60">{t("inbox.hero.ctaPricing", "See pricing")}</Link>
+          </div>
         </div>
         <Rv variant="deal" delay={200} className="mt-14"><Desk t={t} /></Rv>
       </div>
@@ -301,9 +297,9 @@ const CALLOUTS_EN: Callout[] = [
 function RealThing({ t }: { t: T }) {
   const callouts = tList<Callout>(t, "inbox.realThing.callouts", CALLOUTS_EN);
   return (
-    <section className="bg-[#fff8ec] px-5 py-24 sm:px-8 sm:py-28">
-      <div className="mx-auto max-w-6xl">
-        <Heading eyebrow={t("inbox.realThing.eyebrow", "The real thing")} color={ORANGE} title={<>{t("inbox.realThing.titlePrefix", "This is the ")}<span className="hl">{t("inbox.realThing.titleHl", "actual inbox.")}</span></>} sub={t("inbox.realThing.subtitle", "No mock-up. Every conversation, the AI's replies, the visitor's details and the Join button, all on one screen.")} />
+    <section className="bg-white px-5 py-16 sm:px-8 lg:px-20 lg:py-24">
+      <div className="mx-auto max-w-[1500px]">
+        <Heading eyebrow={t("inbox.realThing.eyebrow", "The real thing")} color={ORANGE} title={<>{t("inbox.realThing.titlePrefix", "This is the ")}{t("inbox.realThing.titleHl", "actual inbox.")}</>} sub={t("inbox.realThing.subtitle", "No mock-up. Every conversation, the AI's replies, the visitor's details and the Join button, all on one screen.")} />
         <Rv variant="deal" delay={120}>
           <div className="relative mt-16">
             <div className={`${card} relative overflow-hidden bg-[#262626]`}>
@@ -313,7 +309,7 @@ function RealThing({ t }: { t: T }) {
             </div>
             {callouts.map((c, i) => {
               const meta = CALLOUTS_META[i] ?? CALLOUTS_META[0];
-              return <span key={c.label} className={`${mono} absolute hidden rotate-[-3deg] rounded-full border-2 border-[#11120f] px-3 py-1.5 text-[10px] md:inline-flex`} style={{ ...meta.style, backgroundColor: meta.color, color: onDark(meta.color), animation: `elpino-float ${4 + i * 0.6}s ease-in-out ${-i}s infinite` }}>{c.label}</span>;
+              return <span key={c.label} className={`absolute hidden rounded-full border border-black/20 bg-white px-3 py-1.5 text-[11px] shadow-[0_6px_20px_rgba(15,23,42,0.12)] md:inline-flex`} style={{ ...meta.style, animation: `elpino-float ${4 + i * 0.6}s ease-in-out ${-i}s infinite` }}>{c.label}</span>;
             })}
           </div>
         </Rv>
@@ -351,25 +347,25 @@ function TwoTabs({ t }: { t: T }) {
   const [i, setI] = useState(1);
   const tab = tabs[i];
   return (
-    <section className="bg-white px-5 py-24 sm:px-8 sm:py-28">
-      <div className="mx-auto max-w-6xl">
-        <Heading eyebrow={t("inbox.twoTabs.eyebrow", "Two views")} color={BLUE} title={<>{t("inbox.twoTabs.titlePrefix", "Watch the AI. ")}<span className="hl">{t("inbox.twoTabs.titleHl", "Run the team.")}</span></>} sub={t("inbox.twoTabs.subtitle", "Your inbox has a tab for what people are handling and a tab for what Elpino is handling, so nothing hides.")} />
-        <div className="mx-auto mt-12 flex w-fit rounded-full border-2 border-[#11120f] bg-[#fff8ec] p-1">
+    <section className="bg-white px-5 py-16 sm:px-8 lg:px-20 lg:py-24">
+      <div className="mx-auto max-w-[1500px]">
+        <Heading eyebrow={t("inbox.twoTabs.eyebrow", "Two views")} color={BLUE} title={<>{t("inbox.twoTabs.titlePrefix", "Watch the AI. ")}{t("inbox.twoTabs.titleHl", "Run the team.")}</>} sub={t("inbox.twoTabs.subtitle", "Your inbox has a tab for what people are handling and a tab for what Elpino is handling, so nothing hides.")} />
+        <div className="mt-12 flex w-fit rounded-full border border-black/25 bg-[#f4f4f2] p-1">
           {tabs.map((x, idx) => (
-            <button key={x.key} type="button" onClick={() => setI(idx)} aria-pressed={idx === i} className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-[15px] font-semibold transition" style={idx === i ? { backgroundColor: x.color, color: "#fff" } : undefined}><x.icon size={16} />{x.label}</button>
+            <button key={x.key ?? idx} type="button" onClick={() => setI(idx)} aria-pressed={idx === i} className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-[15px] font-semibold transition" style={idx === i ? { backgroundColor: INK, color: "#fff" } : undefined}><x.icon size={16} />{x.label}</button>
           ))}
         </div>
         <div key={tab.key} className="mt-10 grid items-center gap-8 lg:grid-cols-2" style={{ animation: "elpino-rv-deal .5s both" }}>
           <div>
-            <h3 className="text-3xl font-semibold tracking-[-0.03em]">{tab.title}</h3>
-            <p className="mt-4 max-w-[46ch] text-[17px] leading-8 text-[#11120f]/65">{tab.body}</p>
+            <h3 className="text-3xl font-normal tracking-[-0.03em]">{tab.title}</h3>
+            <p className="mt-4 max-w-[46ch] text-[17px] leading-8 text-black/65">{tab.body}</p>
           </div>
           <div className={`${card} bg-[#262626] p-3 text-white`}>
             {tab.rows.map(([n, p, b]) => (
-              <div key={n} className="flex items-center gap-3 rounded-xl px-3 py-3">
+              <div key={`${n}-${p}`} className="flex items-center gap-3 rounded-xl px-3 py-3">
                 <span className="grid size-10 shrink-0 place-items-center rounded-full text-[11px] font-bold" style={{ backgroundColor: tab.color }}>{initials(n)}</span>
                 <span className="min-w-0 flex-1"><span className="block truncate text-[14px] font-semibold">{n}</span><span className="block truncate text-[12px] text-white/55">{p}</span></span>
-                <span className={`${mono} rounded-full border-2 border-[#11120f] px-2 py-0.5 text-[9px]`} style={{ backgroundColor: b === "Resolved" ? PINK : b === "AI" ? PURPLE : GREEN, color: "#fff" }}>{b}</span>
+                <span className={`${mono} rounded-full border border-black/25 px-2 py-0.5 text-[9px]`} style={{ backgroundColor: b === "Resolved" ? PINK : b === "AI" ? PURPLE : GREEN, color: "#fff" }}>{b}</span>
               </div>
             ))}
           </div>
@@ -406,20 +402,20 @@ function Baton({ t }: { t: T }) {
     return () => window.clearInterval(id);
   }, [reduced, baton.length]);
   return (
-    <section className="bg-white px-5 py-24 sm:px-8 sm:py-28">
-      <div className="mx-auto max-w-6xl">
-        <Heading eyebrow={t("inbox.baton.eyebrow", "Pass the baton")} color={GREEN} title={<>{t("inbox.baton.titlePrefix", "Join it. Take it over. ")}<span className="hl">{t("inbox.baton.titleHl", "Give it back.")}</span></>} sub={t("inbox.baton.subtitle", "A conversation moves between the AI and your people with one tap, and the history travels with it.")} />
+    <section className="bg-white px-5 py-16 sm:px-8 lg:px-20 lg:py-24">
+      <div className="mx-auto max-w-[1500px]">
+        <Heading eyebrow={t("inbox.baton.eyebrow", "Pass the baton")} color={GREEN} title={<>{t("inbox.baton.titlePrefix", "Join it. Take it over. ")}{t("inbox.baton.titleHl", "Give it back.")}</>} sub={t("inbox.baton.subtitle", "A conversation moves between the AI and your people with one tap, and the history travels with it.")} />
         <div className="relative mt-16">
-          <div aria-hidden="true" className="absolute left-[12.5%] right-[12.5%] top-[34px] hidden h-0.5 md:block" style={{ backgroundImage: `linear-gradient(90deg, ${INK} 50%, transparent 50%)`, backgroundSize: "12px 2px" }} />
+          <div aria-hidden="true" className="absolute left-[12.5%] right-[12.5%] top-[34px] hidden h-0.5 md:block" style={{ backgroundImage: `linear-gradient(90deg, rgba(0,0,0,0.3) 50%, transparent 50%)`, backgroundSize: "12px 2px" }} />
           <div className="grid gap-5 md:grid-cols-4">
             {baton.map((b, idx) => {
               const on = idx === i;
               return (
                 <div key={idx} className="flex flex-col items-center text-center">
-                  <span className="relative z-10 grid size-[68px] place-items-center rounded-full border-2 border-[#11120f] transition-all duration-500" style={{ backgroundColor: b.color, transform: on ? "scale(1.15) rotate(-6deg)" : "scale(1)", boxShadow: on ? `0 0 0 6px ${b.color}44` : "none" }}><b.icon size={26} color="#fff" /></span>
-                  <div className={`${card} mt-4 w-full p-4 transition-all duration-500`} style={{ backgroundColor: on ? "#fffdf5" : "#fff", transform: on ? "translateY(-4px)" : "none", opacity: on ? 1 : 0.6 }}>
-                    <p className="text-lg font-semibold tracking-tight">{b.who}</p>
-                    <p className="mt-1 text-[14.5px] text-[#11120f]/60">{b.note}</p>
+                  <span className="relative z-10 grid size-[68px] place-items-center rounded-full border border-black/20 bg-white transition-all duration-500" style={{ transform: on ? "scale(1.1)" : "scale(1)", boxShadow: on ? `0 0 0 6px ${b.color}22` : "none", borderColor: on ? b.color : undefined }}><b.icon size={26} style={{ color: b.color }} /></span>
+                  <div className={`${card} mt-4 w-full p-4 transition-all duration-500`} style={{ backgroundColor: on ? "#f4f4f2" : "#fff", transform: on ? "translateY(-4px)" : "none", opacity: on ? 1 : 0.6 }}>
+                    <p className="text-lg font-medium tracking-[-0.02em]">{b.who}</p>
+                    <p className="mt-1 text-[14.5px] text-black/60">{b.note}</p>
                     <span className={`${mono} mt-3 inline-block text-[10px]`} style={{ color: b.color }}>{on ? t("inbox.baton.holdingNow", "Holding it now") : t("inbox.baton.stepLabel", "Step {n}").replace("{n}", String(idx + 1))}</span>
                   </div>
                 </div>
@@ -452,17 +448,17 @@ function NobodyFree({ t }: { t: T }) {
   const marksText = tList<Mark>(t, "inbox.nobodyFree.marks", MARKS_EN);
   const marks = MARKS_META.map((meta, i) => ({ ...meta, ...marksText[i] }));
   return (
-    <section className="bg-[#fff8ec] px-5 py-24 sm:px-8 sm:py-28">
-      <div className="mx-auto max-w-6xl">
-        <Heading eyebrow={t("inbox.nobodyFree.eyebrow", "Nothing gets dropped")} color={PINK} title={<>{t("inbox.nobodyFree.titlePrefix", "Even when everyone's ")}<span className="hl">{t("inbox.nobodyFree.titleHl", "busy.")}</span></>} sub={t("inbox.nobodyFree.subtitle", "If nobody joins in time, the customer isn't left staring at a spinner.")} />
+    <section className="bg-white px-5 py-16 sm:px-8 lg:px-20 lg:py-24">
+      <div className="mx-auto max-w-[1500px]">
+        <Heading eyebrow={t("inbox.nobodyFree.eyebrow", "Nothing gets dropped")} color={PINK} title={<>{t("inbox.nobodyFree.titlePrefix", "Even when everyone's ")}{t("inbox.nobodyFree.titleHl", "busy.")}</>} sub={t("inbox.nobodyFree.subtitle", "If nobody joins in time, the customer isn't left staring at a spinner.")} />
         <div className="mt-14 grid gap-4 md:grid-cols-4">
           {marks.map((m, i) => (
             <Rv key={m.h} variant="up" delay={i * 90}>
               <div className={`${card} relative h-full bg-white p-5`}>
-                <span className={`${mono} absolute -top-3 left-4 rounded-full border-2 border-[#11120f] px-2.5 py-1 text-[10px] text-white`} style={{ backgroundColor: m.c }}>{m.t}</span>
+                <span className={`${mono} absolute -top-3 left-4 rounded-full bg-[#11120f] px-2.5 py-1 text-[10px] text-white`}>{m.t}</span>
                 <m.icon size={24} className="mt-2" style={{ color: m.c }} />
-                <p className="mt-4 text-xl font-semibold leading-snug tracking-tight">{m.h}</p>
-                <p className="mt-2 text-[15px] leading-7 text-[#11120f]/65">{m.d}</p>
+                <p className="mt-4 text-xl font-medium leading-snug tracking-[-0.02em]">{m.h}</p>
+                <p className="mt-2 text-[15px] leading-7 text-black/65">{m.d}</p>
               </div>
             </Rv>
           ))}
@@ -492,12 +488,12 @@ function FindAnything({ t }: { t: T }) {
   const filterKeys = ["all", "unread", "read", "resolved"];
   const rows = convos.filter((c) => (filterKeys[f] === "all" || c.s === filterKeys[f]) && (c.n + c.p).toLowerCase().includes(q.toLowerCase()));
   return (
-    <section className="bg-white px-5 py-24 sm:px-8 sm:py-28">
-      <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[.9fr_1.1fr]">
+    <section className="bg-white px-5 py-16 sm:px-8 lg:px-20 lg:py-24">
+      <div className="mx-auto grid max-w-[1500px] items-center gap-12 lg:grid-cols-[.9fr_1.1fr]">
         <div>
           <Rv variant="drop"><Stamp color={YELLOW}><Search size={13} />{t("inbox.findAnything.eyebrow", "Search & filters")}</Stamp></Rv>
-          <Rv delay={80}><h2 className="mt-5 text-[clamp(2.1rem,4.4vw,3.4rem)] font-semibold leading-[1.03] tracking-[-0.045em]">{t("inbox.findAnything.titlePrefix", "Find any conversation ")}<span className="hl">{t("inbox.findAnything.titleHl", "in a second.")}</span></h2></Rv>
-          <Rv delay={160}><p className="mt-5 max-w-[46ch] text-lg leading-8 text-[#11120f]/65">{t("inbox.findAnything.subtitle", "Search by name or message and narrow to All, Unread, Read or Resolved. Give it a try on the right.")}</p></Rv>
+          <Rv delay={80}><h2 className="mt-5 text-4xl font-normal leading-[1.05] tracking-[-0.04em] sm:text-5xl">{t("inbox.findAnything.titlePrefix", "Find any conversation ")}{t("inbox.findAnything.titleHl", "in a second.")}</h2></Rv>
+          <Rv delay={160}><p className="mt-5 max-w-[46ch] text-lg leading-8 text-black/65">{t("inbox.findAnything.subtitle", "Search by name or message and narrow to All, Unread, Read or Resolved. Give it a try on the right.")}</p></Rv>
         </div>
         <Rv variant="deal" delay={100}>
           <div className={`${card} bg-[#262626] p-4 text-white`}>
@@ -505,7 +501,7 @@ function FindAnything({ t }: { t: T }) {
               <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={t("inbox.desk.searchPlaceholder", "Search conversations")} aria-label={t("inbox.desk.searchPlaceholder", "Search conversations")} className="w-full bg-transparent outline-none placeholder:text-white/40" />
             </div>
             <div className="mt-3 flex gap-2 border-b border-[#3a3a3a] pb-3">
-              {filters.map((x, idx) => <button key={x} type="button" onClick={() => setF(idx)} aria-pressed={f === idx} className="rounded-full px-3.5 py-1.5 text-[12.5px] font-semibold transition" style={f === idx ? { backgroundColor: YELLOW, color: INK } : { color: "#ffffff88" }}>{x}</button>)}
+              {filters.map((x, idx) => <button key={x} type="button" onClick={() => setF(idx)} aria-pressed={f === idx} className="rounded-full px-3.5 py-1.5 text-[12.5px] font-semibold transition" style={f === idx ? { backgroundColor: "#fff", color: INK } : { color: "#ffffff88" }}>{x}</button>)}
             </div>
             <div className="mt-2 min-h-[288px] space-y-0.5">
               {rows.length === 0 && <p className="py-12 text-center text-sm text-white/45">{t("inbox.findAnything.noMatch", "Nothing matches. Try another word.")}</p>}
@@ -543,17 +539,17 @@ function SecureRequest({ t }: { t: T }) {
   const stepsText = tList<Step>(t, "inbox.secureRequest.steps", SECURE_STEPS_EN);
   const steps = SECURE_STEPS_META.map((meta, i) => ({ ...meta, ...stepsText[i] }));
   return (
-    <section className="bg-white px-5 py-24 sm:px-8 sm:py-28">
-      <div className="mx-auto max-w-6xl">
-        <Heading eyebrow={t("inbox.secureRequest.eyebrow", "Secure requests")} color={PINK} title={<>{t("inbox.secureRequest.titlePrefix", "Private details ")}<span className="hl">{t("inbox.secureRequest.titleHl", "stay out of the chat.")}</span></>} sub={t("inbox.secureRequest.subtitle", "Ask for sensitive information through a one-time secure form, so it never sits in the transcript.")} />
+    <section className="bg-white px-5 py-16 sm:px-8 lg:px-20 lg:py-24">
+      <div className="mx-auto max-w-[1500px]">
+        <Heading eyebrow={t("inbox.secureRequest.eyebrow", "Secure requests")} color={PINK} title={<>{t("inbox.secureRequest.titlePrefix", "Private details ")}{t("inbox.secureRequest.titleHl", "stay out of the chat.")}</>} sub={t("inbox.secureRequest.subtitle", "Ask for sensitive information through a one-time secure form, so it never sits in the transcript.")} />
         <div className="mt-14 grid gap-5 md:grid-cols-3">
           {steps.map((s, i) => (
             <Rv key={s.t} variant="deal" delay={i * 100}>
-              <div className={`${card} group h-full bg-[#fffdf5] p-6 transition duration-300 hover:-translate-y-1.5`}>
-                <span className="grid size-12 place-items-center rounded-full border-2 border-[#11120f] transition-transform duration-300 group-hover:rotate-12" style={{ backgroundColor: s.c }}><s.icon size={22} color="#fff" /></span>
+              <div className={`${card} group h-full bg-white p-6 transition-colors duration-300 hover:bg-[#fafaf9]`}>
+                <span className="grid size-11 place-items-center rounded-full" style={{ backgroundColor: `${s.c}1a` }}><s.icon size={21} style={{ color: s.c }} /></span>
                 <p className={`${mono} mt-4 text-[#11120f]/45`}>{t("inbox.secureRequest.stepLabel", "Step {n}").replace("{n}", String(i + 1))}</p>
-                <p className="mt-1 text-xl font-semibold tracking-tight">{s.t}</p>
-                <p className="mt-2 text-[15.5px] leading-7 text-[#11120f]/65">{s.d}</p>
+                <p className="mt-1 text-xl font-medium tracking-[-0.02em]">{s.t}</p>
+                <p className="mt-2 text-[15.5px] leading-7 text-black/65">{s.d}</p>
               </div>
             </Rv>
           ))}
@@ -576,16 +572,16 @@ const COMPARE_EN: [string, string][] = [
 function Compare({ t }: { t: T }) {
   const rows = tList<[string, string]>(t, "inbox.compare.rows", COMPARE_EN);
   return (
-    <section className="bg-white px-5 py-24 sm:px-8 sm:py-28">
-      <div className="mx-auto max-w-5xl">
-        <Heading eyebrow={t("inbox.compare.eyebrow", "Before & after")} color={ORANGE} title={<>{t("inbox.compare.titlePrefix", "From scramble to ")}<span className="hl">{t("inbox.compare.titleHl", "calm.")}</span></>} />
+    <section className="bg-white px-5 py-16 sm:px-8 lg:px-20 lg:py-24">
+      <div className="mx-auto max-w-[1500px]">
+        <Heading eyebrow={t("inbox.compare.eyebrow", "Before & after")} color={ORANGE} title={<>{t("inbox.compare.titlePrefix", "From scramble to ")}{t("inbox.compare.titleHl", "calm.")}</>} />
         <div className="mt-14 space-y-3">
           <div className="hidden grid-cols-2 gap-4 md:grid"><p className={`${mono} px-2 text-[#11120f]/50`}>{t("inbox.compare.headerA", "Without a shared inbox")}</p><p className={`${mono} px-2 text-[#11120f]/50`}>{t("inbox.compare.headerB", "With Elpino")}</p></div>
           {rows.map(([a, b], i) => (
             <Rv key={a} variant="up" delay={i * 60}>
               <div className="grid gap-3 md:grid-cols-2 md:gap-4">
-                <div className={`${card} flex items-center gap-3 bg-[#fff8ec] p-4 text-[#11120f]/60`}><X size={18} color={PINK} strokeWidth={3} className="shrink-0" /><span className="line-through decoration-[#d9508a]/50 decoration-2">{a}</span></div>
-                <div className={`${card} flex items-center gap-3 p-4 font-semibold text-white`} style={{ backgroundColor: [BLUE, PURPLE, GREEN, ORANGE, PINK][i] }}><Check size={18} strokeWidth={3} className="shrink-0" />{b}</div>
+                <div className={`${card} flex items-center gap-3 bg-[#f4f4f2] p-4 text-black/55`}><X size={18} color={PINK} strokeWidth={3} className="shrink-0" /><span>{a}</span></div>
+                <div className={`${card} flex items-center gap-3 bg-white p-4 font-medium`}><Check size={18} strokeWidth={3} color={GREEN} className="shrink-0" />{b}</div>
               </div>
             </Rv>
           ))}
@@ -613,19 +609,19 @@ function Holders({ t }: { t: T }) {
   const holdersText = tList<Holder>(t, "inbox.holders.items", HOLDERS_EN);
   const holders = HOLDERS_META.map((meta, i) => ({ ...meta, ...holdersText[i] }));
   return (
-    <section className="bg-[#fff8ec] px-5 py-24 sm:px-8 sm:py-28">
-      <div className="mx-auto max-w-6xl">
-        <Heading eyebrow={t("inbox.holders.eyebrow", "Always clear")} color={PURPLE} title={<>{t("inbox.holders.titlePrefix", "You always know ")}<span className="hl">{t("inbox.holders.titleHl", "who has it.")}</span></>} sub={t("inbox.holders.subtitle", "Every conversation carries a badge in the list, so nobody double-replies and nothing falls through.")} />
+    <section className="bg-white px-5 py-16 sm:px-8 lg:px-20 lg:py-24">
+      <div className="mx-auto max-w-[1500px]">
+        <Heading eyebrow={t("inbox.holders.eyebrow", "Always clear")} color={PURPLE} title={<>{t("inbox.holders.titlePrefix", "You always know ")}{t("inbox.holders.titleHl", "who has it.")}</>} sub={t("inbox.holders.subtitle", "Every conversation carries a badge in the list, so nobody double-replies and nothing falls through.")} />
         <div className="mt-14 grid gap-7 md:grid-cols-3">
           {holders.map((h, i) => (
             <Rv key={h.tag} variant="deal" delay={i * 110}>
-              <div className={`${card} ${h.tilt} bg-white p-6 transition duration-300 hover:-translate-y-2 hover:rotate-0`}>
+              <div className={`${card} bg-white p-6 transition-colors duration-300 hover:bg-[#fafaf9]`}>
                 <div className="flex items-center justify-between">
-                  <span className="grid size-12 place-items-center rounded-full border-2 border-[#11120f]" style={{ backgroundColor: h.color }}><h.icon size={22} color="#fff" /></span>
-                  <span className={`${mono} rounded-full border-2 border-[#11120f] px-2.5 py-1 text-[10px] text-white`} style={{ backgroundColor: h.color }}>{h.tag}</span>
+                  <span className="grid size-11 place-items-center rounded-full" style={{ backgroundColor: `${h.color}1a` }}><h.icon size={21} style={{ color: h.color }} /></span>
+                  <span className={`${mono} rounded-full border border-black/20 px-2.5 py-1 text-[10px] text-black/60`}>{h.tag}</span>
                 </div>
-                <h3 className="mt-6 text-2xl font-semibold tracking-tight">{h.title}</h3>
-                <p className="mt-2 text-[16px] leading-7 text-[#11120f]/65">{h.body}</p>
+                <h3 className="mt-6 text-2xl font-medium tracking-[-0.025em]">{h.title}</h3>
+                <p className="mt-2 text-[16px] leading-7 text-black/65">{h.body}</p>
               </div>
             </Rv>
           ))}
@@ -654,20 +650,20 @@ function TeamAlert({ t }: { t: T }) {
   ]);
 
   return (
-    <section className="bg-[#11120f] px-5 py-24 text-white sm:px-8 sm:py-28">
-      <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
+    <section className="bg-[#11120f] px-5 py-16 text-white sm:px-8 lg:px-20 lg:py-24">
+      <div className="mx-auto grid max-w-[1500px] items-center gap-12 lg:grid-cols-2">
         <div>
           <Rv variant="drop"><Stamp color={ORANGE}><BellRing size={13} />{t("inbox.teamAlert.eyebrow", "Team-wide alerts")}</Stamp></Rv>
-          <Rv delay={80}><h2 className="mt-5 text-[clamp(2.1rem,4.6vw,3.6rem)] font-semibold leading-[1.03] tracking-[-0.045em]">{t("inbox.teamAlert.titlePrefix", "Ring the whole team. ")}<span className="rounded-md px-2" style={{ backgroundColor: YELLOW, color: INK }}>{t("inbox.teamAlert.titleHl", "One person answers.")}</span></h2></Rv>
+          <Rv delay={80}><h2 className="mt-5 text-4xl font-normal leading-[1.05] tracking-[-0.04em] sm:text-5xl">{t("inbox.teamAlert.titlePrefix", "Ring the whole team. ")}<span style={{ color: "#6db3ff" }}>{t("inbox.teamAlert.titleHl", "One person answers.")}</span></h2></Rv>
           <Rv delay={160}><p className="mt-5 max-w-[50ch] text-lg leading-8 text-white/65">{t("inbox.teamAlert.subtitle", "When a customer asks for a human, every teammate gets a Join alert at the same time. The first to tap Join takes the chat, the alert disappears for everyone else, and the customer sees who joined.")}</p></Rv>
           <Rv delay={220}>
             <ul className="mt-7 space-y-3 text-[16px]">
-              {bullets.map((x) => <li key={x} className="flex items-start gap-3"><Check size={18} color={YELLOW} strokeWidth={3} className="mt-1 shrink-0" />{x}</li>)}
+              {bullets.map((x) => <li key={x} className="flex items-start gap-3"><Check size={18} color="#6db3ff" strokeWidth={3} className="mt-1 shrink-0" />{x}</li>)}
             </ul>
           </Rv>
         </div>
         <Rv variant="pop" delay={100}>
-          <div className={`${card} bg-[#fffdf5] p-6 text-[#11120f]`}>
+          <div className={`rounded-[10px] bg-white p-6 text-[#11120f]`}>
             <p className={`${mono} text-[#11120f]/50`}>{t("inbox.teamAlert.panelLabel", "Inbox alerts")}</p>
             <div className="mt-4 grid grid-cols-2 gap-3">
               {team.map(([n, c], i) => {
@@ -675,22 +671,22 @@ function TeamAlert({ t }: { t: T }) {
                 const alerted = tick >= 1;
                 const cleared = joined && !isWinner;
                 return (
-                  <div key={n} className="rounded-2xl border-2 border-[#11120f] p-3.5 transition-all duration-500" style={{ backgroundColor: cleared ? "#f1efe7" : "#fff", opacity: cleared ? 0.6 : 1 }}>
+                  <div key={n} className="rounded-xl border border-black/20 p-3.5 transition-all duration-500" style={{ backgroundColor: cleared ? "#f4f4f2" : "#fff", opacity: cleared ? 0.6 : 1 }}>
                     <div className="flex items-center gap-2.5">
-                      <span className="grid size-9 place-items-center rounded-full border-2 border-[#11120f] text-sm font-bold text-white" style={{ backgroundColor: c }}>{n[0]}</span>
+                      <span className="grid size-9 place-items-center rounded-full text-sm font-bold text-white" style={{ backgroundColor: c }}>{n[0]}</span>
                       <span className="font-semibold">{n}</span>
                     </div>
                     <div className="mt-3 h-9">
-                      {isWinner && joined ? <span className={`${mono} flex h-full items-center justify-center rounded-lg border-2 border-[#11120f] text-[10px] text-white`} style={{ backgroundColor: GREEN, animation: "elpino-slam .35s both" }}>{t("inbox.teamAlert.joinedStatus", "Joined")}</span>
+                      {isWinner && joined ? <span className={`${mono} flex h-full items-center justify-center rounded-lg text-[10px] text-white`} style={{ backgroundColor: GREEN, animation: "elpino-slam .35s both" }}>{t("inbox.teamAlert.joinedStatus", "Joined")}</span>
                         : cleared ? <span className={`${mono} flex h-full items-center justify-center text-[10px] text-[#11120f]/50`}>{t("inbox.teamAlert.alertCleared", "Alert cleared")}</span>
-                        : alerted ? <span className={`${mono} flex h-full items-center justify-center rounded-lg border-2 border-[#11120f] text-[10px]`} style={{ backgroundColor: YELLOW, animation: "elpino-ring 1.4s ease-out infinite" }}>{t("inbox.teamAlert.joinChatStatus", "Join chat")}</span>
+                        : alerted ? <span className={`${mono} flex h-full items-center justify-center rounded-lg text-[10px] text-white`} style={{ backgroundColor: BLUE, animation: "elpino-ring 1.4s ease-out infinite" }}>{t("inbox.teamAlert.joinChatStatus", "Join chat")}</span>
                         : <span className={`${mono} flex h-full items-center justify-center text-[10px] text-[#11120f]/35`}>{t("inbox.teamAlert.quietStatus", "Quiet")}</span>}
                     </div>
                   </div>
                 );
               })}
             </div>
-            <div className="mt-4 rounded-xl border-2 border-[#11120f] px-4 py-3 text-sm font-medium" style={{ backgroundColor: joined ? "#d8f3e9" : "#fff1e6" }}>
+            <div className="mt-4 rounded-lg px-4 py-3 text-sm font-medium" style={{ backgroundColor: joined ? "#e3f5ee" : "#f4f4f2" }}>
               {joined ? t("inbox.teamAlert.bannerJoined", "Priya joined. The customer sees her name.") : tick >= 1 ? t("inbox.teamAlert.bannerAlerting", "Alerting all 4 teammates…") : t("inbox.teamAlert.bannerAsked", "Customer asked for a person")}
             </div>
           </div>
@@ -722,25 +718,24 @@ function Context({ t }: { t: T }) {
   const itemsText = tList<ContextItem>(t, "inbox.context.items", CONTEXT_EN);
   const items = CONTEXT_META.map((meta, i) => ({ ...meta, ...itemsText[i] }));
   return (
-    <section className="bg-[#fff8ec] px-5 py-24 sm:px-8 sm:py-28">
-      <div className="mx-auto max-w-6xl">
-        <Heading eyebrow={t("inbox.context.eyebrow", "Context, built in")} color={GREEN} title={<>{t("inbox.context.titlePrefix", "Never ask ")}<span className="hl">{t("inbox.context.titleHl", "“who are you again?”")}</span></>} sub={t("inbox.context.subtitle", "Your team opens a thread and already knows the essentials.")} />
+    <section className="bg-white px-5 py-16 sm:px-8 lg:px-20 lg:py-24">
+      <div className="mx-auto max-w-[1500px]">
+        <Heading eyebrow={t("inbox.context.eyebrow", "Context, built in")} color={GREEN} title={<>{t("inbox.context.titlePrefix", "Never ask ")}{t("inbox.context.titleHl", "“who are you again?”")}</>} sub={t("inbox.context.subtitle", "Your team opens a thread and already knows the essentials.")} />
         <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((c, i) => (
             <Rv key={c.t} variant="pop" delay={(i % 3) * 80}>
-              <div className={`${card} group relative h-full overflow-hidden p-6 transition duration-300 hover:-translate-y-1.5`} style={{ backgroundColor: c.color, color: "#fff" }}>
-                <div aria-hidden="true" className="absolute inset-0 opacity-[0.14]" style={{ backgroundImage: "radial-gradient(#000 1.2px, transparent 1.2px)", backgroundSize: "14px 14px" }} />
-                <span className="relative grid size-12 place-items-center rounded-2xl border-2 border-[#11120f] bg-white transition-transform duration-300 group-hover:-rotate-12"><c.icon size={22} color={INK} /></span>
-                <h3 className="relative mt-5 text-2xl font-semibold tracking-tight">{c.t}</h3>
-                <p className="relative mt-2 text-[16px] leading-7 opacity-90">{c.d}</p>
+              <div className={`${card} group relative h-full bg-white p-6 transition-colors duration-300 hover:bg-[#fafaf9]`}>
+                <span className="grid size-11 place-items-center rounded-full" style={{ backgroundColor: `${c.color}1a` }}><c.icon size={21} style={{ color: c.color }} /></span>
+                <h3 className="mt-5 text-2xl font-medium tracking-[-0.025em]">{c.t}</h3>
+                <p className="mt-2 text-[16px] leading-7 text-black/65">{c.d}</p>
               </div>
             </Rv>
           ))}
           <Rv variant="pop" delay={160}>
-            <div className={`${card} flex h-full flex-col justify-center border-dashed bg-[#fffdf5] p-6 text-center`}>
+            <div className={`${card} flex h-full flex-col justify-center border-dashed bg-[#f4f4f2] p-6 text-center`}>
               <Users className="mx-auto" size={26} aria-hidden="true" />
-              <p className="mt-3 text-lg font-semibold">{t("inbox.context.extraTitle", "Plus live typing on both sides")}</p>
-              <p className="mt-1 text-[15px] text-[#11120f]/60">{t("inbox.context.extraDesc", "Customers see when you're replying, and you see when they are.")}</p>
+              <p className="mt-3 text-lg font-medium">{t("inbox.context.extraTitle", "Plus live typing on both sides")}</p>
+              <p className="mt-1 text-[15px] text-black/60">{t("inbox.context.extraDesc", "Customers see when you're replying, and you see when they are.")}</p>
             </div>
           </Rv>
         </div>
@@ -766,18 +761,18 @@ function AfterLeave({ t }: { t: T }) {
   const stepsText = tList<Step>(t, "inbox.afterLeave.steps", AFTER_LEAVE_EN);
   const steps = AFTER_LEAVE_META.map((meta, i) => ({ ...meta, ...stepsText[i] }));
   return (
-    <section className="bg-[#fff8ec] px-5 py-24 sm:px-8 sm:py-28">
-      <div className="mx-auto max-w-6xl">
-        <Heading eyebrow={t("inbox.afterLeave.eyebrow", "After they leave")} color={PINK} title={<>{t("inbox.afterLeave.titlePrefix", "Closing the tab ")}<span className="hl">{t("inbox.afterLeave.titleHl", "isn't the end.")}</span></>} sub={t("inbox.afterLeave.subtitle", "Elpino tells you honestly whether a reply can still reach them.")} />
+    <section className="bg-white px-5 py-16 sm:px-8 lg:px-20 lg:py-24">
+      <div className="mx-auto max-w-[1500px]">
+        <Heading eyebrow={t("inbox.afterLeave.eyebrow", "After they leave")} color={PINK} title={<>{t("inbox.afterLeave.titlePrefix", "Closing the tab ")}{t("inbox.afterLeave.titleHl", "isn't the end.")}</>} sub={t("inbox.afterLeave.subtitle", "Elpino tells you honestly whether a reply can still reach them.")} />
         <div className="mt-14 grid items-stretch gap-4 md:grid-cols-[1fr_auto_1fr_auto_1fr]">
           {steps.map((s, i) => (
             <div key={s.t} className="contents">
               <Rv variant="up" delay={i * 120}>
                 <div className={`${card} h-full bg-white p-6`}>
-                  <span className="grid size-12 place-items-center rounded-full border-2 border-[#11120f]" style={{ backgroundColor: s.c }}><s.icon size={22} color="#fff" /></span>
+                  <span className="grid size-11 place-items-center rounded-full" style={{ backgroundColor: `${s.c}1a` }}><s.icon size={21} style={{ color: s.c }} /></span>
                   <p className={`${mono} mt-4 text-[#11120f]/45`}>{t("inbox.afterLeave.stepLabel", "Step {n}").replace("{n}", String(i + 1))}</p>
-                  <p className="mt-1 text-xl font-semibold tracking-tight">{s.t}</p>
-                  <p className="mt-2 text-[15.5px] leading-7 text-[#11120f]/65">{s.d}</p>
+                  <p className="mt-1 text-xl font-medium tracking-[-0.02em]">{s.t}</p>
+                  <p className="mt-2 text-[15.5px] leading-7 text-black/65">{s.d}</p>
                 </div>
               </Rv>
               {i < 2 && <div aria-hidden="true" className="hidden items-center md:flex"><ArrowRight size={26} /></div>}
@@ -803,24 +798,29 @@ function Faq({ t }: { t: T }) {
   const faqs = tList<[string, string]>(t, "inbox.faq.items", FAQS_EN);
   const [open, setOpen] = useState(0);
   return (
-    <section className="bg-[#fff8ec] px-5 py-24 sm:px-8 sm:py-28">
-      <div className="mx-auto max-w-3xl">
-        <Heading eyebrow={t("inbox.faq.eyebrow", "Questions")} color={YELLOW} title={<>{t("inbox.faq.titlePrefix", "Good to ")}<span className="hl">{t("inbox.faq.titleHl", "know.")}</span></>} />
-        <div className="mt-12 space-y-3">
-          {faqs.map(([q, a], i) => (
-            <Rv key={q} variant="up" delay={i * 50}>
-              <div className={`${card} overflow-hidden ${open === i ? "bg-[#fffdf5]" : "bg-white"}`}>
-                <button type="button" aria-expanded={open === i} onClick={() => setOpen(open === i ? -1 : i)} className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left text-[17px] font-semibold">
-                  {q}
-                  <span className="grid size-8 shrink-0 place-items-center rounded-full border-2 border-[#11120f] transition-transform duration-300" style={{ backgroundColor: open === i ? YELLOW : "#fff", transform: open === i ? "rotate(45deg)" : "none" }}><Plus size={16} /></span>
-                </button>
-                <div className="grid transition-[grid-template-rows] duration-300" style={{ gridTemplateRows: open === i ? "1fr" : "0fr" }}>
-                  <div className="overflow-hidden"><p className="px-5 pb-5 text-[16px] leading-7 text-[#11120f]/70">{a}</p></div>
+    <section className="bg-white px-5 py-16 sm:px-8 lg:px-20 lg:py-24">
+      <div className="mx-auto grid max-w-[1500px] gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+        <Rv><h2 className="text-4xl font-normal leading-[1.05] tracking-[-0.04em] sm:text-5xl">{t("inbox.faq.titlePrefix", "Good to ")}{t("inbox.faq.titleHl", "know.")}</h2></Rv>
+        <Rv delay={80}>
+          <div className="border-b border-black/20">
+            {faqs.map(([q, a], i) => {
+              const isOpen = open === i;
+              return (
+                <div key={q} className="border-t border-black/20">
+                  <h3>
+                    <button type="button" aria-expanded={isOpen} onClick={() => setOpen(isOpen ? -1 : i)} className="flex w-full items-center justify-between gap-6 py-6 text-left">
+                      <span className="text-[clamp(1.1rem,1.6vw,1.35rem)] font-medium leading-snug tracking-[-0.015em]">{q}</span>
+                      <span aria-hidden="true" className={`grid size-9 shrink-0 place-items-center rounded-full border transition-all duration-300 ${isOpen ? "rotate-45 border-[#11120f] bg-[#11120f] text-white" : "border-black/25 text-[#11120f]"}`}><Plus size={18} /></span>
+                    </button>
+                  </h3>
+                  <div className={`grid transition-[grid-template-rows] duration-300 ${isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
+                    <div className="overflow-hidden"><p className="max-w-2xl pb-7 text-[17px] leading-7 text-black/65">{a}</p></div>
+                  </div>
                 </div>
-              </div>
-            </Rv>
-          ))}
-        </div>
+              );
+            })}
+          </div>
+        </Rv>
       </div>
     </section>
   );
@@ -828,15 +828,14 @@ function Faq({ t }: { t: T }) {
 
 function Closing({ t }: { t: T }) {
   return (
-    <section className="bg-white px-5 pb-24 pt-8 sm:px-8">
-      <Rv variant="pop">
-        <div className={`${card} relative mx-auto max-w-6xl overflow-hidden px-6 py-16 text-center text-white sm:px-12`} style={{ backgroundColor: BLUE }}>
-          <div aria-hidden="true" className="absolute inset-0 opacity-[0.16]" style={{ backgroundImage: "radial-gradient(#000 1.2px, transparent 1.2px)", backgroundSize: "16px 16px" }} />
-          <h2 className="relative mx-auto max-w-2xl text-[clamp(2.1rem,4.6vw,3.6rem)] font-semibold leading-[1.03] tracking-[-0.045em]">{t("inbox.closing.title", "Give your team one place to help from.")}</h2>
-          <p className="relative mx-auto mt-4 max-w-lg text-lg text-white/85">{t("inbox.closing.subtitle", "Start free and invite your teammates when you're ready.")}</p>
-          <div className="relative mt-8 flex flex-wrap justify-center gap-3">
-            <Link href="/signup" className="inline-flex h-13 items-center gap-2 rounded-full border-2 border-[#11120f] px-8 font-semibold text-[#11120f] transition hover:-translate-y-0.5" style={{ backgroundColor: YELLOW }}>{t("inbox.closing.ctaStart", "Start free")} <ArrowRight size={16} /></Link>
-            <Link href="/product/ai-agent" className="inline-flex h-13 items-center rounded-full border-2 border-[#11120f] bg-white px-8 font-semibold text-[#11120f] transition hover:-translate-y-0.5">{t("inbox.closing.ctaMeetAgent", "Meet the AI agent")}</Link>
+    <section className="bg-white px-5 pb-24 pt-4 sm:px-8 lg:px-20">
+      <Rv className="mx-auto max-w-[1500px]">
+        <div className="rounded-tl-[2rem] border border-black/20 bg-[#f4f4f2] px-7 py-14 sm:px-14 sm:py-20">
+          <h2 className="max-w-3xl text-4xl font-normal leading-[1.04] tracking-[-0.035em] sm:text-5xl">{t("inbox.closing.title", "Give your team one place to help from.")}</h2>
+          <p className="mt-5 max-w-xl text-lg leading-8 text-black/65">{t("inbox.closing.subtitle", "Start free and invite your teammates when you're ready.")}</p>
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <Link href="/signup" className="group inline-flex h-12 items-center gap-2.5 rounded-full bg-[#11120f] px-8 text-[15px] font-medium text-white transition hover:opacity-85">{t("inbox.closing.ctaStart", "Start free")} <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" /></Link>
+            <Link href="/product/ai-agent" className="inline-flex h-12 items-center rounded-full border border-black/25 bg-white px-8 text-[15px] font-medium transition hover:border-black/60">{t("inbox.closing.ctaMeetAgent", "Meet the AI agent")}</Link>
           </div>
         </div>
       </Rv>
@@ -848,7 +847,7 @@ export function InboxClient() {
   const language = useStoredLanguage();
   const { t } = useTranslation(language as any);
   return (
-    <main className="font-[family-name:var(--font-rethink-sans)]">
+    <main className="bg-white font-[family-name:var(--font-rethink-sans)] text-[#11120f]">
       <Hero t={t} />
       <RealThing t={t} />
       <TwoTabs t={t} />

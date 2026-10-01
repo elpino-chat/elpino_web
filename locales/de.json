@@ -599,20 +599,7 @@
         },
         "seats": {
           "name": "Wer sich anmelden kann",
-          "rows": {
-            "included": {
-              "label": "Enthaltene Plätze",
-              "description": "Teammitglieder, die vom Planpreis abgedeckt sind, Workspace-Besitzer eingeschlossen."
-            },
-            "extra": {
-              "label": "Zusätzliche Plätze",
-              "description": "Jedes Teammitglied über die enthaltenen Plätze hinaus, bei jedem Plan."
-            },
-            "ceiling": {
-              "label": "Platzobergrenze",
-              "description": "Der Punkt, an dem du einen größeren Plan statt eines weiteren Platzes brauchst."
-            }
-          }
+          "rows": {}
         },
         "product": {
           "name": "Das Produkt",
@@ -665,8 +652,7 @@
       "standard": "Standard",
       "priority": "Priorität",
       "messages": "Nachrichten",
-      "credit": "Guthaben",
-      "seatBundleSummary": "3 Plätze für $2, 5 für $3"
+      "credit": "Guthaben"
     },
     "billing": {
       "eyebrow": "Klare, einfache Abrechnung",
@@ -697,10 +683,7 @@
       "eyebrow": "Kapazität hinzufügen",
       "title": "Wachse, ohne deine Arbeitsweise zu ändern.",
       "subtitle": "Füge Personen oder KI-Kapazität nur hinzu, wenn du sie brauchst. Dein Posteingang, dein Wissen und dein Gesprächsverlauf bleiben genau dort, wo sie sind.",
-      "teammatesTitle": "Zusätzliche Teammitglieder",
-      "teammatesDesc": "Gib mehr Personen ihren eigenen Login, während sie denselben Posteingang, Wissen und KI-Guthaben teilen. Sie bleiben jeden Monat in deinem Plan, bis du sie entfernst.",
       "perMonth": "pro Monat",
-      "seatsWord": "Plätze",
       "topUpAnytime": "Jederzeit aufladen",
       "onAnyPaidPlan": "bei jedem bezahlten Plan",
       "creditTitle": "Zusätzliches KI-Guthaben",
@@ -728,7 +711,7 @@
       "items": [
         {
           "q": "Was kosten die Pläne?",
-          "a": "Free ist $0. Monatliche Pläne sind Starter für $12 mit $7 KI-Guthaben pro Monat, Growth für $59 mit $40, und Scale für $299 mit $240. Bei jährlicher Abrechnung gibt es zwei Monate kostenlos — du zahlst für zehn Monate und bekommst zwölf: Starter kostet $120 pro Jahr ($10/Monat), Growth $590 ($49.17/Monat), und Scale $2.990 ($249.17/Monat)."
+          "a": "Free ist $0. Monatliche Pläne sind Starter für $12 mit $7 KI-Guthaben pro Monat, Growth für $59 mit $40, und Scale für $299 mit $240. Bei jährlicher Abrechnung gibt es zwei Monate kostenlos — du zahlst für zehn Monate und bekommst zwölf: Starter kostet $120 pro Jahr ($10/Monat), Growth $588 ($49/Monat), und Scale $2.990 ($249/Monat)."
         },
         {
           "q": "Wie funktioniert das KI-Kontingent?",
@@ -747,8 +730,8 @@
           "a": "Die KI übergibt neue Gespräche direkt an dein Team, statt zu antworten. Bei einem bezahlten Plan kannst du jederzeit Guthaben aufladen oder die automatische Aufladung aktivieren, damit es nie stoppt. Aufladungen verfallen nie. Dein monatliches Guthaben setzt sich jeden Abrechnungszeitraum zurück."
         },
         {
-          "q": "Wie viel kostet ein zusätzliches Teammitglied?",
-          "a": "Zusätzliche Plätze gibt es in Paketen bei jedem Plan, auch bei Free: 3 Plätze für $2 pro Monat, oder 5 für $3. Plätze und KI-Guthaben werden völlig getrennt abgerechnet — ein Teammitglied hinzuzufügen rührt niemals dein KI-Kontingent an."
+          "q": "Do I pay for each teammate?",
+          "a": "No. Seats are unlimited on every plan, including Free, so adding a teammate costs nothing. Seats and AI credit are billed completely separately — adding a teammate never touches your AI allowance."
         },
         {
           "q": "Kann ich jederzeit kündigen?",
@@ -787,8 +770,7 @@
         "cta": "Jetzt starten",
         "features": [
           "Bis zu 100 KI-Nachrichten/Monat",
-          "2 Plätze enthalten",
-          "Platzpakete ab $0.60/Platz",
+          "Unbegrenzte Plätze",
           "20 MB Wissensdatenbank",
           "Website-Chat-Widget",
           "Gemeinsamer Posteingang mit Übergabe"
@@ -800,8 +782,7 @@
         "cta": "Jetzt starten",
         "features": [
           "$7 KI-Guthaben jeden Monat",
-          "5 Plätze enthalten",
-          "Platzpakete ab $0.60/Platz",
+          "Unbegrenzte Plätze",
           "200 MB Wissensdatenbank",
           "Jederzeit Guthaben aufladen",
           "Besucheranalyse"
@@ -813,8 +794,7 @@
         "cta": "Jetzt starten",
         "features": [
           "$40 KI-Guthaben jeden Monat",
-          "15 Plätze enthalten",
-          "Platzpakete ab $0.60/Platz",
+          "Unbegrenzte Plätze",
           "1 GB Wissensdatenbank",
           "Jederzeit Guthaben aufladen",
           "Vollständiges KI-Prüfprotokoll",
@@ -827,8 +807,7 @@
         "cta": "Jetzt starten",
         "features": [
           "$240 KI-Guthaben jeden Monat",
-          "40 Plätze enthalten",
-          "Platzpakete ab $0.60/Platz",
+          "Unbegrenzte Plätze",
           "5 GB Wissensdatenbank",
           "Jederzeit Guthaben aufladen",
           "Integrationen & API-Zugang"
@@ -946,7 +925,7 @@
       ],
       [
         "Wie ist die Preisgestaltung aufgebaut?",
-        "Free enthält 100 KI-Nachrichten pro Monat, und bezahlte Pläne enthalten ein monatliches KI-Guthaben. Zusätzliche Teammitglieder kommen in Platzpaketen ab $0.60 pro Platz, und ein Gespräch an einen Menschen zu übergeben kostet nie extra. Die Preisseite erklärt enthaltene Plätze und die Mindestgebühr des kostenlosen Plans."
+        "Free includes 100 AI messages a month, and paid plans include a monthly AI credit. Seats are unlimited on every plan, and handing a conversation to a human never costs extra. The pricing page explains the details."
       ]
     ],
     "closing": {
@@ -1176,7 +1155,7 @@
         ],
         [
           "Kann mein Team es auch nutzen?",
-          "Ja. Lade Teammitglieder ein, füge Plätze hinzu, während du wächst, und sie erhalten Beitritts-Alarme, wenn ein Kunde eine Person braucht."
+          "Yes. Invite as many teammates as you like, since seats are unlimited, and they'll get Join alerts when a customer needs a person."
         ]
       ]
     },
@@ -3533,7 +3512,7 @@
       },
       {
         "name": "Team-Einladungen",
-        "body": "Laden Sie Teammitglieder per E-Mail ein und fügen Sie Plätze hinzu, während Ihr Team wächst."
+        "body": "Invite as many teammates by email as you like: seats are unlimited."
       },
       {
         "name": "Automatische Tickets",
@@ -3629,7 +3608,7 @@
       },
       {
         "name": "Guthabenbasierte Pläne",
-        "body": "Kostenpflichtige Pläne enthalten ein monatliches KI-Guthaben, und zusätzliche Plätze sind einfache Add-ons."
+        "body": "Paid plans include a monthly AI credit, and seats are unlimited."
       },
       {
         "name": "Antworten per E-Mail",
@@ -3764,7 +3743,7 @@
         },
         {
           "q": "Wie funktionieren kostenpflichtige Pläne?",
-          "a": "Kostenpflichtige Pläne enthalten ein monatliches KI-Guthaben, und zusätzliche Plätze sind einfache Add-ons. Details finden Sie auf der Preisseite."
+          "a": "Paid plans include a monthly AI credit, and seats are unlimited. See the pricing page for details."
         }
       ]
     },
@@ -3921,7 +3900,7 @@
         },
         {
           "t": "Ein kleines Team",
-          "d": "Konversationen zuweisen, Posteingang teilen, Plätze hinzufügen, wenn du sie brauchst."
+          "d": "Assign conversations, share the inbox, invite the whole team."
         },
         {
           "t": "Wachstum",

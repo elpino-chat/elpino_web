@@ -599,20 +599,7 @@
         },
         "seats": {
           "name": "Wie kan inloggen",
-          "rows": {
-            "included": {
-              "label": "Inbegrepen plekken",
-              "description": "Teamleden die vallen onder de planprijs, inclusief de eigenaar van de workspace."
-            },
-            "extra": {
-              "label": "Extra plekken",
-              "description": "Elk teamlid boven de inbegrepen plekken, bij elk plan."
-            },
-            "ceiling": {
-              "label": "Plekkenlimiet",
-              "description": "Het punt waarop je een groter plan nodig hebt in plaats van nog een plek."
-            }
-          }
+          "rows": {}
         },
         "product": {
           "name": "Het product",
@@ -665,8 +652,7 @@
       "standard": "Standaard",
       "priority": "Prioriteit",
       "messages": "berichten",
-      "credit": "tegoed",
-      "seatBundleSummary": "3 plekken voor $2, 5 voor $3"
+      "credit": "tegoed"
     },
     "billing": {
       "eyebrow": "Duidelijke, eenvoudige facturering",
@@ -697,10 +683,7 @@
       "eyebrow": "Capaciteit toevoegen",
       "title": "Groei zonder je manier van werken te veranderen.",
       "subtitle": "Voeg alleen mensen of AI-capaciteit toe wanneer je die nodig hebt. Je inbox, kennis en gespreksgeschiedenis blijven precies waar ze zijn.",
-      "teammatesTitle": "Extra teamleden",
-      "teammatesDesc": "Geef meer mensen hun eigen login terwijl ze dezelfde inbox, kennis en AI-tegoed delen. Ze blijven elke maand op je plan totdat je ze verwijdert.",
       "perMonth": "per maand",
-      "seatsWord": "plekken",
       "topUpAnytime": "Waardeer op elk moment op",
       "onAnyPaidPlan": "bij elk betaald plan",
       "creditTitle": "Extra AI-tegoed",
@@ -728,7 +711,7 @@
       "items": [
         {
           "q": "Wat kosten de plannen?",
-          "a": "Free is $0. Maandelijkse plannen zijn Starter voor $12 met $7 AI-tegoed per maand, Growth voor $59 met $40, en Scale voor $299 met $240. Jaarlijkse facturering geeft twee maanden gratis — je betaalt voor tien maanden en krijgt er twaalf: Starter kost $120 per jaar ($10/maand), Growth $590 ($49,17/maand), en Scale $2.990 ($249,17/maand)."
+          "a": "Free is $0. Maandelijkse plannen zijn Starter voor $12 met $7 AI-tegoed per maand, Growth voor $59 met $40, en Scale voor $299 met $240. Jaarlijkse facturering geeft twee maanden gratis — je betaalt voor tien maanden en krijgt er twaalf: Starter kost $120 per jaar ($10/maand), Growth $588 ($49,17/maand), en Scale $2.990 ($249,17/maand)."
         },
         {
           "q": "Hoe werkt de AI-toewijzing?",
@@ -747,8 +730,8 @@
           "a": "De AI draagt nieuwe gesprekken direct over aan je team in plaats van te antwoorden. Bij een betaald plan kun je op elk moment tegoed opwaarderen, of automatisch opwaarderen inschakelen zodat het nooit stopt. Opwaarderingen verlopen nooit. Je maandelijkse tegoed reset elke factureringsperiode."
         },
         {
-          "q": "Hoeveel kost een extra teamlid?",
-          "a": "Extra plekken komen in pakketten bij elk plan, inclusief Free: 3 plekken voor $2 per maand, of 5 voor $3. Plekken en AI-tegoed worden volledig gescheiden gefactureerd — een teamlid toevoegen raakt je AI-toewijzing nooit."
+          "q": "Do I pay for each teammate?",
+          "a": "No. Seats are unlimited on every plan, including Free, so adding a teammate costs nothing. Seats and AI credit are billed completely separately — adding a teammate never touches your AI allowance."
         },
         {
           "q": "Kan ik op elk moment opzeggen?",
@@ -787,8 +770,7 @@
         "cta": "Aan de slag",
         "features": [
           "Tot 100 AI-berichten/maand",
-          "2 plekken inbegrepen",
-          "Plekpakketten vanaf $0,60/plek",
+          "Onbeperkt aantal plekken",
           "20 MB kennisbank",
           "Website-chatwidget",
           "Gedeelde inbox met overdracht"
@@ -800,8 +782,7 @@
         "cta": "Aan de slag",
         "features": [
           "$7 AI-tegoed elke maand",
-          "5 plekken inbegrepen",
-          "Plekpakketten vanaf $0,60/plek",
+          "Onbeperkt aantal plekken",
           "200 MB kennisbank",
           "Waardeer tegoed op elk moment op",
           "Bezoekersanalyse"
@@ -813,8 +794,7 @@
         "cta": "Aan de slag",
         "features": [
           "$40 AI-tegoed elke maand",
-          "15 plekken inbegrepen",
-          "Plekpakketten vanaf $0,60/plek",
+          "Onbeperkt aantal plekken",
           "1 GB kennisbank",
           "Waardeer tegoed op elk moment op",
           "Volledig AI-auditlog",
@@ -827,8 +807,7 @@
         "cta": "Aan de slag",
         "features": [
           "$240 AI-tegoed elke maand",
-          "40 plekken inbegrepen",
-          "Plekpakketten vanaf $0,60/plek",
+          "Onbeperkt aantal plekken",
           "5 GB kennisbank",
           "Waardeer tegoed op elk moment op",
           "Integraties & API-toegang"
@@ -946,7 +925,7 @@
       ],
       [
         "Hoe is de prijsstelling opgebouwd?",
-        "Free bevat 100 AI-berichten per maand, en betaalde plannen bevatten een maandelijks AI-tegoed. Extra teamgenoten komen in plekpakketten vanaf $0,60 per plek, en een gesprek overdragen aan een mens kost nooit extra. De prijspagina legt inbegrepen plekken en de minimumkosten van het gratis plan uit."
+        "Free includes 100 AI messages a month, and paid plans include a monthly AI credit. Seats are unlimited on every plan, and handing a conversation to a human never costs extra. The pricing page explains the details."
       ]
     ],
     "closing": {
@@ -1176,7 +1155,7 @@
         ],
         [
           "Kan mijn team het ook gebruiken?",
-          "Ja. Nodig teamgenoten uit, voeg plekken toe terwijl je groeit, en ze krijgen deelname-meldingen wanneer een klant een persoon nodig heeft."
+          "Yes. Invite as many teammates as you like, since seats are unlimited, and they'll get Join alerts when a customer needs a person."
         ]
       ]
     },
@@ -3516,7 +3495,7 @@
       },
       {
         "name": "Teamuitnodigingen",
-        "body": "Nodig teamleden uit via e-mail en voeg extra plekken toe naarmate je team groeit."
+        "body": "Invite as many teammates by email as you like: seats are unlimited."
       },
       {
         "name": "Automatische tickets",
@@ -3612,7 +3591,7 @@
       },
       {
         "name": "Op tegoed gebaseerde plannen",
-        "body": "Betaalde plannen bevatten een maandelijks AI-tegoed, en extra plekken zijn simpele add-ons."
+        "body": "Paid plans include a monthly AI credit, and seats are unlimited."
       },
       {
         "name": "E-mailantwoorden",
@@ -3747,7 +3726,7 @@
         },
         {
           "q": "Hoe werken betaalde plannen?",
-          "a": "Betaalde plannen bevatten een maandelijks AI-tegoed, en extra plekken zijn simpele add-ons. Bekijk de prijzenpagina voor details."
+          "a": "Paid plans include a monthly AI credit, and seats are unlimited. See the pricing page for details."
         }
       ]
     },
@@ -3904,7 +3883,7 @@
         },
         {
           "t": "Een klein team",
-          "d": "Wijs gesprekken toe, deel de inbox, voeg zetels toe wanneer nodig."
+          "d": "Assign conversations, share the inbox, invite the whole team."
         },
         {
           "t": "Opschalen",

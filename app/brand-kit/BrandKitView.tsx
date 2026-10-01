@@ -102,40 +102,31 @@ const DownloadIcon = () => <Download size={16} aria-hidden="true" />;
 
 // ------------------------------------------------------------ parts
 
-function Eyebrow({ n, children, color }: { n: string; children: string; color: string }) {
-  return (
-    <p className="flex items-center gap-3 font-mono text-[12px] font-medium uppercase tracking-[0.12em]" style={{ color }}>
-      <span className="rounded-md border-2 border-[#11120f] px-1.5 py-0.5 text-[11px] font-bold" style={{ background: color, color: color === "#FFD84D" ? INK : "#fff" }}>{n}</span>
-      {children}
-    </p>
-  );
+function Eyebrow({ n, children }: { n: string; children: string; color?: string }) {
+  return <p className="text-[14px] text-black/50">{n} · {children}</p>;
 }
 
-// A die-cut sticker. Clicking it peels it up a little and copies its hex.
+// One colour as a card. Clicking it copies its hex.
 function Sticker({ swatch, index, onCopy, isCopied }: { swatch: (typeof PALETTE)[number]; index: number; onCopy: (hex: string) => void; isCopied: boolean }) {
   const text = bestText(swatch.hex);
-  const tilt = ["-rotate-2", "rotate-1", "-rotate-1", "rotate-2"][index % 4];
   return (
-    <Rv variant="pop" delay={(index % 5) * 80}>
+    <Rv variant="up" delay={(index % 5) * 70}>
       <button
         type="button"
         onClick={() => onCopy(swatch.hex)}
         aria-label={`Copy ${swatch.name} ${swatch.hex}`}
-        className={`group relative block w-full text-left transition duration-300 ease-[cubic-bezier(0.3,1.5,0.5,1)] hover:-translate-y-2 hover:rotate-0 active:-translate-y-4 active:rotate-3 ${tilt}`}
+        className="group relative block w-full text-left transition-transform duration-300 hover:-translate-y-1"
       >
-        {/* the backing sheet shows through where the sticker lifts */}
-        <span aria-hidden="true" className="absolute inset-0 translate-y-1 rounded-[26px] border-2 border-dashed border-[#11120f]/25" />
-        <span className="relative flex aspect-[4/5] flex-col justify-between rounded-[26px] border-2 border-[#11120f] p-5" style={{ background: swatch.hex, color: text.colour }}>
-          <span aria-hidden="true" className="absolute right-4 top-4 h-5 w-5 rounded-full bg-white/40 [clip-path:polygon(0_0,100%_0,0_100%)]" />
-          <span className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] opacity-75">{String(index + 1).padStart(2, "0")}</span>
+        <span className="relative flex aspect-[4/5] flex-col justify-between rounded-[10px] border border-black/40 p-5" style={{ background: swatch.hex, color: text.colour }}>
+          <span className="text-[13px] font-medium opacity-75">{String(index + 1).padStart(2, "0")}</span>
           <span>
             <span className="block text-2xl font-medium tracking-[-0.03em]">{swatch.name}</span>
-            <span className="mt-1 flex items-center gap-2 font-mono text-[13px] font-bold tracking-[0.04em]">
+            <span className="mt-1 flex items-center gap-2 text-[13px] font-semibold tracking-[0.04em]">
               {swatch.hex}
-              <span className="rounded-md border-2 px-1.5 py-0.5 text-[10.5px]" style={{ borderColor: text.colour }}>{isCopied ? "Copied ✓" : "Copy"}</span>
+              <span className="rounded-md border px-1.5 py-0.5 text-[10.5px]" style={{ borderColor: text.colour }}>{isCopied ? "Copied ✓" : "Copy"}</span>
             </span>
             <span className="mt-3 block text-[12.5px] leading-5 opacity-85">{swatch.role}</span>
-            <span className="mt-3 block font-mono text-[10.5px] uppercase tracking-[0.08em] opacity-75">{text.label} · {text.ratio.toFixed(1)}:1 · {text.grade}</span>
+            <span className="mt-3 block text-[11px] opacity-75">{text.label} · {text.ratio.toFixed(1)}:1 · {text.grade}</span>
           </span>
         </span>
       </button>
@@ -155,46 +146,44 @@ export function BrandKitView() {
     <main className="bg-white text-[#11120f]">
       {/* Toast */}
       <div role="status" aria-live="polite" className={`pointer-events-none fixed bottom-6 left-1/2 z-[70] -translate-x-1/2 transition duration-300 ${copied ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}`}>
-        <span className="inline-flex items-center gap-2 rounded-full border-2 border-[#11120f] bg-[#ffd84d] px-5 py-2.5 text-sm font-semibold"><Check size={15} /> Copied {copied}</span>
+        <span className="inline-flex items-center gap-2 rounded-full bg-[#11120f] px-5 py-2.5 text-sm font-medium text-white shadow-[0_10px_30px_rgba(17,18,15,0.25)]"><Check size={15} /> Copied {copied}</span>
       </div>
 
       {/* Hero */}
-      <section className="relative isolate overflow-hidden pb-20 pt-[124px]">
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 bg-[url('/piliar-1-grandient.png')] bg-cover bg-top bg-no-repeat [mask-image:linear-gradient(to_bottom,black_75%,transparent)]" />
-        <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-5 sm:px-8 lg:grid-cols-[1.2fr_0.8fr]">
+      <section className="bg-white px-5 pb-16 pt-16 sm:px-8 lg:px-20 lg:pt-24">
+        <div className="mx-auto grid max-w-[1500px] items-center gap-12 lg:grid-cols-[1.2fr_0.8fr]">
           <div>
-            <p className="w-fit rounded-full border-2 border-[#11120f] bg-white px-4 py-1 font-mono text-[12px] font-medium uppercase tracking-[0.12em]">Brand kit</p>
-            <h1 className="mt-5 animate-[elpino-focus_0.9s_ease-out_both] text-5xl font-normal leading-[1.02] tracking-[-0.045em] sm:text-7xl">
-              Simple, <span className="hl-load">on purpose.</span>
+            <h1 className="animate-[elpino-focus_0.9s_ease-out_both] text-5xl font-normal leading-[1.02] tracking-[-0.045em] sm:text-6xl lg:text-7xl">
+              Simple, on purpose.
             </h1>
             <p className="mt-6 max-w-xl animate-[elpino-focus_0.9s_ease-out_0.15s_both] text-lg leading-8 text-black/60">
               Logos, colours and type for Elpino, the AI customer support platform that answers instantly and hands off to a human when it can&apos;t. Everything here is free to use to write about us.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <a href="/api/brand-kit" download="elpino-brand-kit.zip" className="group inline-flex h-12 items-center gap-2 rounded-full border-2 border-[#11120f] bg-[#3784ff] px-7 text-[15px] font-semibold text-white transition hover:-translate-y-0.5">
+              <a href="/api/brand-kit" download="elpino-brand-kit.zip" className="group inline-flex h-12 items-center gap-2 rounded-full bg-[#11120f] px-7 text-[15px] font-semibold text-white transition hover:-translate-y-0.5">
                 <DownloadIcon /> Download all assets
               </a>
-              <a href="#colour" className="inline-flex h-12 items-center rounded-full border-2 border-[#11120f] bg-white px-7 text-[15px] font-semibold transition hover:-translate-y-0.5">Jump to colours</a>
+              <a href="#colour" className="inline-flex h-12 items-center rounded-full border border-black/25 bg-white px-7 text-[15px] font-semibold transition hover:-translate-y-0.5">Jump to colours</a>
             </div>
             <div className="mt-8 flex flex-wrap gap-2.5 text-sm">
-              <span className="rounded-full border-2 border-[#11120f] bg-[#ffd84d] px-3.5 py-1.5 font-semibold">{LOGOS.length} logo files</span>
-              <span className="rounded-full border-2 border-[#11120f] bg-white px-3.5 py-1.5">{PALETTE.length} colours</span>
-              <span className="rounded-full border-2 border-[#11120f] bg-white px-3.5 py-1.5">3 typefaces</span>
+              <span className="rounded-full border border-black/30 bg-white px-3.5 py-1.5 font-semibold">{LOGOS.length} logo files</span>
+              <span className="rounded-full border border-black/25 bg-white px-3.5 py-1.5 text-black/70">{PALETTE.length} colours</span>
+              <span className="rounded-full border border-black/25 bg-white px-3.5 py-1.5 text-black/70">3 typefaces</span>
             </div>
           </div>
 
           {/* the mark, with the palette orbiting it */}
           <div aria-hidden="true" className="relative mx-auto flex h-[320px] w-[320px] items-center justify-center sm:h-[380px] sm:w-[380px]">
-            <span className="absolute inset-4 rounded-full border-2 border-dashed border-[#11120f]/35" />
+            <span className="absolute inset-4 rounded-full border border-dashed border-black/25" />
             <div className="absolute inset-0 animate-[elpino-orbit_28s_linear_infinite]">
               {dots.map((swatch, index) => {
                 const angle = (index / dots.length) * Math.PI * 2 - Math.PI / 2;
                 return (
-                  <span key={swatch.hex} className="absolute h-9 w-9 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[#11120f]" style={{ left: `${50 + Math.cos(angle) * 43}%`, top: `${50 + Math.sin(angle) * 43}%`, background: swatch.hex }} />
+                  <span key={swatch.hex} className="absolute h-9 w-9 -translate-x-1/2 -translate-y-1/2 rounded-full border border-black/40" style={{ left: `${50 + Math.cos(angle) * 43}%`, top: `${50 + Math.sin(angle) * 43}%`, background: swatch.hex }} />
                 );
               })}
             </div>
-            <div className="relative flex h-48 w-48 items-center justify-center rounded-full border-2 border-[#11120f] bg-white sm:h-56 sm:w-56">
+            <div className="relative flex h-48 w-48 items-center justify-center rounded-full border border-black/25 bg-white sm:h-56 sm:w-56">
               <Image src="/elpino_slack.png" alt="" width={190} height={190} priority className="h-32 w-32 object-contain sm:h-40 sm:w-40" />
             </div>
           </div>
@@ -202,12 +191,12 @@ export function BrandKitView() {
       </section>
 
       {/* 01 Logos */}
-      <section id="logos" className="scroll-mt-16 bg-[#fff8ec] px-5 py-20 sm:px-8 lg:py-28">
-        <div className="mx-auto max-w-[1200px]">
+      <section id="logos" className="scroll-mt-16 bg-white px-5 py-20 sm:px-8 lg:px-20 lg:py-24">
+        <div className="mx-auto max-w-[1500px]">
           <Rv className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div>
               <Eyebrow n="01" color="#3784FF">Logos</Eyebrow>
-              <h2 className="mt-3 text-4xl font-normal tracking-[-0.045em] sm:text-6xl">Official <span className="hl">logos.</span></h2>
+              <h2 className="mt-3 text-4xl font-normal tracking-[-0.045em] sm:text-6xl">Official logos.</h2>
             </div>
             <p className="max-w-md text-base leading-7 text-black/60">Pick a background to see how each file looks on it, then download the one you need.</p>
           </Rv>
@@ -223,8 +212,8 @@ export function BrandKitView() {
           <div className="mt-8 grid gap-6 md:grid-cols-3">
             {LOGOS.map((logo, index) => (
               <Rv key={logo.id} variant="deal" delay={index * 120}>
-                <article className="group overflow-hidden rounded-[24px] border-2 border-[#11120f] bg-white transition duration-300 hover:-translate-y-1.5">
-                  <div className="flex h-56 items-center justify-center border-b-2 border-[#11120f] p-8 transition-colors duration-500" style={{ background: stage.css }}>
+                <article className="group overflow-hidden rounded-[10px] border border-black/40 bg-white transition duration-300 hover:-translate-y-1">
+                  <div className="flex h-56 items-center justify-center border-b border-black/15 p-8 transition-colors duration-500" style={{ background: stage.css }}>
                     <Image
                       src={logo.file}
                       alt={logo.name}
@@ -239,9 +228,9 @@ export function BrandKitView() {
                         <h3 className="text-lg font-medium tracking-[-0.02em]">{logo.name}</h3>
                         <p className="mt-1 text-[13.5px] leading-5 text-black/55">{logo.note}</p>
                       </div>
-                      <a href={logo.file} download={logo.download} aria-label={`Download ${logo.name}`} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-[#11120f] bg-[#ffd84d] transition hover:-translate-y-0.5"><DownloadIcon /></a>
+                      <a href={logo.file} download={logo.download} aria-label={`Download ${logo.name}`} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-black/30 bg-white transition hover:-translate-y-0.5"><DownloadIcon /></a>
                     </div>
-                    <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.08em] text-black/40">PNG · {logo.w} × {logo.h}</p>
+                    <p className="mt-3 text-[12px] text-black/40">PNG · {logo.w} × {logo.h}</p>
                   </div>
                 </article>
               </Rv>
@@ -252,18 +241,18 @@ export function BrandKitView() {
       </section>
 
       {/* Logo usage */}
-      <section className="bg-white px-5 py-20 sm:px-8 lg:py-28">
-        <div className="mx-auto max-w-[1200px]">
+      <section className="bg-white px-5 py-20 sm:px-8 lg:px-20 lg:py-24">
+        <div className="mx-auto max-w-[1500px]">
           <Rv className="max-w-2xl">
             <Eyebrow n="02" color="#7060BD">Usage</Eyebrow>
-            <h2 className="mt-3 text-4xl font-normal tracking-[-0.045em] sm:text-6xl">Giving the logo <span className="hl">room.</span></h2>
+            <h2 className="mt-3 text-4xl font-normal tracking-[-0.045em] sm:text-6xl">Giving the logo room.</h2>
           </Rv>
 
           <div className="mt-12 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
             {/* clear space */}
             <Rv variant="up">
-              <div className="rounded-[24px] border-2 border-[#11120f] bg-[#fff8ec] p-6 sm:p-8">
-                <p className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-black/45">Clear space</p>
+              <div className="rounded-[10px] border border-black/40 bg-[#f4f4f2] p-6 sm:p-8">
+                <p className="text-[13px] font-medium text-black/45">Clear space</p>
                 <div className="mt-5 flex justify-center">
                   <div className="relative inline-block border-2 border-dashed border-[#3784ff] p-[44px]">
                     <span className="absolute inset-[44px] border-2 border-[#11120f]/25" aria-hidden="true" />
@@ -278,8 +267,8 @@ export function BrandKitView() {
 
             {/* do */}
             <Rv variant="up" delay={120}>
-              <div className="h-full rounded-[24px] border-2 border-[#11120f] bg-white p-6 sm:p-8">
-                <p className="flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-[#1aa37a]"><span className="flex h-5 w-5 items-center justify-center rounded-md border-2 border-[#11120f] bg-[#1aa37a] text-white"><Check size={12} strokeWidth={3.5} /></span> Do</p>
+              <div className="h-full rounded-[10px] border border-black/40 bg-white p-6 sm:p-8">
+                <p className="flex items-center gap-2 text-[13px] font-medium text-[#1aa37a]"><span className="flex h-5 w-5 items-center justify-center rounded-md border-2 border-[#11120f] bg-[#1aa37a] text-white"><Check size={12} strokeWidth={3.5} /></span> Do</p>
                 <div className="mt-5 flex h-32 items-center justify-center rounded-2xl border-2 border-[#11120f] bg-white"><Image src="/logo_demo_transparent.png" alt="Correct logo use" width={900} height={274} className="h-12 w-auto" /></div>
                 <ul className="mt-5 space-y-2.5 text-[15px] leading-6 text-black/65">
                   <li>Use the files exactly as provided.</li>
@@ -292,8 +281,8 @@ export function BrandKitView() {
 
           {/* don't */}
           <Rv variant="up" className="mt-6">
-            <div className="rounded-[24px] border-2 border-[#11120f] bg-white p-6 sm:p-8">
-              <p className="flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-[#d9508a]"><span className="flex h-5 w-5 items-center justify-center rounded-md border-2 border-[#11120f] bg-[#d9508a] text-[11px] text-white">✕</span> Don&apos;t</p>
+            <div className="rounded-[10px] border border-black/40 bg-white p-6 sm:p-8">
+              <p className="flex items-center gap-2 text-[13px] font-medium text-[#d9508a]"><span className="flex h-5 w-5 items-center justify-center rounded-md border-2 border-[#11120f] bg-[#d9508a] text-[11px] text-white">✕</span> Don&apos;t</p>
               <div className="mt-5 grid grid-cols-2 gap-4 md:grid-cols-5">
                 {[
                   { label: "Stretch or squash", style: { transform: "scaleX(1.6)" } },
@@ -317,17 +306,17 @@ export function BrandKitView() {
       </section>
 
       {/* 03 Colour: the sticker sheet */}
-      <section id="colour" className="scroll-mt-16 bg-[#fff8ec] px-5 py-20 sm:px-8 lg:py-28">
-        <div className="mx-auto max-w-[1200px]">
+      <section id="colour" className="scroll-mt-16 bg-white px-5 py-20 sm:px-8 lg:px-20 lg:py-24">
+        <div className="mx-auto max-w-[1500px]">
           <Rv className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div>
               <Eyebrow n="03" color="#FC7B33">Colour</Eyebrow>
-              <h2 className="mt-3 text-4xl font-normal tracking-[-0.045em] sm:text-6xl">A sheet of <span className="hl">stickers.</span></h2>
+              <h2 className="mt-3 text-4xl font-normal tracking-[-0.045em] sm:text-6xl">A sheet of stickers.</h2>
             </div>
             <p className="max-w-md text-base leading-7 text-black/60">Click a sticker to peel it off and copy its hex. Each shows the best text colour on top of it and how well it reads.</p>
           </Rv>
 
-          <div className="mt-14 grid grid-cols-2 gap-5 rounded-[32px] border-2 border-dashed border-[#11120f]/40 bg-white/60 p-4 sm:gap-7 sm:p-8 lg:grid-cols-3 xl:grid-cols-5">
+          <div className="mt-14 grid grid-cols-2 gap-5 rounded-[10px] border border-black/25 bg-white/60 p-4 sm:gap-7 sm:p-8 lg:grid-cols-3 xl:grid-cols-5">
             {PALETTE.map((swatch, index) => (
               <Sticker key={swatch.hex} swatch={swatch} index={index} onCopy={(hex) => copy(hex)} isCopied={copied === swatch.hex} />
             ))}
@@ -344,11 +333,11 @@ export function BrandKitView() {
       </section>
 
       {/* 04 Type */}
-      <section className="bg-white px-5 py-20 sm:px-8 lg:py-28">
-        <div className="mx-auto max-w-[1200px]">
+      <section className="bg-white px-5 py-20 sm:px-8 lg:px-20 lg:py-24">
+        <div className="mx-auto max-w-[1500px]">
           <Rv className="max-w-2xl">
             <Eyebrow n="04" color="#1AA37A">Type</Eyebrow>
-            <h2 className="mt-3 text-4xl font-normal tracking-[-0.045em] sm:text-6xl">Three <span className="hl">typefaces.</span></h2>
+            <h2 className="mt-3 text-4xl font-normal tracking-[-0.045em] sm:text-6xl">Three typefaces.</h2>
             <p className="mt-4 text-base leading-7 text-black/60">Clean, readable type for a product people scan quickly, not decode. All three are free on Google Fonts.</p>
           </Rv>
 
@@ -359,9 +348,9 @@ export function BrandKitView() {
               { role: "Labels & code", name: "Geist Mono", color: "#7060BD", cls: "font-mono", sample: "STEP 01 · VERIFIED · 10 MIN", href: "https://fonts.google.com/specimen/Geist+Mono" },
             ].map((face, index) => (
               <Rv key={face.name} variant="deal" delay={index * 120}>
-                <article className="h-full overflow-hidden rounded-[24px] border-2 border-[#11120f] bg-white transition duration-300 hover:-translate-y-1.5">
-                  <header className="flex items-center justify-between border-b-2 border-[#11120f] px-6 py-3" style={{ background: face.color, color: face.ink ? INK : "#fff" }}>
-                    <span className="font-mono text-[12px] font-bold uppercase tracking-[0.12em]">{face.role}</span>
+                <article className="h-full overflow-hidden rounded-[10px] border border-black/40 bg-white transition duration-300 hover:-translate-y-1">
+                  <header className="flex items-center justify-between border-b border-black/15 px-6 py-3" style={{ background: face.color, color: face.ink ? INK : "#fff" }}>
+                    <span className="text-[13px] font-medium">{face.role}</span>
                     <span className="font-mono text-[12px] opacity-80">{String(index + 1).padStart(2, "0")}</span>
                   </header>
                   <div className="p-6">
@@ -369,7 +358,7 @@ export function BrandKitView() {
                     <h3 className="mt-3 text-2xl font-medium tracking-[-0.03em]">{face.name}</h3>
                     <p className={`mt-4 text-[17px] leading-7 text-black/70 ${face.cls}`}>{face.sample}</p>
                     <p className={`mt-5 text-[13px] leading-6 text-black/45 ${face.cls}`}>ABCDEFGHIJKLM NOPQRSTUVWXYZ<br />abcdefghijklm nopqrstuvwxyz<br />0123456789 !@#$%</p>
-                    <a href={face.href} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex rounded-full border-2 border-[#11120f] bg-[#fff8ec] px-4 py-1.5 text-[13.5px] font-semibold transition hover:bg-[#ffd84d]">Get it on Google Fonts ↗</a>
+                    <a href={face.href} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex rounded-full border-2 border-[#11120f] bg-[#f4f4f2] px-4 py-1.5 text-[13.5px] font-semibold transition hover:border-black/60">Get it on Google Fonts ↗</a>
                   </div>
                 </article>
               </Rv>
@@ -379,17 +368,17 @@ export function BrandKitView() {
       </section>
 
       {/* 05 How we draw */}
-      <section className="bg-[#fff8ec] px-5 py-20 sm:px-8 lg:py-28">
-        <div className="mx-auto max-w-[1200px]">
+      <section className="bg-white px-5 py-20 sm:px-8 lg:px-20 lg:py-24">
+        <div className="mx-auto max-w-[1500px]">
           <Rv className="max-w-2xl">
             <Eyebrow n="05" color="#7060BD">Style</Eyebrow>
-            <h2 className="mt-3 text-4xl font-normal tracking-[-0.045em] sm:text-6xl">How we <span className="hl">draw things.</span></h2>
+            <h2 className="mt-3 text-4xl font-normal tracking-[-0.045em] sm:text-6xl">How we draw things.</h2>
             <p className="mt-4 text-base leading-7 text-black/60">Sticker-like shapes: a clear ink outline, flat colour, generous rounding and a little motion. Here are the building blocks.</p>
           </Rv>
 
           <div className="mt-12 grid gap-6 md:grid-cols-2">
             <Rv variant="up">
-              <div className="h-full rounded-[24px] border-2 border-[#11120f] bg-white p-6 sm:p-8">
+              <div className="h-full rounded-[10px] border border-black/40 bg-white p-6 sm:p-8">
                 <p className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-black/45">Buttons</p>
                 <div className="mt-6 flex flex-wrap items-center gap-3">
                   <span className="inline-flex h-12 items-center rounded-full border-2 border-[#11120f] bg-[#3784ff] px-7 text-[15px] font-semibold text-white">Primary</span>
@@ -401,7 +390,7 @@ export function BrandKitView() {
               </div>
             </Rv>
             <Rv variant="up" delay={100}>
-              <div className="h-full rounded-[24px] border-2 border-[#11120f] bg-white p-6 sm:p-8">
+              <div className="h-full rounded-[10px] border border-black/40 bg-white p-6 sm:p-8">
                 <p className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-black/45">Badges, labels & stamps</p>
                 <div className="mt-6 flex flex-wrap items-center gap-3">
                   <span className="rounded-full border-2 border-[#11120f] bg-white px-4 py-1 font-mono text-[12px] font-medium uppercase tracking-[0.12em]">Mono label</span>
@@ -412,18 +401,18 @@ export function BrandKitView() {
               </div>
             </Rv>
             <Rv variant="up">
-              <div className="h-full rounded-[24px] border-2 border-[#11120f] bg-white p-6 sm:p-8">
+              <div className="h-full rounded-[10px] border border-black/40 bg-white p-6 sm:p-8">
                 <p className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-black/45">The highlighter</p>
-                <p className="mt-6 text-4xl font-normal leading-[1.1] tracking-[-0.04em]">A little better, <span className="hl-load">every release.</span></p>
+                <p className="mt-6 text-4xl font-normal leading-[1.1] tracking-[-0.04em]">A little better, every release.</p>
                 <p className="mt-5 text-[14px] leading-6 text-black/55">One phrase per headline gets a yellow marker line that draws itself in.</p>
               </div>
             </Rv>
             <Rv variant="up" delay={100}>
-              <div className="h-full rounded-[24px] border-2 border-[#11120f] bg-white p-6 sm:p-8">
+              <div className="h-full rounded-[10px] border border-black/40 bg-white p-6 sm:p-8">
                 <p className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-black/45">Cards & surfaces</p>
                 <div className="mt-6 grid grid-cols-3 gap-3">
                   <div className="h-20 rounded-2xl border-2 border-[#11120f] bg-white" />
-                  <div className="h-20 rounded-2xl border-2 border-[#11120f] bg-[#fff8ec]" />
+                  <div className="h-20 rounded-2xl border-2 border-[#11120f] bg-[#f4f4f2]" />
                   <div className="relative h-20 overflow-hidden rounded-2xl border-2 border-[#11120f] bg-[#3784ff]"><span className="absolute inset-0 opacity-25" style={{ backgroundImage: "radial-gradient(#fff 1.4px, transparent 1.4px)", backgroundSize: "14px 14px" }} /></div>
                 </div>
                 <p className="mt-5 text-[14px] leading-6 text-black/55">Rounded 22–28 px, ink outline, flat colour. No hard drop shadows. A dot pattern adds texture on colour.</p>
@@ -434,26 +423,26 @@ export function BrandKitView() {
       </section>
 
       {/* 06 The mascot */}
-      <section className="bg-white px-5 py-20 sm:px-8 lg:py-28">
-        <div className="mx-auto max-w-[1200px]">
+      <section className="bg-white px-5 py-20 sm:px-8 lg:px-20 lg:py-24">
+        <div className="mx-auto max-w-[1500px]">
           <Rv className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div>
               <Eyebrow n="06" color="#FC7B33">Mascot</Eyebrow>
-              <h2 className="mt-3 text-4xl font-normal tracking-[-0.045em] sm:text-6xl">Meet <span className="hl">Pino.</span></h2>
+              <h2 className="mt-3 text-4xl font-normal tracking-[-0.045em] sm:text-6xl">Meet Pino.</h2>
             </div>
             <p className="max-w-md text-base leading-7 text-black/60">Sloths never rush bad code. Pino is calm, thorough and quietly helpful, and is the friendly face of the product.</p>
           </Rv>
           <div className="mt-12 grid grid-cols-2 gap-5 md:grid-cols-3">
             {SLOTHS.map((sloth, index) => (
               <Rv key={sloth.src} variant="deal" delay={(index % 3) * 100}>
-                <figure className="group overflow-hidden rounded-[22px] border-2 border-[#11120f] bg-white transition duration-300 hover:-translate-y-1.5 hover:-rotate-[0.6deg]">
+                <figure className="group overflow-hidden rounded-[10px] border border-black/40 bg-white transition duration-300 hover:-translate-y-1">
                   <div className="flex h-48 items-center justify-center bg-[linear-gradient(135deg,#eef4ff,#fff3e2)] p-4 sm:h-56">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={sloth.src} alt={sloth.alt} loading="lazy" className="h-full w-full object-contain transition duration-500 group-hover:scale-105" />
                   </div>
-                  <figcaption className="flex items-center justify-between border-t-2 border-[#11120f] px-4 py-3 text-[14px] font-semibold">
+                  <figcaption className="flex items-center justify-between border-t border-black/15 px-4 py-3 text-[14px] font-semibold">
                     {sloth.name}
-                    <a href={sloth.src} download aria-label={`Download ${sloth.name}`} className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-[#11120f] bg-[#ffd84d] transition hover:-translate-y-0.5"><DownloadIcon /></a>
+                    <a href={sloth.src} download aria-label={`Download ${sloth.name}`} className="flex h-9 w-9 items-center justify-center rounded-full border border-black/30 bg-white transition hover:-translate-y-0.5"><DownloadIcon /></a>
                   </figcaption>
                 </figure>
               </Rv>
@@ -462,22 +451,33 @@ export function BrandKitView() {
         </div>
       </section>
 
-      {/* 07 Voice */}
-      <section className="bg-[#11120f] px-5 py-20 text-[#fff8ec] sm:px-8 lg:py-28">
-        <div className="mx-auto max-w-[1200px]">
+      {/* 07 Voice: one row per trait, what we say beside what we don't */}
+      <section className="bg-white px-5 py-20 sm:px-8 lg:px-20 lg:py-24">
+        <div className="mx-auto max-w-[1500px] border-t border-black/20 pt-16">
           <Rv className="max-w-2xl">
-            <p className="flex items-center gap-3 font-mono text-[12px] font-medium uppercase tracking-[0.12em] text-[#ffd84d]"><span className="rounded-md border-2 border-[#fff8ec] px-1.5 py-0.5 text-[11px] font-bold">07</span> Voice</p>
-            <h2 className="mt-3 text-4xl font-normal tracking-[-0.045em] sm:text-6xl">How we <span className="text-[#fc7b33]">sound.</span></h2>
+            <p className="text-[14px] text-black/50">07 · Voice</p>
+            <h2 className="mt-3 text-4xl font-normal leading-[1.05] tracking-[-0.04em] sm:text-5xl">How we sound.</h2>
           </Rv>
-          <div className="mt-12 grid gap-6 lg:grid-cols-3">
+          <div className="mt-12 border-b border-black/20">
             {VOICE.map((voice, index) => (
-              <Rv key={voice.name} variant="deal" delay={index * 130}>
-                <article className="h-full overflow-hidden rounded-[22px] border-2 border-[#fff8ec]/70">
-                  <header className="border-b-2 border-[#11120f] px-6 py-4 text-2xl font-medium tracking-[-0.02em]" style={{ background: voice.color, color: voice.ink ? INK : "#fff" }}>{voice.name}</header>
-                  <div className="space-y-4 p-6">
-                    <p className="text-[15px] leading-6 text-[#fff8ec]/70">{voice.text}</p>
-                    <div className="rounded-xl border-2 border-[#1aa37a] p-4"><p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.1em] text-[#1aa37a]">Say this</p><p className="mt-1.5 text-[15px] leading-6">&ldquo;{voice.say}&rdquo;</p></div>
-                    <div className="rounded-xl border-2 border-dashed border-[#d9508a]/70 p-4"><p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.1em] text-[#d9508a]">Not this</p><p className="mt-1.5 text-[15px] leading-6 text-[#fff8ec]/60 line-through decoration-[#d9508a]/60">&ldquo;{voice.not}&rdquo;</p></div>
+              <Rv key={voice.name} variant="up" delay={index * 100}>
+                <article className="grid gap-8 border-t border-black/20 py-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-14">
+                  <div>
+                    <h3 className="flex items-center gap-3 text-3xl font-medium tracking-[-0.03em]">
+                      <span aria-hidden="true" className="size-3 rounded-full border border-black/30" style={{ background: voice.color }} />
+                      {voice.name}
+                    </h3>
+                    <p className="mt-4 max-w-md text-[16px] leading-7 text-black/65">{voice.text}</p>
+                  </div>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="rounded-[10px] border border-black/40 bg-white p-5">
+                      <p className="flex items-center gap-2 text-[13px] font-medium text-[#1aa37a]"><span className="grid size-5 place-items-center rounded-full bg-[#1aa37a] text-white"><Check size={12} strokeWidth={3} aria-hidden="true" /></span>Say this</p>
+                      <p className="mt-3 text-[18px] leading-7 tracking-[-0.01em]">&ldquo;{voice.say}&rdquo;</p>
+                    </div>
+                    <div className="rounded-[10px] bg-[#f4f4f2] p-5">
+                      <p className="flex items-center gap-2 text-[13px] font-medium text-[#d9508a]"><span className="grid size-5 place-items-center rounded-full bg-[#d9508a] text-[12px] leading-none text-white" aria-hidden="true">✕</span>Not this</p>
+                      <p className="mt-3 text-[18px] leading-7 tracking-[-0.01em] text-black/50 line-through decoration-[#d9508a]/60">&ldquo;{voice.not}&rdquo;</p>
+                    </div>
                   </div>
                 </article>
               </Rv>
@@ -487,20 +487,20 @@ export function BrandKitView() {
       </section>
 
       {/* 08 Boilerplate */}
-      <section className="bg-white px-5 py-20 sm:px-8 lg:py-28">
-        <div className="mx-auto max-w-[1000px]">
+      <section className="bg-white px-5 py-20 sm:px-8 lg:px-20 lg:py-24">
+        <div className="mx-auto max-w-[1500px]">
           <Rv className="max-w-2xl">
             <Eyebrow n="08" color="#3784FF">About us</Eyebrow>
-            <h2 className="mt-3 text-4xl font-normal tracking-[-0.045em] sm:text-6xl">Ready to <span className="hl">paste.</span></h2>
+            <h2 className="mt-3 text-4xl font-normal tracking-[-0.045em] sm:text-6xl">Ready to paste.</h2>
             <p className="mt-4 text-base leading-7 text-black/60">Writing about Elpino? Use whichever length fits.</p>
           </Rv>
           <div className="mt-12 space-y-5">
             {BOILERPLATE.map((item, index) => (
               <Rv key={item.label} variant="up" delay={index * 100}>
-                <article className="rounded-[22px] border-2 border-[#11120f] bg-[#fffdf5] p-6 sm:p-7">
+                <article className="rounded-[10px] border border-black/40 bg-white p-6 sm:p-7">
                   <div className="flex items-center justify-between gap-4">
-                    <span className="rounded-full border-2 border-[#11120f] bg-[#ffd84d] px-3 py-0.5 font-mono text-[11px] font-bold uppercase tracking-[0.1em]">{item.label}</span>
-                    <button type="button" onClick={() => copy(item.text, "the text")} className="inline-flex items-center gap-1.5 rounded-full border-2 border-[#11120f] bg-white px-4 py-1.5 text-[13.5px] font-semibold transition hover:-translate-y-0.5"><Copy size={14} /> Copy</button>
+                    <span className="rounded-full border border-black/30 bg-white px-3 py-0.5 text-[13px] font-medium">{item.label}</span>
+                    <button type="button" onClick={() => copy(item.text, "the text")} className="inline-flex items-center gap-1.5 rounded-full border border-black/25 bg-white px-4 py-1.5 text-[13.5px] font-semibold transition hover:-translate-y-0.5"><Copy size={14} /> Copy</button>
                   </div>
                   <p className="mt-4 text-[17px] leading-8 text-black/75">{item.text}</p>
                 </article>
@@ -511,16 +511,22 @@ export function BrandKitView() {
       </section>
 
       {/* Philosophy + download */}
-      <section className="bg-white px-5 pb-24 sm:px-8">
-        <Rv variant="pop" className="mx-auto max-w-[1200px]">
-          <div className="relative isolate overflow-hidden rounded-[32px] border-2 border-[#11120f] bg-[#3784ff] px-7 py-14 text-white sm:px-14 sm:py-20">
-            <div aria-hidden="true" className="absolute inset-0 -z-10 opacity-25" style={{ backgroundImage: "radial-gradient(#fff 1.4px, transparent 1.4px)", backgroundSize: "22px 22px" }} />
-            <span aria-hidden="true" className="elpino-stamp absolute right-6 top-6 hidden rotate-[-8deg] rounded-lg border-[3px] border-[#ffd84d] px-3 py-1 font-mono text-[14px] font-bold uppercase tracking-[0.16em] text-[#ffd84d] sm:block">Free to use</span>
-            <p className="font-mono text-[12px] font-medium uppercase tracking-[0.12em] text-white/80">Our design philosophy</p>
-            <h2 className="mt-4 max-w-3xl text-4xl font-normal leading-[1.05] tracking-[-0.04em] sm:text-6xl">Simple over complex. AI first, human when it matters. Clarity over noise.</h2>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a href="/api/brand-kit" download="elpino-brand-kit.zip" className="group inline-flex h-12 items-center gap-2 rounded-full border-2 border-[#11120f] bg-[#ffd84d] px-7 text-[15px] font-semibold text-[#11120f] transition hover:-translate-y-0.5"><DownloadIcon /> Download all assets</a>
-              <a href="mailto:hello@elpino.chat?subject=Brand%20question" className="inline-flex h-12 items-center rounded-full border-2 border-[#11120f] bg-white px-7 text-[15px] font-semibold text-[#11120f] transition hover:-translate-y-0.5">Ask about the brand</a>
+      <section className="bg-white px-5 pb-24 pt-4 sm:px-8 lg:px-20">
+        <Rv className="mx-auto max-w-[1500px]">
+          <div className="rounded-[10px] bg-[#11120f] px-7 py-12 text-white sm:px-14 sm:py-16">
+            <p className="text-[14px] text-white/55">Our design philosophy</p>
+            {/* the one line, as its three statements */}
+            <div className="mt-10 grid gap-10 md:grid-cols-3 md:gap-0">
+              {["Simple over complex.", "AI first, human when it matters.", "Clarity over noise."].map((line, index) => (
+                <div key={line} className={`md:px-8 ${index === 0 ? "md:pl-0" : "md:border-l md:border-white/20"} ${index === 2 ? "md:pr-0" : ""}`}>
+                  <span className="text-[14px] font-medium text-[#0078f4]">{String(index + 1).padStart(2, "0")}</span>
+                  <h2 className="mt-3 text-3xl font-normal leading-[1.1] tracking-[-0.03em] sm:text-4xl">{line}</h2>
+                </div>
+              ))}
+            </div>
+            <div className="mt-12 flex flex-wrap gap-3 border-t border-white/20 pt-8">
+              <a href="/api/brand-kit" download="elpino-brand-kit.zip" className="group inline-flex h-12 items-center gap-2 rounded-full bg-white px-7 text-[15px] font-medium text-[#11120f] transition hover:opacity-90"><DownloadIcon /> Download all assets</a>
+              <a href="mailto:hello@elpino.chat?subject=Brand%20question" className="inline-flex h-12 items-center rounded-full border border-white/35 px-7 text-[15px] font-medium text-white transition hover:border-white/80">Ask about the brand</a>
             </div>
           </div>
         </Rv>

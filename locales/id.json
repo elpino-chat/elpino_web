@@ -599,20 +599,7 @@
         },
         "seats": {
           "name": "Siapa yang bisa masuk",
-          "rows": {
-            "included": {
-              "label": "Kursi termasuk",
-              "description": "Rekan tim yang tercakup dalam harga paket, termasuk pemilik ruang kerja."
-            },
-            "extra": {
-              "label": "Kursi tambahan",
-              "description": "Setiap rekan tim di luar kursi yang termasuk, pada paket apa pun."
-            },
-            "ceiling": {
-              "label": "Batas kursi",
-              "description": "Titik di mana Anda perlu paket lebih besar daripada kursi tambahan."
-            }
-          }
+          "rows": {}
         },
         "product": {
           "name": "Produk",
@@ -665,8 +652,7 @@
       "standard": "Standar",
       "priority": "Prioritas",
       "messages": "pesan",
-      "credit": "kredit",
-      "seatBundleSummary": "3 kursi $2, 5 kursi $3"
+      "credit": "kredit"
     },
     "billing": {
       "eyebrow": "Penagihan jelas dan sederhana",
@@ -697,10 +683,7 @@
       "eyebrow": "Tambah kapasitas",
       "title": "Tumbuh tanpa mengubah cara kerja Anda.",
       "subtitle": "Tambahkan orang atau kapasitas AI hanya saat Anda perlu. Kotak masuk, pengetahuan, dan riwayat percakapan Anda tetap sama seperti sebelumnya.",
-      "teammatesTitle": "Rekan tim tambahan",
-      "teammatesDesc": "Berikan lebih banyak orang login mereka sendiri sambil berbagi kotak masuk, pengetahuan, dan kredit AI yang sama. Mereka tetap di paket Anda setiap bulan sampai Anda menghapusnya.",
       "perMonth": "per bulan",
-      "seatsWord": "kursi",
       "topUpAnytime": "Isi ulang kapan saja",
       "onAnyPaidPlan": "di paket berbayar mana pun",
       "creditTitle": "Kredit AI tambahan",
@@ -728,7 +711,7 @@
       "items": [
         {
           "q": "Berapa biaya paketnya?",
-          "a": "Free adalah $0. Paket bulanan adalah Starter $12 dengan kredit AI $7 setiap bulan, Growth $59 dengan $40, dan Scale $299 dengan $240. Penagihan tahunan memberi dua bulan gratis — Anda membayar sepuluh bulan dan mendapat dua belas: Starter $120 setahun ($10/bulan), Growth $590 ($49.17/bulan), dan Scale $2,990 ($249.17/bulan)."
+          "a": "Free adalah $0. Paket bulanan adalah Starter $12 dengan kredit AI $7 setiap bulan, Growth $59 dengan $40, dan Scale $299 dengan $240. Penagihan tahunan memberi dua bulan gratis — Anda membayar sepuluh bulan dan mendapat dua belas: Starter $120 setahun ($10/bulan), Growth $588 ($49/bulan), dan Scale $2,988 ($249/bulan)."
         },
         {
           "q": "Bagaimana jatah AI bekerja?",
@@ -747,8 +730,8 @@
           "a": "AI mengalihkan percakapan baru langsung ke tim Anda daripada menjawab. Pada paket berbayar Anda dapat mengisi ulang kredit kapan saja, atau mengaktifkan isi ulang otomatis agar tidak pernah berhenti. Isi ulang tidak pernah kedaluwarsa. Kredit bulanan Anda diatur ulang setiap periode penagihan."
         },
         {
-          "q": "Berapa biaya rekan tim tambahan?",
-          "a": "Kursi tambahan tersedia dalam paket di setiap paket termasuk Free: 3 kursi untuk $2 sebulan, atau 5 untuk $3. Kursi dan kredit AI ditagih secara terpisah sepenuhnya — menambahkan rekan tim tidak pernah menyentuh jatah AI Anda."
+          "q": "Do I pay for each teammate?",
+          "a": "No. Seats are unlimited on every plan, including Free, so adding a teammate costs nothing. Seats and AI credit are billed completely separately — adding a teammate never touches your AI allowance."
         },
         {
           "q": "Bisakah saya membatalkan kapan saja?",
@@ -787,8 +770,7 @@
         "cta": "Mulai",
         "features": [
           "Hingga 100 pesan AI/bulan",
-          "2 kursi termasuk",
-          "Paket kursi mulai $0.60/kursi",
+          "Kursi tanpa batas",
           "Basis pengetahuan 20 MB",
           "Widget chat situs web",
           "Kotak masuk bersama dengan pengalihan"
@@ -800,8 +782,7 @@
         "cta": "Mulai",
         "features": [
           "Kredit AI $7 setiap bulan",
-          "5 kursi termasuk",
-          "Paket kursi mulai $0.60/kursi",
+          "Kursi tanpa batas",
           "Basis pengetahuan 200 MB",
           "Isi ulang kredit kapan saja",
           "Analitik pengunjung"
@@ -813,8 +794,7 @@
         "cta": "Mulai",
         "features": [
           "Kredit AI $40 setiap bulan",
-          "15 kursi termasuk",
-          "Paket kursi mulai $0.60/kursi",
+          "Kursi tanpa batas",
           "Basis pengetahuan 1 GB",
           "Isi ulang kredit kapan saja",
           "Jejak audit AI penuh",
@@ -827,8 +807,7 @@
         "cta": "Mulai",
         "features": [
           "Kredit AI $240 setiap bulan",
-          "40 kursi termasuk",
-          "Paket kursi mulai $0.60/kursi",
+          "Kursi tanpa batas",
           "Basis pengetahuan 5 GB",
           "Isi ulang kredit kapan saja",
           "Integrasi & akses API"
@@ -946,7 +925,7 @@
       ],
       [
         "Bagaimana struktur harganya?",
-        "Free mencakup 100 pesan AI per bulan, dan paket berbayar mencakup kredit AI bulanan. Rekan tim tambahan tersedia dalam paket kursi mulai $0.60 per kursi, dan mengalihkan percakapan ke manusia tidak pernah dikenai biaya tambahan. Halaman harga menjelaskan kursi yang termasuk dan biaya minimum paket gratis."
+        "Free includes 100 AI messages a month, and paid plans include a monthly AI credit. Seats are unlimited on every plan, and handing a conversation to a human never costs extra. The pricing page explains the details."
       ]
     ],
     "closing": {
@@ -1176,7 +1155,7 @@
         ],
         [
           "Bisakah tim saya juga menggunakannya?",
-          "Ya. Undang rekan tim, tambahkan kursi saat Anda berkembang, dan mereka akan mendapat peringatan gabung saat pelanggan memerlukan orang."
+          "Yes. Invite as many teammates as you like, since seats are unlimited, and they'll get Join alerts when a customer needs a person."
         ]
       ]
     },
@@ -3516,7 +3495,7 @@
       },
       {
         "name": "Undangan tim",
-        "body": "Undang rekan tim lewat email, dan tambah kursi seiring pertumbuhan timmu."
+        "body": "Invite as many teammates by email as you like: seats are unlimited."
       },
       {
         "name": "Tiket otomatis",
@@ -3612,7 +3591,7 @@
       },
       {
         "name": "Paket berbasis kredit",
-        "body": "Paket berbayar mencakup kredit AI bulanan, dan kursi tambahan berupa add-on sederhana."
+        "body": "Paid plans include a monthly AI credit, and seats are unlimited."
       },
       {
         "name": "Balasan email",
@@ -3747,7 +3726,7 @@
         },
         {
           "q": "Bagaimana cara kerja paket berbayar?",
-          "a": "Paket berbayar mencakup kredit AI bulanan, dan kursi tambahan berupa add-on sederhana. Lihat halaman harga untuk detailnya."
+          "a": "Paid plans include a monthly AI credit, and seats are unlimited. See the pricing page for details."
         }
       ]
     },
@@ -3904,7 +3883,7 @@
         },
         {
           "t": "Tim kecil",
-          "d": "Tugaskan percakapan, bagikan inbox, tambah seat saat dibutuhkan."
+          "d": "Assign conversations, share the inbox, invite the whole team."
         },
         {
           "t": "Berkembang lebih besar",

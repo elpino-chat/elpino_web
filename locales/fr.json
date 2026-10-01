@@ -599,20 +599,7 @@
         },
         "seats": {
           "name": "Qui peut se connecter",
-          "rows": {
-            "included": {
-              "label": "Sièges inclus",
-              "description": "Coéquipiers couverts par le prix du plan, propriétaire de l'espace de travail inclus."
-            },
-            "extra": {
-              "label": "Sièges supplémentaires",
-              "description": "Chaque coéquipier au-delà des sièges inclus, sur n'importe quel plan."
-            },
-            "ceiling": {
-              "label": "Plafond de sièges",
-              "description": "Le point où vous avez besoin d'un plan plus grand plutôt qu'un autre siège."
-            }
-          }
+          "rows": {}
         },
         "product": {
           "name": "Le produit",
@@ -665,8 +652,7 @@
       "standard": "Standard",
       "priority": "Prioritaire",
       "messages": "messages",
-      "credit": "crédit",
-      "seatBundleSummary": "3 sièges pour 2 $, 5 pour 3 $"
+      "credit": "crédit"
     },
     "billing": {
       "eyebrow": "Facturation claire et simple",
@@ -697,10 +683,7 @@
       "eyebrow": "Ajouter de la capacité",
       "title": "Grandissez sans changer votre façon de travailler.",
       "subtitle": "Ajoutez des personnes ou de la capacité IA uniquement quand vous en avez besoin. Votre boîte de réception, vos connaissances et votre historique de conversations restent exactement où ils sont.",
-      "teammatesTitle": "Coéquipiers supplémentaires",
-      "teammatesDesc": "Donnez à plus de personnes leur propre connexion tout en partageant la même boîte de réception, les mêmes connaissances et le même crédit IA. Ils restent sur votre plan chaque mois jusqu'à ce que vous les retiriez.",
       "perMonth": "par mois",
-      "seatsWord": "sièges",
       "topUpAnytime": "Rechargez à tout moment",
       "onAnyPaidPlan": "sur tout plan payant",
       "creditTitle": "Crédit IA supplémentaire",
@@ -728,7 +711,7 @@
       "items": [
         {
           "q": "Combien coûtent les plans ?",
-          "a": "Free est à 0 $. Les plans mensuels sont Starter à 12 $ avec 7 $ de crédit IA chaque mois, Growth à 59 $ avec 40 $, et Scale à 299 $ avec 240 $. La facturation annuelle offre deux mois gratuits — vous payez dix mois et en obtenez douze : Starter coûte 120 $ par an (10 $/mois), Growth 590 $ (49,17 $/mois), et Scale 2 990 $ (249,17 $/mois)."
+          "a": "Free est à 0 $. Les plans mensuels sont Starter à 12 $ avec 7 $ de crédit IA chaque mois, Growth à 59 $ avec 40 $, et Scale à 299 $ avec 240 $. La facturation annuelle offre deux mois gratuits — vous payez dix mois et en obtenez douze : Starter coûte 120 $ par an (10 $/mois), Growth 588 $ (49 $/mois), et Scale 2 988 $ (249 $/mois)."
         },
         {
           "q": "Comment fonctionne le quota d'IA ?",
@@ -747,8 +730,8 @@
           "a": "L'IA transfère directement les nouvelles conversations à votre équipe au lieu de répondre. Sur un plan payant, vous pouvez recharger le crédit à tout moment, ou activer la recharge automatique pour qu'elle ne s'arrête jamais. Les recharges n'expirent jamais. Votre crédit mensuel se réinitialise à chaque période de facturation."
         },
         {
-          "q": "Combien coûte un coéquipier supplémentaire ?",
-          "a": "Les sièges supplémentaires viennent en packs sur tous les plans, y compris Free : 3 sièges pour 2 $ par mois, ou 5 pour 3 $. Les sièges et le crédit IA sont facturés complètement séparément — ajouter un coéquipier ne touche jamais votre quota d'IA."
+          "q": "Do I pay for each teammate?",
+          "a": "No. Seats are unlimited on every plan, including Free, so adding a teammate costs nothing. Seats and AI credit are billed completely separately — adding a teammate never touches your AI allowance."
         },
         {
           "q": "Puis-je annuler à tout moment ?",
@@ -787,8 +770,7 @@
         "cta": "Commencer",
         "features": [
           "Jusqu'à 100 messages IA/mois",
-          "2 sièges inclus",
-          "Packs de sièges à partir de 0,60 $/siège",
+          "Sièges illimités",
           "Base de connaissances de 20 Mo",
           "Widget de chat sur le site",
           "Boîte de réception partagée avec transfert"
@@ -800,8 +782,7 @@
         "cta": "Commencer",
         "features": [
           "7 $ de crédit IA chaque mois",
-          "5 sièges inclus",
-          "Packs de sièges à partir de 0,60 $/siège",
+          "Sièges illimités",
           "Base de connaissances de 200 Mo",
           "Rechargez le crédit à tout moment",
           "Analyse des visiteurs"
@@ -813,8 +794,7 @@
         "cta": "Commencer",
         "features": [
           "40 $ de crédit IA chaque mois",
-          "15 sièges inclus",
-          "Packs de sièges à partir de 0,60 $/siège",
+          "Sièges illimités",
           "Base de connaissances de 1 Go",
           "Rechargez le crédit à tout moment",
           "Piste d'audit IA complète",
@@ -827,8 +807,7 @@
         "cta": "Commencer",
         "features": [
           "240 $ de crédit IA chaque mois",
-          "40 sièges inclus",
-          "Packs de sièges à partir de 0,60 $/siège",
+          "Sièges illimités",
           "Base de connaissances de 5 Go",
           "Rechargez le crédit à tout moment",
           "Intégrations et accès API"
@@ -946,7 +925,7 @@
       ],
       [
         "Comment est structurée la tarification ?",
-        "Free inclut 100 messages IA par mois, et les plans payants incluent un crédit IA mensuel. Les coéquipiers supplémentaires viennent en packs de sièges à partir de 0,60 $ par siège, et transférer une conversation à un humain ne coûte jamais plus cher. La page de tarification explique les sièges inclus et les frais minimums du plan gratuit."
+        "Free includes 100 AI messages a month, and paid plans include a monthly AI credit. Seats are unlimited on every plan, and handing a conversation to a human never costs extra. The pricing page explains the details."
       ]
     ],
     "closing": {
@@ -1176,7 +1155,7 @@
         ],
         [
           "Mon équipe peut-elle aussi l'utiliser ?",
-          "Oui. Invitez des coéquipiers, ajoutez des sièges en grandissant, et ils recevront des alertes de connexion quand un client a besoin d'une personne."
+          "Yes. Invite as many teammates as you like, since seats are unlimited, and they'll get Join alerts when a customer needs a person."
         ]
       ]
     },
@@ -3516,7 +3495,7 @@
       },
       {
         "name": "Invitations d'équipe",
-        "body": "Invitez des collègues par e-mail et ajoutez des sièges au fur et à mesure que votre équipe grandit."
+        "body": "Invite as many teammates by email as you like: seats are unlimited."
       },
       {
         "name": "Tickets automatiques",
@@ -3612,7 +3591,7 @@
       },
       {
         "name": "Forfaits basés sur un crédit",
-        "body": "Les forfaits payants incluent un crédit IA mensuel, et les sièges supplémentaires sont de simples options."
+        "body": "Paid plans include a monthly AI credit, and seats are unlimited."
       },
       {
         "name": "Réponses par e-mail",
@@ -3747,7 +3726,7 @@
         },
         {
           "q": "Comment fonctionnent les forfaits payants ?",
-          "a": "Les forfaits payants incluent un crédit IA mensuel, et les sièges supplémentaires sont de simples options. Consultez la page des tarifs pour plus de détails."
+          "a": "Paid plans include a monthly AI credit, and seats are unlimited. See the pricing page for details."
         }
       ]
     },
@@ -3904,7 +3883,7 @@
         },
         {
           "t": "Une petite équipe",
-          "d": "Attribuez des conversations, partagez la boîte de réception, ajoutez des sièges selon vos besoins."
+          "d": "Assign conversations, share the inbox, invite the whole team."
         },
         {
           "t": "En pleine croissance",

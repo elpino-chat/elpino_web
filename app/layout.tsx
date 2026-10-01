@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Geist_Mono, Rethink_Sans, Inter } from "next/font/google";
+import { Instrument_Serif, Geist_Mono, Rethink_Sans, Inter, Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
 import { AppShell } from "./components/AppShell";
 import { Toaster } from "@/components/ui/sonner";
@@ -23,6 +23,13 @@ const geistMono = Geist_Mono({
 
 const rethinkSans = Rethink_Sans({
   variable: "--font-rethink-sans",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+// The home hero heading's typeface: a grotesque with more character than Inter.
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
   subsets: ["latin"],
   display: "swap",
 });
@@ -100,7 +107,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${instrumentSerif.variable} ${geistMono.variable} ${rethinkSans.variable} ${neueHaas.variable} h-full antialiased`}
+      className={`${instrumentSerif.variable} ${geistMono.variable} ${rethinkSans.variable} ${bricolage.variable} ${neueHaas.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-white text-text-primary">

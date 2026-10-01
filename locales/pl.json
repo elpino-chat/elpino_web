@@ -599,20 +599,7 @@
         },
         "seats": {
           "name": "Kto może się zalogować",
-          "rows": {
-            "included": {
-              "label": "Miejsca w cenie",
-              "description": "Członkowie zespołu objęci ceną planu, w tym właściciel przestrzeni roboczej."
-            },
-            "extra": {
-              "label": "Dodatkowe miejsca",
-              "description": "Każdy członek zespołu poza miejscami w cenie, na każdym planie."
-            },
-            "ceiling": {
-              "label": "Limit miejsc",
-              "description": "Punkt, w którym potrzebujesz większego planu, a nie kolejnego miejsca."
-            }
-          }
+          "rows": {}
         },
         "product": {
           "name": "Produkt",
@@ -665,8 +652,7 @@
       "standard": "Standardowe",
       "priority": "Priorytetowe",
       "messages": "wiadomości",
-      "credit": "kredyt",
-      "seatBundleSummary": "3 miejsca za $2, 5 za $3"
+      "credit": "kredyt"
     },
     "billing": {
       "eyebrow": "Przejrzyste, proste rozliczenia",
@@ -697,10 +683,7 @@
       "eyebrow": "Dodaj pojemność",
       "title": "Rozwijaj się bez zmiany sposobu pracy.",
       "subtitle": "Dodawaj ludzi lub pojemność AI tylko wtedy, gdy potrzebujesz. Twoja skrzynka, wiedza i historia rozmów pozostają dokładnie tam, gdzie są.",
-      "teammatesTitle": "Dodatkowi członkowie zespołu",
-      "teammatesDesc": "Daj większej liczbie osób własne logowanie, jednocześnie dzieląc tę samą skrzynkę, wiedzę i kredyt AI. Pozostają w Twoim planie każdego miesiąca, aż ich usuniesz.",
       "perMonth": "na miesiąc",
-      "seatsWord": "miejsc",
       "topUpAnytime": "Doładuj w każdej chwili",
       "onAnyPaidPlan": "na każdym płatnym planie",
       "creditTitle": "Dodatkowy kredyt AI",
@@ -728,7 +711,7 @@
       "items": [
         {
           "q": "Ile kosztują plany?",
-          "a": "Free to $0. Plany miesięczne to Starter za $12 z $7 kredytu AI miesięcznie, Growth za $59 z $40, i Scale za $299 z $240. Rozliczenie roczne daje dwa miesiące bezpłatnie — płacisz za dziesięć miesięcy i otrzymujesz dwanaście: Starter kosztuje $120 rocznie ($10/miesiąc), Growth $590 ($49.17/miesiąc), a Scale $2,990 ($249.17/miesiąc)."
+          "a": "Free to $0. Plany miesięczne to Starter za $12 z $7 kredytu AI miesięcznie, Growth za $59 z $40, i Scale za $299 z $240. Rozliczenie roczne daje dwa miesiące bezpłatnie — płacisz za dziesięć miesięcy i otrzymujesz dwanaście: Starter kosztuje $120 rocznie ($10/miesiąc), Growth $588 ($49/miesiąc), a Scale $2,988 ($249/miesiąc)."
         },
         {
           "q": "Jak działa limit AI?",
@@ -747,8 +730,8 @@
           "a": "AI przekazuje nowe rozmowy prosto do Twojego zespołu, zamiast odpowiadać. W płatnym planie możesz doładować kredyt w każdej chwili lub włączyć automatyczne doładowanie, aby nigdy się nie zatrzymał. Doładowania nigdy nie wygasają. Twój miesięczny kredyt resetuje się każdy okres rozliczeniowy."
         },
         {
-          "q": "Ile kosztuje dodatkowy członek zespołu?",
-          "a": "Dodatkowe miejsca są dostępne w pakietach w każdym planie, w tym Free: 3 miejsca za $2 na miesiąc, lub 5 za $3. Miejsca i kredyt AI są rozliczane całkowicie oddzielnie — dodanie członka zespołu nigdy nie wpływa na Twój limit AI."
+          "q": "Do I pay for each teammate?",
+          "a": "No. Seats are unlimited on every plan, including Free, so adding a teammate costs nothing. Seats and AI credit are billed completely separately — adding a teammate never touches your AI allowance."
         },
         {
           "q": "Czy mogę anulować w każdej chwili?",
@@ -787,8 +770,7 @@
         "cta": "Zacznij",
         "features": [
           "Do 100 wiadomości AI/miesiąc",
-          "2 miejsca w cenie",
-          "Pakiety miejsc od $0.60/miejsce",
+          "Nieograniczona liczba miejsc",
           "Baza wiedzy 20 MB",
           "Widget czatu na stronie",
           "Wspólna skrzynka z przekazaniem"
@@ -800,8 +782,7 @@
         "cta": "Zacznij",
         "features": [
           "Kredyt AI $7 każdego miesiąca",
-          "5 miejsc w cenie",
-          "Pakiety miejsc od $0.60/miejsce",
+          "Nieograniczona liczba miejsc",
           "Baza wiedzy 200 MB",
           "Doładuj kredyt w każdej chwili",
           "Analityka odwiedzających"
@@ -813,8 +794,7 @@
         "cta": "Zacznij",
         "features": [
           "Kredyt AI $40 każdego miesiąca",
-          "15 miejsc w cenie",
-          "Pakiety miejsc od $0.60/miejsce",
+          "Nieograniczona liczba miejsc",
           "Baza wiedzy 1 GB",
           "Doładuj kredyt w każdej chwili",
           "Pełny dziennik audytu AI",
@@ -827,8 +807,7 @@
         "cta": "Zacznij",
         "features": [
           "Kredyt AI $240 każdego miesiąca",
-          "40 miejsc w cenie",
-          "Pakiety miejsc od $0.60/miejsce",
+          "Nieograniczona liczba miejsc",
           "Baza wiedzy 5 GB",
           "Doładuj kredyt w każdej chwili",
           "Integracje i dostęp do API"
@@ -946,7 +925,7 @@
       ],
       [
         "Jak jest ustrukturyzowana cena?",
-        "Free zawiera 100 wiadomości AI na miesiąc, a płatne plany zawierają miesięczny kredyt AI. Dodatkowi członkowie zespołu są dostępni w pakietach miejsc od $0.60 za miejsce, a przekazanie rozmowy człowiekowi nigdy nie kosztuje dodatkowo. Strona cenowa wyjaśnia miejsca w cenie i minimalną opłatę darmowego planu."
+        "Free includes 100 AI messages a month, and paid plans include a monthly AI credit. Seats are unlimited on every plan, and handing a conversation to a human never costs extra. The pricing page explains the details."
       ]
     ],
     "closing": {
@@ -1176,7 +1155,7 @@
         ],
         [
           "Czy mój zespół może też go używać?",
-          "Tak. Zaproś współpracowników, dodawaj miejsca w miarę rozwoju, a otrzymają alerty o dołączeniu, gdy klient potrzebuje osoby."
+          "Yes. Invite as many teammates as you like, since seats are unlimited, and they'll get Join alerts when a customer needs a person."
         ]
       ]
     },
@@ -3602,7 +3581,7 @@
         },
         {
           "t": "Mały zespół",
-          "d": "Przypisuj rozmowy, dzielcie skrzynkę, dodawajcie miejsca, gdy potrzebujecie."
+          "d": "Assign conversations, share the inbox, invite the whole team."
         },
         {
           "t": "Skalowanie",

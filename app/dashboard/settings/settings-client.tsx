@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 import posthog from "posthog-js";
 import Link from "next/link";
 import {
-  ANNUAL_SAVING_PERCENT,
   getAnnualTotal,
   getPlanPrice,
   plans as pricingPlans,
@@ -163,6 +162,9 @@ function useCurrentWorkspace() {
 }
 
 // Personal to the signed-in user, independent of which workspace they're in.
+// Matches UNLIMITED_SEATS in workspace-service billing/plans.ts.
+const UNLIMITED_SEATS = 1_000_000;
+
 const accountItems = [
   { label: "General", slug: "", icon: Settings },
   { label: "Billing", slug: "billing", icon: CreditCard },
@@ -879,7 +881,10 @@ function TeamsSettingsPage() {
 
   const seatsAllowed = entitlement?.seatsAllowed ?? 0;
   const seatsUsed = members.length + invitations.length;
-  const emptySeats = Math.max(0, seatsAllowed - seatsUsed);
+  // Seats are unlimited on every plan; billing reports that as a very large number (UNLIMITED_SEATS), which must
+  // never be drawn as "empty seats" or printed as a count.
+  const seatsUnlimited = seatsAllowed >= UNLIMITED_SEATS;
+  const emptySeats = seatsUnlimited ? 0 : Math.max(0, seatsAllowed - seatsUsed);
   const isFree = entitlement?.planId === "free";
   const currency = entitlement?.currency ?? "USD";
   const bundles = entitlement?.seatBundles ?? [];
@@ -1067,9 +1072,9 @@ function TeamsSettingsPage() {
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h2 className="text-[32px] font-semibold tracking-[-0.04em]">Members</h2>
-          <p className="mt-1.5 text-[13px] text-[var(--b-muted)]">Everyone in this workspace shares one inbox. Each person, or pending invite, takes a seat.</p>
+          <p className="mt-1.5 text-[13px] text-[var(--b-muted)]">Everyone in this workspace shares one inbox. Invite as many people as you like: seats are unlimited.</p>
         </div>
-        {isOwner && (
+        {isOwner && bundles.length > 0 && (
           <div className="relative">
             <button type="button" onClick={() => setSeatsMenuOpen((open) => !open)} className="inline-flex h-10 items-center gap-2 rounded-none border border-[var(--b-border)] px-4 text-[13px] font-medium transition hover:bg-[var(--b-surface-2)]">
               <Plus size={14} /> Add more seats <ChevronDown size={13} />
@@ -1151,7 +1156,7 @@ function TeamsSettingsPage() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h3 className="text-[18px] font-semibold tracking-[-0.02em]">Team members</h3>
-            <p className="mt-0.5 text-[12.5px] text-[var(--b-muted)]">Manage your current team members and their access. {seatsUsed} of {seatsAllowed} seats used{emptySeats > 0 ? `, ${emptySeats} free` : ""}.</p>
+            <p className="mt-0.5 text-[12.5px] text-[var(--b-muted)]">Manage your current team members and their access. {seatsUnlimited ? `${seatsUsed} ${seatsUsed === 1 ? "person" : "people"} so far, and seats are unlimited.` : `${seatsUsed} of ${seatsAllowed} seats used${emptySeats > 0 ? `, ${emptySeats} free` : ""}.`}</p>
           </div>
           <div className="flex items-center gap-2">
             <div className="flex h-9 items-center gap-2 rounded-none border border-[var(--b-border)] px-3">
@@ -1382,7 +1387,7 @@ export function UpgradeSettingsPage() {
                 className={`dashboard-pricing-option rounded-lg px-3.5 py-2 text-[12px] font-medium capitalize transition ${cadence === option ? "dashboard-pricing-option-active bg-[#428ce5] text-white" : "text-white/55 hover:bg-white/[0.05] hover:text-white/90"}`}
               >
                 {option}
-                {option === "annual" && <span className="ml-1.5 text-[10px] font-bold uppercase tracking-[0.08em]">save {ANNUAL_SAVING_PERCENT}%</span>}
+                {option === "annual" && <span className="ml-1.5 text-[10px] font-bold uppercase tracking-[0.08em]">2 months free</span>}
               </button>
             ))}
           </div>
@@ -1934,8 +1939,8 @@ function BillingSettingsPage() {
                     <p className="text-[15px] font-semibold">Seats</p>
                   </div>
                   <div className="min-w-0">
-                    <p className="text-[26px] font-semibold leading-none tracking-[-0.04em] tabular-nums">{seatsInUse ? (seatsInUse.members + seatsInUse.pending).toLocaleString() : "–"}<span className="text-[16px] font-medium tracking-normal text-[var(--b-muted)]"> of {(entitlement?.seatsAllowed ?? 0).toLocaleString()} {(entitlement?.seatsAllowed ?? 0) === 1 ? "seat" : "seats"} used</span></p>
-                    <p className="mt-1.5 text-[12.5px] text-[var(--b-muted)]">{seatsInUse ? `${seatsInUse.members} member${seatsInUse.members === 1 ? "" : "s"}${seatsInUse.pending > 0 ? ` and ${seatsInUse.pending} pending invite${seatsInUse.pending === 1 ? "" : "s"}` : ""}. ` : ""}{entitlement?.seatsIncluded ?? 0} included{(entitlement?.seatsPurchased ?? 0) > 0 ? ` · ${entitlement?.seatsPurchased} extra` : ""}. Adding seats never changes your AI allowance.</p>
+                    <p className="text-[26px] font-semibold leading-none tracking-[-0.04em] tabular-nums">{seatsInUse ? (seatsInUse.members + seatsInUse.pending).toLocaleString() : "–"}<span className="text-[16px] font-medium tracking-normal text-[var(--b-muted)]">{(entitlement?.seatsAllowed ?? 0) >= UNLIMITED_SEATS ? " in use · unlimited" : ` of ${(entitlement?.seatsAllowed ?? 0).toLocaleString()} ${(entitlement?.seatsAllowed ?? 0) === 1 ? "seat" : "seats"} used`}</span></p>
+                    <p className="mt-1.5 text-[12.5px] text-[var(--b-muted)]">{seatsInUse ? `${seatsInUse.members} member${seatsInUse.members === 1 ? "" : "s"}${seatsInUse.pending > 0 ? ` and ${seatsInUse.pending} pending invite${seatsInUse.pending === 1 ? "" : "s"}` : ""}. ` : ""}{(entitlement?.seatsAllowed ?? 0) >= UNLIMITED_SEATS ? "Seats are unlimited on every plan, and adding teammates never changes your AI allowance." : `${entitlement?.seatsIncluded ?? 0} included${(entitlement?.seatsPurchased ?? 0) > 0 ? ` · ${entitlement?.seatsPurchased} extra` : ""}. Adding seats never changes your AI allowance.`}</p>
                   </div>
                   {seatBundles.length > 0 && (
                     <div className="flex flex-wrap items-center gap-2 md:justify-end">
@@ -2145,7 +2150,7 @@ function BillingSettingsPage() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget && !cancelBusy) setCancelOpen(false); }}>
           <div role="dialog" aria-modal="true" aria-labelledby="cancel-plan-title" className="w-full max-w-[440px] rounded-2xl border border-white/10 bg-[#2d2d2d] p-6 text-white/90 shadow-[0_24px_80px_rgba(0,0,0,0.45)]">
             <p id="cancel-plan-title" className="text-[18px] font-medium">Cancel {plan.name}?</p>
-            <p className="mt-2 text-[13px] leading-6 text-white/60">Your plan stays active until the end of the paid period. Then the workspace moves to Free with {pricingPlans[0].resolutions} AI messages a month and {pricingPlans[0].seatsIncluded} included seats.</p>
+            <p className="mt-2 text-[13px] leading-6 text-white/60">Your plan stays active until the end of the paid period. Then the workspace moves to Free with {pricingPlans[0].resolutions} AI messages a month and unlimited seats.</p>
             {cancelError && <p role="alert" className="mt-3 text-[12px] text-red-300">{cancelError}</p>}
             <div className="mt-6 flex flex-col gap-2 sm:flex-row-reverse">
               <button type="button" disabled={cancelBusy} onClick={() => void cancelSubscription()} className="flex h-10 flex-1 items-center justify-center gap-2 rounded-lg bg-[#a5414b] px-4 text-[12px] font-medium text-white transition hover:bg-[#b44d58] disabled:opacity-60">{cancelBusy && <LoaderCircle size={13} className="animate-spin" />} Cancel at period end</button>

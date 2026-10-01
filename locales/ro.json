@@ -599,20 +599,7 @@
         },
         "seats": {
           "name": "Cine poate să se autentifice",
-          "rows": {
-            "included": {
-              "label": "Locuri incluse",
-              "description": "Colegi de echipă acoperiți de prețul planului, inclusiv proprietarul spațiului de lucru."
-            },
-            "extra": {
-              "label": "Locuri extra",
-              "description": "Fiecare coleg de echipă dincolo de locurile incluse, pe orice plan."
-            },
-            "ceiling": {
-              "label": "Plafon de locuri",
-              "description": "Punctul în care ai nevoie de un plan mai mare în loc de încă un loc."
-            }
-          }
+          "rows": {}
         },
         "product": {
           "name": "Produsul",
@@ -665,8 +652,7 @@
       "standard": "Standard",
       "priority": "Prioritar",
       "messages": "mesaje",
-      "credit": "credit",
-      "seatBundleSummary": "3 locuri pentru $2, 5 pentru $3"
+      "credit": "credit"
     },
     "billing": {
       "eyebrow": "Facturare clară și simplă",
@@ -697,10 +683,7 @@
       "eyebrow": "Adaugă capacitate",
       "title": "Crește fără să schimbi modul în care lucrezi.",
       "subtitle": "Adaugă persoane sau capacitate AI doar când ai nevoie. Căsuța poștală, cunoștințele și istoricul conversațiilor tale rămân exact acolo unde sunt.",
-      "teammatesTitle": "Colegi de echipă adiționali",
-      "teammatesDesc": "Dă mai multor persoane propria lor autentificare în timp ce partajează aceeași căsuță poștală, cunoștințe și credit AI. Rămân pe planul tău în fiecare lună până când îi elimini.",
       "perMonth": "pe lună",
-      "seatsWord": "locuri",
       "topUpAnytime": "Reîncarcă oricând",
       "onAnyPaidPlan": "pe orice plan plătit",
       "creditTitle": "Credit AI adițional",
@@ -728,7 +711,7 @@
       "items": [
         {
           "q": "Cât costă planurile?",
-          "a": "Free este $0. Planurile lunare sunt Starter la $12 cu $7 credit AI pe lună, Growth la $59 cu $40, și Scale la $299 cu $240. Facturarea anuală oferă două luni gratuit — plătești pentru zece luni și primești douăsprezece: Starter costă $120 pe an ($10/lună), Growth $590 ($49.17/lună), și Scale $2.990 ($249.17/lună)."
+          "a": "Free este $0. Planurile lunare sunt Starter la $12 cu $7 credit AI pe lună, Growth la $59 cu $40, și Scale la $299 cu $240. Facturarea anuală oferă două luni gratuit — plătești pentru zece luni și primești douăsprezece: Starter costă $120 pe an ($10/lună), Growth $588 ($49/lună), și Scale $2.990 ($249/lună)."
         },
         {
           "q": "Cum funcționează alocația AI?",
@@ -747,8 +730,8 @@
           "a": "AI-ul transferă conversațiile noi direct echipei tale în loc să răspundă. Pe un plan plătit poți reîncărca creditul oricând, sau activa reîncărcarea automată pentru ca acesta să nu se oprească niciodată. Reîncărcările nu expiră niciodată. Creditul tău lunar se resetează la fiecare perioadă de facturare."
         },
         {
-          "q": "Cât costă un membru de echipă adițional?",
-          "a": "Locurile extra vin în pachete pe fiecare plan, inclusiv Free: 3 locuri pentru $2 pe lună, sau 5 pentru $3. Locurile și creditul AI sunt facturate complet separat — adăugarea unui membru de echipă nu îți afectează niciodată alocația AI."
+          "q": "Do I pay for each teammate?",
+          "a": "No. Seats are unlimited on every plan, including Free, so adding a teammate costs nothing. Seats and AI credit are billed completely separately — adding a teammate never touches your AI allowance."
         },
         {
           "q": "Pot anula oricând?",
@@ -787,8 +770,7 @@
         "cta": "Începe",
         "features": [
           "Până la 100 de mesaje AI/lună",
-          "2 locuri incluse",
-          "Pachete de locuri de la $0.60/loc",
+          "Locuri nelimitate",
           "Bază de cunoștințe de 20 MB",
           "Widget de chat pe site",
           "Căsuță poștală partajată cu transfer"
@@ -800,8 +782,7 @@
         "cta": "Începe",
         "features": [
           "Credit AI de $7 în fiecare lună",
-          "5 locuri incluse",
-          "Pachete de locuri de la $0.60/loc",
+          "Locuri nelimitate",
           "Bază de cunoștințe de 200 MB",
           "Reîncarcă creditul oricând",
           "Analiză vizitatori"
@@ -813,8 +794,7 @@
         "cta": "Începe",
         "features": [
           "Credit AI de $40 în fiecare lună",
-          "15 locuri incluse",
-          "Pachete de locuri de la $0.60/loc",
+          "Locuri nelimitate",
           "Bază de cunoștințe de 1 GB",
           "Reîncarcă creditul oricând",
           "Traseu complet de audit AI",
@@ -827,8 +807,7 @@
         "cta": "Începe",
         "features": [
           "Credit AI de $240 în fiecare lună",
-          "40 de locuri incluse",
-          "Pachete de locuri de la $0.60/loc",
+          "Locuri nelimitate",
           "Bază de cunoștințe de 5 GB",
           "Reîncarcă creditul oricând",
           "Integrări și acces API"
@@ -946,7 +925,7 @@
       ],
       [
         "Cum este structurat prețul?",
-        "Free include 100 de mesaje AI pe lună, și planurile plătite includ un credit AI lunar. Colegii de echipă adiționali vin în pachete de locuri de la $0.60 pe loc, și transferul unei conversații către un om nu costă niciodată extra. Pagina de prețuri explică locurile incluse și taxa minimă a planului gratuit."
+        "Free includes 100 AI messages a month, and paid plans include a monthly AI credit. Seats are unlimited on every plan, and handing a conversation to a human never costs extra. The pricing page explains the details."
       ]
     ],
     "closing": {
@@ -1176,7 +1155,7 @@
         ],
         [
           "Poate echipa mea să îl folosească și ea?",
-          "Da. Invită colegi de echipă, adaugă locuri pe măsură ce crești, și vor primi alerte de alăturare când un client are nevoie de o persoană."
+          "Yes. Invite as many teammates as you like, since seats are unlimited, and they'll get Join alerts when a customer needs a person."
         ]
       ]
     },
@@ -3602,7 +3581,7 @@
         },
         {
           "t": "O echipă mică",
-          "d": "Alocă conversații, împărtășiți căsuța de mesaje, adăugați locuri când aveți nevoie."
+          "d": "Assign conversations, share the inbox, invite the whole team."
         },
         {
           "t": "Scalare",

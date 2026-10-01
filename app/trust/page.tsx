@@ -4,14 +4,14 @@ import { TrustClient } from "./TrustClient";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://elpino.chat";
 
 export const metadata: Metadata = {
-  title: "Trust, Compliance & Enterprise Security",
+  title: "Trust & Security",
   description:
-    "How Elpino protects customer data: SOC 2 Type II certified, AES-256 and TLS 1.3 encryption, Zero Data Retention for AI training, and enterprise RBAC.",
+    "How Elpino protects customer data: private details are swapped out before the AI sees them, conversations are never used to train models, and every customer is verified before the AI acts.",
   alternates: { canonical: `${SITE_URL}/trust` },
   openGraph: {
-    title: "Trust, Compliance & Enterprise Security | Elpino",
+    title: "Trust & Security | Elpino",
     description:
-      "Enterprise security you can inspect. SOC 2 Type II certified, Zero Data Retention for LLM training, and cryptographic tenant isolation.",
+      "Security you can inspect: private details never reach the model, conversations are never used for training, and access is checked on every request.",
     url: `${SITE_URL}/trust`,
     type: "website",
   },

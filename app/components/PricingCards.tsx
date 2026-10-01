@@ -4,16 +4,14 @@ export type Plan = {
   id: string;
   name: string;
   price: string;
+  /** What a year costs, in USD cents, when it is set by hand rather than ten times the monthly price. */
+  annualUsdCents?: number;
   cadence: string;
   description: string;
   cta: string;
   href: string;
   features: string[];
   highlighted?: boolean;
-  /** Seats bundled into the price, owner included. */
-  seatsIncluded: number;
-  /** Hard seat ceiling; null means seats scale indefinitely at $1 each. */
-  seatsMax: number | null;
   /**
    * True on paid plans: the AI is metered by dollar credit alone, with no
    * conversation count or per-conversation overage. Free is capped by count.
@@ -34,23 +32,14 @@ export type Plan = {
 
 // Mirrors apps/workspace-service/src/billing/plans.ts — the backend is the
 // source of truth for entitlement; this copy exists so the public pricing
-// page renders without a service round-trip. Keep prices, seats, and
+// page renders without a service round-trip. Keep prices and
 // resolution counts in sync with that file.
 //
 // The model in one line: Free gets 100 AI messages; paid plans get a
 // monthly AI credit that pays for however many conversations it covers. Seats
 // are separate and never affect the AI allowance. Everyone in a workspace
-// shares one inbox and one credit pool no matter how many seats are open.
-// Seats are sold in bundles, mirroring SEAT_BUNDLES in the backend catalog.
-// A standalone $1 charge loses roughly a third of itself to card processing
-// and some issuers decline it outright, so the smallest seat purchase is a
-// $2 three-pack. Buying more gets cheaper per seat.
-export const SEAT_BUNDLES = [
-  { seats: 3, price: '$2' },
-  { seats: 5, price: '$3' },
-];
-export const SEAT_PRICE = '$0.60';
-export const SEAT_BUNDLE_SUMMARY = '3 seats for $2, 5 for $3';
+// shares one inbox and one credit pool.
+// Seats are unlimited on every plan, Free included, and are not sold or billed, so no plan carries a seat count.
 
 // Annual is twelve months of service for ten months of price — the same
 // ANNUAL_MONTHS_CHARGED the backend prices against. Deriving the discount
@@ -86,8 +75,6 @@ export const plans: Plan[] = [
     description: 'For a founder answering their own support. Real AI, no card.',
     cta: 'Get started',
     href: '/signup',
-    seatsIncluded: 2,
-    seatsMax: 7,
     creditBased: false,
     resolutions: 100,
     storageMb: 20,
@@ -95,8 +82,7 @@ export const plans: Plan[] = [
     aiCreditGrantUsdCents: 200,
     features: [
       'Up to 100 AI messages/month',
-      '2 seats included',
-      'Seat packs from $0.60/seat',
+      'Unlimited seats',
       '20 MB knowledge base',
       'Website chat widget',
       'Shared inbox with handoff',
@@ -110,8 +96,6 @@ export const plans: Plan[] = [
     description: 'For a small team whose support has outgrown one inbox.',
     cta: 'Get started',
     href: '/signup',
-    seatsIncluded: 5,
-    seatsMax: null,
     creditBased: true,
     resolutions: 0,
     storageMb: 200,
@@ -119,8 +103,7 @@ export const plans: Plan[] = [
     aiCreditGrantUsdCents: 700,
     features: [
       '$7 AI credit every month',
-      '5 seats included',
-      'Seat packs from $0.60/seat',
+      'Unlimited seats',
       '200 MB knowledge base',
       'Top up credit any time',
       'Visitor analytics',
@@ -130,12 +113,11 @@ export const plans: Plan[] = [
     id: 'growth',
     name: 'Growth',
     price: '$59',
+    annualUsdCents: 58800,
     cadence: '/month',
     description: 'For teams running support as a real function, with the data to prove it.',
     cta: 'Get started',
     href: '/signup',
-    seatsIncluded: 15,
-    seatsMax: null,
     creditBased: true,
     resolutions: 0,
     storageMb: 1000,
@@ -144,8 +126,7 @@ export const plans: Plan[] = [
     highlighted: true,
     features: [
       '$40 AI credit every month',
-      '15 seats included',
-      'Seat packs from $0.60/seat',
+      'Unlimited seats',
       '1 GB knowledge base',
       'Top up credit any time',
       'Full AI audit trail',
@@ -156,12 +137,11 @@ export const plans: Plan[] = [
     id: 'scale',
     name: 'Scale',
     price: '$299',
+    annualUsdCents: 298800,
     cadence: '/month',
     description: 'For high-volume support where the AI carries most of the load.',
     cta: 'Get started',
     href: '/signup',
-    seatsIncluded: 40,
-    seatsMax: null,
     creditBased: true,
     resolutions: 0,
     storageMb: 5000,
@@ -169,8 +149,7 @@ export const plans: Plan[] = [
     aiCreditGrantUsdCents: 24000,
     features: [
       '$240 AI credit every month',
-      '40 seats included',
-      'Seat packs from $0.60/seat',
+      'Unlimited seats',
       '5 GB knowledge base',
       'Top up credit any time',
       'Integrations & API access',
@@ -191,9 +170,13 @@ export function monthlyCents(plan: Plan): number {
   return Math.round(Number(plan.price.replace(/[^0-9.]/g, '')) * 100);
 }
 
-/** What one year costs, in cents — ten months of the monthly price. */
+/**
+ * What one year costs, in cents. Ten months of the monthly price, unless the plan sets a round annual
+ * figure of its own so the per-month price lands on a whole dollar: Growth is $588 a year ($49 a
+ * month) and Scale $2,988 ($249 a month), instead of $590 ($49.17) and $2,990 ($249.17).
+ */
 export function annualTotalCents(plan: Plan): number {
-  return monthlyCents(plan) * ANNUAL_MONTHS_CHARGED;
+  return plan.annualUsdCents ?? monthlyCents(plan) * ANNUAL_MONTHS_CHARGED;
 }
 
 function formatUsd(cents: number): string {
@@ -240,7 +223,7 @@ export function PricingCards({ billing = 'monthly', pageStyle = false }: { billi
                   </div>
                 </div>
                 <p className='mt-2 min-h-5 text-xs text-[#666666]'>
-                  {plan.id === 'free' ? '100 AI messages every month' : billing === 'yearly' ? `${annualTotal} per year · Save ${ANNUAL_SAVING_PERCENT}%` : 'Monthly billing, per workspace'}
+                  {plan.id === 'free' ? '100 AI messages every month' : billing === 'yearly' ? `${annualTotal} per year · 2 months free` : 'Monthly billing, per workspace'}
                 </p>
                 <Link href={plan.href} className={`mt-7 flex min-h-14 w-full items-center justify-center rounded-none border px-4 py-3 text-base font-medium transition focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black ${plan.highlighted ? 'border-[#222222] bg-gradient-to-b from-[#343434] to-[#1C1C1C] text-white shadow-[0_2px_3px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.2)] hover:brightness-110' : 'border-[#CCCCCC] bg-gradient-to-b from-[#EEEEEE] to-[#E2E2E2] text-black shadow-[0_2px_3px_rgba(0,0,0,0.08),inset_0_1px_0_white] hover:brightness-95'}`}>
                   {plan.cta}
@@ -303,7 +286,7 @@ export function PricingCards({ billing = 'monthly', pageStyle = false }: { billi
           </div>
           {plan.id !== 'free' && (
             <p className='mt-3 text-sm text-[#667069]'>
-              {billing === 'yearly' ? `${annualTotal} billed annually · Save ${ANNUAL_SAVING_PERCENT}%` : 'Billed monthly'}
+              {billing === 'yearly' ? `${annualTotal} billed annually · 2 months free` : 'Billed monthly'}
             </p>
           )}
           {!pageStyle && plan.introNote && billing === 'monthly' && <p className='mt-1 text-xs text-[#D9BEF4]'>{plan.introNote}</p>}

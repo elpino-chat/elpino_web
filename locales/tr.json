@@ -599,20 +599,7 @@
         },
         "seats": {
           "name": "Kimler giriş yapabilir",
-          "rows": {
-            "included": {
-              "label": "Dahil koltuklar",
-              "description": "Çalışma alanı sahibi dahil, plan fiyatına dahil olan ekip arkadaşları."
-            },
-            "extra": {
-              "label": "Ek koltuklar",
-              "description": "Herhangi bir planda dahil koltukları aşan her ekip arkadaşı."
-            },
-            "ceiling": {
-              "label": "Koltuk tavanı",
-              "description": "Başka bir koltuk yerine daha büyük bir plana ihtiyaç duyduğunuz nokta."
-            }
-          }
+          "rows": {}
         },
         "product": {
           "name": "Ürün",
@@ -665,8 +652,7 @@
       "standard": "Standart",
       "priority": "Öncelikli",
       "messages": "mesaj",
-      "credit": "kredi",
-      "seatBundleSummary": "3 koltuk $2, 5 koltuk $3"
+      "credit": "kredi"
     },
     "billing": {
       "eyebrow": "Açık, basit faturalandırma",
@@ -697,10 +683,7 @@
       "eyebrow": "Kapasite ekle",
       "title": "Çalışma şeklinizi değiştirmeden büyüyün.",
       "subtitle": "Yalnızca gerektiğinde insan veya yapay zeka kapasitesi ekleyin. Gelen kutunuz, bilginiz ve konuşma geçmişiniz tam olarak oldukları yerde kalır.",
-      "teammatesTitle": "Ek ekip arkadaşları",
-      "teammatesDesc": "Aynı gelen kutusunu, bilgiyi ve yapay zeka kredisini paylaşırken daha fazla kişiye kendi girişini verin. Onları kaldırana kadar her ay planınızda kalırlar.",
       "perMonth": "aylık",
-      "seatsWord": "koltuk",
       "topUpAnytime": "İstediğiniz zaman yükleyin",
       "onAnyPaidPlan": "herhangi bir ücretli planda",
       "creditTitle": "Ek yapay zeka kredisi",
@@ -728,7 +711,7 @@
       "items": [
         {
           "q": "Planların maliyeti nedir?",
-          "a": "Free $0'dır. Aylık planlar, ayda $7 yapay zeka kredisiyle $12'lik Starter, $40 ile $59'luk Growth, ve $240 ile $299'luk Scale'dir. Yıllık faturalandırma iki ay ücretsizdir—on ay ödersiniz ve on iki ay alırsınız: Starter yılda $120'dır ($10/ay), Growth $590'dır ($49.17/ay), ve Scale $2,990'dır ($249.17/ay)."
+          "a": "Free $0'dır. Aylık planlar, ayda $7 yapay zeka kredisiyle $12'lik Starter, $40 ile $59'luk Growth, ve $240 ile $299'luk Scale'dir. Yıllık faturalandırma iki ay ücretsizdir—on ay ödersiniz ve on iki ay alırsınız: Starter yılda $120'dır ($10/ay), Growth $588'dır ($49/ay), ve Scale $2,988'dır ($249/ay)."
         },
         {
           "q": "Yapay zeka hakkı nasıl çalışır?",
@@ -747,8 +730,8 @@
           "a": "Yapay zeka yeni konuşmaları yanıtlamak yerine doğrudan ekibinize devreder. Ücretli bir planda krediyi istediğiniz zaman yükleyebilir veya asla durmaması için otomatik yüklemeyi açabilirsiniz. Yüklemeler asla sona ermez. Aylık krediniz her fatura döneminde sıfırlanır."
         },
         {
-          "q": "Ek bir ekip arkadaşı ne kadara mal olur?",
-          "a": "Ek koltuklar Free dahil her planda paketler halinde gelir: ayda $2'ye 3 koltuk veya $3'e 5 koltuk. Koltuklar ve yapay zeka kredisi tamamen ayrı faturalandırılır—bir ekip arkadaşı eklemek yapay zeka hakkınıza asla dokunmaz."
+          "q": "Do I pay for each teammate?",
+          "a": "No. Seats are unlimited on every plan, including Free, so adding a teammate costs nothing. Seats and AI credit are billed completely separately — adding a teammate never touches your AI allowance."
         },
         {
           "q": "İstediğim zaman iptal edebilir miyim?",
@@ -787,8 +770,7 @@
         "cta": "Başlayın",
         "features": [
           "Ayda 100 yapay zeka mesajına kadar",
-          "2 koltuk dahil",
-          "$0.60/koltuktan başlayan koltuk paketleri",
+          "Sınırsız koltuk",
           "20 MB bilgi tabanı",
           "Web sitesi sohbet widget'ı",
           "Devirli ortak gelen kutusu"
@@ -800,8 +782,7 @@
         "cta": "Başlayın",
         "features": [
           "Her ay $7 yapay zeka kredisi",
-          "5 koltuk dahil",
-          "$0.60/koltuktan başlayan koltuk paketleri",
+          "Sınırsız koltuk",
           "200 MB bilgi tabanı",
           "Krediyi her zaman yükleyin",
           "Ziyaretçi analitiği"
@@ -813,8 +794,7 @@
         "cta": "Başlayın",
         "features": [
           "Her ay $40 yapay zeka kredisi",
-          "15 koltuk dahil",
-          "$0.60/koltuktan başlayan koltuk paketleri",
+          "Sınırsız koltuk",
           "1 GB bilgi tabanı",
           "Krediyi her zaman yükleyin",
           "Tam yapay zeka denetim izi",
@@ -827,8 +807,7 @@
         "cta": "Başlayın",
         "features": [
           "Her ay $240 yapay zeka kredisi",
-          "40 koltuk dahil",
-          "$0.60/koltuktan başlayan koltuk paketleri",
+          "Sınırsız koltuk",
           "5 GB bilgi tabanı",
           "Krediyi her zaman yükleyin",
           "Entegrasyonlar ve API erişimi"
@@ -946,7 +925,7 @@
       ],
       [
         "Fiyatlandırma nasıl yapılandırılmıştır?",
-        "Free ayda 100 yapay zeka mesajı içerir ve ücretli planlar aylık bir yapay zeka kredisi içerir. Ek ekip arkadaşları $0.60'tan başlayan koltuk paketleriyle gelir ve bir konuşmayı bir insana devretmek asla ekstra ücrete tabi değildir. Fiyatlandırma sayfası dahil koltukları ve ücretsiz planın minimum ücretini açıklar."
+        "Free includes 100 AI messages a month, and paid plans include a monthly AI credit. Seats are unlimited on every plan, and handing a conversation to a human never costs extra. The pricing page explains the details."
       ]
     ],
     "closing": {
@@ -1176,7 +1155,7 @@
         ],
         [
           "Ekibim de kullanabilir mi?",
-          "Evet. Ekip arkadaşlarını davet edin, büyüdükçe koltuk ekleyin, ve bir müşteri bir kişiye ihtiyaç duyduğunda katılım uyarıları alacaklar."
+          "Yes. Invite as many teammates as you like, since seats are unlimited, and they'll get Join alerts when a customer needs a person."
         ]
       ]
     },
@@ -3516,7 +3495,7 @@
       },
       {
         "name": "Ekip davetleri",
-        "body": "Ekip üyelerini e-posta ile davet edin, ekibiniz büyüdükçe koltuk ekleyin."
+        "body": "Invite as many teammates by email as you like: seats are unlimited."
       },
       {
         "name": "Otomatik talepler",
@@ -3612,7 +3591,7 @@
       },
       {
         "name": "Krediye dayalı planlar",
-        "body": "Ücretli planlar aylık bir yapay zeka kredisi içerir; ekstra koltuklar ise basit eklentilerdir."
+        "body": "Paid plans include a monthly AI credit, and seats are unlimited."
       },
       {
         "name": "E-posta yanıtları",
@@ -3747,7 +3726,7 @@
         },
         {
           "q": "Ücretli planlar nasıl çalışır?",
-          "a": "Ücretli planlar aylık bir yapay zeka kredisi içerir, ekstra koltuklar ise basit eklentilerdir. Ayrıntılar için fiyatlandırma sayfasına bakın."
+          "a": "Paid plans include a monthly AI credit, and seats are unlimited. See the pricing page for details."
         }
       ]
     },
@@ -3904,7 +3883,7 @@
         },
         {
           "t": "Küçük bir ekip",
-          "d": "Konuşmaları atayın, gelen kutusunu paylaşın, ihtiyaç oldukça koltuk ekleyin."
+          "d": "Assign conversations, share the inbox, invite the whole team."
         },
         {
           "t": "Ölçeklenme",

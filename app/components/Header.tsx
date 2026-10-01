@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useTranslation } from '@/app/hooks/useTranslation';
@@ -65,7 +66,7 @@ function MegaNav({ groups, light = false, t }: { groups: DropdownGroup[]; light?
             <button
               key={group.label}
               type="button"
-              className={`inline-flex h-9 items-center gap-1.5 px-3 text-sm font-normal transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 ${isOpen
+              className={`inline-flex h-9 items-center gap-1.5 px-3 text-[15px] font-normal transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 ${isOpen
                   ? light
                     ? 'text-black'
                     : 'text-white'
@@ -83,6 +84,13 @@ function MegaNav({ groups, light = false, t }: { groups: DropdownGroup[]; light?
           );
         })}
       </div>
+
+      {/* Blurs and dims the page behind the open menu; a click on it closes the menu. */}
+      <div
+        aria-hidden="true"
+        onClick={() => setOpenIndex(null)}
+        className={`fixed inset-0 -z-10 bg-black/20 backdrop-blur-[6px] transition-opacity duration-200 ${activeGroup ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+      />
 
       {/* Floating 4-Column Dropdown Card. Anchored to the header bar (the
           nearest positioned ancestor) and centred on it, so the wide panel is
@@ -121,10 +129,13 @@ export function Header({
   // never leaves the other's menu stuck open underneath a hidden element.
   const [desktopLanguageOpen, setDesktopLanguageOpen] = useState(false);
   const { t } = useTranslation(language as any);
-  const light = variant === 'light';
 
   const headerRef = useRef<HTMLDivElement>(null);
   const [scrolled, setScrolled] = useState(false);
+  // On the home page the header is a plain white bar, full width, over the white hero.
+  const pathname = usePathname();
+  const onHome = variant === 'light' && pathname === '/';
+  const light = variant === 'light';
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -146,17 +157,17 @@ export function Header({
 
   // The strip is transparent; the nav inside it is the visible bar, hanging
   // from the top edge with only its bottom corners rounded.
-  const headerClassName = 'w-full px-4 sm:px-6';
+  const headerClassName = 'w-full';
 
-  const navLinkClassName = `hidden h-9 items-center px-3 text-sm font-normal transition lg:inline-flex ${light ? 'text-black hover:text-black/70' : 'text-white/80 hover:text-white'
+  const navLinkClassName = `hidden h-9 items-center px-3 text-[15px] font-normal transition lg:inline-flex ${light ? 'text-black hover:text-black' : 'text-white/80 hover:text-white'
     }`;
 
-  const loginClassName = `hidden h-[36px] items-center justify-center rounded-lg border-2 px-4 text-sm font-normal transition-all duration-150 lg:inline-flex ${light 
+  const loginClassName = `hidden h-[42px] items-center justify-center rounded-[2px] border px-5 text-[15px] font-normal transition-all duration-150 lg:inline-flex ${light 
       ? 'border-black/30 bg-transparent text-black hover:bg-black/5' 
-      : 'border-white bg-transparent text-white hover:bg-white/10'
+      : 'border-white/30 bg-transparent text-white hover:bg-white/10'
     }`;
 
-  const signUpPillClassName = `inline-flex h-[36px] items-center justify-center rounded-lg px-4 text-sm font-normal transition-all duration-150 bg-[#3784ff] text-white shadow-xs hover:bg-[#3784ff]/90`;
+  const signUpPillClassName = `inline-flex h-[42px] items-center justify-center rounded-[2px] px-5 text-[15px] font-normal transition-all duration-150 shadow-xs ${light ? 'bg-[#11120f] text-white hover:bg-[#11120f]/85' : 'bg-[#3784ff] text-white hover:bg-[#3784ff]/90'}`;
 
   const mobileLineClassName = light ? 'bg-[#11120f]' : 'bg-[var(--elpino-text)]';
 
@@ -193,12 +204,21 @@ export function Header({
   return (
     <div
       ref={headerRef}
-      className={`fixed inset-x-0 top-0 z-50 w-full ${light ? 'text-[#11120f]' : 'text-[var(--elpino-text)]'
+      className={`${onHome ? 'fixed inset-x-0 top-0' : 'sticky top-0'} z-50 w-full ${light ? 'text-[#11120f]' : 'text-[var(--elpino-text)]'
         }`}
     >
+      {onHome && (
+        <div className="bg-black px-6 py-2 text-left text-[13px] text-white sm:px-12">
+          <Link href="/signup" className="inline-flex items-center gap-2 hover:underline">
+            <span className="rounded-[2px] bg-white px-1.5 py-0.5 text-[11px] uppercase tracking-wide text-black">{t('nav.offer.tag', 'Offer')}</span>
+            {t('nav.offer.text', 'Start free today: 100 AI messages a month, no card required, and you can be live on your own site in an afternoon')}
+            <span aria-hidden="true">→</span>
+          </Link>
+        </div>
+      )}
       <header className={headerClassName}>
         <nav
-          className={`relative mx-auto flex h-14 w-full max-w-5xl items-center justify-between rounded-b-2xl border-x border-b px-5 sm:px-6 ${light ? 'border-white/70 bg-white/45 shadow-[0_8px_30px_rgba(15,23,42,0.06)]' : 'border-white/15 bg-black/40'} backdrop-blur-xl backdrop-saturate-150`}
+          className={`relative flex h-16 w-full items-center justify-between ${onHome ? 'border-b' : 'border-b'} transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300 px-10 ${onHome ? (scrolled ? 'border-black/10 bg-white shadow-[0_8px_30px_rgba(15,23,42,0.06)]' : 'border-transparent bg-white') : scrolled ? `backdrop-blur-xl backdrop-saturate-150 ${light ? 'border-white/70 bg-white/45 shadow-[0_8px_30px_rgba(15,23,42,0.06)]' : 'border-white/15 bg-black/40'}` : 'border-transparent bg-transparent'}`}
           aria-label="Main navigation"
         >
           {/* Logo & Navigation Links */}

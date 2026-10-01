@@ -599,20 +599,7 @@
         },
         "seats": {
           "name": "ログインできる人",
-          "rows": {
-            "included": {
-              "label": "含まれる席数",
-              "description": "プラン価格に含まれるチームメイト、ワークスペース所有者を含む。"
-            },
-            "extra": {
-              "label": "追加の席",
-              "description": "含まれる席数を超えるすべてのチームメイト、どのプランでも。"
-            },
-            "ceiling": {
-              "label": "席数の上限",
-              "description": "もう1席追加するのではなく、より大きなプランが必要になる時点。"
-            }
-          }
+          "rows": {}
         },
         "product": {
           "name": "製品",
@@ -665,8 +652,7 @@
       "standard": "標準",
       "priority": "優先",
       "messages": "メッセージ",
-      "credit": "クレジット",
-      "seatBundleSummary": "3席で$2、5席で$3"
+      "credit": "クレジット"
     },
     "billing": {
       "eyebrow": "明確でシンプルな請求",
@@ -697,10 +683,7 @@
       "eyebrow": "容量を追加",
       "title": "働き方を変えずに成長しましょう。",
       "subtitle": "必要なときだけ、人やAI容量を追加します。インボックス、知識、会話履歴はそのままの場所に残ります。",
-      "teammatesTitle": "追加のチームメイト",
-      "teammatesDesc": "同じインボックス、知識、AIクレジットを共有しながら、より多くの人に自分専用のログインを付与します。削除するまで毎月プランに残ります。",
       "perMonth": "月ごと",
-      "seatsWord": "席",
       "topUpAnytime": "いつでもチャージ",
       "onAnyPaidPlan": "どの有料プランでも",
       "creditTitle": "追加のAIクレジット",
@@ -728,7 +711,7 @@
       "items": [
         {
           "q": "プランの料金はどれくらいですか?",
-          "a": "Freeは$0です。月払いプランは、Starterが$12(毎月$7のAIクレジット付き)、Growthが$59(毎月$40)、Scaleが$299(毎月$240)です。年払いは2ヶ月分無料—10ヶ月分の支払いで12ヶ月分利用できます: Starterは年$120($10/月)、Growthは$590($49.17/月)、Scaleは$2,990($249.17/月)です。"
+          "a": "Freeは$0です。月払いプランは、Starterが$12(毎月$7のAIクレジット付き)、Growthが$59(毎月$40)、Scaleが$299(毎月$240)です。年払いは2ヶ月分無料—10ヶ月分の支払いで12ヶ月分利用できます: Starterは年$120($10/月)、Growthは$588($49/月)、Scaleは$2,988($249/月)です。"
         },
         {
           "q": "AI利用上限はどう機能しますか?",
@@ -747,8 +730,8 @@
           "a": "AIは回答する代わりに、新しい会話を直接チームに引き継ぎます。有料プランでは、いつでもクレジットをチャージしたり、自動チャージを有効にして決して止まらないようにできます。チャージは期限切れになりません。月間クレジットは各請求期間ごとにリセットされます。"
         },
         {
-          "q": "追加のチームメイトの料金はいくらですか?",
-          "a": "追加の席は、Freeを含むすべてのプランでパックとして提供されます: 3席で月$2、または5席で$3。席とAIクレジットは完全に別々に請求されます—チームメイトを追加してもAI利用上限には影響しません。"
+          "q": "Do I pay for each teammate?",
+          "a": "No. Seats are unlimited on every plan, including Free, so adding a teammate costs nothing. Seats and AI credit are billed completely separately — adding a teammate never touches your AI allowance."
         },
         {
           "q": "いつでも解約できますか?",
@@ -787,8 +770,7 @@
         "cta": "始める",
         "features": [
           "月100件までのAIメッセージ",
-          "2席が含まれる",
-          "$0.60/席からの席パック",
+          "席数は無制限",
           "20MBのナレッジベース",
           "ウェブサイトチャットウィジェット",
           "引き継ぎ付き共有インボックス"
@@ -800,8 +782,7 @@
         "cta": "始める",
         "features": [
           "毎月$7のAIクレジット",
-          "5席が含まれる",
-          "$0.60/席からの席パック",
+          "席数は無制限",
           "200MBのナレッジベース",
           "いつでもクレジットをチャージ",
           "訪問者分析"
@@ -813,8 +794,7 @@
         "cta": "始める",
         "features": [
           "毎月$40のAIクレジット",
-          "15席が含まれる",
-          "$0.60/席からの席パック",
+          "席数は無制限",
           "1GBのナレッジベース",
           "いつでもクレジットをチャージ",
           "完全なAI監査ログ",
@@ -827,8 +807,7 @@
         "cta": "始める",
         "features": [
           "毎月$240のAIクレジット",
-          "40席が含まれる",
-          "$0.60/席からの席パック",
+          "席数は無制限",
           "5GBのナレッジベース",
           "いつでもクレジットをチャージ",
           "統合とAPIアクセス"
@@ -946,7 +925,7 @@
       ],
       [
         "料金体系はどうなっていますか?",
-        "Freeは月100件のAIメッセージを含み、有料プランには月間AIクレジットが含まれます。追加のチームメイトは$0.60/席からの席パックで提供され、会話を人間に引き継ぐことは追加料金がかかりません。料金ページで含まれる席と無料プランの最低料金について説明しています。"
+        "Free includes 100 AI messages a month, and paid plans include a monthly AI credit. Seats are unlimited on every plan, and handing a conversation to a human never costs extra. The pricing page explains the details."
       ]
     ],
     "closing": {
@@ -1176,7 +1155,7 @@
         ],
         [
           "チームも使用できますか?",
-          "はい。チームメイトを招待し、成長に応じて席を追加してください。顧客に担当者が必要な時、参加アラートが届きます。"
+          "Yes. Invite as many teammates as you like, since seats are unlimited, and they'll get Join alerts when a customer needs a person."
         ]
       ]
     },
@@ -3516,7 +3495,7 @@
       },
       {
         "name": "チーム招待",
-        "body": "メールでチームメンバーを招待し、チームの成長に合わせて席数を追加できます。"
+        "body": "Invite as many teammates by email as you like: seats are unlimited."
       },
       {
         "name": "自動チケット化",
@@ -3612,7 +3591,7 @@
       },
       {
         "name": "クレジット制プラン",
-        "body": "有料プランには月間AIクレジットが含まれ、追加席はシンプルなアドオンとして追加できます。"
+        "body": "Paid plans include a monthly AI credit, and seats are unlimited."
       },
       {
         "name": "メール返信",
@@ -3747,7 +3726,7 @@
         },
         {
           "q": "有料プランはどのように機能しますか？",
-          "a": "有料プランには月間AIクレジットが含まれ、追加席はシンプルなアドオンとして追加できます。詳細は料金ページをご覧ください。"
+          "a": "Paid plans include a monthly AI credit, and seats are unlimited. See the pricing page for details."
         }
       ]
     },
@@ -3904,7 +3883,7 @@
         },
         {
           "t": "小さなチーム",
-          "d": "会話を割り振り、受信箱を共有し、必要に応じてシートを追加できます。"
+          "d": "Assign conversations, share the inbox, invite the whole team."
         },
         {
           "t": "拡大期",

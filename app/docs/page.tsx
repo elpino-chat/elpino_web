@@ -808,10 +808,10 @@ window.Elpino("update", { mrr: 299 });`}</code></pre>
 
             <div className="mt-7 grid gap-4 sm:grid-cols-2">
               {[
-                { title: "Data encryption", text: "All data is encrypted at rest with AES-256 and in transit with TLS 1.3. API keys and integration credentials are stored in isolated vaults." },
+                { title: "Credentials", text: "API keys and tokens for connected tools are encrypted before they are stored, and are wiped when you disconnect an integration." },
                 { title: "Identity verification", text: "Generate a signed token on your server using your workspace secret. The token verifies the visitor's identity without exposing credentials to the browser." },
                 { title: "GDPR & privacy", text: "Elpino supports data deletion requests, conversation export, and consent-based contact creation. See our Privacy Policy for full detail." },
-                { title: "SOC 2", text: "Elpino is SOC 2 Type II certified. A copy of the audit report is available to enterprise customers under NDA." },
+                { title: "Security", text: "Elpino does not hold a third-party security certification today. The Security guide describes the controls built into the product, and questions are welcome at security@elpino.chat." },
               ].map(({ title, text }) => (
                 <div key={title} className="rounded-xl border border-black/10 bg-[#fafafa] p-4">
                   <h3 className="flex items-center gap-2 text-sm font-semibold">

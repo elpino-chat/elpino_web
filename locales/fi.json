@@ -599,20 +599,7 @@
         },
         "seats": {
           "name": "Kuka voi kirjautua",
-          "rows": {
-            "included": {
-              "label": "Sisältyvät paikat",
-              "description": "Tason hintaan sisältyvät tiimin jäsenet, mukaan lukien työtilan omistaja."
-            },
-            "extra": {
-              "label": "Lisäpaikat",
-              "description": "Kaikki tiimin jäsenet sisältyvien paikkojen lisäksi, millä tahansa tasolla."
-            },
-            "ceiling": {
-              "label": "Paikkakatto",
-              "description": "Kohta, jossa tarvitset suuremman tason toisen paikan sijaan."
-            }
-          }
+          "rows": {}
         },
         "product": {
           "name": "Tuote",
@@ -665,8 +652,7 @@
       "standard": "Vakio",
       "priority": "Prioriteetti",
       "messages": "viestiä",
-      "credit": "krediittiä",
-      "seatBundleSummary": "3 paikkaa $2, 5 paikkaa $3"
+      "credit": "krediittiä"
     },
     "billing": {
       "eyebrow": "Selkeä, yksinkertainen laskutus",
@@ -697,10 +683,7 @@
       "eyebrow": "Lisää kapasiteettia",
       "title": "Kasva muuttamatta työskentelytapaasi.",
       "subtitle": "Lisää ihmisiä tai tekoälykapasiteettia vain, kun tarvitset sitä. Saapuneet-kansiosi, tietosi ja keskusteluhistoriasi pysyvät täsmälleen siellä, missä ne ovat.",
-      "teammatesTitle": "Lisää tiimin jäseniä",
-      "teammatesDesc": "Anna useammalle ihmiselle oma kirjautuminen jakaen samalla saman saapuneet-kansion, tiedon ja tekoälykrediitin. He pysyvät tasollasi joka kuukausi, kunnes poistat heidät.",
       "perMonth": "kuukaudessa",
-      "seatsWord": "paikkaa",
       "topUpAnytime": "Täytä milloin tahansa",
       "onAnyPaidPlan": "millä tahansa maksullisella tasolla",
       "creditTitle": "Lisää tekoälykrediittiä",
@@ -728,7 +711,7 @@
       "items": [
         {
           "q": "Mitä tasot maksavat?",
-          "a": "Free on $0. Kuukausitasot ovat Starter $12 sisältäen $7 tekoälykrediittiä kuukaudessa, Growth $59 sisältäen $40, ja Scale $299 sisältäen $240. Vuosilaskutus antaa kaksi kuukautta ilmaiseksi — maksat kymmenestä kuukaudesta ja saat kaksitoista: Starter maksaa $120 vuodessa ($10/kk), Growth $590 ($49.17/kk), ja Scale $2 990 ($249.17/kk)."
+          "a": "Free on $0. Kuukausitasot ovat Starter $12 sisältäen $7 tekoälykrediittiä kuukaudessa, Growth $59 sisältäen $40, ja Scale $299 sisältäen $240. Vuosilaskutus antaa kaksi kuukautta ilmaiseksi — maksat kymmenestä kuukaudesta ja saat kaksitoista: Starter maksaa $120 vuodessa ($10/kk), Growth $588 ($49/kk), ja Scale $2 990 ($249/kk)."
         },
         {
           "q": "Miten tekoälykiintiö toimii?",
@@ -747,8 +730,8 @@
           "a": "Tekoäly siirtää uudet keskustelut suoraan tiimillesi vastaamisen sijaan. Maksullisella tasolla voit täyttää krediittiä milloin tahansa, tai ottaa käyttöön automaattisen täytön, jotta se ei koskaan pysähdy. Täytöt eivät koskaan vanhene. Kuukausittainen krediittisi palautuu joka laskutusjakso."
         },
         {
-          "q": "Kuinka paljon ylimääräinen tiimin jäsen maksaa?",
-          "a": "Lisäpaikkoja on saatavilla paketteina kaikilla tasoilla, mukaan lukien Free: 3 paikkaa $2 kuukaudessa, tai 5 paikkaa $3. Paikat ja tekoälykrediitti laskutetaan täysin erikseen — tiimin jäsenen lisääminen ei koskaan vaikuta tekoälykiintiöösi."
+          "q": "Do I pay for each teammate?",
+          "a": "No. Seats are unlimited on every plan, including Free, so adding a teammate costs nothing. Seats and AI credit are billed completely separately — adding a teammate never touches your AI allowance."
         },
         {
           "q": "Voinko peruuttaa milloin tahansa?",
@@ -787,8 +770,7 @@
         "cta": "Aloita",
         "features": [
           "Jopa 100 tekoälyviestiä/kk",
-          "2 paikkaa sisältyy",
-          "Paikkapaketit alkaen $0.60/paikka",
+          "Rajaton määrä paikkoja",
           "20 MB tietokanta",
           "Verkkosivun chat-widget",
           "Jaettu saapuneet-kansio siirrolla"
@@ -800,8 +782,7 @@
         "cta": "Aloita",
         "features": [
           "$7 tekoälykrediittiä joka kuukausi",
-          "5 paikkaa sisältyy",
-          "Paikkapaketit alkaen $0.60/paikka",
+          "Rajaton määrä paikkoja",
           "200 MB tietokanta",
           "Täytä krediittiä milloin tahansa",
           "Kävijäanalytiikka"
@@ -813,8 +794,7 @@
         "cta": "Aloita",
         "features": [
           "$40 tekoälykrediittiä joka kuukausi",
-          "15 paikkaa sisältyy",
-          "Paikkapaketit alkaen $0.60/paikka",
+          "Rajaton määrä paikkoja",
           "1 GB tietokanta",
           "Täytä krediittiä milloin tahansa",
           "Täysi tekoälyn auditointiloki",
@@ -827,8 +807,7 @@
         "cta": "Aloita",
         "features": [
           "$240 tekoälykrediittiä joka kuukausi",
-          "40 paikkaa sisältyy",
-          "Paikkapaketit alkaen $0.60/paikka",
+          "Rajaton määrä paikkoja",
           "5 GB tietokanta",
           "Täytä krediittiä milloin tahansa",
           "Integraatiot ja API-pääsy"
@@ -946,7 +925,7 @@
       ],
       [
         "Miten hinnoittelu on rakennettu?",
-        "Free sisältää 100 tekoälyviestiä kuukaudessa, ja maksulliset tasot sisältävät kuukausittaisen tekoälykrediitin. Lisätiimin jäsenet tulevat paikkapaketeissa alkaen $0.60/paikka, ja keskustelun siirtäminen ihmiselle ei koskaan maksa lisää. Hinnoittelusivu selittää sisältyvät paikat ja ilmaistason vähimmäismaksun."
+        "Free includes 100 AI messages a month, and paid plans include a monthly AI credit. Seats are unlimited on every plan, and handing a conversation to a human never costs extra. The pricing page explains the details."
       ]
     ],
     "closing": {
@@ -1176,7 +1155,7 @@
         ],
         [
           "Voiko tiimini käyttää sitä myös?",
-          "Kyllä. Kutsu tiimin jäseniä, lisää paikkoja kasvaessasi, ja he saavat liittymisilmoituksia, kun asiakas tarvitsee ihmisen."
+          "Yes. Invite as many teammates as you like, since seats are unlimited, and they'll get Join alerts when a customer needs a person."
         ]
       ]
     },
@@ -3516,7 +3495,7 @@
       },
       {
         "name": "Tiimikutsut",
-        "body": "Kutsu tiimin jäseniä sähköpostitse ja lisää käyttäjäpaikkoja tiimin kasvaessa."
+        "body": "Invite as many teammates by email as you like: seats are unlimited."
       },
       {
         "name": "Automaattiset tiketit",
@@ -3612,7 +3591,7 @@
       },
       {
         "name": "Krediittipohjaiset suunnitelmat",
-        "body": "Maksulliset suunnitelmat sisältävät kuukausittaisen tekoälykrediitin, ja lisäkäyttäjäpaikat ovat yksinkertaisia lisäosia."
+        "body": "Paid plans include a monthly AI credit, and seats are unlimited."
       },
       {
         "name": "Vastaukset sähköpostitse",
@@ -3747,7 +3726,7 @@
         },
         {
           "q": "Miten maksulliset suunnitelmat toimivat?",
-          "a": "Maksulliset suunnitelmat sisältävät kuukausittaisen tekoälykrediitin, ja lisäkäyttäjäpaikat ovat yksinkertaisia lisäosia. Katso lisätiedot hinnoittelusivulta."
+          "a": "Paid plans include a monthly AI credit, and seats are unlimited. See the pricing page for details."
         }
       ]
     },
@@ -3904,7 +3883,7 @@
         },
         {
           "t": "Pieni tiimi",
-          "d": "Jaa keskusteluja, käytä postilaatikkoa yhdessä, lisää käyttäjäpaikkoja tarpeen mukaan."
+          "d": "Assign conversations, share the inbox, invite the whole team."
         },
         {
           "t": "Kasvun vaihe",

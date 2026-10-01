@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Activity, Check, FileText, Gauge, Globe2, LoaderCircle, Lock, LockOpen, Radio } from "lucide-react";
-import { ANNUAL_MONTHS_CHARGED, ANNUAL_SAVING_PERCENT, getAnnualTotal, getPlanPrice, plans } from "@/app/components/PricingCards";
+import { ANNUAL_MONTHS_CHARGED, getAnnualTotal, getPlanPrice, plans } from "@/app/components/PricingCards";
 import { openRazorpayCheckout } from "@/lib/razorpay-checkout";
 import { ChannelsTable, DevicesTable, KpiCard, PathsTable, Card, CardTitle, TrendChart } from "./_components";
 import { formatCompact, formatDuration, formatPercent, type ReportData } from "./_report";
@@ -182,7 +182,7 @@ export function LockedUpgradeCard() {
               >
                 {period === "monthly" ? "Monthly" : "Annually"}
                 {period === "yearly" && (
-                  <span className="-rotate-3 rounded-full border-2 bg-[#3784ff] px-1.5 py-0.5 text-[10.5px] font-bold text-white" style={{ borderColor: INK }}>-{ANNUAL_SAVING_PERCENT}%</span>
+                  <span className="-rotate-3 rounded-full border-2 bg-[#3784ff] px-1.5 py-0.5 text-[10.5px] font-bold text-white" style={{ borderColor: INK }}>2 months free</span>
                 )}
               </button>
             ))}

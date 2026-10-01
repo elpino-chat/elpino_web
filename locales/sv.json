@@ -599,20 +599,7 @@
         },
         "seats": {
           "name": "Vem kan logga in",
-          "rows": {
-            "included": {
-              "label": "Ingående platser",
-              "description": "Teammedlemmar som täcks av planens pris, inklusive arbetsytans ägare."
-            },
-            "extra": {
-              "label": "Extra platser",
-              "description": "Varje teammedlem utöver de ingående platserna, på vilken plan som helst."
-            },
-            "ceiling": {
-              "label": "Platstak",
-              "description": "Punkten där du behöver en större plan istället för en till plats."
-            }
-          }
+          "rows": {}
         },
         "product": {
           "name": "Produkten",
@@ -665,8 +652,7 @@
       "standard": "Standard",
       "priority": "Prioritet",
       "messages": "meddelanden",
-      "credit": "kredit",
-      "seatBundleSummary": "3 platser för $2, 5 för $3"
+      "credit": "kredit"
     },
     "billing": {
       "eyebrow": "Tydlig, enkel fakturering",
@@ -697,10 +683,7 @@
       "eyebrow": "Lägg till kapacitet",
       "title": "Väx utan att ändra hur du arbetar.",
       "subtitle": "Lägg till personer eller AI-kapacitet bara när du behöver det. Din inkorg, kunskap och konversationshistorik förblir exakt där de är.",
-      "teammatesTitle": "Ytterligare teammedlemmar",
-      "teammatesDesc": "Ge fler personer sin egen inloggning medan de delar samma inkorg, kunskap och AI-kredit. De stannar på din plan varje månad tills du tar bort dem.",
       "perMonth": "per månad",
-      "seatsWord": "platser",
       "topUpAnytime": "Fyll på när som helst",
       "onAnyPaidPlan": "på vilken betald plan som helst",
       "creditTitle": "Ytterligare AI-kredit",
@@ -728,7 +711,7 @@
       "items": [
         {
           "q": "Vad kostar planerna?",
-          "a": "Free är $0. Månadsplaner är Starter för $12 med $7 AI-kredit per månad, Growth för $59 med $40, och Scale för $299 med $240. Årlig fakturering ger två månader gratis — du betalar för tio månader och får tolv: Starter är $120 per år ($10/månad), Growth är $590 ($49.17/månad), och Scale är $2 990 ($249.17/månad)."
+          "a": "Free är $0. Månadsplaner är Starter för $12 med $7 AI-kredit per månad, Growth för $59 med $40, och Scale för $299 med $240. Årlig fakturering ger två månader gratis — du betalar för tio månader och får tolv: Starter är $120 per år ($10/månad), Growth är $588 ($49/månad), och Scale är $2 990 ($249/månad)."
         },
         {
           "q": "Hur fungerar AI-tilldelningen?",
@@ -747,8 +730,8 @@
           "a": "AI:n överlämnar nya konversationer direkt till ditt team istället för att svara. På en betald plan kan du fylla på kredit när som helst, eller aktivera automatisk påfyllning så att det aldrig stannar. Påfyllningar går aldrig ut. Din månatliga kredit återställs varje faktureringsperiod."
         },
         {
-          "q": "Hur mycket kostar en extra teammedlem?",
-          "a": "Extra platser kommer i paket på varje plan, inklusive Free: 3 platser för $2 per månad, eller 5 för $3. Platser och AI-kredit faktureras helt separat — att lägga till en teammedlem påverkar aldrig din AI-tilldelning."
+          "q": "Do I pay for each teammate?",
+          "a": "No. Seats are unlimited on every plan, including Free, so adding a teammate costs nothing. Seats and AI credit are billed completely separately — adding a teammate never touches your AI allowance."
         },
         {
           "q": "Kan jag avbryta när som helst?",
@@ -787,8 +770,7 @@
         "cta": "Kom igång",
         "features": [
           "Upp till 100 AI-meddelanden/månad",
-          "2 platser ingår",
-          "Platspaket från $0.60/plats",
+          "Obegränsat antal platser",
           "20 MB kunskapsbas",
           "Chattwidget på webbplatsen",
           "Delad inkorg med överlämning"
@@ -800,8 +782,7 @@
         "cta": "Kom igång",
         "features": [
           "$7 AI-kredit varje månad",
-          "5 platser ingår",
-          "Platspaket från $0.60/plats",
+          "Obegränsat antal platser",
           "200 MB kunskapsbas",
           "Fyll på kredit när som helst",
           "Besöksanalys"
@@ -813,8 +794,7 @@
         "cta": "Kom igång",
         "features": [
           "$40 AI-kredit varje månad",
-          "15 platser ingår",
-          "Platspaket från $0.60/plats",
+          "Obegränsat antal platser",
           "1 GB kunskapsbas",
           "Fyll på kredit när som helst",
           "Fullständig AI-granskningslogg",
@@ -827,8 +807,7 @@
         "cta": "Kom igång",
         "features": [
           "$240 AI-kredit varje månad",
-          "40 platser ingår",
-          "Platspaket från $0.60/plats",
+          "Obegränsat antal platser",
           "5 GB kunskapsbas",
           "Fyll på kredit när som helst",
           "Integrationer och API-åtkomst"
@@ -946,7 +925,7 @@
       ],
       [
         "Hur är prissättningen strukturerad?",
-        "Free inkluderar 100 AI-meddelanden per månad, och betalda planer inkluderar en månatlig AI-kredit. Extra lagkamrater kommer i platspaket från $0.60 per plats, och att överlämna en konversation till en människa kostar aldrig extra. Prissidan förklarar inkluderade platser och den gratis planens minimiavgift."
+        "Free includes 100 AI messages a month, and paid plans include a monthly AI credit. Seats are unlimited on every plan, and handing a conversation to a human never costs extra. The pricing page explains the details."
       ]
     ],
     "closing": {
@@ -1176,7 +1155,7 @@
         ],
         [
           "Kan mitt team också använda det?",
-          "Ja. Bjud in lagkamrater, lägg till platser när du växer, och de får anslutningsaviseringar när en kund behöver en person."
+          "Yes. Invite as many teammates as you like, since seats are unlimited, and they'll get Join alerts when a customer needs a person."
         ]
       ]
     },
@@ -3602,7 +3581,7 @@
         },
         {
           "t": "Ett litet team",
-          "d": "Fördela konversationer, dela inkorgen, lägg till platser vid behov."
+          "d": "Assign conversations, share the inbox, invite the whole team."
         },
         {
           "t": "Skalar upp",

@@ -599,20 +599,7 @@
         },
         "seats": {
           "name": "誰可以登入",
-          "rows": {
-            "included": {
-              "label": "包含的席位",
-              "description": "方案價格涵蓋的團隊成員,包含工作區擁有者。"
-            },
-            "extra": {
-              "label": "額外席位",
-              "description": "任何方案中超出包含席位的每位團隊成員。"
-            },
-            "ceiling": {
-              "label": "席位上限",
-              "description": "需要更大方案而非增加席位的臨界點。"
-            }
-          }
+          "rows": {}
         },
         "product": {
           "name": "產品",
@@ -665,8 +652,7 @@
       "standard": "標準",
       "priority": "優先",
       "messages": "則訊息",
-      "credit": "額度",
-      "seatBundleSummary": "3 席位 $2,5 席位 $3"
+      "credit": "額度"
     },
     "billing": {
       "eyebrow": "清楚簡單的計費",
@@ -697,10 +683,7 @@
       "eyebrow": "增加容量",
       "title": "在不改變工作方式的情況下成長。",
       "subtitle": "只在需要時新增人員或 AI 容量。您的收件匣、知識和對話歷史記錄會完全保留在原處。",
-      "teammatesTitle": "額外團隊成員",
-      "teammatesDesc": "讓更多人擁有自己的登入資訊,同時共用相同的收件匣、知識和 AI 額度。他們會保留在您的方案上,直到您移除他們為止。",
       "perMonth": "每月",
-      "seatsWord": "席位",
       "topUpAnytime": "隨時加值",
       "onAnyPaidPlan": "適用於任何付費方案",
       "creditTitle": "額外 AI 額度",
@@ -728,7 +711,7 @@
       "items": [
         {
           "q": "各方案費用是多少?",
-          "a": "Free 為 $0。月付方案為 Starter $12(含每月 $7 AI 額度)、Growth $59(含 $40)、Scale $299(含 $240)。年付可省兩個月費用——支付十個月即可使用十二個月:Starter 年費 $120($10/月)、Growth $590($49.17/月)、Scale $2,990($249.17/月)。"
+          "a": "Free 為 $0。月付方案為 Starter $12(含每月 $7 AI 額度)、Growth $59(含 $40)、Scale $299(含 $240)。年付可省兩個月費用——支付十個月即可使用十二個月:Starter 年費 $120($10/月)、Growth $588($49/月)、Scale $2,988($249/月)。"
         },
         {
           "q": "AI 額度如何運作?",
@@ -747,8 +730,8 @@
           "a": "AI 會直接將新對話轉交給您的團隊,而不進行回答。在付費方案中,您可以隨時加值額度,或開啟自動加值使其永不中斷。加值永不過期。您的每月額度會在每個計費週期重置。"
         },
         {
-          "q": "新增團隊成員要多少錢?",
-          "a": "額外席位以套餐形式提供,適用於包括 Free 的所有方案:3 席位每月 $2,或 5 席位 $3。席位與 AI 額度完全分開計費——新增團隊成員永遠不會影響您的 AI 額度。"
+          "q": "Do I pay for each teammate?",
+          "a": "No. Seats are unlimited on every plan, including Free, so adding a teammate costs nothing. Seats and AI credit are billed completely separately — adding a teammate never touches your AI allowance."
         },
         {
           "q": "我可以隨時取消嗎?",
@@ -787,8 +770,7 @@
         "cta": "開始使用",
         "features": [
           "每月最多 100 則 AI 訊息",
-          "包含 2 個席位",
-          "席位方案每席 $0.60 起",
+          "席位不限量",
           "20 MB 知識庫",
           "網站聊天小工具",
           "含轉接功能的共用收件匣"
@@ -800,8 +782,7 @@
         "cta": "開始使用",
         "features": [
           "每月 $7 AI 額度",
-          "包含 5 個席位",
-          "席位方案每席 $0.60 起",
+          "席位不限量",
           "200 MB 知識庫",
           "隨時加值額度",
           "訪客分析"
@@ -813,8 +794,7 @@
         "cta": "開始使用",
         "features": [
           "每月 $40 AI 額度",
-          "包含 15 個席位",
-          "席位方案每席 $0.60 起",
+          "席位不限量",
           "1 GB 知識庫",
           "隨時加值額度",
           "完整 AI 稽核記錄",
@@ -827,8 +807,7 @@
         "cta": "開始使用",
         "features": [
           "每月 $240 AI 額度",
-          "包含 40 個席位",
-          "席位方案每席 $0.60 起",
+          "席位不限量",
           "5 GB 知識庫",
           "隨時加值額度",
           "整合與 API 存取"
@@ -946,7 +925,7 @@
       ],
       [
         "定價結構是怎樣的?",
-        "Free 每月包含 100 則 AI 訊息,付費方案則包含每月 AI 額度。額外的團隊成員以每席位 $0.60 起的席位方案提供,將對話轉接給真人永遠不收取額外費用。定價頁面說明了包含的席位和免費方案的最低費用。"
+        "Free includes 100 AI messages a month, and paid plans include a monthly AI credit. Seats are unlimited on every plan, and handing a conversation to a human never costs extra. The pricing page explains the details."
       ]
     ],
     "closing": {
@@ -1176,7 +1155,7 @@
         ],
         [
           "我的團隊也可以使用嗎?",
-          "可以。邀請團隊成員,隨著成長新增席位,當客戶需要真人協助時,他們會收到加入通知。"
+          "Yes. Invite as many teammates as you like, since seats are unlimited, and they'll get Join alerts when a customer needs a person."
         ]
       ]
     },
@@ -3516,7 +3495,7 @@
       },
       {
         "name": "邀請團隊成員",
-        "body": "透過電子郵件邀請團隊成員,並隨團隊成長增加席位。"
+        "body": "Invite as many teammates by email as you like: seats are unlimited."
       },
       {
         "name": "自動建立工單",
@@ -3612,7 +3591,7 @@
       },
       {
         "name": "額度制方案",
-        "body": "付費方案包含每月 AI 額度,額外席位則是簡單的加購項目。"
+        "body": "Paid plans include a monthly AI credit, and seats are unlimited."
       },
       {
         "name": "電子郵件回覆",
@@ -3747,7 +3726,7 @@
         },
         {
           "q": "付費方案如何運作?",
-          "a": "付費方案包含每月 AI 額度,額外席位則是簡單的加購項目。詳情請參閱價格方案頁面。"
+          "a": "Paid plans include a monthly AI credit, and seats are unlimited. See the pricing page for details."
         }
       ]
     },
@@ -3904,7 +3883,7 @@
         },
         {
           "t": "一個小團隊",
-          "d": "指派對話、共用收件匣，需要時再增加席位。"
+          "d": "Assign conversations, share the inbox, invite the whole team."
         },
         {
           "t": "擴大規模",

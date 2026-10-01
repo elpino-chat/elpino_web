@@ -28,15 +28,15 @@ function tList<Item>(t: T, key: string, fallback: Item[]): Item[] {
 }
 
 const INK = "#11120f";
-const BLUE = "#3784ff";
+const BLUE = "#0078f4";
 const YELLOW = "#ffd84d";
 const PURPLE = "#7060bd";
 const ORANGE = "#fc7b33";
 const GREEN = "#1aa37a";
 const PINK = "#d9508a";
 
-const card = "rounded-[22px] border-2 border-[#11120f]";
-const mono = "font-mono text-[11px] font-semibold uppercase tracking-[0.14em]";
+const card = "rounded-[10px] border border-black/40";
+const mono = "font-mono text-[11px] font-medium uppercase tracking-[0.08em]";
 const onDark = (c: string) => (c === YELLOW ? INK : "#fff");
 const dots = { backgroundImage: "radial-gradient(#000 1.2px, transparent 1.2px)", backgroundSize: "14px 14px" };
 
@@ -48,18 +48,19 @@ function useReduced() {
 
 function Stamp({ color, children }: { color: string; children: ReactNode }) {
   return (
-    <span className={`${mono} inline-flex items-center gap-1.5 rounded-full border-2 border-[#11120f] px-3 py-1.5`} style={{ backgroundColor: color, color: onDark(color) }}>
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-black/25 bg-white px-3 py-1 text-[12.5px] font-medium normal-case tracking-normal text-black/70">
+      <span aria-hidden="true" className="size-1.5 rounded-full" style={{ backgroundColor: color }} />
       {children}
     </span>
   );
 }
 
-function Heading({ eyebrow, color, title, sub, left = false }: { eyebrow: string; color: string; title: ReactNode; sub?: string; left?: boolean }) {
+function Heading({ eyebrow, color, title, sub }: { eyebrow: string; color: string; title: ReactNode; sub?: string; left?: boolean }) {
   return (
-    <div className={left ? "max-w-3xl" : "mx-auto max-w-3xl text-center"}>
+    <div className="max-w-3xl">
       <Rv variant="drop"><Stamp color={color}>{eyebrow}</Stamp></Rv>
-      <Rv delay={80}><h2 className="mt-5 text-[clamp(2.2rem,5vw,3.9rem)] font-semibold leading-[1.02] tracking-[-0.045em]">{title}</h2></Rv>
-      {sub && <Rv delay={160}><p className="mt-5 text-lg leading-8 text-[#11120f]/65">{sub}</p></Rv>}
+      <Rv delay={80}><h2 className="mt-5 text-4xl font-normal leading-[1.05] tracking-[-0.04em] sm:text-5xl">{title}</h2></Rv>
+      {sub && <Rv delay={160}><p className="mt-5 text-lg leading-8 text-black/65">{sub}</p></Rv>}
     </div>
   );
 }
@@ -113,28 +114,28 @@ function Stream({ t }: { t: T }) {
   const needs = shown.filter((s) => s.you).length;
 
   return (
-    <div className={`${card} relative overflow-hidden bg-[#fffdf5]`}>
-      <div className="flex items-center justify-between border-b-2 border-[#11120f] bg-white px-4 py-3">
+    <div className={`${card} relative overflow-hidden bg-white`}>
+      <div className="flex items-center justify-between border-b border-black/15 bg-white px-4 py-3">
         <span className={`${mono} text-[#11120f]/55`}>{t("founders.stream.incomingLive", "Incoming, live")}</span>
         <span className="flex items-center gap-1.5 text-[12px] font-medium"><span className="size-2 animate-pulse rounded-full" style={{ backgroundColor: GREEN }} />{t("founders.stream.onDuty", "Elpino on duty")}</span>
       </div>
       <div className="min-h-[286px] space-y-2.5 p-4">
         {visible.map((s, i) => (
-          <div key={i} className="rounded-2xl border-2 border-[#11120f] bg-white p-3.5" style={{ animation: "elpino-rv-drop .45s both" }}>
+          <div key={i} className="rounded-xl border border-black/15 bg-white p-3.5" style={{ animation: "elpino-rv-drop .45s both" }}>
             <div className="flex items-center justify-between gap-3">
               <span className={`${mono} text-[10px] text-[#11120f]/50`}>{s.who}</span>
               {s.you
-                ? <span className={`${mono} inline-flex items-center gap-1 rounded-full border-2 border-[#11120f] px-2 py-0.5 text-[9px]`} style={{ backgroundColor: YELLOW, animation: "elpino-ring 1.4s ease-out infinite" }}><BellRing size={10} />{t("founders.stream.needsYou", "Needs you")}</span>
-                : <span className={`${mono} inline-flex items-center gap-1 rounded-full border-2 border-[#11120f] px-2 py-0.5 text-[9px] text-white`} style={{ backgroundColor: GREEN }}><Check size={10} strokeWidth={3} />{t("founders.stream.handled", "Handled")}</span>}
+                ? <span className={`${mono} inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] text-white`} style={{ backgroundColor: BLUE, animation: "elpino-ring 1.4s ease-out infinite" }}><BellRing size={10} />{t("founders.stream.needsYou", "Needs you")}</span>
+                : <span className={`${mono} inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] text-white`} style={{ backgroundColor: GREEN }}><Check size={10} strokeWidth={3} />{t("founders.stream.handled", "Handled")}</span>}
             </div>
-            <p className="mt-1.5 text-[15px] font-semibold leading-snug">{s.q}</p>
+            <p className="mt-1.5 text-[15px] font-medium leading-snug">{s.q}</p>
             {s.you && <p className="mt-1 text-[12.5px] text-[#11120f]/55">{t("founders.stream.askedFirst", "{why}. Elpino asked first, then alerted you.").replace("{why}", s.why ?? "")}</p>}
           </div>
         ))}
       </div>
-      <div className="grid grid-cols-2 border-t-2 border-[#11120f]">
-        <div className="border-r-2 border-[#11120f] p-4 text-white" style={{ backgroundColor: GREEN }}><p className="text-4xl font-semibold tabular-nums tracking-[-0.04em]">{handled}</p><p className={`${mono} text-white/80`}>{t("founders.stream.handledWithoutYou", "Handled without you")}</p></div>
-        <div className="p-4" style={{ backgroundColor: YELLOW }}><p className="text-4xl font-semibold tabular-nums tracking-[-0.04em]">{needs}</p><p className={`${mono} text-[#11120f]/70`}>{t("founders.stream.actuallyNeededYou", "Actually needed you")}</p></div>
+      <div className="grid grid-cols-2 border-t border-black/15">
+        <div className="p-4 text-white" style={{ backgroundColor: INK }}><p className="text-4xl font-normal tabular-nums tracking-[-0.04em]">{handled}</p><p className={`${mono} text-white/80`}>{t("founders.stream.handledWithoutYou", "Handled without you")}</p></div>
+        <div className="bg-[#f4f4f2] p-4"><p className="text-4xl font-normal tabular-nums tracking-[-0.04em]">{needs}</p><p className={`${mono} text-black/60`}>{t("founders.stream.actuallyNeededYou", "Actually needed you")}</p></div>
       </div>
     </div>
   );
@@ -142,24 +143,19 @@ function Stream({ t }: { t: T }) {
 
 function Hero({ t }: { t: T }) {
   return (
-    <section className="relative isolate overflow-hidden bg-white text-[#11120f]">
-      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-cover bg-top" style={{ backgroundImage: "url(/piliar-1-grandient.png)", maskImage: "linear-gradient(to bottom, #000 50%, transparent)", WebkitMaskImage: "linear-gradient(to bottom, #000 50%, transparent)" }} />
-      <div className="mx-auto grid max-w-6xl items-center gap-14 px-5 pb-24 pt-[124px] sm:px-8 lg:grid-cols-[1.1fr_.9fr] lg:pt-[140px]">
+    <section className="bg-white px-5 pb-16 pt-16 text-[#11120f] sm:px-8 lg:px-20 lg:pt-24">
+      <div className="mx-auto grid max-w-[1500px] items-center gap-14 lg:grid-cols-[1.1fr_.9fr] lg:gap-16">
         <div>
-          <Rv variant="drop"><Stamp color={YELLOW}><Rocket size={13} />{t("founders.hero.badge", "For founders")}</Stamp></Rv>
-          <Rv delay={80}>
-            <h1 className="mt-6 text-[clamp(2.9rem,6.8vw,5.6rem)] font-semibold leading-[0.96] tracking-[-0.058em]">{t("founders.hero.titlePrefix", "Ship product. ")}<span className="hl">{t("founders.hero.titleHl", "Not support replies.")}</span></h1>
-          </Rv>
-          <Rv delay={170}><p className="mt-6 max-w-[52ch] text-lg leading-8 text-[#11120f]/70">{t("founders.hero.subtitle", "You started a company to build something, not to answer “how do I reset my password?” forty times a week. Elpino takes the repeat questions and only taps you for the ones that truly need a founder.")}</p></Rv>
-          <Rv delay={250}>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/signup" className="inline-flex h-13 items-center gap-2 rounded-full border-2 border-[#11120f] px-7 font-semibold text-white transition hover:-translate-y-0.5" style={{ backgroundColor: BLUE }}>{t("founders.hero.ctaStart", "Start free")} <ArrowRight size={17} /></Link>
-              <Link href="/pricing" className="inline-flex h-13 items-center rounded-full border-2 border-[#11120f] bg-white px-7 font-semibold transition hover:-translate-y-0.5 hover:bg-[#ffd84d]">{t("founders.hero.ctaPricing", "See pricing")}</Link>
-            </div>
-            <p className="mt-4 text-sm text-[#11120f]/55">{t("founders.hero.freeNote", "Free plan: 100 AI messages a month. No card.")}</p>
-          </Rv>
+          <p className="text-[14px] text-black/50">{t("founders.hero.badge", "For founders")}</p>
+          <h1 className="mt-4 max-w-[14ch] animate-[elpino-focus_0.9s_ease-out_both] text-5xl font-normal leading-[1.02] tracking-[-0.045em] sm:text-6xl lg:text-[4.2rem]">{t("founders.hero.titlePrefix", "Ship product. ")}{t("founders.hero.titleHl", "Not support replies.")}</h1>
+          <p className="mt-6 max-w-xl animate-[elpino-focus_0.9s_ease-out_0.15s_both] text-lg leading-8 text-black/65">{t("founders.hero.subtitle", "You started a company to build something, not to answer “how do I reset my password?” forty times a week. Elpino takes the repeat questions and only taps you for the ones that truly need a founder.")}</p>
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <Link href="/signup" className="group inline-flex h-14 items-center gap-3 rounded-full bg-[#11120f] px-9 text-[18px] font-medium text-white transition hover:opacity-85">{t("founders.hero.ctaStart", "Start free")} <ArrowRight size={20} className="transition-transform group-hover:translate-x-1" /></Link>
+            <Link href="/pricing" className="inline-flex h-14 items-center rounded-full border border-black/25 bg-white px-9 text-[18px] font-medium transition hover:border-black/60">{t("founders.hero.ctaPricing", "See pricing")}</Link>
+          </div>
+          <p className="mt-4 text-sm text-black/55">{t("founders.hero.freeNote", "Free plan: 100 AI messages a month. No card.")}</p>
         </div>
-        <Rv variant="deal" delay={200}><Stream t={t} /></Rv>
+        <div className="animate-[elpino-focus_0.9s_ease-out_0.25s_both]"><Stream t={t} /></div>
       </div>
     </section>
   );
@@ -170,7 +166,7 @@ function Hero({ t }: { t: T }) {
 function Slider({ label, value, min, max, unit, onChange, color }: { label: string; value: number; min: number; max: number; unit: string; onChange: (v: number) => void; color: string }) {
   return (
     <label className="block">
-      <span className="flex items-baseline justify-between"><span className="text-[15px] font-semibold">{label}</span><span className="font-mono text-2xl font-bold tabular-nums" style={{ color }}>{value}<span className="text-sm font-medium text-[#11120f]/50"> {unit}</span></span></span>
+      <span className="flex items-baseline justify-between"><span className="text-[15px] font-medium">{label}</span><span className="font-mono text-2xl font-medium tabular-nums" style={{ color }}>{value}<span className="text-sm font-medium text-[#11120f]/50"> {unit}</span></span></span>
       <input type="range" min={min} max={max} value={value} onChange={(e) => onChange(Number(e.target.value))} className="mt-2 w-full" style={{ accentColor: color }} />
     </label>
   );
@@ -185,15 +181,15 @@ function Calculator({ t }: { t: T }) {
   const after = Math.min(8, perDay * (1 - pct / 100));
   const backWeek = ((perDay - perDay * (1 - pct / 100)) * 5);
   const bar = (support: number) => (
-    <div className="flex h-12 overflow-hidden rounded-xl border-2 border-[#11120f]">
-      <div className="grid place-items-center text-[12px] font-semibold text-white transition-[width] duration-500" style={{ width: `${(support / 8) * 100}%`, backgroundColor: ORANGE }}>{support >= 0.6 ? t("founders.calculator.supportLabel", "{h}h support").replace("{h}", support.toFixed(1)) : ""}</div>
-      <div className="grid flex-1 place-items-center text-[12px] font-semibold text-white" style={{ backgroundColor: GREEN }}>{(8 - support) >= 1 ? t("founders.calculator.buildingLabel", "{h}h building").replace("{h}", (8 - support).toFixed(1)) : ""}</div>
+    <div className="flex h-12 overflow-hidden rounded-lg">
+      <div className="grid place-items-center text-[12px] font-medium text-white transition-[width] duration-500" style={{ width: `${(support / 8) * 100}%`, backgroundColor: ORANGE }}>{support >= 0.6 ? t("founders.calculator.supportLabel", "{h}h support").replace("{h}", support.toFixed(1)) : ""}</div>
+      <div className="grid flex-1 place-items-center text-[12px] font-medium text-white" style={{ backgroundColor: GREEN }}>{(8 - support) >= 1 ? t("founders.calculator.buildingLabel", "{h}h building").replace("{h}", (8 - support).toFixed(1)) : ""}</div>
     </div>
   );
   return (
-    <section className="bg-[#fff8ec] px-5 py-24 sm:px-8 sm:py-28">
-      <div className="mx-auto max-w-6xl">
-        <Heading eyebrow={t("founders.calculator.eyebrow", "Do the maths")} color={GREEN} title={<>{t("founders.calculator.titlePrefix", "Get your afternoons ")}<span className="hl">{t("founders.calculator.titleHl", "back.")}</span></>} sub={t("founders.calculator.subtitle", "Plug in your own numbers. The AI share is your guess, not a promise, and it depends on what's in your knowledge base.")} />
+    <section className="bg-white px-5 py-16 sm:px-8 lg:px-20 lg:py-24">
+      <div className="mx-auto max-w-[1500px]">
+        <Heading eyebrow={t("founders.calculator.eyebrow", "Do the maths")} color={GREEN} title={<>{t("founders.calculator.titlePrefix", "Get your afternoons ")}{t("founders.calculator.titleHl", "back.")}</>} sub={t("founders.calculator.subtitle", "Plug in your own numbers. The AI share is your guess, not a promise, and it depends on what's in your knowledge base.")} />
         <div className="mt-14 grid gap-6 lg:grid-cols-[.9fr_1.1fr]">
           <Rv variant="up">
             <div className={`${card} space-y-7 bg-white p-6 sm:p-8`}>
@@ -203,13 +199,13 @@ function Calculator({ t }: { t: T }) {
             </div>
           </Rv>
           <Rv variant="up" delay={120}>
-            <div className={`${card} relative h-full overflow-hidden bg-[#fffdf5] p-6 sm:p-8`}>
+            <div className={`${card} relative h-full overflow-hidden bg-[#f4f4f2] p-6 sm:p-8`}>
               <p className={`${mono} text-[#11120f]/55`}>{t("founders.calculator.yourDay", "Your 8-hour day")}</p>
-              <p className="mt-3 text-[13px] font-semibold text-[#11120f]/70">{t("founders.calculator.today", "Today")}</p>{bar(now)}
-              <p className="mt-4 text-[13px] font-semibold text-[#11120f]/70">{t("founders.calculator.withElpinoAt", "With Elpino at {pct}%").replace("{pct}", String(pct))}</p>{bar(after)}
+              <p className="mt-3 text-[13px] font-semibold text-black/65">{t("founders.calculator.today", "Today")}</p>{bar(now)}
+              <p className="mt-4 text-[13px] font-semibold text-black/65">{t("founders.calculator.withElpinoAt", "With Elpino at {pct}%").replace("{pct}", String(pct))}</p>{bar(after)}
               <div className="mt-6 grid grid-cols-2 gap-3">
-                <div className={`${card} p-4 text-white`} style={{ backgroundColor: PURPLE }}><p className="text-4xl font-semibold tabular-nums tracking-[-0.04em]">{backWeek.toFixed(1)}h</p><p className={`${mono} text-white/80`}>{t("founders.calculator.backEachWeek", "Back each week")}</p></div>
-                <div className={`${card} p-4`} style={{ backgroundColor: YELLOW }}><p className="text-4xl font-semibold tabular-nums tracking-[-0.04em]">{Math.round(q * (pct / 100))}</p><p className={`${mono} text-[#11120f]/70`}>{t("founders.calculator.chatsUntouched", "Chats a day, untouched")}</p></div>
+                <div className="rounded-[10px] p-4 text-white" style={{ backgroundColor: INK }}><p className="text-4xl font-normal tabular-nums tracking-[-0.04em]">{backWeek.toFixed(1)}h</p><p className={`${mono} text-white/80`}>{t("founders.calculator.backEachWeek", "Back each week")}</p></div>
+                <div className="rounded-[10px] bg-white p-4"><p className="text-4xl font-normal tabular-nums tracking-[-0.04em]">{Math.round(q * (pct / 100))}</p><p className={`${mono} text-black/60`}>{t("founders.calculator.chatsUntouched", "Chats a day, untouched")}</p></div>
               </div>
               {perDay > 8 && <p className="mt-4 text-[13px] text-[#11120f]/55">{t("founders.calculator.volumeNote", "At this volume, support alone is more than a full day.")}</p>}
             </div>
@@ -227,7 +223,7 @@ type SetupText = { t: string; d: string; meter: string };
 
 const SETUP_META: SetupMeta[] = [
   { icon: Globe2, c: BLUE },
-  { icon: BookOpen, c: YELLOW },
+  { icon: BookOpen, c: ORANGE },
   { icon: Zap, c: PURPLE },
   { icon: CreditCard, c: PINK },
 ];
@@ -254,19 +250,19 @@ function Setup({ t }: { t: T }) {
     return () => window.clearInterval(id);
   }, [reduced, SETUP.length]);
   return (
-    <section className="bg-white px-5 py-24 sm:px-8 sm:py-28">
-      <div className="mx-auto max-w-6xl">
-        <Heading eyebrow={t("founders.setup.eyebrow", "Setup")} color={BLUE} title={<>{t("founders.setup.titlePrefix", "Live before your ")}<span className="hl">{t("founders.setup.titleHl", "coffee cools.")}</span></>} sub={t("founders.setup.subtitle", "No engineers, no training period. Four steps, and the last is optional.")} />
+    <section className="bg-white px-5 py-16 sm:px-8 lg:px-20 lg:py-24">
+      <div className="mx-auto max-w-[1500px]">
+        <Heading eyebrow={t("founders.setup.eyebrow", "Setup")} color={BLUE} title={<>{t("founders.setup.titlePrefix", "Live before your ")}{t("founders.setup.titleHl", "coffee cools.")}</>} sub={t("founders.setup.subtitle", "No engineers, no training period. Four steps, and the last is optional.")} />
         <div className="mt-14 grid gap-4 md:grid-cols-4">
           {SETUP.map((s, k) => {
             const on = k === i;
             return (
-              <button key={k} type="button" onClick={() => setI(k)} aria-pressed={on} className={`${card} p-5 text-left transition-all duration-500`} style={{ backgroundColor: on ? s.c : "#fff", color: on ? onDark(s.c) : INK, transform: on ? "translateY(-8px)" : "none" }}>
-                <span className="grid size-12 place-items-center rounded-full border-2 border-[#11120f] bg-white"><s.icon size={22} color={INK} /></span>
-                <p className={`${mono} mt-4 text-[10px] opacity-70`}>{t("founders.setup.stepLabel", "Step {n}").replace("{n}", String(k + 1))}</p>
-                <p className="mt-1 text-xl font-semibold leading-snug tracking-tight">{s.t}</p>
-                <p className="mt-2 text-[14.5px] leading-6 opacity-85">{s.d}</p>
-                <div className="mt-4 h-2.5 overflow-hidden rounded-full border-2 border-[#11120f] bg-white/70">
+              <button key={k} type="button" onClick={() => setI(k)} aria-pressed={on} className={`${card} p-5 text-left transition-all duration-500`} style={{ backgroundColor: on ? "#f4f4f2" : "#fff", borderColor: on ? INK : undefined }}>
+                <span className="grid size-11 place-items-center rounded-full" style={{ backgroundColor: `${s.c}1a` }}><s.icon size={21} style={{ color: s.c }} /></span>
+                <p className={`${mono} mt-4 text-[10px] text-black/45`}>{t("founders.setup.stepLabel", "Step {n}").replace("{n}", String(k + 1))}</p>
+                <p className="mt-1 text-xl font-medium leading-snug tracking-[-0.02em]">{s.t}</p>
+                <p className="mt-2 text-[14.5px] leading-6 text-black/60">{s.d}</p>
+                <div className="mt-4 h-1 overflow-hidden rounded-full bg-black/10">
                   <div key={on ? `on${i}` : "off"} className="h-full w-full" style={on ? { backgroundImage: `linear-gradient(${INK}, ${INK})`, backgroundRepeat: "no-repeat", animation: "elpino-hl 2.4s ease-out both" } : { backgroundColor: k < i ? INK : "transparent" }} />
                 </div>
               </button>
@@ -286,7 +282,7 @@ type ReachText = { t: string; d: string };
 const REACHES_META: ReachMeta[] = [
   { c: GREEN, icon: Check },
   { c: BLUE, icon: CreditCard },
-  { c: YELLOW, icon: Headset },
+  { c: PURPLE, icon: Headset },
   { c: ORANGE, icon: Ticket },
 ];
 
@@ -305,19 +301,19 @@ function useReaches(t: T) {
 function Reaches({ t }: { t: T }) {
   const rules = useReaches(t);
   return (
-    <section className="bg-[#11120f] px-5 py-24 text-white sm:px-8 sm:py-28">
-      <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
+    <section className="bg-[#11120f] px-5 py-16 text-white sm:px-8 lg:px-20 lg:py-24">
+      <div className="mx-auto grid max-w-[1500px] items-center gap-12 lg:grid-cols-2">
         <div>
           <Rv variant="drop"><Stamp color={ORANGE}><BellRing size={13} />{t("founders.reaches.badge", "The filter")}</Stamp></Rv>
-          <Rv delay={80}><h2 className="mt-5 text-[clamp(2.2rem,5vw,3.9rem)] font-semibold leading-[1.02] tracking-[-0.045em]">{t("founders.reaches.titlePrefix", "Only the ")}<span className="rounded-md px-2" style={{ backgroundColor: YELLOW, color: INK }}>{t("founders.reaches.titleHl", "important stuff")}</span>{t("founders.reaches.titleSuffix", " reaches you.")}</h2></Rv>
+          <Rv delay={80}><h2 className="mt-5 text-4xl font-normal leading-[1.05] tracking-[-0.04em] sm:text-5xl">{t("founders.reaches.titlePrefix", "Only the ")}<span style={{ color: "#6db3ff" }}>{t("founders.reaches.titleHl", "important stuff")}</span>{t("founders.reaches.titleSuffix", " reaches you.")}</h2></Rv>
           <Rv delay={160}><p className="mt-5 max-w-[48ch] text-lg leading-8 text-white/65">{t("founders.reaches.subtitle", "You decide what the AI may do. Everything else is a clear rule: ask first, alert together, and never leave the customer hanging.")}</p></Rv>
         </div>
         <div className="space-y-3">
           {rules.map((r, i) => (
             <Rv key={i} variant="up" delay={i * 90}>
-              <div className={`${card} flex items-center gap-4 bg-[#fffdf5] p-4 text-[#11120f] transition duration-300 hover:translate-x-2`}>
-                <span className="grid size-12 shrink-0 place-items-center rounded-full border-2 border-[#11120f]" style={{ backgroundColor: r.c }}><r.icon size={20} color={onDark(r.c)} /></span>
-                <div><p className="text-[17px] font-semibold leading-snug">{r.t}</p><p className="text-[14.5px] text-[#11120f]/60">{r.d}</p></div>
+              <div className="flex items-center gap-4 rounded-[10px] bg-white p-4 text-[#11120f]">
+                <span className="grid size-12 shrink-0 place-items-center rounded-full" style={{ backgroundColor: `${r.c}1a` }}><r.icon size={20} style={{ color: r.c }} /></span>
+                <div><p className="text-[17px] font-medium leading-snug">{r.t}</p><p className="text-[14.5px] text-[#11120f]/60">{r.d}</p></div>
               </div>
             </Rv>
           ))}
@@ -332,22 +328,22 @@ function Reaches({ t }: { t: T }) {
 function Money({ t }: { t: T }) {
   const [refunds, setRefunds] = useState(false);
   return (
-    <section className="bg-white px-5 py-24 sm:px-8 sm:py-28">
-      <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1fr_1.05fr]">
+    <section className="bg-white px-5 py-16 sm:px-8 lg:px-20 lg:py-24">
+      <div className="mx-auto grid max-w-[1500px] items-center gap-12 lg:grid-cols-[1fr_1.05fr]">
         <div>
-          <Heading left eyebrow={t("founders.money.eyebrow", "Billing questions")} color={PINK} title={<>{t("founders.money.titlePrefix", "It checks the real payment. ")}<span className="hl">{t("founders.money.titleHl", "You keep the keys.")}</span></>} sub={t("founders.money.subtitle", "Connect Stripe or Razorpay and the AI can look up payments and subscriptions, send receipts and payment links, and cancel a subscription when asked. Refunds stay off until you flip the switch.")} />
+          <Heading left eyebrow={t("founders.money.eyebrow", "Billing questions")} color={PINK} title={<>{t("founders.money.titlePrefix", "It checks the real payment. ")}{t("founders.money.titleHl", "You keep the keys.")}</>} sub={t("founders.money.subtitle", "Connect Stripe or Razorpay and the AI can look up payments and subscriptions, send receipts and payment links, and cancel a subscription when asked. Refunds stay off until you flip the switch.")} />
         </div>
         <Rv variant="deal" delay={100}>
-          <div className={`${card} bg-[#fffdf5] p-5`}>
+          <div className={`${card} bg-[#f4f4f2] p-5`}>
             <div className="space-y-2.5 text-[14.5px]">
-              <div className="ml-auto max-w-[85%] rounded-2xl rounded-br-sm border-2 border-[#11120f] px-4 py-2.5 text-white" style={{ backgroundColor: PURPLE }}>{t("founders.money.chatAsk", "Can I get my last payment refunded?")}</div>
-              <div key={String(refunds)} className="max-w-[92%] rounded-2xl rounded-bl-sm border-2 border-[#11120f] bg-white px-4 py-2.5" style={{ animation: "elpino-rv-pop .35s both" }}>{refunds ? t("founders.money.chatYes", "I've found your payment and started the refund. It usually reaches your account in 5 to 7 working days.") : t("founders.money.chatNo", "I can see the payment, but I can't refund it myself. Would you like me to connect you with our team?")}</div>
+              <div className="ml-auto max-w-[85%] rounded-2xl rounded-br-sm px-4 py-2.5 text-white" style={{ backgroundColor: INK }}>{t("founders.money.chatAsk", "Can I get my last payment refunded?")}</div>
+              <div key={String(refunds)} className="max-w-[92%] rounded-2xl rounded-bl-sm border border-black/15 bg-white px-4 py-2.5" style={{ animation: "elpino-rv-pop .35s both" }}>{refunds ? t("founders.money.chatYes", "I've found your payment and started the refund. It usually reaches your account in 5 to 7 working days.") : t("founders.money.chatNo", "I can see the payment, but I can't refund it myself. Would you like me to connect you with our team?")}</div>
             </div>
-            <div className="mt-5 flex items-center justify-between rounded-2xl border-2 border-[#11120f] bg-white px-4 py-3.5">
-              <span className="flex items-center gap-2.5 font-semibold"><Lock size={17} />{t("founders.money.toggleLabel", "Let the AI issue refunds")}</span>
-              <button type="button" role="switch" aria-checked={refunds} aria-label={t("founders.money.toggleLabel", "Let the AI issue refunds")} onClick={() => setRefunds(!refunds)} className="relative h-7 w-12 rounded-full border-2 border-[#11120f] transition-colors" style={{ backgroundColor: refunds ? GREEN : "#e7e2d6" }}><span className="absolute top-0.5 size-5 rounded-full border-2 border-[#11120f] bg-white transition-all" style={{ left: refunds ? "calc(100% - 22px)" : "2px" }} /></button>
+            <div className="mt-5 flex items-center justify-between rounded-xl bg-white px-4 py-3.5">
+              <span className="flex items-center gap-2.5 font-medium"><Lock size={17} />{t("founders.money.toggleLabel", "Let the AI issue refunds")}</span>
+              <button type="button" role="switch" aria-checked={refunds} aria-label={t("founders.money.toggleLabel", "Let the AI issue refunds")} onClick={() => setRefunds(!refunds)} className="relative h-7 w-12 rounded-full transition-colors" style={{ backgroundColor: refunds ? GREEN : "#d4d4d0" }}><span className="absolute top-0.5 size-6 rounded-full bg-white transition-all" style={{ left: refunds ? "calc(100% - 26px)" : "2px" }} /></button>
             </div>
-            <p className="mt-3 text-center text-xs text-[#11120f]/50">{t("founders.money.toggleNote", "Off by default. Try the switch.")}</p>
+            <p className="mt-3 text-xs text-black/50">{t("founders.money.toggleNote", "Off by default. Try the switch.")}</p>
           </div>
         </Rv>
       </div>
@@ -370,7 +366,7 @@ const STAGES_META: StageMeta[] = [
 const STAGES_EN: StageText[] = [
   { t: "Just you", d: "Free plan, 100 AI messages a month, one inbox you rarely open." },
   { t: "First hire", d: "Invite them by email. They get Join alerts and take chats over from the AI." },
-  { t: "A small team", d: "Assign conversations, share the inbox, add seats when you need them." },
+  { t: "A small team", d: "Assign conversations, share the inbox, invite the whole team." },
   { t: "Scaling up", d: "Paid plans with a monthly AI credit, MCP tools for your own systems." },
 ];
 
@@ -382,19 +378,19 @@ function useStages(t: T) {
 function Grows({ t }: { t: T }) {
   const STAGES = useStages(t);
   return (
-    <section className="bg-[#fff8ec] px-5 py-24 sm:px-8 sm:py-28">
-      <div className="mx-auto max-w-6xl">
-        <Heading eyebrow={t("founders.grows.eyebrow", "Room to grow")} color={PURPLE} title={<>{t("founders.grows.titlePrefix", "Starts with you. ")}<span className="hl">{t("founders.grows.titleHl", "Scales with your team.")}</span></>} />
+    <section className="bg-white px-5 py-16 sm:px-8 lg:px-20 lg:py-24">
+      <div className="mx-auto max-w-[1500px]">
+        <Heading eyebrow={t("founders.grows.eyebrow", "Room to grow")} color={PURPLE} title={<>{t("founders.grows.titlePrefix", "Starts with you. ")}{t("founders.grows.titleHl", "Scales with your team.")}</>} />
         <div className="relative mt-16">
-          <div aria-hidden="true" className="absolute left-[12%] right-[12%] top-[38px] hidden h-0.5 md:block" style={{ backgroundImage: `linear-gradient(90deg, ${INK} 50%, transparent 50%)`, backgroundSize: "12px 2px" }} />
+          <div aria-hidden="true" className="absolute left-[12%] right-[12%] top-[38px] hidden h-0.5 md:block" style={{ backgroundImage: `linear-gradient(90deg, rgba(0,0,0,0.3) 50%, transparent 50%)`, backgroundSize: "12px 2px" }} />
           <div className="grid gap-5 md:grid-cols-4">
             {STAGES.map((s, i) => (
               <Rv key={i} variant="up" delay={i * 100}>
                 <div className="group flex flex-col items-center text-center">
-                  <span className="relative z-10 grid size-[76px] place-items-center rounded-full border-2 border-[#11120f] transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6" style={{ backgroundColor: s.c }}><s.icon size={28} color="#fff" /></span>
-                  <div className={`${card} mt-4 w-full bg-white p-4`} style={{ marginTop: 16 + i * 6 }}>
+                  <span className="relative z-10 grid size-[76px] place-items-center rounded-full border border-black/20 bg-white transition-transform duration-300 group-hover:scale-105"><s.icon size={28} style={{ color: s.c }} /></span>
+                  <div className={`${card} mt-4 w-full bg-white p-4`}>
                     <p className={`${mono} text-[10px] text-[#11120f]/45`}>{t("founders.grows.stageLabel", "Stage {n}").replace("{n}", String(i + 1))}</p>
-                    <p className="mt-1 text-xl font-semibold tracking-tight">{s.t}</p>
+                    <p className="mt-1 text-xl font-medium tracking-[-0.02em]">{s.t}</p>
                     <p className="mt-1.5 text-[14.5px] leading-6 text-[#11120f]/60">{s.d}</p>
                   </div>
                 </div>
@@ -424,24 +420,29 @@ function Faq({ t }: { t: T }) {
   const FAQS = tList<Faq>(t, "founders.faq.items", FAQS_EN);
   const [open, setOpen] = useState(0);
   return (
-    <section className="bg-white px-5 py-24 sm:px-8 sm:py-28">
-      <div className="mx-auto max-w-3xl">
-        <Heading eyebrow={t("founders.faq.eyebrow", "Founder questions")} color={YELLOW} title={<>{t("founders.faq.titlePrefix", "Straight ")}<span className="hl">{t("founders.faq.titleHl", "answers.")}</span></>} />
-        <div className="mt-12 space-y-3">
-          {FAQS.map((item, i) => (
-            <Rv key={i} variant="up" delay={i * 50}>
-              <div className={`${card} overflow-hidden ${open === i ? "bg-[#fffdf5]" : "bg-white"}`}>
-                <button type="button" aria-expanded={open === i} onClick={() => setOpen(open === i ? -1 : i)} className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left text-[17px] font-semibold">
-                  {item.q}
-                  <span className="grid size-8 shrink-0 place-items-center rounded-full border-2 border-[#11120f] transition-transform duration-300" style={{ backgroundColor: open === i ? YELLOW : "#fff", transform: open === i ? "rotate(45deg)" : "none" }}><Plus size={16} /></span>
-                </button>
-                <div className="grid transition-[grid-template-rows] duration-300" style={{ gridTemplateRows: open === i ? "1fr" : "0fr" }}>
-                  <div className="overflow-hidden"><p className="px-5 pb-5 text-[16px] leading-7 text-[#11120f]/70">{item.a}</p></div>
+    <section className="bg-white px-5 py-16 sm:px-8 lg:px-20 lg:py-24">
+      <div className="mx-auto grid max-w-[1500px] gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+        <Rv><h2 className="text-4xl font-normal leading-[1.05] tracking-[-0.04em] sm:text-5xl">{t("founders.faq.titlePrefix", "Straight ")}{t("founders.faq.titleHl", "answers.")}</h2></Rv>
+        <Rv delay={80}>
+          <div className="border-b border-black/20">
+            {FAQS.map((item, i) => {
+              const isOpen = open === i;
+              return (
+                <div key={i} className="border-t border-black/20">
+                  <h3>
+                    <button type="button" aria-expanded={isOpen} onClick={() => setOpen(isOpen ? -1 : i)} className="flex w-full items-center justify-between gap-6 py-6 text-left">
+                      <span className="text-[clamp(1.1rem,1.6vw,1.35rem)] font-medium leading-snug tracking-[-0.015em]">{item.q}</span>
+                      <span aria-hidden="true" className={`grid size-9 shrink-0 place-items-center rounded-full border transition-all duration-300 ${isOpen ? "rotate-45 border-[#11120f] bg-[#11120f] text-white" : "border-black/25 text-[#11120f]"}`}><Plus size={18} /></span>
+                    </button>
+                  </h3>
+                  <div className={`grid transition-[grid-template-rows] duration-300 ${isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
+                    <div className="overflow-hidden"><p className="max-w-2xl pb-7 text-[17px] leading-7 text-black/65">{item.a}</p></div>
+                  </div>
                 </div>
-              </div>
-            </Rv>
-          ))}
-        </div>
+              );
+            })}
+          </div>
+        </Rv>
       </div>
     </section>
   );
@@ -449,16 +450,14 @@ function Faq({ t }: { t: T }) {
 
 function Closing({ t }: { t: T }) {
   return (
-    <section className="bg-white px-5 pb-24 pt-4 sm:px-8">
-      <Rv variant="pop">
-        <div className={`${card} relative mx-auto max-w-6xl overflow-hidden px-6 py-16 text-center text-white sm:px-12`} style={{ backgroundColor: ORANGE }}>
-          <div aria-hidden="true" className="absolute inset-0 opacity-[0.16]" style={dots} />
-          <Rocket size={38} className="relative mx-auto" aria-hidden="true" />
-          <h2 className="relative mx-auto mt-5 max-w-3xl text-[clamp(2.3rem,5.4vw,4.4rem)] font-semibold leading-[1.02] tracking-[-0.05em]">{t("founders.closing.title", "Go back to building.")}</h2>
-          <p className="relative mx-auto mt-4 max-w-lg text-lg text-white/90">{t("founders.closing.subtitle", "Start free, teach Elpino your product, and let it take the repeat questions.")}</p>
-          <div className="relative mt-8 flex flex-wrap justify-center gap-3">
-            <Link href="/signup" className="inline-flex h-13 items-center gap-2 rounded-full border-2 border-[#11120f] px-8 font-semibold text-[#11120f] transition hover:-translate-y-0.5" style={{ backgroundColor: YELLOW }}>{t("founders.closing.ctaStart", "Start free")} <ArrowRight size={16} /></Link>
-            <Link href="/product/ai-agent" className="inline-flex h-13 items-center rounded-full border-2 border-[#11120f] bg-white px-8 font-semibold text-[#11120f] transition hover:-translate-y-0.5">{t("founders.closing.ctaMeetAgent", "Meet the AI agent")}</Link>
+    <section className="bg-white px-5 pb-24 pt-4 sm:px-8 lg:px-20">
+      <Rv className="mx-auto max-w-[1500px]">
+        <div className="rounded-tl-[2rem] border border-black/20 bg-[#f4f4f2] px-7 py-14 sm:px-14 sm:py-20">
+          <h2 className="max-w-3xl text-4xl font-normal leading-[1.04] tracking-[-0.035em] sm:text-5xl">{t("founders.closing.title", "Go back to building.")}</h2>
+          <p className="mt-5 max-w-xl text-lg leading-8 text-black/65">{t("founders.closing.subtitle", "Start free, teach Elpino your product, and let it take the repeat questions.")}</p>
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <Link href="/signup" className="group inline-flex h-12 items-center gap-2.5 rounded-full bg-[#11120f] px-8 text-[15px] font-medium text-white transition hover:opacity-85">{t("founders.closing.ctaStart", "Start free")} <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" /></Link>
+            <Link href="/product/ai-agent" className="inline-flex h-12 items-center rounded-full border border-black/25 bg-white px-8 text-[15px] font-medium transition hover:border-black/60">{t("founders.closing.ctaMeetAgent", "Meet the AI agent")}</Link>
           </div>
         </div>
       </Rv>
@@ -470,7 +469,7 @@ export function FoundersClient() {
   const language = useStoredLanguage();
   const { t } = useTranslation(language as any);
   return (
-    <main className="font-[family-name:var(--font-rethink-sans)]">
+    <main className="bg-white font-[family-name:var(--font-rethink-sans)] text-[#11120f]">
       <Hero t={t} />
       <Calculator t={t} />
       <Setup t={t} />
