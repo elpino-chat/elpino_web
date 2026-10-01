@@ -69,6 +69,9 @@
         "text": "Paste one line, teach it your docs, switch it on. The guides walk you through each.",
         "cta": "Open the docs"
       }
+    },
+    "offer": {
+      "text": "Start free today: 100 AI messages a month, no card required, and you can be live on your own site in an afternoon"
     }
   },
   "contact": {
@@ -302,11 +305,24 @@
       "widget": {
         "name": "Elpino",
         "subtitle": "Answers in seconds",
-        "convo": [
-          "Was I charged twice for my upgrade?",
-          "Checked your payment record",
-          "You were charged once. The second attempt failed and was never captured."
-        ]
+        "convo": {
+          "0": "Was I charged twice for my upgrade?",
+          "2": "You were charged once. The second attempt failed and was never captured."
+        }
+      },
+      "emailPlaceholder": "Enter your work email",
+      "emailLabel": "Email address",
+      "ctaSignUp": "Start free trial",
+      "ctaDemo": "View demo",
+      "stage": {
+        "step0": "Reading the question",
+        "step1": "Checking your payment record",
+        "step2": "Reading your refund policy",
+        "working": "Elpino is working…"
+      },
+      "glass": {
+        "customer": "Customer",
+        "ai": "Elpino"
       }
     },
     "marquee": {
@@ -443,6 +459,30 @@
           "tag": "Tickets",
           "title": "Nothing gets dropped",
           "desc": "If nobody's free, a ticket is filed and the customer is told."
+        }
+      ],
+      "websiteLabel": "Your website",
+      "websitePlaceholder": "yourcompany.com",
+      "websiteAdded": "Added",
+      "websiteButton": "Add website",
+      "plugins": "Plugins",
+      "prev": "Previous",
+      "next": "Next",
+      "steps": [
+        {
+          "tag": "Step 1",
+          "title": "Add your website",
+          "desc": "Paste your site address. That is all Elpino needs to start learning your business."
+        },
+        {
+          "tag": "Step 2",
+          "title": "Crawl your site and feed it",
+          "desc": "Elpino reads your pages and files, and keeps every customer's details and past chats in its built-in CRM. Connect plugins like Stripe or Shopify to keep that data in sync."
+        },
+        {
+          "tag": "Step 3",
+          "title": "Add the chat widget in minutes",
+          "desc": "Drop one snippet into your website or web app, from a landing page to a React app, and talk to visitors in real time."
         }
       ]
     },
@@ -610,13 +650,216 @@
           "q": "Does it work on other channels?",
           "a": "Website chat is live today. Omnichannel is coming in November."
         }
-      ]
+      ],
+      "more": "Can't find your answer?",
+      "talk": "Talk to us"
     },
     "closing": {
       "title": "Give your customers the answer before they finish typing.",
       "subtitle": "Start free, teach it your business, and let it take the repeat questions.",
       "ctaPrimary": "Start free",
       "ctaSecondary": "Talk to us"
+    },
+    "tabs": {
+      "more": "Learn more",
+      "widget": {
+        "label": "Elpino AI",
+        "title": "An AI that checks before it answers",
+        "body": "Elpino confirms who it is talking to, looks up the real payment or order, keeps private details out of the model, and only then replies.",
+        "p0": "Verifies the customer before it touches account data",
+        "p1": "Checks payments, plans and orders in your connected tools",
+        "p2": "Hands over to your team with the full story when a person is needed"
+      },
+      "inbox": {
+        "label": "Shared inbox",
+        "title": "One inbox for your team and the AI",
+        "body": "Clear ownership, join alerts and the full context on every thread.",
+        "p0": "See what the AI already checked",
+        "p1": "Join a conversation in one click",
+        "p2": "Visitor location, device and history alongside"
+      },
+      "kb": {
+        "label": "Knowledge",
+        "title": "Teach it from anything you have",
+        "body": "Crawl your site, upload files, write pages. Public and private switches decide who sees what.",
+        "p0": "Crawl your website",
+        "p1": "Upload documents and notes",
+        "p2": "Keep private pages away from visitors"
+      },
+      "tickets": {
+        "label": "Tickets",
+        "title": "Nothing gets dropped",
+        "body": "If nobody is free, a ticket is filed and the customer is told.",
+        "p0": "Filed to Asana or Trello",
+        "p1": "The summary travels with the ticket",
+        "p2": "The customer always hears back"
+      },
+      "aria": "Product areas"
+    },
+    "teams": {
+      "verify": {
+        "claim": "I'm Alex Morgan. Show me my invoices.",
+        "ok": "Thanks, Alex. You're signed in, so here are your invoices.",
+        "ask": "I can't share account details with a guest. Sign in on the site and I'll check it's really you.",
+        "verified": "Identity verified",
+        "locked": "Guest · account locked",
+        "site": "Signed in on your website",
+        "token": "Signed token received · alex@example.com",
+        "invoice": "Invoice #1042",
+        "plan": "Growth plan · paid"
+      },
+      "plugins": {
+        "live": "9 plugins connected"
+      },
+      "contacts": {
+        "label": "Contacts",
+        "name": "Name",
+        "contact": "Email or phone",
+        "status": "Status",
+        "new": "New lead",
+        "ask": "What's your email, just in case we get disconnected?",
+        "agent": "AI agent · Just now",
+        "skip": "Skip",
+        "thanks": "Thanks, Maya! Is there anything else I can help you with?"
+      },
+      "eyebrow": "A place for every team",
+      "title": "Deliver real productivity for every team",
+      "cards": [
+        {
+          "tag": "Identity verification",
+          "title": "Nobody gets in just by claiming a name",
+          "desc": "A name or an email typed into a chat proves nothing. Elpino opens private account data only for visitors your own website has signed in and vouched for, so a guest pretending to be someone else gets nothing.",
+          "note": "Payment and order lookups use only the verified email from your login, and logging out ends the chat session straight away.",
+          "points": [
+            "Your site signs the user in, and Elpino trusts only that",
+            "Guests can chat, but private tools stay locked",
+            "Logging out ends the session at once"
+          ]
+        },
+        {
+          "tag": "AI replies",
+          "title": "See exactly what the AI replies",
+          "desc": "Every reply shows its working: the pages of your knowledge it drew on and the payment or order it looked up in your connected tools. Nothing the AI says is a black box.",
+          "note": "Watch the conversation live from the inbox and step in when a person is needed. Your team gets the full story, so nobody asks the customer to repeat themselves.",
+          "points": [
+            "See the pages and tools behind each reply",
+            "Read each reply as the customer sees it",
+            "Join in one click with the full context"
+          ]
+        },
+        {
+          "tag": "Analytics",
+          "title": "See who visits and what they do",
+          "desc": "Web analytics sits right next to your inbox. Track visitors, page views, sessions, time on site and bounce rate for the last 7 days or any period, and compare it with the one before.",
+          "note": "Real visitors are counted apart from bots, so the numbers describe people. Filter by domain and save presets for the views you check most.",
+          "points": [
+            "Visitors, page views, sessions and bounce rate",
+            "Compare with the previous period",
+            "Filter by domain and save your favourite views"
+          ]
+        },
+        {
+          "tag": "Contacts",
+          "title": "Turn chats into contacts",
+          "desc": "Every visitor who shares an email or phone number lands in your built-in CRM, with their whole conversation history attached.",
+          "note": "Whenever you speak to someone you see who they are and what they asked before, so every reply feels personal.",
+          "points": [
+            "Leads captured right in the chat",
+            "History and plan beside every contact",
+            "Synced with the CRM you already use"
+          ]
+        },
+        {
+          "tag": "Plugins",
+          "title": "Plug into the tools you already use",
+          "desc": "Connect payments, stores, CRMs and ticketing tools in minutes, so every answer comes from live data instead of a guess.",
+          "note": "Elpino reads and acts through the plugins you switch on, and only with the permissions you give it.",
+          "points": [
+            "Payments, orders and plans, looked up live",
+            "Tickets filed in Asana or Trello",
+            "Switch a plugin off at any time"
+          ]
+        }
+      ]
+    },
+    "autopilot": {
+      "save": "Save",
+      "close": "About the same",
+      "aYearVs": "a year, compared with",
+      "cheapest": "the cheapest of the three",
+      "each": "Saving against each",
+      "youSave": "You save vs",
+      "yr": "a year",
+      "same": "about the same",
+      "seats": "Seats",
+      "conversations": "AI conversations / mo",
+      "p1": "Unlimited seats on every plan, even Free, so you can grow your team without growing your software bill.",
+      "p2": "No commitment. Stay on the $10 plan and top up AI credit only when you need it, at $0.03 a conversation at most. Top-ups carry forward, and there is never an overage bill.",
+      "bills": "One month's bill, itemised",
+      "seatsUnit": "seats",
+      "convUnit": "AI conversations",
+      "perMonth": "Per month",
+      "perYearLabel": "Per year",
+      "compareWith": "Compare with",
+      "footnote": "Public list prices in USD, checked 1 October 2026, annual billing where shown, for the same number of seats and AI conversations on every product. Excludes taxes, add-ons and enterprise discounts. Intercom and Zendesk charge only for conversations the AI resolves; Elpino charges for every AI conversation it handles, resolved or not. This comparison assumes every AI conversation is resolved, which is the most those two would bill. Elpino: Starter plan on annual billing ($10 a month, $7 of AI credit included), unlimited seats, and AI credit topped up at up to $0.03 a conversation.",
+      "cta": "See pricing"
+    },
+    "saved": {
+      "title": "Give your team its hours back.",
+      "p1": "Elpino answers the repeat questions and looks up payments and orders itself, so your people keep the conversations that need them.",
+      "p2": "Move the sliders to your own numbers. It is an estimate, not a promise.",
+      "save": "Save",
+      "hours": "hours",
+      "per": "of your team's time, given back",
+      "conversations": "Conversations/mo",
+      "share": "Answered without a person",
+      "minutes": "Minutes each",
+      "grid": "Your team's support time, one square",
+      "hr": "hr",
+      "left": "hrs left",
+      "hrs": "hrs",
+      "today": "Your team today",
+      "givenBack": "Given back by Elpino"
+    },
+    "widgetMock": {
+      "row0": "Reading your message",
+      "row0done": "Got your message",
+      "row1": "Verifying it's you",
+      "row1done": "You're verified",
+      "row2": "Checking your payment and plan",
+      "row2done": "Payment and plan checked",
+      "row3": "Protecting your private details",
+      "row3done": "Private details kept out of the AI",
+      "name": "Elpino AI",
+      "role": "AI Assistant",
+      "question": "I purchased a plan but it's still not active",
+      "answer": "Thanks for your patience. Your payment went through and your plan is now active. If you still see the old plan, refresh your dashboard."
+    },
+    "kgraph": {
+      "s0": "Website sitemap",
+      "s1": "PDFs and documents",
+      "s2": "Pages you write",
+      "s2hint": "policies and how-tos",
+      "s3": "Your connected tools",
+      "s3hint": "live data via MCP",
+      "aria": "Your website, documents, pages and tools all feed Elpino's knowledge",
+      "hub": "Knowledge",
+      "answer": "Answers"
+    },
+    "ticketFlow": {
+      "title": "Paid, but the plan is still not active",
+      "filed": "Filed",
+      "assigned": "Assigned",
+      "told": "Customer told",
+      "aria": "When nobody is free, a ticket is written, filed to your team's tool, and the customer is told",
+      "nobody": "Nobody on the team is free right now",
+      "ticket": "Ticket",
+      "open": "Open",
+      "draft": "Draft",
+      "high": "High",
+      "billing": "Billing",
+      "summary": "Summary, what was checked and what was found attached",
+      "filedTo": "Filed to your ticketing tool"
     }
   },
   "pricing": {

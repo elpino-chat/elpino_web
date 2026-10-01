@@ -209,9 +209,8 @@
       "ctaPrimary": "Kezdd el ingyen",
       "ctaSecondary": "Próbáld ki magad",
       "trust": [
-        "100 ingyenes AI üzenet havonta",
-        "Nincs szükség kártyára",
-        "Egy délután alatt kész"
+        "100 ingyenes mesterséges intelligencia üzenet havonta",
+        "Nem szükséges kártya"
       ],
       "stickers": [
         "AI által megoldva",
@@ -227,12 +226,27 @@
       "widget": {
         "name": "Elpino",
         "subtitle": "Másodperceken belül válaszol",
-        "convo": [
-          "Kétszer terheltek meg a frissítésért?",
-          "Ellenőriztem a fizetési előzményeidet",
-          "Csak egyszer terheltek meg. A második próbálkozás sikertelen volt, és soha nem lett elszámolva."
-        ]
-      }
+        "convo": {
+          "0": "Kétszer kellett fizetni a frissítésért?",
+          "2": "Egyszer megterhelték Önt. A második kísérlet kudarcot vallott, és nem sikerült elkapni."
+        }
+      },
+      "emailPlaceholder": "Adja meg munkahelyi e-mail-címét",
+      "emailLabel": "E-mail cím",
+      "ctaSignUp": "Indítsa el az ingyenes próbaverziót",
+      "ctaDemo": "Demo megtekintése",
+      "stage": {
+        "step0": "Olvasva a kérdést",
+        "step1": "Fizetési nyilvántartásának ellenőrzése",
+        "step2": "A visszatérítési szabályzat elolvasása",
+        "working": "Elpino dolgozik…"
+      },
+      "glass": {
+        "customer": "Ügyfél",
+        "ai": "Elpino"
+      },
+      "headLead": "Hagyja, hogy a mesterséges intelligencia válaszoljon az ismételt kérdésekre,",
+      "headEmphasis": "így a csapata kezeli a fontosakat."
     },
     "marquee": {
       "questions": [
@@ -367,6 +381,31 @@
           "tag": "Jegyek",
           "title": "Semmi nem vész el",
           "desc": "Ha senki nem elérhető, jegy készül, és az ügyfél értesítést kap."
+        }
+      ],
+      "websiteLabel": "Az Ön webhelye",
+      "websitePlaceholder": "yourcompany.com",
+      "websiteAdded": "Hozzáadva",
+      "websiteButton": "Webhely hozzáadása",
+      "plugins": "Beépülő modulok",
+      "title3": "Minden, amire egy ügyfélszolgálatnak szüksége van, 3 lépésben",
+      "prev": "Előző",
+      "next": "Következő",
+      "steps": [
+        {
+          "tag": "1. lépés",
+          "title": "Adja hozzá webhelyét",
+          "desc": "Illessze be a webhely címét. Elpinónak csak ennyire van szüksége ahhoz, hogy elkezdje tanulni vállalkozását."
+        },
+        {
+          "tag": "2. lépés",
+          "title": "Feltérképezze webhelyét, és táplálja be",
+          "desc": "Az Elpino beolvassa oldalait és fájljait, és megőrzi minden ügyfél adatait és korábbi csevegéseit a beépített CRM-jében. Csatlakoztassa az olyan bővítményeket, mint a Stripe vagy a Shopify, hogy az adatok szinkronban legyenek."
+        },
+        {
+          "tag": "3. lépés",
+          "title": "Adja hozzá a csevegőmodult percek alatt",
+          "desc": "Helyezzen egy részletet webhelyébe vagy webalkalmazásába, a nyitóoldaltól a React alkalmazásig, és valós időben beszéljen a látogatókkal."
         }
       ]
     },
@@ -507,40 +546,250 @@
     },
     "faq": {
       "eyebrow": "Kérdések",
-      "titlePrefix": "Amit az emberek először",
-      "titleHl": "kérdeznek.",
+      "titlePrefix": "Dolgok emberek",
+      "titleHl": "először kérdezz.",
       "items": [
         {
-          "q": "Mi az Elpino?",
-          "a": "Egy AI-alapú ügyfélszolgálati platform: egy chat widget a weboldaladon, egy AI ügynök, amely a tudásbázisod alapján válaszol és ellenőrzi a valódi kifizetéseket, egy megosztott csapat postafiók, és jegyek, amikor senki nem elérhető."
+          "q": "Mi az az Elpino?",
+          "a": "Egy mesterséges intelligencia ügyfélszolgálati platform: egy webhelyen működő chat-widget, egy mesterséges intelligencia-ügynök, amely az Ön tudásából válaszol, és ellenőrzi a valós fizetéseket, megosztott csapatpostafiók, valamint jegyek, amikor senki sem szabad."
         },
         {
-          "q": "Fog az AI dolgokat kitalálni?",
-          "a": "A te jóváhagyott tudásod alapján válaszol, és egy ellenőrzési lépés a piszkozatokat az eszközök eredményeivel veti össze. Amikor nem tudja, megmondja, és felajánl egy embert."
+          "q": "A mesterséges intelligencia kitalálja a dolgokat?",
+          "a": "Az Ön által jóváhagyott ismeretek alapján válaszol, és az áttekintési bizonyítvány ellenőrzi a piszkozatokat az eszköz eredményeivel. Ha nem tudja, kimondja, és felajánl egy személyt."
         },
         {
-          "q": "Mi történik, amikor nem tud segíteni?",
-          "a": "Először megkérdezi az ügyfelet. Igen esetén az egész csapat csatlakozási értesítést kap, és 90 másodperc áll rendelkezésre a reagálásra. Ha senki nem csatlakozik, jegy készül, és az ügyfél e-mailt kap."
+          "q": "Mi történik, ha nem tud segíteni?",
+          "a": "Először az ügyfelet kérdezi meg. Ha igen, minden csapattárs kap egy csatlakozási figyelmeztetést, és 90 másodperce van a beugrásra. Ha senki sem teszi meg, a rendszer jegyet ad, és e-mailt küld az ügyfélnek."
         },
         {
           "q": "Mennyi ideig tart a beállítás?",
-          "a": "A legtöbb csapat még aznap élővé válik: adj hozzá tudást, illeszd be a widget kódot, és hívd meg a csapatodat."
+          "a": "A legtöbb csapat ugyanazon a napon él: adja hozzá tudását, illessze be a widget kódrészletét, és hívja meg csapatát."
         },
         {
           "q": "Van ingyenes csomag?",
-          "a": "Igen: 100 AI üzenet havonta, nincs szükség kártyára."
+          "a": "Igen: 100 mesterséges intelligencia üzenet havonta, kártya nem szükséges."
         },
         {
           "q": "Működik más csatornákon?",
-          "a": "A weboldali chat már működik. Az omnicsatorna novemberben érkezik."
+          "a": "A webhelyen ma élő csevegés. Az Omnichannel novemberben érkezik."
+        }
+      ],
+      "more": "Nem találja a választ?",
+      "talk": "Beszéljen velünk"
+    },
+    "closing": {
+      "title": "Adja meg ügyfeleinek a választ, mielőtt befejeznék a gépelést.",
+      "subtitle": "Kezdje ingyen, tanítsa meg a dolgát, és hagyja, hogy az ismétlődő kérdéseket intézze.",
+      "ctaPrimary": "Kezdje ingyen",
+      "ctaSecondary": "Beszéljen velünk"
+    },
+    "tabs": {
+      "more": "Tudjon meg többet",
+      "widget": {
+        "label": "Elpino AI",
+        "title": "Egy mesterséges intelligencia, amely ellenőrzi, mielőtt válaszolna",
+        "body": "Az Elpino megerősíti, hogy kivel beszél, megkeresi a valós fizetést vagy megrendelést, a privát részleteket kizárja a modellből, és csak ezután válaszol.",
+        "p0": "Ellenőrzi az ügyfelet, mielőtt hozzáérne a fiókadatokhoz",
+        "p1": "Ellenőrzi a kifizetéseket, terveket és rendeléseket a csatlakoztatott eszközökben",
+        "p2": "Adja át csapatának a teljes történetet, amikor valakire szükség van"
+      },
+      "inbox": {
+        "label": "Megosztott postafiók",
+        "title": "Egy beérkező levelek a csapatnak és az AI-nak",
+        "body": "Tisztítsa meg a tulajdonjogot, a csatlakozási figyelmeztetéseket és a teljes kontextust minden szálon.",
+        "p0": "Nézze meg, mit ellenőrzött már az AI",
+        "p1": "Csatlakozzon egy beszélgetéshez egyetlen kattintással",
+        "p2": "Látogató helye, eszköze és előzményei mellett"
+      },
+      "kb": {
+        "label": "Tudás",
+        "title": "Tanítsa meg bármiből, amije van",
+        "body": "Feltérképezze webhelyét, töltse fel fájlokat, írjon oldalakat. A nyilvános és privát kapcsolók döntik el, hogy ki mit lát.",
+        "p0": "Feltérképezze webhelyét",
+        "p1": "Dokumentumok és jegyzetek feltöltése",
+        "p2": "Tartsa távol a privát oldalakat a látogatóktól"
+      },
+      "tickets": {
+        "label": "Jegyek",
+        "title": "Semmi sem esik le",
+        "body": "Ha senki sem szabad, akkor jegyet adnak le, és értesítik az ügyfelet.",
+        "p0": "Bejelentve Asana vagy Trello számára",
+        "p1": "Az összefoglaló a jeggyel együtt utazik",
+        "p2": "Az ügyfél mindig visszahall"
+      },
+      "aria": "Termékterületek"
+    },
+    "teams": {
+      "verify": {
+        "claim": "Alex Morgan vagyok. Mutassa meg a számláimat.",
+        "ok": "Köszönöm, Alex. Be van jelentkezve, tehát itt vannak a számlái.",
+        "ask": "Nem oszthatom meg a fiók adatait egy vendéggel. Jelentkezzen be az oldalra, és ellenőrizni fogom, hogy valóban te vagy-e.",
+        "verified": "A személyazonosság ellenőrizve",
+        "locked": "Vendég · fiók zárolva",
+        "site": "Bejelentkezett a webhelyén",
+        "token": "Aláírt token érkezett · alex@example.com",
+        "invoice": "1042-es számla",
+        "plan": "Növekedési terv · fizetett"
+      },
+      "plugins": {
+        "live": "9 plugin csatlakoztatva"
+      },
+      "contacts": {
+        "label": "Kapcsolatok",
+        "name": "Név",
+        "contact": "E-mailben vagy telefonon",
+        "status": "Állapot",
+        "new": "Új vezető",
+        "ask": "Mi az e-mail címed, arra az esetre, ha megszakadnánk?",
+        "agent": "AI-ügynök · Csak most",
+        "skip": "Ugrás",
+        "thanks": "Köszönöm, Maya! Van még valami, amiben segíthetek?"
+      },
+      "eyebrow": "Egy hely minden csapatnak",
+      "title": "Valódi termelékenységet biztosít minden csapat számára",
+      "cards": [
+        {
+          "tag": "Személyazonosság ellenőrzése",
+          "title": "Senki sem jut be csak egy név igénylésével",
+          "desc": "A chatbe beírt név vagy e-mail cím nem bizonyít semmit. Az Elpino csak azoknak a látogatóknak nyit meg privát fiókadatokat, akikre a saját webhelye bejelentkezett és jótállást vállalt, így az a vendég, aki valaki másnak adja ki magát, nem kap semmit.",
+          "note": "A fizetési és rendelési keresések csak a bejelentkezésedből származó ellenőrzött e-mailt használják, és a kijelentkezés azonnal befejezi a csevegést.",
+          "points": [
+            "Az Ön webhelye bejelentkezteti a felhasználót, és az Elpino csak ebben bízik",
+            "A vendégek cseveghetnek, de a privát eszközök zárva maradnak",
+            "A kijelentkezés azonnal befejezi a munkamenetet"
+          ]
+        },
+        {
+          "tag": "AI válaszol",
+          "title": "Tekintse meg pontosan, mit válaszol a mesterséges intelligencia",
+          "desc": "Minden válasz megmutatja a működését: az Ön tudásának lapjait, amelyekre támaszkodott, és a fizetést vagy megrendelést, amelyet a csatlakoztatott eszközökben keresett. Az AI szerint semmi sem fekete doboz.",
+          "note": "Nézze meg élőben a beszélgetést a beérkező levelek közül, és lépjen be, ha valakire szükség van. Csapata megkapja a teljes történetet, így senki sem kéri az ügyféltől, hogy ismételje meg önmagát.",
+          "points": [
+            "Tekintse meg az egyes válaszok mögött található oldalakat és eszközöket",
+            "Olvasson el minden választ úgy, ahogy az ügyfél látja",
+            "Csatlakozzon egyetlen kattintással a teljes kontextushoz"
+          ]
+        },
+        {
+          "tag": "Analytics",
+          "title": "Nézze meg, kik látogatnak és mit csinálnak",
+          "desc": "A webes elemzés közvetlenül a beérkező levelek mellett található. Kövesse nyomon a látogatókat, az oldalmegtekintéseket, a munkameneteket, a webhelyen töltött időt és a visszafordulási arányt az elmúlt 7 napban vagy bármely időszakban, és hasonlítsa össze az előzővel.",
+          "note": "A valódi látogatókat a botokon kívül számítják, tehát a számok az embereket írják le. Szűrjön tartomány szerint, és mentse el a leggyakrabban ellenőrzött nézetekhez tartozó előbeállításokat.",
+          "points": [
+            "Látogatók, oldalmegtekintések, munkamenetek és visszafordulási arány",
+            "Hasonlítsa össze az előző időszakkal",
+            "Szűrjön domain szerint, és mentse el kedvenc nézeteit"
+          ]
+        },
+        {
+          "tag": "Kapcsolatok",
+          "title": "A csevegéseket névjegyekké alakíthatja",
+          "desc": "Minden látogató, aki megoszt egy e-mail-címet vagy telefonszámot, a beépített CRM-be kerül, a teljes beszélgetési előzményeihez csatolva.",
+          "note": "Valahányszor beszél valakivel, láthatja, ki ő, és mit kérdezett korábban, így minden válasz személyesnek tűnik.",
+          "points": [
+            "A leadeket közvetlenül a csevegésben rögzítették",
+            "Történelem és terv minden kapcsolat mellett",
+            "Szinkronizálva a már használt CRM-mel"
+          ]
+        },
+        {
+          "tag": "Beépülő modulok",
+          "title": "Csatlakoztassa a már használt eszközöket",
+          "desc": "Csatlakoztassa a fizetéseket, az üzleteket, a CRM-eket és a jegyértékesítő eszközöket percek alatt, így minden válasz élő adatokból származik, nem pedig találgatásból.",
+          "note": "Az Elpino a bekapcsolt bővítményeken keresztül olvas és cselekszik, és csak az Ön által megadott engedélyekkel.",
+          "points": [
+            "Fizetések, rendelések és tervek, élőben keresve",
+            "Jegyek az Asana vagy a Trello területén",
+            "Bármikor kapcsoljon ki egy plugint"
+          ]
         }
       ]
     },
-    "closing": {
-      "title": "Add meg ügyfeleidnek a választ, mielőtt befejeznék az írást.",
-      "subtitle": "Kezdd el ingyen, taníts meg neki a vállalkozásodat, és hagyd, hogy átvegye az ismétlődő kérdéseket.",
-      "ctaPrimary": "Kezdd el ingyen",
-      "ctaSecondary": "Beszélj velünk"
+    "autopilot": {
+      "save": "Mentés",
+      "close": "Körülbelül ugyanaz",
+      "aYearVs": "évente, ehhez képest",
+      "cheapest": "a legolcsóbb a három közül",
+      "each": "Megtakarítás mindegyik ellen",
+      "youSave": "Megtakarítasz vs",
+      "yr": "évente",
+      "same": "kb",
+      "seats": "Felhasználók",
+      "conversations": "AI beszélgetések / hónap",
+      "p1": "Korlátlan számú férőhely minden csomagban, még ingyenesen is, így bővítheti csapatát anélkül, hogy növelné szoftverszámláját.",
+      "p2": "Nincs elkötelezettség. Maradjon a 10 dolláros csomagnál, és csak akkor töltse fel az AI-jóváírást, amikor szüksége van rá, legfeljebb 0,03 dollárért egy beszélgetésért. A feltöltések továbbvihetők, és soha nincs túllépés.",
+      "bills": "Egyhavi számla, tételesen",
+      "seatsUnit": "ülések",
+      "convUnit": "AI beszélgetések",
+      "perMonth": "Havonta",
+      "perYearLabel": "Évente",
+      "compareWith": "Hasonlítsa össze",
+      "footnote": "Nyilvános listaárak USD-ben, 2026. október 1-jén ellenőrizve, éves számlázás, ahol látható, minden terméknél ugyanannyi hely és mesterséges intelligencia beszélgetés. Nem tartalmazza az adókat, a kiegészítőket és a vállalati kedvezményeket. Az intercom és a Zendesk csak az AI által megoldott beszélgetésekért számol fel; Az Elpino minden általa kezelt mesterségesintelligencia-beszélgetésért díjat számít fel, akár megoldódott, akár nem. Ez az összehasonlítás azt feltételezi, hogy minden mesterséges intelligencia-beszélgetés megoldódott, ami a legtöbb, amit ők ketten fizetnének. Elpino: Kezdő csomag éves számlázással (havi 10 USD, 7 USD AI-jóváírással), korlátlan férőhelyek és mesterséges intelligencia-jóváírás beszélgetésenként akár 0,03 USD-val is.",
+      "cta": "Lásd az árakat"
+    },
+    "toolsLine": {
+      "title": "Nem sprint, hanem percek alatt csatlakozik a már használt fizetési, bolti, CRM- és jegykezelő eszközökhöz."
+    },
+    "saved": {
+      "title": "Adja vissza csapatának óráit.",
+      "p1": "Elpino válaszol az ismétlődő kérdésekre, és maga keresi a kifizetéseket és a megrendeléseket, így az emberei folytathatják a szükséges beszélgetéseket.",
+      "p2": "Mozgassa a csúszkákat a saját számaira. Ez becslés, nem ígéret.",
+      "save": "Mentés",
+      "hours": "óra",
+      "per": "csapata idejéből, visszaadva",
+      "conversations": "Beszélgetések/hó",
+      "share": "Személy nélkül válaszolt",
+      "minutes": "percenként",
+      "grid": "Csapatod támogatási ideje, egy négyzet",
+      "hr": "óra",
+      "left": "óra van hátra",
+      "hrs": "óra",
+      "today": "Csapatod ma",
+      "givenBack": "Elpino adta vissza"
+    },
+    "platform": {
+      "title": "AI, amely úgy ellenőrzi, ahogy a legjobb ügynök tenné",
+      "subtitle": "Ellenőrzi, hogy kivel beszél, megkeresi a valós fizetést vagy megrendelést, kizárja a privát adatokat a modellből, majd válaszol. Ha valakire szükség van, a csapat mindent megkap, amit talált."
+    },
+    "widgetMock": {
+      "row0": "Üzenetének olvasása",
+      "row0done": "Megkaptam az üzenetet",
+      "row1": "Ön személyazonosságának ellenőrzése",
+      "row1done": "Ellenőrizve",
+      "row2": "Fizetésének és tervének ellenőrzése",
+      "row2done": "Fizetés és terv ellenőrizve",
+      "row3": "Személyes adatainak védelme",
+      "row3done": "A privát részleteket az AI-tól távol tartják",
+      "name": "Elpino AI",
+      "role": "AI-asszisztens",
+      "question": "Vettem egy csomagot, de még mindig nem aktív",
+      "answer": "Köszönjük türelmét. Befizetése sikeres, és a terv aktív. Ha továbbra is a régi csomagot látja, frissítse az irányítópultot."
+    },
+    "kgraph": {
+      "s0": "Webhely-oldaltérkép",
+      "s1": "PDF-ek és dokumentumok",
+      "s2": "Az Ön által írt oldalak",
+      "s2hint": "irányelvek és útmutatók",
+      "s3": "Az Ön csatlakoztatott eszközei",
+      "s3hint": "élő adatok MCP-n keresztül",
+      "aria": "Az Ön webhelye, dokumentumai, oldalai és eszközei mind táplálják az Elpino tudását",
+      "hub": "Tudás",
+      "answer": "Válaszok"
+    },
+    "ticketFlow": {
+      "title": "Fizetve, de a terv még mindig nem aktív",
+      "filed": "Bejelentve",
+      "assigned": "Hozzárendelve",
+      "told": "Az ügyfél elmondta",
+      "aria": "Ha senki sem szabad, jegyet írnak, beadják a csapatod eszközébe, és közlik az ügyféllel",
+      "nobody": "A csapatból jelenleg senki sem szabad",
+      "ticket": "Jegy",
+      "open": "Nyitva",
+      "draft": "Piszkozat",
+      "high": "Magas",
+      "billing": "Számlázás",
+      "summary": "Összefoglaló, mit ellenőriztek és mit találtak csatolva",
+      "filedTo": "A jegyértékesítő eszközhöz iktatva"
     }
   },
   "pricing": {
@@ -1235,7 +1484,10 @@
     "contactSales": "Kapcsolatfelvétel az értékesítéssel",
     "login": "Bejelentkezés",
     "goToDashboard": "Ugrás az irányítópultra",
-    "getStarted": "Kezdés"
+    "getStarted": "Kezdés",
+    "offer": {
+      "text": "Kezdje ingyenesen még ma: havi 100 mesterséges intelligencia üzenet, kártya nélkül, és egy délutánon belül élőben lehet a saját webhelyén"
+    }
   },
   "footer": {
     "ticker": [

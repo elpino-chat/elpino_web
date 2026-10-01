@@ -210,8 +210,7 @@
       "ctaSecondary": "Probeer het zelf",
       "trust": [
         "100 gratis AI-berichten per maand",
-        "Geen kaart nodig",
-        "Klaar in een middag"
+        "Geen kaart nodig"
       ],
       "stickers": [
         "Opgelost door AI",
@@ -227,12 +226,27 @@
       "widget": {
         "name": "Elpino",
         "subtitle": "Antwoordt in seconden",
-        "convo": [
-          "Ben ik twee keer belast voor mijn upgrade?",
-          "Ik heb uw betalingsgeschiedenis gecontroleerd",
-          "U bent maar één keer belast. De tweede poging is mislukt en nooit vastgelegd."
-        ]
-      }
+        "convo": {
+          "0": "Zijn er twee keer kosten in rekening gebracht voor mijn upgrade?",
+          "2": "Er zijn één keer kosten in rekening gebracht. De tweede poging mislukte en werd nooit vastgelegd."
+        }
+      },
+      "emailPlaceholder": "Voer uw zakelijke e-mailadres in",
+      "emailLabel": "E-mailadres",
+      "ctaSignUp": "Start een gratis proefperiode",
+      "ctaDemo": "Bekijk de demo",
+      "stage": {
+        "step0": "Ik lees de vraag",
+        "step1": "Uw betalingsgegevens controleren",
+        "step2": "Uw restitutiebeleid lezen",
+        "working": "Elpino werkt…"
+      },
+      "glass": {
+        "customer": "Klant",
+        "ai": "Elpino"
+      },
+      "headLead": "Laat AI de herhaalde vragen beantwoorden,",
+      "headEmphasis": "zodat uw team de zaken afhandelt die er toe doen."
     },
     "marquee": {
       "questions": [
@@ -367,6 +381,31 @@
           "tag": "Tickets",
           "title": "Niets valt weg",
           "desc": "Als niemand vrij is, wordt een ticket aangemaakt en de klant geïnformeerd."
+        }
+      ],
+      "websiteLabel": "Uw website",
+      "websitePlaceholder": "uwbedrijf.com",
+      "websiteAdded": "Toegevoegd",
+      "websiteButton": "Website toevoegen",
+      "plugins": "Plug-ins",
+      "title3": "Alles wat een supportdesk nodig heeft, in 3 stappen",
+      "prev": "Vorige",
+      "next": "Volgende",
+      "steps": [
+        {
+          "tag": "Stap 1",
+          "title": "Voeg uw website toe",
+          "desc": "Plak uw siteadres. Dat is alles wat Elpino nodig heeft om uw bedrijf te leren kennen."
+        },
+        {
+          "tag": "Stap 2",
+          "title": "Crawl uw site en voer deze in",
+          "desc": "Elpino leest uw pagina's en bestanden en bewaart de gegevens van elke klant en eerdere chats in de ingebouwde CRM. Verbind plug-ins zoals Stripe of Shopify om die gegevens gesynchroniseerd te houden."
+        },
+        {
+          "tag": "Stap 3",
+          "title": "Voeg de chatwidget binnen enkele minuten toe",
+          "desc": "Plaats één fragment in uw website of webapp, van een landingspagina naar een React-app, en praat in realtime met bezoekers."
         }
       ]
     },
@@ -507,40 +546,250 @@
     },
     "faq": {
       "eyebrow": "Vragen",
-      "titlePrefix": "Wat mensen",
-      "titleHl": "als eerste vragen.",
+      "titlePrefix": "Dingen mensen",
+      "titleHl": "eerst vragen.",
       "items": [
         {
           "q": "Wat is Elpino?",
-          "a": "Een AI-klantenserviceplatform: een chatwidget voor uw website, een AI-agent die antwoordt vanuit uw kennis en echte betalingen controleert, een gedeelde teaminbox, en tickets als niemand vrij is."
+          "a": "Een AI-klantenondersteuningsplatform: een chatwidget op de website, een AI-agent die antwoordt vanuit uw kennis en echte betalingen controleert, een gedeelde teaminbox en tickets als er niemand vrij is."
         },
         {
-          "q": "Gaat de AI dingen verzinnen?",
-          "a": "Het antwoordt vanuit de kennis die u heeft goedgekeurd, en een controleronde toetst concepten aan tool-resultaten. Als het het niet weet, zegt het dat en biedt een mens aan."
+          "q": "Zal de AI het verzinnen?",
+          "a": "Het antwoordt op basis van de kennis die u hebt goedgekeurd, en een beoordelingspas controleert concepten aan de hand van de toolresultaten. Als hij het niet weet, zegt hij dat en biedt hij een persoon aan."
         },
         {
-          "q": "Wat gebeurt er als het niet kan helpen?",
-          "a": "Het vraagt eerst de klant. Bij ja krijgt elk teamlid een deelname-melding en heeft 90 seconden om in te springen. Doet niemand dat, dan wordt een ticket aangemaakt en de klant gemaild."
+          "q": "Wat gebeurt er als het niet helpt?",
+          "a": "Het vraagt ​​eerst de klant. Bij een ja krijgt elke teamgenoot een deelnamemelding en heeft hij 90 seconden de tijd om in te springen. Als niemand dat doet, wordt er een ticket ingediend en wordt de klant per e-mail verzonden."
         },
         {
           "q": "Hoe lang duurt de installatie?",
-          "a": "De meeste teams zijn dezelfde dag live: voeg uw kennis toe, plak het widget-snippet en nodig uw team uit."
+          "a": "De meeste teams zijn dezelfde dag live: voeg je kennis toe, plak het widgetfragment en nodig je team uit."
         },
         {
-          "q": "Is er een gratis plan?",
-          "a": "Ja: 100 AI-berichten per maand, geen kaart nodig."
+          "q": "Is er een gratis abonnement?",
+          "a": "Ja: 100 AI-berichten per maand, geen kaart vereist."
         },
         {
           "q": "Werkt het op andere kanalen?",
-          "a": "Websitechat is nu al live. Omnichannel komt in november."
+          "a": "Websitechat is vandaag live. Omnichannel komt in november."
         }
-      ]
+      ],
+      "more": "Kunt u uw antwoord niet vinden?",
+      "talk": "Praat met ons"
     },
     "closing": {
       "title": "Geef uw klanten het antwoord voordat ze klaar zijn met typen.",
-      "subtitle": "Start gratis, leer het uw bedrijf, en laat het de herhaalvragen overnemen.",
-      "ctaPrimary": "Start gratis",
+      "subtitle": "Begin gratis, leer het uw vak, en laat het de herhaalde vragen stellen.",
+      "ctaPrimary": "Begin gratis",
       "ctaSecondary": "Praat met ons"
+    },
+    "tabs": {
+      "more": "Meer informatie",
+      "widget": {
+        "label": "Elpino AI",
+        "title": "Een AI die controleert voordat hij antwoordt",
+        "body": "Elpino bevestigt met wie hij praat, zoekt de echte betaling of bestelling op, houdt privégegevens buiten het model en antwoordt pas daarna.",
+        "p0": "Verifieert de klant voordat deze aan accountgegevens komt",
+        "p1": "Controleert betalingen, plannen en bestellingen in uw verbonden tools",
+        "p2": "Geeft het volledige verhaal door aan uw team als er iemand nodig is"
+      },
+      "inbox": {
+        "label": "Gedeelde inbox",
+        "title": "Eén inbox voor uw team en de AI",
+        "body": "Duidelijk eigendom, deelnamemeldingen en de volledige context van elke thread.",
+        "p0": "Kijk wat de AI al heeft gecontroleerd",
+        "p1": "Neem met één klik deel aan een gesprek",
+        "p2": "Bezoekerslocatie, apparaat en geschiedenis ernaast"
+      },
+      "kb": {
+        "label": "Kennis",
+        "title": "Leer het van alles wat je hebt",
+        "body": "Crawl uw site, upload bestanden, schrijf pagina's. Publieke en private schakelaars bepalen wie wat ziet.",
+        "p0": "Crawl uw website",
+        "p1": "Documenten en notities uploaden",
+        "p2": "Houd privépagina's uit de buurt van bezoekers"
+      },
+      "tickets": {
+        "label": "Tickets",
+        "title": "Er wordt niets verwijderd",
+        "body": "Als niemand vrij is, wordt er een ticket ingediend en wordt de klant hiervan op de hoogte gesteld.",
+        "p0": "Gearchiveerd in Asana of Trello",
+        "p1": "De samenvatting reist mee met het ticket",
+        "p2": "De klant hoort altijd iets terug"
+      },
+      "aria": "Productgebieden"
+    },
+    "teams": {
+      "verify": {
+        "claim": "Ik ben Alex Morgan. Laat mij mijn facturen zien.",
+        "ok": "Bedankt, Alex. U bent ingelogd, dus hier zijn uw facturen.",
+        "ask": "Ik kan geen accountgegevens delen met een gast. Meld je aan op de site en ik controleer of jij het echt bent.",
+        "verified": "Identiteit geverifieerd",
+        "locked": "Gast · account vergrendeld",
+        "site": "Aangemeld op uw website",
+        "token": "Ondertekend token ontvangen · alex@example.com",
+        "invoice": "Factuur #1042",
+        "plan": "Groeiplan · betaald"
+      },
+      "plugins": {
+        "live": "9 plug-ins aangesloten"
+      },
+      "contacts": {
+        "label": "Contacten",
+        "name": "Naam",
+        "contact": "E-mail of telefoon",
+        "status": "Status",
+        "new": "Nieuwe lead",
+        "ask": "Wat is uw e-mailadres, voor het geval de verbinding verbroken wordt?",
+        "agent": "AI-agent · Zojuist",
+        "skip": "Overslaan",
+        "thanks": "Bedankt, Maya! Kan ik je nog ergens mee helpen?"
+      },
+      "eyebrow": "Een plek voor ieder team",
+      "title": "Lever echte productiviteit voor elk team",
+      "cards": [
+        {
+          "tag": "Identiteitsverificatie",
+          "title": "Niemand komt binnen door alleen maar een naam te claimen",
+          "desc": "Een naam of een e-mail die in een chat wordt getypt, bewijst niets. Elpino opent privéaccountgegevens alleen voor bezoekers van uw eigen website die zich hebben aangemeld en waarvoor u heeft ingestaan, dus een gast die zich voordoet als iemand anders krijgt niets.",
+          "note": "Voor het opzoeken van betalingen en bestellingen wordt alleen het geverifieerde e-mailadres van uw login gebruikt, en uitloggen beëindigt de chatsessie meteen.",
+          "points": [
+            "Uw site meldt de gebruiker aan, en Elpino vertrouwt alleen dat",
+            "Gasten kunnen chatten, maar privétools blijven vergrendeld",
+            "Uitloggen beëindigt de sessie onmiddellijk"
+          ]
+        },
+        {
+          "tag": "AI antwoordt",
+          "title": "Zie precies wat de AI antwoordt",
+          "desc": "Elk antwoord laat zien wat het doet: de pagina's van uw kennis waarop het is gebaseerd en de betaling of bestelling die het heeft opgezocht in uw verbonden tools. Niets wat de AI zegt is een zwarte doos.",
+          "note": "Bekijk het gesprek live vanuit de inbox en stap in wanneer er iemand nodig is. Jouw team krijgt het volledige verhaal, zodat niemand de klant vraagt ​​om zichzelf te herhalen.",
+          "points": [
+            "Bekijk de pagina's en hulpmiddelen achter elk antwoord",
+            "Lees elk antwoord zoals de klant het ziet",
+            "Sluit u met één klik aan met de volledige context"
+          ]
+        },
+        {
+          "tag": "Analyse",
+          "title": "Zie wie er op bezoek komt en wat ze doen",
+          "desc": "Webanalyses bevinden zich direct naast uw inbox. Houd bezoekers, paginaweergaven, sessies, tijd op de site en bouncepercentage bij van de afgelopen zeven dagen of een andere periode, en vergelijk deze met de vorige.",
+          "note": "Echte bezoekers worden geteld, afgezien van bots, dus de cijfers beschrijven mensen. Filter op domein en bewaar presets voor de weergaven die u het meest controleert.",
+          "points": [
+            "Bezoekers, paginaweergaven, sessies en bouncepercentage",
+            "Vergelijk met de vorige periode",
+            "Filter op domein en sla uw favoriete weergaven op"
+          ]
+        },
+        {
+          "tag": "Contacten",
+          "title": "Verander chats in contacten",
+          "desc": "Elke bezoeker die een e-mailadres of telefoonnummer deelt, komt terecht in uw ingebouwde CRM, met zijn hele gespreksgeschiedenis als bijlage.",
+          "note": "Wanneer je met iemand spreekt, zie je wie hij of zij is en wat hij of zij eerder heeft gevraagd, zodat elk antwoord persoonlijk aanvoelt.",
+          "points": [
+            "Leads die rechtstreeks in de chat zijn vastgelegd",
+            "Geschiedenis en plan naast elk contact",
+            "Gesynchroniseerd met de CRM die u al gebruikt"
+          ]
+        },
+        {
+          "tag": "Plug-ins",
+          "title": "Sluit de tools aan die u al gebruikt",
+          "desc": "Verbind betalingen, winkels, CRM's en ticketingtools binnen enkele minuten, zodat elk antwoord afkomstig is van live gegevens in plaats van een gok.",
+          "note": "Elpino leest en handelt via de plug-ins die u inschakelt, en alleen met de machtigingen die u eraan geeft.",
+          "points": [
+            "Betalingen, bestellingen en plannen, live opgezocht",
+            "Tickets opgeslagen in Asana of Trello",
+            "Schakel een plug-in op elk gewenst moment uit"
+          ]
+        }
+      ]
+    },
+    "autopilot": {
+      "save": "Opslaan",
+      "close": "Ongeveer hetzelfde",
+      "aYearVs": "per jaar, vergeleken met",
+      "cheapest": "de goedkoopste van de drie",
+      "each": "Besparen tegen elk",
+      "youSave": "U bespaart vs",
+      "yr": "per jaar",
+      "same": "ongeveer hetzelfde",
+      "seats": "Gebruikers",
+      "conversations": "AI-gesprekken / ma",
+      "p1": "Onbeperkt aantal zitplaatsen bij elk abonnement, zelfs gratis, zodat u uw team kunt laten groeien zonder uw softwarerekening te laten groeien.",
+      "p2": "Geen verplichting. Blijf op het abonnement van $ 10 en vul AI-tegoed alleen aan wanneer je het nodig hebt, voor maximaal $ 0,03 per gesprek. Opwaarderingen kunnen worden overgedragen en er is nooit sprake van een overschrijdingsfactuur.",
+      "bills": "Eén maandfactuur, gespecificeerd",
+      "seatsUnit": "zitplaatsen",
+      "convUnit": "AI-gesprekken",
+      "perMonth": "Per maand",
+      "perYearLabel": "Per jaar",
+      "compareWith": "Vergelijk met",
+      "footnote": "Openbare catalogusprijzen in USD, gecontroleerd op 1 oktober 2026, jaarlijkse facturering waar getoond, voor hetzelfde aantal gebruikers en AI-gesprekken voor elk product. Exclusief belastingen, add-ons en bedrijfskortingen. Intercom en Zendesk brengen alleen kosten in rekening voor gesprekken die de AI oplost; Elpino brengt kosten in rekening voor elk AI-gesprek dat het afhandelt, opgelost of niet. Bij deze vergelijking wordt ervan uitgegaan dat elk AI-gesprek wordt opgelost, wat het hoogste bedrag is dat deze twee in rekening zouden brengen. Elpino: startersplan met jaarlijkse facturering ($ 10 per maand, $ 7 aan AI-tegoed inbegrepen), onbeperkte zitplaatsen en AI-tegoed aangevuld tot $ 0,03 per gesprek.",
+      "cta": "Zie prijzen"
+    },
+    "toolsLine": {
+      "title": "Maakt verbinding met de betalings-, winkel-, CRM- en ticketingtools die u al gebruikt, in minuten, geen sprints."
+    },
+    "saved": {
+      "title": "Geef je team zijn uren terug.",
+      "p1": "Elpino beantwoordt de herhaalvragen en zoekt zelf betalingen en bestellingen op, zodat uw mensen de gesprekken behouden die ze nodig hebben.",
+      "p2": "Verplaats de schuifregelaars naar uw eigen nummers. Het is een schatting, geen belofte.",
+      "save": "Opslaan",
+      "hours": "uur",
+      "per": "van de tijd van uw team, teruggegeven",
+      "conversations": "Gesprekken/ma",
+      "share": "Beantwoord zonder persoon",
+      "minutes": "Minuten elk",
+      "grid": "De ondersteuningstijd van uw team, één vierkant",
+      "hr": "uur",
+      "left": "uur nog",
+      "hrs": "uur",
+      "today": "Uw team vandaag",
+      "givenBack": "Teruggegeven door Elpino"
+    },
+    "platform": {
+      "title": "AI die controleert zoals uw beste agent dat zou doen",
+      "subtitle": "Het verifieert met wie er wordt gesproken, zoekt de echte betaling of bestelling op, houdt privégegevens buiten het model en antwoordt vervolgens. Wanneer er iemand nodig is, krijgt uw team alles wat het gevonden heeft."
+    },
+    "widgetMock": {
+      "row0": "Je bericht lezen",
+      "row0done": "Ik heb je bericht ontvangen",
+      "row1": "Ik verifieer dat jij het bent",
+      "row1done": "Je bent geverifieerd",
+      "row2": "Uw betaling en abonnement controleren",
+      "row2done": "Betaling en abonnement gecontroleerd",
+      "row3": "Bescherming van uw privégegevens",
+      "row3done": "Privégegevens worden buiten de AI gehouden",
+      "name": "Elpino AI",
+      "role": "AI-assistent",
+      "question": "Ik heb een abonnement gekocht, maar het is nog steeds niet actief",
+      "answer": "Bedankt voor uw geduld. Uw betaling is verwerkt en uw abonnement is nu actief. Als u nog steeds het oude abonnement ziet, vernieuw dan uw dashboard."
+    },
+    "kgraph": {
+      "s0": "Website-sitemap",
+      "s1": "PDF's en documenten",
+      "s2": "Pagina's die u schrijft",
+      "s2hint": "beleid en how-to's",
+      "s3": "Uw verbonden tools",
+      "s3hint": "livegegevens via MCP",
+      "aria": "Uw website, documenten, pagina's en tools voeden allemaal de kennis van Elpino",
+      "hub": "Kennis",
+      "answer": "Antwoorden"
+    },
+    "ticketFlow": {
+      "title": "Betaald, maar het abonnement is nog steeds niet actief",
+      "filed": "Gearchiveerd",
+      "assigned": "Toegewezen",
+      "told": "Klant heeft het verteld",
+      "aria": "Als niemand vrij is, wordt er een ticket geschreven, opgeslagen in de tool van uw team en wordt de klant op de hoogte gesteld",
+      "nobody": "Niemand in het team is momenteel vrij",
+      "ticket": "Ticket",
+      "open": "Open",
+      "draft": "Concept",
+      "high": "Hoog",
+      "billing": "Facturering",
+      "summary": "Samenvatting, wat er is gecontroleerd en wat er als bijlage is aangetroffen",
+      "filedTo": "Gearchiveerd in uw ticketingtool"
     }
   },
   "pricing": {
@@ -1235,7 +1484,10 @@
     "contactSales": "Neem contact op met sales",
     "login": "Inloggen",
     "goToDashboard": "Naar dashboard",
-    "getStarted": "Beginnen"
+    "getStarted": "Beginnen",
+    "offer": {
+      "text": "Start vandaag nog gratis: 100 AI-berichten per maand, geen kaart nodig en binnen een middag live op je eigen site"
+    }
   },
   "footer": {
     "ticker": [

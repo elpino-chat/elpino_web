@@ -209,9 +209,8 @@
       "ctaPrimary": "Začít zdarma",
       "ctaSecondary": "Vyzkoušejte to sami",
       "trust": [
-        "100 bezplatných AI zpráv měsíčně",
-        "Karta není nutná",
-        "Hotovo za jedno odpoledne"
+        "100 bezplatných zpráv AI měsíčně",
+        "Není potřeba žádná karta"
       ],
       "stickers": [
         "Vyřešeno AI",
@@ -227,12 +226,27 @@
       "widget": {
         "name": "Elpino",
         "subtitle": "Odpovídá během sekund",
-        "convo": [
-          "Byl mi účtován upgrade dvakrát?",
-          "Zkontroloval jsem vaši historii plateb",
-          "Bylo vám naúčtováno jen jednou. Druhý pokus se nezdařil a nikdy nebyl zaúčtován."
-        ]
-      }
+        "convo": {
+          "0": "Byl mi upgrade účtován dvakrát?",
+          "2": "Byla vám účtována jednou. Druhý pokus se nezdařil a nikdy nebyl zajat."
+        }
+      },
+      "emailPlaceholder": "Zadejte svůj pracovní e-mail",
+      "emailLabel": "E-mailová adresa",
+      "ctaSignUp": "Spusťte bezplatnou zkušební verzi",
+      "ctaDemo": "Zobrazit ukázku",
+      "stage": {
+        "step0": "Čtení otázky",
+        "step1": "Kontrola záznamu o platbě",
+        "step2": "Čtení zásad pro vrácení peněz",
+        "working": "Elpino funguje..."
+      },
+      "glass": {
+        "customer": "Zákazník",
+        "ai": "Elpino"
+      },
+      "headLead": "Nechte AI odpovědět na opakované otázky,",
+      "headEmphasis": "takže váš tým zvládne ty, na kterých záleží."
     },
     "marquee": {
       "questions": [
@@ -367,6 +381,31 @@
           "tag": "Tikety",
           "title": "Nic se neztratí",
           "desc": "Pokud nikdo není k dispozici, vytvoří se tiket a zákazník je informován."
+        }
+      ],
+      "websiteLabel": "Vaše webové stránky",
+      "websitePlaceholder": "yourcompany.com",
+      "websiteAdded": "Přidáno",
+      "websiteButton": "Přidat webovou stránku",
+      "plugins": "Pluginy",
+      "title3": "Vše, co oddělení podpory potřebuje, ve 3 krocích",
+      "prev": "Předchozí",
+      "next": "Další",
+      "steps": [
+        {
+          "tag": "Krok 1",
+          "title": "Přidejte svůj web",
+          "desc": "Vložte adresu svého webu. To je vše, co Elpino potřebuje, aby se začalo učit vaše podnikání."
+        },
+        {
+          "tag": "Krok 2",
+          "title": "Procházejte své stránky a krmte je",
+          "desc": "Elpino čte vaše stránky a soubory a uchovává podrobnosti o každém zákazníkovi a minulé chaty ve svém vestavěném CRM. Připojte pluginy, jako je Stripe nebo Shopify, abyste udrželi tato data v synchronizaci."
+        },
+        {
+          "tag": "Krok 3",
+          "title": "Přidejte widget chatu během několika minut",
+          "desc": "Vložte jeden úryvek na svůj web nebo webovou aplikaci, ze vstupní stránky do aplikace React, a mluvte s návštěvníky v reálném čase."
         }
       ]
     },
@@ -507,40 +546,250 @@
     },
     "faq": {
       "eyebrow": "Otázky",
-      "titlePrefix": "Co se lidé ptají",
-      "titleHl": "nejdřív.",
+      "titlePrefix": "Věci lidé",
+      "titleHl": "se nejprve zeptejte.",
       "items": [
         {
           "q": "Co je Elpino?",
-          "a": "Platforma podpory zákazníků založená na AI: chatový widget na vašem webu, AI agent, který odpovídá z vašich znalostí a ověřuje skutečné platby, sdílená schránka týmu a tikety, když nikdo není k dispozici."
+          "a": "Platforma zákaznické podpory AI: widget pro chat na webu, agent AI, který odpovídá na základě vašich znalostí a kontroluje skutečné platby, sdílená týmová schránka a vstupenky, když nikdo není volný."
         },
         {
-          "q": "Bude AI vymýšlet věci?",
-          "a": "Odpovídá ze znalostí, které jste schválili, a fáze ověření porovnává návrhy s výsledky nástrojů. Když neví, řekne to a nabídne člověka."
+          "q": "Will the AI make things up?",
+          "a": "It answers from the knowledge you've approved, and a review pass checks drafts against tool results. When it doesn't know, it says so and offers a person."
         },
         {
-          "q": "Co se stane, když nemůže pomoct?",
-          "a": "Nejprve se zeptá zákazníka. Pokud souhlasí, celý tým dostane upozornění na připojení a má 90 sekund na reakci. Pokud se nikdo nepřipojí, vytvoří se tiket a zákazník je informován e-mailem."
+          "q": "What happens when it can't help?",
+          "a": "It asks the customer first. On a yes, every teammate gets a Join alert and has 90 seconds to jump in. If nobody does, a ticket is filed and the customer is emailed."
         },
         {
-          "q": "Jak dlouho trvá nastavení?",
-          "a": "Většina týmů je v provozu do stejného dne: přidejte znalosti, vložte kód widgetu a pozvěte svůj tým."
+          "q": "How long does setup take?",
+          "a": "Most teams are live the same day: add your knowledge, paste the widget snippet and invite your team."
         },
         {
-          "q": "Existuje bezplatný plán?",
-          "a": "Ano: 100 AI zpráv měsíčně, karta není nutná."
+          "q": "Is there a free plan?",
+          "a": "Yes: 100 AI messages a month, no card required."
         },
         {
-          "q": "Funguje to na jiných kanálech?",
-          "a": "Chat na webu už funguje. Omnichannel přichází v listopadu."
+          "q": "Does it work on other channels?",
+          "a": "Website chat is live today. Omnichannel is coming in November."
+        }
+      ],
+      "more": "Nemůžete najít svou odpověď?",
+      "talk": "Promluvte si s námi"
+    },
+    "closing": {
+      "title": "Give your customers the answer before they finish typing.",
+      "subtitle": "Start free, teach it your business, and let it take the repeat questions.",
+      "ctaPrimary": "Začněte zdarma",
+      "ctaSecondary": "Promluvte si s námi"
+    },
+    "tabs": {
+      "more": "Další informace",
+      "widget": {
+        "label": "Elpino AI",
+        "title": "AI, která kontroluje, než odpoví",
+        "body": "Elpino potvrdí, s kým mluví, vyhledá skutečnou platbu nebo objednávku, ponechá soukromé údaje mimo model a teprve poté odpoví.",
+        "p0": "Ověřuje zákazníka předtím, než se dotkne dat účtu",
+        "p1": "Kontroluje platby, plány a objednávky ve vašich připojených nástrojích",
+        "p2": "Předá svému týmu celý příběh, když je potřeba osoba"
+      },
+      "inbox": {
+        "label": "Sdílená doručená pošta",
+        "title": "Jedna schránka pro váš tým a AI",
+        "body": "Jasné vlastnictví, upozornění na připojení a úplný kontext každého vlákna.",
+        "p0": "Podívejte se, co už AI zkontrolovala",
+        "p1": "Připojte se ke konverzaci jedním kliknutím",
+        "p2": "Umístění, zařízení a historie návštěvníka"
+      },
+      "kb": {
+        "label": "Znalosti",
+        "title": "Naučte se to ze všeho, co máte",
+        "body": "Procházejte svůj web, nahrávejte soubory, pište stránky. Veřejné a soukromé přepínače rozhodují o tom, kdo co uvidí.",
+        "p0": "Procházejte svůj web",
+        "p1": "Nahrajte dokumenty a poznámky",
+        "p2": "Udržujte soukromé stránky mimo dosah návštěvníků"
+      },
+      "tickets": {
+        "label": "vstupenky",
+        "title": "Nic nespadne",
+        "body": "Pokud není nikdo volný, je podán tiket a zákazník je informován.",
+        "p0": "Zařazeno do Asana nebo Trello",
+        "p1": "Souhrn putuje s lístkem",
+        "p2": "Zákazník se vždy ozve"
+      },
+      "aria": "Oblasti produktů"
+    },
+    "teams": {
+      "verify": {
+        "claim": "Jsem Alex Morgan. Ukažte mi faktury.",
+        "ok": "Děkuji, Alexi. Jste přihlášeni, takže zde jsou vaše faktury.",
+        "ask": "Nemohu sdílet podrobnosti účtu s hostem. Přihlaste se na stránce a já zkontroluji, zda jste to opravdu vy.",
+        "verified": "Identita ověřena",
+        "locked": "Host · účet uzamčen",
+        "site": "Přihlášeni na vašem webu",
+        "token": "Podepsaný token přijat · alex@example.com",
+        "invoice": "Faktura č. 1042",
+        "plan": "Růstový plán · placený"
+      },
+      "plugins": {
+        "live": "Je připojeno 9 pluginů"
+      },
+      "contacts": {
+        "label": "Kontakty",
+        "name": "Jméno",
+        "contact": "E-mail nebo telefon\nStav",
+        "status": "Stav",
+        "new": "Nový zájemce",
+        "ask": "Jaký je váš e-mail, pro případ, že bychom byli odpojeni?",
+        "agent": "AI agent · Právě teď",
+        "skip": "Přeskočit",
+        "thanks": "Díky, Mayo! Je ještě něco, s čím vám mohu pomoci?"
+      },
+      "eyebrow": "Místo pro každý tým",
+      "title": "Poskytujte každému týmu skutečnou produktivitu",
+      "cards": [
+        {
+          "tag": "Ověření identity",
+          "title": "Nikdo se nedostane dovnitř pouhým nárokováním jména",
+          "desc": "Jméno nebo e-mail zadaný do chatu nic nedokazuje. Elpino otevírá údaje o soukromém účtu pouze návštěvníkům, na které se přihlásil váš vlastní web a za které se zaručil, takže host, který se vydává za někoho jiného, ​​nedostane nic.",
+          "note": "Při vyhledávání plateb a objednávek se používá pouze ověřený e-mail z vašeho přihlášení a odhlášením se chat okamžitě ukončí.",
+          "points": [
+            "Váš web přihlásí uživatele a Elpino důvěřuje pouze tomu",
+            "Hosté mohou chatovat, ale soukromé nástroje zůstávají uzamčeny",
+            "Odhlášením se relace okamžitě ukončí"
+          ]
+        },
+        {
+          "tag": "AI odpovídá",
+          "title": "Podívejte se, co přesně AI odpovídá",
+          "desc": "Každá odpověď ukazuje, jak funguje: stránky vašich znalostí, ze kterých čerpala, a platba nebo objednávka, kterou vyhledala ve vašich připojených nástrojích. Nic, co říká AI, není černá skříňka.",
+          "note": "Sledujte konverzaci živě z doručené pošty a zapojte se, když je potřeba osoba. Váš tým dostane celý příběh, takže nikdo nepožaduje, aby se zákazník opakoval.",
+          "points": [
+            "Podívejte se na stránky a nástroje za každou odpovědí",
+            "Přečtěte si každou odpověď tak, jak ji vidí zákazník",
+            "Připojte se jedním kliknutím s úplným kontextem"
+          ]
+        },
+        {
+          "tag": "Analytics",
+          "title": "Podívejte se, kdo vás navštěvuje a co dělá",
+          "desc": "Webová analýza se nachází hned vedle vaší doručené pošty. Sledujte návštěvníky, zobrazení stránek, relace, čas na webu a míru okamžitého opuštění za posledních 7 dní nebo jakékoli období a porovnejte je s předchozím.",
+          "note": "Skuteční návštěvníci se počítají mimo roboty, takže čísla popisují lidi. Filtrujte podle domény a uložte předvolby pro zobrazení, která nejčastěji kontrolujete.",
+          "points": [
+            "Návštěvníci, zobrazení stránek, relace a míra okamžitého opuštění",
+            "Porovnejte s předchozím obdobím",
+            "Filtrujte podle domény a uložte si svá oblíbená zobrazení"
+          ]
+        },
+        {
+          "tag": "Kontakty",
+          "title": "Přeměňte chaty na kontakty",
+          "desc": "Každý návštěvník, který sdílí e-mail nebo telefonní číslo, se dostane do vašeho vestavěného CRM s celou jeho historií konverzace připojenou.",
+          "note": "Kdykoli s někým mluvíte, vidíte, kdo to je a na co se předtím ptal, takže každá odpověď je osobní.",
+          "points": [
+            "Potenciální zákazníci zachyceni přímo v chatu",
+            "Historie a plán vedle každého kontaktu",
+            "Synchronizováno s CRM, které již používáte"
+          ]
+        },
+        {
+          "tag": "Pluginy",
+          "title": "Připojte se k nástrojům, které již používáte",
+          "desc": "Propojte platby, obchody, CRM a nástroje pro prodej vstupenek během několika minut, takže každá odpověď bude pocházet z živých dat namísto odhadu.",
+          "note": "Elpino čte a jedná prostřednictvím pluginů, které zapnete, a pouze s oprávněními, která mu udělíte.",
+          "points": [
+            "Platby, objednávky a plány, vyhledané živě",
+            "Vstupenky podané v Asaně nebo Trello",
+            "Plugin kdykoli vypněte"
+          ]
         }
       ]
     },
-    "closing": {
-      "title": "Dejte zákazníkům odpověď dřív, než dopíší.",
-      "subtitle": "Začněte zdarma, naučte ho o svém podnikání a nechte ho zvládat opakující se otázky.",
-      "ctaPrimary": "Začít zdarma",
-      "ctaSecondary": "Kontaktujte nás"
+    "autopilot": {
+      "save": "Uložit",
+      "close": "Přibližně to samé",
+      "aYearVs": "za rok ve srovnání s",
+      "cheapest": "nejlevnější ze tří",
+      "each": "Ukládání proti každému",
+      "youSave": "Ušetříte vs",
+      "yr": "ročně",
+      "same": "přibližně stejně",
+      "seats": "Uživatelé",
+      "conversations": "konverzace AI / měsíc",
+      "p1": "Neomezený počet míst v každém plánu, dokonce i zdarma, takže můžete rozvíjet svůj tým, aniž byste zvyšovali svůj účet za software.",
+      "p2": "Žádný závazek. Zůstaňte u plánu 10 $ a dobíjejte kredit AI pouze tehdy, když ho potřebujete, maximálně 0,03 $ za konverzaci. Dobití se přenášejí dál a nikdy nedojde k přebytečnému účtu.",
+      "bills": "Jednoměsíční vyúčtování, rozepsané na jednotlivé položky",
+      "seatsUnit": "míst",
+      "convUnit": "konverzace AI",
+      "perMonth": "za měsíc",
+      "perYearLabel": "za rok",
+      "compareWith": "Porovnejte s",
+      "footnote": "Veřejné ceníkové ceny v USD, zkontrolováno 1. října 2026, je-li uvedeno roční vyúčtování, pro stejný počet míst a konverzací AI u každého produktu. Nezahrnuje daně, doplňky a podnikové slevy. Interkom a Zendesk účtují pouze za konverzace, které AI řeší; Elpino si účtuje poplatky za každou konverzaci s umělou inteligencí, kterou zvládne, ať už vyřešenou nebo ne. Toto srovnání předpokládá, že každá konverzace s umělou inteligencí je vyřešena, což je nejvíce, které by tito dva účtovali. Elpino: Startovací plán s roční fakturací (10 $ měsíčně, 7 $ kreditu AI včetně), neomezená místa a kredit AI navýšený až na 0,03 $ za konverzaci.",
+      "cta": "Viz ceník"
+    },
+    "toolsLine": {
+      "title": "Connects to the payment, store, CRM and ticketing tools you already use, in minutes, not sprints."
+    },
+    "saved": {
+      "title": "Give your team its hours back.",
+      "p1": "Elpino answers the repeat questions and looks up payments and orders itself, so your people keep the conversations that need them.",
+      "p2": "Move the sliders to your own numbers. It is an estimate, not a promise.",
+      "save": "Uložit",
+      "hours": "hodin",
+      "per": "of your team's time, given back",
+      "conversations": "Konverzace/měs",
+      "share": "Answered without a person",
+      "minutes": "minut každý",
+      "grid": "Your team's support time, one square",
+      "hr": "hod\nZbývá",
+      "left": "hodin",
+      "hrs": "hod",
+      "today": "Váš dnešní tým",
+      "givenBack": "Vráceno zpět od Elpina"
+    },
+    "platform": {
+      "title": "AI, která kontroluje způsob, jakým by to dělal váš nejlepší agent",
+      "subtitle": "Ověří, s kým mluví, vyhledá skutečnou platbu nebo objednávku, ponechá soukromé údaje mimo model a poté odpoví. Když je člověk potřeba, váš tým dostane vše, co našel."
+    },
+    "widgetMock": {
+      "row0": "Čtení vaší zprávy",
+      "row0done": "Dostal jsem vaši zprávu",
+      "row1": "Ověřování, že jste to vy",
+      "row1done": "Jste ověřeni",
+      "row2": "Kontrola platby a plánu",
+      "row2done": "Platba a plán zkontrolovány",
+      "row3": "Ochrana vašich soukromých údajů",
+      "row3done": "Soukromé údaje uchovávané mimo AI",
+      "name": "Elpino AI",
+      "role": "AI Assistant",
+      "question": "Zakoupil jsem si plán, ale stále není aktivní",
+      "answer": "Děkujeme za trpělivost. Vaše platba proběhla a váš plán je nyní aktivní. Pokud stále vidíte starý plán, obnovte řídicí panel."
+    },
+    "kgraph": {
+      "s0": "Mapa webu",
+      "s1": "PDF a dokumenty",
+      "s2": "Stránky, které píšete",
+      "s2hint": "zásady a postupy",
+      "s3": "Vaše připojené nástroje",
+      "s3hint": "živá data přes MCP",
+      "aria": "Vaše webové stránky, dokumenty, stránky a nástroje, to vše je zdrojem znalostí společnosti Elpino",
+      "hub": "Znalosti",
+      "answer": "Odpovědi"
+    },
+    "ticketFlow": {
+      "title": "Zaplaceno, ale plán stále není aktivní",
+      "filed": "Soubor",
+      "assigned": "Přiřazeno",
+      "told": "Zákazník řekl",
+      "aria": "Když nikdo není volný, sepíše se lístek, uloží se do nástroje vašeho týmu a zákazník je informován",
+      "nobody": "Nikdo v týmu není právě teď volný\nVstupenka",
+      "ticket": "Tiket",
+      "open": "Otevřít",
+      "draft": "Koncept",
+      "high": "Vysoká",
+      "billing": "Fakturace",
+      "summary": "Souhrn, co bylo zkontrolováno a co bylo nalezeno v příloze",
+      "filedTo": "Zařazeno do vašeho nástroje pro prodej vstupenek"
     }
   },
   "pricing": {
@@ -1235,7 +1484,10 @@
     "contactSales": "Kontaktovat obchod",
     "login": "Přihlásit se",
     "goToDashboard": "Přejít na panel",
-    "getStarted": "Začít"
+    "getStarted": "Začít",
+    "offer": {
+      "text": "Začněte zdarma ještě dnes: 100 zpráv AI měsíčně, nepotřebujete žádnou kartu a odpoledne můžete být živí na svém vlastním webu"
+    }
   },
   "privacyPage": {
     "title": "Zásady ochrany osobních údajů",

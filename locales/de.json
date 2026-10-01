@@ -210,8 +210,7 @@
       "ctaSecondary": "Selbst ausprobieren",
       "trust": [
         "100 kostenlose KI-Nachrichten pro Monat",
-        "Keine Kreditkarte nötig",
-        "In einem Nachmittag startklar"
+        "Keine Karte erforderlich"
       ],
       "stickers": [
         "Von KI gelöst",
@@ -227,12 +226,27 @@
       "widget": {
         "name": "Elpino",
         "subtitle": "Antwortet in Sekunden",
-        "convo": [
-          "Wurde ich für mein Upgrade doppelt belastet?",
-          "Ihre Zahlungshistorie wurde geprüft",
-          "Sie wurden nur einmal belastet. Der zweite Versuch ist fehlgeschlagen und wurde nie abgebucht."
-        ]
-      }
+        "convo": {
+          "0": "Wurde mir mein Upgrade doppelt in Rechnung gestellt?",
+          "2": "Ihnen wurde einmal etwas in Rechnung gestellt. Der zweite Versuch scheiterte und wurde nie gefangen genommen."
+        }
+      },
+      "emailPlaceholder": "Geben Sie Ihre geschäftliche E-Mail-Adresse ein",
+      "emailLabel": "E-Mail-Adresse",
+      "ctaSignUp": "Kostenlose Testversion starten",
+      "ctaDemo": "Demo ansehen",
+      "stage": {
+        "step0": "Ich lese die Frage",
+        "step1": "Überprüfung Ihrer Zahlungsaufzeichnung",
+        "step2": "Lesen Sie Ihre Rückerstattungsrichtlinie",
+        "working": "Elpino arbeitet…"
+      },
+      "glass": {
+        "customer": "Kunde",
+        "ai": "Elpino"
+      },
+      "headLead": "Lassen Sie die KI die wiederholten Fragen beantworten,",
+      "headEmphasis": "damit sich Ihr Team um die wichtigen Dinge kümmert."
     },
     "marquee": {
       "questions": [
@@ -367,6 +381,31 @@
           "tag": "Tickets",
           "title": "Nichts geht unter",
           "desc": "Ist niemand verfügbar, wird ein Ticket erstellt und der Kunde informiert."
+        }
+      ],
+      "websiteLabel": "Ihre Website",
+      "websitePlaceholder": "yourcompany.com",
+      "websiteAdded": "Hinzugefügt",
+      "websiteButton": "Website hinzufügen",
+      "plugins": "Plugins",
+      "title3": "Alles, was ein Support Desk braucht, in 3 Schritten",
+      "prev": "Zurück",
+      "next": "Weiter",
+      "steps": [
+        {
+          "tag": "Schritt 1",
+          "title": "Fügen Sie Ihre Website hinzu",
+          "desc": "Fügen Sie Ihre Website-Adresse ein. Das ist alles, was Elpino braucht, um Ihr Unternehmen kennenzulernen."
+        },
+        {
+          "tag": "Schritt 2",
+          "title": "Crawlen Sie Ihre Website und füttern Sie sie",
+          "desc": "Elpino liest Ihre Seiten und Dateien und speichert die Daten und vergangenen Chats jedes Kunden in seinem integrierten CRM. Verbinden Sie Plugins wie Stripe oder Shopify, um diese Daten synchron zu halten."
+        },
+        {
+          "tag": "Schritt 3",
+          "title": "Fügen Sie das Chat-Widget in wenigen Minuten hinzu",
+          "desc": "Fügen Sie ein Snippet in Ihre Website oder Web-App ein, von einer Landingpage bis zu einer React-App, und sprechen Sie in Echtzeit mit Besuchern."
         }
       ]
     },
@@ -507,40 +546,250 @@
     },
     "faq": {
       "eyebrow": "Fragen",
-      "titlePrefix": "Was Leute",
-      "titleHl": "zuerst fragen.",
+      "titlePrefix": "Dinge Leute",
+      "titleHl": "erst fragen.",
       "items": [
         {
           "q": "Was ist Elpino?",
-          "a": "Eine KI-Kundensupport-Plattform: ein Website-Chat-Widget, ein KI-Agent, der aus Ihrem Wissen antwortet und echte Zahlungen prüft, ein gemeinsamer Team-Posteingang und Tickets, wenn niemand verfügbar ist."
+          "a": "Eine KI-Kundensupportplattform: ein Website-Chat-Widget, ein KI-Agent, der mit Ihrem Wissen antwortet und echte Zahlungen prüft, ein gemeinsamer Team-Posteingang und Tickets, wenn niemand frei ist."
         },
         {
-          "q": "Erfindet die KI Dinge?",
-          "a": "Sie antwortet aus dem von Ihnen freigegebenen Wissen, und ein Prüfschritt gleicht Entwürfe mit Tool-Ergebnissen ab. Weiß sie es nicht, sagt sie das und bietet einen Menschen an."
+          "q": "Wird die KI die Dinge erfinden?",
+          "a": "Es antwortet auf der Grundlage der von Ihnen genehmigten Daten, und bei einem Überprüfungsdurchlauf werden Entwürfe anhand der Toolergebnisse überprüft. Wenn es es nicht weiß, sagt es es und bietet es einer Person an."
         },
         {
-          "q": "Was passiert, wenn sie nicht helfen kann?",
-          "a": "Sie fragt zuerst den Kunden. Bei Ja bekommt jedes Teammitglied eine Beitreten-Benachrichtigung und hat 90 Sekunden, um einzuspringen. Tut das niemand, wird ein Ticket erstellt und der Kunde per E-Mail informiert."
+          "q": "Was passiert, wenn es nicht helfen kann?",
+          "a": "Es fragt zuerst den Kunden. Bei „Ja“ erhält jeder Teamkollege eine Beitrittsbenachrichtigung und hat 90 Sekunden Zeit, einzuspringen. Wenn niemand dies tut, wird ein Ticket eingereicht und der Kunde wird per E-Mail benachrichtigt."
         },
         {
           "q": "Wie lange dauert die Einrichtung?",
-          "a": "Die meisten Teams sind noch am selben Tag live: Wissen hinzufügen, Widget-Snippet einfügen und Ihr Team einladen."
+          "a": "Die meisten Teams sind noch am selben Tag live: Geben Sie Ihr Wissen ein, fügen Sie das Widget-Snippet ein und laden Sie Ihr Team ein."
         },
         {
           "q": "Gibt es einen kostenlosen Plan?",
-          "a": "Ja: 100 KI-Nachrichten pro Monat, keine Kreditkarte nötig."
+          "a": "Ja: 100 AI-Nachrichten pro Monat, keine Karte erforderlich."
         },
         {
           "q": "Funktioniert es auf anderen Kanälen?",
-          "a": "Website-Chat ist bereits live. Omnichannel kommt im November."
+          "a": "Der Website-Chat ist heute live. Omnichannel kommt im November."
+        }
+      ],
+      "more": "Können Sie Ihre Antwort nicht finden?",
+      "talk": "Sprechen Sie mit uns"
+    },
+    "closing": {
+      "title": "Geben Sie Ihren Kunden die Antwort, bevor sie mit der Eingabe fertig sind.",
+      "subtitle": "Fangen Sie kostenlos an, bringen Sie ihm Ihr Geschäft bei und lassen Sie ihn die Wiederholungsfragen beantworten.",
+      "ctaPrimary": "Kostenlos starten",
+      "ctaSecondary": "Sprechen Sie mit uns"
+    },
+    "tabs": {
+      "more": "Erfahren Sie mehr",
+      "widget": {
+        "label": "Elpino KI",
+        "title": "Eine KI, die prüft, bevor sie antwortet",
+        "body": "Elpino bestätigt, mit wem es spricht, sucht nach der tatsächlichen Zahlung oder Bestellung, hält private Daten aus dem Modell heraus und antwortet erst dann.",
+        "p0": "Verifiziert den Kunden, bevor er Kontodaten berührt",
+        "p1": "Überprüft Zahlungen, Pläne und Bestellungen in Ihren verbundenen Tools",
+        "p2": "Übergibt Ihrem Team die vollständige Geschichte, wenn eine Person benötigt wird"
+      },
+      "inbox": {
+        "label": "Geteilter Posteingang",
+        "title": "Ein Posteingang für Ihr Team und die KI",
+        "body": "Klare Eigentümerschaft, Beitrittsbenachrichtigungen und der vollständige Kontext zu jedem Thread.",
+        "p0": "Sehen Sie, was die KI bereits überprüft hat",
+        "p1": "Nehmen Sie mit einem Klick an einer Unterhaltung teil",
+        "p2": "Standort, Gerät und Verlauf des Besuchers daneben"
+      },
+      "kb": {
+        "label": "Wissen",
+        "title": "Lehren Sie es mit allem, was Sie haben",
+        "body": "Crawlen Sie Ihre Website, laden Sie Dateien hoch, schreiben Sie Seiten. Öffentliche und private Schalter entscheiden darüber, wer was sieht.",
+        "p0": "Crawlen Sie Ihre Website",
+        "p1": "Dokumente und Notizen hochladen",
+        "p2": "Halten Sie private Seiten von Besuchern fern"
+      },
+      "tickets": {
+        "label": "Tickets",
+        "title": "Nichts wird gelöscht",
+        "body": "Wenn niemand frei ist, wird ein Ticket erstellt und dem Kunden mitgeteilt.",
+        "p0": "Abgelegt bei Asana oder Trello",
+        "p1": "Die Zusammenfassung reist mit dem Ticket",
+        "p2": "Der Kunde hört immer eine Antwort"
+      },
+      "aria": "Produktbereiche"
+    },
+    "teams": {
+      "verify": {
+        "claim": "Ich bin Alex Morgan. Zeigen Sie mir meine Rechnungen.",
+        "ok": "Danke, Alex. Sie sind angemeldet. Hier sind Ihre Rechnungen.",
+        "ask": "Ich kann keine Kontodaten mit einem Gast teilen. Melden Sie sich auf der Website an und ich prüfe, ob Sie es wirklich sind.",
+        "verified": "Identität bestätigt",
+        "locked": "Gast · Konto gesperrt",
+        "site": "Auf Ihrer Website angemeldet",
+        "token": "Signiertes Token erhalten · alex@example.com",
+        "invoice": "Rechnung Nr. 1042",
+        "plan": "Wachstumsplan · bezahlt"
+      },
+      "plugins": {
+        "live": "9 Plugins verbunden"
+      },
+      "contacts": {
+        "label": "Kontakte",
+        "name": "Name",
+        "contact": "E-Mail oder Telefon",
+        "status": "Status",
+        "new": "Neuer Leiter",
+        "ask": "Wie lautet Ihre E-Mail-Adresse, für den Fall, dass die Verbindung unterbrochen wird?",
+        "agent": "KI-Agent · Gerade eben",
+        "skip": "Überspringen",
+        "thanks": "Danke, Maya! Gibt es sonst noch etwas, bei dem ich Ihnen helfen kann?"
+      },
+      "eyebrow": "Ein Platz für jedes Team",
+      "title": "Sorgen Sie für echte Produktivität für jedes Team",
+      "cards": [
+        {
+          "tag": "Identitätsüberprüfung",
+          "title": "Niemand kommt rein, indem er nur einen Namen beansprucht",
+          "desc": "Ein in einen Chat eingegebener Name oder eine E-Mail beweist nichts. Elpino öffnet private Kontodaten nur für Besucher, die sich auf Ihrer eigenen Website angemeldet und für die Sie bürgen, sodass ein Gast, der vorgibt, jemand anderes zu sein, nichts erhält.",
+          "note": "Bei der Zahlungs- und Bestellsuche wird nur die verifizierte E-Mail-Adresse aus Ihrem Login verwendet, und durch Abmelden wird die Chat-Sitzung sofort beendet.",
+          "points": [
+            "Ihre Website meldet den Benutzer an und Elpino vertraut nur diesem",
+            "Gäste können chatten, private Tools bleiben jedoch gesperrt",
+            "Durch Abmelden wird die Sitzung sofort beendet"
+          ]
+        },
+        {
+          "tag": "AI antwortet",
+          "title": "Sehen Sie genau, was die KI antwortet",
+          "desc": "Jede Antwort zeigt, dass sie funktioniert: die Seiten Ihres Wissens, auf die sie zurückgegriffen hat, und die Zahlung oder Bestellung, die sie in Ihren verbundenen Tools nachgeschlagen hat. Nichts, was die KI sagt, ist eine Blackbox.",
+          "note": "Verfolgen Sie das Gespräch live aus dem Posteingang und greifen Sie ein, wenn jemand gebraucht wird. Ihr Team erfährt die ganze Geschichte, sodass niemand den Kunden auffordert, sich zu wiederholen.",
+          "points": [
+            "Sehen Sie sich die Seiten und Tools hinter jeder Antwort an",
+            "Lesen Sie jede Antwort so, wie der Kunde sie sieht",
+            "Treten Sie mit einem Klick dem vollständigen Kontext bei"
+          ]
+        },
+        {
+          "tag": "Analysen",
+          "title": "Sehen Sie, wer uns besucht und was sie tun",
+          "desc": "Web Analytics befindet sich direkt neben Ihrem Posteingang. Verfolgen Sie Besucher, Seitenaufrufe, Sitzungen, Verweildauer auf der Website und Absprungrate für die letzten 7 Tage oder einen beliebigen Zeitraum und vergleichen Sie sie mit der vorherigen.",
+          "note": "Echte Besucher werden außer Bots gezählt, daher beschreiben die Zahlen Personen. Filtern Sie nach Domäne und speichern Sie Voreinstellungen für die Ansichten, die Sie am häufigsten überprüfen.",
+          "points": [
+            "Besucher, Seitenaufrufe, Sitzungen und Absprungrate",
+            "Vergleichen Sie mit der vorherigen Periode",
+            "Filtern Sie nach Domain und speichern Sie Ihre Lieblingsansichten"
+          ]
+        },
+        {
+          "tag": "Kontakte",
+          "title": "Verwandeln Sie Chats in Kontakte",
+          "desc": "Jeder Besucher, der eine E-Mail-Adresse oder Telefonnummer teilt, landet in Ihrem integrierten CRM mit seinem gesamten Gesprächsverlauf im Anhang.",
+          "note": "Immer wenn Sie mit jemandem sprechen, sehen Sie, wer er ist und was er zuvor gefragt hat, sodass sich jede Antwort persönlich anfühlt.",
+          "points": [
+            "Leads direkt im Chat erfasst",
+            "Geschichte und Plan neben jedem Kontakt",
+            "Synchronisiert mit dem CRM, das Sie bereits verwenden"
+          ]
+        },
+        {
+          "tag": "Plugins",
+          "title": "Nutzen Sie die Tools, die Sie bereits verwenden",
+          "desc": "Verbinden Sie Zahlungen, Geschäfte, CRMs und Ticketing-Tools in wenigen Minuten, sodass jede Antwort aus Live-Daten und nicht aus Vermutungen stammt.",
+          "note": "Elpino liest und handelt über die Plugins, die Sie aktivieren, und nur mit den Berechtigungen, die Sie ihm erteilen.",
+          "points": [
+            "Zahlungen, Bestellungen und Pläne, live abrufbar",
+            "Tickets in Asana oder Trello eingereicht",
+            "Schalten Sie ein Plugin jederzeit aus"
+          ]
         }
       ]
     },
-    "closing": {
-      "title": "Geben Sie Ihren Kunden die Antwort, bevor sie fertig getippt haben.",
-      "subtitle": "Kostenlos starten, ihm Ihr Geschäft beibringen, und die Wiederholungsfragen abgeben.",
-      "ctaPrimary": "Kostenlos starten",
-      "ctaSecondary": "Sprechen Sie mit uns"
+    "autopilot": {
+      "save": "Speichern",
+      "close": "Ungefähr das Gleiche",
+      "aYearVs": "pro Jahr, verglichen mit",
+      "cheapest": "das günstigste der drei",
+      "each": "Gegeneinander sparen",
+      "youSave": "Sie sparen vs",
+      "yr": "pro Jahr",
+      "same": "ungefähr gleich",
+      "seats": "Nutzer",
+      "conversations": "KI-Gespräche / Mo",
+      "p1": "Unbegrenzte Plätze für jeden Plan, auch kostenlos, damit Sie Ihr Team vergrößern können, ohne Ihre Softwarerechnung zu erhöhen.",
+      "p2": "Keine Verpflichtung. Bleiben Sie beim 10-Dollar-Plan und laden Sie AI-Guthaben nur dann auf, wenn Sie es benötigen, höchstens 0,03 Dollar pro Gespräch. Aufladungen werden vorgetragen und es wird nie eine Überschreitungsrechnung berechnet.",
+      "bills": "Monatsrechnung, aufgeschlüsselt",
+      "seatsUnit": "Sitzplätze",
+      "convUnit": "KI-Gespräche",
+      "perMonth": "Pro Monat",
+      "perYearLabel": "Pro Jahr",
+      "compareWith": "Vergleiche mit",
+      "footnote": "Öffentliche Listenpreise in USD, überprüft am 1. Oktober 2026, jährliche Abrechnung, sofern angezeigt, für die gleiche Anzahl an Sitzplätzen und KI-Gesprächen für jedes Produkt. Ausgenommen sind Steuern, Zuschläge und Unternehmensrabatte. Intercom und Zendesk erheben nur Gebühren für Gespräche, die von der KI geführt werden. Elpino berechnet für jede KI-Konversation, die es verarbeitet, ob gelöst oder nicht. Bei diesem Vergleich wird davon ausgegangen, dass jede KI-Konversation gelöst wird, was den Höchstbetrag darstellt, den die beiden in Rechnung stellen würden. Elpino: Starter-Plan mit jährlicher Abrechnung (10 $ pro Monat, 7 $ AI-Guthaben inklusive), unbegrenzten Sitzplätzen und AI-Guthaben, aufgestockt auf bis zu 0,03 $ pro Gespräch.",
+      "cta": "Siehe Preise"
+    },
+    "toolsLine": {
+      "title": "Stellt in wenigen Minuten und nicht in Sprints eine Verbindung zu den Zahlungs-, Shop-, CRM- und Ticketing-Tools her, die Sie bereits verwenden."
+    },
+    "saved": {
+      "title": "Geben Sie Ihrem Team seine Stunden zurück.",
+      "p1": "Elpino beantwortet die wiederkehrenden Fragen und sucht selbst nach Zahlungen und Bestellungen, damit Ihre Mitarbeiter die Gespräche führen, die sie benötigen.",
+      "p2": "Bewegen Sie die Schieberegler auf Ihre eigenen Zahlen. Es handelt sich um eine Schätzung, nicht um ein Versprechen.",
+      "save": "Speichern",
+      "hours": "Std.",
+      "per": "der Zeit Ihres Teams zurückgegeben",
+      "conversations": "Gespräche/Mo",
+      "share": "Ohne Person beantwortet",
+      "minutes": "Jeweils Minuten",
+      "grid": "Die Supportzeit Ihres Teams, ein Feld",
+      "hr": "Std",
+      "left": "Stunden übrig",
+      "hrs": "Std",
+      "today": "Ihr Team heute",
+      "givenBack": "Von Elpino zurückgegeben"
+    },
+    "platform": {
+      "title": "KI, die prüft, wie Ihr bester Agent es tun würde",
+      "subtitle": "Es überprüft, mit wem es spricht, prüft die tatsächliche Zahlung oder Bestellung, hält private Daten aus dem Modell fern und antwortet dann. Wenn eine Person gebraucht wird, bekommt Ihr Team alles, was es findet."
+    },
+    "widgetMock": {
+      "row0": "Ich lese Ihre Nachricht",
+      "row0done": "Habe deine Nachricht erhalten",
+      "row1": "Bestätigung Ihrer Identität",
+      "row1done": "Sie sind verifiziert",
+      "row2": "Überprüfung Ihrer Zahlung und Ihres Plans",
+      "row2done": "Zahlung und Plan überprüft",
+      "row3": "Schutz Ihrer privaten Daten",
+      "row3done": "Private Daten werden von der KI ferngehalten",
+      "name": "Elpino KI",
+      "role": "KI-Assistent",
+      "question": "Ich habe einen Plan gekauft, aber er ist immer noch nicht aktiv",
+      "answer": "Danke für deine Geduld. Ihre Zahlung wurde durchgeführt und Ihr Plan ist jetzt aktiv. Wenn Sie immer noch den alten Plan sehen, aktualisieren Sie Ihr Dashboard."
+    },
+    "kgraph": {
+      "s0": "Website-Sitemap",
+      "s1": "PDFs und Dokumente",
+      "s2": "Seiten, die du schreibst",
+      "s2hint": "Richtlinien und Anleitungen",
+      "s3": "Ihre vernetzten Werkzeuge",
+      "s3hint": "Live-Daten über MCP",
+      "aria": "Ihre Website, Dokumente, Seiten und Tools fließen in Elpinos Wissen ein",
+      "hub": "Wissen",
+      "answer": "Antworten"
+    },
+    "ticketFlow": {
+      "title": "Bezahlt, aber der Plan ist immer noch nicht aktiv",
+      "filed": "Abgelegt",
+      "assigned": "Zugewiesen",
+      "told": "Der Kunde hat es erzählt",
+      "aria": "Wenn niemand frei ist, wird ein Ticket erstellt, im Tool Ihres Teams abgelegt und dem Kunden mitgeteilt",
+      "nobody": "Im Moment ist niemand im Team frei",
+      "ticket": "Ticket",
+      "open": "Offen",
+      "draft": "Entwurf",
+      "high": "Hoch",
+      "billing": "Abrechnung",
+      "summary": "Zusammenfassung, was überprüft wurde und was gefunden wurde, beigefügt",
+      "filedTo": "Abgelegt in Ihrem Ticketing-Tool"
     }
   },
   "pricing": {
@@ -1235,7 +1484,10 @@
     "contactSales": "Vertrieb kontaktieren",
     "login": "Anmelden",
     "goToDashboard": "Zum Dashboard",
-    "getStarted": "Los geht's"
+    "getStarted": "Los geht's",
+    "offer": {
+      "text": "Starten Sie noch heute kostenlos: 100 KI-Nachrichten pro Monat, keine Karte erforderlich, und Sie können an einem Nachmittag live auf Ihrer eigenen Website sein"
+    }
   },
   "privacyPage": {
     "title": "Datenschutzrichtlinie",

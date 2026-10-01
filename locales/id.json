@@ -209,9 +209,8 @@
       "ctaPrimary": "Mulai gratis",
       "ctaSecondary": "Coba sendiri",
       "trust": [
-        "100 pesan AI gratis per bulan",
-        "Tanpa kartu diperlukan",
-        "Siap dalam satu sore"
+        "100 pesan AI gratis sebulan",
+        "Tidak diperlukan kartu"
       ],
       "stickers": [
         "Diselesaikan oleh AI",
@@ -227,12 +226,27 @@
       "widget": {
         "name": "Elpino",
         "subtitle": "Menjawab dalam hitungan detik",
-        "convo": [
-          "Apakah saya ditagih dua kali untuk upgrade saya?",
-          "Saya memeriksa riwayat pembayaran Anda",
-          "Anda hanya ditagih sekali. Percobaan kedua gagal dan tidak pernah berhasil ditagih."
-        ]
-      }
+        "convo": {
+          "0": "Apakah saya dikenakan biaya dua kali untuk peningkatan versi saya?",
+          "2": "Anda ditagih satu kali. Upaya kedua gagal dan tidak pernah ditangkap."
+        }
+      },
+      "emailPlaceholder": "Masukkan email kantor Anda",
+      "emailLabel": "Alamat email",
+      "ctaSignUp": "Mulai uji coba gratis",
+      "ctaDemo": "Lihat demo",
+      "stage": {
+        "step0": "Membaca pertanyaan",
+        "step1": "Memeriksa catatan pembayaran Anda",
+        "step2": "Membaca kebijakan pengembalian dana Anda",
+        "working": "Elpino sedang bekerja…"
+      },
+      "glass": {
+        "customer": "Pelanggan",
+        "ai": "Elpino"
+      },
+      "headLead": "Biarkan AI menjawab pertanyaan yang berulang,",
+      "headEmphasis": "sehingga tim Anda menangani hal-hal yang penting."
     },
     "marquee": {
       "questions": [
@@ -367,6 +381,31 @@
           "tag": "Tiket",
           "title": "Tidak ada yang terlewat",
           "desc": "Jika tidak ada yang tersedia, tiket dibuat dan pelanggan diberi tahu."
+        }
+      ],
+      "websiteLabel": "Situs web Anda",
+      "websitePlaceholder": "perusahaan Anda.com",
+      "websiteAdded": "Ditambahkan",
+      "websiteButton": "Tambahkan situs web",
+      "plugins": "Plugin",
+      "title3": "Semua yang dibutuhkan meja dukungan, dalam 3 langkah",
+      "prev": "Sebelumnya",
+      "next": "Selanjutnya",
+      "steps": [
+        {
+          "tag": "Langkah 1",
+          "title": "Tambahkan situs web Anda",
+          "desc": "Tempelkan alamat situs Anda. Hanya itu yang dibutuhkan Elpino untuk mulai mempelajari bisnis Anda."
+        },
+        {
+          "tag": "Langkah 2",
+          "title": "Merayapi situs Anda dan memberinya makan",
+          "desc": "Elpino membaca halaman dan file Anda, dan menyimpan detail setiap pelanggan dan obrolan sebelumnya di CRM bawaannya. Hubungkan plugin seperti Stripe atau Shopify untuk menjaga data tetap sinkron."
+        },
+        {
+          "tag": "Langkah 3",
+          "title": "Tambahkan widget obrolan dalam hitungan menit",
+          "desc": "Masukkan satu cuplikan ke situs web atau aplikasi web Anda, dari halaman arahan ke aplikasi React, dan bicaralah dengan pengunjung secara real-time."
         }
       ]
     },
@@ -507,40 +546,250 @@
     },
     "faq": {
       "eyebrow": "Pertanyaan",
-      "titlePrefix": "Yang paling sering",
-      "titleHl": "ditanyakan.",
+      "titlePrefix": "Hal-hal orang",
+      "titleHl": "tanya dulu.",
       "items": [
         {
           "q": "Apa itu Elpino?",
-          "a": "Platform dukungan pelanggan bertenaga AI: widget chat untuk situs web, agen AI yang menjawab dari pengetahuan Anda dan memeriksa pembayaran asli, kotak masuk tim bersama, dan tiket saat tidak ada yang tersedia."
+          "a": "Platform dukungan pelanggan AI: widget obrolan situs web, agen AI yang menjawab berdasarkan pengetahuan Anda dan memeriksa pembayaran nyata, kotak masuk tim bersama, dan tiket ketika tidak ada orang yang senggang."
         },
         {
-          "q": "Apakah AI akan mengarang sesuatu?",
-          "a": "AI menjawab dari pengetahuan yang telah Anda setujui, dan tahap peninjauan memeriksa draf terhadap hasil alat. Saat tidak tahu, ia mengatakannya dan menawarkan manusia."
+          "q": "Apakah AI akan memperbaikinya?",
+          "a": "Ini menjawab dari pengetahuan yang telah Anda setujui, dan kartu tinjauan memeriksa draf terhadap hasil alat. Ketika ia tidak mengetahuinya, ia mengatakannya dan menawarkan seseorang."
         },
         {
-          "q": "Apa yang terjadi saat AI tidak bisa membantu?",
-          "a": "AI bertanya dulu pada pelanggan. Jika ya, seluruh tim menerima notifikasi bergabung dan punya 90 detik untuk ikut serta. Jika tidak ada yang merespons, tiket dibuat dan pelanggan diberi tahu via email."
+          "q": "Apa yang terjadi jika tidak dapat membantu?",
+          "a": "Ini menanyakan pelanggan terlebih dahulu. Jika ya, setiap rekan tim mendapat peringatan Gabung dan memiliki waktu 90 detik untuk ikut serta. Jika tidak ada yang melakukannya, tiket akan diajukan dan pelanggan akan dikirimi email."
         },
         {
-          "q": "Berapa lama pengaturannya?",
-          "a": "Sebagian besar tim aktif di hari yang sama: tambahkan pengetahuan Anda, tempel cuplikan widget, dan undang tim Anda."
+          "q": "Berapa lama waktu yang dibutuhkan untuk setup?",
+          "a": "Sebagian besar tim ditayangkan pada hari yang sama: tambahkan pengetahuan Anda, tempel cuplikan widget, dan undang tim Anda."
         },
         {
           "q": "Apakah ada paket gratis?",
-          "a": "Ya: 100 pesan AI per bulan, tanpa kartu diperlukan."
+          "a": "Ya: 100 pesan AI sebulan, tidak perlu kartu."
         },
         {
-          "q": "Apakah bisa digunakan di saluran lain?",
-          "a": "Chat situs web sudah aktif sekarang. Omnichannel akan hadir bulan November."
+          "q": "Apakah ini berfungsi di saluran lain?",
+          "a": "Obrolan situs web ditayangkan hari ini. Multisaluran akan hadir pada bulan November."
+        }
+      ],
+      "more": "Tidak dapat menemukan jawaban Anda?",
+      "talk": "Bicaralah dengan kami"
+    },
+    "closing": {
+      "title": "Berikan jawabannya kepada pelanggan Anda sebelum mereka selesai mengetik.",
+      "subtitle": "Mulailah dengan gratis, ajarkan bisnis Anda, dan biarkan ia menjawab pertanyaan berulang.",
+      "ctaPrimary": "Mulai gratis",
+      "ctaSecondary": "Bicaralah dengan kami"
+    },
+    "tabs": {
+      "more": "Pelajari lebih lanjut",
+      "widget": {
+        "label": "Elpino AI",
+        "title": "AI yang memeriksa sebelum menjawab",
+        "body": "Elpino mengonfirmasi dengan siapa ia berbicara, mencari pembayaran atau pesanan sebenarnya, menyembunyikan detail pribadi dari model, dan baru kemudian membalas.",
+        "p0": "Memverifikasi pelanggan sebelum menyentuh data akun",
+        "p1": "Memeriksa pembayaran, paket, dan pesanan di alat Anda yang terhubung",
+        "p2": "Serahkan ke tim Anda dengan cerita lengkap ketika seseorang dibutuhkan"
+      },
+      "inbox": {
+        "label": "Kotak masuk bersama",
+        "title": "Satu kotak masuk untuk tim Anda dan AI",
+        "body": "Hapus kepemilikan, gabungkan pemberitahuan, dan konteks lengkap di setiap rangkaian pesan.",
+        "p0": "Lihat apa yang sudah diperiksa AI",
+        "p1": "Bergabunglah dalam percakapan dalam satu klik",
+        "p2": "Lokasi pengunjung, perangkat, dan riwayat di sampingnya"
+      },
+      "kb": {
+        "label": "Pengetahuan",
+        "title": "Ajarkan dari apa pun yang Anda miliki",
+        "body": "Jelajahi situs Anda, unggah file, tulis halaman. Peralihan publik dan swasta memutuskan siapa melihat apa.",
+        "p0": "Merayapi situs web Anda",
+        "p1": "Unggah dokumen dan catatan",
+        "p2": "Jauhkan halaman pribadi dari pengunjung"
+      },
+      "tickets": {
+        "label": "Tiket",
+        "title": "Tidak ada yang terjatuh",
+        "body": "Jika tidak ada orang yang bebas, tiket akan diajukan dan pelanggan diberitahu.",
+        "p0": "Diarsipkan ke Asana atau Trello",
+        "p1": "Ringkasan disertakan dengan tiket",
+        "p2": "Pelanggan selalu mendengarnya kembali"
+      },
+      "aria": "Area produk"
+    },
+    "teams": {
+      "verify": {
+        "claim": "Saya Alex Morgan. Tunjukkan faktur saya.",
+        "ok": "Terima kasih, Alex. Anda sudah masuk, jadi inilah faktur Anda.",
+        "ask": "Saya tidak bisa berbagi detail akun dengan tamu. Masuk ke situs dan saya akan memeriksa bahwa itu memang Anda.",
+        "verified": "Identitas terverifikasi",
+        "locked": "Tamu · akun terkunci",
+        "site": "Masuk ke situs web Anda",
+        "token": "Token yang ditandatangani diterima · alex@example.com",
+        "invoice": "Faktur #1042",
+        "plan": "Rencana pertumbuhan · berbayar"
+      },
+      "plugins": {
+        "live": "9 plugin terhubung"
+      },
+      "contacts": {
+        "label": "Kontak",
+        "name": "Nama",
+        "contact": "Email atau telepon",
+        "status": "Status",
+        "new": "Petunjuk baru",
+        "ask": "Apa email Anda, kalau-kalau sambungan kita terputus?",
+        "agent": "Agen AI · Baru saja",
+        "skip": "Lewati",
+        "thanks": "Terima kasih, Maya! Apakah ada hal lain yang bisa saya bantu?"
+      },
+      "eyebrow": "Tempat untuk setiap tim",
+      "title": "Berikan produktivitas nyata untuk setiap tim",
+      "cards": [
+        {
+          "tag": "Verifikasi identitas",
+          "title": "Tidak ada yang bisa masuk hanya dengan menyebutkan nama",
+          "desc": "Nama atau email yang diketik dalam obrolan tidak membuktikan apa pun. Elpino membuka data akun pribadi hanya untuk pengunjung situs web Anda yang telah masuk dan dijamin, sehingga tamu yang berpura-pura menjadi orang lain tidak mendapat apa-apa.",
+          "note": "Pembayaran dan pencarian pesanan hanya menggunakan email terverifikasi dari login Anda, dan logout langsung mengakhiri sesi obrolan.",
+          "points": [
+            "Situs Anda memasukkan pengguna, dan Elpino hanya memercayai hal itu",
+            "Tamu dapat mengobrol, namun alat pribadi tetap terkunci",
+            "Logout mengakhiri sesi sekaligus"
+          ]
+        },
+        {
+          "tag": "Balasan AI",
+          "title": "Lihat dengan tepat apa balasan AI",
+          "desc": "Setiap balasan menunjukkan cara kerjanya: halaman pengetahuan Anda yang digunakannya dan pembayaran atau pesanan yang dicarinya di alat Anda yang terhubung. Tidak ada yang dikatakan AI sebagai kotak hitam.",
+          "note": "Saksikan percakapan langsung dari kotak masuk dan turun tangan saat seseorang dibutuhkan. Tim Anda mendapatkan cerita lengkapnya, jadi tidak ada yang meminta pelanggan mengulanginya.",
+          "points": [
+            "Lihat halaman dan alat di balik setiap balasan",
+            "Baca setiap balasan seperti yang dilihat pelanggan",
+            "Bergabunglah dalam satu klik dengan konteks penuh"
+          ]
+        },
+        {
+          "tag": "Analisis",
+          "title": "Lihat siapa yang berkunjung dan apa yang mereka lakukan",
+          "desc": "Analisis web berada tepat di sebelah kotak masuk Anda. Lacak pengunjung, tampilan halaman, sesi, waktu di situs, dan rasio pentalan selama 7 hari terakhir atau periode apa pun, dan bandingkan dengan sebelumnya.",
+          "note": "Pengunjung sebenarnya dihitung selain bot, jadi angkanya menggambarkan orang. Filter berdasarkan domain dan simpan preset untuk tampilan yang paling sering Anda periksa.",
+          "points": [
+            "Pengunjung, tampilan halaman, sesi, dan rasio pentalan",
+            "Bandingkan dengan periode sebelumnya",
+            "Filter berdasarkan domain dan simpan tampilan favorit Anda"
+          ]
+        },
+        {
+          "tag": "Kontak",
+          "title": "Ubah obrolan menjadi kontak",
+          "desc": "Setiap pengunjung yang berbagi email atau nomor telepon akan masuk ke CRM bawaan Anda, dengan seluruh riwayat percakapan mereka terlampir.",
+          "note": "Setiap kali Anda berbicara dengan seseorang, Anda akan melihat siapa mereka dan apa yang mereka tanyakan sebelumnya, sehingga setiap balasan terasa pribadi.",
+          "points": [
+            "Prospek ditangkap langsung di obrolan",
+            "Sejarah dan rencana di samping setiap kontak",
+            "Disinkronkan dengan CRM yang sudah Anda gunakan"
+          ]
+        },
+        {
+          "tag": "Plugin",
+          "title": "Hubungkan ke alat yang sudah Anda gunakan",
+          "desc": "Hubungkan pembayaran, toko, CRM, dan alat tiket dalam hitungan menit, sehingga setiap jawaban berasal dari data langsung, bukan hanya tebakan.",
+          "note": "Elpino membaca dan bertindak melalui plugin yang Anda aktifkan, dan hanya dengan izin yang Anda berikan.",
+          "points": [
+            "Pembayaran, pesanan, dan rencana, dilihat secara langsung",
+            "Tiket diajukan di Asana atau Trello",
+            "Matikan plugin kapan saja"
+          ]
         }
       ]
     },
-    "closing": {
-      "title": "Berikan jawaban pada pelanggan Anda sebelum mereka selesai mengetik.",
-      "subtitle": "Mulai gratis, ajari ia tentang bisnis Anda, dan biarkan ia menangani pertanyaan yang berulang.",
-      "ctaPrimary": "Mulai gratis",
-      "ctaSecondary": "Hubungi kami"
+    "autopilot": {
+      "save": "Simpan",
+      "close": "Hampir sama",
+      "aYearVs": "setahun, dibandingkan dengan",
+      "cheapest": "yang termurah dari ketiganya",
+      "each": "Menghemat masing-masing",
+      "youSave": "Anda menyimpan vs",
+      "yr": "setahun",
+      "same": "hampir sama",
+      "seats": "Pengguna",
+      "conversations": "Percakapan AI / bln",
+      "p1": "Kursi tak terbatas di setiap paket, bahkan Gratis, sehingga Anda dapat mengembangkan tim tanpa menambah tagihan perangkat lunak Anda.",
+      "p2": "Tidak ada komitmen. Tetap gunakan paket $10 dan isi ulang kredit AI hanya saat Anda membutuhkannya, paling banyak $0,03 per percakapan. Isi ulang diteruskan, dan tidak pernah ada tagihan kelebihan.",
+      "bills": "Tagihan satu bulan, dirinci",
+      "seatsUnit": "kursi",
+      "convUnit": "percakapan AI",
+      "perMonth": "Per bulan",
+      "perYearLabel": "Per tahun",
+      "compareWith": "Bandingkan dengan",
+      "footnote": "Daftar harga publik dalam USD, diperiksa pada 1 Oktober 2026, penagihan tahunan jika ditampilkan, untuk jumlah kursi dan percakapan AI yang sama pada setiap produk. Tidak termasuk pajak, add-on, dan diskon perusahaan. Interkom dan Zendesk hanya mengenakan biaya untuk percakapan yang diselesaikan oleh AI; Elpino mengenakan biaya untuk setiap percakapan AI yang ditanganinya, baik diselesaikan atau tidak. Perbandingan ini mengasumsikan setiap percakapan AI terselesaikan, yang merupakan jumlah terbesar yang akan ditagihkan oleh keduanya. Elpino: Paket awal untuk penagihan tahunan ($10 per bulan, termasuk kredit AI $7), kursi tak terbatas, dan kredit AI yang diisi ulang hingga $0,03 per percakapan.",
+      "cta": "Lihat harga"
+    },
+    "toolsLine": {
+      "title": "Terhubung ke alat pembayaran, toko, CRM, dan tiket yang sudah Anda gunakan, dalam hitungan menit, bukan sprint."
+    },
+    "saved": {
+      "title": "Kembalikan waktu kerja tim Anda.",
+      "p1": "Elpino menjawab pertanyaan berulang dan mencari sendiri pembayaran dan pesanan, sehingga orang-orang Anda terus melakukan percakapan yang membutuhkannya.",
+      "p2": "Pindahkan penggeser ke nomor Anda sendiri. Itu hanya perkiraan, bukan janji.",
+      "save": "Simpan",
+      "hours": "jam",
+      "per": "waktu tim Anda, diberikan kembali",
+      "conversations": "Percakapan/bln",
+      "share": "Dijawab tanpa siapa pun",
+      "minutes": "Menit masing-masing",
+      "grid": "Waktu dukungan tim Anda, satu kotak",
+      "hr": "jam",
+      "left": "jam lagi",
+      "hrs": "jam",
+      "today": "Tim Anda hari ini",
+      "givenBack": "Diberikan kembali oleh Elpino"
+    },
+    "platform": {
+      "title": "AI yang memeriksa cara agen terbaik Anda",
+      "subtitle": "Ini memverifikasi dengan siapa ia berbicara, mencari pembayaran atau pesanan sebenarnya, menyembunyikan detail pribadi dari model, lalu membalas. Ketika seseorang dibutuhkan, tim Anda mendapatkan semua yang ditemukannya."
+    },
+    "widgetMock": {
+      "row0": "Membaca pesan Anda",
+      "row0done": "Terima pesan Anda",
+      "row1": "Memverifikasi bahwa ini memang Anda",
+      "row1done": "Anda sudah terverifikasi",
+      "row2": "Memeriksa pembayaran dan paket Anda",
+      "row2done": "Pembayaran dan paket diperiksa",
+      "row3": "Melindungi data pribadi Anda",
+      "row3done": "Detail pribadi dijauhkan dari AI",
+      "name": "Elpino AI",
+      "role": "Asisten AI",
+      "question": "Saya membeli paket namun masih belum aktif",
+      "answer": "Terima kasih atas kesabaran Anda. Pembayaran Anda telah berhasil dan paket Anda sekarang aktif. Jika Anda masih melihat paket lama, segarkan dasbor Anda."
+    },
+    "kgraph": {
+      "s0": "Peta situs situs web",
+      "s1": "PDF dan dokumen",
+      "s2": "Halaman yang Anda tulis",
+      "s2hint": "kebijakan dan caranya",
+      "s3": "Alat Anda yang terhubung",
+      "s3hint": "data langsung melalui MCP",
+      "aria": "Situs web, dokumen, halaman, dan alat Anda semuanya menambah pengetahuan Elpino",
+      "hub": "Pengetahuan",
+      "answer": "Jawaban"
+    },
+    "ticketFlow": {
+      "title": "Berbayar, namun paket masih belum aktif",
+      "filed": "Diarsipkan",
+      "assigned": "Ditugaskan",
+      "told": "Pelanggan memberi tahu",
+      "aria": "Ketika tidak ada orang yang senggang, tiket ditulis, dimasukkan ke alat tim Anda, dan pelanggan diberitahu",
+      "nobody": "Tak seorang pun di tim yang bebas saat ini",
+      "ticket": "Tiket",
+      "open": "Buka",
+      "draft": "Draf",
+      "high": "Tinggi",
+      "billing": "Penagihan",
+      "summary": "Ringkasan, apa yang diperiksa dan apa yang ditemukan terlampir",
+      "filedTo": "Diarsipkan ke alat tiket Anda"
     }
   },
   "pricing": {
@@ -1235,7 +1484,10 @@
     "contactSales": "Hubungi Penjualan",
     "login": "Masuk",
     "goToDashboard": "Ke dasbor",
-    "getStarted": "Mulai"
+    "getStarted": "Mulai",
+    "offer": {
+      "text": "Mulai gratis hari ini: 100 pesan AI sebulan, tidak memerlukan kartu, dan Anda dapat langsung berada di situs Anda sendiri dalam satu sore"
+    }
   },
   "footer": {
     "ticker": [

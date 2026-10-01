@@ -210,8 +210,7 @@
       "ctaSecondary": "Testa själv",
       "trust": [
         "100 gratis AI-meddelanden per månad",
-        "Inget kort krävs",
-        "Klart på en eftermiddag"
+        "Inget kort krävs"
       ],
       "stickers": [
         "Löst av AI",
@@ -227,12 +226,27 @@
       "widget": {
         "name": "Elpino",
         "subtitle": "Svarar inom sekunder",
-        "convo": [
-          "Blev jag debiterad dubbelt för uppgraderingen?",
-          "Kontrollerade din betalningshistorik",
-          "Du debiterades bara en gång. Det andra försöket misslyckades och drogs aldrig."
-        ]
-      }
+        "convo": {
+          "0": "Debiterades jag två gånger för min uppgradering?",
+          "2": "Du debiterades en gång. Det andra försöket misslyckades och fångades aldrig."
+        }
+      },
+      "emailPlaceholder": "Ange din arbetsmail",
+      "emailLabel": "E-postadress",
+      "ctaSignUp": "Starta gratis provperiod",
+      "ctaDemo": "Visa demo",
+      "stage": {
+        "step0": "Läser frågan",
+        "step1": "Kontrollerar din betalningsinformation",
+        "step2": "Läser din återbetalningspolicy",
+        "working": "Elpino arbetar..."
+      },
+      "glass": {
+        "customer": "Kund",
+        "ai": "Elpino"
+      },
+      "headLead": "Låt AI svara på de upprepade frågorna,",
+      "headEmphasis": "så ditt team hanterar de som betyder något."
     },
     "marquee": {
       "questions": [
@@ -367,6 +381,31 @@
           "tag": "Ärenden",
           "title": "Ingenting går förlorat",
           "desc": "Om ingen är tillgänglig skapas ett ärende och kunden informeras."
+        }
+      ],
+      "websiteLabel": "Din webbplats",
+      "websitePlaceholder": "ditt företag.com",
+      "websiteAdded": "Tillagd",
+      "websiteButton": "Lägg till webbplats",
+      "plugins": "Plugins",
+      "title3": "Allt en supportdesk behöver, i 3 steg",
+      "prev": "Föregående",
+      "next": "Nästa",
+      "steps": [
+        {
+          "tag": "Steg 1",
+          "title": "Lägg till din webbplats",
+          "desc": "Klistra in din webbplatsadress. Det är allt Elpino behöver för att börja lära sig ditt företag."
+        },
+        {
+          "tag": "Steg 2",
+          "title": "Genomsök din webbplats och mata den",
+          "desc": "Elpino läser dina sidor och filer och sparar varje kunds detaljer och tidigare chattar i sitt inbyggda CRM. Anslut plugins som Stripe eller Shopify för att hålla dessa data synkroniserade."
+        },
+        {
+          "tag": "Steg 3",
+          "title": "Lägg till chattwidgeten på några minuter",
+          "desc": "Släpp ett utdrag till din webbplats eller webbapp, från en målsida till en React-app, och prata med besökare i realtid."
         }
       ]
     },
@@ -507,24 +546,24 @@
     },
     "faq": {
       "eyebrow": "Frågor",
-      "titlePrefix": "Vad folk frågar",
-      "titleHl": "först.",
+      "titlePrefix": "Saker människor",
+      "titleHl": "fråga först.",
       "items": [
         {
           "q": "Vad är Elpino?",
-          "a": "En AI-driven kundsupportplattform: en chattwidget på din webbplats, en AI-agent som svarar utifrån din kunskap och verifierar riktiga betalningar, en delad teaminkorg, och ärenden när ingen är tillgänglig."
+          "a": "En AI-kundsupportplattform: en webbchattwidget, en AI-agent som svarar utifrån din kunskap och kontrollerar riktiga betalningar, en delad inkorg för teamet och biljetter när ingen är ledig."
         },
         {
-          "q": "Kommer AI:n att hitta på saker?",
-          "a": "Den svarar utifrån kunskap du har godkänt, och ett verifieringssteg kontrollerar utkast mot verktygsresultat. När den inte vet säger den det och erbjuder en människa."
+          "q": "Kommer AI att hitta på saker?",
+          "a": "Den svarar utifrån den kunskap du har godkänt, och ett granskningspass kontrollerar utkast mot verktygsresultat. När den inte vet, säger den det och erbjuder en person."
         },
         {
-          "q": "Vad händer när den inte kan hjälpa?",
-          "a": "Den frågar kunden först. Vid ja får hela teamet en anslutningsavisering och 90 sekunder att reagera. Om ingen ansluter skapas ett ärende och kunden får ett e-postmeddelande."
+          "q": "Vad händer när det inte kan hjälpa?",
+          "a": "Den frågar kunden först. På ett ja får varje lagkamrat en Join-alarm och har 90 sekunder på sig att hoppa in. Om ingen gör det arkiveras en biljett och kunden mailas."
         },
         {
-          "q": "Hur lång tid tar konfigurationen?",
-          "a": "De flesta team är igång samma dag: lägg till kunskap, klistra in widget-koden, och bjud in ditt team."
+          "q": "Hur lång tid tar installationen?",
+          "a": "De flesta lag är live samma dag: lägg till dina kunskaper, klistra in widget-kodavsnittet och bjud in ditt team."
         },
         {
           "q": "Finns det en gratis plan?",
@@ -532,15 +571,225 @@
         },
         {
           "q": "Fungerar det på andra kanaler?",
-          "a": "Chatt på webbplatsen fungerar redan. Omnikanal kommer i november."
+          "a": "Webbplatschatt är live idag. Omnikanal kommer i november."
+        }
+      ],
+      "more": "Hittar du inte ditt svar?",
+      "talk": "Prata med oss"
+    },
+    "closing": {
+      "title": "Ge dina kunder svaret innan de slutar skriva.",
+      "subtitle": "Börja gratis, lär det ditt företag och låt det ta återkommande frågor.",
+      "ctaPrimary": "Börja gratis",
+      "ctaSecondary": "Prata med oss"
+    },
+    "tabs": {
+      "more": "Läs mer",
+      "widget": {
+        "label": "Elpino AI",
+        "title": "En AI som kollar innan den svarar",
+        "body": "Elpino bekräftar vem den pratar med, letar upp den verkliga betalningen eller beställningen, håller privata detaljer borta från modellen och svarar först därefter.",
+        "p0": "Verifierar kunden innan den rör kontodata",
+        "p1": "Kontrollerar betalningar, planer och beställningar i dina anslutna verktyg",
+        "p2": "Överlämnar till ditt team med hela historien när en person behövs"
+      },
+      "inbox": {
+        "label": "Delad inkorg",
+        "title": "En inkorg för ditt team och AI",
+        "body": "Rensa ägarskap, gå med i varningar och hela sammanhanget i varje tråd.",
+        "p0": "Se vad AI redan har kontrollerat",
+        "p1": "Gå med i en konversation med ett klick",
+        "p2": "Besökarens plats, enhet och historik vid sidan av"
+      },
+      "kb": {
+        "label": "Kunskap",
+        "title": "Lär det från allt du har",
+        "body": "Genomsök din webbplats, ladda upp filer, skriv sidor. Offentliga och privata switchar avgör vem som ser vad.",
+        "p0": "Genomsök din webbplats",
+        "p1": "Ladda upp dokument och anteckningar",
+        "p2": "Håll privata sidor borta från besökare"
+      },
+      "tickets": {
+        "label": "Biljetter",
+        "title": "Ingenting tappas",
+        "body": "Om ingen är ledig arkiveras en biljett och kunden meddelas.",
+        "p0": "Arkiverad till Asana eller Trello",
+        "p1": "Sammanfattningen reser med biljetten",
+        "p2": "Kunden hör alltid av sig"
+      },
+      "aria": "Produktområden"
+    },
+    "teams": {
+      "verify": {
+        "claim": "Jag heter Alex Morgan. Visa mig mina fakturor.",
+        "ok": "Tack, Alex. Du är inloggad, så här är dina fakturor.",
+        "ask": "Jag kan inte dela kontouppgifter med en gäst. Logga in på sidan så ska jag kolla att det verkligen är du.",
+        "verified": "Identitet verifierad",
+        "locked": "Gäst · konto låst",
+        "site": "Inloggad på din webbplats",
+        "token": "Signerad token mottagen · alex@example.com",
+        "invoice": "Faktura #1042",
+        "plan": "Tillväxtplan · betald"
+      },
+      "plugins": {
+        "live": "9 plugins anslutna"
+      },
+      "contacts": {
+        "label": "Kontakter",
+        "name": "Namn",
+        "contact": "E-post eller telefon",
+        "status": "Status",
+        "new": "Ny lead",
+        "ask": "Vad är din e-post, ifall vi skulle kopplas bort?",
+        "agent": "AI-agent · Just nu",
+        "skip": "Hoppa över",
+        "thanks": "Tack, Maya! Finns det något mer jag kan hjälpa dig med?"
+      },
+      "eyebrow": "En plats för varje lag",
+      "title": "Leverera verklig produktivitet för varje team",
+      "cards": [
+        {
+          "tag": "Identitetsverifiering",
+          "title": "Ingen kommer in bara genom att göra anspråk på ett namn",
+          "desc": "Ett namn eller ett e-postmeddelande som skrivits in i en chatt bevisar ingenting. Elpino öppnar privat kontodata endast för besökare som din egen webbplats har loggat in och garanterat, så en gäst som låtsas vara någon annan får ingenting.",
+          "note": "Betalnings- och beställningssökningar använder endast den verifierade e-posten från din inloggning, och om du loggar ut avslutas chattsessionen direkt.",
+          "points": [
+            "Din webbplats loggar in användaren, och Elpino litar bara på det",
+            "Gäster kan chatta, men privata verktyg förblir låsta",
+            "Att logga ut avslutar sessionen på en gång"
+          ]
+        },
+        {
+          "tag": "AI svarar",
+          "title": "Se exakt vad AI svarar",
+          "desc": "Varje svar visar hur det fungerar: sidorna med dina kunskaper det hämtade och betalningen eller beställningen som det slog upp i dina anslutna verktyg. Inget AI säger är en svart låda.",
+          "note": "Se konversationen live från inkorgen och kliva in när en person behövs. Ditt team får hela historien, så ingen ber kunden att upprepa sig.",
+          "points": [
+            "Se sidorna och verktygen bakom varje svar",
+            "Läs varje svar som kunden ser det",
+            "Gå med med ett klick med hela sammanhanget"
+          ]
+        },
+        {
+          "tag": "Analytics",
+          "title": "Se vilka som besöker och vad de gör",
+          "desc": "Webbanalys finns bredvid din inkorg. Spåra besökare, sidvisningar, sessioner, tid på webbplatsen och avvisningsfrekvens för de senaste 7 dagarna eller vilken period som helst, och jämför det med den tidigare.",
+          "note": "Riktiga besökare räknas bortsett från bots, så siffrorna beskriver människor. Filtrera efter domän och spara förinställningar för de vyer du kontrollerar mest.",
+          "points": [
+            "Besökare, sidvisningar, sessioner och avvisningsfrekvens",
+            "Jämför med föregående period",
+            "Filtrera efter domän och spara dina favoritvyer"
+          ]
+        },
+        {
+          "tag": "Kontakter",
+          "title": "Förvandla chattar till kontakter",
+          "desc": "Varje besökare som delar ett e-post- eller telefonnummer hamnar i ditt inbyggda CRM, med hela sin konversationshistorik bifogad.",
+          "note": "När du pratar med någon ser du vilka de är och vad de frågade innan, så varje svar känns personligt.",
+          "points": [
+            "Leads fångas direkt i chatten",
+            "Historik och plan bredvid varje kontakt",
+            "Synkroniserad med det CRM du redan använder"
+          ]
+        },
+        {
+          "tag": "Plugins",
+          "title": "Anslut till de verktyg du redan använder",
+          "desc": "Anslut betalningar, butiker, CRM och biljettverktyg på några minuter, så varje svar kommer från livedata istället för en gissning.",
+          "note": "Elpino läser och agerar genom plugins du slår på, och endast med de behörigheter du ger den.",
+          "points": [
+            "Betalningar, beställningar och planer, slog upp live",
+            "Biljetter arkiveras i Asana eller Trello",
+            "Stäng av en plugin när som helst"
+          ]
         }
       ]
     },
-    "closing": {
-      "title": "Ge dina kunder svaret innan de är klara med att skriva.",
-      "subtitle": "Börja gratis, lär den din verksamhet, och låt den ta de återkommande frågorna.",
-      "ctaPrimary": "Börja gratis",
-      "ctaSecondary": "Prata med oss"
+    "autopilot": {
+      "save": "Spara",
+      "close": "Ungefär detsamma",
+      "aYearVs": "ett år, jämfört med",
+      "cheapest": "den billigaste av de tre",
+      "each": "Sparar mot varje",
+      "youSave": "Du sparar vs",
+      "yr": "ett år",
+      "same": "ungefär detsamma",
+      "seats": "Användare",
+      "conversations": "AI-konversationer / mån",
+      "p1": "Obegränsade platser på varje plan, även gratis, så att du kan utöka ditt team utan att öka din mjukvaruräkning.",
+      "p2": "Inget åtagande. Fortsätt med $10-planen och fyll på AI-kredit bara när du behöver det, högst 0,03 $ per konversation. Påfyllningar förs vidare, och det finns aldrig en överskottsräkning.",
+      "bills": "En månads räkning, specificerad",
+      "seatsUnit": "platser",
+      "convUnit": "AI-konversationer",
+      "perMonth": "Per månad",
+      "perYearLabel": "Per år",
+      "compareWith": "Jämför med",
+      "footnote": "Offentliga listpriser i USD, kontrollerade 1 oktober 2026, årlig fakturering där visas, för samma antal platser och AI-konversationer på varje produkt. Exkluderar skatter, tillägg och företagsrabatter. Intercom och Zendesk tar endast betalt för konversationer som AI löser; Elpino tar betalt för varje AI-konversation den hanterar, löst eller inte. Den här jämförelsen förutsätter att varje AI-konversation är löst, vilket är det mesta de två skulle fakturera. Elpino: Nybörjarplan för årlig fakturering (10 USD i månaden, 7 USD av AI-kredit ingår), obegränsade platser och AI-kredit på upp till 0,03 USD per konversation.",
+      "cta": "Se priser"
+    },
+    "toolsLine": {
+      "title": "Ansluter till betalnings-, butiks-, CRM- och biljettverktygen du redan använder, på några minuter, inte sprints."
+    },
+    "saved": {
+      "title": "Ge ditt team sina timmar tillbaka.",
+      "p1": "Elpino svarar på de återkommande frågorna och letar upp betalningar och beställningar själv, så att dina medarbetare håller de konversationer som behöver dem.",
+      "p2": "Flytta reglagen till dina egna nummer. Det är en uppskattning, inte ett löfte.",
+      "save": "Spara",
+      "hours": "timmar",
+      "per": "av ditt lags tid, ges tillbaka",
+      "conversations": "Konversationer/mån",
+      "share": "Besvaras utan person",
+      "minutes": "Minuter vardera",
+      "grid": "Ditt teams supporttid, en ruta",
+      "hr": "tim",
+      "left": "timmar kvar",
+      "hrs": "timmar",
+      "today": "Ditt team idag",
+      "givenBack": "Givet tillbaka av Elpino"
+    },
+    "platform": {
+      "title": "AI som kontrollerar hur din bästa agent skulle göra",
+      "subtitle": "Den verifierar vem den pratar med, slår upp den verkliga betalningen eller beställningen, håller privata detaljer borta från modellen och svarar sedan. När en person behövs får ditt team allt det hittat."
+    },
+    "widgetMock": {
+      "row0": "Läser ditt meddelande",
+      "row0done": "Fick ditt meddelande",
+      "row1": "Verifierar att det är du",
+      "row1done": "Du är verifierad",
+      "row2": "Kontrollera din betalning och plan",
+      "row2done": "Betalning och plan kontrolleras",
+      "row3": "Skyddar dina privata uppgifter",
+      "row3done": "Privata detaljer hålls borta från AI",
+      "name": "Elpino AI",
+      "role": "AI-assistent",
+      "question": "Jag köpte en plan men den är fortfarande inte aktiv",
+      "answer": "Tack för ditt tålamod. Din betalning gick igenom och din plan är nu aktiv. Om du fortfarande ser den gamla planen, uppdatera din instrumentpanel."
+    },
+    "kgraph": {
+      "s0": "Webbplatskarta",
+      "s1": "PDF-filer och dokument",
+      "s2": "Sidor du skriver",
+      "s2hint": "policyer och instruktioner",
+      "s3": "Dina anslutna verktyg",
+      "s3hint": "livedata via MCP",
+      "aria": "Din webbplats, dokument, sidor och verktyg ger Elpinos kunskap",
+      "hub": "Kunskap",
+      "answer": "Svar"
+    },
+    "ticketFlow": {
+      "title": "Betalt, men planen är fortfarande inte aktiv",
+      "filed": "Arkiverat",
+      "assigned": "Tilldelad",
+      "told": "Kunden berättade",
+      "aria": "När ingen är ledig skrivs en biljett, arkiveras till ditt teams verktyg och kunden får veta",
+      "nobody": "Ingen i laget är ledig just nu",
+      "ticket": "Ärende",
+      "open": "Öppna",
+      "draft": "Utkast",
+      "high": "Hög",
+      "billing": "Fakturering",
+      "summary": "Sammanfattning, vad som kontrollerades och vad som hittades bifogat",
+      "filedTo": "Arkiverat till ditt biljettverktyg"
     }
   },
   "pricing": {
@@ -1235,7 +1484,10 @@
     "contactSales": "Kontakta säljteamet",
     "login": "Logga in",
     "goToDashboard": "Gå till dashboard",
-    "getStarted": "Kom igång"
+    "getStarted": "Kom igång",
+    "offer": {
+      "text": "Börja gratis idag: 100 AI-meddelanden per månad, inget kort krävs, och du kan vara live på din egen sida på en eftermiddag"
+    }
   },
   "footer": {
     "ticker": [

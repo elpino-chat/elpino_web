@@ -210,8 +210,7 @@
       "ctaSecondary": "Tự mình trải nghiệm",
       "trust": [
         "100 tin nhắn AI miễn phí mỗi tháng",
-        "Không cần thẻ",
-        "Sẵn sàng trong một buổi chiều"
+        "Không cần thẻ"
       ],
       "stickers": [
         "Được AI giải quyết",
@@ -227,12 +226,27 @@
       "widget": {
         "name": "Elpino",
         "subtitle": "Trả lời trong vài giây",
-        "convo": [
-          "Tôi có bị tính phí hai lần cho gói nâng cấp không?",
-          "Đã kiểm tra lịch sử thanh toán của bạn",
-          "Bạn chỉ bị tính phí một lần. Lần thử thứ hai đã thất bại và không được ghi nhận."
-        ]
-      }
+        "convo": {
+          "0": "Tôi có bị tính phí hai lần cho việc nâng cấp của mình không?",
+          "2": "Bạn đã bị tính phí một lần. Lần thử thứ hai thất bại và không bao giờ bị bắt."
+        }
+      },
+      "emailPlaceholder": "Nhập email công việc của bạn",
+      "emailLabel": "Địa chỉ email",
+      "ctaSignUp": "Bắt đầu dùng thử miễn phí",
+      "ctaDemo": "Xem bản demo",
+      "stage": {
+        "step0": "Đọc câu hỏi",
+        "step1": "Đang kiểm tra hồ sơ thanh toán của bạn",
+        "step2": "Đọc chính sách hoàn tiền của bạn",
+        "working": "Elpino đang làm việc…"
+      },
+      "glass": {
+        "customer": "Khách hàng",
+        "ai": "Elpino"
+      },
+      "headLead": "Hãy để AI trả lời những câu hỏi lặp đi lặp lại,",
+      "headEmphasis": "để nhóm của bạn xử lý những vấn đề quan trọng."
     },
     "marquee": {
       "questions": [
@@ -367,6 +381,31 @@
           "tag": "Yêu cầu hỗ trợ",
           "title": "Không bỏ sót bất cứ điều gì",
           "desc": "Nếu không ai rảnh, một yêu cầu hỗ trợ sẽ được tạo và khách hàng sẽ được thông báo."
+        }
+      ],
+      "websiteLabel": "Trang web của bạn",
+      "websitePlaceholder": "yourcompany.com",
+      "websiteAdded": "Đã thêm",
+      "websiteButton": "Thêm trang web",
+      "plugins": "Plugin",
+      "title3": "Mọi thứ mà bộ phận hỗ trợ cần chỉ trong 3 bước",
+      "prev": "Trước đó",
+      "next": "Tiếp theo",
+      "steps": [
+        {
+          "tag": "Bước 1",
+          "title": "Thêm trang web của bạn",
+          "desc": "Dán địa chỉ trang web của bạn. Đó là tất cả những gì Elpino cần để bắt đầu tìm hiểu công việc kinh doanh của bạn."
+        },
+        {
+          "tag": "Bước 2",
+          "title": "Thu thập dữ liệu trang web của bạn và cung cấp dữ liệu cho nó",
+          "desc": "Elpino đọc các trang và tệp của bạn, đồng thời lưu giữ thông tin chi tiết và các cuộc trò chuyện trước đây của mọi khách hàng trong CRM tích hợp sẵn. Kết nối các plugin như Stripe hoặc Shopify để giữ cho dữ liệu đó được đồng bộ hóa."
+        },
+        {
+          "tag": "Bước 3",
+          "title": "Thêm tiện ích trò chuyện trong vài phút",
+          "desc": "Thả một đoạn mã vào trang web hoặc ứng dụng web của bạn, từ trang đích đến ứng dụng React và trò chuyện với khách truy cập trong thời gian thực."
         }
       ]
     },
@@ -507,24 +546,24 @@
     },
     "faq": {
       "eyebrow": "Câu hỏi",
-      "titlePrefix": "Những điều mọi người",
-      "titleHl": "hỏi trước tiên.",
+      "titlePrefix": "Chuyện mọi người",
+      "titleHl": "hãy hỏi trước.",
       "items": [
         {
           "q": "Elpino là gì?",
-          "a": "Một nền tảng hỗ trợ khách hàng bằng AI: widget trò chuyện cho trang web, trợ lý AI trả lời dựa trên kiến thức của bạn và kiểm tra thanh toán thực tế, hộp thư nhóm dùng chung, và yêu cầu hỗ trợ khi không ai rảnh."
+          "a": "Nền tảng hỗ trợ khách hàng AI: tiện ích trò chuyện trên trang web, nhân viên AI trả lời dựa trên kiến ​​thức của bạn và kiểm tra các khoản thanh toán thực, hộp thư đến chung của nhóm và phiếu yêu cầu khi không có ai rảnh."
         },
         {
-          "q": "AI có bịa đặt thông tin không?",
-          "a": "AI trả lời dựa trên kiến thức bạn đã duyệt, và một bước rà soát sẽ đối chiếu bản nháp với kết quả từ các công cụ. Khi không biết, nó sẽ nói rõ và đề xuất kết nối với người thật."
+          "q": "Liệu AI có bịa ra chuyện này không?",
+          "a": "Nó trả lời dựa trên kiến ​​thức mà bạn đã phê duyệt và thẻ đánh giá sẽ kiểm tra các bản nháp so với kết quả của công cụ. Khi nó không biết, nó nói như vậy và đề nghị một người."
         },
         {
-          "q": "Điều gì xảy ra khi AI không thể giúp?",
-          "a": "AI sẽ hỏi khách hàng trước. Nếu đồng ý, toàn bộ đội ngũ sẽ nhận thông báo tham gia và có 90 giây để can thiệp. Nếu không ai phản hồi, một yêu cầu hỗ trợ sẽ được tạo và khách hàng sẽ được thông báo qua email."
+          "q": "Điều gì xảy ra khi nó không thể giúp được?",
+          "a": "Nó hỏi khách hàng trước. Nếu đồng ý, mọi đồng đội sẽ nhận được thông báo Tham gia và có 90 giây để tham gia. Nếu không có ai thực hiện, một yêu cầu sẽ được gửi và khách hàng sẽ được gửi qua email."
         },
         {
-          "q": "Việc thiết lập mất bao lâu?",
-          "a": "Hầu hết các đội ngũ đều hoạt động ngay trong ngày: thêm kiến thức, dán đoạn mã widget và mời đội ngũ của bạn."
+          "q": "Quá trình thiết lập mất bao lâu?",
+          "a": "Hầu hết các nhóm đều phát trực tiếp trong cùng một ngày: bổ sung kiến ​​thức của bạn, dán đoạn mã tiện ích và mời nhóm của bạn."
         },
         {
           "q": "Có gói miễn phí không?",
@@ -532,15 +571,225 @@
         },
         {
           "q": "Nó có hoạt động trên các kênh khác không?",
-          "a": "Trò chuyện trên trang web đã hoạt động ngay bây giờ. Đa kênh sẽ ra mắt vào tháng 11."
+          "a": "Trò chuyện trên trang web đã hoạt động hôm nay. Bán hàng đa kênh sẽ ra mắt vào tháng 11."
+        }
+      ],
+      "more": "Không tìm thấy câu trả lời của bạn?",
+      "talk": "Hãy nói chuyện với chúng tôi"
+    },
+    "closing": {
+      "title": "Cung cấp cho khách hàng câu trả lời trước khi họ nhập xong.",
+      "subtitle": "Bắt đầu miễn phí, dạy nó về công việc kinh doanh của bạn và để nó nhận các câu hỏi lặp lại.",
+      "ctaPrimary": "Bắt đầu miễn phí",
+      "ctaSecondary": "Hãy nói chuyện với chúng tôi"
+    },
+    "tabs": {
+      "more": "Tìm hiểu thêm",
+      "widget": {
+        "label": "Elpino AI",
+        "title": "Một AI sẽ kiểm tra trước khi trả lời",
+        "body": "Elpino xác nhận người đang nói chuyện với ai, tra cứu khoản thanh toán hoặc đơn đặt hàng thực sự, loại bỏ các chi tiết riêng tư ra khỏi mô hình và chỉ sau đó mới trả lời.",
+        "p0": "Xác minh khách hàng trước khi chạm vào dữ liệu tài khoản",
+        "p1": "Kiểm tra các khoản thanh toán, gói và đơn đặt hàng trong các công cụ được kết nối của bạn",
+        "p2": "Bàn giao cho nhóm của bạn toàn bộ câu chuyện khi cần một người"
+      },
+      "inbox": {
+        "label": "Hộp thư đến được chia sẻ",
+        "title": "Một hộp thư đến cho nhóm của bạn và AI",
+        "body": "Xóa quyền sở hữu, thông báo tham gia và bối cảnh đầy đủ trên mỗi chuỗi.",
+        "p0": "Xem những gì AI đã kiểm tra",
+        "p1": "Tham gia cuộc trò chuyện chỉ bằng một cú nhấp chuột",
+        "p2": "Vị trí, thiết bị và lịch sử của khách truy cập cùng với"
+      },
+      "kb": {
+        "label": "Kiến thức",
+        "title": "Hãy dạy nó từ bất cứ thứ gì bạn có",
+        "body": "Thu thập dữ liệu trang web của bạn, tải tệp lên, viết trang. Thiết bị chuyển mạch công cộng và riêng tư quyết định ai nhìn thấy cái gì.",
+        "p0": "Thu thập dữ liệu trang web của bạn",
+        "p1": "Tải lên tài liệu và ghi chú",
+        "p2": "Giữ các trang riêng tư tránh xa khách truy cập"
+      },
+      "tickets": {
+        "label": "Vé",
+        "title": "Không có gì bị rơi",
+        "body": "Nếu không có ai rảnh, một vé sẽ được nộp và khách hàng sẽ được thông báo.",
+        "p0": "Được gửi tới Asana hoặc Trello",
+        "p1": "Tóm tắt chuyến đi cùng vé",
+        "p2": "Khách hàng luôn phản hồi"
+      },
+      "aria": "Khu vực sản phẩm"
+    },
+    "teams": {
+      "verify": {
+        "claim": "Tôi là Alex Morgan. Cho tôi xem hóa đơn của tôi.",
+        "ok": "Cảm ơn Alex. Bạn đã đăng nhập nên đây là hóa đơn của bạn.",
+        "ask": "Tôi không thể chia sẻ thông tin tài khoản với khách. Đăng nhập vào trang web và tôi sẽ kiểm tra xem đó có thực sự là bạn không.",
+        "verified": "Đã xác minh danh tính",
+        "locked": "Khách · tài khoản bị khóa",
+        "site": "Đã đăng nhập trên trang web của bạn",
+        "token": "Đã nhận được mã thông báo đã ký · alex@example.com",
+        "invoice": "Hóa đơn số 1042",
+        "plan": "Kế hoạch tăng trưởng · được trả tiền"
+      },
+      "plugins": {
+        "live": "9 plugin được kết nối"
+      },
+      "contacts": {
+        "label": "Liên hệ",
+        "name": "Tên",
+        "contact": "Email hoặc điện thoại",
+        "status": "Trạng thái",
+        "new": "Khách hàng tiềm năng mới",
+        "ask": "Email của bạn là gì, đề phòng trường hợp chúng tôi bị ngắt kết nối?",
+        "agent": "Đặc vụ AI · Vừa rồi",
+        "skip": "Bỏ qua",
+        "thanks": "Cảm ơn Maya! Tôi có thể giúp gì khác cho bạn không?"
+      },
+      "eyebrow": "Nơi dành cho mọi tập thể",
+      "title": "Mang lại năng suất thực sự cho mọi nhóm",
+      "cards": [
+        {
+          "tag": "Xác minh danh tính",
+          "title": "Không ai có thể vào được chỉ bằng cách xác nhận một cái tên",
+          "desc": "Một cái tên hoặc một email được nhập vào cuộc trò chuyện chẳng chứng minh được điều gì. Elpino chỉ mở dữ liệu tài khoản riêng tư cho những khách truy cập mà trang web của chính bạn đã đăng nhập và xác nhận, vì vậy, khách giả vờ là người khác sẽ không nhận được gì.",
+          "note": "Tra cứu thanh toán và đơn hàng chỉ sử dụng email đã được xác minh từ thông tin đăng nhập của bạn và việc đăng xuất sẽ kết thúc phiên trò chuyện ngay lập tức.",
+          "points": [
+            "Trang web của bạn đăng nhập người dùng và Elpino chỉ tin tưởng điều đó",
+            "Khách có thể trò chuyện nhưng các công cụ riêng tư vẫn bị khóa",
+            "Đăng xuất sẽ kết thúc phiên ngay lập tức"
+          ]
+        },
+        {
+          "tag": "AI trả lời",
+          "title": "Xem chính xác những gì AI trả lời",
+          "desc": "Mỗi câu trả lời đều cho thấy nó đang hoạt động: các trang kiến thức mà nó thu thập và khoản thanh toán hoặc đơn đặt hàng mà nó tra cứu trong các công cụ được kết nối của bạn. Không có gì AI nói là hộp đen.",
+          "note": "Xem cuộc trò chuyện trực tiếp từ hộp thư đến và can thiệp khi cần một người. Nhóm của bạn nắm được toàn bộ câu chuyện nên không ai yêu cầu khách hàng lặp lại.",
+          "points": [
+            "Xem các trang và công cụ đằng sau mỗi câu trả lời",
+            "Đọc từng câu trả lời khi khách hàng nhìn thấy",
+            "Tham gia chỉ bằng một cú nhấp chuột với bối cảnh đầy đủ"
+          ]
+        },
+        {
+          "tag": "Phân tích",
+          "title": "Xem ai ghé thăm và họ làm gì",
+          "desc": "Phân tích trang web nằm ngay cạnh hộp thư đến của bạn. Theo dõi khách truy cập, lượt xem trang, phiên, thời gian trên trang web và tỷ lệ thoát trong 7 ngày qua hoặc bất kỳ khoảng thời gian nào và so sánh với khoảng thời gian trước đó.",
+          "note": "Khách truy cập thực được tính ngoài bot nên các con số mô tả con người. Lọc theo tên miền và lưu cài đặt trước cho các chế độ xem bạn kiểm tra nhiều nhất.",
+          "points": [
+            "Khách truy cập, lượt xem trang, phiên và tỷ lệ thoát",
+            "So sánh với kỳ trước",
+            "Lọc theo tên miền và lưu các chế độ xem yêu thích của bạn"
+          ]
+        },
+        {
+          "tag": "Liên hệ",
+          "title": "Biến cuộc trò chuyện thành danh bạ",
+          "desc": "Mỗi khách truy cập chia sẻ email hoặc số điện thoại sẽ được đưa vào CRM tích hợp của bạn, kèm theo toàn bộ lịch sử cuộc trò chuyện của họ.",
+          "note": "Bất cứ khi nào bạn nói chuyện với ai đó, bạn sẽ biết họ là ai và họ đã hỏi gì trước đó, vì vậy mọi câu trả lời đều mang lại cảm giác cá nhân.",
+          "points": [
+            "Khách hàng tiềm năng được ghi lại ngay trong cuộc trò chuyện",
+            "Lịch sử và kế hoạch bên cạnh mỗi lần liên hệ",
+            "Đã đồng bộ hóa với CRM bạn đã sử dụng"
+          ]
+        },
+        {
+          "tag": "Plugin",
+          "title": "Cắm vào các công cụ bạn đã sử dụng",
+          "desc": "Kết nối thanh toán, cửa hàng, CRM và công cụ bán vé trong vài phút, vì vậy mọi câu trả lời đều đến từ dữ liệu trực tiếp thay vì phỏng đoán.",
+          "note": "Elpino đọc và hoạt động thông qua các plugin bạn bật và chỉ với sự cho phép mà bạn cấp cho nó.",
+          "points": [
+            "Thanh toán, đơn đặt hàng và kế hoạch, tra cứu trực tiếp",
+            "Vé được nộp ở Asana hoặc Trello",
+            "Tắt plugin bất cứ lúc nào"
+          ]
         }
       ]
     },
-    "closing": {
-      "title": "Đưa ra câu trả lời cho khách hàng trước khi họ gõ xong.",
-      "subtitle": "Bắt đầu miễn phí, dạy nó về doanh nghiệp của bạn, và để nó đảm nhận những câu hỏi lặp lại.",
-      "ctaPrimary": "Bắt đầu miễn phí",
-      "ctaSecondary": "Liên hệ với chúng tôi"
+    "autopilot": {
+      "save": "Lưu",
+      "close": "Tương tự",
+      "aYearVs": "một năm, so với",
+      "cheapest": "rẻ nhất trong ba loại",
+      "each": "Tiết kiệm cho từng người",
+      "youSave": "Bạn lưu vs",
+      "yr": "một năm",
+      "same": "cũng giống vậy",
+      "seats": "Người dùng",
+      "conversations": "Cuộc hội thoại AI / tháng",
+      "p1": "Số chỗ không giới hạn trên mọi gói, thậm chí là Miễn phí, vì vậy bạn có thể phát triển nhóm của mình mà không cần tăng hóa đơn phần mềm.",
+      "p2": "Không có cam kết. Tiếp tục sử dụng gói 10 USD và chỉ nạp tiền tín dụng AI khi bạn cần, tối đa là 0,03 USD cho một cuộc trò chuyện. Các khoản nạp tiền sẽ được chuyển tiếp và không bao giờ có hóa đơn quá mức.",
+      "bills": "Hóa đơn một tháng, được chia thành từng khoản",
+      "seatsUnit": "chỗ ngồi",
+      "convUnit": "Cuộc hội thoại AI",
+      "perMonth": "Mỗi tháng",
+      "perYearLabel": "Mỗi năm",
+      "compareWith": "So sánh với",
+      "footnote": "Giá niêm yết công khai bằng USD, được kiểm tra vào ngày 1 tháng 10 năm 2026, thanh toán hàng năm nếu được hiển thị, cho cùng số lượng chỗ ngồi và cuộc trò chuyện AI trên mọi sản phẩm. Không bao gồm thuế, tiện ích bổ sung và giảm giá doanh nghiệp. Intercom và Zendesk chỉ tính phí những cuộc hội thoại mà AI giải quyết; Elpino tính phí cho mọi cuộc hội thoại AI mà nó xử lý, dù có giải quyết hay không. Sự so sánh này giả định mọi cuộc trò chuyện bằng AI đều được giải quyết, đây là mức chi phí cao nhất mà hai cuộc trò chuyện đó sẽ thực hiện. Elpino: Kế hoạch khởi đầu về thanh toán hàng năm ($10 một tháng, bao gồm $7 tín dụng AI), số chỗ không giới hạn và tín dụng AI lên tới $0,03 một cuộc trò chuyện.",
+      "cta": "Xem giá"
+    },
+    "toolsLine": {
+      "title": "Kết nối với các công cụ thanh toán, cửa hàng, CRM và bán vé mà bạn đã sử dụng chỉ trong vài phút chứ không phải chạy nước rút."
+    },
+    "saved": {
+      "title": "Trả lại thời gian cho nhóm của bạn.",
+      "p1": "Elpino trả lời các câu hỏi lặp lại và tự tra cứu các khoản thanh toán cũng như đơn đặt hàng, để người của bạn duy trì các cuộc trò chuyện cần đến chúng.",
+      "p2": "Di chuyển thanh trượt đến số của riêng bạn. Đó là một ước tính, không phải là một lời hứa.",
+      "save": "Lưu",
+      "hours": "giờ",
+      "per": "thời gian của nhóm bạn, được trả lại",
+      "conversations": "Cuộc trò chuyện/tháng",
+      "share": "Đã trả lời mà không có người",
+      "minutes": "Mỗi phút",
+      "grid": "Thời gian hỗ trợ của nhóm bạn, một ô vuông",
+      "hr": "giờ",
+      "left": "còn lại số giờ",
+      "hrs": "giờ",
+      "today": "Nhóm của bạn ngày hôm nay",
+      "givenBack": "Được Elpino trả lại"
+    },
+    "platform": {
+      "title": "AI kiểm tra cách người đại diện tốt nhất của bạn sẽ làm",
+      "subtitle": "Nó xác minh người đang nói chuyện với ai, tra cứu khoản thanh toán hoặc đơn đặt hàng thực sự, loại bỏ các chi tiết riêng tư ra khỏi mô hình, sau đó trả lời. Khi cần một người, nhóm của bạn sẽ có được mọi thứ họ tìm thấy."
+    },
+    "widgetMock": {
+      "row0": "Đang đọc tin nhắn của bạn",
+      "row0done": "Đã nhận được tin nhắn của bạn",
+      "row1": "Đang xác minh đó là bạn",
+      "row1done": "Bạn đã được xác minh",
+      "row2": "Đang kiểm tra khoản thanh toán và gói của bạn",
+      "row2done": "Đã kiểm tra thanh toán và gói",
+      "row3": "Bảo vệ thông tin riêng tư của bạn",
+      "row3done": "Thông tin riêng tư được giữ kín khỏi AI",
+      "name": "Elpino AI",
+      "role": "Trợ lý AI",
+      "question": "Tôi đã mua gói nhưng gói này vẫn chưa hoạt động",
+      "answer": "Cảm ơn sự kiên nhẫn của bạn. Khoản thanh toán của bạn đã được thực hiện và gói của bạn hiện đang hoạt động. Nếu bạn vẫn thấy gói cũ, hãy làm mới trang tổng quan của bạn."
+    },
+    "kgraph": {
+      "s0": "Sơ đồ trang web",
+      "s1": "PDF và tài liệu",
+      "s2": "Trang bạn viết",
+      "s2hint": "chính sách và cách thực hiện",
+      "s3": "Các công cụ được kết nối của bạn",
+      "s3hint": "dữ liệu trực tiếp qua MCP",
+      "aria": "Trang web, tài liệu, trang và công cụ của bạn đều cung cấp kiến thức cho Elpino",
+      "hub": "Kiến thức",
+      "answer": "Câu trả lời"
+    },
+    "ticketFlow": {
+      "title": "Đã thanh toán nhưng gói vẫn chưa hoạt động",
+      "filed": "Đã nộp",
+      "assigned": "Đã được chỉ định",
+      "told": "Khách hàng kể",
+      "aria": "Khi không có ai rảnh, một yêu cầu sẽ được viết, gửi đến công cụ của nhóm bạn và khách hàng sẽ được thông báo",
+      "nobody": "Hiện tại không ai trong nhóm rảnh cả",
+      "ticket": "Yêu cầu hỗ trợ",
+      "open": "Mở",
+      "draft": "Bản nháp",
+      "high": "Cao",
+      "billing": "Thanh toán",
+      "summary": "Tóm tắt, những gì đã được kiểm tra và những gì đã tìm thấy được đính kèm",
+      "filedTo": "Được lưu vào công cụ tạo yêu cầu của bạn"
     }
   },
   "pricing": {
@@ -1235,7 +1484,10 @@
     "contactSales": "Liên hệ bán hàng",
     "login": "Đăng nhập",
     "goToDashboard": "Đến bảng điều khiển",
-    "getStarted": "Bắt đầu"
+    "getStarted": "Bắt đầu",
+    "offer": {
+      "text": "Bắt đầu miễn phí ngay hôm nay: 100 tin nhắn AI mỗi tháng, không cần thẻ và bạn có thể phát trực tiếp trên trang web của riêng mình sau một buổi chiều"
+    }
   },
   "footer": {
     "ticker": [

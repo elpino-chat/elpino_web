@@ -210,8 +210,7 @@
       "ctaSecondary": "Kokeile itse",
       "trust": [
         "100 ilmaista tekoälyviestiä kuukaudessa",
-        "Ei korttia tarvita",
-        "Valmis yhdessä iltapäivässä"
+        "Korttia ei tarvita"
       ],
       "stickers": [
         "Tekoälyn ratkaisema",
@@ -227,12 +226,27 @@
       "widget": {
         "name": "Elpino",
         "subtitle": "Vastaa sekunneissa",
-        "convo": [
-          "Veloitettiinko minulta päivitys kahdesti?",
-          "Tarkistin maksuhistoriasi",
-          "Sinulta veloitettiin vain kerran. Toinen yritys epäonnistui ja sitä ei koskaan veloitettu."
-        ]
-      }
+        "convo": {
+          "0": "Veloitettiinko minua kahdesti päivityksestäni?",
+          "2": "Sinulta veloitettiin kerran. Toinen yritys epäonnistui, eikä sitä koskaan saatu kiinni."
+        }
+      },
+      "emailPlaceholder": "Kirjoita työsähköpostiosoitteesi",
+      "emailLabel": "Sähköpostiosoite",
+      "ctaSignUp": "Aloita ilmainen kokeilu",
+      "ctaDemo": "Näytä demo",
+      "stage": {
+        "step0": "Lue kysymys",
+        "step1": "Tarkistaa maksutietosi",
+        "step2": "Palautuskäytäntösi lukeminen",
+        "working": "Elpino toimii…"
+      },
+      "glass": {
+        "customer": "Asiakas",
+        "ai": "Elpino"
+      },
+      "headLead": "Anna tekoäly vastata toistuviin kysymyksiin,",
+      "headEmphasis": "jotta tiimisi hoitaa tärkeimmät."
     },
     "marquee": {
       "questions": [
@@ -367,6 +381,31 @@
           "tag": "Tiketit",
           "title": "Mikään ei katoa",
           "desc": "Jos kukaan ei ole käytettävissä, luodaan tiketti ja asiakkaalle ilmoitetaan."
+        }
+      ],
+      "websiteLabel": "Verkkosivustosi",
+      "websitePlaceholder": "omayritys.fi",
+      "websiteAdded": "Lisätty",
+      "websiteButton": "Lisää verkkosivusto",
+      "plugins": "Lisäosat",
+      "title3": "Kaikki, mitä tukipalvelu tarvitsee, kolmessa vaiheessa",
+      "prev": "Edellinen",
+      "next": "Seuraava",
+      "steps": [
+        {
+          "tag": "Vaihe 1",
+          "title": "Lisää verkkosivustosi",
+          "desc": "Liitä sivustosi osoite. Siinä on kaikki, mitä Elpino tarvitsee aloittaakseen yrityksesi oppimisen."
+        },
+        {
+          "tag": "Vaihe 2",
+          "title": "Indeksoi sivustosi ja syötä se",
+          "desc": "Elpino lukee sivusi ja tiedostosi ja säilyttää jokaisen asiakkaan tiedot ja aiemmat keskustelut sisäänrakennetussa CRM:ssä. Yhdistä laajennukset, kuten Stripe tai Shopify, jotta tiedot pysyvät synkronoituina."
+        },
+        {
+          "tag": "Vaihe 3",
+          "title": "Lisää chat-widget muutamassa minuutissa",
+          "desc": "Pudota yksi katkelma verkkosivustollesi tai verkkosovellukseesi aloitussivulta React-sovellukseen ja puhu vierailijoille reaaliajassa."
         }
       ]
     },
@@ -507,40 +546,250 @@
     },
     "faq": {
       "eyebrow": "Kysymykset",
-      "titlePrefix": "Mitä ihmiset kysyvät",
-      "titleHl": "ensin.",
+      "titlePrefix": "Asiat ihmiset",
+      "titleHl": "kysy ensin.",
       "items": [
         {
           "q": "Mikä on Elpino?",
-          "a": "Tekoälypohjainen asiakastukialusta: chat-widget sivustollasi, tekoälyagentti, joka vastaa tiedoistasi ja tarkistaa oikeat maksut, jaettu tiimin saapuneet-kansio ja tiketit, kun kukaan ei ole käytettävissä."
+          "a": "Tekoälyn asiakastukialusta: verkkosivuston chat-widget, tekoälyagentti, joka vastaa tietosi perusteella ja tarkistaa todelliset maksut, jaettu tiimin postilaatikko ja liput, kun kukaan ei ole vapaa."
         },
         {
           "q": "Keksiikö tekoäly asioita?",
-          "a": "Se vastaa sinun hyväksymästäsi tiedosta, ja vahvistusvaihe tarkistaa luonnokset työkalutuloksia vasten. Kun se ei tiedä, se sanoo niin ja tarjoaa ihmistä."
+          "a": "Se vastaa hyväksymästäsi tiedosta, ja tarkistuspassi vertaa luonnoksia työkalun tuloksiin. Kun se ei tiedä, se sanoo niin ja tarjoaa henkilölle."
         },
         {
-          "q": "Mitä tapahtuu, kun se ei pysty auttamaan?",
-          "a": "Se kysyy asiakkaalta ensin. Kyllä-vastauksella koko tiimi saa liittymisilmoituksen ja 90 sekuntia aikaa reagoida. Jos kukaan ei liity, luodaan tiketti ja asiakkaalle lähetetään sähköposti."
+          "q": "Mitä tapahtuu, kun se ei voi auttaa?",
+          "a": "Se kysyy ensin asiakkaalta. Kyllä, jokainen joukkuetoveri saa liittymisilmoituksen ja hänellä on 90 sekuntia aikaa hypätä sisään. Jos kukaan ei tee sitä, arkistoidaan lippu ja asiakkaalle lähetetään sähköpostia."
         },
         {
           "q": "Kuinka kauan käyttöönotto kestää?",
-          "a": "Useimmat tiimit ovat käytössä samana päivänä: lisää tietoa, liitä widget-koodi ja kutsu tiimisi."
+          "a": "Useimmat joukkueet ovat live-tilassa samana päivänä: lisää tietosi, liitä widget-koodinpätkä ja kutsu tiimisi."
         },
         {
-          "q": "Onko ilmaista tasoa?",
-          "a": "On: 100 tekoälyviestiä kuukaudessa, ei korttia tarvita."
+          "q": "Onko olemassa ilmaista suunnitelmaa?",
+          "a": "Kyllä: 100 tekoälyviestiä kuukaudessa, korttia ei tarvita."
         },
         {
-          "q": "Toimiiko se muissa kanavissa?",
-          "a": "Sivuston chat toimii jo. Omnikanava saapuu marraskuussa."
+          "q": "Toimiiko se muilla kanavilla?",
+          "a": "Verkkosivuston chat on käynnissä tänään. Omnichannel tulee marraskuussa."
+        }
+      ],
+      "more": "Etkö löydä vastausta?",
+      "talk": "Keskustele kanssamme"
+    },
+    "closing": {
+      "title": "Anna asiakkaillesi vastaus ennen kuin he lopettavat kirjoittamisen.",
+      "subtitle": "Aloita ilmaiseksi, opeta se yrityksesi ja anna sen vastata toistuviin kysymyksiin.",
+      "ctaPrimary": "Aloita ilmaiseksi",
+      "ctaSecondary": "Keskustele kanssamme"
+    },
+    "tabs": {
+      "more": "Lisätietoja",
+      "widget": {
+        "label": "Elpino AI",
+        "title": "Tekoäly, joka tarkistaa ennen kuin vastaa",
+        "body": "Elpino vahvistaa, kenen kanssa se puhuu, etsii oikean maksun tai tilauksen, pitää yksityiset tiedot poissa mallista ja vastaa vasta sitten.",
+        "p0": "Vahvistaa asiakkaan ennen kuin se koskettaa tilitietoja",
+        "p1": "Tarkistaa maksut, suunnitelmat ja tilaukset liitetyissä työkaluissasi",
+        "p2": "Luovuta tiimillesi koko tarina, kun henkilöä tarvitaan"
+      },
+      "inbox": {
+        "label": "Jaettu postilaatikko",
+        "title": "Yksi postilaatikko tiimillesi ja tekoälylle",
+        "body": "Selvitä omistajuus, liity hälytykset ja koko konteksti jokaisessa säikeessä.",
+        "p0": "Katso, mitä tekoäly on jo tarkistanut",
+        "p1": "Liity keskusteluun yhdellä napsautuksella",
+        "p2": "Vierailijan sijainti, laite ja historia rinnakkain"
+      },
+      "kb": {
+        "label": "Tietoa",
+        "title": "Opeta se kaikesta mitä sinulla on",
+        "body": "Indeksoi sivustoasi, lataa tiedostoja, kirjoita sivuja. Julkinen ja yksityinen kytkimet päättävät, kuka näkee mitä.",
+        "p0": "Indeksoi verkkosivustosi",
+        "p1": "Lähetä asiakirjoja ja muistiinpanoja",
+        "p2": "Pidä yksityiset sivut poissa vierailijoilta"
+      },
+      "tickets": {
+        "label": "Liput",
+        "title": "Mitään ei pudota",
+        "body": "Jos kukaan ei ole vapaa, arkistoidaan lippu ja kerrotaan asiakkaalle.",
+        "p0": "Ilmoitettu Asanalle tai Trellolle",
+        "p1": "Yhteenveto kulkee lipun mukana",
+        "p2": "Asiakas kuulee aina takaisin"
+      },
+      "aria": "Tuotealueet"
+    },
+    "teams": {
+      "verify": {
+        "claim": "Olen Alex Morgan. Näytä minulle laskuni.",
+        "ok": "Kiitos, Alex. Olet kirjautunut sisään, joten tässä ovat laskusi.",
+        "ask": "En voi jakaa tilitietoja vieraalle. Kirjaudu sisään sivustolle, niin tarkistan, että olet todella sinä.",
+        "verified": "Henkilöllisyys vahvistettu",
+        "locked": "Vieras · tili lukittu",
+        "site": "Kirjautunut sisään verkkosivustollesi",
+        "token": "Allekirjoitettu tunnus vastaanotettu · alex@example.com",
+        "invoice": "Lasku #1042",
+        "plan": "Kasvusuunnitelma · maksettu"
+      },
+      "plugins": {
+        "live": "9 laajennusta kytketty"
+      },
+      "contacts": {
+        "label": "Yhteystiedot",
+        "name": "Nimi",
+        "contact": "Sähköposti tai puhelin",
+        "status": "Tila",
+        "new": "Uusi johto",
+        "ask": "Mikä on sähköpostiosoitteesi siltä varalta, että yhteys katkeaa?",
+        "agent": "AI-agentti · Juuri nyt",
+        "skip": "Ohita",
+        "thanks": "Kiitos, Maya! Voinko auttaa sinua muussa asiassa?"
+      },
+      "eyebrow": "Paikka jokaiselle joukkueelle",
+      "title": "Tarjoa todellista tuottavuutta jokaiselle tiimille",
+      "cards": [
+        {
+          "tag": "Henkilöllisyyden vahvistus",
+          "title": "Kukaan ei pääse sisään pelkällä nimellä",
+          "desc": "Chatiin kirjoitettu nimi tai sähköpostiosoite ei todista mitään. Elpino avaa yksityisiä tilitietoja vain vierailijoille, joille oma verkkosivustosi on kirjautunut sisään ja jotka ovat vakuuttaneet, joten joku muu esiintyvä vieras ei saa mitään.",
+          "note": "Maksu- ja tilaushakuissa käytetään vain kirjautumisestasi saatua vahvistettua sähköpostia, ja uloskirjautuminen lopettaa chat-istunnon välittömästi.",
+          "points": [
+            "Sivustosi kirjaa käyttäjän sisään, ja Elpino luottaa vain siihen",
+            "Vieraat voivat keskustella, mutta yksityiset työkalut pysyvät lukittuina",
+            "Uloskirjautuminen lopettaa istunnon heti"
+          ]
+        },
+        {
+          "tag": "AI vastaa",
+          "title": "Katso tarkalleen, mitä tekoäly vastaa",
+          "desc": "Jokainen vastaus näyttää toimivuutensa: tietosi sivut, joihin se perustui, ja maksu tai tilaus, jonka se etsi yhdistetyistä työkaluistasi. Mikään tekoälyn mukaan ei ole musta laatikko.",
+          "note": "Katso keskustelua suorana postilaatikosta ja astu sisään, kun henkilöä tarvitaan. Tiimisi saa koko tarinan, joten kukaan ei pyydä asiakasta toistamaan itseään.",
+          "points": [
+            "Katso jokaisen vastauksen takana olevat sivut ja työkalut",
+            "Lue jokainen vastaus sellaisena kuin asiakas sen näkee",
+            "Liity yhdellä napsautuksella koko kontekstin kanssa"
+          ]
+        },
+        {
+          "tag": "Analytics",
+          "title": "Katso, ketkä vierailevat ja mitä he tekevät",
+          "desc": "Verkkoanalytiikka sijaitsee aivan postilaatikkosi vieressä. Seuraa kävijöitä, näyttökertoja, istuntoja, sivustolla vietettyä aikaa ja välitöntä poistumisprosenttia viimeisen 7 päivän tai minkä tahansa ajanjakson ajalta ja vertaa sitä edelliseen.",
+          "note": "Todelliset vierailijat lasketaan erilleen kuin botit, joten luvut kuvaavat ihmisiä. Suodata verkkotunnuksen mukaan ja tallenna esiasetukset eniten tarkistamillesi näkymille.",
+          "points": [
+            "Vierailijat, näyttökerrat, istunnot ja poistumisprosentti",
+            "Vertaa edelliseen ajanjaksoon",
+            "Suodata verkkotunnuksen mukaan ja tallenna suosikkinäkymäsi"
+          ]
+        },
+        {
+          "tag": "Yhteystiedot",
+          "title": "Muuta keskustelut kontakteiksi",
+          "desc": "Jokainen vierailija, joka jakaa sähköpostiosoitteen tai puhelinnumeron, päätyy sisäänrakennettuun CRM-järjestelmääsi ja koko keskusteluhistoriansa liitteenä.",
+          "note": "Aina kun puhut jonkun kanssa, näet, keitä hän on ja mitä hän kysyi aiemmin, joten jokainen vastaus tuntuu henkilökohtaiselta.",
+          "points": [
+            "Liidit vangittiin suoraan chatissa",
+            "Historia ja suunnitelma jokaisen yhteydenoton yhteydessä",
+            "Synkronoitu jo käyttämäsi CRM:n kanssa"
+          ]
+        },
+        {
+          "tag": "Lisäosat",
+          "title": "Liitä jo käyttämiisi työkaluihin",
+          "desc": "Yhdistä maksut, kaupat, asiakassuhdehallitukset ja lipputyökalut minuuteissa, joten jokainen vastaus tulee reaaliaikaisesta datasta arvauksen sijaan.",
+          "note": "Elpino lukee ja toimii päälle kytkemiesi lisäosien kautta ja vain sille antamillasi luvilla.",
+          "points": [
+            "Maksut, tilaukset ja suunnitelmat, katsottiin livenä",
+            "Liput arkistoitu Asanassa tai Trellossa",
+            "Kytke laajennus pois päältä milloin tahansa"
+          ]
         }
       ]
     },
-    "closing": {
-      "title": "Anna asiakkaillesi vastaus ennen kuin he ehtivät lopettaa kirjoittamisen.",
-      "subtitle": "Aloita ilmaiseksi, opeta sille yrityksesi, ja anna sen hoitaa toistuvat kysymykset.",
-      "ctaPrimary": "Aloita ilmaiseksi",
-      "ctaSecondary": "Ota yhteyttä"
+    "autopilot": {
+      "save": "Tallenna",
+      "close": "Suunnilleen sama",
+      "aYearVs": "vuodessa verrattuna",
+      "cheapest": "halvin kolmesta",
+      "each": "Säästä kutakin vastaan",
+      "youSave": "Säästät vs",
+      "yr": "vuodessa",
+      "same": "suunnilleen sama",
+      "seats": "Käyttäjät",
+      "conversations": "AI-keskustelut / kk",
+      "p1": "Rajoittamaton määrä paikkoja jokaisessa paketissa, jopa ilmainen, joten voit kasvattaa tiimiäsi kasvattamatta ohjelmistolaskuasi.",
+      "p2": "Ei sitoutumista. Pysy 10 dollarin suunnitelmassa ja lisää AI-saldoa vain silloin, kun tarvitset sitä, korkeintaan 0,03 dollaria keskustelulta. Täydennykset siirretään eteenpäin, eikä koskaan tule ylimääräistä laskua.",
+      "bills": "Yhden kuukauden lasku, eritelty",
+      "seatsUnit": "paikkoja",
+      "convUnit": "AI-keskustelut",
+      "perMonth": "Kuukaudessa",
+      "perYearLabel": "vuodessa",
+      "compareWith": "Vertaa",
+      "footnote": "Julkiset listahinnat Yhdysvaltain dollareina, tarkistettu 1. lokakuuta 2026, vuosilaskutus, missä näkyy, sama määrä paikkoja ja tekoälykeskusteluja jokaisessa tuotteessa. Ei sisällä veroja, lisäosia ja yritysalennuksia. Intercom ja Zendesk veloittavat vain tekoälyn ratkaisemista keskusteluista; Elpino veloittaa jokaisesta käsittelemänsä tekoälykeskustelusta riippumatta siitä, onko se ratkaistu tai ei. Tässä vertailussa oletetaan, että jokainen tekoälykeskustelu on ratkaistu, mikä on suurin summa, jonka he kaksi maksaisivat. Elpino: Aloitussuunnitelma vuosittaisesta laskutuksesta (10 dollaria kuukaudessa, 7 dollaria tekoälyhyvitystä), rajattomat istumapaikat ja tekoälysaldoa korotettiin jopa 0,03 dollarilla keskustelua kohden.",
+      "cta": "Katso hinta"
+    },
+    "toolsLine": {
+      "title": "Yhdistää jo käyttämiisi maksu-, kauppa-, CRM- ja lipunmyyntityökaluihin muutamassa minuutissa, ei sprinteissä."
+    },
+    "saved": {
+      "title": "Anna tiimillesi työtunnit takaisin.",
+      "p1": "Elpino vastaa toistuviin kysymyksiin ja etsii maksut ja tilaukset itse, jotta ihmiset pitävät niitä tarvitsevat keskustelut.",
+      "p2": "Siirrä liukusäätimet omiin numeroihisi. Se on arvio, ei lupaus.",
+      "save": "Tallenna",
+      "hours": "tuntia",
+      "per": "tiimisi ajasta palautettuna",
+      "conversations": "Keskustelut/kk",
+      "share": "Vastattiin ilman henkilöä",
+      "minutes": "Minuutit kukin",
+      "grid": "Joukkueesi tukiaika, yksi neliö",
+      "hr": "klo",
+      "left": "tuntia jäljellä",
+      "hrs": "klo",
+      "today": "Your team today",
+      "givenBack": "Elpinon palauttama"
+    },
+    "platform": {
+      "title": "AI, joka tarkistaa parhaan agenttisi tavalla",
+      "subtitle": "Se tarkistaa, kenen kanssa se puhuu, etsii oikean maksun tai tilauksen, pitää yksityiset tiedot poissa mallista ja vastaa sitten. Kun henkilöä tarvitaan, tiimisi saa kaiken, mitä se löysi."
+    },
+    "widgetMock": {
+      "row0": "Viestisi lukeminen",
+      "row0done": "Sain viestisi",
+      "row1": "Verifying it's you",
+      "row1done": "Olet vahvistettu",
+      "row2": "Tarkistamme maksusi ja suunnitelmasi",
+      "row2done": "Maksu ja suunnitelma tarkistettu",
+      "row3": "Yksityistietojesi suojaaminen",
+      "row3done": "Yksityiset tiedot pidetään poissa tekoälystä",
+      "name": "Elpino AI",
+      "role": "AI Assistant",
+      "question": "Ostin suunnitelman, mutta se ei ole vieläkään aktiivinen",
+      "answer": "Kiitos kärsivällisyydestäsi. Maksusi onnistui ja suunnitelmasi on nyt aktiivinen. Jos näet edelleen vanhan suunnitelman, päivitä hallintapaneeli."
+    },
+    "kgraph": {
+      "s0": "Verkkosivuston sivukartta",
+      "s1": "PDF-tiedostot ja asiakirjat",
+      "s2": "Kirjoittamasi sivut",
+      "s2hint": "käytännöt ja ohjeet",
+      "s3": "Yhdistetyt työkalut",
+      "s3hint": "reaaliaikainen data MCP:n kautta",
+      "aria": "Verkkosivustosi, asiakirjasi, sivusi ja työkalusi ruokkivat Elpinon tietämystä",
+      "hub": "Tietoa",
+      "answer": "Vastaukset"
+    },
+    "ticketFlow": {
+      "title": "Maksettu, mutta suunnitelma ei ole vielä voimassa",
+      "filed": "Arkistoitu",
+      "assigned": "Määrätty",
+      "told": "Asiakas kertoi",
+      "aria": "Kun kukaan ei ole vapaa, kirjoitetaan lippu, joka arkistoidaan tiimisi työkaluun ja asiakkaalle kerrotaan",
+      "nobody": "Kukaan tiimistä ei ole tällä hetkellä vapaa",
+      "ticket": "Tiketti",
+      "open": "Open",
+      "draft": "Luonnos",
+      "high": "Korkea",
+      "billing": "Laskutus",
+      "summary": "Yhteenveto, mitä tarkistettiin ja mitä löydettiin liitteenä",
+      "filedTo": "Arkistoitu lipputyökaluusi"
     }
   },
   "pricing": {
@@ -1235,7 +1484,10 @@
     "contactSales": "Ota yhteyttä myyntiin",
     "login": "Kirjaudu sisään",
     "goToDashboard": "Siirry hallintapaneeliin",
-    "getStarted": "Aloita"
+    "getStarted": "Aloita",
+    "offer": {
+      "text": "Aloita ilmaiseksi tänään: 100 tekoälyviestiä kuukaudessa, korttia ei tarvita, ja voit olla livenä omalla sivustollasi iltapäivällä"
+    }
   },
   "footer": {
     "ticker": [

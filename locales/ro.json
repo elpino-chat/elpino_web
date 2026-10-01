@@ -210,8 +210,7 @@
       "ctaSecondary": "Încearcă chiar tu",
       "trust": [
         "100 de mesaje AI gratuite pe lună",
-        "Nu e nevoie de card",
-        "Pregătit într-o după-amiază"
+        "Nu este nevoie de card"
       ],
       "stickers": [
         "Rezolvat de AI",
@@ -227,12 +226,27 @@
       "widget": {
         "name": "Elpino",
         "subtitle": "Răspunde în câteva secunde",
-        "convo": [
-          "Am fost taxat de două ori pentru upgrade?",
-          "Am verificat istoricul plăților tale",
-          "Ai fost taxat o singură dată. A doua încercare a eșuat și nu a fost niciodată debitată."
-        ]
-      }
+        "convo": {
+          "0": "Am fost taxat de două ori pentru upgrade-ul meu?",
+          "2": "Ați fost taxat o dată. A doua încercare a eșuat și nu a fost niciodată capturată."
+        }
+      },
+      "emailPlaceholder": "Introduceți adresa de e-mail de serviciu",
+      "emailLabel": "Adresă de e-mail",
+      "ctaSignUp": "Începeți perioada de încercare gratuită",
+      "ctaDemo": "Vezi demonstrația",
+      "stage": {
+        "step0": "Citind întrebarea",
+        "step1": "Verificarea evidenței plăților",
+        "step2": "Citind politica de rambursare",
+        "working": "Elpino lucrează..."
+      },
+      "glass": {
+        "customer": "Client",
+        "ai": "Elpino"
+      },
+      "headLead": "Lăsați AI să răspundă la întrebările repetate,",
+      "headEmphasis": ", astfel încât echipa ta să se ocupe de cele care contează."
     },
     "marquee": {
       "questions": [
@@ -367,6 +381,31 @@
           "tag": "Tichete",
           "title": "Nimic nu se pierde",
           "desc": "Dacă nimeni nu este disponibil, se creează un tichet și clientul este informat."
+        }
+      ],
+      "websiteLabel": "Site-ul dvs",
+      "websitePlaceholder": "compania ta.com",
+      "websiteAdded": "Adăugat",
+      "websiteButton": "Adăugați site-ul web",
+      "plugins": "Pluginuri",
+      "title3": "Tot ce are nevoie un birou de asistență, în 3 pași",
+      "prev": "Anterior",
+      "next": "În continuare",
+      "steps": [
+        {
+          "tag": "Pasul 1",
+          "title": "Adaugă site-ul tău",
+          "desc": "Lipiți adresa site-ului dvs. Acesta este tot ce are nevoie Elpino pentru a începe să-ți învețe afacerea."
+        },
+        {
+          "tag": "Pasul 2",
+          "title": "Accesați cu crawlere site-ul dvs. și alimentați-l",
+          "desc": "Elpino îți citește paginile și fișierele și păstrează detaliile fiecărui client și conversațiile anterioare în CRM-ul său încorporat. Conectați pluginuri precum Stripe sau Shopify pentru a menține acele date sincronizate."
+        },
+        {
+          "tag": "Pasul 3",
+          "title": "Adăugați widgetul de chat în câteva minute",
+          "desc": "Introduceți un fragment în site-ul dvs. web sau în aplicația dvs. web, de la o pagină de destinație la o aplicație React și discutați cu vizitatorii în timp real."
         }
       ]
     },
@@ -507,40 +546,250 @@
     },
     "faq": {
       "eyebrow": "Întrebări",
-      "titlePrefix": "Ce întreabă oamenii",
-      "titleHl": "primul.",
+      "titlePrefix": "Lucruri oameni",
+      "titleHl": "întreabă mai întâi.",
       "items": [
         {
           "q": "Ce este Elpino?",
-          "a": "O platformă de suport pentru clienți bazată pe AI: un widget de chat pe site-ul tău, un agent AI care răspunde din cunoștințele tale și verifică plăți reale, un inbox de echipă partajat, și tichete când nimeni nu este disponibil."
+          "a": "O platformă de asistență pentru clienți AI: un widget de chat pe site, un agent AI care răspunde din cunoștințele tale și verifică plățile reale, o căsuță de echipă partajată și bilete atunci când nimeni nu este liber."
         },
         {
-          "q": "Va inventa AI-ul lucruri?",
-          "a": "Răspunde din cunoștințele pe care le-ai aprobat, și un pas de verificare confruntă schițele cu rezultatele instrumentelor. Când nu știe, spune asta și oferă un om."
+          "q": "Va inventa AI lucrurile?",
+          "a": "Răspunde din cunoștințele pe care le-ați aprobat, iar o trecere de revizuire verifică schițele cu rezultatele instrumentului. Când nu știe, așa spune și oferă o persoană."
         },
         {
           "q": "Ce se întâmplă când nu poate ajuta?",
-          "a": "Întreabă clientul mai întâi. Dacă răspunsul e da, toată echipa primește o notificare de alăturare și are 90 de secunde să reacționeze. Dacă nimeni nu se alătură, se creează un tichet și clientul primește un email."
+          "a": "Îl întreabă pe client mai întâi. În cazul unui da, fiecare coechipier primește o alertă de alăturare și are 90 de secunde pentru a intra. Dacă nimeni nu o face, se depune un bilet și clientului i se trimite un e-mail."
         },
         {
           "q": "Cât durează configurarea?",
-          "a": "Majoritatea echipelor sunt active în aceeași zi: adaugă cunoștințe, lipește codul widgetului, și invită-ți echipa."
+          "a": "Cele mai multe echipe sunt live în aceeași zi: adaugă cunoștințele tale, inserează fragmentul de widget și invită-ți echipa."
         },
         {
           "q": "Există un plan gratuit?",
-          "a": "Da: 100 de mesaje AI pe lună, nu e nevoie de card."
+          "a": "Da: 100 de mesaje AI pe lună, nu este nevoie de card."
         },
         {
           "q": "Funcționează pe alte canale?",
-          "a": "Chatul pe site funcționează deja. Suportul omnicanal vine în noiembrie."
+          "a": "Chatul pe site este live astăzi. Omnicanalul vine în noiembrie."
+        }
+      ],
+      "more": "Nu găsești răspunsul tău?",
+      "talk": "Vorbeste cu noi"
+    },
+    "closing": {
+      "title": "Oferă-le clienților tăi răspunsul înainte de a termina de tastat.",
+      "subtitle": "Începeți gratuit, învățați-l afacerea dvs. și lăsați-l să ia întrebările repetate.",
+      "ctaPrimary": "Începe gratuit",
+      "ctaSecondary": "Vorbește cu noi"
+    },
+    "tabs": {
+      "more": "Aflați mai multe",
+      "widget": {
+        "label": "Elpino AI",
+        "title": "Un AI care verifică înainte de a răspunde",
+        "body": "Elpino confirmă cu cine vorbește, caută plata sau comanda reală, păstrează detaliile private în afara modelului și abia apoi răspunde.",
+        "p0": "Verifică clientul înainte de a atinge datele contului",
+        "p1": "Verifică plățile, planurile și comenzile în instrumentele tale conectate",
+        "p2": "Predați-i echipei dvs. povestea completă atunci când este nevoie de o persoană"
+      },
+      "inbox": {
+        "label": "Mesaje primite partajate",
+        "title": "O căsuță de e-mail pentru echipa ta și AI",
+        "body": "Ștergeți calitatea de proprietar, alăturați-vă alertelor și contextului complet pentru fiecare fir.",
+        "p0": "Vezi ce a verificat deja AI",
+        "p1": "Alăturați-vă unei conversații cu un singur clic",
+        "p2": "Locația vizitatorului, dispozitivul și istoricul alături"
+      },
+      "kb": {
+        "label": "Cunoștințe",
+        "title": "Învață-l din orice ai",
+        "body": "Accesați cu crawlere site-ul dvs., încărcați fișiere, scrieți pagini. Comutatoarele publice și private decid cine vede ce.",
+        "p0": "Accesați cu crawlere site-ul dvs",
+        "p1": "Încărcați documente și note",
+        "p2": "Păstrați paginile private departe de vizitatori"
+      },
+      "tickets": {
+        "label": "Bilete",
+        "title": "Nu scapă nimic",
+        "body": "Dacă nimeni nu este liber, se depune un bilet și se anunță clientului.",
+        "p0": "Depus la Asana sau Trello",
+        "p1": "Rezumatul călătorește cu biletul",
+        "p2": "Clientul primește întotdeauna răspunsuri"
+      },
+      "aria": "Domenii de produse"
+    },
+    "teams": {
+      "verify": {
+        "claim": "Sunt Alex Morgan. Arată-mi facturile.",
+        "ok": "Mulțumesc, Alex. Sunteți conectat, așa că iată facturile dvs.",
+        "ask": "Nu pot împărtăși detaliile contului unui oaspete. Conectați-vă pe site și voi verifica dacă sunteți cu adevărat dvs.",
+        "verified": "Identitate verificată",
+        "locked": "Invitat · contul blocat",
+        "site": "Conectat pe site-ul dvs. web",
+        "token": "Token semnat primit · alex@example.com",
+        "invoice": "Factura #1042",
+        "plan": "Plan de creștere · plătit"
+      },
+      "plugins": {
+        "live": "9 plugin-uri conectate"
+      },
+      "contacts": {
+        "label": "Contacte",
+        "name": "Nume",
+        "contact": "E-mail sau telefon",
+        "status": "Stare",
+        "new": "Un nou client",
+        "ask": "Care este adresa ta de e-mail, în caz că ne deconectam?",
+        "agent": "Agent AI · Chiar acum",
+        "skip": "Sari peste",
+        "thanks": "Mulțumesc, Maya! Mai este ceva cu care te pot ajuta?"
+      },
+      "eyebrow": "Un loc pentru fiecare echipă",
+      "title": "Oferiți productivitate reală pentru fiecare echipă",
+      "cards": [
+        {
+          "tag": "Verificarea identității",
+          "title": "Nimeni nu intră doar revendicând un nume",
+          "desc": "Un nume sau un e-mail introdus într-un chat nu dovedește nimic. Elpino deschide datele contului privat numai pentru vizitatorii site-ului dvs. pe care s-a conectat și pentru care s-a garantat, astfel încât un oaspete care se pretinde a fi altcineva nu primește nimic.",
+          "note": "Căutările privind plățile și comenzile folosesc numai e-mailul verificat de la datele de conectare, iar deconectarea încheie sesiunea de chat imediat.",
+          "points": [
+            "Site-ul dvs. conectează utilizatorul, iar Elpino are încredere doar în asta",
+            "Oaspeții pot conversa prin chat, dar instrumentele private rămân blocate",
+            "Deconectarea încheie sesiunea imediat"
+          ]
+        },
+        {
+          "tag": "AI răspunde",
+          "title": "Vezi exact ce răspunde AI",
+          "desc": "Fiecare răspuns arată cum funcționează: paginile cunoștințelor tale pe care le-a folosit și plata sau comanda pe care a căutat-o în instrumentele tale conectate. Nimic din ce spune AI-ul nu este o cutie neagră.",
+          "note": "Urmărește conversația în direct din căsuța de e-mail și intervine atunci când este nevoie de o persoană. Echipa ta primește povestea completă, așa că nimeni nu îi cere clientului să se repete.",
+          "points": [
+            "Vedeți paginile și instrumentele din spatele fiecărui răspuns",
+            "Citiți fiecare răspuns așa cum îl vede clientul",
+            "Alăturați-vă cu un singur clic cu contextul complet"
+          ]
+        },
+        {
+          "tag": "Analytics",
+          "title": "Vezi cine vizitează și ce fac",
+          "desc": "Analizele web se află chiar lângă căsuța dvs. de e-mail. Urmăriți vizitatorii, vizualizările de pagină, sesiunile, timpul petrecut pe site și rata de respingere pentru ultimele 7 zile sau orice perioadă și comparați-le cu cea anterioară.",
+          "note": "Vizitatorii reali sunt numărați în afară de roboți, astfel încât numerele descriu oamenii. Filtrați după domeniu și salvați setările prestabilite pentru vizualizările pe care le verificați cel mai mult.",
+          "points": [
+            "Vizitatori, vizualizări de pagină, sesiuni și rata de respingere",
+            "Comparați cu perioada anterioară",
+            "Filtrați după domeniu și salvați vizualizările preferate"
+          ]
+        },
+        {
+          "tag": "Contacte",
+          "title": "Transformă chat-urile în contacte",
+          "desc": "Fiecare vizitator care partajează un e-mail sau un număr de telefon ajunge în CRM-ul tău încorporat, cu întregul istoric al conversațiilor atașat.",
+          "note": "Ori de câte ori vorbești cu cineva, vezi cine este și ce a întrebat înainte, astfel încât fiecare răspuns să fie personal.",
+          "points": [
+            "Clienti potențiali capturați chiar în chat",
+            "Istoricul și planul de lângă fiecare contact",
+            "Sincronizat cu CRM-ul pe care îl utilizați deja"
+          ]
+        },
+        {
+          "tag": "Pluginuri",
+          "title": "Conectați-vă la instrumentele pe care le utilizați deja",
+          "desc": "Conectați plățile, magazinele, CRM-urile și instrumentele de ticketing în câteva minute, astfel încât fiecare răspuns să vină din date live și nu dintr-o ghicire.",
+          "note": "Elpino citește și acționează prin intermediul pluginurilor pe care le porniți și numai cu permisiunile pe care le acordați.",
+          "points": [
+            "Plăți, comenzi și planuri, căutate în direct",
+            "Bilete depuse în Asana sau Trello",
+            "Dezactivați un plugin în orice moment"
+          ]
         }
       ]
     },
-    "closing": {
-      "title": "Dă-le clienților tăi răspunsul înainte să termine de scris.",
-      "subtitle": "Începe gratuit, învață-l afacerea ta, și lasă-l să se ocupe de întrebările repetitive.",
-      "ctaPrimary": "Începe gratuit",
-      "ctaSecondary": "Vorbește cu noi"
+    "autopilot": {
+      "save": "Salvați",
+      "close": "Cam la fel",
+      "aYearVs": "pe an, comparativ cu",
+      "cheapest": "cel mai ieftin dintre cele trei",
+      "each": "Economisire față de fiecare",
+      "youSave": "Economisești vs",
+      "yr": "pe an",
+      "same": "cam la fel",
+      "seats": "Utilizatori",
+      "conversations": "Conversații AI/lun",
+      "p1": "Locuri nelimitate pentru fiecare plan, chiar și gratuit, astfel încât să vă puteți dezvolta echipa fără a vă crește factura de software.",
+      "p2": "Nici un angajament. Rămâneți pe planul de 10 USD și reîncărcați creditul AI numai atunci când aveți nevoie, la cel mult 0,03 USD o conversație. Reîncărcările sunt reportate și nu există niciodată o factură de exces.",
+      "bills": "Factura de o lună, detaliată",
+      "seatsUnit": "locuri",
+      "convUnit": "Conversații AI",
+      "perMonth": "Pe lună",
+      "perYearLabel": "Pe an",
+      "compareWith": "Compara cu",
+      "footnote": "Prețuri de listă publice în USD, verificate la 1 octombrie 2026, facturare anuală acolo unde este afișată, pentru același număr de locuri și conversații AI pentru fiecare produs. Exclude taxele, suplimentele și reducerile pentru întreprinderi. Interfonul și Zendesk taxează numai pentru conversațiile pe care le rezolvă AI; Elpino taxează pentru fiecare conversație AI pe care o gestionează, rezolvată sau nu. Această comparație presupune că fiecare conversație AI este rezolvată, ceea ce este cel mai mult pe care cei doi l-ar factura. Elpino: Plan de pornire pentru facturarea anuală (10 USD pe lună, 7 USD din credit AI inclus), locuri nelimitate și credit AI, care a fost completat cu până la 0,03 USD pe conversație.",
+      "cta": "Vedeți prețurile"
+    },
+    "toolsLine": {
+      "title": "Se conectează la instrumentele de plată, magazin, CRM și ticketing pe care le utilizați deja, în câteva minute, nu în sprinturi."
+    },
+    "saved": {
+      "title": "Da-i echipei tale orele înapoi.",
+      "p1": "Elpino răspunde la întrebările repetate și caută singur plăți și comenzi, astfel încât oamenii tăi să păstreze conversațiile care au nevoie de ele.",
+      "p2": "Mutați glisoarele la propriile numere. Este o estimare, nu o promisiune.",
+      "save": "Salvați",
+      "hours": "ore",
+      "per": "din timpul echipei tale, restituit",
+      "conversations": "Conversații/lună",
+      "share": "A răspuns fără persoană",
+      "minutes": "Minute fiecare",
+      "grid": "Timpul de sprijin al echipei tale, un pătrat",
+      "hr": "h",
+      "left": "ore rămase",
+      "hrs": "ore",
+      "today": "Echipa ta astăzi",
+      "givenBack": "Dată înapoi de Elpino"
+    },
+    "platform": {
+      "title": "AI care verifică modul în care ar fi cel mai bun agent al tău",
+      "subtitle": "Verifică cu cine vorbește, caută plata sau comanda reală, păstrează detaliile private din model, apoi răspunde. Când este nevoie de o persoană, echipa ta primește tot ce a găsit."
+    },
+    "widgetMock": {
+      "row0": "Vă citesc mesajul",
+      "row0done": "Am primit mesajul dvs",
+      "row1": "Se verifică că ești tu",
+      "row1done": "Sunteți verificat",
+      "row2": "Verificarea plății și a planului",
+      "row2done": "Plata și planul verificate",
+      "row3": "Protejarea detaliilor tale private",
+      "row3done": "Detaliile private ținute departe de AI",
+      "name": "Elpino AI",
+      "role": "Asistent AI",
+      "question": "Am achiziționat un plan, dar încă nu este activ",
+      "answer": "Vă mulțumim pentru răbdare. Plata dvs. a fost finalizată și planul dvs. este acum activ. Dacă încă vedeți vechiul plan, reîmprospătați tabloul de bord."
+    },
+    "kgraph": {
+      "s0": "Harta site-ului",
+      "s1": "PDF-uri și documente",
+      "s2": "Paginile pe care le scrii\nPolitici și modalități de",
+      "s2hint": "policies and how-tos",
+      "s3": "Instrumentele dvs. conectate",
+      "s3hint": "date live prin MCP",
+      "aria": "Site-ul, documentele, paginile și instrumentele dvs. alimentează toate cunoștințele lui Elpino",
+      "hub": "Cunoștințe",
+      "answer": "Răspunsuri"
+    },
+    "ticketFlow": {
+      "title": "Plătit, dar planul încă nu este activ",
+      "filed": "Depus",
+      "assigned": "Atribuit",
+      "told": "Clientul a spus",
+      "aria": "Când nimeni nu este liber, este scris un bilet, depus în instrumentul echipei tale și clientului i se spune",
+      "nobody": "Nimeni din echipă nu este liber acum",
+      "ticket": "Tichet",
+      "open": "Deschis",
+      "draft": "Schiță",
+      "high": "Mare",
+      "billing": "Facturare",
+      "summary": "Rezumat, ce a fost verificat și ce s-a găsit atașat",
+      "filedTo": "Înregistrat în instrumentul dvs. de ticketing"
     }
   },
   "pricing": {
@@ -1235,7 +1484,10 @@
     "contactSales": "Contactează vânzările",
     "login": "Conectare",
     "goToDashboard": "Mergi la panou",
-    "getStarted": "Începe"
+    "getStarted": "Începe",
+    "offer": {
+      "text": "Începe gratuit astăzi: 100 de mesaje AI pe lună, nu este nevoie de card și poți fi live pe propriul tău site într-o după-amiază"
+    }
   },
   "footer": {
     "ticker": [

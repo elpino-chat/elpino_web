@@ -210,8 +210,7 @@
       "ctaSecondary": "Kendiniz deneyin",
       "trust": [
         "Ayda 100 ücretsiz AI mesajı",
-        "Kart gerekmez",
-        "Bir öğleden sonrada hazır"
+        "Kart gerekmez"
       ],
       "stickers": [
         "AI tarafından çözüldü",
@@ -227,12 +226,27 @@
       "widget": {
         "name": "Elpino",
         "subtitle": "Saniyeler içinde yanıtlar",
-        "convo": [
-          "Yükseltme için iki kez mi ücretlendirildim?",
-          "Ödeme geçmişinizi kontrol ettim",
-          "Yalnızca bir kez ücretlendirildiniz. İkinci deneme başarısız oldu ve hiç tahsil edilmedi."
-        ]
-      }
+        "convo": {
+          "0": "Yükseltmem için benden iki kez ücret mi alındı?",
+          "2": "Sizden bir kez ücret alındı. İkinci girişim başarısız oldu ve asla yakalanamadı."
+        }
+      },
+      "emailPlaceholder": "İş e-postanızı girin",
+      "emailLabel": "E-posta adresi",
+      "ctaSignUp": "Ücretsiz denemeyi başlat",
+      "ctaDemo": "Demoyu görüntüle",
+      "stage": {
+        "step0": "Soruyu okuma",
+        "step1": "Ödeme kaydınız kontrol ediliyor",
+        "step2": "Geri ödeme politikanızı okuma",
+        "working": "Elpino çalışıyor…"
+      },
+      "glass": {
+        "customer": "Müşteri",
+        "ai": "Elpino"
+      },
+      "headLead": "Bırakın AI tekrarlanan soruları yanıtlasın,",
+      "headEmphasis": "böylece önemli olanlarla ekibiniz ilgilenir."
     },
     "marquee": {
       "questions": [
@@ -367,6 +381,31 @@
           "tag": "Talepler",
           "title": "Hiçbir şey atlanmaz",
           "desc": "Kimse müsait değilse bir talep oluşturulur ve müşteriye bildirilir."
+        }
+      ],
+      "websiteLabel": "Web siteniz",
+      "websitePlaceholder": "sirketiniz.com",
+      "websiteAdded": "Eklendi",
+      "websiteButton": "Web sitesi ekle",
+      "plugins": "Eklentiler",
+      "title3": "Bir destek masasının ihtiyaç duyduğu her şey 3 adımda",
+      "prev": "Önceki",
+      "next": "Sonraki",
+      "steps": [
+        {
+          "tag": "Adım 1",
+          "title": "Web sitenizi ekleyin",
+          "desc": "Site adresinizi yapıştırın. Elpino'nun işinizi öğrenmeye başlamak için ihtiyacı olan tek şey bu."
+        },
+        {
+          "tag": "Adım 2",
+          "title": "Sitenizi tarayın ve besleyin",
+          "desc": "Elpino sayfalarınızı ve dosyalarınızı okur ve her müşterinin ayrıntılarını ve geçmiş sohbetlerini yerleşik CRM'sinde saklar. Bu verileri senkronize tutmak için Stripe veya Shopify gibi eklentileri bağlayın."
+        },
+        {
+          "tag": "Adım 3",
+          "title": "Dakikalar içinde sohbet widget'ını ekleyin",
+          "desc": "Açılış sayfasından React uygulamasına kadar web sitenize veya web uygulamanıza bir snippet bırakın ve ziyaretçilerle gerçek zamanlı olarak konuşun."
         }
       ]
     },
@@ -507,40 +546,250 @@
     },
     "faq": {
       "eyebrow": "Sorular",
-      "titlePrefix": "İnsanların ilk sorduğu",
-      "titleHl": "şeyler.",
+      "titlePrefix": "Şeyler insanlar",
+      "titleHl": "önce sor.",
       "items": [
         {
           "q": "Elpino nedir?",
-          "a": "Bir yapay zeka müşteri destek platformu: web sitesi için bir sohbet widget'ı, bilginizden yanıt veren ve gerçek ödemeleri kontrol eden bir yapay zeka ajanı, paylaşılan bir ekip gelen kutusu, ve kimse müsait değilse talepler."
+          "a": "Bir AI müşteri destek platformu: bir web sitesi sohbet widget'ı, bilginize göre yanıt veren ve gerçek ödemeleri kontrol eden bir AI temsilcisi, paylaşılan bir ekip gelen kutusu ve kimsenin müsait olmadığı durumlarda biletler."
         },
         {
-          "q": "Yapay zeka bir şeyler uydurur mu?",
-          "a": "Onayladığınız bilgiden yanıt verir ve bir inceleme adımı taslakları araç sonuçlarıyla karşılaştırır. Bilmediğinde bunu söyler ve bir kişi önerir."
+          "q": "Yapay zeka bir şeyler uyduracak mı?",
+          "a": "Onayladığınız bilgilerden yanıt verir ve bir inceleme geçişi, taslakları araç sonuçlarına göre kontrol eder. Bilmediği zaman öyle der ve kişiye ikram eder."
         },
         {
-          "q": "Yardımcı olamadığında ne olur?",
-          "a": "Önce müşteriye sorar. Evet derse, tüm ekip bir katılım uyarısı alır ve müdahale etmek için 90 saniyesi olur. Kimse müdahale etmezse bir talep oluşturulur ve müşteriye e-posta gönderilir."
+          "q": "Yardımcı olamayınca ne olur?",
+          "a": "Önce müşteriye sorar. Evet cevabı verildiğinde, her takım arkadaşı bir Katıl uyarısı alır ve katılmak için 90 saniyeleri vardır. Kimse katılmazsa, bir destek bildirimi açılır ve müşteriye e-posta gönderilir."
         },
         {
           "q": "Kurulum ne kadar sürer?",
-          "a": "Çoğu ekip aynı gün canlıya geçer: bilginizi ekleyin, widget kod parçasını yapıştırın ve ekibinizi davet edin."
+          "a": "Çoğu takım aynı gün yayındadır: Bilginizi ekleyin, widget parçasını yapıştırın ve takımınızı davet edin."
         },
         {
-          "q": "Ücretsiz plan var mı?",
-          "a": "Evet: ayda 100 yapay zeka mesajı, kart gerekmez."
+          "q": "Ücretsiz bir plan var mı?",
+          "a": "Evet: Ayda 100 AI mesajı, kart gerekmez."
         },
         {
-          "q": "Diğer kanallarda çalışır mı?",
-          "a": "Web sitesi sohbeti şu anda kullanımda. Çok kanallı destek kasımda geliyor."
+          "q": "Diğer kanallarda çalışıyor mu?",
+          "a": "Web sitesi sohbeti bugün yayında. Omnichannel Kasım ayında geliyor."
+        }
+      ],
+      "more": "Cevabınızı bulamıyor musunuz?",
+      "talk": "Bizimle konuşun"
+    },
+    "closing": {
+      "title": "Müşterilerinize yazmayı bitirmeden önce cevabı verin.",
+      "subtitle": "Ücretsiz başlayın, ona işinizi öğretin ve tekrarlanan soruları almasına izin verin.",
+      "ctaPrimary": "Ücretsiz başlayın",
+      "ctaSecondary": "Bizimle konuşun"
+    },
+    "tabs": {
+      "more": "Daha fazlasını öğrenin",
+      "widget": {
+        "label": "Elpino AI",
+        "title": "Yanıt vermeden önce kontrol eden bir yapay zeka",
+        "body": "Elpino kiminle konuştuğunu doğrular, gerçek ödemeyi veya siparişi arar, özel ayrıntıları modelin dışında tutar ve ancak o zaman yanıt verir.",
+        "p0": "Müşteriyi hesap verilerine dokunmadan önce doğrular",
+        "p1": "Bağlantılı araçlarınızdaki ödemeleri, planları ve siparişleri kontrol eder",
+        "p2": "Bir kişiye ihtiyaç duyulduğunda hikayenin tamamını ekibinize teslim edin"
+      },
+      "inbox": {
+        "label": "Paylaşılan gelen kutusu",
+        "title": "Ekibiniz ve yapay zeka için tek bir gelen kutusu",
+        "body": "Sahipliğinizi temizleyin, uyarılara katılın ve her başlıkta tüm içeriği belirtin.",
+        "p0": "Yapay zekanın halihazırda neyi kontrol ettiğini görün",
+        "p1": "Tek tıklamayla bir sohbete katılın",
+        "p2": "Ziyaretçi konumu, cihazı ve geçmişi"
+      },
+      "kb": {
+        "label": "Bilgi",
+        "title": "Sahip olduğunuz her şeyden öğretin",
+        "body": "Sitenizi tarayın, dosya yükleyin, sayfa yazın. Genel ve özel anahtarlar kimin neyi göreceğine karar verir.",
+        "p0": "Web sitenizi tarayın",
+        "p1": "Belgeleri ve notları yükleyin",
+        "p2": "Özel sayfaları ziyaretçilerden uzak tutun"
+      },
+      "tickets": {
+        "label": "Biletler",
+        "title": "Hiçbir şey düşürülmez",
+        "body": "Kimse boş değilse, bir bilet oluşturulur ve müşteriye bilgi verilir.",
+        "p0": "Asana veya Trello'ya Dosyalandı",
+        "p1": "Özet biletle birlikte seyahat eder",
+        "p2": "Müşteri her zaman yanıt verir"
+      },
+      "aria": "Ürün alanları"
+    },
+    "teams": {
+      "verify": {
+        "claim": "Ben Alex Morgan. Bana faturalarımı göster.",
+        "ok": "Teşekkürler Alex. Oturum açtınız, işte faturalarınız.",
+        "ask": "Hesap ayrıntılarını bir misafirle paylaşamıyorum. Sitede oturum açın, gerçekten siz olup olmadığınızı kontrol edeceğim.",
+        "verified": "Kimlik doğrulandı",
+        "locked": "Misafir · hesap kilitlendi",
+        "site": "Web sitenizde oturum açıldı",
+        "token": "İmzalı jeton alındı · alex@example.com",
+        "invoice": "Fatura #1042",
+        "plan": "Büyüme planı · ödendi"
+      },
+      "plugins": {
+        "live": "9 eklenti bağlı"
+      },
+      "contacts": {
+        "label": "Kişiler",
+        "name": "Ad",
+        "contact": "E-posta veya telefon",
+        "status": "Durum",
+        "new": "Yeni müşteri adayı",
+        "ask": "Bağlantımız kesilirse diye e-postanız nedir?",
+        "agent": "AI temsilcisi · Az önce",
+        "skip": "Atla",
+        "thanks": "Teşekkürler Maya! Size yardımcı olabileceğim başka bir konu var mı?"
+      },
+      "eyebrow": "Her takıma bir yer",
+      "title": "Her ekip için gerçek üretkenlik sağlayın",
+      "cards": [
+        {
+          "tag": "Kimlik doğrulama",
+          "title": "Kimse sadece bir isim talep ederek içeri giremez",
+          "desc": "Sohbete yazılan bir isim veya e-posta hiçbir şeyi kanıtlamaz. Elpino, özel hesap verilerini yalnızca kendi web sitenizin oturum açtığı ve kefil olduğu ziyaretçiler için açar, böylece başka biri gibi davranan bir misafir hiçbir şey alamaz.",
+          "note": "Ödeme ve sipariş aramaları yalnızca giriş bilgilerinizdeki doğrulanmış e-postayı kullanır ve çıkış yapmak, sohbet oturumunu hemen sonlandırır.",
+          "points": [
+            "Siteniz kullanıcının oturumunu açıyor ve Elpino yalnızca buna güveniyor",
+            "Konuklar sohbet edebilir ancak özel araçlar kilitli kalır",
+            "Oturumu kapatmak oturumu bir kerede sonlandırır"
+          ]
+        },
+        {
+          "tag": "AI yanıtları",
+          "title": "Yapay zekanın tam olarak ne yanıt verdiğini görün",
+          "desc": "Her yanıt, çalıştığını gösterir: yararlandığı bilgi sayfalarınız ve bağlı araçlarınızda baktığı ödeme veya sipariş. Yapay zekanın söylediği hiçbir şey kara kutu değildir.",
+          "note": "Gelen kutusundan konuşmayı canlı izleyin ve bir kişiye ihtiyaç duyulduğunda müdahale edin. Ekibiniz hikayenin tamamını alır, böylece kimse müşteriden kendisini tekrar etmesini istemez.",
+          "points": [
+            "Her yanıtın arkasındaki sayfaları ve araçları görün",
+            "Her yanıtı müşterinin gördüğü şekilde okuyun",
+            "Tüm bağlamla tek tıklamayla katılın"
+          ]
+        },
+        {
+          "tag": "Analitik",
+          "title": "Kimlerin ziyaret ettiğini ve ne yaptığını görün",
+          "desc": "Web analitiği, gelen kutunuzun hemen yanında bulunur. Son 7 güne veya herhangi bir döneme ait ziyaretçileri, sayfa görüntülemelerini, oturumları, sitede geçirilen süreyi ve hemen çıkma oranını takip edin ve bir öncekiyle karşılaştırın.",
+          "note": "Gerçek ziyaretçiler botlardan ayrı olarak sayılır, dolayısıyla sayılar insanları tanımlar. Etki alanına göre filtreleyin ve en çok kontrol ettiğiniz görünümler için ön ayarları kaydedin.",
+          "points": [
+            "Ziyaretçiler, sayfa görüntülemeleri, oturumlar ve hemen çıkma oranı",
+            "Önceki dönemle karşılaştırın",
+            "Etki alanına göre filtreleyin ve favori görünümlerinizi kaydedin"
+          ]
+        },
+        {
+          "tag": "Kişiler",
+          "title": "Sohbetleri kişilere dönüştürün",
+          "desc": "Bir e-posta veya telefon numarası paylaşan her ziyaretçi, tüm konuşma geçmişiyle birlikte yerleşik CRM'nize ulaşır.",
+          "note": "Biriyle konuştuğunuzda onun kim olduğunu ve daha önce ne sorduğunu görürsünüz, böylece her yanıt kişisel hissettirir.",
+          "points": [
+            "Potansiyel müşteriler doğrudan sohbette yakalanır",
+            "Her kişinin yanında geçmiş ve plan",
+            "Halihazırda kullandığınız CRM ile senkronize edildi"
+          ]
+        },
+        {
+          "tag": "Eklentiler",
+          "title": "Halihazırda kullandığınız araçları kullanın",
+          "desc": "Ödemeleri, mağazaları, CRM'leri ve biletleme araçlarını dakikalar içinde bağlayın, böylece her yanıt bir tahmin yerine canlı verilerden gelir.",
+          "note": "Elpino, açtığınız eklentileri yalnızca sizin verdiğiniz izinlerle okur ve hareket eder.",
+          "points": [
+            "Ödemeler, siparişler ve planlar canlı olarak incelendi",
+            "Asana veya Trello'da düzenlenen biletler",
+            "İstediğiniz zaman bir eklentiyi kapatın"
+          ]
         }
       ]
     },
-    "closing": {
-      "title": "Müşterileriniz yazmayı bitirmeden önce onlara yanıtı verin.",
-      "subtitle": "Ücretsiz başlayın, işinizi ona öğretin, ve tekrar eden soruları o üstlensin.",
-      "ctaPrimary": "Ücretsiz başlayın",
-      "ctaSecondary": "Bizimle konuşun"
+    "autopilot": {
+      "save": "Kaydet",
+      "close": "Yaklaşık aynı",
+      "aYearVs": "ile karşılaştırıldığında",
+      "cheapest": "üçü arasında en ucuzu",
+      "each": "Her birine karşı tasarruf",
+      "youSave": "Tasarruf edersiniz",
+      "yr": "yılda bir",
+      "same": "hemen hemen aynı",
+      "seats": "Kullanıcılar",
+      "conversations": "AI konuşmaları / ay",
+      "p1": "Her planda sınırsız koltuk, hatta Ücretsiz, böylece yazılım faturanızı artırmadan ekibinizi büyütebilirsiniz.",
+      "p2": "Taahhüt yok. 10 ABD doları tutarındaki planda kalın ve konuşma başına en fazla 0,03 ABD doları olmak üzere yalnızca ihtiyacınız olduğunda AI kredisini artırın. Yüklemeler devam eder ve hiçbir zaman aşım faturası olmaz.",
+      "bills": "Bir aylık fatura, ayrıntılı olarak",
+      "seatsUnit": "koltuklar",
+      "convUnit": "AI konuşmaları",
+      "perMonth": "Aylık",
+      "perYearLabel": "Yıllık",
+      "compareWith": "Şununla karşılaştır:",
+      "footnote": "ABD doları cinsinden genel liste fiyatları, 1 Ekim 2026'da kontrol edildi, gösterildiği yerlerde yıllık faturalandırma, her üründe aynı sayıda lisans ve yapay zeka konuşması için. Vergiler, eklentiler ve kurumsal indirimler hariçtir. Intercom ve Zendesk yalnızca yapay zekanın çözdüğü görüşmeler için ücret alır; Elpino, çözümlenmiş olsun ya da olmasın, gerçekleştirdiği her yapay zeka görüşmesi için ücret alır. Bu karşılaştırma, her yapay zeka görüşmesinin çözüldüğünü varsayar; bu da bu ikisinin faturalandıracağı en yüksek tutardır. Elpino: Yıllık faturalandırma (ayda 10 ABD doları, 7 ABD doları AI kredisi dahil), sınırsız koltuk ve konuşma başına 0,03 ABD dolarına kadar artırılan AI kredisi içeren başlangıç ​​planı.",
+      "cta": "Fiyatlara bakın"
+    },
+    "toolsLine": {
+      "title": "Halihazırda kullandığınız ödeme, mağaza, CRM ve biletleme araçlarına kısa sürede değil dakikalar içinde bağlanır."
+    },
+    "saved": {
+      "title": "Ekibinize saatlerini geri verin.",
+      "p1": "Elpino tekrarlanan soruları yanıtlıyor ve ödemeleri ve siparişleri kendisi araştırıyor, böylece çalışanlarınız ihtiyaç duyulan görüşmeleri sürdürebiliyor.",
+      "p2": "Kaydırıcıları kendi numaralarınıza taşıyın. Bu bir vaat değil, bir tahmindir.",
+      "save": "Kaydet",
+      "hours": "saat\nEkibinizin zamanının",
+      "per": "'si geri veriliyor",
+      "conversations": "Konuşmalar/ay",
+      "share": "Kimse olmadan yanıtlandı",
+      "minutes": "Her biri dakika",
+      "grid": "Ekibinizin destek süresi, tek kare",
+      "hr": "saat",
+      "left": "saat kaldı",
+      "hrs": "saat",
+      "today": "Ekibiniz bugün",
+      "givenBack": "Elpino tarafından geri verildi"
+    },
+    "platform": {
+      "title": "En iyi temsilcinizin yapacağı şekilde kontrol eden yapay zeka",
+      "subtitle": "Kiminle konuştuğunu doğrular, gerçek ödemeyi veya siparişi arar, özel ayrıntıları modelin dışında tutar ve ardından yanıt verir. Bir kişiye ihtiyaç duyulduğunda ekibiniz bulduğu her şeyi alır."
+    },
+    "widgetMock": {
+      "row0": "Mesajınızı okuyorum",
+      "row0done": "Mesajınızı aldım",
+      "row1": "Kimliğiniz doğrulanıyor",
+      "row1done": "Doğrulandınız",
+      "row2": "Ödemeniz ve planınız kontrol ediliyor",
+      "row2done": "Ödeme ve plan kontrol edildi",
+      "row3": "Özel bilgilerinizi koruma",
+      "row3done": "Özel ayrıntılar yapay zekanın dışında tutuldu",
+      "name": "Elpino AI",
+      "role": "Yapay Zeka Asistanı",
+      "question": "Bir plan satın aldım ancak hâlâ aktif değil",
+      "answer": "Sabrınız için teşekkür ederiz. Ödemeniz gerçekleşti ve planınız artık etkin. Hala eski planı görüyorsanız kontrol panelinizi yenileyin."
+    },
+    "kgraph": {
+      "s0": "Web sitesi site haritası",
+      "s1": "PDF'ler ve belgeler",
+      "s2": "Yazdığınız sayfalar",
+      "s2hint": "politikalar ve nasıl yapılırlar",
+      "s3": "Bağlantılı araçlarınız",
+      "s3hint": "MCP aracılığıyla canlı veriler",
+      "aria": "Web siteniz, belgeleriniz, sayfalarınız ve araçlarınızın tümü Elpino'nun bilgisini besliyor",
+      "hub": "Bilgi",
+      "answer": "Cevaplar"
+    },
+    "ticketFlow": {
+      "title": "Ücretli, ancak plan hâlâ etkin değil",
+      "filed": "Dosyalandı",
+      "assigned": "Atandı",
+      "told": "Müşteri söyledi",
+      "aria": "Kimse boş olmadığında bir bilet yazılır, ekibinizin aracına gönderilir ve müşteriye bilgi verilir",
+      "nobody": "Takımdaki hiç kimse şu anda boş değil",
+      "ticket": "Talep",
+      "open": "Aç",
+      "draft": "Taslak",
+      "high": "Yüksek",
+      "billing": "Faturalandırma",
+      "summary": "Özet, kontrol edilenler ve ekte bulunanlar",
+      "filedTo": "Biletleme aracınıza dosyalandı"
     }
   },
   "pricing": {
@@ -1235,7 +1484,10 @@
     "contactSales": "Satışla iletişime geçin",
     "login": "Giriş yap",
     "goToDashboard": "Panele git",
-    "getStarted": "Başla"
+    "getStarted": "Başla",
+    "offer": {
+      "text": "Bugün ücretsiz başlayın: Ayda 100 AI mesajı, kart gerekmez ve öğleden sonra kendi sitenizde canlı yayına çıkabilirsiniz"
+    }
   },
   "footer": {
     "ticker": [

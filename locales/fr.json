@@ -210,8 +210,7 @@
       "ctaSecondary": "Essayez par vous-même",
       "trust": [
         "100 messages IA gratuits par mois",
-        "Aucune carte requise",
-        "Prêt en un après-midi"
+        "Aucune carte requise"
       ],
       "stickers": [
         "Résolu par l'IA",
@@ -227,12 +226,27 @@
       "widget": {
         "name": "Elpino",
         "subtitle": "Répond en quelques secondes",
-        "convo": [
-          "Ai-je été facturé deux fois pour ma mise à niveau ?",
-          "J'ai vérifié votre historique de paiement",
-          "Vous n'avez été facturé qu'une fois. La deuxième tentative a échoué et n'a jamais été capturée."
-        ]
-      }
+        "convo": {
+          "0": "Ai-je été facturé deux fois pour ma mise à niveau ?",
+          "2": "Vous avez été facturé une fois. La deuxième tentative échoua et ne fut jamais capturée."
+        }
+      },
+      "emailPlaceholder": "Saisissez votre adresse e-mail professionnelle",
+      "emailLabel": "Adresse e-mail",
+      "ctaSignUp": "Commencer l'essai gratuit",
+      "ctaDemo": "Voir la démo",
+      "stage": {
+        "step0": "Lecture de la question",
+        "step1": "Vérification de votre historique de paiement",
+        "step2": "Lire votre politique de remboursement",
+        "working": "Elpino travaille…"
+      },
+      "glass": {
+        "customer": "Client",
+        "ai": "Elpino"
+      },
+      "headLead": "Laissez l'IA répondre aux questions répétées,",
+      "headEmphasis": "pour que votre équipe s'occupe de ceux qui comptent."
     },
     "marquee": {
       "questions": [
@@ -367,6 +381,31 @@
           "tag": "Tickets",
           "title": "Rien n'est jamais perdu",
           "desc": "Si personne n'est disponible, un ticket est créé et le client est informé."
+        }
+      ],
+      "websiteLabel": "Votre site internet",
+      "websitePlaceholder": "votreentreprise.com",
+      "websiteAdded": "Ajouté",
+      "websiteButton": "Ajouter un site Web",
+      "plugins": "Plugins",
+      "title3": "Tout ce dont un service d'assistance a besoin, en 3 étapes",
+      "prev": "Précédent",
+      "next": "Suivant",
+      "steps": [
+        {
+          "tag": "Étape 1",
+          "title": "Ajoutez votre site Web",
+          "desc": "Collez l'adresse de votre site. C'est tout ce dont Elpino a besoin pour commencer à apprendre votre métier."
+        },
+        {
+          "tag": "Étape 2",
+          "title": "Explorez votre site et alimentez-le",
+          "desc": "Elpino lit vos pages et fichiers et conserve les détails de chaque client et les discussions passées dans son CRM intégré. Connectez des plugins comme Stripe ou Shopify pour garder ces données synchronisées."
+        },
+        {
+          "tag": "Étape 3",
+          "title": "Ajoutez le widget de chat en quelques minutes",
+          "desc": "Déposez un extrait de code dans votre site Web ou votre application Web, d'une page de destination à une application React, et parlez aux visiteurs en temps réel."
         }
       ]
     },
@@ -507,40 +546,250 @@
     },
     "faq": {
       "eyebrow": "Questions",
-      "titlePrefix": "Ce que les gens",
-      "titleHl": "demandent en premier.",
+      "titlePrefix": "Choses, gens",
+      "titleHl": "demandez d'abord.",
       "items": [
         {
           "q": "Qu'est-ce qu'Elpino ?",
-          "a": "Une plateforme de support client par IA : un widget de chat pour votre site, un agent IA qui répond avec vos connaissances et vérifie les paiements réels, une boîte de réception d'équipe partagée, et des tickets quand personne n'est disponible."
+          "a": "Une plateforme de support client IA : un widget de chat sur site Web, un agent IA qui répond à partir de vos connaissances et vérifie les paiements réels, une boîte de réception d'équipe partagée et des tickets lorsque personne n'est libre."
         },
         {
-          "q": "L'IA va-t-elle inventer des choses ?",
-          "a": "Elle répond à partir des connaissances que vous avez approuvées, et une passe de relecture vérifie les brouillons par rapport aux résultats des outils. Quand elle ne sait pas, elle le dit et propose une personne."
+          "q": "L'IA va-t-elle inventer des choses ?",
+          "a": "Il répond à partir des connaissances que vous avez approuvées et une passe de révision vérifie les brouillons par rapport aux résultats de l'outil. Quand il ne sait pas, il le dit et propose à une personne."
         },
         {
-          "q": "Que se passe-t-il quand elle ne peut pas aider ?",
-          "a": "Elle demande d'abord au client. En cas de oui, toute l'équipe reçoit une alerte pour rejoindre et a 90 secondes pour intervenir. Si personne ne le fait, un ticket est créé et le client est prévenu par email."
+          "q": "Que se passe-t-il lorsque cela ne peut pas aider ?",
+          "a": "Il demande d'abord au client. Sur réponse oui, chaque coéquipier reçoit une alerte d'adhésion et dispose de 90 secondes pour intervenir. Si personne ne le fait, un ticket est déposé et le client reçoit un e-mail."
         },
         {
-          "q": "Combien de temps prend la mise en place ?",
-          "a": "La plupart des équipes sont opérationnelles le jour même : ajoutez vos connaissances, collez l'extrait du widget et invitez votre équipe."
+          "q": "Combien de temps prend l'installation ?",
+          "a": "La plupart des équipes sont en direct le même jour : ajoutez vos connaissances, collez l'extrait du widget et invitez votre équipe."
         },
         {
-          "q": "Y a-t-il un forfait gratuit ?",
-          "a": "Oui : 100 messages IA par mois, aucune carte requise."
+          "q": "Existe-t-il un forfait gratuit ?",
+          "a": "Oui : 100 messages IA par mois, aucune carte requise."
         },
         {
-          "q": "Fonctionne-t-il sur d'autres canaux ?",
-          "a": "Le chat du site web est déjà disponible. L'omnicanal arrive en novembre."
+          "q": "Est-ce que ça marche sur d'autres chaînes ?",
+          "a": "Le chat sur le site Web est en direct aujourd'hui. L'omnicanal arrive en novembre."
+        }
+      ],
+      "more": "Vous ne trouvez pas votre réponse ?",
+      "talk": "Parlez-nous"
+    },
+    "closing": {
+      "title": "Donnez la réponse à vos clients avant qu'ils aient fini de taper.",
+      "subtitle": "Commencez gratuitement, apprenez-lui votre métier et laissez-le répondre aux questions répétées.",
+      "ctaPrimary": "Commencez gratuitement",
+      "ctaSecondary": "Parlez-nous"
+    },
+    "tabs": {
+      "more": "En savoir plus",
+      "widget": {
+        "label": "Elpino IA",
+        "title": "Une IA qui vérifie avant de répondre",
+        "body": "Elpino confirme à qui il parle, recherche le paiement ou la commande réelle, conserve les détails privés hors du modèle et répond ensuite seulement.",
+        "p0": "Vérifie le client avant qu'il ne touche aux données du compte",
+        "p1": "Vérifie les paiements, les forfaits et les commandes dans vos outils connectés",
+        "p2": "Remet à votre équipe l'histoire complète lorsqu'une personne est nécessaire"
+      },
+      "inbox": {
+        "label": "Boîte de réception partagée",
+        "title": "Une boîte de réception pour votre équipe et l'IA",
+        "body": "Effacez la propriété, rejoignez les alertes et le contexte complet sur chaque fil de discussion.",
+        "p0": "Voyez ce que l'IA a déjà vérifié",
+        "p1": "Rejoignez une conversation en un clic",
+        "p2": "Emplacement, appareil et historique du visiteur à côté"
+      },
+      "kb": {
+        "label": "Connaissance",
+        "title": "Apprenez-le à partir de tout ce que vous avez",
+        "body": "Explorez votre site, téléchargez des fichiers, rédigez des pages. Les commutateurs publics et privés décident qui voit quoi.",
+        "p0": "Explorez votre site Web",
+        "p1": "Télécharger des documents et des notes",
+        "p2": "Gardez les pages privées hors de portée des visiteurs"
+      },
+      "tickets": {
+        "label": "Tickets",
+        "title": "Rien n'est supprimé",
+        "body": "Si personne n'est libre, un ticket est déposé et le client en est informé.",
+        "p0": "Classé sur Asana ou Trello",
+        "p1": "Le récapitulatif voyage avec le ticket",
+        "p2": "Le client répond toujours"
+      },
+      "aria": "Domaines de produits"
+    },
+    "teams": {
+      "verify": {
+        "claim": "Je m'appelle Alex Morgan. Montre-moi mes factures.",
+        "ok": "Merci, Alex. Vous êtes connecté, voici donc vos factures.",
+        "ask": "Je ne peux pas partager les détails de mon compte avec un invité. Connectez-vous sur le site et je vérifierai qu'il s'agit bien de vous.",
+        "verified": "Identité vérifiée",
+        "locked": "Invité · compte verrouillé",
+        "site": "Connecté sur votre site Web",
+        "token": "Jeton signé reçu · alex@example.com",
+        "invoice": "Facture n° 1042",
+        "plan": "Plan de croissance · payant"
+      },
+      "plugins": {
+        "live": "9 plugins connectés"
+      },
+      "contacts": {
+        "label": "Contacts",
+        "name": "Nom",
+        "contact": "E-mail ou téléphone",
+        "status": "Statut",
+        "new": "Nouveau prospect",
+        "ask": "Quel est votre email, juste au cas où nous serions déconnectés ?",
+        "agent": "Agent IA · Tout à l'heure",
+        "skip": "Sauter",
+        "thanks": "Merci, Maya ! Y a-t-il autre chose que je puisse vous aider ?"
+      },
+      "eyebrow": "Une place pour chaque équipe",
+      "title": "Offrez une réelle productivité à chaque équipe",
+      "cards": [
+        {
+          "tag": "Vérification d'identité",
+          "title": "Personne n'entre en revendiquant simplement un nom",
+          "desc": "Un nom ou un email tapé dans un chat ne prouve rien. Elpino ouvre les données de compte privé uniquement pour les visiteurs auxquels votre propre site Web s'est connecté et pour lequel il s'est porté garant, de sorte qu'un invité prétendant être quelqu'un d'autre n'obtient rien.",
+          "note": "Les recherches de paiement et de commande utilisent uniquement l'e-mail vérifié de votre connexion, et la déconnexion met immédiatement fin à la session de chat.",
+          "points": [
+            "Votre site connecte l'utilisateur et Elpino ne fait confiance qu'à cela",
+            "Les invités peuvent discuter, mais les outils privés restent verrouillés",
+            "La déconnexion met immédiatement fin à la session"
+          ]
+        },
+        {
+          "tag": "Réponses de l'IA",
+          "title": "Voyez exactement ce que l'IA répond",
+          "desc": "Chaque réponse montre son fonctionnement : les pages de vos connaissances sur lesquelles elle s'est appuyée et le paiement ou la commande qu'elle a recherché dans vos outils connectés. Rien de ce que dit l’IA n’est une boîte noire.",
+          "note": "Regardez la conversation en direct depuis la boîte de réception et intervenez lorsqu'une personne est nécessaire. Votre équipe obtient toute l’histoire, donc personne ne demande au client de se répéter.",
+          "points": [
+            "Voir les pages et les outils derrière chaque réponse",
+            "Lisez chaque réponse telle que le client la voit",
+            "Rejoignez-nous en un clic avec le contexte complet"
+          ]
+        },
+        {
+          "tag": "Analyses",
+          "title": "Découvrez qui visite et ce qu'ils font",
+          "desc": "L'analyse Web se trouve juste à côté de votre boîte de réception. Suivez les visiteurs, les pages vues, les sessions, le temps passé sur le site et le taux de rebond au cours des 7 derniers jours ou sur n'importe quelle période, et comparez-les avec celui précédent.",
+          "note": "Les vrais visiteurs sont comptés en dehors des robots, les chiffres décrivent donc les personnes. Filtrez par domaine et enregistrez les préréglages pour les vues que vous consultez le plus.",
+          "points": [
+            "Visiteurs, pages vues, sessions et taux de rebond",
+            "Comparer avec la période précédente",
+            "Filtrez par domaine et enregistrez vos vues préférées"
+          ]
+        },
+        {
+          "tag": "Contacts",
+          "title": "Transformez les discussions en contacts",
+          "desc": "Chaque visiteur qui partage un e-mail ou un numéro de téléphone atterrit dans votre CRM intégré, avec l'intégralité de son historique de conversation en pièce jointe.",
+          "note": "Chaque fois que vous parlez à quelqu'un, vous voyez qui il est et ce qu'il a demandé auparavant, chaque réponse semble donc personnelle.",
+          "points": [
+            "Leads capturés directement dans le chat",
+            "Historique et plan à côté de chaque contact",
+            "Synchronisé avec le CRM que vous utilisez déjà"
+          ]
+        },
+        {
+          "tag": "Plugins",
+          "title": "Connectez-vous aux outils que vous utilisez déjà",
+          "desc": "Connectez les paiements, les magasins, les CRM et les outils de billetterie en quelques minutes, afin que chaque réponse provienne de données en direct plutôt que d'une supposition.",
+          "note": "Elpino lit et agit via les plugins que vous activez, et uniquement avec les autorisations que vous lui accordez.",
+          "points": [
+            "Paiements, commandes et forfaits, consultés en direct",
+            "Tickets déposés sur Asana ou Trello",
+            "Désactiver un plugin à tout moment"
+          ]
         }
       ]
     },
-    "closing": {
-      "title": "Donnez à vos clients la réponse avant qu'ils aient fini de taper.",
-      "subtitle": "Commencez gratuitement, apprenez-lui votre activité, et laissez-le prendre en charge les questions répétées.",
-      "ctaPrimary": "Commencer gratuitement",
-      "ctaSecondary": "Parlez-nous"
+    "autopilot": {
+      "save": "Enregistrer",
+      "close": "À peu près pareil",
+      "aYearVs": "par an, comparativement à",
+      "cheapest": "le moins cher des trois",
+      "each": "Économiser contre chacun",
+      "youSave": "Vous enregistrez contre",
+      "yr": "par an",
+      "same": "à peu près pareil",
+      "seats": "Utilisateurs",
+      "conversations": "Conversations IA / mois",
+      "p1": "Sièges illimités sur chaque forfait, même gratuit, pour que vous puissiez développer votre équipe sans augmenter votre facture logicielle.",
+      "p2": "Aucun engagement. Restez sur le forfait à 10 $ et rechargez le crédit AI uniquement lorsque vous en avez besoin, à 0,03 $ par conversation au maximum. Les recharges sont reportées et il n’y a jamais de facture excédentaire.",
+      "bills": "Facture d'un mois, détaillée",
+      "seatsUnit": "places",
+      "convUnit": "Conversations IA",
+      "perMonth": "Par mois",
+      "perYearLabel": "Par an",
+      "compareWith": "Comparer avec",
+      "footnote": "Prix catalogue publics en USD, vérifiés le 1er octobre 2026, facturation annuelle là où indiqué, pour le même nombre de postes et de conversations IA sur chaque produit. Exclut les taxes, les modules complémentaires et les remises d'entreprise. Intercom et Zendesk facturent uniquement les conversations résolues par l'IA ; Elpino facture chaque conversation IA qu'elle gère, résolue ou non. Cette comparaison suppose que chaque conversation IA est résolue, ce qui correspond au montant maximum facturé par ces deux-là. Elpino : plan de démarrage avec facturation annuelle (10 $ par mois, 7 $ de crédit IA inclus), sièges illimités et crédit IA rechargé jusqu'à 0,03 $ par conversation.",
+      "cta": "Voir les tarifs"
+    },
+    "toolsLine": {
+      "title": "Se connecte aux outils de paiement, de magasin, de CRM et de billetterie que vous utilisez déjà, en quelques minutes, et non en sprints."
+    },
+    "saved": {
+      "title": "Redonnez ses heures à votre équipe.",
+      "p1": "Elpino répond aux questions répétées et recherche lui-même les paiements et les commandes, afin que vos collaborateurs conservent les conversations qui en ont besoin.",
+      "p2": "Déplacez les curseurs vers vos propres numéros. Il s'agit d'une estimation, pas d'une promesse.",
+      "save": "Enregistrer",
+      "hours": "heures",
+      "per": "du temps de votre équipe, reversé",
+      "conversations": "Conversations/mois",
+      "share": "Répondu sans personne",
+      "minutes": "Minutes chacun",
+      "grid": "Le temps d'assistance de votre équipe, un carré",
+      "hr": "heures",
+      "left": "heures restantes",
+      "hrs": "heures",
+      "today": "Votre équipe aujourd'hui",
+      "givenBack": "Rendu par Elpino"
+    },
+    "platform": {
+      "title": "Une IA qui vérifie la manière dont votre meilleur agent le ferait",
+      "subtitle": "Il vérifie à qui il parle, recherche le paiement ou la commande réel, conserve les détails privés hors du modèle, puis répond. Lorsqu'une personne est nécessaire, votre équipe obtient tout ce qu'elle a trouvé."
+    },
+    "widgetMock": {
+      "row0": "Lecture de votre message",
+      "row0done": "Vous avez reçu votre message",
+      "row1": "Vérifier qu'il s'agit bien de vous",
+      "row1done": "Vous êtes vérifié",
+      "row2": "Vérification de votre paiement et de votre forfait",
+      "row2done": "Paiement et forfait vérifiés",
+      "row3": "Protéger vos informations privées",
+      "row3done": "Détails privés gardés à l'écart de l'IA",
+      "name": "Elpino IA",
+      "role": "Assistant IA",
+      "question": "J'ai acheté un forfait mais il n'est toujours pas actif",
+      "answer": "Merci pour votre patience. Votre paiement a été effectué et votre forfait est désormais actif. Si vous voyez toujours l'ancien plan, actualisez votre tableau de bord."
+    },
+    "kgraph": {
+      "s0": "Plan du site",
+      "s1": "PDF et documents",
+      "s2": "Pages que vous écrivez",
+      "s2hint": "politiques et procédures",
+      "s3": "Vos outils connectés",
+      "s3hint": "données en direct via MCP",
+      "aria": "Votre site internet, vos documents, vos pages et vos outils nourrissent les connaissances d'Elpino",
+      "hub": "Connaissance",
+      "answer": "Réponses"
+    },
+    "ticketFlow": {
+      "title": "Payé, mais le forfait n'est toujours pas actif",
+      "filed": "Classé",
+      "assigned": "Attribué",
+      "told": "Le client a informé",
+      "aria": "Quand personne n'est libre, un ticket est rédigé, archivé dans l'outil de votre équipe, et le client est informé",
+      "nobody": "Personne dans l'équipe n'est libre pour le moment",
+      "ticket": "Ticket",
+      "open": "Ouvrir",
+      "draft": "Brouillon",
+      "high": "Élevé",
+      "billing": "Facturation",
+      "summary": "Résumé, ce qui a été vérifié et ce qui a été trouvé en pièce jointe",
+      "filedTo": "Classé dans votre outil de billetterie"
     }
   },
   "pricing": {
@@ -1235,7 +1484,10 @@
     "contactSales": "Contacter les ventes",
     "login": "Se connecter",
     "goToDashboard": "Accéder au tableau de bord",
-    "getStarted": "Commencer"
+    "getStarted": "Commencer",
+    "offer": {
+      "text": "Commencez gratuitement dès aujourd'hui : 100 messages IA par mois, aucune carte requise et vous pouvez être en direct sur votre propre site en un après-midi"
+    }
   },
   "footer": {
     "ticker": [

@@ -209,9 +209,8 @@
       "ctaPrimary": "Zacznij za darmo",
       "ctaSecondary": "Wypróbuj sam",
       "trust": [
-        "100 darmowych wiadomości AI miesięcznie",
-        "Karta niepotrzebna",
-        "Gotowe w jedno popołudnie"
+        "100 bezpłatnych wiadomości AI miesięcznie",
+        "Karta nie jest wymagana"
       ],
       "stickers": [
         "Rozwiązane przez AI",
@@ -227,12 +226,27 @@
       "widget": {
         "name": "Elpino",
         "subtitle": "Odpowiada w kilka sekund",
-        "convo": [
-          "Czy zostałem obciążony dwukrotnie za ulepszenie?",
-          "Sprawdziłem Twoją historię płatności",
-          "Zostałeś obciążony tylko raz. Druga próba nie powiodła się i nigdy nie została zaksięgowana."
-        ]
-      }
+        "convo": {
+          "0": "Czy za uaktualnienie pobrano podwójną opłatę?",
+          "2": "Obciążono Cię raz. Druga próba nie powiodła się i nigdy nie została schwytana."
+        }
+      },
+      "emailPlaceholder": "Wpisz swój służbowy adres e-mail",
+      "emailLabel": "Adres e-mail",
+      "ctaSignUp": "Rozpocznij bezpłatny okres próbny",
+      "ctaDemo": "Zobacz wersję demonstracyjną",
+      "stage": {
+        "step0": "Czytanie pytania",
+        "step1": "Sprawdzam historię płatności",
+        "step2": "Przeczytaj zasady zwrotów",
+        "working": "Elpino pracuje…"
+      },
+      "glass": {
+        "customer": "Klient",
+        "ai": "Elpino"
+      },
+      "headLead": "Pozwól AI odpowiedzieć na powtarzające się pytania,",
+      "headEmphasis": ", aby Twój zespół zajął się tymi, które mają znaczenie."
     },
     "marquee": {
       "questions": [
@@ -367,6 +381,31 @@
           "tag": "Zgłoszenia",
           "title": "Nic nie ginie",
           "desc": "Jeśli nikt nie jest dostępny, tworzone jest zgłoszenie i klient jest informowany."
+        }
+      ],
+      "websiteLabel": "Twoja strona internetowa",
+      "websitePlaceholder": "twojafirma.com",
+      "websiteAdded": "Dodano",
+      "websiteButton": "Dodaj witrynę",
+      "plugins": "Wtyczki",
+      "title3": "Wszystko, czego potrzebuje dział wsparcia, w 3 krokach",
+      "prev": "Poprzedni",
+      "next": "Następny",
+      "steps": [
+        {
+          "tag": "Krok 1",
+          "title": "Dodaj swoją witrynę internetową",
+          "desc": "Wklej adres swojej witryny. To wszystko, czego Elpino potrzebuje, aby rozpocząć naukę Twojego biznesu."
+        },
+        {
+          "tag": "Krok 2",
+          "title": "Indeksuj swoją witrynę i zasilaj ją",
+          "desc": "Elpino czyta Twoje strony i pliki oraz przechowuje dane każdego klienta i wcześniejsze rozmowy we wbudowanym CRM. Podłącz wtyczki takie jak Stripe lub Shopify, aby synchronizować dane."
+        },
+        {
+          "tag": "Krok 3",
+          "title": "Dodaj widżet czatu w kilka minut",
+          "desc": "Wrzuć jeden fragment do swojej witryny lub aplikacji internetowej, ze strony docelowej do aplikacji React i rozmawiaj z odwiedzającymi w czasie rzeczywistym."
         }
       ]
     },
@@ -507,40 +546,250 @@
     },
     "faq": {
       "eyebrow": "Pytania",
-      "titlePrefix": "Co ludzie pytają",
-      "titleHl": "najpierw.",
+      "titlePrefix": "Rzeczy, ludzie",
+      "titleHl": "najpierw zapytaj.",
       "items": [
         {
-          "q": "Czym jest Elpino?",
-          "a": "Platforma obsługi klienta oparta na AI: widget czatu na stronie, agent AI odpowiadający na podstawie Twojej wiedzy i sprawdzający rzeczywiste płatności, wspólna skrzynka zespołu oraz zgłoszenia, gdy nikt nie jest dostępny."
+          "q": "Co to jest Elpino?",
+          "a": "Platforma obsługi klienta AI: widżet czatu internetowego, agent AI, który odpowiada na podstawie Twojej wiedzy i sprawdza rzeczywiste płatności, współdzielona skrzynka odbiorcza zespołu i bilety, gdy nikt nie jest wolny."
         },
         {
-          "q": "Czy AI będzie zmyślać?",
-          "a": "Odpowiada na podstawie zatwierdzonej przez Ciebie wiedzy, a etap weryfikacji porównuje wersje robocze z wynikami narzędzi. Gdy nie wie, mówi to i proponuje człowieka."
+          "q": "Czy sztuczna inteligencja zmyśli sprawę?",
+          "a": "Odpowiada na podstawie zatwierdzonej przez Ciebie wiedzy, a przepustka recenzyjna sprawdza wersje robocze z wynikami narzędzia. Kiedy nie wie, mówi to i proponuje osobę."
         },
         {
-          "q": "Co się dzieje, gdy nie może pomóc?",
-          "a": "Najpierw pyta klienta. Jeśli odpowie tak, cały zespół otrzymuje powiadomienie o dołączeniu i ma 90 sekund na reakcję. Jeśli nikt nie zareaguje, tworzone jest zgłoszenie i klient jest informowany e-mailem."
+          "q": "Co się stanie, jeśli to nie pomoże?",
+          "a": "Najpierw pyta klienta. Jeśli wyrazisz zgodę, każdy członek zespołu otrzyma powiadomienie o dołączeniu i będzie miał 90 sekund na włączenie się. Jeśli nikt tego nie zrobi, zostanie złożone zgłoszenie, a do klienta zostanie wysłana wiadomość e-mail."
         },
         {
-          "q": "Ile trwa konfiguracja?",
-          "a": "Większość zespołów działa tego samego dnia: dodaj wiedzę, wklej fragment kodu widgetu i zaproś swój zespół."
+          "q": "Jak długo trwa konfiguracja?",
+          "a": "Większość zespołów transmituje na żywo tego samego dnia: dodaj swoją wiedzę, wklej fragment widżetu i zaproś swój zespół."
         },
         {
-          "q": "Czy jest darmowy plan?",
-          "a": "Tak: 100 wiadomości AI miesięcznie, karta niepotrzebna."
+          "q": "Czy istnieje darmowy plan?",
+          "a": "Tak: 100 wiadomości AI miesięcznie, bez karty."
         },
         {
-          "q": "Czy działa na innych kanałach?",
-          "a": "Czat na stronie już działa. Wsparcie wielokanałowe pojawi się w listopadzie."
+          "q": "Czy to działa na innych kanałach?",
+          "a": "Czat internetowy jest dzisiaj aktywny. Omnichannel pojawi się w listopadzie."
+        }
+      ],
+      "more": "Nie możesz znaleźć odpowiedzi?",
+      "talk": "Porozmawiaj z nami"
+    },
+    "closing": {
+      "title": "Daj swoim klientom odpowiedź, zanim zakończą pisać.",
+      "subtitle": "Zacznij bezpłatnie, naucz go swojej działalności i pozwól mu odpowiedzieć na powtarzające się pytania.",
+      "ctaPrimary": "Zacznij bezpłatnie",
+      "ctaSecondary": "Porozmawiaj z nami"
+    },
+    "tabs": {
+      "more": "Dowiedz się więcej",
+      "widget": {
+        "label": "Elpino AI",
+        "title": "Sztuczna inteligencja, która sprawdza, zanim odpowie",
+        "body": "Elpino potwierdza, z kim rozmawia, sprawdza prawdziwą płatność lub zamówienie, nie udostępnia modelowi prywatnych danych i dopiero wtedy odpowiada.",
+        "p0": "Weryfikuje klienta, zanim dotknie danych konta",
+        "p1": "Sprawdza płatności, plany i zamówienia w połączonych narzędziach",
+        "p2": "Przekaż swojemu zespołowi pełną historię, gdy potrzebna będzie dana osoba"
+      },
+      "inbox": {
+        "label": "Udostępniona skrzynka odbiorcza",
+        "title": "Jedna skrzynka odbiorcza dla Twojego zespołu i sztucznej inteligencji",
+        "body": "Wyczyść własność, dołącz do alertów i pełny kontekst w każdym wątku.",
+        "p0": "Zobacz, co AI już sprawdziło",
+        "p1": "Dołącz do rozmowy jednym kliknięciem",
+        "p2": "Lokalizacja gościa, urządzenie i historia"
+      },
+      "kb": {
+        "label": "Wiedza",
+        "title": "Naucz się tego, korzystając ze wszystkiego, co masz",
+        "body": "Przeszukuj swoją witrynę, przesyłaj pliki, pisz strony. Przełączniki publiczne i prywatne decydują, kto co widzi.",
+        "p0": "Przeszukaj swoją witrynę",
+        "p1": "Prześlij dokumenty i notatki",
+        "p2": "Trzymaj prywatne strony z dala od odwiedzających"
+      },
+      "tickets": {
+        "label": "Bilety",
+        "title": "Nic nie spada",
+        "body": "Jeśli nikt nie jest wolny, wystawiane jest zgłoszenie i informowane o tym klienta.",
+        "p0": "Zapisano w Asanie lub Trello",
+        "p1": "Podsumowanie podróżuje z biletem",
+        "p2": "Klient zawsze się odezwie"
+      },
+      "aria": "Obszary produktów"
+    },
+    "teams": {
+      "verify": {
+        "claim": "Jestem Alex Morgan. Pokaż mi moje faktury.",
+        "ok": "Dzięki, Alex. Jesteś zalogowany, więc oto Twoje faktury.",
+        "ask": "Nie mogę udostępnić szczegółów konta gościowi. Zaloguj się na stronie, a sprawdzę, czy to naprawdę Ty.",
+        "verified": "Tożsamość zweryfikowana",
+        "locked": "Gość · konto zablokowane",
+        "site": "Zalogowano się na Twojej stronie internetowej",
+        "token": "Otrzymano podpisany token · alex@example.com",
+        "invoice": "Faktura nr 1042",
+        "plan": "Plan rozwoju · płatny"
+      },
+      "plugins": {
+        "live": "Podłączono 9 wtyczek"
+      },
+      "contacts": {
+        "label": "Kontakty",
+        "name": "Imię",
+        "contact": "E-mail lub telefon",
+        "status": "Stan",
+        "new": "Nowy potencjalny klient",
+        "ask": "Jaki jest Twój e-mail, na wypadek, gdybyśmy się rozłączyli?",
+        "agent": "Agent AI · Właśnie teraz",
+        "skip": "Pomiń",
+        "thanks": "Dzięki, Maya! Czy jest jeszcze coś, w czym mogę Ci pomóc?"
+      },
+      "eyebrow": "Miejsce dla każdego zespołu",
+      "title": "Zapewnij prawdziwą produktywność każdemu zespołowi",
+      "cards": [
+        {
+          "tag": "Weryfikacja tożsamości",
+          "title": "Nikt nie wchodzi do gry tylko poprzez podanie nazwiska",
+          "desc": "Imię lub adres e-mail wpisany na czacie niczego nie dowodzi. Elpino otwiera dane konta prywatnego tylko dla gości, którzy zalogowali się na Twojej stronie i za co ręczyli, więc gość podający się za kogoś innego nic nie zyskuje.",
+          "note": "Do sprawdzania płatności i zamówień używany jest wyłącznie zweryfikowany adres e-mail podany w loginie, a wylogowanie natychmiast kończy sesję czatu.",
+          "points": [
+            "Twoja witryna loguje użytkownika i Elpino ufa tylko temu",
+            "Goście mogą rozmawiać, ale narzędzia prywatne pozostają zablokowane",
+            "Wylogowanie powoduje natychmiastowe zakończenie sesji"
+          ]
+        },
+        {
+          "tag": "Odpowiedzi AI",
+          "title": "Zobacz dokładnie, co odpowiada sztuczna inteligencja",
+          "desc": "Każda odpowiedź pokazuje, że działa: strony Twojej wiedzy, z których korzystał, oraz płatność lub zamówienie, które wyszukałeś w połączonych narzędziach. Nic, co mówi sztuczna inteligencja, nie jest czarną skrzynką.",
+          "note": "Oglądaj rozmowę na żywo w skrzynce odbiorczej i wkraczaj, gdy dana osoba jest potrzebna. Twój zespół otrzymuje pełną historię, więc nikt nie prosi klienta o powtarzanie.",
+          "points": [
+            "Zobacz strony i narzędzia odpowiadające każdej odpowiedzi",
+            "Przeczytaj każdą odpowiedź tak, jak widzi ją klient",
+            "Dołącz jednym kliknięciem z pełnym kontekstem"
+          ]
+        },
+        {
+          "tag": "Analityka",
+          "title": "Zobacz, kto odwiedza i co robi",
+          "desc": "Analityka internetowa znajduje się tuż obok Twojej skrzynki odbiorczej. Śledź odwiedzających, odsłony stron, sesje, czas spędzony w witrynie i współczynnik odrzuceń z ostatnich 7 dni lub dowolnego okresu i porównaj je z poprzednimi.",
+          "note": "Prawdziwych odwiedzających nie liczy się botów, więc liczby opisują ludzi. Filtruj według domeny i zapisuj gotowe ustawienia dla najczęściej sprawdzanych widoków.",
+          "points": [
+            "Odwiedzający, odsłony strony, sesje i współczynnik odrzuceń",
+            "Porównaj z poprzednim okresem",
+            "Filtruj według domeny i zapisuj swoje ulubione widoki"
+          ]
+        },
+        {
+          "tag": "Kontakty",
+          "title": "Zamień czaty w kontakty",
+          "desc": "Każdy odwiedzający, który udostępni adres e-mail lub numer telefonu, trafi do Twojego wbudowanego CRM z załączoną całą historią rozmów.",
+          "note": "Kiedykolwiek z kimś rozmawiasz, widzisz, kim jest i o co wcześniej pytał, więc każda odpowiedź ma charakter osobisty.",
+          "points": [
+            "Potencjalni klienci przechwyceni bezpośrednio na czacie",
+            "Historia i plan obok każdego kontaktu",
+            "Zsynchronizowane z CRM, którego już używasz"
+          ]
+        },
+        {
+          "tag": "Wtyczki",
+          "title": "Podłącz narzędzia, z których już korzystasz",
+          "desc": "Połącz płatności, sklepy, systemy CRM i narzędzia do sprzedaży biletów w ciągu kilku minut, więc każda odpowiedź pochodzi z bieżących danych, a nie z domysłów.",
+          "note": "Elpino czyta i działa za pośrednictwem wtyczek, które włączasz, i tylko za przyznanymi uprawnieniami.",
+          "points": [
+            "Płatności, zamówienia i plany, sprawdzane na żywo",
+            "Bilety złożone w Asanie lub Trello",
+            "Wyłącz wtyczkę w dowolnym momencie"
+          ]
         }
       ]
     },
-    "closing": {
-      "title": "Daj klientom odpowiedź, zanim skończą pisać.",
-      "subtitle": "Zacznij za darmo, naucz go swojej firmy, i pozwól mu przejąć powtarzające się pytania.",
-      "ctaPrimary": "Zacznij za darmo",
-      "ctaSecondary": "Porozmawiaj z nami"
+    "autopilot": {
+      "save": "Zapisz",
+      "close": "Mniej więcej tak samo",
+      "aYearVs": "rok w porównaniu z",
+      "cheapest": "najtańszy z całej trójki",
+      "each": "Oszczędzanie na każdym",
+      "youSave": "Oszczędzasz vs",
+      "yr": "rok",
+      "same": "o tym samym",
+      "seats": "Użytkownicy",
+      "conversations": "Rozmowy AI / mies",
+      "p1": "Unlimited seats on every plan, even Free, so you can grow your team without growing your software bill.",
+      "p2": "No commitment. Stay on the $10 plan and top up AI credit only when you need it, at $0.03 a conversation at most. Top-ups carry forward, and there is never an overage bill.",
+      "bills": "Rachunek za jeden miesiąc, wyszczególniony",
+      "seatsUnit": "siedzenia",
+      "convUnit": "Rozmowy AI",
+      "perMonth": "Na miesiąc",
+      "perYearLabel": "Na rok",
+      "compareWith": "Porównaj z",
+      "footnote": "Publiczne ceny katalogowe w USD, sprawdzone 1 października 2026 r., rozliczenie roczne, jeśli pokazano, za tę samą liczbę stanowisk i rozmów AI w przypadku każdego produktu. Nie obejmuje podatków, dodatków i rabatów dla przedsiębiorstw. Intercom i Zendesk pobierają opłaty tylko za rozmowy rozwiązane przez sztuczną inteligencję; Elpino pobiera opłaty za każdą obsłużoną rozmowę AI, niezależnie od tego, czy została rozwiązana, czy nie. W tym porównaniu założono, że każda konwersacja AI została rozwiązana, czyli jest to najwyższa kwota, jaką naliczą te dwie rozmowy. Elpino: Plan startowy z rocznym rozliczeniem (10 USD miesięcznie, w tym 7 USD kredytu na AI), nieograniczona liczba miejsc i doładowanie środków AI do 0,03 USD za rozmowę.",
+      "cta": "Zobacz ceny"
+    },
+    "toolsLine": {
+      "title": "Łączy się z narzędziami do płatności, sklepu, CRM i sprzedaży biletów, z których już korzystasz, w ciągu kilku minut, a nie sprintów."
+    },
+    "saved": {
+      "title": "Przywróć swojemu zespołowi godziny pracy.",
+      "p1": "Elpino odpowiada na powtarzające się pytania i samodzielnie wyszukuje płatności i zamówienia, dzięki czemu Twoi ludzie mogą prowadzić rozmowy, które ich potrzebują.",
+      "p2": "Przesuń suwaki do własnych liczb. To jest szacunek, a nie obietnica.",
+      "save": "Zapisz",
+      "hours": "godz",
+      "per": "czasu Twojego zespołu, zwrócone",
+      "conversations": "Rozmowy/mies",
+      "share": "Odpowiedź bez osoby",
+      "minutes": "Minuty każda",
+      "grid": "Czas wsparcia Twojego zespołu, jeden kwadrat",
+      "hr": "godz",
+      "left": "Pozostało godz",
+      "hrs": "godz",
+      "today": "Twój dzisiejszy zespół",
+      "givenBack": "Oddane przez Elpino"
+    },
+    "platform": {
+      "title": "Sztuczna inteligencja, która sprawdza tak, jak zrobiłby to Twój najlepszy agent",
+      "subtitle": "Sprawdza, z kim rozmawia, wyszukuje rzeczywistą płatność lub zamówienie, nie udostępnia modelowi prywatnych danych, a następnie odpowiada. Kiedy dana osoba jest potrzebna, Twój zespół otrzymuje wszystko, co znajdzie."
+    },
+    "widgetMock": {
+      "row0": "Czytanie Twojej wiadomości",
+      "row0done": "Otrzymałem Twoją wiadomość",
+      "row1": "Potwierdzam, że to Ty",
+      "row1done": "Zostałeś zweryfikowany",
+      "row2": "Sprawdzam płatność i plan",
+      "row2done": "Sprawdzono płatność i plan",
+      "row3": "Ochrona Twoich prywatnych danych",
+      "row3done": "Prywatne dane trzymane poza AI",
+      "name": "Elpino AI",
+      "role": "Asystent AI",
+      "question": "Kupiłem plan, ale nadal nie jest on aktywny",
+      "answer": "Dziękuję za cierpliwość. Twoja płatność została zrealizowana i Twój plan jest teraz aktywny. Jeśli nadal widzisz stary plan, odśwież swój panel."
+    },
+    "kgraph": {
+      "s0": "Mapa witryny internetowej",
+      "s1": "Pliki PDF i dokumenty",
+      "s2": "Strony, które piszesz",
+      "s2hint": "zasady i instrukcje",
+      "s3": "Twoje połączone narzędzia",
+      "s3hint": "dane na żywo za pośrednictwem MCP",
+      "aria": "Twoja witryna internetowa, dokumenty, strony i narzędzia zasilają wiedzę Elpino",
+      "hub": "Wiedza",
+      "answer": "Odpowiedzi"
+    },
+    "ticketFlow": {
+      "title": "Zapłacono, ale plan nadal nie jest aktywny",
+      "filed": "Zapisano",
+      "assigned": "Przypisane",
+      "told": "Klient powiedział",
+      "aria": "Kiedy nikt nie jest wolny, zostaje wypisane zgłoszenie, przesłane do narzędzia Twojego zespołu i klient zostaje poinformowany",
+      "nobody": "Nikt w zespole nie jest teraz wolny",
+      "ticket": "Zgłoszenie",
+      "open": "Otwórz",
+      "draft": "Wersja robocza",
+      "high": "Wysoka",
+      "billing": "Rozliczenia",
+      "summary": "Podsumowanie, co zostało sprawdzone i co zostało znalezione w załączeniu",
+      "filedTo": "Zapisane w Twoim narzędziu do sprzedaży biletów"
     }
   },
   "pricing": {
@@ -1235,7 +1484,10 @@
     "contactSales": "Skontaktuj się z działem sprzedaży",
     "login": "Zaloguj się",
     "goToDashboard": "Przejdź do panelu",
-    "getStarted": "Zacznij"
+    "getStarted": "Zacznij",
+    "offer": {
+      "text": "Zacznij bezpłatnie już dziś: 100 wiadomości AI miesięcznie, bez karty, a po południu możesz żyć we własnej witrynie"
+    }
   },
   "footer": {
     "ticker": [
