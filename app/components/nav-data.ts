@@ -124,7 +124,6 @@ export const navGroups: DropdownGroup[] = [
           { label: 'Trust Center', href: '/trust' },
           { label: 'Privacy Policy', href: '/privacy' },
           { label: 'Terms of Service', href: '/terms' },
-          { label: 'Safety & security', href: '/security-guide' },
         ],
       },
       {

@@ -276,7 +276,7 @@ export function Header({
                       className={signUpPillClassName}
                       href="/signup"
                     >
-                      {t('nav.startFreeTrial', 'Start free trial')}
+                      {t('nav.startFreeTrial', 'Start free')}
                     </Link>
                   </div>
                 </>

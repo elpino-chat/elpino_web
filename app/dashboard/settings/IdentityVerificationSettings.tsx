@@ -16,6 +16,19 @@ export const IDENTITY_GUIDE_HREF = "/docs/identity-verification";
 
 export function IdentityVerificationSettingsPage() {
   const [expanded, setExpanded] = useState(false);
+  // Whether the workspace already has an identity secret. The switch has to start from this, not from "off",
+  // or a refresh makes a feature that is on look switched off.
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/workspace/identity-secret", { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: { configured?: boolean } | null) => { if (!cancelled && data?.configured) setExpanded(true); })
+      .catch(() => undefined)
+      .finally(() => { if (!cancelled) setLoaded(true); });
+    return () => { cancelled = true; };
+  }, []);
 
   return (
     <div className="mx-auto w-full max-w-[1120px] px-7 pb-14 pt-8 text-[#17181a] sm:px-9 lg:px-10">
@@ -34,10 +47,10 @@ export function IdentityVerificationSettingsPage() {
 
       <div className="mt-6 flex items-center justify-between gap-4 rounded-xl border border-[#e7e8ea] px-4 py-3.5">
         <p className="text-[13px] font-semibold text-[#17181a]">Identity verification</p>
-        <Switch checked={expanded} onCheckedChange={setExpanded} aria-label="Show identity verification setup" className="shrink-0" />
+        <Switch checked={expanded} disabled={!loaded} onCheckedChange={setExpanded} aria-label="Show identity verification setup" className="shrink-0" />
       </div>
 
-      {expanded && (
+      {loaded && expanded && (
         <>
           <p className="mt-4 text-[12px] leading-5 text-[#687178]">
             Go to <Link href={IDENTITY_GUIDE_HREF} target="_blank" className="font-medium text-[#428ce5] underline underline-offset-2">the identity verification guide</Link> for full setup details.
