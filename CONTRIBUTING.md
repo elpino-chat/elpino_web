@@ -28,6 +28,18 @@ npm run dev
 
 See the [README](README.md) for what each variable does.
 
+## What to expect from us
+
+- **We reply to every pull request and issue within 48 hours** (business days). A reply may be a review, a question or a
+  "not now, and here is why". If you have heard nothing after 48 hours, comment on the pull request and we will look.
+- **Small, focused pull requests get merged fastest.** Large or unrelated changes are slower to review, and may be
+  asked to be split.
+- **Not every pull request is accepted.** If a change does not fit the project we will say so plainly and explain why.
+- **The backend is closed on purpose.** This repository is the website, dashboard UI and widget. The AI agent and
+  backend services are proprietary. See the [README](README.md#what-is-and-is-not-open) for what is and is not open.
+- **Questions are welcome** in [Discussions](https://github.com/elpino-chat/elpino_web/discussions). Please do not use
+  issues for general questions.
+
 ## Workflow
 
 1. **Branch from `main`** with a short name: `feat/…`, `fix/…`, `docs/…`, `chore/…`.

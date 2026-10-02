@@ -1,0 +1,11 @@
+# Code owners are asked to review every pull request that touches the paths below.
+# Later rules take precedence over earlier ones.
+
+# Everything, unless a more specific rule below says otherwise
+*                      @CodeWithJagdeep
+
+# Security-sensitive files: always reviewed by an owner
+/next.config.ts        @CodeWithJagdeep
+/proxy.ts              @CodeWithJagdeep
+/app/api/              @CodeWithJagdeep
+/.github/              @CodeWithJagdeep
