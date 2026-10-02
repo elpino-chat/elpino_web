@@ -673,6 +673,23 @@ function DashboardContent({ name }: { name: string }) {
     }
   }
 
+  // Hooks must run on every render, so these sit above the early returns below. Calling them after
+  // `if (!conversationId) return …` changes the hook count when a chat is picked and React throws.
+  // Who has taken this chat, learned live from the team-wide "joined" event
+  // (it carries their first name, which the conversation itself doesn't).
+  const [joinedBy, setJoinedBy] = useState<{ userId: string; name: string } | null>(null);
+  useEffect(() => {
+    setJoinedBy(null);
+    const onJoined = (event: Event) => {
+      const detail = (event as CustomEvent<{ conversationId?: string; userId?: string; name?: string }>).detail;
+      if (!detail?.conversationId || detail.conversationId !== conversationId || !detail.userId) return;
+      setJoinedBy({ userId: detail.userId, name: detail.name || "A teammate" });
+      setConversation((current) => (current ? { ...current, assignedUserId: detail.userId!, handledBy: "human" } : current));
+    };
+    window.addEventListener("elpino:conversation-joined", onJoined);
+    return () => window.removeEventListener("elpino:conversation-joined", onJoined);
+  }, [conversationId]);
+
   if (!conversationId) {
     // A brand-new workspace with zero conversations anywhere gets a real
     // welcome instead of "pick a conversation" pointing at an empty list —
@@ -739,20 +756,6 @@ function DashboardContent({ name }: { name: string }) {
   // Mirrors the widget's own fallback (api/widget/start) so a workspace that
   // never picked an avatar still shows the icon its visitors actually see.
   const aiAvatarUrl = conversation?.aiAvatarUrl || DEFAULT_BOT_AVATAR;
-  // Who has taken this chat, learned live from the team-wide "joined" event
-  // (it carries their first name, which the conversation itself doesn't).
-  const [joinedBy, setJoinedBy] = useState<{ userId: string; name: string } | null>(null);
-  useEffect(() => {
-    setJoinedBy(null);
-    const onJoined = (event: Event) => {
-      const detail = (event as CustomEvent<{ conversationId?: string; userId?: string; name?: string }>).detail;
-      if (!detail?.conversationId || detail.conversationId !== conversationId || !detail.userId) return;
-      setJoinedBy({ userId: detail.userId, name: detail.name || "A teammate" });
-      setConversation((current) => (current ? { ...current, assignedUserId: detail.userId!, handledBy: "human" } : current));
-    };
-    window.addEventListener("elpino:conversation-joined", onJoined);
-    return () => window.removeEventListener("elpino:conversation-joined", onJoined);
-  }, [conversationId]);
   const isMine = !!myAccountId && conversation?.assignedUserId === myAccountId;
   const assignedElsewhere = !!conversation?.assignedUserId && conversation.assignedUserId !== myAccountId;
   const isResolved = conversation?.status === "resolved";
