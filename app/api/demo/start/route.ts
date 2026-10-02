@@ -3,7 +3,7 @@ import { callGateway } from "@/app/api/auth/_lib/gateway";
 import { rateLimit } from "../../_lib/rate-limit";
 
 export async function POST(request: Request) {
-  const limited = await rateLimit(request, "demo-start", { limit: 10, windowMs: 10 * 60_000 });
+  const limited = await rateLimit(request, "demo-start", { limit: 30, windowMs: 10 * 60_000 });
   if (limited) return limited;
   const body = await request.json().catch(() => null);
   const token = String(body?.token ?? "");

@@ -4,7 +4,7 @@ import { clientIp } from "../../_lib/client-geo";
 import { rateLimit } from "../../_lib/rate-limit";
 
 export async function POST(request: Request) {
-  const limited = await rateLimit(request, "demo-send-code", { limit: 5, windowMs: 10 * 60_000 });
+  const limited = await rateLimit(request, "demo-send-code", { limit: 30, windowMs: 10 * 60_000 });
   if (limited) return limited;
   const body = await request.json().catch(() => null);
   const email = String(body?.email ?? "").trim();
