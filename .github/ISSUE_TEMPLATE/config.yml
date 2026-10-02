@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/elpino-chat/elpino_web/blob/main/SECURITY.md
+    about: Please email security@elpino.chat instead of opening a public issue.

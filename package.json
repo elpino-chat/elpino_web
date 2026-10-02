@@ -2,6 +2,9 @@
   "name": "elpino-web",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
+  "repository": { "type": "git", "url": "https://github.com/elpino-chat/elpino_web.git" },
+  "homepage": "https://elpino.chat",
   "overrides": {
     "postcss": "8.5.10"
   },
