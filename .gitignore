@@ -10,3 +10,6 @@ dist/
 next-env.d.ts
 .DS_Store
 *.log
+
+# Local tooling skills (not part of the app)
+.claude/skills/integration-nextjs-app-router/
