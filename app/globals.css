@@ -1835,6 +1835,11 @@ body {
   color: var(--dashboard-accent-contrast, rgba(255, 255, 255, 0.92)) !important;
 }
 
+/* A thin white/30 ring in the dark theme, so the avatar reads against the dark surface (Tailwind's border-white/30). */
+[data-dashboard-theme="dark"] .dashboard-account-avatar {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
 /* Explicit light-header reset prevents dark appearance styles from lingering
    when the user changes modes without reloading the dashboard. */
 [data-dashboard-theme="light"] .dashboard-shell header {
@@ -2098,6 +2103,11 @@ body {
   background-color: #202225 !important;
   border-color: #ffffff !important;
   color: #ffffff !important;
+}
+
+/* In the dark theme the badge sits on a dark surface, so the solid white ring is far too loud. */
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-settings-surface .dashboard-avatar-upload {
+  border-color: rgba(255, 255, 255, 0.3) !important;
 }
 
 [data-dashboard-theme="light"] .dashboard-shell .dashboard-settings-surface .dashboard-settings-outline-action {
@@ -5191,15 +5201,12 @@ body:has(.dashboard-ai-usage-page) .dashboard-add-credits-dialog [class*="hover:
   border-color: rgba(0, 0, 0, 0.14) !important;
 }
 
-/* ConnectPageContent embedded inline in the Setup & Integration settings
-   page (an always-light page, independent of the dashboard-wide dark/light
-   toggle) — same color flip as the light-theme rules above, but applied
-   unconditionally since this host page is never dark, plus dropping the
-   component's own dark background, header and max-width so it reads as
-   part of the page instead of a separate dark panel. */
+/* ConnectPageContent embedded inline in the Setup & Integration settings page. The structural parts (no own
+   background, header or max-width, so it reads as part of the page) apply in both themes. The colour flip to
+   dark-on-light is only for the light theme: in the dark theme the component's own white-on-dark styling is
+   already right, and flipping it there made the text unreadable. */
 .dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page {
   background: transparent !important;
-  color: rgba(0, 0, 0, 0.85) !important;
   min-height: 0 !important;
 }
 .dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page > div[class*="max-w-[1320px]"] {
@@ -5209,31 +5216,37 @@ body:has(.dashboard-ai-usage-page) .dashboard-add-credits-dialog [class*="hover:
 .dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page header {
   display: none !important;
 }
-.dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page [class*="text-white"]:not(.dashboard-connect-badge-letter) {
+[data-dashboard-theme="light"] .dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page {
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+[data-dashboard-theme="light"] .dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page [class*="text-white"]:not(.dashboard-connect-badge-letter) {
   color: rgba(0, 0, 0, 0.7) !important;
 }
-.dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page [class*="bg-white/"] {
+[data-dashboard-theme="light"] .dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page [class*="bg-white/"] {
   background-color: rgba(0, 0, 0, 0.05) !important;
 }
-.dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page [class*="border-white"] {
+[data-dashboard-theme="light"] .dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page [class*="border-white"] {
   border-color: rgba(0, 0, 0, 0.12) !important;
 }
-.dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page [class*="bg-[#292a2b]"],
-.dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page [class*="bg-[#262626]"] {
+[data-dashboard-theme="light"] .dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page [class*="bg-[#292a2b]"],
+[data-dashboard-theme="light"] .dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page [class*="bg-[#262626]"] {
   background-color: #ffffff !important;
   border-color: rgba(0, 0, 0, 0.12) !important;
 }
-.dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page [class*="bg-[#222324]"] {
+[data-dashboard-theme="light"] .dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page [class*="bg-[#222324]"] {
   background-color: #f5f6f7 !important;
   border-color: rgba(0, 0, 0, 0.14) !important;
 }
-/* Connector cards and the loading skeleton: border only, no fill — reads
-   as part of the page instead of a separate gray panel. Comes after the
-   general bg-white/ rule above so it wins on these specific cards. */
-.dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page [class*="bg-white/[0.025]"],
-.dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page [class*="bg-white/[0.03]"],
-.dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page [class*="bg-white/[0.045]"] {
+/* Connector cards and the loading skeleton: border only, no fill (light theme), so they read as part of the
+   page. In the dark theme they keep their subtle white/3% fill and white/10 border, raised to white/20 so the
+   cards are easy to tell apart on the black background. */
+[data-dashboard-theme="light"] .dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page [class*="bg-white/[0.025]"],
+[data-dashboard-theme="light"] .dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page [class*="bg-white/[0.03]"],
+[data-dashboard-theme="light"] .dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page [class*="bg-white/[0.045]"] {
   background-color: transparent !important;
+}
+[data-dashboard-theme="dark"] .dashboard-connect-embedded.dashboard-connect-embedded .dashboard-connect-page :is(article, section > div > .rounded-xl)[class*="border-white/10"] {
+  border-color: rgb(255 255 255 / 0.2) !important;
 }
 
 /* About hero: preserve the component's editorial details on its dark surface. */
@@ -5860,4 +5873,136 @@ body:has(.dashboard-ai-usage-page) .dashboard-add-credits-dialog [class*="hover:
 }
 @media (prefers-reduced-motion: reduce) {
   [data-fx-on] [data-fx]:not([data-fx-in]) { opacity: 1 !important; translate: none !important; filter: none !important; }
+}
+
+/* Dashboard navigation text is full white (text-white/100). The icon rail and the settings sidebar are dark
+   (#262626) in both themes, so their labels are white in both. The repeated .dashboard-shell raises the
+   specificity above the older per-theme sidebar colour rules; the yellow Upgrade chip keeps its dark text. */
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell.dashboard-shell.dashboard-shell :is(aside, .dashboard-secondary-sidebar):not([role="dialog"]) :is(a, button, h1, h2, h3, p, span, svg):not(.sidebar-upgrade, .sidebar-upgrade *) {
+  color: rgb(255 255 255 / 1) !important;
+}
+
+/* The header is light in the light theme, so its actions (Page tour, Invite team, Usage, Upgrade) are white only
+   in the dark theme. */
+[data-dashboard-theme="dark"] .dashboard-shell.dashboard-shell header :is(a, button, span, p, h1, h2, svg) {
+  color: rgb(255 255 255 / 1) !important;
+}
+
+/* Tag Manager: the "one website per workspace" note, the table header and every row use a /40 border, white in
+   the dark theme and black in the light theme (border-white/40 and border-black/40). */
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-tag-manager-page :is(.dashboard-tag-note, .dashboard-tag-table-header, .dashboard-tag-table-row) {
+  border-color: rgb(255 255 255 / 0.4) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-tag-manager-page :is(.dashboard-tag-note, .dashboard-tag-table-header, .dashboard-tag-table-row) {
+  border-color: rgb(0 0 0 / 0.4) !important;
+}
+
+/* The settings sidebar (Account, General, Billing … Danger Zone, Log out) is full white, text-white/100, in both
+   themes. The older per-state rules for it are keyed on #dashboard-settings-sidebar, so these use the same ID to
+   win over them: normal, current page, and hover. */
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) #dashboard-settings-sidebar :is(a, button, p),
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) #dashboard-settings-sidebar :is(a, button) :is(span, svg),
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) #dashboard-settings-sidebar a[aria-current="page"],
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) #dashboard-settings-sidebar :is(a, button):hover,
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) #dashboard-settings-sidebar > div > p {
+  color: rgb(255 255 255 / 1) !important;
+}
+
+/* Members page, dark theme: the settings area is #262626, so the cards share that fill and are told apart by a
+   clear white/30 border (the same /30 to /40 family used across the dashboard), with a slightly lighter
+   strip for the table header and row hover. Light theme keeps the shared billing tokens. */
+[data-dashboard-theme="dark"] .members-v2 {
+  --b-surface: #262626;
+  --b-surface-2: #2f3133;
+  --b-border: rgb(255 255 255 / 0.3);
+  --b-track: rgb(255 255 255 / 0.2);
+}
+[data-dashboard-theme="dark"] .members-v2 :is(input[type="checkbox"]) {
+  accent-color: #ffffff;
+}
+[data-dashboard-theme="dark"] .members-v2 input.bg-transparent:not([type="checkbox"]) {
+  background-color: transparent !important;
+}
+
+/* Members page inputs (invite email, search): transparent in the dark theme, so only the bordered wrapper shows,
+   with the typed text still the normal light input colour. Same ID-level selector as the settings input rule above
+   so it wins over its forced background. */
+[data-dashboard-theme="dark"] #dashboard-settings-page .dashboard-settings-surface .members-v2 input.bg-transparent:not([type="checkbox"]) {
+  background: transparent !important;
+  border-color: transparent !important;
+  color: rgb(255 255 255 / 0.9) !important;
+  box-shadow: none !important;
+}
+[data-dashboard-theme="dark"] #dashboard-settings-page .dashboard-settings-surface .members-v2 input.bg-transparent:not([type="checkbox"])::placeholder {
+  color: rgb(255 255 255 / 0.4) !important;
+}
+
+/* Connect page "Explore / Connected" toggle: the active button is solid white with dark text, the other is
+   transparent. In the light theme the active one is solid dark with white text so it still stands out. These are
+   their own classes (not text-white / bg-white utilities) so the embedded light-theme colour flips don't touch them. */
+.dashboard-connect-page .connect-view-toggle .connect-view-on {
+  background-color: #ffffff !important;
+  color: #11120f !important;
+}
+.dashboard-connect-page .connect-view-toggle .connect-view-off {
+  background-color: transparent !important;
+  color: rgb(255 255 255 / 0.7) !important;
+}
+.dashboard-connect-page .connect-view-toggle .connect-view-off:hover {
+  color: rgb(255 255 255 / 1) !important;
+}
+[data-dashboard-theme="light"] .dashboard-connect-page .connect-view-toggle {
+  border-color: rgba(0, 0, 0, 0.2) !important;
+}
+[data-dashboard-theme="light"] .dashboard-connect-page .connect-view-toggle .connect-view-on {
+  background-color: #11120f !important;
+  color: #ffffff !important;
+}
+[data-dashboard-theme="light"] .dashboard-connect-page .connect-view-toggle .connect-view-off {
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+[data-dashboard-theme="light"] .dashboard-connect-page .connect-view-toggle .connect-view-off:hover {
+  color: rgba(0, 0, 0, 0.9) !important;
+}
+
+/* Connect dialog (API key / token form). Own colour variables, so it reads the same wherever it opens and the
+   embedded Connect page's light-theme flips don't touch it. Dark: the dashboard's #262626 with white/30 borders. */
+.connect-dialog {
+  --cd-bg: #262626;
+  --cd-surface-2: #2f3133;
+  --cd-border: rgb(255 255 255 / 0.3);
+  --cd-text: rgb(255 255 255 / 1);
+  --cd-muted: rgb(255 255 255 / 0.62);
+  --cd-ink: #ffffff;
+  --cd-ink-text: #11120f;
+  --cd-good: #5fd09a;
+  --cd-bad: #f08a92;
+  --cd-bad-bg: rgb(240 138 146 / 0.14);
+}
+[data-dashboard-theme="light"] .connect-dialog {
+  --cd-bg: #ffffff;
+  --cd-surface-2: #f5f6f7;
+  --cd-border: rgb(0 0 0 / 0.2);
+  --cd-text: #14161a;
+  --cd-muted: #66707a;
+  --cd-ink: #11120f;
+  --cd-ink-text: #ffffff;
+  --cd-good: #1f8f5f;
+  --cd-bad: #a5414b;
+  --cd-bad-bg: #fdf0f1;
+}
+/* The settings area forces its own input background and border; the dialog's inputs keep theirs. */
+[data-dashboard-theme="dark"] #dashboard-settings-page .dashboard-settings-surface .connect-dialog input.connect-dialog-input,
+.dashboard-shell .connect-dialog input.connect-dialog-input {
+  background: transparent !important;
+  border-color: var(--cd-border) !important;
+  color: var(--cd-text) !important;
+  box-shadow: none !important;
+}
+[data-dashboard-theme="dark"] #dashboard-settings-page .dashboard-settings-surface .connect-dialog input.connect-dialog-input:focus,
+.dashboard-shell .connect-dialog input.connect-dialog-input:focus {
+  border-color: var(--cd-text) !important;
+}
+.dashboard-shell .connect-dialog input.connect-dialog-input::placeholder {
+  color: var(--cd-muted) !important;
 }
