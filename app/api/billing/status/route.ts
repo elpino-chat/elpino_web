@@ -6,11 +6,7 @@ type Entitlement = {
   planId: string;
   planName: string;
   status: string;
-  seatsIncluded: number;
-  seatsPurchased: number;
   seatsAllowed: number;
-  seatsMax: number | null;
-  seatPriceUsdCents: number;
   creditBased?: boolean;
   estimatedConversations?: number | null;
   aiCreditGrantUsdCents?: number;

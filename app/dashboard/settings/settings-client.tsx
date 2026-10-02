@@ -843,8 +843,6 @@ function TeamsSettingsPage() {
 
   const [inviteOpen, setInviteOpen] = useState(false);
   const [upgradeOpen, setUpgradeOpen] = useState(false);
-  const [seatsMenuOpen, setSeatsMenuOpen] = useState(false);
-  const [buying, setBuying] = useState<number | null>(null);
   const [notice, setNotice] = useState<{ ok: boolean; text: string } | null>(null);
   const [rowBusy, setRowBusy] = useState<string | null>(null);
   const [manageOpenFor, setManageOpenFor] = useState<string | null>(null);
@@ -879,15 +877,8 @@ function TeamsSettingsPage() {
   }
   useEffect(loadJoinLink, [isOwner]);
 
-  const seatsAllowed = entitlement?.seatsAllowed ?? 0;
+  // Seats are unlimited on every plan and are not sold, so there is no ceiling to count against.
   const seatsUsed = members.length + invitations.length;
-  // Seats are unlimited on every plan; billing reports that as a very large number (UNLIMITED_SEATS), which must
-  // never be drawn as "empty seats" or printed as a count.
-  const seatsUnlimited = seatsAllowed >= UNLIMITED_SEATS;
-  const emptySeats = seatsUnlimited ? 0 : Math.max(0, seatsAllowed - seatsUsed);
-  const isFree = entitlement?.planId === "free";
-  const currency = entitlement?.currency ?? "USD";
-  const bundles = entitlement?.seatBundles ?? [];
   const ownerCount = members.filter((m) => m.role === "owner").length;
 
   const joinUrl = joinLink?.token && typeof window !== "undefined" ? `${window.location.origin}/join/${joinLink.token}` : "";
@@ -944,37 +935,6 @@ function TeamsSettingsPage() {
       }
     } catch {
       setNotice({ ok: false, text: "Could not send the invite." });
-    }
-  }
-
-  async function buySeats(quantity: number) {
-    if (buying !== null) return;
-    setBuying(quantity);
-    setNotice(null);
-    try {
-      const response = await fetch("/api/billing/seats", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ quantity }),
-      });
-      const data = (await response.json().catch(() => ({}))) as { message?: string; upgradeRequired?: boolean; orderId?: string; keyId?: string; amountPaise?: number; seatsGranted?: number };
-      if (!response.ok) {
-        setNotice({ ok: false, text: data.upgradeRequired ? `${data.message ?? "This plan can't add more seats."} Upgrade to add more.` : data.message ?? "Could not add seats." });
-        return;
-      }
-      if (data.orderId && data.keyId) {
-        await openRazorpayCheckout({ keyId: data.keyId, orderId: data.orderId, amountPaise: data.amountPaise, description: "Extra seats" });
-        setNotice({ ok: true, text: "Payment received. Your seats will be ready in a moment." });
-        window.setTimeout(() => void load(), 2500);
-      } else {
-        setNotice({ ok: true, text: `${data.seatsGranted ?? quantity} seats added. They're billed with your subscription from the next invoice.` });
-      }
-      setSeatsMenuOpen(false);
-      await load();
-    } catch (issue) {
-      setNotice({ ok: false, text: issue instanceof Error ? issue.message : "Could not add seats." });
-    } finally {
-      setBuying(null);
     }
   }
 
@@ -1063,43 +1023,21 @@ function TeamsSettingsPage() {
     setSelected((current) => (current.size === filteredMembers.length ? new Set() : new Set(filteredMembers.map((m) => m.id))));
   }
 
-  const smallBtn = "inline-flex h-8 items-center gap-1.5 rounded-none border border-[var(--b-border)] px-3 text-[12.5px] font-medium transition hover:bg-[var(--b-surface-2)] disabled:opacity-50";
+  const smallBtn = "inline-flex h-9 items-center gap-1.5 rounded-full border border-[var(--b-border)] px-4 text-[12.5px] font-medium transition hover:bg-[var(--b-surface-2)] disabled:opacity-50";
   const cellClass = "min-w-0 text-[13px]";
   const gridCols = "grid-cols-[28px_1.7fr_1.6fr_1fr_1fr_0.9fr_36px]";
 
   return (
-    <div className="billing-v2 mx-auto w-full max-w-[1120px] px-6 pb-20 pt-8 sm:px-9 lg:px-10">
+    <div className="billing-v2 members-v2 mx-auto w-full max-w-[1120px] px-6 pb-20 pt-8 sm:px-9 lg:px-10">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h2 className="text-[32px] font-semibold tracking-[-0.04em]">Members</h2>
+          <h2 className="text-[30px] font-normal tracking-[-0.04em]">Members</h2>
           <p className="mt-1.5 text-[13px] text-[var(--b-muted)]">Everyone in this workspace shares one inbox. Invite as many people as you like: seats are unlimited.</p>
         </div>
-        {isOwner && bundles.length > 0 && (
-          <div className="relative">
-            <button type="button" onClick={() => setSeatsMenuOpen((open) => !open)} className="inline-flex h-10 items-center gap-2 rounded-none border border-[var(--b-border)] px-4 text-[13px] font-medium transition hover:bg-[var(--b-surface-2)]">
-              <Plus size={14} /> Add more seats <ChevronDown size={13} />
-            </button>
-            {seatsMenuOpen && (
-              <div className="absolute right-0 top-12 z-30 w-[240px] rounded-none border border-[var(--b-border)] bg-[var(--b-surface)] p-1.5 shadow-[0_18px_45px_rgba(15,23,42,0.16)]">
-                {bundles.map((bundle) => {
-                  const minor = currency === "INR" ? bundle.inrPaise : bundle.usdCents;
-                  const overCap = entitlement?.seatsMax != null && seatsAllowed + bundle.seats > entitlement.seatsMax;
-                  return (
-                    <button key={bundle.seats} type="button" disabled={buying !== null || overCap} onClick={() => void buySeats(bundle.seats)} className="flex w-full items-center justify-between rounded-none px-3 py-2.5 text-left text-[13px] transition hover:bg-[var(--b-surface-2)] disabled:opacity-45">
-                      <span className="flex items-center gap-2 font-medium">{buying === bundle.seats && <LoaderCircle size={13} className="animate-spin" />}{bundle.seats} seats</span>
-                      <span className="text-[var(--b-muted)]">{formatMoney(minor, currency)}{isFree ? "" : "/mo"}</span>
-                    </button>
-                  );
-                })}
-                <p className="px-3 pb-1.5 pt-1 text-[11.5px] leading-4 text-[var(--b-muted)]">{isFree ? "One-time payment." : "Billed with your subscription."}</p>
-              </div>
-            )}
-          </div>
-        )}
       </header>
 
       {notice && (
-        <p role={notice.ok ? "status" : "alert"} className={`mt-5 rounded-none px-4 py-3 text-[13px] ${notice.ok ? "bg-[var(--b-good-bg)] text-[var(--b-good)]" : "bg-[var(--b-bad-bg)] text-[var(--b-bad)]"}`}>
+        <p role={notice.ok ? "status" : "alert"} className={`mt-5 rounded-[10px] px-4 py-3 text-[13px] ${notice.ok ? "bg-[var(--b-good-bg)] text-[var(--b-good)]" : "bg-[var(--b-bad-bg)] text-[var(--b-bad)]"}`}>
           {notice.text}
           {!notice.ok && notice.text.includes("Upgrade") && <> <button type="button" onClick={() => setUpgradeOpen(true)} className="font-semibold underline underline-offset-2">See plans</button></>}
         </p>
@@ -1107,17 +1045,11 @@ function TeamsSettingsPage() {
 
       {/* -------------------------------------------------------- invite block */}
       {isOwner && (
-        <section className="mt-6 bg-[var(--b-surface)] p-8">
-          <h3 className="text-[15px] font-semibold">Add people to this workspace</h3>
+        <section className="mt-6 rounded-[10px] border border-[var(--b-border)] bg-[var(--b-surface)] p-6 sm:p-7">
+          <h3 className="text-[17px] font-medium tracking-[-0.02em]">Add people to this workspace</h3>
           <p className="mt-1 text-[12.5px] text-[var(--b-muted)]">Share this link with anyone you want to join, or invite a specific email. <Link href="/dashboard/settings/security-permissions" className="underline underline-offset-2 hover:text-[var(--b-text)]">Learn more.</Link></p>
 
           <div className="mt-4 flex flex-col gap-2.5 sm:flex-row sm:items-center">
-            <div className="flex h-11 min-w-0 flex-1 items-center gap-2 rounded-none border border-[var(--b-border)] bg-[var(--b-surface-2)] px-3.5">
-              <LinkIcon size={14} className="shrink-0 text-[var(--b-muted)]" />
-              <span className="min-w-0 flex-1 truncate text-[13px] text-[var(--b-muted)]">
-                {joinLink === null ? "Loading…" : joinLink.enabled && joinUrl ? joinUrl : "Turn on the join link to get a URL"}
-              </span>
-            </div>
             <button type="button" disabled={!joinLink?.enabled || !joinUrl} onClick={copyJoinLink} className={smallBtn}>
               <Copy size={13} /> {linkCopied ? "Copied" : "Copy link"}
             </button>
@@ -1133,7 +1065,7 @@ function TeamsSettingsPage() {
           </div>
 
           <div className="mt-3 flex flex-col gap-2.5 sm:flex-row sm:items-center">
-            <div className="flex h-11 min-w-0 flex-1 items-center gap-2 rounded-none border border-[var(--b-border)] px-3.5">
+            <div className="flex h-11 min-w-0 flex-1 items-center gap-2 rounded-[10px] border border-[var(--b-border)] px-3.5">
               <Mail size={14} className="shrink-0 text-[var(--b-muted)]" />
               <input
                 type="email"
@@ -1144,7 +1076,7 @@ function TeamsSettingsPage() {
                 className="min-w-0 flex-1 bg-transparent text-[13px] outline-none placeholder:text-[var(--b-muted)]"
               />
             </div>
-            <button type="button" onClick={() => void sendInviteEmail()} disabled={!emailDraft.trim()} className="inline-flex h-11 items-center gap-2 rounded-none bg-[var(--b-ink)] px-4 text-[13px] font-semibold text-[var(--b-ink-text)] transition hover:opacity-85 disabled:opacity-50">
+            <button type="button" onClick={() => void sendInviteEmail()} disabled={!emailDraft.trim()} className="inline-flex h-11 items-center gap-2 rounded-full bg-[var(--b-ink)] px-5 text-[13px] font-medium text-[var(--b-ink-text)] transition hover:opacity-85 disabled:opacity-50">
               <Send size={13} /> Send invite
             </button>
           </div>
@@ -1155,28 +1087,28 @@ function TeamsSettingsPage() {
       <section className="mt-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h3 className="text-[18px] font-semibold tracking-[-0.02em]">Team members</h3>
-            <p className="mt-0.5 text-[12.5px] text-[var(--b-muted)]">Manage your current team members and their access. {seatsUnlimited ? `${seatsUsed} ${seatsUsed === 1 ? "person" : "people"} so far, and seats are unlimited.` : `${seatsUsed} of ${seatsAllowed} seats used${emptySeats > 0 ? `, ${emptySeats} free` : ""}.`}</p>
+            <h3 className="text-[20px] font-normal tracking-[-0.03em]">Team members</h3>
+            <p className="mt-0.5 text-[12.5px] text-[var(--b-muted)]">Manage your current team members and their access. {`${seatsUsed} ${seatsUsed === 1 ? "person" : "people"} so far, and seats are unlimited.`}</p>
           </div>
           <div className="flex items-center gap-2">
-            <div className="flex h-9 items-center gap-2 rounded-none border border-[var(--b-border)] px-3">
+            <div className="flex h-9 items-center gap-2 rounded-full border border-[var(--b-border)] px-3.5">
               <Search size={13} className="text-[var(--b-muted)]" />
               <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search" className="w-32 bg-transparent text-[13px] outline-none placeholder:text-[var(--b-muted)] sm:w-44" />
             </div>
             <div className="relative">
               <button type="button" onClick={() => setFilterOpen((open) => !open)} className={smallBtn}><Filter size={13} /> Filter</button>
               {filterOpen && (
-                <div className="absolute right-0 top-10 z-30 w-[200px] rounded-none border border-[var(--b-border)] bg-[var(--b-surface)] p-3 shadow-[0_18px_45px_rgba(15,23,42,0.16)]">
+                <div className="absolute right-0 top-11 z-30 w-[200px] rounded-xl border border-[var(--b-border)] bg-[var(--b-surface)] p-3 shadow-[0_18px_45px_rgba(15,23,42,0.16)]">
                   <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--b-muted)]">Role</p>
                   <div className="mt-1.5 flex flex-col gap-1">
                     {(["all", "owner", "member"] as const).map((value) => (
-                      <button key={value} type="button" onClick={() => setRoleFilter(value)} className={`rounded-none px-2 py-1.5 text-left text-[13px] capitalize transition hover:bg-[var(--b-surface-2)] ${roleFilter === value ? "font-semibold" : ""}`}>{value}</button>
+                      <button key={value} type="button" onClick={() => setRoleFilter(value)} className={`rounded-lg px-2 py-1.5 text-left text-[13px] capitalize transition hover:bg-[var(--b-surface-2)] ${roleFilter === value ? "font-semibold" : ""}`}>{value}</button>
                     ))}
                   </div>
                   <p className="mt-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--b-muted)]">Status</p>
                   <div className="mt-1.5 flex flex-col gap-1">
                     {(["all", "online", "away", "brb", "pending"] as const).map((value) => (
-                      <button key={value} type="button" onClick={() => setStatusFilter(value)} className={`rounded-none px-2 py-1.5 text-left text-[13px] capitalize transition hover:bg-[var(--b-surface-2)] ${statusFilter === value ? "font-semibold" : ""}`}>{value === "brb" ? "Be right back" : value}</button>
+                      <button key={value} type="button" onClick={() => setStatusFilter(value)} className={`rounded-lg px-2 py-1.5 text-left text-[13px] capitalize transition hover:bg-[var(--b-surface-2)] ${statusFilter === value ? "font-semibold" : ""}`}>{value === "brb" ? "Be right back" : value}</button>
                     ))}
                   </div>
                 </div>
@@ -1188,10 +1120,10 @@ function TeamsSettingsPage() {
           </div>
         </div>
 
-        <div className="mt-4 overflow-hidden rounded-none border border-[var(--b-border)] bg-[var(--b-surface)]">
+        <div className="mt-4 overflow-hidden rounded-[10px] border border-[var(--b-border)] bg-[var(--b-surface)]">
           <div className="overflow-x-auto">
             <div className="min-w-[760px]">
-              <div className={`grid ${gridCols} items-center gap-3 border-b border-[var(--b-border)] px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--b-muted)]`}>
+              <div className={`grid ${gridCols} items-center gap-3 border-b border-[var(--b-border)] bg-[var(--b-surface-2)] px-5 py-3 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--b-muted)]`}>
                 <input type="checkbox" checked={filteredMembers.length > 0 && selected.size === filteredMembers.length} onChange={toggleAll} disabled={!isOwner || filteredMembers.length === 0} className="h-4 w-4 rounded" aria-label="Select all" />
                 <span>Team member</span>
                 <span>Email</span>
@@ -1211,18 +1143,18 @@ function TeamsSettingsPage() {
                     const status = STATUS_DOT[member.presenceStatus ?? "online"] ?? STATUS_DOT.online;
                     const isSelf = member.id === myId;
                     return (
-                      <div key={member.id} className={`grid ${gridCols} items-center gap-3 border-b border-[var(--b-border)] px-5 py-3`}>
+                      <div key={member.id} className={`grid ${gridCols} items-center gap-3 border-b border-[var(--b-border)] px-5 py-3 transition-colors hover:bg-[var(--b-surface-2)]`}>
                         <input type="checkbox" checked={selected.has(member.id)} onChange={() => toggleRow(member.id)} disabled={!isOwner || isSelf} className="h-4 w-4 rounded" aria-label={`Select ${member.email}`} />
                         <div className={`flex items-center gap-2.5 ${cellClass}`}>
                           <span className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[var(--b-surface-2)] text-[12px] font-semibold">
                             {member.avatarUrl ? <img src={member.avatarUrl} alt="" className="h-full w-full object-cover" /> : memberInitial(member)}
                           </span>
-                          <span className="truncate font-medium">{member.name?.trim() || member.email}{isSelf ? " (you)" : ""}</span>
+                          <span className="truncate font-medium text-[var(--b-text)]">{member.name?.trim() || member.email}{isSelf ? " (you)" : ""}</span>
                         </div>
                         <span className={`${cellClass} truncate text-[var(--b-muted)]`}>{member.email}</span>
                         <span className={cellClass}>
                           {member.role === "owner" ? (
-                            <span className="inline-flex items-center gap-1 rounded-none bg-[var(--b-good-bg)] px-2 py-0.5 text-[11px] font-semibold text-[var(--b-good)]">Owner</span>
+                            <span className="inline-flex items-center gap-1 rounded-full bg-[var(--b-good-bg)] px-2.5 py-0.5 text-[11px] font-medium text-[var(--b-good)]">Owner</span>
                           ) : (
                             <span className="text-[var(--b-muted)]">Member</span>
                           )}
@@ -1231,22 +1163,22 @@ function TeamsSettingsPage() {
                         <span className="flex items-center gap-1.5 text-[12.5px]"><span className={`h-2 w-2 rounded-full ${status.dot}`} />{status.label}</span>
                         <div className="relative flex justify-end">
                           {isOwner && !isSelf && (
-                            <button type="button" onClick={() => setManageOpenFor(manageOpenFor === member.id ? null : member.id)} className="flex h-8 w-8 items-center justify-center rounded-none transition hover:bg-[var(--b-surface-2)]" aria-label={`Manage ${member.email}`}>
+                            <button type="button" onClick={() => setManageOpenFor(manageOpenFor === member.id ? null : member.id)} className="flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-[var(--b-surface-2)]" aria-label={`Manage ${member.email}`}>
                               {rowBusy === member.id ? <LoaderCircle size={14} className="animate-spin" /> : <MoreHorizontal size={16} />}
                             </button>
                           )}
                           {manageOpenFor === member.id && (
-                            <div className="absolute right-0 top-9 z-30 w-[200px] rounded-none border border-[var(--b-border)] bg-[var(--b-surface)] p-1.5 text-left shadow-[0_18px_45px_rgba(15,23,42,0.16)]">
+                            <div className="absolute right-0 top-9 z-30 w-[200px] rounded-xl border border-[var(--b-border)] bg-[var(--b-surface)] p-1.5 text-left shadow-[0_18px_45px_rgba(15,23,42,0.16)]">
                               {member.role === "owner" ? (
-                                <button type="button" disabled={ownerCount <= 1} onClick={() => void changeRole(member, "member")} className="flex w-full items-center gap-2 rounded-none px-3 py-2 text-[13px] transition hover:bg-[var(--b-surface-2)] disabled:opacity-40" title={ownerCount <= 1 ? "A workspace needs at least one owner" : undefined}>
+                                <button type="button" disabled={ownerCount <= 1} onClick={() => void changeRole(member, "member")} className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-[13px] transition hover:bg-[var(--b-surface-2)] disabled:opacity-40" title={ownerCount <= 1 ? "A workspace needs at least one owner" : undefined}>
                                   <ShieldOff size={14} /> Make member
                                 </button>
                               ) : (
-                                <button type="button" onClick={() => void changeRole(member, "owner")} className="flex w-full items-center gap-2 rounded-none px-3 py-2 text-[13px] transition hover:bg-[var(--b-surface-2)]">
+                                <button type="button" onClick={() => void changeRole(member, "owner")} className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-[13px] transition hover:bg-[var(--b-surface-2)]">
                                   <ShieldCheck size={14} /> Make owner
                                 </button>
                               )}
-                              <button type="button" disabled={member.role === "owner" && ownerCount <= 1} onClick={() => void removeMember(member)} className="flex w-full items-center gap-2 rounded-none px-3 py-2 text-[13px] text-[var(--b-bad)] transition hover:bg-[var(--b-bad-bg)] disabled:opacity-40" title={member.role === "owner" && ownerCount <= 1 ? "The last owner can't be removed" : undefined}>
+                              <button type="button" disabled={member.role === "owner" && ownerCount <= 1} onClick={() => void removeMember(member)} className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-[13px] text-[var(--b-bad)] transition hover:bg-[var(--b-bad-bg)] disabled:opacity-40" title={member.role === "owner" && ownerCount <= 1 ? "The last owner can't be removed" : undefined}>
                                 <UserMinus size={14} /> Remove from workspace
                               </button>
                             </div>
@@ -1269,36 +1201,20 @@ function TeamsSettingsPage() {
                       <span className="flex items-center gap-1.5 text-[12.5px] text-[var(--b-muted)]"><span className="h-2 w-2 rounded-full bg-[var(--b-track)]" />Pending</span>
                       <div className="relative flex justify-end">
                         {isOwner && (
-                          <button type="button" onClick={() => setManageOpenFor(manageOpenFor === invite.id ? null : invite.id)} className="flex h-8 w-8 items-center justify-center rounded-none transition hover:bg-[var(--b-surface-2)]" aria-label={`Manage invite to ${invite.email}`}>
+                          <button type="button" onClick={() => setManageOpenFor(manageOpenFor === invite.id ? null : invite.id)} className="flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-[var(--b-surface-2)]" aria-label={`Manage invite to ${invite.email}`}>
                             {rowBusy === invite.id ? <LoaderCircle size={14} className="animate-spin" /> : <MoreHorizontal size={16} />}
                           </button>
                         )}
                         {manageOpenFor === invite.id && (
-                          <div className="absolute right-0 top-9 z-30 w-[160px] rounded-none border border-[var(--b-border)] bg-[var(--b-surface)] p-1.5 text-left shadow-[0_18px_45px_rgba(15,23,42,0.16)]">
-                            <button type="button" onClick={() => void resendInvite(invite)} className="flex w-full items-center gap-2 rounded-none px-3 py-2 text-[13px] transition hover:bg-[var(--b-surface-2)]"><RefreshCw size={14} /> Resend</button>
-                            <button type="button" onClick={() => void revokeInvite(invite)} className="flex w-full items-center gap-2 rounded-none px-3 py-2 text-[13px] text-[var(--b-bad)] transition hover:bg-[var(--b-bad-bg)]"><X size={14} /> Revoke</button>
+                          <div className="absolute right-0 top-9 z-30 w-[160px] rounded-xl border border-[var(--b-border)] bg-[var(--b-surface)] p-1.5 text-left shadow-[0_18px_45px_rgba(15,23,42,0.16)]">
+                            <button type="button" onClick={() => void resendInvite(invite)} className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-[13px] transition hover:bg-[var(--b-surface-2)]"><RefreshCw size={14} /> Resend</button>
+                            <button type="button" onClick={() => void revokeInvite(invite)} className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-[13px] text-[var(--b-bad)] transition hover:bg-[var(--b-bad-bg)]"><X size={14} /> Revoke</button>
                           </div>
                         )}
                       </div>
                     </div>
                   ))}
 
-                  {emptySeats > 0 && (!term && roleFilter === "all" && statusFilter === "all") && Array.from({ length: emptySeats }, (_, index) => (
-                    <div key={`empty-${index}`} className={`grid ${gridCols} items-center gap-3 border-b border-[var(--b-border)] px-5 py-3 last:border-b-0`}>
-                      <span />
-                      <div className={`flex items-center gap-2.5 ${cellClass}`}>
-                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-dashed border-[var(--b-border)] text-[var(--b-muted)]"><UserRound size={14} /></span>
-                        <span className="text-[var(--b-muted)]">Empty seat</span>
-                      </div>
-                      <span />
-                      <span />
-                      <span />
-                      <span />
-                      <div className="flex justify-end">
-                        {isOwner && <button type="button" onClick={() => setInviteOpen(true)} className={smallBtn}><UserPlus size={13} /> Add user</button>}
-                      </div>
-                    </div>
-                  ))}
                 </div>
               )}
             </div>
@@ -1443,26 +1359,15 @@ export function UpgradeSettingsPage() {
 
 type BillingInvoice = { id?: string; date?: string; amount?: string | number; status?: string; url?: string };
 
-// Mirrors the entitlement shape returned by /api/billing/status. The two
-// meters are independent by design: `resolutionsRemaining` moves only when
-// the AI answers, `seatsAllowed` only when someone buys a seat.
+// Mirrors the entitlement shape returned by /api/billing/status. `resolutionsRemaining` moves only when the AI
+// answers. Seats are unlimited on every plan and are not sold, so `seatsAllowed` is a ceiling nobody reaches.
 type Entitlement = {
   planId: string;
   planName: string;
   status: string;
-  seatsIncluded: number;
-  seatsPurchased: number;
-  /** Seats the owner removed; they stop being billed at the next renewal. */
-  seatsPendingRelease?: number;
-  /** What the extra seats add to each monthly bill, in the smallest currency unit. */
-  seatsMonthlyMinor?: number;
   /** The plan's own price per month, in the smallest currency unit. */
   effectiveMonthlyMinor?: number;
   seatsAllowed: number;
-  seatsMax: number | null;
-  /** Cheapest per-seat rate across the bundles, for the "from" price. */
-  seatFromUsdCents?: number;
-  seatBundles?: { seats: number; usdCents: number; inrPaise: number }[];
   /** AI credit this plan grants each period, in USD cents. */
   aiCreditGrantUsdCents?: number;
   /** Paid plans: metered by credit alone. Free: capped at a plain conversation count. */
@@ -1562,38 +1467,24 @@ function PaymentDetailRow({ label, value, mono, copyable }: { label: string; val
   );
 }
 
-// Plan-tinted glow behind the plan card on the Billing page.
-const BILLING_HERO_TINT: Record<string, string> = {
-  free: "from-[#94a3b8]/30 via-[#428ce5]/20 to-transparent",
-  starter: "from-[#7c3aed]/35 via-[#428ce5]/25 to-transparent",
-  growth: "from-[#2aa876]/35 via-[#428ce5]/25 to-transparent",
-  scale: "from-[#f59e0b]/35 via-[#ec4899]/25 to-transparent",
-};
-
 // A circular gauge: how far through the billing period you are (paid) or how
 // much of the Free message allowance is used. The label goes in the middle.
 function BillingRing({ percent, children }: { percent: number; children: React.ReactNode }) {
-  const size = 152;
-  const stroke = 11;
+  const size = 148;
+  const stroke = 8;
   const radius = (size - stroke) / 2;
   const circumference = 2 * Math.PI * radius;
   const value = Math.max(0, Math.min(100, percent));
   return (
     <div className="relative" style={{ width: size, height: size }}>
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90" aria-hidden>
-        <defs>
-          <linearGradient id="billing-ring-gradient" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#7c3aed" />
-            <stop offset="100%" stopColor="#428ce5" />
-          </linearGradient>
-        </defs>
         <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="var(--b-track)" strokeWidth={stroke} />
         <circle
           cx={size / 2}
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="url(#billing-ring-gradient)"
+          stroke="var(--b-info)"
           strokeWidth={stroke}
           strokeLinecap="round"
           strokeDasharray={circumference}
@@ -1623,76 +1514,7 @@ function BillingSettingsPage() {
   const [cancelBusy, setCancelBusy] = useState(false);
   const [cancelError, setCancelError] = useState<string | null>(null);
   const [cancelNotice, setCancelNotice] = useState<string | null>(null);
-  const [removeSeatsOpen, setRemoveSeatsOpen] = useState(false);
-  const [removeSeatsCount, setRemoveSeatsCount] = useState("1");
-  const [seatBusy, setSeatBusy] = useState(false);
-  const [seatError, setSeatError] = useState<string | null>(null);
-  const [addingSeats, setAddingSeats] = useState<number | null>(null);
   const [upgradeOpen, setUpgradeOpen] = useState(false);
-  const [addSeatsNotice, setAddSeatsNotice] = useState<string | null>(null);
-  const [addSeatsError, setAddSeatsError] = useState<string | null>(null);
-
-  // Removing seats takes effect at the next renewal: they were paid for
-  // through the end of this period, so they stay usable until then.
-  async function removeSeats() {
-    setSeatBusy(true);
-    setSeatError(null);
-    try {
-      const response = await fetch(`/api/billing/seats?quantity=${encodeURIComponent(removeSeatsCount)}`, { method: "DELETE" });
-      const data = (await response.json().catch(() => ({}))) as { message?: string };
-      if (!response.ok) throw new Error(data.message ?? "Could not remove seats.");
-      setRemoveSeatsOpen(false);
-      await loadStatus();
-    } catch (issue) {
-      setSeatError(issue instanceof Error ? issue.message : "Could not remove seats.");
-    } finally {
-      setSeatBusy(false);
-    }
-  }
-
-  // Buys a seat pack. On a paid plan the seats are added to the subscription
-  // straight away and billed on its next invoice, then on every renewal until
-  // removed. On Free there is no invoice, so Razorpay Checkout takes a one-off
-  // payment first and the webhook grants the seats.
-  async function addSeats(quantity: number) {
-    if (addingSeats !== null) return;
-    setAddingSeats(quantity);
-    setAddSeatsError(null);
-    setAddSeatsNotice(null);
-    try {
-      const response = await fetch("/api/billing/seats", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ quantity }),
-      });
-      const data = (await response.json().catch(() => ({}))) as {
-        message?: string;
-        upgradeRequired?: boolean;
-        orderId?: string;
-        keyId?: string;
-        amountPaise?: number;
-        seatsGranted?: number;
-        billedOnNextInvoice?: boolean;
-      };
-      if (!response.ok) {
-        setAddSeatsError(data.upgradeRequired ? `${data.message ?? "This plan can't add more seats."} Upgrade to add more teammates.` : data.message ?? "Could not add seats.");
-        return;
-      }
-      if (data.orderId && data.keyId) {
-        await openRazorpayCheckout({ keyId: data.keyId, orderId: data.orderId, amountPaise: data.amountPaise, description: "Extra seats" });
-        setAddSeatsNotice("Payment received. Your seats will be ready in a moment.");
-        // The grant lands when Razorpay's webhook confirms the payment.
-        window.setTimeout(() => void loadStatus(), 2500);
-      } else {
-        setAddSeatsNotice(`${data.seatsGranted ?? quantity} seats added. They're billed with your subscription, starting on your next invoice.`);
-      }
-      await loadStatus();
-    } catch (issue) {
-      setAddSeatsError(issue instanceof Error ? issue.message : "Could not add seats.");
-    } finally {
-      setAddingSeats(null);
-    }
-  }
 
   function loadStatus() {
     return fetch("/api/billing/status")
@@ -1759,10 +1581,6 @@ function BillingSettingsPage() {
   const isFree = plan.id === "free";
   const currencyCode = entitlement?.currency ?? "USD";
   const planMinor = entitlement?.effectiveMonthlyMinor ?? 0;
-  const seatsMinor = entitlement?.seatsMonthlyMinor ?? 0;
-  const seatBundles = entitlement?.seatBundles ?? [];
-  const seatsCapHit = entitlement?.seatsMax != null && seatBundles.some((bundle) => (entitlement?.seatsAllowed ?? 0) + bundle.seats > (entitlement?.seatsMax ?? 0));
-  const keptSeats = Math.max(0, (entitlement?.seatsPurchased ?? 0) - (entitlement?.seatsPendingRelease ?? 0));
   const renewAt = entitlement ? (periodEnd ? new Date(periodEnd) : nextAllowanceReset(entitlement)) : null;
   const periodStartMs = entitlement ? new Date(entitlement.currentPeriodStart).getTime() : NaN;
   const daysLeft = renewAt ? Math.max(0, Math.ceil((renewAt.getTime() - Date.now()) / 86_400_000)) : 0;
@@ -1791,20 +1609,20 @@ function BillingSettingsPage() {
     bad: "bg-[var(--b-bad-bg)] text-[var(--b-bad)]",
     info: "bg-[var(--b-info-bg)] text-[var(--b-info)]",
   };
-  const card = "rounded-2xl border border-[var(--b-border)] bg-[var(--b-surface)]";
-  const primaryBtn = "inline-flex h-10 items-center gap-2 rounded-xl bg-[var(--b-ink)] px-4 text-[13px] font-semibold text-[var(--b-ink-text)] transition hover:opacity-85";
-  const ghostBtn = "inline-flex h-10 items-center gap-2 rounded-xl border border-[var(--b-border)] px-4 text-[13px] font-medium text-[var(--b-text)] transition hover:bg-[var(--b-surface-2)]";
+  const card = "rounded-[10px] border border-[var(--b-border)] bg-[var(--b-surface)]";
+  const primaryBtn = "inline-flex h-10 items-center gap-2 rounded-full bg-[var(--b-ink)] px-5 text-[13px] font-medium text-[var(--b-ink-text)] transition hover:opacity-85";
+  const ghostBtn = "inline-flex h-10 items-center gap-2 rounded-full border border-[var(--b-border)] px-4 text-[13px] font-medium text-[var(--b-text)] transition hover:bg-[var(--b-surface-2)]";
   // The homepage's language: ink outlines, flat sticker fills, mono "stamp" labels.
-  const sticker = "rounded-[22px] border-2 border-[var(--s-line)]";
-  const stamp = "inline-flex items-center gap-1.5 rounded-full border-2 border-[var(--s-line)] px-2.5 py-1 font-mono text-[10.5px] font-semibold uppercase tracking-[0.14em]";
-  const chipBtn = "inline-flex h-9 items-center gap-1.5 rounded-full border-2 border-[var(--s-line)] bg-[var(--s-paper)] px-3.5 text-[12.5px] font-semibold transition hover:-translate-y-0.5";
-  const pillBtn = "inline-flex h-11 items-center gap-2 rounded-full border-2 border-[var(--s-line)] bg-[var(--s-ink)] px-6 text-[13.5px] font-semibold text-[var(--s-ink-text)] transition hover:-translate-y-0.5";
+  const sticker = "rounded-[10px] border border-[var(--b-border)]";
+  const stamp = "inline-flex items-center gap-1.5 rounded-full border border-[var(--b-border)] px-2.5 py-1 text-[11.5px] font-medium text-[var(--b-muted)]";
+  const chipBtn = "inline-flex h-9 items-center gap-1.5 rounded-full border border-[var(--b-border)] bg-[var(--b-surface)] px-3.5 text-[12.5px] font-medium transition hover:bg-[var(--b-surface-2)]";
+  const pillBtn = "inline-flex h-11 items-center gap-2 rounded-full bg-[var(--b-ink)] px-6 text-[13.5px] font-medium text-[var(--b-ink-text)] transition hover:opacity-85";
 
   return (
     <div className="billing-v2 mx-auto w-full max-w-[1080px] px-6 pb-20 pt-8 sm:px-9">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h2 className="text-[32px] font-semibold tracking-[-0.04em]">Billing</h2>
+          <h2 className="text-[30px] font-normal tracking-[-0.04em]">Billing</h2>
           <p className="mt-1.5 text-[13px] text-[var(--b-muted)]">Your plan, what&apos;s included, and how you pay.</p>
         </div>
         <button type="button" onClick={() => setUpgradeOpen(true)} className={ghostBtn}>View plans <ArrowRight size={14} /></button>
@@ -1836,7 +1654,7 @@ function BillingSettingsPage() {
       {cancelNotice && <div role="status" className="mt-7 rounded-2xl bg-[var(--b-good-bg)] px-5 py-4 text-[13px] text-[var(--b-good)]">{cancelNotice}</div>}
       {!loading && billedInOtherCurrency && (
         <div className="mt-7 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-[var(--b-info-bg)] px-5 py-4 text-[13px] text-[var(--b-info)]">
-          <p>This subscription was started in {currencyCode}, so it is still charged as {formatMoney(planMinor + seatsMinor, currencyCode)} a month. Plans and top-ups are now priced in dollars, and changing your plan moves you to dollar billing.</p>
+          <p>This subscription was started in {currencyCode}, so it is still charged as {formatMoney(planMinor, currencyCode)} a month. Plans and top-ups are now priced in dollars, and changing your plan moves you to dollar billing.</p>
           <button type="button" onClick={() => setUpgradeOpen(true)} className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-current px-3 text-[12px] font-semibold">Switch to dollars <ArrowRight size={13} /></button>
         </div>
       )}
@@ -1844,24 +1662,22 @@ function BillingSettingsPage() {
       {!loading && (
         <>
           {/* ------------------------------------------------------------- plan hero */}
-          <section className="relative mt-7 overflow-hidden rounded-3xl border border-[var(--b-border)] bg-[var(--b-surface)] p-7 md:p-9">
-            <div aria-hidden className={`pointer-events-none absolute -right-24 -top-32 h-96 w-96 rounded-full bg-gradient-to-br ${BILLING_HERO_TINT[plan.id] ?? BILLING_HERO_TINT.free} blur-3xl`} />
-            <div aria-hidden className="pointer-events-none absolute -bottom-40 -left-24 h-80 w-80 rounded-full bg-gradient-to-tr from-[#428ce5]/15 to-transparent blur-3xl" />
+          <section className="relative mt-7 overflow-hidden rounded-[10px] border border-[var(--b-border)] bg-[var(--b-surface)] p-7 md:p-9">
             <div className="relative grid items-center gap-8 md:grid-cols-[minmax(0,1fr)_auto]">
               <div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="rounded-full border border-[var(--b-border)] px-2.5 py-1 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[var(--b-muted)]">Current plan</span>
+                  <span className="rounded-full border border-[var(--b-border)] px-2.5 py-1 text-[11.5px] font-medium text-[var(--b-muted)]">Current plan</span>
                   <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${tone[statusPill.tone]}`}>{statusPill.label}</span>
                 </div>
-                <h3 className="mt-5 text-[46px] font-semibold leading-none tracking-[-0.05em]">{plan.name}</h3>
+                <h3 className="mt-5 text-[44px] font-normal leading-none tracking-[-0.045em]">{plan.name}</h3>
                 <p className="mt-3 flex items-baseline gap-1.5">
-                  <span className="text-[24px] font-semibold tabular-nums tracking-[-0.03em]">{priceMain}</span>
+                  <span className="text-[24px] font-medium tabular-nums tracking-[-0.03em]">{priceMain}</span>
                   <span className="text-[13px] text-[var(--b-muted)]">{isFree ? "forever" : cadence === "annual" ? "/ month · billed yearly" : "/ month"}</span>
                 </p>
                 <p className="mt-3 max-w-md text-[13px] leading-6 text-[var(--b-muted)]">{plan.description}</p>
                 <div className="mt-6 flex flex-wrap items-center gap-2">
                   <button type="button" onClick={() => setUpgradeOpen(true)} className={primaryBtn}>{isFree ? <><Rocket size={14} /> Upgrade plan</> : <>Change plan <ArrowRight size={14} /></>}</button>
-                  {!isFree && !cancelling && <button type="button" onClick={() => setCancelOpen(true)} className="h-10 rounded-xl px-3 text-[13px] font-medium text-[var(--b-muted)] transition hover:bg-[var(--b-surface-2)] hover:text-[var(--b-text)]">Cancel plan</button>}
+                  {!isFree && !cancelling && <button type="button" onClick={() => setCancelOpen(true)} className="h-10 rounded-full px-3 text-[13px] font-medium text-[var(--b-muted)] transition hover:bg-[var(--b-surface-2)] hover:text-[var(--b-text)]">Cancel plan</button>}
                 </div>
               </div>
 
@@ -1895,7 +1711,7 @@ function BillingSettingsPage() {
             )}
           </section>
 
-          <div role="tablist" aria-label="Billing sections" className="mt-9 inline-flex gap-1 rounded-full border-2 border-[var(--s-line)] bg-[var(--s-paper)] p-1">
+          <div role="tablist" aria-label="Billing sections" className="mt-9 flex gap-6 border-b border-[var(--b-border)]">
             {([["plan", "What's included"], ["history", "Payment history"]] as const).map(([id, label]) => (
               <button
                 key={id}
@@ -1903,10 +1719,10 @@ function BillingSettingsPage() {
                 role="tab"
                 aria-selected={tab === id}
                 onClick={() => setTab(id)}
-                className={`inline-flex h-9 items-center gap-2 rounded-full px-4 text-[13px] font-semibold transition ${tab === id ? "bg-[var(--s-ink)] text-[var(--s-ink-text)]" : "text-[var(--b-muted)] hover:text-[var(--b-text)]"}`}
+                className={`-mb-px inline-flex h-11 items-center gap-2 border-b-2 text-[14px] font-medium transition ${tab === id ? "border-[var(--b-ink)] text-[var(--b-text)]" : "border-transparent text-[var(--b-muted)] hover:text-[var(--b-text)]"}`}
               >
                 {label}
-                {id === "history" && payments.length > 0 && <span className={`rounded-full px-1.5 py-0.5 text-[10.5px] leading-none ${tab === id ? "bg-[var(--s-ink-text)]/20" : "bg-[var(--s-yellow)] text-[var(--s-ink)]"}`}>{payments.length}</span>}
+                {id === "history" && payments.length > 0 && <span className={`rounded-full px-1.5 py-0.5 text-[10.5px] leading-none bg-[var(--b-surface-2)] text-[var(--b-muted)]`}>{payments.length}</span>}
               </button>
             ))}
           </div>
@@ -1915,70 +1731,33 @@ function BillingSettingsPage() {
           <>
           {/* ------------------------------------------------------------ what's included */}
           <section className="mt-5">
-            <div className={`${sticker} divide-y-2 divide-[var(--s-line)] overflow-hidden bg-[var(--s-paper)]`}>
+            <div className={`${sticker} divide-y divide-[var(--b-border)] overflow-hidden bg-[var(--b-surface)]`}>
               <div className="grid items-center gap-4 px-6 py-5 md:grid-cols-[210px_minmax(0,1fr)_auto]">
                 <div className="flex items-center gap-3">
-                  <span className="grid size-10 shrink-0 place-items-center rounded-xl border-2 border-[var(--s-line)] bg-[var(--s-blue-solid)] text-white"><CircleGauge size={18} /></span>
-                  <p className="text-[15px] font-semibold">{isFree ? "AI messages" : "AI credit"}</p>
+                  <span className="grid size-10 shrink-0 place-items-center rounded-full bg-[var(--b-surface-2)] text-[var(--b-info)]"><CircleGauge size={18} /></span>
+                  <p className="text-[15px] font-medium">{isFree ? "AI messages" : "AI credit"}</p>
                 </div>
                 {isFree ? (
                   <div className="flex items-center gap-4">
-                    <div className="h-3 min-w-0 flex-1 overflow-hidden rounded-full border-2 border-[var(--s-line)] bg-[var(--s-paper)]"><div className="h-full bg-[var(--s-blue-solid)] transition-all" style={{ width: `${messagesPercent}%` }} /></div>
-                    <p className="shrink-0 text-[26px] font-semibold leading-none tracking-[-0.04em] tabular-nums">{messagesUsed.toLocaleString()}<span className="text-[16px] font-medium tracking-normal text-[var(--b-muted)]"> / {messagesTotal.toLocaleString()}</span></p>
+                    <div className="h-2 min-w-0 flex-1 overflow-hidden rounded-full bg-[var(--b-track)]"><div className="h-full rounded-full bg-[var(--b-info)] transition-all" style={{ width: `${messagesPercent}%` }} /></div>
+                    <p className="shrink-0 text-[26px] font-normal leading-none tracking-[-0.04em] tabular-nums">{messagesUsed.toLocaleString()}<span className="text-[16px] font-medium tracking-normal text-[var(--b-muted)]"> / {messagesTotal.toLocaleString()}</span></p>
                   </div>
                 ) : (
-                  <p className="text-[26px] font-semibold leading-none tracking-[-0.04em] tabular-nums">{formatCents(entitlement?.aiCreditGrantUsdCents ?? 0)}<span className="text-[16px] font-medium tracking-normal text-[var(--b-muted)]"> of AI credit every month</span></p>
+                  <p className="text-[26px] font-normal leading-none tracking-[-0.04em] tabular-nums">{formatCents(entitlement?.aiCreditGrantUsdCents ?? 0)}<span className="text-[16px] font-medium tracking-normal text-[var(--b-muted)]"> of AI credit every month</span></p>
                 )}
-                <Link href="/dashboard/settings/ai-usage" className={`${chipBtn} hover:bg-[var(--s-yellow)]`}>View usage <ArrowRight size={13} /></Link>
+                <Link href="/dashboard/settings/ai-usage" className={`${chipBtn}`}>View usage <ArrowRight size={13} /></Link>
               </div>
 
-              <div className="px-6 py-5">
-                <div className="grid items-center gap-4 md:grid-cols-[210px_minmax(0,1fr)_auto]">
-                  <div className="flex items-center gap-3">
-                    <span className="grid size-10 shrink-0 place-items-center rounded-xl border-2 border-[var(--s-line)] bg-[var(--s-purple)] text-white"><UsersRound size={18} /></span>
-                    <p className="text-[15px] font-semibold">Seats</p>
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-[26px] font-semibold leading-none tracking-[-0.04em] tabular-nums">{seatsInUse ? (seatsInUse.members + seatsInUse.pending).toLocaleString() : "–"}<span className="text-[16px] font-medium tracking-normal text-[var(--b-muted)]">{(entitlement?.seatsAllowed ?? 0) >= UNLIMITED_SEATS ? " in use · unlimited" : ` of ${(entitlement?.seatsAllowed ?? 0).toLocaleString()} ${(entitlement?.seatsAllowed ?? 0) === 1 ? "seat" : "seats"} used`}</span></p>
-                    <p className="mt-1.5 text-[12.5px] text-[var(--b-muted)]">{seatsInUse ? `${seatsInUse.members} member${seatsInUse.members === 1 ? "" : "s"}${seatsInUse.pending > 0 ? ` and ${seatsInUse.pending} pending invite${seatsInUse.pending === 1 ? "" : "s"}` : ""}. ` : ""}{(entitlement?.seatsAllowed ?? 0) >= UNLIMITED_SEATS ? "Seats are unlimited on every plan, and adding teammates never changes your AI allowance." : `${entitlement?.seatsIncluded ?? 0} included${(entitlement?.seatsPurchased ?? 0) > 0 ? ` · ${entitlement?.seatsPurchased} extra` : ""}. Adding seats never changes your AI allowance.`}</p>
-                  </div>
-                  {seatBundles.length > 0 && (
-                    <div className="flex flex-wrap items-center gap-2 md:justify-end">
-                      {seatBundles.map((bundle) => {
-                        const minor = currencyCode === "INR" ? bundle.inrPaise : bundle.usdCents;
-                        const overCap = entitlement?.seatsMax != null && (entitlement?.seatsAllowed ?? 0) + bundle.seats > entitlement.seatsMax;
-                        const busy = addingSeats === bundle.seats;
-                        return (
-                          <button
-                            key={bundle.seats}
-                            type="button"
-                            disabled={addingSeats !== null || overCap}
-                            onClick={() => void addSeats(bundle.seats)}
-                            title={overCap ? `${plan.name} allows up to ${entitlement?.seatsMax} seats` : undefined}
-                            className={`${chipBtn} hover:bg-[var(--s-yellow)] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0 disabled:hover:bg-[var(--s-paper)]`}
-                          >
-                            {busy ? <LoaderCircle size={13} className="animate-spin" /> : <Plus size={13} strokeWidth={3} />}
-                            {bundle.seats} seats
-                            <span className="font-mono text-[11px] font-semibold opacity-70">{formatMoney(minor, currencyCode)}{isFree ? "" : "/mo"}</span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
+              <div className="grid items-center gap-4 px-6 py-5 md:grid-cols-[210px_minmax(0,1fr)_auto]">
+                <div className="flex items-center gap-3">
+                  <span className="grid size-10 shrink-0 place-items-center rounded-full bg-[var(--b-surface-2)] text-[var(--b-info)]"><UsersRound size={18} /></span>
+                  <p className="text-[15px] font-medium">Seats</p>
                 </div>
-                {seatBundles.length > 0 && (
-                  <p className="mt-3 text-[12px] leading-5 text-[var(--b-muted)] md:pl-[226px]">
-                    {isFree ? "One-time payment, and the seats stay on your workspace." : "Added to your subscription and billed with it from the next invoice, every period until you remove them."}
-                  </p>
-                )}
-                {seatsCapHit && (
-                  <p className="mt-2 text-[12.5px] font-semibold md:pl-[226px]">
-                    {plan.name} allows up to {entitlement?.seatsMax} seats.{" "}
-                    <button type="button" onClick={() => setUpgradeOpen(true)} className="underline underline-offset-2 transition hover:opacity-70">Upgrade to add more</button>
-                  </p>
-                )}
-                {addSeatsNotice && <p role="status" className="mt-2 text-[12.5px] font-semibold text-[var(--b-good)] md:pl-[226px]">{addSeatsNotice}</p>}
-                {addSeatsError && <p role="alert" className="mt-2 text-[12.5px] font-semibold text-[var(--b-bad)] md:pl-[226px]">{addSeatsError}</p>}
+                <div className="min-w-0">
+                  <p className="text-[26px] font-normal leading-none tracking-[-0.04em]">Unlimited</p>
+                  <p className="mt-1.5 text-[12.5px] text-[var(--b-muted)]">{seatsInUse ? `${seatsInUse.members + seatsInUse.pending} ${seatsInUse.members + seatsInUse.pending === 1 ? "person" : "people"} in this workspace. ` : ""}Every plan includes unlimited seats, and adding teammates never changes your AI allowance.</p>
+                </div>
+                <Link href="/dashboard/settings/teams" className={`${chipBtn}`}>View members <ArrowRight size={13} /></Link>
               </div>
             </div>
           </section>
@@ -1986,48 +1765,29 @@ function BillingSettingsPage() {
           {/* ------------------------------------------- bill (or upgrade pitch) + card */}
           <div className="mt-5 grid gap-5 md:grid-cols-2">
             {!isFree && entitlement ? (
-              <article className={`${sticker} bg-[var(--s-paper)] p-7`}>
+              <article className={`${sticker} bg-[var(--b-surface)] p-7`}>
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className={`${stamp} bg-[var(--s-yellow)]`}>Monthly bill</span>
-                  <span className={`${stamp} bg-[var(--s-paper)]`}>{cadence === "annual" ? "Billed yearly" : "Billed monthly"}</span>
+                  <span className={`${stamp} text-[var(--b-text)]`}>Monthly bill</span>
+                  <span className={`${stamp}`}>{cadence === "annual" ? "Billed yearly" : "Billed monthly"}</span>
                 </div>
                 <div className="mt-6 space-y-3.5 text-[14px]">
                   <div className="flex items-center justify-between"><span className="text-[var(--b-muted)]">{plan.name} plan</span><span className="font-semibold tabular-nums">{formatMoney(planMinor, currencyCode)}</span></div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-[var(--b-muted)]">Extra seats ({keptSeats})</span>
-                    <span className="flex items-center gap-3">
-                      {keptSeats > 0 && !removeSeatsOpen && <button type="button" onClick={() => { setRemoveSeatsOpen(true); setRemoveSeatsCount("1"); }} className="text-[12px] font-semibold underline underline-offset-2 transition hover:opacity-70">Remove</button>}
-                      <span className="font-semibold tabular-nums">{formatMoney(seatsMinor, currencyCode)}</span>
-                    </span>
-                  </div>
-                  {removeSeatsOpen && (
-                    <div className="flex flex-wrap items-center gap-2 rounded-2xl border-2 border-[var(--s-line)] bg-[var(--s-cream)] px-3.5 py-3 text-[13px]">
-                      <span>Remove</span>
-                      <input type="number" min={1} max={keptSeats} value={removeSeatsCount} onChange={(event) => setRemoveSeatsCount(event.target.value)} className="h-8 w-14 rounded-lg border-2 border-[var(--s-line)] bg-transparent px-2 text-[13px] outline-none" aria-label="Seats to remove" />
-                      <span>at the next renewal</span>
-                      <button type="button" disabled={seatBusy} onClick={() => void removeSeats()} className="h-8 rounded-full border-2 border-[var(--s-line)] bg-[var(--s-ink)] px-3.5 text-[12px] font-semibold text-[var(--s-ink-text)] disabled:opacity-60">{seatBusy ? "Saving…" : "Confirm"}</button>
-                      <button type="button" onClick={() => setRemoveSeatsOpen(false)} className="h-8 px-2 text-[12px] font-semibold text-[var(--b-muted)]">Cancel</button>
-                    </div>
-                  )}
-                  <div className="flex items-end justify-between border-t-2 border-dashed border-[var(--s-line)] pt-4">
+                  <div className="flex items-end justify-between border-t border-[var(--b-border)] pt-4">
                     <span className="font-semibold">Total per month</span>
-                    <span className="text-[30px] font-semibold leading-none tracking-[-0.045em] tabular-nums">{formatMoney(planMinor + seatsMinor, currencyCode)}</span>
+                    <span className="text-[30px] font-normal leading-none tracking-[-0.045em] tabular-nums">{formatMoney(planMinor, currencyCode)}</span>
                   </div>
                 </div>
-                {(entitlement.seatsPendingRelease ?? 0) > 0 && <p className="mt-3 text-[12px] text-[var(--b-muted)]">{entitlement.seatsPendingRelease} seat(s) will be removed at the next renewal and stay usable until then.</p>}
-                {seatError && <p role="alert" className="mt-3 text-[12.5px] font-semibold text-[var(--b-bad)]">{seatError}</p>}
                 <p className="mt-5 flex items-center gap-2 text-[12.5px] text-[var(--b-muted)]"><CalendarDays size={14} />{cancelling ? `No further charges. Plan ends ${renewLabel ?? "at the end of the period"}.` : renewLabel ? `Next payment on ${renewLabel}` : "Charged every period"}</p>
               </article>
             ) : (
-              <article className={`${sticker} relative overflow-hidden bg-[var(--s-yellow)] p-7`}>
-                <div aria-hidden className="pointer-events-none absolute -right-8 -top-8 size-44 opacity-25" style={{ backgroundImage: "radial-gradient(var(--s-line) 1.2px, transparent 1.2px)", backgroundSize: "14px 14px" }} />
+              <article className={`${sticker} relative overflow-hidden bg-[var(--b-surface-2)] p-7`}>
                 <div className="relative">
-                  <span className={`${stamp} bg-[var(--s-paper)]`}><Rocket size={11} /> Upgrade</span>
-                  <h3 className="mt-5 text-[32px] font-semibold leading-[1.03] tracking-[-0.045em]">Outgrowing Free?</h3>
+                  <span className={`${stamp}`}><Rocket size={11} /> Upgrade</span>
+                  <h3 className="mt-5 text-[30px] font-normal leading-[1.05] tracking-[-0.04em]">Outgrowing Free?</h3>
                   <p className="mt-2 text-[14px] text-[var(--b-muted)]">Paid plans swap the message limit for a monthly AI credit.</p>
                   <ul className="mt-5 space-y-2.5 text-[14.5px]">
                     {(pricingPlans[1]?.features ?? []).slice(0, 5).map((feature) => (
-                      <li key={feature} className="flex items-center gap-2.5"><Check size={16} strokeWidth={3} className="shrink-0 text-[var(--s-green)]" />{feature}</li>
+                      <li key={feature} className="flex items-center gap-2.5"><Check size={16} strokeWidth={3} className="shrink-0 text-[var(--b-good)]" />{feature}</li>
                     ))}
                   </ul>
                   <button type="button" onClick={() => setUpgradeOpen(true)} className={`${pillBtn} mt-7`}>See plans <ArrowRight size={14} /></button>
@@ -2035,11 +1795,10 @@ function BillingSettingsPage() {
               </article>
             )}
 
-            <article className={`${sticker} bg-[var(--s-blue)] p-7`}>
-              <span className={`${stamp} bg-[var(--s-paper)]`}><CreditCard size={11} /> Payment method</span>
+            <article className={`${sticker} bg-[var(--b-surface)] p-7`}>
+              <span className={`${stamp}`}><CreditCard size={11} /> Payment method</span>
               {paymentMethod?.last4 ? (
-                <div className="relative mt-6 -rotate-1 overflow-hidden rounded-[18px] border-2 border-[var(--s-line)] bg-[var(--s-purple)] p-5 text-white">
-                  <div aria-hidden className="pointer-events-none absolute -right-6 -top-6 size-32 opacity-25" style={{ backgroundImage: "radial-gradient(#fff 1.2px, transparent 1.2px)", backgroundSize: "12px 12px" }} />
+                <div className="relative mt-6 overflow-hidden rounded-xl bg-[var(--b-ink)] p-5 text-[var(--b-ink-text)]">
                   <div className="relative flex items-center justify-between">
                     <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em]">{paymentMethod.brand ?? "Card"}</span>
                     <CreditCard size={18} />
@@ -2047,13 +1806,13 @@ function BillingSettingsPage() {
                   <p className="relative mt-8 font-mono text-[18px] tracking-[0.16em]">•••• •••• •••• {paymentMethod.last4}</p>
                   <div className="relative mt-5 flex items-end justify-between text-[11.5px]">
                     <span>{paymentMethod.expiryMonth && paymentMethod.expiryYear ? `Expires ${String(paymentMethod.expiryMonth).padStart(2, "0")}/${String(paymentMethod.expiryYear).slice(-2)}` : "Saved card"}</span>
-                    <span className="rounded-full border-2 border-white/80 px-2.5 py-0.5 font-mono text-[10.5px] font-semibold uppercase tracking-[0.12em]">Default</span>
+                    <span className="rounded-full border border-current px-2.5 py-0.5 font-mono text-[10.5px] font-medium uppercase tracking-[0.1em] opacity-80">Default</span>
                   </div>
                 </div>
               ) : (
-                <div className="mt-6 flex flex-col items-center rounded-[18px] border-2 border-dashed border-[var(--s-line)] bg-[var(--s-paper)] px-5 py-9 text-center">
-                  <span className="grid size-12 place-items-center rounded-full border-2 border-[var(--s-line)] bg-[var(--s-yellow)]"><CreditCard size={20} /></span>
-                  <p className="mt-3 text-[16px] font-semibold tracking-[-0.02em]">No card saved yet</p>
+                <div className="mt-6 flex flex-col items-center rounded-xl border border-dashed border-[var(--b-border)] px-5 py-9 text-center">
+                  <span className="grid size-12 place-items-center rounded-full bg-[var(--b-surface-2)]"><CreditCard size={20} /></span>
+                  <p className="mt-3 text-[16px] font-medium tracking-[-0.02em]">No card saved yet</p>
                   <p className="mt-1 max-w-[250px] text-[12.5px] leading-5 text-[var(--b-muted)]">Your card is saved securely by our payment provider when you pay for a plan.</p>
                 </div>
               )}
@@ -2100,7 +1859,7 @@ function BillingSettingsPage() {
               ) : (
                 <div className="border-t border-[var(--b-border)] px-6 py-12 text-center">
                   <p className="text-[14px] font-medium">No payments yet</p>
-                  <p className="mt-1 text-[12.5px] text-[var(--b-muted)]">When you pay for a plan or extra seats, each charge shows up here.</p>
+                  <p className="mt-1 text-[12.5px] text-[var(--b-muted)]">When you pay for a plan, each charge shows up here.</p>
                 </div>
               )}
             </section>
@@ -2851,28 +2610,27 @@ function SettingsHubCard({ title, description, href }: { title: string; descript
 
 function SetupIntegrationSettingsPage() {
   return (
-    <div className="mx-auto w-full max-w-[1120px] px-7 pb-14 pt-8 text-[#17181a] sm:px-9 lg:px-10">
-      <div className="border-b border-[#E5E8EA] pb-7">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Workspace</p>
-        <h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em] text-[#17181a]">Setup & Integration</h2>
-        <p className="mt-2 max-w-xl text-[14px] leading-6 text-[#667069]">Configure the chat widget and connect the tools your team already uses.</p>
-      </div>
+    <div className="billing-v2 members-v2 mx-auto w-full max-w-[1120px] px-6 pb-14 pt-8 sm:px-9 lg:px-10">
+      <header className="border-b border-[var(--b-border)] pb-7">
+        <h2 className="text-[30px] font-normal tracking-[-0.04em]">Setup &amp; Integration</h2>
+        <p className="mt-1.5 max-w-xl text-[13px] leading-6 text-[var(--b-muted)]">Configure the chat widget and connect the tools your team already uses.</p>
+      </header>
 
       <Link
         href="/dashboard/settings/identity"
-        className="group mt-6 flex items-center justify-between gap-4 rounded-xl border border-[#e7e8ea] bg-[#fafbfc] px-5 py-4 transition hover:border-[#c9d0d4] hover:bg-[#ffffff]"
+        className="group mt-6 flex items-center justify-between gap-4 rounded-[10px] border border-[var(--b-border)] bg-[var(--b-surface)] px-5 py-4 transition hover:bg-[var(--b-surface-2)]"
       >
         <div className="flex items-center gap-3">
-          <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#428ce5]/10 text-[#428ce5]"><UserCheck size={17} /></span>
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[var(--b-surface-2)] text-[var(--b-info)]"><UserCheck size={17} /></span>
           <div>
-            <p className="text-[13px] font-semibold">Enable verification</p>
-            <p className="mt-0.5 text-[12px] text-[#687178]">Verify logged-in customers before they chat, so no one can pretend to be someone else.</p>
+            <p className="text-[14px] font-medium">Enable verification</p>
+            <p className="mt-0.5 text-[12.5px] text-[var(--b-muted)]">Verify logged-in customers before they chat, so no one can pretend to be someone else.</p>
           </div>
         </div>
-        <ArrowRight size={15} className="shrink-0 text-[#a4acb1] transition group-hover:translate-x-0.5 group-hover:text-[#687178]" />
+        <ArrowRight size={15} className="shrink-0 text-[var(--b-muted)] transition group-hover:translate-x-0.5 group-hover:text-[var(--b-text)]" />
       </Link>
 
-      <div className="dashboard-connect-embedded mt-8 border-t border-[#E5E8EA] pt-8">
+      <div className="dashboard-connect-embedded mt-8">
         <ConnectPageContent />
       </div>
     </div>
@@ -3211,7 +2969,7 @@ function GeneralSettingsPage({ user }: { user: SettingsUser }) {
         <div className="grid grid-cols-[310px_minmax(0,1fr)] gap-10 max-xl:grid-cols-[270px_minmax(0,1fr)] max-lg:grid-cols-1 max-lg:gap-5">
           <div><h3 className="dashboard-settings-heading text-base font-semibold">Dashboard appearance</h3><p className="dashboard-settings-subdesc mt-1 max-w-[285px] text-[12px] leading-[1.55] text-[#858585]">Personalize the dashboard canvas, navigation, buttons, and active states. These choices do not change your customer-facing chatbot.</p></div>
           <div className="min-w-0">
-            <div><p className="dashboard-settings-heading text-base font-semibold">Appearance</p><p className="dashboard-settings-subdesc mt-1 text-sm text-[#858585]">Choose Light or Dark, or let System follow your device.</p><div className="mt-4 flex flex-wrap gap-4">{([['light','Light'],['dark','Dark'],['system','System']] as const).map(([value,label]) => { const swatchLight = value === 'light'; return <button key={value} type="button" onClick={() => updateDashboardAppearance(value)} className="text-left"><span className={`block h-[70px] w-[116px] overflow-hidden rounded-lg border-2 p-2 transition ${dashboardAppearance === value ? (swatchLight ? "border-black/70" : "border-white/70") : "border-white/10"} ${swatchLight ? "bg-[#f4f4f5]" : "bg-[#202327]"}`}><span className={`block h-2 w-8 rounded ${swatchLight ? "bg-black/30" : "bg-white/35"}`} /><span className={`mt-2 block h-2 w-16 rounded ${swatchLight ? "bg-black/15" : "bg-white/20"}`} /></span><span className={`mt-2 block text-[11px] font-normal ${dashboardAppearance === value ? "text-white/90" : "text-white/55"}`}>{label}</span></button>; })}</div></div>
+            <div><p className="dashboard-settings-heading text-base font-semibold">Appearance</p><p className="dashboard-settings-subdesc mt-1 text-sm text-[#858585]">Choose Light or Dark, or let System follow your device.</p><div className="mt-4 flex flex-wrap gap-4">{([['light','Light'],['dark','Dark'],['system','System']] as const).map(([value,label]) => { const swatchLight = value === 'light'; return <button key={value} type="button" onClick={() => updateDashboardAppearance(value)} className="text-left"><span className={`block h-[70px] w-[116px] overflow-hidden rounded-lg border-2 p-2 transition ${dashboardAppearance === value ? "border-[#11120f] [[data-dashboard-theme=dark]_&]:border-white/70" : "border-black/15 [[data-dashboard-theme=dark]_&]:border-white/10"} ${swatchLight ? "bg-[#f4f4f5]" : "bg-[#202327]"}`}><span className={`block h-2 w-8 rounded ${swatchLight ? "bg-black/30" : "bg-white/35"}`} /><span className={`mt-2 block h-2 w-16 rounded ${swatchLight ? "bg-black/15" : "bg-white/20"}`} /></span><span className={`mt-2 block text-[11px] ${dashboardAppearance === value ? "dashboard-settings-heading font-medium" : "dashboard-settings-subdesc font-normal text-[#858585]"}`}>{label}</span></button>; })}</div></div>
           </div>
         </div>
 
@@ -4984,41 +4742,64 @@ function PresenceLogSettingsPage() {
   const normalizedQuery = query.trim().toLowerCase();
   const visibleEvents = events.filter((event) => !normalizedQuery || `${event.name ?? ""} ${event.email}`.toLowerCase().includes(normalizedQuery));
 
+  const onlineNow = (() => {
+    const latest = new Map<string, PresenceEvent>();
+    for (const event of events) {
+      const seen = latest.get(event.userId);
+      if (!seen || new Date(event.occurredAt) > new Date(seen.occurredAt)) latest.set(event.userId, event);
+    }
+    return [...latest.values()].filter((event) => event.status === "online").length;
+  })();
+
   return (
-    <div className="mx-auto w-full max-w-[1120px] px-7 pb-16 pt-9 text-[#11120f] sm:px-9 lg:px-10">
-      <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Support operations</p>
-      <h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em] text-white/90">Presence log</h2>
-      <p className="mt-2 max-w-2xl text-[14px] leading-6 text-[#667069]">Every time a teammate comes online or goes offline, driven by their actual connection — not a status they set themselves.</p>
+    <div className="billing-v2 members-v2 mx-auto w-full max-w-[1120px] px-6 pb-20 pt-8 sm:px-9 lg:px-10">
+      <header>
+        <h2 className="text-[30px] font-normal tracking-[-0.04em]">Presence log</h2>
+        <p className="mt-1.5 max-w-2xl text-[13px] leading-6 text-[var(--b-muted)]">Every time a teammate comes online or goes offline, driven by their actual connection, not a status they set themselves.</p>
+      </header>
 
       {myRole !== null && !canView ? (
-        <p className="mt-6 rounded-lg bg-[#FFF4E5] px-3 py-2 text-[11.5px] font-medium text-[#93651D]">Only the workspace owner can view the presence log.</p>
+        <p className="mt-6 rounded-[10px] bg-[var(--b-warn-bg)] px-4 py-3 text-[13px] font-medium text-[var(--b-warn)]">Only the workspace owner can view the presence log.</p>
       ) : (
-        <div className="mt-6 overflow-hidden rounded-[24px] border border-black/20 bg-white">
-          <div className="flex flex-wrap items-center gap-3 border-b border-black/20 px-5 py-4">
-            <h3 className="text-[13px] font-semibold">Recent activity</h3>
-            <label className="dashboard-search-box ml-auto flex h-9 min-w-[230px] items-center gap-2 rounded-xl border px-3"><Search size={15} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search teammate" className="min-w-0 flex-1 bg-transparent text-[12px] outline-none" /></label>
+        <section className="mt-6 overflow-hidden rounded-[10px] border border-[var(--b-border)] bg-[var(--b-surface)]">
+          <div className="flex flex-wrap items-center gap-3 border-b border-[var(--b-border)] px-5 py-4">
+            <div>
+              <h3 className="text-[17px] font-normal tracking-[-0.02em]">Recent activity</h3>
+              {!loading && events.length > 0 && <p className="mt-0.5 text-[12.5px] text-[var(--b-muted)]">{events.length} {events.length === 1 ? "event" : "events"}{onlineNow > 0 ? ` · ${onlineNow} online now` : ""}</p>}
+            </div>
+            <label className="ml-auto flex h-9 min-w-[230px] items-center gap-2 rounded-full border border-[var(--b-border)] px-3.5">
+              <Search size={14} className="shrink-0 text-[var(--b-muted)]" />
+              <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search teammate" className="min-w-0 flex-1 bg-transparent text-[13px] outline-none placeholder:text-[var(--b-muted)]" />
+            </label>
           </div>
 
           {loading ? (
             <SkeletonRows rows={5} className="px-5 py-5" />
           ) : visibleEvents.length ? (
-            <div>
+            <ul>
               {visibleEvents.map((event) => (
-                <div key={event.id} className="flex items-center gap-4 border-t border-black/20 px-5 py-4 first:border-t-0">
-                  <span className={`h-2 w-2 shrink-0 rounded-full ${event.status === "online" ? "bg-[#32a880]" : "bg-[#9aa1a6]"}`} />
+                <li key={event.id} className="flex items-center gap-4 border-t border-[var(--b-border)] px-5 py-3.5 transition-colors first:border-t-0 hover:bg-[var(--b-surface-2)]">
+                  <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--b-surface-2)] text-[12px] font-medium">
+                    {(event.name || event.email).trim().charAt(0).toUpperCase()}
+                    <span className={`absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-[var(--b-surface)] ${event.status === "online" ? "bg-[var(--b-good)]" : "bg-[var(--b-track)]"}`} />
+                  </span>
                   <div className="min-w-0 flex-1">
-                    <p className="dashboard-presence-name truncate text-[14px] font-semibold">{event.name || event.email}</p>
-                    <p className="mt-0.5 truncate text-[10.5px] text-[#8A9397]">{event.email}</p>
+                    <p className="truncate text-[14px] font-medium">{event.name || event.email}</p>
+                    <p className="mt-0.5 truncate text-[12px] text-[var(--b-muted)]">{event.email}</p>
                   </div>
-                  <span className={`shrink-0 rounded-full px-2.5 py-1 text-[10px] font-semibold capitalize ${event.status === "online" ? "bg-[#EEF8F2] text-[#34845C]" : "bg-[#F1F3F4] text-[#5F686D]"}`}>{event.status}</span>
-                  <time className="w-[150px] shrink-0 text-right text-[11px] text-[#7A858B]">{new Date(event.occurredAt).toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}</time>
-                </div>
+                  <span className={`shrink-0 rounded-full px-2.5 py-0.5 text-[11.5px] font-medium capitalize ${event.status === "online" ? "bg-[var(--b-good-bg)] text-[var(--b-good)]" : "border border-[var(--b-border)] text-[var(--b-muted)]"}`}>{event.status}</span>
+                  <time className="w-[150px] shrink-0 text-right text-[12.5px] text-[var(--b-muted)]">{new Date(event.occurredAt).toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}</time>
+                </li>
               ))}
-            </div>
+            </ul>
           ) : (
-            <div className="flex flex-col items-center px-6 py-14 text-center"><Search size={22} className="text-[#9AA3A7]" /><p className="mt-3 text-[13px] font-semibold">No presence activity yet</p><p className="mt-1 text-[11px] text-[#7A858B]">Online/offline events will appear here as teammates connect.</p></div>
+            <div className="flex flex-col items-center px-6 py-14 text-center">
+              <span className="grid size-11 place-items-center rounded-full bg-[var(--b-surface-2)] text-[var(--b-muted)]"><Search size={18} /></span>
+              <p className="mt-3 text-[14px] font-medium">{normalizedQuery ? "No teammate matches this search" : "No presence activity yet"}</p>
+              <p className="mt-1 text-[12.5px] text-[var(--b-muted)]">{normalizedQuery ? "Try a different name or email." : "Online and offline events will appear here as teammates come and go."}</p>
+            </div>
           )}
-        </div>
+        </section>
       )}
     </div>
   );
@@ -5169,7 +4950,7 @@ function TagManagerSettingsPage() {
           SITE_LIMIT) — once a tag exists, don't offer a control that the
           backend will just reject after a full form fill-out. A second
           domain means a second workspace instead. */}
-      {tags.length > 0 && <p className="mt-4 rounded-lg border border-[#DFE3E6] bg-[#FAFBFB] px-3.5 py-2.5 text-[12px] leading-5 text-[#667069]">A workspace can only connect one website. To support another domain, create a separate workspace for it.</p>}
+      {tags.length > 0 && <p className="dashboard-tag-note mt-4 rounded-lg border border-[#DFE3E6] bg-[#FAFBFB] px-3.5 py-2.5 text-[12px] leading-5 text-[#667069]">A workspace can only connect one website. To support another domain, create a separate workspace for it.</p>}
 
       <div className="dashboard-tag-table-surface mt-5 bg-transparent">
         {tagError && !dialog && <div role="alert" className="mb-4 flex items-center justify-between rounded-lg bg-[#FFF2F2] px-3.5 py-2.5 text-[11px] font-medium text-[#A64A53]"><span>{tagError}</span><button type="button" onClick={() => setTagError(null)} aria-label="Dismiss error"><X size={14} /></button></div>}

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import posthog from "posthog-js";
-import { Check, CheckCircle2, ChevronRight, CreditCard, ExternalLink, KeyRound, ListTodo, LoaderCircle, MessageSquareText, Search, ShieldCheck, ShoppingBag, Sparkles, Unplug, Users, X } from "lucide-react";
+import { Check, CheckCircle2, ChevronRight, CreditCard, ExternalLink, KeyRound, ListTodo, LoaderCircle, Lock, MessageSquareText, Search, ShieldCheck, ShoppingBag, Sparkles, Unplug, Users, X } from "lucide-react";
 import { RazorpayIcon, StripeIcon, TrelloIcon } from "@/app/components/ConnectorIcons";
 import { McpServers } from "./McpServers";
 import { AiPermissions } from "./AiPermissions";
@@ -197,7 +197,7 @@ export function ConnectPageContent() {
                   fill the row by default, which would otherwise leave this
                   pill's own background dead space to the right of its two
                   short buttons. */}
-              <div className="flex w-fit self-start rounded-lg border border-white/10 bg-white/[0.035] p-1 sm:self-auto">{(["explore", "connected"] as const).map((item) => <button key={item} type="button" onClick={() => setView(item)} className={`rounded-md px-3 py-1.5 text-xs font-medium capitalize transition ${view === item ? "bg-white/10 text-white" : "text-white/45 hover:text-white/80"}`}>{item}{item === "connected" && integrations.length > 0 ? ` · ${integrations.length}` : ""}</button>)}</div>
+              <div className="connect-view-toggle flex w-fit self-start rounded-lg border border-white/20 p-1 sm:self-auto">{(["explore", "connected"] as const).map((item) => <button key={item} type="button" onClick={() => setView(item)} aria-pressed={view === item} className={`rounded-md px-3.5 py-1.5 text-xs font-medium capitalize transition ${view === item ? "connect-view-on" : "connect-view-off"}`}>{item}{item === "connected" && integrations.length > 0 ? ` · ${integrations.length}` : ""}</button>)}</div>
               <label className="flex h-9 w-full items-center gap-2 rounded-lg border border-white/10 bg-white/[0.045] px-3 transition focus-within:border-white/20 sm:w-auto sm:min-w-[220px]"><Search size={14} className="text-white/35" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search connectors" className="min-w-0 flex-1 bg-transparent text-[13px] text-white/90 outline-none placeholder:text-white/35" />{query && <button type="button" aria-label="Clear search" onClick={() => setQuery("")}><X size={13} /></button>}</label>
             </div>
           </div>
@@ -240,21 +240,31 @@ function ApiKeyDialog({ provider, onClose, onConnected }: { provider: ApiKeyProv
     const response = await fetch("/api/workspace/integrations/apikey", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ provider, credentials: values }) }).catch(() => null);
     if (response?.ok) onConnected(provider); else { const data = response ? await response.json().catch(() => ({})) as { message?: string } : {}; setError(data.message ?? "Could not save these credentials."); setSaving(false); }
   }
-  return <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-[2px]" onMouseDown={(event) => { if (event.target === event.currentTarget && !saving) onClose(); }}>
-    <aside role="dialog" aria-modal="true" aria-labelledby="connect-dialog-title" className="w-full max-w-[480px] overflow-hidden rounded-2xl border border-white/10 bg-[#292a2b] text-white shadow-[0_24px_70px_rgba(0,0,0,0.5)]">
-      <div className="flex items-start justify-between border-b border-white/10 px-6 py-5"><div className="flex items-center gap-3"><span className="flex size-10 items-center justify-center rounded-xl bg-[#428ce5]/10 text-[#5ca5fa] ring-1 ring-[#428ce5]/20"><KeyRound size={18} /></span><div><p className="text-[10px] font-medium uppercase tracking-[0.14em] text-white/35">Secure connection</p><h2 id="connect-dialog-title" className="mt-0.5 text-lg font-medium">Connect {label}</h2></div></div><button type="button" aria-label="Close" onClick={onClose} className="flex size-8 items-center justify-center rounded-lg text-white/45 hover:bg-white/5 hover:text-white"><X size={16} /></button></div>
-      <div className="max-h-[70vh] overflow-y-auto p-6 [scrollbar-width:thin]">
-        <p className="text-[13px] leading-5 text-white/55">{details.summary}</p>
-        <div className="mt-5 rounded-xl border border-white/10 bg-white/[0.025] p-4">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-white/40">How Elpino will use it</p>
-          <ul className="mt-3 space-y-2.5">{details.uses.map((use) => <li key={use} className="flex items-start gap-2.5 text-xs leading-5 text-white/65"><CheckCircle2 size={15} className="mt-0.5 shrink-0 text-[#5ca5fa]" />{use}</li>)}</ul>
+  const catalogItem = CATALOG.find((item) => item.id === provider);
+  return <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-[3px]" onMouseDown={(event) => { if (event.target === event.currentTarget && !saving) onClose(); }}>
+    <aside role="dialog" aria-modal="true" aria-labelledby="connect-dialog-title" className="connect-dialog w-full max-w-[500px] overflow-hidden rounded-[14px] border border-[var(--cd-border)] bg-[var(--cd-bg)] text-[var(--cd-text)] shadow-[0_28px_80px_rgba(0,0,0,0.5)]">
+      <div className="flex items-start justify-between gap-4 px-6 pb-5 pt-6">
+        <div className="flex items-center gap-3.5">
+          <span className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-[var(--cd-border)] bg-white p-2.5"><ConnectorLogo name={label} fallback={catalogItem ? catalogItem.icon() : <KeyRound size={18} />} /></span>
+          <div>
+            <p className="flex items-center gap-1.5 text-[12px] font-medium text-[var(--cd-muted)]"><Lock size={11} />Secure connection</p>
+            <h2 id="connect-dialog-title" className="mt-0.5 text-[22px] font-normal tracking-[-0.03em]">Connect {label}</h2>
+          </div>
         </div>
-        <div className="mt-5 space-y-4">{fields.map((field) => <label key={field.key} className="block text-xs font-medium text-white/75">{field.label}<div className="relative mt-2"><KeyRound size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/25" /><input autoFocus={field === fields[0]} type={field.plain ? "text" : "password"} value={values[field.key] ?? ""} onChange={(event) => setValues((current) => ({ ...current, [field.key]: event.target.value }))} placeholder={field.placeholder} autoComplete="off" className="h-10 w-full rounded-lg border border-white/10 bg-[#222324] pl-9 pr-3 text-sm text-white outline-none transition placeholder:text-white/20 focus:border-[#428ce5]/60 focus:ring-2 focus:ring-[#428ce5]/10" /></div></label>)}</div>
-        <p className="mt-3 text-[11px] leading-4 text-white/35">{details.note}</p>
-        <div className="mt-5 flex items-start gap-2 rounded-lg bg-[#428ce5]/[0.08] p-3 text-[11px] leading-4 text-white/45"><ShieldCheck size={15} className="shrink-0 text-[#5ca5fa]" /><span><strong className="font-medium text-white/70">Encrypted and private.</strong> Credentials are encrypted before storage and are never displayed after you connect.</span></div>
-        {error && <p className="mt-4 rounded-lg bg-red-500/10 p-3 text-xs font-medium text-red-300">{error}</p>}
+        <button type="button" aria-label="Close" onClick={onClose} className="flex size-9 shrink-0 items-center justify-center rounded-full border border-[var(--cd-border)] text-[var(--cd-muted)] transition hover:bg-[var(--cd-surface-2)] hover:text-[var(--cd-text)]"><X size={16} /></button>
       </div>
-      <div className="flex items-center justify-between border-t border-white/10 px-6 py-4"><p className="hidden text-[10px] text-white/30 sm:block">You can disconnect at any time.</p><div className="flex gap-2"><button type="button" onClick={onClose} className="rounded-lg px-4 py-2 text-xs font-medium text-white/50 hover:bg-white/5 hover:text-white">Cancel</button><button type="button" disabled={!canSubmit || saving} onClick={() => void submit()} className="inline-flex min-w-28 items-center justify-center gap-2 rounded-lg bg-white px-4 py-2 text-xs font-medium text-[#202020] transition hover:bg-white/90 disabled:opacity-35">{saving && <LoaderCircle size={14} className="animate-spin" />}Connect {label}</button></div></div>
+      <div className="max-h-[68vh] overflow-y-auto border-t border-[var(--cd-border)] px-6 py-6 [scrollbar-width:thin]">
+        <p className="text-[14px] leading-6 text-[var(--cd-muted)]">{details.summary}</p>
+        <div className="mt-5 rounded-[10px] border border-[var(--cd-border)] p-4">
+          <p className="text-[12px] font-medium text-[var(--cd-muted)]">How Elpino will use it</p>
+          <ul className="mt-3 space-y-2.5">{details.uses.map((use) => <li key={use} className="flex items-start gap-2.5 text-[13px] leading-5"><CheckCircle2 size={16} className="mt-px shrink-0 text-[var(--cd-good)]" />{use}</li>)}</ul>
+        </div>
+        <div className="mt-6 space-y-4">{fields.map((field) => <label key={field.key} className="block text-[13px] font-medium">{field.label}<div className="relative mt-2"><KeyRound size={14} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--cd-muted)]" /><input autoFocus={field === fields[0]} type={field.plain ? "text" : "password"} value={values[field.key] ?? ""} onChange={(event) => setValues((current) => ({ ...current, [field.key]: event.target.value }))} placeholder={field.placeholder} autoComplete="off" className="connect-dialog-input h-11 w-full rounded-[10px] border border-[var(--cd-border)] bg-transparent pl-10 pr-3 text-[14px] font-normal outline-none transition placeholder:text-[var(--cd-muted)] focus:border-[var(--cd-text)]" /></div></label>)}</div>
+        <p className="mt-3 text-[12px] leading-5 text-[var(--cd-muted)]">{details.note}</p>
+        <div className="mt-5 flex items-start gap-3 rounded-[10px] bg-[var(--cd-surface-2)] p-3.5 text-[12.5px] leading-5 text-[var(--cd-muted)]"><ShieldCheck size={16} className="mt-0.5 shrink-0 text-[var(--cd-good)]" /><span><strong className="font-medium text-[var(--cd-text)]">Encrypted and private.</strong> Credentials are encrypted before storage and are never displayed after you connect.</span></div>
+        {error && <p className="mt-4 rounded-[10px] bg-[var(--cd-bad-bg)] p-3 text-[13px] font-medium text-[var(--cd-bad)]">{error}</p>}
+      </div>
+      <div className="flex items-center justify-between gap-3 border-t border-[var(--cd-border)] px-6 py-4"><p className="hidden text-[12px] text-[var(--cd-muted)] sm:block">You can disconnect at any time.</p><div className="ml-auto flex gap-2"><button type="button" onClick={onClose} className="h-10 rounded-full border border-[var(--cd-border)] px-5 text-[13px] font-medium transition hover:bg-[var(--cd-surface-2)]">Cancel</button><button type="button" disabled={!canSubmit || saving} onClick={() => void submit()} className="inline-flex h-10 min-w-32 items-center justify-center gap-2 rounded-full bg-[var(--cd-ink)] px-5 text-[13px] font-medium text-[var(--cd-ink-text)] transition hover:opacity-85 disabled:opacity-35">{saving && <LoaderCircle size={14} className="animate-spin" />}Connect {label}</button></div></div>
     </aside>
   </div>;
 }
