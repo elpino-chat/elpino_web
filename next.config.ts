@@ -5,9 +5,9 @@ import { fileURLToPath } from "node:url";
 const webDir = path.dirname(fileURLToPath(import.meta.url));
 const isProductionBuild = process.env.NODE_ENV === "production";
 
-// The frontend host does not inject runtime environment variables. Keep these
-// public production identifiers deterministic at build time so a developer
-// .env file can never send production users back to localhost.
+// Keep these public production identifiers deterministic at build time so a developer
+// .env file can never send production users back to localhost. (Secrets are different:
+// they come from the runtime environment, see the `env` block below.)
 const productionFrontend = {
   siteUrl: "https://elpino.chat",
   gatewayUrl: "https://api.elpino.chat",
@@ -46,34 +46,19 @@ const nextConfig: NextConfig = {
       ...to('/product/inbox', '/solutions/visitor-intelligence', '/solutions/teammate-handoff', '/solutions/omnichannel-triage', '/solutions/omnichannel'),
     ];
   },
-  // Fallbacks for deploys where env vars aren't configured. Real env vars
-  // always take precedence. WARNING: this includes secrets baked into a
-  // private repo at the owner's request. If the repo ever goes public,
-  // rotate AUTH_*, RESEND_API_KEY, TELEGRAM_BOT_TOKEN and ELPINO_WIDGET_IDENTITY_SECRET. AUTH_* values
-  // must match the gateway env on the production VM.
+  // Server secrets (AUTH_INTERNAL_SECRET, AUTH_JWT_SECRET, RESEND_API_KEY, TELEGRAM_BOT_TOKEN,
+  // ELPINO_WIDGET_IDENTITY_SECRET, WS_TOKEN_SECRET) are deliberately NOT listed here. Values in this block are
+  // inlined at build time, so a secret here would be baked into the build and into git. Route handlers read
+  // them from the runtime environment (Cloud Run "Variables & Secrets"), and fail closed when one is missing.
+  //
+  // What is listed below is public configuration: it ships to every browser anyway.
   env: {
     NEXT_PUBLIC_SITE_URL:
       isProductionBuild
         ? productionFrontend.siteUrl
         : process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
-    AUTH_INTERNAL_SECRET:
-      process.env.AUTH_INTERNAL_SECRET ??
-      "53fe6175f780eb04b00378e6843fcdc28a598a7a13c1f4cb9deb60c932ca2b9f",
-    AUTH_JWT_SECRET:
-      process.env.AUTH_JWT_SECRET ??
-      "2CAK52uRNuzrSxFrdRNRZexpB5Qqc/go44RNbF7CrvjKFoXAkmk24QueAv1p9G35",
-    RESEND_API_KEY:
-      process.env.RESEND_API_KEY ?? "re_4KAytbCy_JqR3Nt5tBDfTg9cHikDRz6Uj",
-    TELEGRAM_BOT_TOKEN:
-      process.env.TELEGRAM_BOT_TOKEN ??
-      "8094927949:AAHaYrvy7bpMNUAFHhTvhPd0Jj8i-HUiq_4",
     RESEND_FROM: process.env.RESEND_FROM ?? "Elpino <noreply@elpino.chat>",
     TELEGRAM_BOT_USERNAME: process.env.TELEGRAM_BOT_USERNAME ?? "tryelpinobot",
-    // Signs the chat widget identity token for logged-in visitors on
-    // elpino.chat (app/api/widget-identity). Must equal the identity secret of
-    // Elpino own workspace: rotating it there means updating it here.
-    ELPINO_WIDGET_IDENTITY_SECRET:
-      process.env.ELPINO_WIDGET_IDENTITY_SECRET ?? "elid_oDZeyJE-nxwAfmskWAixwYfalyLMsmDildAPa4RzWgc",
     // Google sign-in now runs through Firebase (see lib/firebase-client.ts):
     // the popup completes entirely client-side, so this is public web config,
     // not a secret, and the same project serves both dev and prod for now.
