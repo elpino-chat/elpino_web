@@ -1,8 +1,7 @@
 # Elpino Web
 
 > **Open source (MIT).** The frontend, docs and chat widget of [Elpino](https://elpino.chat), the AI support
-> agent that learns your website and runs customer support on autopilot. Try it at
-> [elpino.chat/demo](https://elpino.chat/demo).
+> agent that learns your website and runs customer support on autopilot.
 
 Next.js frontend for Elpino — the marketing site, the signed-in dashboard, and
 the embeddable chat widget that customers drop onto their own sites.
