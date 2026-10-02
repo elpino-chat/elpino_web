@@ -14,7 +14,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "next typegen && tsc --noEmit",
     "logos:download": "node --env-file=.env.local scripts/download-connector-logos.mjs"
   },
   "dependencies": {
