@@ -100,9 +100,6 @@ function HeroSignup({ t }: { t: T }) {
         {t("home.hero.ctaSignUp", "Start free")} <ArrowRight size={17} />
       </button>
     </form>
-    <Link href="/demo" className="inline-flex h-12 shrink-0 items-center justify-center rounded-md border-2 border-[#11120f] bg-white px-5 text-[#11120f] transition hover:bg-[#f4f4f4]">
-      {t("home.hero.ctaDemo", "View demo")}
-    </Link>
     </div>
   );
 }
