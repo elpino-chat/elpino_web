@@ -1,0 +1,49 @@
+# Builds the site with Google Cloud buildpacks and deploys it to the Cloud Run service
+# "elpino-web". Cloud Build runs this on every push to main (trigger "deploy-elpino-web",
+# build configuration "Autodetected"). These are the same steps the original trigger used.
+#
+# Values below can be overridden by substitutions on the trigger. $COMMIT_SHA, $REPO_NAME and
+# $BUILD_ID are filled in by Cloud Build itself.
+substitutions:
+  _AR_HOSTNAME: us-central1-docker.pkg.dev
+  _AR_PROJECT_ID: project-85ab0530-f9c5-4fbb-a1c
+  _AR_REPOSITORY: cloud-run-source-deploy
+  _DEPLOY_REGION: us-central1
+  _SERVICE_NAME: elpino-web
+
+steps:
+  # 1. Build and publish the image (buildpacks detect Next.js, no Dockerfile needed).
+  - name: gcr.io/k8s-skaffold/pack
+    args:
+      - build
+      - $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+      - --builder=gcr.io/buildpacks/builder:latest
+      - --network=cloudbuild
+      - --publish
+      - --path=.
+  # 2-3. Pull and push, as the original console-generated trigger did.
+  - name: gcr.io/cloud-builders/docker
+    args: [pull, "$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA"]
+  - name: gcr.io/cloud-builders/docker
+    args: [push, "$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA"]
+  # 4. Point the Cloud Run service at the new image. Settings and environment variables on the
+  #    service are kept; only the image changes.
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    args:
+      - run
+      - services
+      - update
+      - $_SERVICE_NAME
+      - --platform=managed
+      - --image=$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+      - --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID
+      - --region=$_DEPLOY_REGION
+      - --quiet
+
+images:
+  - $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  substitutionOption: ALLOW_LOOSE
+  dynamicSubstitutions: true
