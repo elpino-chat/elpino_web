@@ -5853,8 +5853,9 @@ body:has(.dashboard-ai-usage-page) .dashboard-add-credits-dialog [class*="hover:
 /* Dashboard navigation text is full white (text-white/100). The icon rail and the settings sidebar are dark
    (#262626) in both themes, so their labels are white in both. The repeated .dashboard-shell raises the
    specificity above the older per-theme sidebar colour rules; the yellow Upgrade chip keeps its dark text.
-   The Space panel is excluded: it is light in the light theme and has its own colour rules below. */
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell.dashboard-shell.dashboard-shell :is(aside:not(.dashboard-space-sidebar), .dashboard-secondary-sidebar):not([role="dialog"]) :is(a, button, h1, h2, h3, p, span, svg):not(.sidebar-upgrade, .sidebar-upgrade *) {
+   The Space panel and the primary icon rail are excluded: both are light in the light theme and have their
+   own colour rules (the rail keeps charcoal with white icons in the dark theme through its own rules). */
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell.dashboard-shell.dashboard-shell :is(aside:not(.dashboard-space-sidebar):not(.dashboard-primary-sidebar), .dashboard-secondary-sidebar):not([role="dialog"]) :is(a, button, h1, h2, h3, p, span, svg):not(.sidebar-upgrade, .sidebar-upgrade *) {
   color: rgb(255 255 255 / 1) !important;
 }
 
