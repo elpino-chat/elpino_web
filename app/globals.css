@@ -3249,7 +3249,7 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
   border-width: 0 1px 0 0;
   box-shadow: none;
 }
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell :is(.dashboard-secondary-sidebar, .dashboard-space-sidebar) {
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell .dashboard-secondary-sidebar {
   background: #262626 !important;
   border-color: #484848 !important;
 }
@@ -3308,107 +3308,82 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
   box-shadow: 0 18px 42px rgba(15, 23, 42, 0.14) !important;
 }
 
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"])
-  .dashboard-shell
-  aside.dashboard-space-sidebar:not([role="dialog"]) {
-  background: #262626 !important;
-  border-color: rgb(255 255 255 / 0.1) !important;
+/* Space panel sidebar — themed at the source with semantic classes + CSS
+   variables instead of dark-authored text-white/* utilities and brittle
+   [class*="text-white"] substring overrides. The variables flip with
+   data-dashboard-theme so the panel reads correctly in light, dark and
+   system appearance. Dark values preserve the previous look; light values
+   meet WCAG AA (>= 4.5:1 for text, >= 3:1 for icons). */
+[data-dashboard-theme="dark"] .dashboard-shell {
+  --space-sidebar-bg: #262626;
+  --space-sidebar-border: rgb(255 255 255 / 0.1);
+  --space-sidebar-hover-bg: rgb(255 255 255 / 0.06);
+  --space-sidebar-active-bg: rgb(255 255 255 / 0.1);
+  --space-sidebar-fg-active: rgb(255 255 255 / 0.9);
+  --space-sidebar-fg-strong: rgb(255 255 255 / 0.75);
+  --space-sidebar-fg-muted: rgb(255 255 255 / 0.6);
+  --space-sidebar-fg-subtle: rgb(255 255 255 / 0.45);
+  --space-sidebar-fg-faint: rgb(255 255 255 / 0.35);
+  --space-sidebar-fg-fainter: rgb(255 255 255 / 0.2);
 }
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"])
-  .dashboard-shell
-  aside.dashboard-space-sidebar:not([role="dialog"])
-  :is(a, button, p, span, svg) {
-  color: #fff !important;
-}
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"])
-  .dashboard-shell
-  aside.dashboard-space-sidebar:not([role="dialog"])
-  a[aria-current="page"],
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"])
-  .dashboard-shell
-  aside.dashboard-space-sidebar:not([role="dialog"])
-  a[aria-current="page"]
-  svg {
-  color: rgb(255 255 255 / 0.9) !important;
-}
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"])
-  .dashboard-shell
-  aside.dashboard-space-sidebar:not([role="dialog"])
-  nav
-  :is(a, button):not([aria-current="page"]),
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"])
-  .dashboard-shell
-  aside.dashboard-space-sidebar:not([role="dialog"])
-  nav
-  :is(a, button):not([aria-current="page"])
-  svg {
-  color: rgb(255 255 255 / 0.6) !important;
+[data-dashboard-theme="light"] .dashboard-shell {
+  --space-sidebar-bg: #f5f6f7;
+  --space-sidebar-border: #e4e4e4;
+  --space-sidebar-hover-bg: rgb(0 0 0 / 0.05);
+  --space-sidebar-active-bg: rgb(0 0 0 / 0.08);
+  --space-sidebar-fg-active: rgb(0 0 0 / 0.9);
+  --space-sidebar-fg-strong: rgb(0 0 0 / 0.9);
+  --space-sidebar-fg-muted: rgb(0 0 0 / 0.68);
+  --space-sidebar-fg-subtle: rgb(0 0 0 / 0.62);
+  --space-sidebar-fg-faint: rgb(0 0 0 / 0.56);
+  --space-sidebar-fg-fainter: rgb(0 0 0 / 0.5);
 }
 
-/* Light theme: the Space panel's JSX is natively dark-authored (text-white/*
-   and bg-white/* opacity utilities throughout, with no light variant of its
-   own), so it needs real overrides here rather than falling through to
-   anything. Selector shapes match the :is(light,dark) blocks above exactly
-   so specificity ties and these (later in the file) win for light only. */
-[data-dashboard-theme="light"] .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) {
-  background: #f5f6f7 !important;
-  border-color: #e4e4e4 !important;
+/* Panel surface + border — sits above the generic dashboard aside rules. */
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) {
+  background: var(--space-sidebar-bg) !important;
+  border-color: var(--space-sidebar-border) !important;
 }
-/* The icons (Home, Bell, CircleAlert, MessageCircle, ChevronRight, ...)
-   render with no className of their own, so the [class*="text-white"] rule
-   below never matches them — they were still hitting the theme-agnostic
-   `:is(a, button, p, span, svg) { color: #fff }` block above. Same selector
-   shape as that block, so this later light-only rule wins on the tie. */
-[data-dashboard-theme="light"] .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) :is(a, button, p, span, svg) {
-  color: rgba(0, 0, 0, 0.6) !important;
+
+/* Foreground hierarchy — one rule per semantic level, scoped to this panel
+   with enough specificity to beat the generic dashboard aside text rules. */
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) .space-panel-heading {
+  color: var(--space-sidebar-fg-subtle) !important;
 }
-[data-dashboard-theme="light"] .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) [class*="text-white"] {
-  color: rgba(0, 0, 0, 0.45) !important;
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) .space-panel-nav {
+  color: var(--space-sidebar-fg-muted) !important;
 }
-/* The catch-all above flattens every text-white/* fraction to the same
-   0.45, which washed out the Recent chats row: the conversation name
-   (text-white/75, meant to read as the primary line) came out the same
-   faint gray as its muted preview line and the "Recent chats" label.
-   Same selector shape, same specificity — these win the tie by coming
-   later, restoring a real near-black/mid-gray/faint scale. */
-[data-dashboard-theme="light"] .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) [class*="text-white/75"] {
-  color: rgba(0, 0, 0, 0.92) !important;
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) .space-panel-nav svg {
+  color: inherit !important;
 }
-[data-dashboard-theme="light"] .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) [class*="text-white/35"] {
-  color: rgba(0, 0, 0, 0.4) !important;
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) .space-panel-nav[aria-current="page"] {
+  color: var(--space-sidebar-fg-active) !important;
+  background: var(--space-sidebar-active-bg) !important;
 }
-[data-dashboard-theme="light"] .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) [class*="text-white/20"] {
-  color: rgba(0, 0, 0, 0.25) !important;
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) .space-panel-nav:hover {
+  color: var(--space-sidebar-fg-active) !important;
+  background: var(--space-sidebar-hover-bg) !important;
 }
-[data-dashboard-theme="light"] .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) [class*="bg-white"] {
-  background-color: transparent !important;
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) .space-panel-view-all {
+  color: var(--space-sidebar-fg-faint) !important;
 }
-[data-dashboard-theme="light"] .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) a[aria-current="page"] {
-  color: rgba(0, 0, 0, 0.9) !important;
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) .space-panel-view-all:hover {
+  color: var(--space-sidebar-fg-strong) !important;
 }
-/* The blanket theme-agnostic block above also has an `a[aria-current="page"]
-   svg` selector one level more specific than a plain [class*="text-white"]
-   or :is(...,svg) match — same shape needed here again to actually win the
-   tie for the active item's icon (e.g. the Home icon on /dashboard). */
-[data-dashboard-theme="light"] .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) a[aria-current="page"] svg {
-  color: rgba(0, 0, 0, 0.9) !important;
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) .space-panel-chat-row:hover {
+  background: var(--space-sidebar-hover-bg) !important;
 }
-[data-dashboard-theme="light"] .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) nav :is(a, button):not([aria-current="page"]) {
-  color: rgba(0, 0, 0, 0.6) !important;
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) .space-panel-chat-name {
+  color: var(--space-sidebar-fg-strong) !important;
 }
-/* Same story for every other nav icon (Bell, CircleAlert, ...): the blanket
-   block's `nav :is(a, button):not([aria-current="page"]) svg` selector is
-   more specific than anything above it, so it needs its own tie-matching
-   mirror too. */
-[data-dashboard-theme="light"] .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) nav :is(a, button):not([aria-current="page"]) svg {
-  color: rgba(0, 0, 0, 0.6) !important;
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) .space-panel-faint {
+  color: var(--space-sidebar-fg-faint) !important;
 }
-[data-dashboard-theme="light"] .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) nav :is(a, button):not([aria-current="page"]):hover {
-  background-color: rgba(0, 0, 0, 0.04) !important;
-  color: rgba(0, 0, 0, 0.9) !important;
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) .space-panel-fainter {
+  color: var(--space-sidebar-fg-fainter) !important;
 }
-[data-dashboard-theme="light"] .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) [class*="border-white"] {
-  border-color: #e4e4e4 !important;
+:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) .space-panel-divider {
+  border-color: var(--space-sidebar-border) !important;
 }
 
 /* Light theme: Settings/Knowledge nav rails already carry their own light

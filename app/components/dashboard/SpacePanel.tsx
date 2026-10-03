@@ -61,26 +61,26 @@ export default function SpacePanel() {
         aria-hidden={!open}
       />
       <aside
-        className={`dashboard-space-sidebar fixed inset-y-0 left-0 z-50 flex h-full w-[250px] shrink-0 flex-col border-r border-white/10 px-2.5 py-3 text-white shadow-[8px_0_30px_rgba(0,0,0,0.35)] transition-transform duration-300 ease-in-out md:static md:z-auto md:w-[250px] md:translate-x-0 md:shadow-none ${
+        className={`dashboard-space-sidebar fixed inset-y-0 left-0 z-50 flex h-full w-[250px] shrink-0 flex-col border-r px-2.5 py-3 shadow-[8px_0_30px_rgba(0,0,0,0.35)] transition-transform duration-300 ease-in-out md:static md:z-auto md:w-[250px] md:translate-x-0 md:shadow-none ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-      <p className="px-2.5 pb-2 text-sm font-normal text-white/45">Space</p>
+      <p className="space-panel-heading px-2.5 pb-2 text-sm font-normal">Space</p>
       <nav aria-label="Space navigation" className="space-y-1">
         {items.map(({ label, href, Icon, count }) => {
           const active = pathname === href;
-          return <Link key={href} href={href} aria-current={active ? "page" : undefined} className={`flex h-10 items-center gap-3 rounded-lg px-3 text-sm font-normal transition ${active ? "bg-white/10 text-white/90" : "text-white/60 hover:bg-white/[0.06] hover:text-white"}`}>
+          return <Link key={href} href={href} aria-current={active ? "page" : undefined} className="space-panel-nav flex h-10 items-center gap-3 rounded-lg px-3 text-sm font-normal transition">
             <Icon size={18} strokeWidth={1.6} /> {label}
             {!!count && <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-[#8db8ff] px-1 text-[10px] text-[#172334]">{count > 99 ? "99+" : count}</span>}
           </Link>;
         })}
       </nav>
 
-      <div className="mx-1 my-4 border-t border-white/10" />
+      <div className="space-panel-divider mx-1 my-4 border-t" />
       <div className="flex min-h-0 flex-1 flex-col">
         <div className="flex items-center justify-between px-2.5">
-          <p className="text-xs font-normal text-white/45">Recent chats</p>
-          <Link href="/dashboard/inbox" className="text-[11px] text-white/35 hover:text-white/75">View all</Link>
+          <p className="space-panel-heading text-xs font-normal">Recent chats</p>
+          <Link href="/dashboard/inbox" className="space-panel-view-all text-[11px]">View all</Link>
         </div>
         <div className="mt-2 min-h-0 flex-1 space-y-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {openChats.slice(0, 6).map((chat) => (
@@ -88,13 +88,13 @@ export default function SpacePanel() {
             // opening one there instead of AI Assist 404s the AI Assist tab
             // out from under the visible chat (Team Inbox only lists chats
             // someone has joined, same filter HomePanel's own list uses).
-            <Link key={chat.id} href={recentChatHref(chat)} className="group flex items-start gap-2.5 rounded-lg px-2.5 py-2.5 transition hover:bg-white/[0.06]">
-              <MessageCircle size={16} strokeWidth={1.6} className="mt-0.5 shrink-0 text-white/35" />
-              <span className="min-w-0 flex-1"><span className="block truncate text-xs font-normal text-white/75">{chat.name}</span><span className="mt-0.5 block truncate text-[11px] text-white/35">{chat.preview || "Open conversation"}</span></span>
-              <ChevronRight size={14} className="mt-1 shrink-0 text-white/20" />
+            <Link key={chat.id} href={recentChatHref(chat)} className="space-panel-chat-row group flex items-start gap-2.5 rounded-lg px-2.5 py-2.5 transition">
+              <MessageCircle size={16} strokeWidth={1.6} className="space-panel-faint mt-0.5 shrink-0" />
+              <span className="min-w-0 flex-1"><span className="space-panel-chat-name block truncate text-xs font-normal">{chat.name}</span><span className="space-panel-faint mt-0.5 block truncate text-[11px]">{chat.preview || "Open conversation"}</span></span>
+              <ChevronRight size={14} className="space-panel-fainter mt-1 shrink-0" />
             </Link>
           ))}
-          {openChats.length === 0 && <div className="px-3 py-8 text-center"><MessageCircle size={20} className="mx-auto text-white/20" /><p className="mt-2 text-xs text-white/35">No open chats</p></div>}
+          {openChats.length === 0 && <div className="px-3 py-8 text-center"><MessageCircle size={20} className="space-panel-fainter mx-auto" /><p className="space-panel-faint mt-2 text-xs">No open chats</p></div>}
         </div>
       </div>
       </aside>
