@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUp } from "lucide-react";
 import { navGroups, tGroupLabel, tSectionTitle, tNavItem } from "./nav-data";
+import { compareFooterLinks } from "../compare/links";
 import { useStoredLanguage } from "../hooks/useStoredLanguage";
 import { useTranslation } from "../hooks/useTranslation";
 
@@ -16,6 +17,7 @@ const columns = [
   { title: "Product", links: groupLinks("Product") },
   { title: "Solutions", links: groupLinks("Solutions") },
   { title: "Resources", links: groupLinks("Resources", ["Company"]) },
+  { title: "Compare", links: compareFooterLinks },
   { title: "Company", links: navGroups.find((g) => g.label === "Resources")?.sections.find((s) => s.title === "Company")?.items ?? [] },
 ];
 
@@ -49,7 +51,7 @@ export function Footer({ editorial = false }: { editorial?: boolean }) {
     <footer className={`w-full bg-black px-5 text-white sm:px-8 lg:px-20 ${editorial ? "font-[family-name:var(--font-rethink-sans)]" : ""}`}>
       <div className="mx-auto max-w-[1500px]">
         {/* The mark at the left, then the site map in columns */}
-        <div className="grid gap-12 py-16 lg:grid-cols-[110px_repeat(4,minmax(0,1fr))] lg:gap-8 lg:py-24">
+        <div className="grid gap-12 py-16 lg:grid-cols-[110px_repeat(5,minmax(0,1fr))] lg:gap-8 lg:py-24">
           <Link href="/" aria-label="Elpino home" className="inline-flex h-10 w-10 items-start"><Image src="/icon0.svg" alt="Elpino" width={367} height={379} className="h-10 w-auto" /></Link>
 
           <nav aria-label="Footer navigation" className="contents">
