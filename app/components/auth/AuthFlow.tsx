@@ -186,6 +186,9 @@ export function AuthFlow({ initialMode }: { initialMode: "login" | "signup" }) {
   const [pendingVerifyEmail, setPendingVerifyEmail] = useState<string | null>(null);
   const [existingAccountEmail, setExistingAccountEmail] = useState<string | null>(null);
   const [otp, setOtp] = useState("");
+  // Set when the account has 2FA on and the password / Google step needs a code.
+  const [twoFactor, setTwoFactor] = useState<null | { kind: "email" } | { kind: "google"; idToken: string }>(null);
+  const [twoFactorCode, setTwoFactorCode] = useState("");
   const [resending, setResending] = useState(false);
   const [resent, setResent] = useState(false);
   const [verifiedEmail, setVerifiedEmail] = useState<string | null>(null);
@@ -259,6 +262,47 @@ export function AuthFlow({ initialMode }: { initialMode: "login" | "signup" }) {
     return next || (requestedPlan ? `/dashboard?plan=${requestedPlan}` : sanitizeReturnPath(data?.next) || "/dashboard");
   }
 
+  const finishGoogleLogin = async (idToken: string, returnTo: string, code?: string) => {
+    const res = await fetch("/api/auth/firebase-google", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ idToken, returnTo, code }),
+    });
+    const data = (await res.json().catch(() => ({}))) as { destination?: string; error?: string; twoFactorRequired?: boolean };
+    if (data.twoFactorRequired) {
+      setTwoFactor({ kind: "google", idToken });
+      setLoading(null);
+      if (code) toast.error(data.error || "Invalid or expired code");
+      return;
+    }
+    if (!res.ok || !data.destination) throw new Error(data.error || "Google sign-in failed");
+    window.location.href = data.destination;
+  };
+
+  const handleTwoFactorSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!twoFactor || loading) return;
+    const code = twoFactorCode.trim();
+    setLoading(twoFactor.kind === "google" ? "google" : "email");
+    try {
+      if (twoFactor.kind === "google") {
+        const next = sanitizeReturnPath(params.get("next"));
+        const returnTo = next || (requestedPlan ? `/dashboard?plan=${requestedPlan}` : "/dashboard");
+        await finishGoogleLogin(twoFactor.idToken, returnTo, code);
+        return;
+      }
+      const { data } = await api.post<AuthResponse>("/auth/password/login", { email, password, code });
+      const destination = getPostAuthDestination(data);
+      announceNavigation(destination);
+      router.push(destination);
+    } catch (err: unknown) {
+      toast.error(getErrorMessage(err, "Invalid or expired code"));
+      setTwoFactorCode("");
+    } finally {
+      setLoading(null);
+    }
+  };
+
   const handleGoogleLogin = async () => {
     if (loading) return;
     const next = sanitizeReturnPath(params.get("next"));
@@ -267,14 +311,7 @@ export function AuthFlow({ initialMode }: { initialMode: "login" | "signup" }) {
     try {
       const { signInWithGooglePopup } = await import("@/lib/firebase-client");
       const idToken = await signInWithGooglePopup();
-      const res = await fetch("/api/auth/firebase-google", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ idToken, returnTo }),
-      });
-      const data = (await res.json().catch(() => ({}))) as { destination?: string; error?: string };
-      if (!res.ok || !data.destination) throw new Error(data.error || "Google sign-in failed");
-      window.location.href = data.destination;
+      await finishGoogleLogin(idToken, returnTo);
     } catch (error) {
       setLoading(null);
       // A closed popup or cancelled consent screen is a normal exit, not a
@@ -340,6 +377,11 @@ export function AuthFlow({ initialMode }: { initialMode: "login" | "signup" }) {
       router.push(destination);
     } catch (err: unknown) {
       const status = (err as { response?: { status?: number } })?.response?.status;
+      if ((err as { response?: { data?: { twoFactorRequired?: boolean } } })?.response?.data?.twoFactorRequired) {
+        setTwoFactor({ kind: "email" });
+        setTwoFactorCode("");
+        return;
+      }
       if (mode === "signup" && status === 409) {
         toast.error("That email is already registered. Switching you to sign in.");
         navigateToMode("login");
@@ -445,7 +487,17 @@ export function AuthFlow({ initialMode }: { initialMode: "login" | "signup" }) {
           )}
 
           <div className={pendingVerifyEmail ? "" : "mt-7"}>
-            {pendingVerifyEmail ? (
+            {twoFactor ? (
+              <form onSubmit={handleTwoFactorSubmit} className="w-full space-y-4">
+                <h1 className="text-[22px] font-semibold tracking-[-0.02em]">Two-factor authentication</h1>
+                <p className="text-[14px] text-[#11120f]/50">Enter the 6-digit code from your authenticator app.</p>
+                <input value={twoFactorCode} onChange={(event) => setTwoFactorCode(event.target.value.replace(/\D/g, "").slice(0, 6))} inputMode="numeric" autoComplete="one-time-code" autoFocus placeholder="123456" className="h-12 w-full rounded-[10px] border border-black/30 bg-white px-4 text-[15px] tracking-[0.3em] outline-none focus:border-[#0078f4]" />
+                <button type="submit" disabled={Boolean(loading) || twoFactorCode.length !== 6} className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#11120f] text-[15px] font-semibold text-white transition hover:opacity-90 disabled:pointer-events-none disabled:opacity-40">
+                  {loading && <Spinner />}Verify and sign in
+                </button>
+                <button type="button" onClick={() => { setTwoFactor(null); setTwoFactorCode(""); }} className="w-full text-center text-[14px] font-semibold text-[#0078f4] hover:underline">Back</button>
+              </form>
+            ) : pendingVerifyEmail ? (
               <form onSubmit={handleVerifyOtp} className="w-full text-center">
                 <h1 className="text-center text-[22px] font-semibold tracking-[-0.02em]">{t("auth.signup.enterCode")}</h1>
                 <p className="mt-2 text-center text-[14px] text-[#11120f]/50">{pendingVerifyEmail}{" "}<button type="button" onClick={handleChangeEmail} className="font-semibold text-[#0078f4] hover:underline">{t("auth.signup.changeEmail")}</button></p>

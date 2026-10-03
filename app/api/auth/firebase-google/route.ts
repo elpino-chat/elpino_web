@@ -5,6 +5,7 @@ import { startSession } from "../_lib/sessions";
 type OAuthResult = {
   identity?: { email: string; name?: string; needsOnboarding?: boolean; tokenVersion?: number };
   error?: string;
+  twoFactorRequired?: boolean;
 };
 
 // Backs the Google sign-in popup (see lib/firebase-client.ts and
@@ -13,20 +14,23 @@ type OAuthResult = {
 // redirect/callback pair here like the old server-driven flow — just one
 // POST to verify it and start the session.
 export async function POST(request: Request) {
-  const body = (await request.json().catch(() => ({}))) as { idToken?: string; returnTo?: string };
+  const body = (await request.json().catch(() => ({}))) as { idToken?: string; returnTo?: string; code?: string };
   if (!body.idToken?.trim()) {
     return Response.json({ error: "idToken is required" }, { status: 400 });
   }
 
   let result: OAuthResult;
   try {
-    result = await callGateway<OAuthResult>("/api/auth/oauth/google", { idToken: body.idToken.trim() });
+    result = await callGateway<OAuthResult>("/api/auth/oauth/google", { idToken: body.idToken.trim(), code: typeof body.code === "string" ? body.code : undefined });
   } catch (error) {
     console.error("firebase google oauth: gateway unreachable", error);
     return Response.json({ error: "Could not reach the sign-in service. Please try again." }, { status: 502 });
   }
 
   if (!result.identity) {
+    if (result.twoFactorRequired) {
+      return Response.json({ error: result.error ?? "Enter your authentication code.", twoFactorRequired: true }, { status: 401 });
+    }
     return Response.json({ error: result.error ?? "Google sign-in failed" }, { status: 401 });
   }
 

@@ -108,3 +108,50 @@ export function sanitizeReturnPath(value: string | null | undefined, fallback = 
     return fallback;
   }
 }
+
+// Proof that an email address passed the emailed-code check, carried in a
+// short-lived httpOnly cookie. complete-profile requires it, so a password can
+// only be set for an address whose owner just verified it. The "signup-proof"
+// prefix is part of the signed text, so it can never be confused with a session JWT.
+const signupProofTtlSeconds = 15 * 60;
+const signupProofCookie = "signup_proof";
+
+function signupProofSignature(email: string, exp: number) {
+  const secret = process.env.AUTH_JWT_SECRET;
+  if (!secret) throw new Error("AUTH_JWT_SECRET is missing");
+  return createHmac("sha256", secret).update(`signup-proof.${email}.${exp}`).digest("base64url");
+}
+
+export async function setSignupProofCookie(email: string) {
+  const normalized = normalizeEmail(email);
+  const exp = Math.floor(Date.now() / 1000) + signupProofTtlSeconds;
+  const cookieStore = await cookies();
+  cookieStore.set(signupProofCookie, `${exp}.${signupProofSignature(normalized, exp)}`, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/api/auth",
+    maxAge: signupProofTtlSeconds,
+  });
+}
+
+export async function hasSignupProof(email: string) {
+  const cookieStore = await cookies();
+  const value = cookieStore.get(signupProofCookie)?.value;
+  if (!value) return false;
+  const [expRaw, signature] = value.split(".");
+  const exp = Number(expRaw);
+  if (!signature || !Number.isFinite(exp) || exp < Math.floor(Date.now() / 1000)) return false;
+  try {
+    const expected = Buffer.from(signupProofSignature(normalizeEmail(email), exp));
+    const provided = Buffer.from(signature);
+    return expected.length === provided.length && timingSafeEqual(expected, provided);
+  } catch {
+    return false;
+  }
+}
+
+export async function clearSignupProofCookie() {
+  const cookieStore = await cookies();
+  cookieStore.set(signupProofCookie, "", { httpOnly: true, path: "/api/auth", maxAge: 0 });
+}

@@ -1,5 +1,5 @@
 import { callGateway } from "../../_lib/gateway";
-import { jsonError } from "../../_lib/auth-store";
+import { jsonError, setSignupProofCookie } from "../../_lib/auth-store";
 
 type VerifyResult = { email?: string; error?: string };
 
@@ -19,6 +19,8 @@ export async function POST(request: Request) {
   if (!result.email) {
     return jsonError(result.error ?? "Invalid or expired code", 400);
   }
+
+  await setSignupProofCookie(result.email);
 
   // No session cookie yet — the account isn't created until the user sets a
   // name and password in the next step (see /api/auth/complete-profile).

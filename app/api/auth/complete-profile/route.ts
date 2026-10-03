@@ -1,5 +1,5 @@
 import { callGateway } from "../_lib/gateway";
-import { jsonError, setAuthCookie } from "../_lib/auth-store";
+import { clearSignupProofCookie, hasSignupProof, jsonError, setAuthCookie } from "../_lib/auth-store";
 import { startSession } from "../_lib/sessions";
 
 type CompleteProfileResult = {
@@ -23,6 +23,11 @@ export async function POST(request: Request) {
     return jsonError("Password must be at least 8 characters", 400);
   }
 
+  // Only the address that just passed the emailed-code check may set a password.
+  if (!(await hasSignupProof(email))) {
+    return jsonError("Please verify your email again to continue.", 403);
+  }
+
   let result: CompleteProfileResult;
   try {
     result = await callGateway<CompleteProfileResult>("/api/auth/complete-profile", { email, name, password });
@@ -34,6 +39,8 @@ export async function POST(request: Request) {
   if (!result.identity) {
     return jsonError(result.error ?? "Could not save your details", 400);
   }
+
+  await clearSignupProofCookie();
 
   // Account now exists with a password — this is where the session actually starts.
   const jwt = await startSession(result.identity);

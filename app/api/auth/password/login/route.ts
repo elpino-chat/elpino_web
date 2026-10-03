@@ -6,15 +6,23 @@ type LoginResult = {
   identity?: { email: string; name?: string; needsOnboarding?: boolean; tokenVersion?: number };
   error?: string;
   needsVerification?: boolean;
+  twoFactorRequired?: boolean;
 };
 
 // OTP is only required at registration; a returning user with a verified
 // password signs in directly, no re-verification per login.
 export async function POST(request: Request) {
-  const body = (await request.json()) as { email?: string; password?: string };
+  const body = (await request.json()) as { email?: string; password?: string; code?: string };
 
-  const result = await callGateway<LoginResult>("/api/auth/login", body);
+  const result = await callGateway<LoginResult>("/api/auth/login", {
+    email: body.email,
+    password: body.password,
+    code: typeof body.code === "string" ? body.code : undefined,
+  });
   if (!result.identity) {
+    if (result.twoFactorRequired) {
+      return Response.json({ message: result.error ?? "Enter your authentication code.", twoFactorRequired: true }, { status: 401 });
+    }
     if (result.needsVerification) {
       return Response.json(
         { message: result.error ?? "Please verify your email first.", needsVerification: true },
