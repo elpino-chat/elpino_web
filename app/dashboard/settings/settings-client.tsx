@@ -2362,7 +2362,7 @@ function UrlRuleSection({
         <div className="fixed inset-0 z-[120] flex items-center justify-center bg-[#0b0f14]/40 p-4 backdrop-blur-[2px]" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onOpenChange(false); }}>
           <div role="dialog" aria-modal="true" aria-label={title} className="w-full max-w-[480px] rounded-2xl bg-white p-6 shadow-[0_24px_70px_rgba(15,23,42,0.24)]">
             <label className="block text-[14px] font-semibold text-[#17181a]">
-              Allow a page by path (use <code className="font-mono text-[13px]">/*</code> for its sub-pages) <span className="text-[#e5484d]">*</span>
+              Allow a page by path (use <code className="font-mono text-[13px]">{"/*"}</code> for its sub-pages) <span className="text-[#e5484d]">*</span>
             </label>
             <input
               autoFocus

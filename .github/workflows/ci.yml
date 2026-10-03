@@ -25,16 +25,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Two checks are deliberately absent so this workflow starts green:
-      #
-      #   lint       `npm run lint` still calls `next lint`, which Next 16
-      #              removed, and no ESLint flat config exists. Restore the
-      #              step after migrating to `eslint .` with an eslint.config.mjs.
-      #   typecheck  `tsc --noEmit` currently reports four pre-existing errors
-      #              (missing vitest types, two unresolved module paths, an
-      #              undefined `setSource` in onboarding-client.tsx).
-      #
-      # A red CI everyone learns to ignore is worse than a narrow green one.
+      # Both checks must pass. Lint reports warnings for patterns that are still widespread (see
+      # eslint.config.mjs) but fails on real errors, so a red check always means something to fix.
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
 
       # The build needs this at compile time for anything inlined into client
       # bundles. It is a public origin, not a secret — the real value is set

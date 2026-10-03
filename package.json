@@ -13,7 +13,8 @@
     "dev:fresh": "rm -rf .next && next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
+    "typecheck": "next typegen && tsc --noEmit",
     "logos:download": "node --env-file=.env.local scripts/download-connector-logos.mjs"
   },
   "dependencies": {

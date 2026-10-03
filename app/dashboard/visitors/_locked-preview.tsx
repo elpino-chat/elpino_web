@@ -61,7 +61,7 @@ function buildSample(): { report: ReportData; prior: ReportData } {
 
 /** The blurred stand-in for the dashboard. The page blurs the whole canvas around it. */
 export function LockedSample() {
-  const { report, prior } = useMemo(buildSample, []);
+  const { report, prior } = useMemo(() => buildSample(), []);
   return (
     <div className="mt-5 space-y-4">
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
