@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { posts } from "./blog/data";
 import { roles } from "./careers/roles";
+import { competitors } from "./compare/data";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://elpino.chat";
 
@@ -69,6 +70,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // is the same value the JobPosting schema on that role's own page uses —
   // so the sitemap and the structured data can never quietly disagree about
   // when a listing went up.
+  // Comparison pages. lastModified is the date the competitor facts were last checked, which is the only
+  // thing that actually changes on them.
+  const comparePages: MetadataRoute.Sitemap = [
+    page("/compare", 0.8, "monthly"),
+    ...competitors.map((c) => page(`/compare/${c.slug}`, 0.8, "monthly", new Date(c.verifiedIso))),
+  ];
+
   const blogPages: MetadataRoute.Sitemap = posts.map((post) => ({
     url: `${BASE_URL}/blog/${post.slug}`,
     lastModified: new Date(post.date),
@@ -83,5 +91,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...staticPages, ...blogPages, ...careerPages];
+  return [...staticPages, ...comparePages, ...blogPages, ...careerPages];
 }
