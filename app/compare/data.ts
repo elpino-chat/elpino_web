@@ -441,15 +441,15 @@ export const competitors: Competitor[] = [
   {
     slug: "intercom",
     name: "Intercom",
-    oneLiner: "A polished per-seat helpdesk with the Fin AI agent, against an AI-first helpdesk with unlimited seats.",
+    oneLiner: "A polished per-seat helpdesk (now branded Fin) with the Fin AI agent, against an AI-first helpdesk with unlimited seats.",
     description:
-      "Elpino vs Intercom: seat pricing, Fin AI agent pricing, inbox, channels and security compared side by side. See which fits a growing support team.",
+      "Elpino vs Intercom (now Fin): seat pricing, Fin AI agent pricing, inbox, channels and security compared side by side. See which fits a growing support team.",
     verified: "October 2026",
     verifiedIso: "2026-10-03",
     website: "https://www.intercom.com",
     pricingUrl: "https://www.intercom.com/pricing",
     tldr:
-      "Intercom is a polished customer platform with a mature AI agent, Fin, plus in-app messages, banners and tooltips. It charges per seat, and Fin is billed per outcome on top, starting from US$0.99 each. Elpino is smaller in scope but simpler to budget: unlimited seats and an AI agent paid from a monthly credit, with a free plan. If you want in-app messaging and a battle-tested AI agent and can budget per seat and per outcome, Intercom is excellent. If your team is growing and you want predictable cost, Elpino is much lighter.",
+      "Intercom, which now brands itself Fin, is a polished customer platform with a mature AI agent plus in-app messages, banners and tooltips. It charges per seat, and Fin is billed per outcome on top, starting from US$0.99 each. Elpino is smaller in scope but simpler to budget: unlimited seats and an AI agent paid from a monthly credit, with a free plan. If you want in-app messaging and a battle-tested AI agent and can budget per seat and per outcome, Intercom is excellent. If your team is growing and you want predictable cost, Elpino is much lighter.",
     chooseElpino: [
       "You want a flat, predictable bill instead of per-seat plus per-outcome charges.",
       "You want to start free, with an AI agent included.",
@@ -465,7 +465,7 @@ export const competitors: Competitor[] = [
     glance: [
       { label: "Best for", elpino: "Growing teams that want predictable cost and an AI agent from day one", them: "Teams that want in-app messaging and a mature AI agent and budget per seat" },
       { label: "Pricing model", elpino: "Flat plans with unlimited seats. AI runs on a monthly credit", them: "Per seat per month, plus the Fin AI agent billed per outcome" },
-      { label: "Starting price", elpino: ELPINO_START, them: "Essential US$29, Advanced US$85 and Expert US$132 per seat a month on monthly billing" },
+      { label: "Starting price", elpino: ELPINO_START, them: "Essential from US$29, Advanced from US$85 and Expert from US$132 per seat a month. The price depends on whether you bill annually or monthly, so check the toggle on their page" },
       { label: "Free plan", elpino: ELPINO_FREE, them: "No free plan is listed. A 14-day trial is offered, with no card required" },
       { label: "Seats", elpino: ELPINO_SEATS, them: "Priced per seat, with a one full seat minimum. Advanced includes 20 free Lite seats and Expert 50" },
       { label: "AI agent cost", elpino: ELPINO_AI_COST, them: "Fin is listed from US$0.99 per outcome, and a monthly minimum applies when it is used with an existing helpdesk" },
@@ -528,24 +528,25 @@ export const competitors: Competitor[] = [
         rows: [
           { feature: "Plan structure", elpino: "Flat monthly plans. Seats are never part of the price", them: "Per seat per month, plus per-outcome AI charges", edge: "even" },
           { feature: "Free plan", elpino: ELPINO_FREE, them: "None listed. 14-day trial", edge: "elpino" },
-          { feature: "Entry price per teammate", elpino: "$0, because seats are free", them: "US$29 per seat a month on Essential, monthly billing", edge: "elpino" },
+          { feature: "Entry price per teammate", elpino: "$0, because seats are free", them: "From US$29 per seat a month on Essential, depending on annual or monthly billing", edge: "elpino" },
           { feature: "Trial", elpino: "No trial needed: the free plan has no time limit", them: "14 days, no card required", edge: "even" },
         ],
       },
     ],
     cost: {
       title: "What seats and AI outcomes cost",
-      intro: "Intercom bills per seat and per Fin outcome. This table uses the Essential plan at its monthly-billing list price. Annual billing is available and cheaper but is not shown as a separate figure on the pricing page.",
+      intro: "Intercom bills per seat and per Fin outcome. This table uses the lowest listed Essential price, US$29 per seat a month. The exact figure depends on whether you bill annually or monthly, so a real bill can be higher.",
       rows: [
-        { scenario: "3 teammates", elpino: "$59 a month on Growth ($49 on annual billing)", them: "3 × US$29 = US$87 a month, plus Fin outcomes" },
-        { scenario: "10 teammates", elpino: "$59 a month, unchanged", them: "10 × US$29 = US$290 a month, plus Fin outcomes" },
-        { scenario: "25 teammates", elpino: "$59 a month, unchanged", them: "25 × US$29 = US$725 a month, plus Fin outcomes" },
+        { scenario: "3 teammates", elpino: "$59 a month on Growth ($49 on annual billing)", them: "At least 3 × US$29 = US$87 a month, plus Fin outcomes" },
+        { scenario: "10 teammates", elpino: "$59 a month, unchanged", them: "At least 10 × US$29 = US$290 a month, plus Fin outcomes" },
+        { scenario: "25 teammates", elpino: "$59 a month, unchanged", them: "At least 25 × US$29 = US$725 a month, plus Fin outcomes" },
         { scenario: "500 AI-resolved conversations", elpino: "Covered by Growth's $40 monthly credit, which Elpino estimates at about 800 average conversations", them: "500 × US$0.99 = about US$495 at the listed starting rate, and a monthly minimum can apply" },
       ],
       note: "The last row is not a like-for-like comparison. Elpino spends credit per conversation whether or not the AI resolves it, while Intercom charges per resolved outcome. Intercom also has in-app messaging that Elpino does not. Taxes and add-ons are excluded.",
     },
     switching: migrationSteps("Intercom"),
     faqs: [
+      { q: "Intercom is now Fin and owned by Salesforce. Does that matter?", a: "Intercom renamed itself Fin in 2026, and Salesforce announced in June 2026 that it would acquire the company for about US$3.6 billion. Reports say the deal closed in September. We have not seen announced pricing changes, but a change of owner is a reasonable moment to ask how plans and pricing will develop. Elpino is independent, and its prices are on our pricing page." },
       { q: "Is Elpino an Intercom alternative?", a: "For website support with an AI agent and a shared inbox, yes, with a much simpler bill. If you rely on in-app messages, banners and tooltips, or on WhatsApp and SMS alongside chat, Intercom covers more." },
       { q: "How does AI pricing compare to Fin?", a: "Fin is billed per outcome, listed from US$0.99 each. Elpino runs the AI on a monthly credit included in the plan, so a short conversation costs less than a long one and there is no per-resolution fee." },
       { q: "Does Elpino charge per seat?", a: "No. Seats are unlimited on every plan, including Free." },
