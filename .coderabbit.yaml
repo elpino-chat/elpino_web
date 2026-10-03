@@ -1,0 +1,34 @@
+# CodeRabbit review settings for the Elpino website, dashboard UI and widget.
+# Docs: https://docs.coderabbit.ai/guides/configure-coderabbit
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: en-US
+
+reviews:
+  # "chill" keeps comments to what matters; switch to "assertive" for stricter reviews.
+  profile: chill
+  # Comment only. Merging stays a maintainer decision.
+  request_changes_workflow: false
+  high_level_summary: true
+  path_filters:
+    - "!package-lock.json"
+    - "!public/**"
+    - "!**/*.min.*"
+  path_instructions:
+    - path: "app/api/**"
+      instructions: >
+        Treat as security-sensitive. Check that every route verifies the session,
+        validates its input, never trusts an email or id from the request body without
+        proof, and never returns or logs secrets. Flag anything that reaches the
+        client that should stay on the server.
+    - path: "app/**/*.css"
+      instructions: >
+        Check selector specificity and !important conflicts. The dashboard has light
+        and dark themes (data-dashboard-theme); a change must stay readable in both.
+        Prefer CSS variables over new substring or class*= overrides.
+    - path: "app/components/auth/**"
+      instructions: >
+        Sign-in and sign-up flow. Check error handling, that two-factor codes are
+        passed through, and that nothing sensitive is stored in localStorage.
+
+chat:
+  auto_reply: true
