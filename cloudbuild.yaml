@@ -29,6 +29,7 @@ steps:
   # 4. Point the Cloud Run service at the new image. Settings and environment variables on the
   #    service are kept; only the image changes.
   - name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: gcloud
     args:
       - run
       - services
