@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight, Bot, CheckCircle2, Code2, Inbox, Ticket, Users, UserRound } from "lucide-react";
+import { ArrowRight, Code2, Inbox, Sparkles, Ticket } from "lucide-react";
 import { requireSession } from "@/app/api/onboarding/_lib/require-user";
 import { selectedWorkspace } from "@/app/api/_lib/workspace";
 import { callGateway } from "@/app/api/auth/_lib/gateway";
@@ -24,17 +24,13 @@ type IssueTicket = { id: string; title: string; provider: string };
 type TeamMember = { id: string; name: string };
 type SiteTag = { id: string; status?: string };
 
-// Never renders the customer's actual message, only what happened to the conversation, so the dashboard
-// can't leak chat content to anyone glancing at the screen.
+// Never renders the customer's actual message — only what happened to the
+// conversation — so the dashboard's activity feed can't leak chat content to
+// anyone glancing at the screen.
 function activityLabel(conversation: Conversation, memberName: string | null) {
-  if (conversation.status === "resolved") return "Resolved";
-  if (conversation.assignedUserId) return memberName ? `${memberName} is replying` : "A teammate is replying";
-  return "AI is handling this";
-}
-
-function initials(name: string) {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  return parts.length ? parts.slice(0, 2).map((part) => part[0]?.toUpperCase() ?? "").join("") : "?";
+  if (conversation.status === "resolved") return `Conversation with ${conversation.name} was resolved`;
+  if (conversation.assignedUserId) return memberName ? `${memberName} joined the conversation with ${conversation.name}` : `A teammate joined the conversation with ${conversation.name}`;
+  return `AI is handling a conversation with ${conversation.name}`;
 }
 
 // "3h ago", "2d ago" — short enough for a one-line activity row.
@@ -89,109 +85,95 @@ export default async function DashboardPage() {
   }
 
   const memberNameById = new Map(members.map((member) => [member.id, member.name]));
-  const openCount = conversations.filter((c) => c.status !== "resolved").length;
-  const teamCount = conversations.filter((c) => c.assignedUserId).length;
-  const aiCount = conversations.filter((c) => !c.assignedUserId).length;
+  const assignedCount = conversations.filter((c) => c.assignedUserId).length;
+  const automatedCount = conversations.filter((c) => !c.assignedUserId).length;
   const peopleCount = contacts.length;
-  const recentConversations = conversations.slice(0, 6);
-  const widgetInstalled = sites.some((site) => site.status === "verified");
-
-  const stats = [
-    { label: "Open now", value: openCount, hint: "Not resolved yet", href: "/dashboard/inbox", icon: Inbox },
-    { label: "Handled by AI", value: aiCount, hint: "No teammate needed", href: "/dashboard/inbox?view=ai", icon: Bot },
-    { label: "With your team", value: teamCount, hint: "A teammate joined", href: "/dashboard/inbox", icon: UserRound },
-    { label: "Contacts", value: peopleCount, hint: "People who left details", href: "/dashboard/contacts", icon: Users },
-  ];
+  const recentConversations = conversations.slice(0, 5);
 
   return (
-    <section id="dashboard-home" className="dh-page min-h-full px-4 py-7 sm:px-6 lg:px-10">
-      <div className="mx-auto max-w-[1100px]">
-        <p className="dh-t text-[15px]">{date}</p>
-        <h1 className="dh-h mt-1.5 text-[30px] font-semibold tracking-[-0.03em] sm:text-[38px]">{greeting}, {firstName}</h1>
-        <p className="dh-t mt-1.5 text-[16px]">
-          {conversations.length === 0 ? "Your support activity will appear here as conversations arrive." : openCount > 0 ? `You have ${openCount} open conversation${openCount === 1 ? "" : "s"}.` : "You're all caught up. Nothing is waiting."}
-        </p>
+    <section id="dashboard-home" className="min-h-full bg-[#262626] px-6 py-7 text-white lg:px-10">
+      <div className="mx-auto max-w-[1200px]">
+        <p className="text-sm font-normal text-white/70">{date}</p>
+        <h1 className="mt-2 text-3xl font-normal tracking-[-0.03em] sm:text-4xl">{greeting}, {firstName}</h1>
 
-        {!widgetInstalled && (
-          <article className="dh-card mt-7 flex flex-col gap-4 rounded-2xl border p-5 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-start gap-4">
-              <span className="dh-icon flex size-11 shrink-0 items-center justify-center rounded-xl"><Code2 size={20} /></span>
-              <div>
-                <h2 className="dh-h text-[17px] font-semibold">Install the chat widget</h2>
-                <p className="dh-t mt-0.5 max-w-xl text-[14.5px] leading-6">Add one line to your website so visitors can start chatting with your AI.</p>
-              </div>
+        {!sites.some((site) => site.status === "verified") && (
+          <article className="mt-7 flex flex-col gap-5 rounded-xl border border-white/10 bg-white/[0.035] p-5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-start gap-3.5">
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-white/[0.07] text-[#8db8ff]"><Code2 size={18} /></span>
+              <div><h2 className="text-sm font-normal text-white/90">Install the Elpino chat widget</h2><p className="mt-1 max-w-xl text-xs leading-5 text-white/45">Add the site tag when you&apos;re ready to start customer conversations. Your onboarding progress is already saved.</p></div>
             </div>
-            <Link href="/dashboard/settings/tags" className="dh-btn flex h-11 shrink-0 items-center justify-center gap-2 rounded-full border px-6 text-[15px] font-medium transition">Install widget <ArrowRight size={15} /></Link>
+            <Link href="/dashboard/settings/tags" className="inline-flex h-9 shrink-0 items-center justify-center gap-1.5 rounded-lg bg-white px-4 text-xs font-medium text-black transition hover:bg-white/85">Install widget <ArrowRight size={13} /></Link>
           </article>
         )}
 
-        <div id="activity" className="mt-7 grid scroll-mt-4 grid-cols-2 gap-3 lg:grid-cols-4">
-          {stats.map(({ label, value, hint, href, icon: Icon }) => (
-            <Link key={label} href={href} className="dh-card dh-link group flex flex-col rounded-2xl border p-5 transition">
-              <span className="flex items-center justify-between">
-                <span className="dh-icon flex size-10 items-center justify-center rounded-xl"><Icon size={18} /></span>
-                <ArrowRight size={16} className="dh-t transition group-hover:translate-x-0.5" />
-              </span>
-              <span className="dh-h mt-4 text-[34px] font-semibold leading-none tracking-[-0.03em]">{value}</span>
-              <span className="dh-h mt-2 text-[15px] font-medium">{label}</span>
-              <span className="dh-t text-[13.5px]">{hint}</span>
-            </Link>
-          ))}
-        </div>
-
-        <div className="mt-4 grid gap-4 lg:grid-cols-5">
-          <article data-tour="recent-activity" className="dh-card rounded-2xl border p-5 lg:col-span-3">
+        <div className="mt-7 grid gap-4 xl:grid-cols-2">
+          <article id="activity" className="min-h-[300px] scroll-mt-4 rounded-xl border border-white/10 bg-[#262626] p-6">
             <div className="flex items-center justify-between">
-              <h2 className="dh-h text-[18px] font-semibold">Recent conversations</h2>
-              <Link href="/dashboard/inbox" className="dh-t flex items-center gap-1.5 text-[14px] font-medium hover:underline">Open inbox <ArrowRight size={14} /></Link>
+              <h2 className="flex items-center gap-2.5 text-xl font-normal"><Inbox size={21} className="text-[#8db8ff]" /> Inbox</h2>
+              <Link href="/dashboard/inbox" className="flex items-center gap-1.5 text-xs text-white/50 hover:text-white">Open inbox <ArrowRight size={14} /></Link>
             </div>
-            {recentConversations.length > 0 ? (
-              <ul className="mt-3">
-                {recentConversations.map((conversation) => (
-                  <li key={conversation.id} className="dh-divide border-t first:border-t-0">
-                    <Link href={`/dashboard/inbox?conversation=${encodeURIComponent(conversation.id)}`} className="dh-row -mx-2 flex items-center gap-3.5 rounded-xl px-2 py-3">
-                      <span className="dh-icon flex size-10 shrink-0 items-center justify-center rounded-full text-[13px] font-semibold">{initials(conversation.name)}</span>
-                      <span className="min-w-0 flex-1">
-                        <span className="dh-h block truncate text-[15px] font-medium">{conversation.name}</span>
-                        <span className="dh-t block truncate text-[14px]">{activityLabel(conversation, conversation.assignedUserId ? memberNameById.get(conversation.assignedUserId) ?? null : null)}</span>
-                      </span>
-                      <span className="dh-t shrink-0 text-[13px]">{relativeTime(conversation.time)}</span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <div className="flex flex-col items-center px-4 py-12 text-center">
-                <span className="dh-icon flex size-12 items-center justify-center rounded-xl"><CheckCircle2 size={22} /></span>
-                <p className="dh-h mt-4 text-[17px] font-semibold">No conversations yet</p>
-                <p className="dh-t mt-1.5 max-w-[260px] text-[14.5px] leading-6">Chats from your website will show up here.</p>
-              </div>
-            )}
+            <div className="mt-8 grid grid-cols-3 gap-2 border-y border-white/[0.07] py-5 text-center">
+              {([
+                ["Assigned", assignedCount],
+                ["Automated", automatedCount],
+                ["People", peopleCount],
+              ] as const).map(([label, value]) => (
+                <div key={label}>
+                  <p className="text-2xl font-normal text-white/90">{value}</p>
+                  <p className="mt-1 text-xs text-white/40">{label}</p>
+                </div>
+              ))}
+            </div>
+            <p className="mt-7 text-sm text-white/45">
+              {conversations.length === 0 ? "Your support activity will appear here as conversations arrive." : `${conversations.length} conversation${conversations.length === 1 ? "" : "s"} total.`}
+            </p>
           </article>
 
-          <article data-tour="issues" className="dh-card rounded-2xl border p-5 lg:col-span-2">
+          <article data-tour="issues" className="min-h-[300px] rounded-xl border border-white/10 bg-[#262626] p-6">
             <div className="flex items-center justify-between">
-              <h2 className="dh-h text-[18px] font-semibold">Issues</h2>
-              <Link href="/dashboard/issues" className="dh-t flex items-center gap-1.5 text-[14px] font-medium hover:underline">View all <ArrowRight size={14} /></Link>
+              <h2 className="flex items-center gap-2.5 text-xl font-normal"><Ticket size={21} className="text-[#7dd3a8]" /> Issues</h2>
+              <Link href="/dashboard/issues" className="flex items-center gap-1.5 text-xs text-white/50 hover:text-white">View issues <ArrowRight size={14} /></Link>
             </div>
             {issues.length > 0 ? (
-              <ul className="mt-3 space-y-2">
+              <div className="mt-8 space-y-2">
                 {issues.map((issue) => (
-                  <li key={`${issue.provider}-${issue.id}`} className="dh-box flex min-h-12 items-center gap-3 rounded-xl border px-4 py-2.5">
-                    <Ticket size={16} className="dh-t shrink-0" />
-                    <span className="dh-h truncate text-[14.5px]">{issue.title}</span>
-                  </li>
+                  <div key={`${issue.provider}-${issue.id}`} className="flex h-12 items-center gap-3 rounded-lg border border-white/[0.07] bg-white/[0.025] px-4 text-sm text-white/55">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#7dd3a8]" />
+                    <span className="truncate">{issue.title}</span>
+                  </div>
                 ))}
-              </ul>
+              </div>
             ) : (
-              <div className="flex flex-col items-center px-4 py-12 text-center">
-                <span className="dh-icon flex size-12 items-center justify-center rounded-xl"><Ticket size={22} /></span>
-                <p className="dh-h mt-4 text-[17px] font-semibold">No issues yet</p>
-                <p className="dh-t mt-1.5 max-w-[240px] text-[14.5px] leading-6">Tickets you file from a conversation, or connect from Trello and Asana, show up here.</p>
+              <div className="mt-8 flex min-h-[140px] flex-col items-center justify-center rounded-lg border border-dashed border-white/[0.12] px-4 py-8 text-center">
+                <p className="text-sm text-white/55">No issues yet</p>
+                <p className="mt-1 max-w-[240px] text-xs text-white/35">Tickets you file from a conversation, or connect from Trello and Asana, will show up here.</p>
               </div>
             )}
           </article>
         </div>
+
+        <article data-tour="recent-activity" className="mt-4 rounded-xl border border-white/10 bg-[#262626] p-6">
+          <h2 className="flex items-center gap-2.5 text-xl font-normal"><Sparkles size={20} className="text-[#e2b64a]" /> Recent activity</h2>
+          {recentConversations.length > 0 ? (
+            <div className="mt-5 divide-y divide-white/[0.07]">
+              {recentConversations.map((conversation) => (
+                <Link
+                  key={conversation.id}
+                  href={`/dashboard/inbox?conversation=${encodeURIComponent(conversation.id)}`}
+                  className="flex items-center gap-3 py-3.5 text-sm transition hover:bg-white/[0.03]"
+                >
+                  <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${conversation.status === "resolved" ? "bg-white/25" : conversation.assignedUserId ? "bg-[#8db8ff]" : "bg-[#7dd3a8]"}`} />
+                  <span className="min-w-0 flex-1 truncate text-white/80">
+                    {activityLabel(conversation, conversation.assignedUserId ? memberNameById.get(conversation.assignedUserId) ?? null : null)}
+                  </span>
+                  <span className="shrink-0 text-xs text-white/35">{relativeTime(conversation.time)}</span>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <p className="mt-5 text-sm text-white/45">Nothing's happened yet — activity from your conversations will show up here.</p>
+          )}
+        </article>
       </div>
     </section>
   );
