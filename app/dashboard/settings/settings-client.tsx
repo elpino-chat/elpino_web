@@ -39,6 +39,8 @@ import {
   type DayWindow,
 } from "@/lib/availability";
 import {
+  ArrowLeft,
+  FileArchive,
   ArrowRight,
   Bot,
   CalendarDays,
@@ -2726,16 +2728,6 @@ function SetupIntegrationSettingsPage() {
         <p className="mt-1.5 max-w-xl text-[13px] leading-6 text-[var(--b-muted)]">Configure the chat widget and connect the tools your team already uses.</p>
       </header>
 
-      <div className="mt-6 flex flex-col gap-4 rounded-xl border border-[var(--b-border)] px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="min-w-0">
-          <h3 className="text-[15px] font-semibold">Customer verification</h3>
-          <p className="mt-0.5 text-[13px] text-[var(--b-muted)]">Confirm who is chatting, so no one can pretend to be someone else.</p>
-        </div>
-        <Link href="/dashboard/settings/identity" className="inline-flex h-9 shrink-0 items-center justify-center rounded-lg border border-[var(--b-text)] px-4 text-[13px] font-semibold transition hover:bg-[var(--b-surface-2)]">
-          Enable
-        </Link>
-      </div>
-
       <div className="dashboard-connect-embedded mt-8">
         <ConnectPageContent />
       </div>
@@ -5011,6 +5003,20 @@ function PresenceLogSettingsPage() {
 
 type SiteTag = { id: string; name: string; domain: string; publicKey: string; allowLocalhost: boolean; status: "unverified" | "verified"; createdAt: string; lastUsedAt: string | null; permissions: { analytics: boolean; visitors: boolean; support: boolean } };
 
+// A WordPress admin menu path shown as small chips: Plugins › Add New › Upload Plugin.
+function PathChips({ items }: { items: string[] }) {
+  return (
+    <span className="mt-1.5 flex flex-wrap items-center gap-1.5">
+      {items.map((item, index) => (
+        <span key={item} className="flex items-center gap-1.5">
+          {index > 0 && <ChevronRight size={14} className="tg-t" aria-hidden="true" />}
+          <span className="tg-chip rounded-md border px-2.5 py-1 text-[13px] font-medium">{item}</span>
+        </span>
+      ))}
+    </span>
+  );
+}
+
 function TagManagerSettingsPage() {
   const [tags, setTags] = useState<SiteTag[]>([]);
   const [dialog, setDialog] = useState<"create" | "install" | "permissions" | null>(null);
@@ -5025,6 +5031,11 @@ function TagManagerSettingsPage() {
   const [copied, setCopied] = useState(false);
   const [cspCopied, setCspCopied] = useState(false);
   const [capabilities, setCapabilities] = useState({ chat: true, visitors: true, identify: true });
+  // The connect dialog asks what the site is built with first: WordPress gets the plugin, anything else gets the code snippet.
+  const [createStep, setCreateStep] = useState<"platform" | "details" | "wordpress">("platform");
+  const [platform, setPlatform] = useState<"wordpress" | "html">("html");
+  const [wpChecking, setWpChecking] = useState(false);
+  const [wpMessage, setWpMessage] = useState<{ ok: boolean; text: string } | null>(null);
   const [creatingTag, setCreatingTag] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<SiteTag | null>(null);
   const [deletingTagId, setDeletingTagId] = useState<string | null>(null);
@@ -5052,7 +5063,32 @@ function TagManagerSettingsPage() {
     return () => { active = false; };
   }, []);
 
-  function closeCreateDialog() { setDialog(null); setSiteName(""); setSiteUrl(""); setAllowLocalhost(false); setCapabilities({ chat: true, visitors: true, identify: true }); setTagError(null); }
+  // The plugin links the site itself (sign in, then back), so there is no tag to create here: this only looks for a connected site.
+  // Silent checks (the automatic ones) only ever report success, so they never flash an error while the person is still in WordPress.
+  async function checkWordpressConnection(silent = false) {
+    if (!silent) { setWpChecking(true); setWpMessage(null); }
+    try {
+      const response = await fetch("/api/workspace/sites", { cache: "no-store" });
+      const result = (await response.json()) as { sites?: SiteTag[] };
+      const sites = result.sites ?? [];
+      const verified = sites.find((site) => site.status === "verified");
+      if (verified) { setTags(sites); setWpMessage({ ok: true, text: verified.domain ? `Connected to ${verified.domain}` : "Connected" }); }
+      else if (!silent) setWpMessage({ ok: false, text: "Not connected yet. Finish the steps in WordPress, open your site once, then check again." });
+    } catch {
+      if (!silent) setWpMessage({ ok: false, text: "Could not check right now. Try again." });
+    } finally {
+      if (!silent) setWpChecking(false);
+    }
+  }
+  // While the plugin steps are open, look for the connection every few seconds so the dialog updates by itself.
+  const wordpressWaiting = dialog === "create" && createStep === "wordpress" && !wpMessage?.ok;
+  useEffect(() => {
+    if (!wordpressWaiting) return;
+    const timer = setInterval(() => { void checkWordpressConnection(true); }, 5000);
+    return () => clearInterval(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [wordpressWaiting]);
+  function closeCreateDialog() { setDialog(null); setCreateStep("platform"); setPlatform("html"); setWpMessage(null); setSiteName(""); setSiteUrl(""); setAllowLocalhost(false); setCapabilities({ chat: true, visitors: true, identify: true }); setTagError(null); }
   async function createTag() {
     const name = siteName.trim();
     const url = /^https?:\/\//i.test(siteUrl.trim()) ? siteUrl.trim() : `https://${siteUrl.trim()}`;
@@ -5070,6 +5106,8 @@ function TagManagerSettingsPage() {
       setSiteUrl("");
       setAllowLocalhost(false);
       setCapabilities({ chat: true, visitors: true, identify: true });
+      setCreateStep("platform");
+      setPlatform("html");
       setDialog("install");
     } finally {
       setCreatingTag(false);
@@ -5262,66 +5300,174 @@ function TagManagerSettingsPage() {
       )}
 
       {dialog === "create" && (
-        <div className="fixed inset-0 z-[100] bg-[#0b0f14]/40 backdrop-blur-[2px]" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) closeCreateDialog(); }}>
-          <aside role="dialog" aria-modal="true" aria-label="Connect a website" className="absolute inset-y-0 right-0 flex w-full max-w-[480px] flex-col border-l border-[#dfe3e6] bg-white shadow-[-16px_0_48px_rgba(15,23,42,0.14)]">
-            <div className="relative shrink-0 border-b border-[#e5e8eb] bg-[#f7f8fa] px-7 pb-6 pt-6">
-              <div className="relative flex items-start justify-between">
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#dfe3e6] bg-white text-[#428ce5] shadow-sm"><Globe2 size={18} /></span>
-                <button type="button" onClick={closeCreateDialog} aria-label="Close" className="flex h-9 w-9 items-center justify-center rounded-lg text-[#687178] transition hover:bg-[#e9edf0] hover:text-black"><X size={18} /></button>
+        <div className="tg-root fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4 backdrop-blur-[2px]" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget && !creatingTag) closeCreateDialog(); }}>
+          <div role="dialog" aria-modal="true" aria-label="Connect a website" className="tg-dialog flex max-h-[min(760px,calc(100dvh-32px))] w-full max-w-[560px] flex-col overflow-hidden rounded-2xl border shadow-[0_28px_80px_rgba(0,0,0,0.4)]">
+            <div className="tg-divide flex shrink-0 items-start justify-between gap-3 border-b px-5 py-4">
+              <div className="flex min-w-0 items-center gap-3.5">
+                {createStep !== "platform" ? (
+                  <button type="button" onClick={() => { setCreateStep("platform"); setTagError(null); setWpMessage(null); }} aria-label="Back" className="tg-close flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-xl transition"><ArrowLeft size={19} /></button>
+                ) : (
+                  <span className="tg-icon flex size-10 shrink-0 items-center justify-center rounded-xl"><Globe2 size={20} /></span>
+                )}
+                <div className="min-w-0">
+                  <h3 className="tg-h text-[19px] font-semibold tracking-[-0.02em]">Connect a website</h3>
+                  <p className="tg-t text-[14px]">Step {createStep === "platform" ? 1 : 2} of 2</p>
+                </div>
               </div>
-              <h3 className="relative mt-4 text-[20px] font-semibold tracking-[-0.02em] text-[#17181a]">Connect a website</h3>
-              <p className="relative mt-1.5 max-w-[360px] text-[12.5px] leading-5 text-[#687178]">Add a site tag so Elpino can recognize visitors and bring the AI teammate to your pages.</p>
+              <button type="button" onClick={closeCreateDialog} disabled={creatingTag} aria-label="Close" className="tg-close flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-lg transition"><X size={18} /></button>
             </div>
 
-            <div className="min-h-0 flex-1 overflow-y-auto px-7 py-7 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              <label className="block">
-                <span className="text-[12.5px] font-semibold text-[#17233A]">Website URL</span>
-                <div className="mt-2 flex h-11 overflow-hidden rounded-xl border border-[#DDE4E8] bg-white transition focus-within:border-[#11120f] focus-within:ring-2 focus-within:ring-[#11120f]/8">
-                  <span className="flex items-center border-r border-[#DDE4E8] bg-[#FAFBFB] px-3 text-[12.5px] font-medium text-[#7B858A]">https://</span>
-                  <input value={siteUrl} onChange={(event) => setSiteUrl(event.target.value.replace(/^https?:\/\//i, ""))} placeholder="www.mywebsite.com" className="min-w-0 flex-1 px-3 text-[13px] outline-none" />
-                </div>
-              </label>
-
-              <label className="mt-4 block">
-                <span className="text-[12.5px] font-semibold text-[#17233A]">Display name</span>
-                <input value={siteName} onChange={(event) => setSiteName(event.target.value)} placeholder="My Website" className="mt-2 h-11 w-full rounded-xl border border-[#DDE4E8] px-3 text-[13px] outline-none transition focus:border-[#11120f] focus:ring-2 focus:ring-[#11120f]/8" />
-              </label>
-
-              <div className="mt-7 flex items-start gap-3 rounded-xl border border-[#DCE5EF] bg-[#F5F9FE] p-4">
-                <div className="min-w-0 flex-1">
-                  <p className="text-[13px] font-semibold text-[#17233A]">Allow localhost for development</p>
-                  <p className="mt-1 text-[11px] leading-4 text-[#66798B]">Off by default. When off, this tag only loads on <span className="font-semibold text-[#35485A]">{siteUrl.trim().replace(/^https?:\/\//i, "").split("/")[0] || "the domain above"}</span>. Turn it on to also use the same tag on localhost or 127.0.0.1.</p>
-                </div>
-                <Switch checked={allowLocalhost} onCheckedChange={setAllowLocalhost} aria-label="Allow localhost for development" />
-              </div>
-
-              <p className="mb-2 mt-7 text-[11px] font-bold uppercase tracking-[0.12em] text-[#8A929C]">What this tag can do</p>
-              <div className="overflow-hidden rounded-xl border border-[#E1E5E8]">
-                {[
-                  { key: "chat" as const, icon: MessageSquarePlus, tone: "bg-[#EAF1FF] text-[#2878ce]", title: "Live chat widget", description: "Show the Elpino chat bubble so visitors can talk to your AI teammate." },
-                  { key: "visitors" as const, icon: Eye, tone: "bg-[#EAF8F0] text-[#238753]", title: "Visitor analytics", description: "See who's on your site right now and where they came from." },
-                  { key: "identify" as const, icon: UserCheck, tone: "bg-[#F3EEFF] text-[#6246DF]", title: "Customer identification", description: "Recognise signed-in visitors on this site. Needs identity verification set up in Settings." },
-                ].map(({ key, icon: Icon, tone, title, description }, index) => (
-                  <div key={key} className={`flex items-start gap-3.5 bg-white px-4 py-4 ${index ? "border-t border-[#EEF0F2]" : ""}`}>
-                    <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${tone}`}><Icon size={16} /></span>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-[13px] font-semibold text-[#17233A]">{title}</p>
-                      <p className="mt-0.5 text-[11px] leading-4 text-[#7B858A]">{description}</p>
-                    </div>
-                    <Switch checked={capabilities[key]} onCheckedChange={(checked) => setCapabilities((current) => ({ ...current, [key]: checked }))} aria-label={title} />
+            <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {createStep === "platform" && (
+                <>
+                  <h4 className="tg-h text-[16px] font-semibold">What is your website built with?</h4>
+                  <p className="tg-t mt-1 text-[13.5px] leading-6">We&apos;ll show you the easiest way to add the chat widget.</p>
+                  <div role="radiogroup" aria-label="Website platform" className="mt-4 flex flex-col gap-2.5">
+                    {([
+                      { value: "wordpress" as const, title: "WordPress", description: "Install our plugin. No code needed.", logo: "/platform-logos/wordpress.svg" },
+                      { value: "html" as const, title: "HTML or other", description: "Paste one line of code into your site. Works with Shopify, Wix and more.", logo: "/platform-logos/html5.svg" },
+                    ]).map((option) => (
+                      <button key={option.value} type="button" role="radio" aria-checked={platform === option.value} onClick={() => setPlatform(option.value)} className={`tg-option flex w-full cursor-pointer items-center gap-3.5 rounded-2xl border p-3 text-left transition ${platform === option.value ? "tg-option-on" : ""}`}>
+                        <span className="tg-logo flex size-12 shrink-0 items-center justify-center rounded-xl bg-white p-2.5 shadow-sm">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={option.logo} alt="" aria-hidden="true" className="size-full object-contain" />
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="tg-h block text-[15.5px] font-semibold">{option.title}</span>
+                          <span className="tg-t mt-0.5 block text-[13.5px] leading-5">{option.description}</span>
+                        </span>
+                        <span className="tg-radio flex size-6 shrink-0 items-center justify-center rounded-full border-2" aria-hidden="true">{platform === option.value && <span className="tg-radio-dot size-3 rounded-full" />}</span>
+                      </button>
+                    ))}
                   </div>
-                ))}
-              </div>
-              {tagError && <p role="alert" className="mt-4 rounded-lg bg-[#FFF1F1] px-3 py-2 text-[11px] font-medium text-[#A64A53]">{tagError}</p>}
+                </>
+              )}
+
+              {createStep === "details" && (
+                <>
+                  <label className="block">
+                    <span className="tg-h text-[15px] font-medium">Website URL</span>
+                    <div className="tg-field mt-2 flex h-11 overflow-hidden rounded-xl border">
+                      <span className="tg-line flex items-center border-r px-3.5 text-[14.5px]">https://</span>
+                      <input value={siteUrl} onChange={(event) => setSiteUrl(event.target.value.replace(/^https?:\/\//i, ""))} placeholder="www.mywebsite.com" autoFocus className="tg-input min-w-0 flex-1 bg-transparent px-3.5 text-[15px] outline-none" />
+                    </div>
+                  </label>
+                  <label className="mt-4 block">
+                    <span className="tg-h text-[15px] font-medium">Display name</span>
+                    <input value={siteName} onChange={(event) => setSiteName(event.target.value)} placeholder="My Website" className="tg-field tg-input mt-2 h-11 w-full rounded-xl border bg-transparent px-3.5 text-[15px] outline-none" />
+                  </label>
+
+                  <details className="tg-box group mt-5 rounded-xl border">
+                    <summary className="tg-h flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3.5 text-[15px] font-medium">
+                      Advanced options
+                      <ChevronDown size={16} className="transition-transform group-open:rotate-180" />
+                    </summary>
+                    <div className="tg-divide border-t px-4 py-4">
+                      <div className="flex items-start gap-3">
+                        <div className="min-w-0 flex-1">
+                          <p className="tg-h text-[15px] font-medium">Allow localhost for development</p>
+                          <p className="tg-t mt-0.5 text-[14px] leading-5">Off by default. When off, the tag only loads on <span className="tg-h font-medium">{siteUrl.trim().replace(/^https?:\/\//i, "").split("/")[0] || "your website"}</span>.</p>
+                        </div>
+                        <Switch checked={allowLocalhost} onCheckedChange={setAllowLocalhost} aria-label="Allow localhost for development" />
+                      </div>
+                      <p className="tg-h mb-1 mt-5 text-[15px] font-medium">What this tag can do</p>
+                      {[
+                        { key: "chat" as const, title: "Live chat widget", description: "Show the chat bubble so visitors can talk to your AI teammate." },
+                        { key: "visitors" as const, title: "Visitor analytics", description: "See who's on your site right now and where they came from." },
+                        { key: "identify" as const, title: "Customer identification", description: "Recognise signed-in visitors. Needs identity verification set up in Settings." },
+                      ].map(({ key, title, description }) => (
+                        <div key={key} className="tg-divide flex items-start gap-3 border-t py-3 first:border-t-0">
+                          <div className="min-w-0 flex-1">
+                            <p className="tg-h text-[14.5px] font-medium">{title}</p>
+                            <p className="tg-t text-[13.5px] leading-5">{description}</p>
+                          </div>
+                          <Switch checked={capabilities[key]} onCheckedChange={(checked) => setCapabilities((current) => ({ ...current, [key]: checked }))} aria-label={title} />
+                        </div>
+                      ))}
+                    </div>
+                  </details>
+                  {tagError && <p role="alert" className="tg-error mt-4 text-[14px] font-medium">{tagError}</p>}
+                </>
+              )}
+
+              {createStep === "wordpress" && (
+                <>
+                  <p className="tg-t text-[14px] leading-6">Install the Elpino Chat plugin on your WordPress site. It takes about two minutes.</p>
+                  <ol className="mt-4">
+                    {[
+                      { title: "Download the plugin", body: (
+                        <>
+                          <div className="tg-box mt-2 flex items-center gap-3 rounded-xl border p-3">
+                            <span className="tg-icon flex size-10 shrink-0 items-center justify-center rounded-lg"><FileArchive size={19} /></span>
+                            <span className="min-w-0 flex-1">
+                              <span className="tg-h block truncate text-[14.5px] font-medium">elpino-chat.zip</span>
+                              <span className="tg-t block text-[13px]">WordPress plugin · Keep it zipped</span>
+                            </span>
+                            <a href="/downloads/elpino-chat.zip" download className="tg-btn inline-flex h-10 shrink-0 items-center gap-2 rounded-full border px-4 text-[14px] font-medium transition"><Download size={15} /> Download</a>
+                          </div>
+                        </>
+                      ) },
+                      { title: "Upload it in WordPress", body: (
+                        <>
+                          <p className="tg-t mt-1 text-[14px] leading-6">In your WordPress admin, open</p>
+                          <PathChips items={["Plugins", "Add New", "Upload Plugin"]} />
+                          <p className="tg-t mt-2 text-[14px] leading-6">Choose the file, then click <span className="tg-h font-medium">Install Now</span> and <span className="tg-h font-medium">Activate</span>.</p>
+                        </>
+                      ) },
+                      { title: "Connect to Elpino", body: (
+                        <>
+                          <p className="tg-t mt-1 text-[14px] leading-6">Open</p>
+                          <PathChips items={["Settings", "Elpino Chat"]} />
+                          <p className="tg-t mt-2 text-[14px] leading-6">Click <span className="tg-h font-medium">Connect to Elpino</span> and sign in. You&apos;ll come straight back with the widget live.</p>
+                        </>
+                      ) },
+                      { title: "Confirm the connection", body: (
+                        <div className={`tg-box mt-2 flex items-center gap-3 rounded-xl border p-3 ${wpMessage?.ok ? "tg-status-ok" : ""}`} role="status">
+                          <span className="tg-icon flex size-10 shrink-0 items-center justify-center rounded-lg">
+                            {wpMessage?.ok ? <CheckCircle2 size={19} /> : <LoaderCircle size={19} className="animate-spin" />}
+                          </span>
+                          <span className="min-w-0 flex-1">
+                            <span className="tg-h block text-[14.5px] font-medium">{wpMessage?.ok ? wpMessage.text : "Waiting for your site to connect"}</span>
+                            <span className="tg-t block text-[13px]">{wpMessage?.ok ? "Your chat widget is live." : wpMessage?.text ?? "This updates by itself. Open your website once after connecting."}</span>
+                          </span>
+                          {!wpMessage?.ok && <button type="button" disabled={wpChecking} onClick={() => void checkWordpressConnection()} className="tg-btn inline-flex h-10 shrink-0 cursor-pointer items-center gap-2 rounded-full border px-4 text-[14px] font-medium transition disabled:opacity-50">{wpChecking && <LoaderCircle size={14} className="animate-spin" />} Check now</button>}
+                        </div>
+                      ) },
+                    ].map((step, index, all) => (
+                      <li key={step.title} className="relative flex gap-3.5 pb-5 last:pb-0">
+                        {index < all.length - 1 && <span className="tg-rail absolute left-4 top-9 -ml-px h-[calc(100%-2.25rem)] w-px" aria-hidden="true" />}
+                        <span className="tg-num relative flex size-8 shrink-0 items-center justify-center rounded-full border text-[13.5px] font-semibold" aria-hidden="true">{index + 1}</span>
+                        <div className="min-w-0 flex-1 pt-1">
+                          <p className="tg-h text-[15px] font-semibold">{step.title}</p>
+                          {step.body}
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
+                </>
+              )}
             </div>
 
-            <div className="flex shrink-0 items-center gap-3 border-t border-[#EEF0F2] px-7 py-5">
-              <button type="button" disabled={creatingTag} onClick={closeCreateDialog} className="h-10 flex-1 rounded-lg border border-[#DDE4E8] text-[13px] font-semibold text-[#17233A] transition hover:bg-[#F7F8FA] disabled:cursor-not-allowed disabled:opacity-50">Cancel</button>
-              <button type="button" disabled={!siteName.trim() || !siteUrl.trim() || creatingTag} onClick={() => void createTag()} className="flex h-10 flex-1 items-center justify-center gap-2 rounded-lg bg-[#428ce5] text-[13px] font-semibold text-white transition hover:bg-[#347dce] disabled:cursor-not-allowed disabled:bg-[#E0E2E4] disabled:text-[#A3A9AE]">
-                {creatingTag ? <><LoaderCircle size={15} className="animate-spin" /> Creating…</> : <><Plus size={15} /> Create tag</>}
-              </button>
+            <div className="tg-divide flex shrink-0 items-center justify-end gap-2.5 border-t px-5 py-3">
+              {createStep === "platform" && (
+                <>
+                  <button type="button" onClick={closeCreateDialog} className="tg-btn h-11 cursor-pointer rounded-full border px-5 text-[15px] font-medium transition">Cancel</button>
+                  <button type="button" onClick={() => setCreateStep(platform === "wordpress" ? "wordpress" : "details")} className="tg-primary flex h-11 cursor-pointer items-center gap-2 rounded-full border px-6 text-[15px] font-semibold transition">Next <ArrowRight size={15} /></button>
+                </>
+              )}
+              {createStep === "details" && (
+                <>
+                  <button type="button" disabled={creatingTag} onClick={() => { setCreateStep("platform"); setTagError(null); }} className="tg-btn h-11 cursor-pointer rounded-full border px-5 text-[15px] font-medium transition disabled:opacity-50">Back</button>
+                  <button type="button" disabled={!siteName.trim() || !siteUrl.trim() || creatingTag} onClick={() => void createTag()} className="tg-primary flex h-11 cursor-pointer items-center gap-2 rounded-full border px-6 text-[15px] font-semibold transition disabled:cursor-not-allowed disabled:opacity-50">
+                    {creatingTag ? <><LoaderCircle size={15} className="animate-spin" /> Creating…</> : <>Create tag <ArrowRight size={15} /></>}
+                  </button>
+                </>
+              )}
+              {createStep === "wordpress" && (
+                <button type="button" onClick={closeCreateDialog} className="tg-primary flex h-11 cursor-pointer items-center gap-2 rounded-full border px-6 text-[15px] font-semibold transition">Done</button>
+              )}
             </div>
-          </aside>
+          </div>
         </div>
       )}
 

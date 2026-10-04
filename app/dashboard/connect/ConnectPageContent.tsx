@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import posthog from "posthog-js";
-import { Check, CheckCircle2, ChevronRight, ExternalLink, KeyRound, LoaderCircle, Lock, Search, ShieldCheck, Unplug, X } from "lucide-react";
+import { ArrowRight, Check, CheckCircle2, ChevronRight, Code2, ExternalLink, KeyRound, LoaderCircle, Lock, Search, ShieldCheck, Unplug, UserCheck, X } from "lucide-react";
 import { AsanaIcon, CashfreeIcon, HubSpotIcon, NotionIcon, PaystackIcon, RazorpayIcon, ShopifyIcon, StripeIcon, TrelloIcon, WooCommerceIcon } from "@/app/components/ConnectorIcons";
 import { McpServers } from "./McpServers";
 import { AiPermissions } from "./AiPermissions";
@@ -100,6 +101,30 @@ export function ConnectPageContent() {
   const [disconnecting, setDisconnecting] = useState<string | null>(null);
   const [banner, setBanner] = useState<{ kind: "success" | "error"; text: string } | null>(null);
   const [category, setCategory] = useState<Category>("All tools");
+  // null until the sites load, so the install card does not flash for a site that is already verified.
+  const [sites, setSites] = useState<{ status?: string; domain?: string }[] | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/workspace/sites", { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : { sites: [] }))
+      .then((data: { sites?: { status?: string; domain?: string }[] }) => { if (!cancelled) setSites(data.sites ?? []); })
+      .catch(() => { if (!cancelled) setSites([]); });
+    return () => { cancelled = true; };
+  }, []);
+
+  const verifiedSite = sites?.find((site) => site.status === "verified") ?? null;
+  // Customer (identity) verification is the next step once the widget is on the site. Only the "configured" flag is read.
+  const [identityOn, setIdentityOn] = useState<boolean | null>(null);
+  useEffect(() => {
+    if (!verifiedSite) return;
+    let cancelled = false;
+    fetch("/api/workspace/identity-secret", { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: { configured?: boolean } | null) => { if (!cancelled) setIdentityOn(Boolean(data?.configured)); })
+      .catch(() => { if (!cancelled) setIdentityOn(null); });
+    return () => { cancelled = true; };
+  }, [verifiedSite]);
 
   async function loadIntegrations() {
     try {
@@ -142,6 +167,46 @@ export function ConnectPageContent() {
         </header>
 
         {banner && <div className={`mt-5 flex items-center justify-between rounded-lg border px-3.5 py-2.5 text-xs ${banner.kind === "success" ? "border-[#428ce5]/25 bg-[#428ce5]/10 text-[#91c4ff]" : "border-red-500/20 bg-red-500/10 text-red-300"}`}><span className="flex items-center gap-2">{banner.kind === "success" && <Check size={14} strokeWidth={2.5} />}{banner.text}</span><button type="button" aria-label="Dismiss" onClick={() => setBanner(null)} className="rounded-md p-1 hover:bg-white/5"><X size={14} /></button></div>}
+
+        {sites && (verifiedSite ? (
+          <>
+          <div className="cw-card mt-5 flex items-center gap-3.5 rounded-2xl border px-5 py-4">
+            <span className="cw-icon flex size-10 shrink-0 items-center justify-center rounded-xl"><CheckCircle2 size={19} /></span>
+            <p className="cw-t min-w-0 flex-1 text-[15px]"><span className="cw-h font-semibold">Chat widget installed</span>{verifiedSite.domain ? <> on <span className="cw-h font-medium">{verifiedSite.domain}</span></> : null}</p>
+            <Link href="/dashboard/settings/tags" className="cw-link shrink-0 text-[14.5px] font-medium hover:underline">Manage</Link>
+          </div>
+          {identityOn === false && (
+            <div className="cw-card mt-3 flex flex-col gap-4 rounded-2xl border p-5 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-start gap-4">
+                <span className="cw-icon flex size-11 shrink-0 items-center justify-center rounded-xl"><UserCheck size={20} /></span>
+                <div>
+                  <h2 className="cw-h text-[17px] font-semibold">Customer verification</h2>
+                  <p className="cw-t mt-0.5 max-w-xl text-[14.5px] leading-6">Confirm who is chatting, so no one can pretend to be someone else.</p>
+                </div>
+              </div>
+              <Link href="/dashboard/settings/identity" className="cw-btn flex h-11 shrink-0 items-center justify-center gap-2 rounded-full border px-6 text-[15px] font-medium transition">Set up <ArrowRight size={15} /></Link>
+            </div>
+          )}
+          {identityOn === true && (
+            <div className="cw-card mt-3 flex items-center gap-3.5 rounded-2xl border px-5 py-4">
+              <span className="cw-icon flex size-10 shrink-0 items-center justify-center rounded-xl"><UserCheck size={19} /></span>
+              <p className="cw-t min-w-0 flex-1 text-[15px]"><span className="cw-h font-semibold">Customer verification</span> is on</p>
+              <Link href="/dashboard/settings/identity" className="cw-link shrink-0 text-[14.5px] font-medium hover:underline">Manage</Link>
+            </div>
+          )}
+          </>
+        ) : (
+          <div className="cw-card mt-5 flex flex-col gap-4 rounded-2xl border p-5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-start gap-4">
+              <span className="cw-icon flex size-11 shrink-0 items-center justify-center rounded-xl"><Code2 size={20} /></span>
+              <div>
+                <h2 className="cw-h text-[17px] font-semibold">Install the chat widget</h2>
+                <p className="cw-t mt-0.5 max-w-xl text-[14.5px] leading-6">Your website isn&apos;t connected yet. Add the install tag to your site so visitors can chat with your AI.</p>
+              </div>
+            </div>
+            <Link href="/dashboard/settings/tags" className="cw-btn flex h-11 shrink-0 items-center justify-center gap-2 rounded-full border px-6 text-[15px] font-medium transition">Install tag <ArrowRight size={15} /></Link>
+          </div>
+        ))}
 
         <section className="mt-7">
           <div className="mt-5 flex gap-1.5 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">{CATEGORIES.map((item) => <button key={item} type="button" onClick={() => setCategory(item)} aria-pressed={category === item} className={`connect-category-tab inline-flex shrink-0 items-center rounded-full border px-3.5 py-1.5 text-sm font-normal transition ${category === item ? "border-white/20 bg-white/10 text-white" : "border-white/10 text-white/45 hover:bg-white/[0.05] hover:text-white/75"}`}>{item}</button>)}</div>

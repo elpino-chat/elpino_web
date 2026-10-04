@@ -6905,3 +6905,89 @@ body:has([data-dashboard-theme="dark"]) .knowledge-popover :is(button, a)[class*
 [data-dashboard-theme] #dashboard-contacts-page .ct-pill { background: transparent !important; border-color: var(--ct-line) !important; color: var(--ct-t) !important; }
 [data-dashboard-theme] #dashboard-contacts-page .ct-pill:hover { background: var(--ct-hover) !important; color: var(--ct-h) !important; }
 [data-dashboard-theme] #dashboard-contacts-page .ct-pill.ct-pill-on { border-color: var(--ct-h) !important; color: var(--ct-h) !important; }
+
+/* Dashboard home. */
+[data-dashboard-theme="dark"] #dashboard-home { --dh-bg: #262626; --dh-card: #2b2b2b; --dh-h: #ffffff; --dh-t: rgb(255 255 255 / 0.8); --dh-line: rgb(255 255 255 / 0.12); --dh-hover: rgb(255 255 255 / 0.05); --dh-icon: rgb(255 255 255 / 0.1); --dh-btn: rgb(255 255 255 / 0.5); }
+[data-dashboard-theme="light"] #dashboard-home { --dh-bg: #f5f6f7; --dh-card: #ffffff; --dh-h: #000000; --dh-t: rgba(0, 0, 0, 0.7); --dh-line: rgba(0, 0, 0, 0.12); --dh-hover: rgba(0, 0, 0, 0.035); --dh-icon: rgba(0, 0, 0, 0.07); --dh-btn: rgba(0, 0, 0, 0.35); }
+[data-dashboard-theme] #dashboard-home.dh-page { background: var(--dh-bg) !important; }
+[data-dashboard-theme] #dashboard-home :is(.dh-h, .dh-h *) { color: var(--dh-h) !important; }
+[data-dashboard-theme] #dashboard-home :is(.dh-t, .dh-t *) { color: var(--dh-t) !important; }
+[data-dashboard-theme] #dashboard-home .dh-card { background: var(--dh-card) !important; border-color: var(--dh-line) !important; }
+[data-dashboard-theme] #dashboard-home .dh-link:hover { border-color: var(--dh-h) !important; }
+[data-dashboard-theme] #dashboard-home .dh-box, [data-dashboard-theme] #dashboard-home .dh-divide { border-color: var(--dh-line) !important; }
+[data-dashboard-theme] #dashboard-home .dh-row:hover { background: var(--dh-hover) !important; }
+[data-dashboard-theme] #dashboard-home .dh-icon { background: var(--dh-icon) !important; color: var(--dh-h) !important; }
+[data-dashboard-theme] #dashboard-home .dh-btn { background: transparent !important; border-color: var(--dh-btn) !important; color: var(--dh-h) !important; }
+[data-dashboard-theme] #dashboard-home .dh-btn:hover { background: var(--dh-hover) !important; border-color: var(--dh-h) !important; }
+
+/* Custom MCP servers (Connect page). */
+[data-dashboard-theme="dark"] .dashboard-shell .mcp-root { --mcp-h: #ffffff; --mcp-t: rgb(255 255 255 / 0.8); --mcp-card: #2b2b2b; --mcp-line: rgb(255 255 255 / 0.12); --mcp-hover: rgb(255 255 255 / 0.06); --mcp-icon: rgb(255 255 255 / 0.1); --mcp-btn: rgb(255 255 255 / 0.5); --mcp-warn: #f5c451; --mcp-err: #f08a93; --mcp-pri-bg: #ffffff; --mcp-pri-fg: #111111; --mcp-off: rgb(255 255 255 / 0.2); }
+[data-dashboard-theme="light"] .dashboard-shell .mcp-root { --mcp-h: #000000; --mcp-t: rgba(0, 0, 0, 0.7); --mcp-card: #ffffff; --mcp-line: rgba(0, 0, 0, 0.12); --mcp-hover: rgba(0, 0, 0, 0.04); --mcp-icon: rgba(0, 0, 0, 0.07); --mcp-btn: rgba(0, 0, 0, 0.35); --mcp-warn: #a15c00; --mcp-err: #b42318; --mcp-pri-bg: #17191b; --mcp-pri-fg: #ffffff; --mcp-off: rgba(0, 0, 0, 0.2); }
+[data-dashboard-theme] .dashboard-shell .mcp-root :is(.mcp-h, .mcp-h *) { color: var(--mcp-h) !important; }
+[data-dashboard-theme] .dashboard-shell .mcp-root :is(.mcp-t, .mcp-t *) { color: var(--mcp-t) !important; }
+[data-dashboard-theme] .dashboard-shell .mcp-root .mcp-warn, [data-dashboard-theme] .dashboard-shell .mcp-root .mcp-warn * { color: var(--mcp-warn) !important; }
+[data-dashboard-theme] .dashboard-shell .mcp-root .mcp-error { color: var(--mcp-err) !important; }
+[data-dashboard-theme] .dashboard-shell .mcp-root :is(.mcp-card, .mcp-dialog) { background: var(--mcp-card) !important; border-color: var(--mcp-line) !important; }
+[data-dashboard-theme] .dashboard-shell .mcp-root :is(.mcp-divide, .mcp-box) { border-color: var(--mcp-line) !important; }
+[data-dashboard-theme] .dashboard-shell .mcp-root .mcp-icon { background: var(--mcp-icon) !important; color: var(--mcp-h) !important; }
+[data-dashboard-theme] .dashboard-shell .mcp-root .mcp-chip { background: transparent !important; border-color: var(--mcp-line) !important; color: var(--mcp-t) !important; }
+[data-dashboard-theme] .dashboard-shell .mcp-root .mcp-btn { background: transparent !important; border-color: var(--mcp-btn) !important; color: var(--mcp-h) !important; }
+[data-dashboard-theme] .dashboard-shell .mcp-root .mcp-btn:hover:not(:disabled) { background: var(--mcp-hover) !important; border-color: var(--mcp-h) !important; }
+[data-dashboard-theme] .dashboard-shell .mcp-root .mcp-primary, [data-dashboard-theme] .dashboard-shell .mcp-root .mcp-primary:hover { background: var(--mcp-pri-bg) !important; border-color: var(--mcp-pri-bg) !important; color: var(--mcp-pri-fg) !important; }
+[data-dashboard-theme] .dashboard-shell .mcp-root .mcp-primary * { color: var(--mcp-pri-fg) !important; }
+[data-dashboard-theme] .dashboard-shell .mcp-root .mcp-danger { color: var(--mcp-err) !important; background: transparent !important; }
+[data-dashboard-theme] .dashboard-shell .mcp-root .mcp-danger:hover { background: var(--mcp-hover) !important; }
+[data-dashboard-theme] .dashboard-shell .mcp-root .mcp-link { color: var(--mcp-h) !important; background: transparent !important; }
+[data-dashboard-theme] .dashboard-shell .mcp-root .mcp-close { background: transparent !important; color: var(--mcp-t) !important; }
+[data-dashboard-theme] .dashboard-shell .mcp-root .mcp-close:hover:not(:disabled) { background: var(--mcp-hover) !important; color: var(--mcp-h) !important; }
+[data-dashboard-theme] .dashboard-shell .mcp-root .mcp-input { background: transparent !important; border-color: var(--mcp-line) !important; color: var(--mcp-h) !important; }
+[data-dashboard-theme] .dashboard-shell .mcp-root .mcp-input:focus { border-color: var(--mcp-h) !important; box-shadow: none !important; }
+[data-dashboard-theme] .dashboard-shell .mcp-root .mcp-input::placeholder { color: var(--mcp-t) !important; opacity: 0.55; }
+[data-dashboard-theme] .dashboard-shell .mcp-root .mcp-pill { background: transparent !important; border-color: var(--mcp-line) !important; color: var(--mcp-t) !important; }
+[data-dashboard-theme] .dashboard-shell .mcp-root .mcp-pill:hover { background: var(--mcp-hover) !important; color: var(--mcp-h) !important; }
+[data-dashboard-theme] .dashboard-shell .mcp-root .mcp-pill.mcp-pill-on { border-color: var(--mcp-h) !important; color: var(--mcp-h) !important; }
+[data-dashboard-theme] .dashboard-shell .mcp-root .mcp-switch { background: var(--mcp-off) !important; }
+[data-dashboard-theme] .dashboard-shell .mcp-root .mcp-switch.mcp-switch-on { background: var(--mcp-h) !important; }
+[data-dashboard-theme] .dashboard-shell .mcp-root .mcp-knob { background: var(--mcp-card) !important; }
+
+/* Setup & Integration: install-the-widget card. */
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-connect-page { --cw-card: #2b2b2b; --cw-h: #ffffff; --cw-t: rgb(255 255 255 / 0.8); --cw-line: rgb(255 255 255 / 0.12); --cw-icon: rgb(255 255 255 / 0.1); --cw-btn: rgb(255 255 255 / 0.5); --cw-hover: rgb(255 255 255 / 0.08); }
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-connect-page { --cw-card: #ffffff; --cw-h: #000000; --cw-t: rgba(0, 0, 0, 0.7); --cw-line: rgba(0, 0, 0, 0.12); --cw-icon: rgba(0, 0, 0, 0.07); --cw-btn: rgba(0, 0, 0, 0.35); --cw-hover: rgba(0, 0, 0, 0.05); }
+[data-dashboard-theme] .dashboard-shell .dashboard-connect-page .cw-card { background: var(--cw-card) !important; border-color: var(--cw-line) !important; }
+[data-dashboard-theme] .dashboard-shell .dashboard-connect-page :is(.cw-h, .cw-h *) { color: var(--cw-h) !important; }
+[data-dashboard-theme] .dashboard-shell .dashboard-connect-page :is(.cw-t, .cw-t *):not(.cw-h) { color: var(--cw-t) !important; }
+[data-dashboard-theme] .dashboard-shell .dashboard-connect-page .cw-link { color: var(--cw-h) !important; }
+[data-dashboard-theme] .dashboard-shell .dashboard-connect-page .cw-icon { background: var(--cw-icon) !important; color: var(--cw-h) !important; }
+[data-dashboard-theme] .dashboard-shell .dashboard-connect-page .cw-btn { background: transparent !important; border-color: var(--cw-btn) !important; color: var(--cw-h) !important; }
+[data-dashboard-theme] .dashboard-shell .dashboard-connect-page .cw-btn:hover { background: var(--cw-hover) !important; border-color: var(--cw-h) !important; }
+
+/* Tag Manager: connect-a-website dialog. */
+[data-dashboard-theme="dark"] .dashboard-shell .tg-root { --tg-card: #2b2b2b; --tg-h: #ffffff; --tg-t: rgb(255 255 255 / 0.8); --tg-line: rgb(255 255 255 / 0.12); --tg-icon: rgb(255 255 255 / 0.1); --tg-btn: rgb(255 255 255 / 0.5); --tg-hover: rgb(255 255 255 / 0.06); --tg-pri-bg: #ffffff; --tg-pri-fg: #111111; --tg-err: #f08a93; --tg-ok: #4ade80; }
+[data-dashboard-theme="light"] .dashboard-shell .tg-root { --tg-card: #ffffff; --tg-h: #000000; --tg-t: rgba(0, 0, 0, 0.7); --tg-line: rgba(0, 0, 0, 0.12); --tg-icon: rgba(0, 0, 0, 0.07); --tg-btn: rgba(0, 0, 0, 0.35); --tg-hover: rgba(0, 0, 0, 0.04); --tg-pri-bg: #17191b; --tg-pri-fg: #ffffff; --tg-err: #b42318; --tg-ok: #1f8a4c; }
+[data-dashboard-theme] .dashboard-shell .tg-root .tg-dialog { background: var(--tg-card) !important; border-color: var(--tg-line) !important; }
+[data-dashboard-theme] .dashboard-shell .tg-root :is(.tg-h, .tg-h *) { color: var(--tg-h) !important; }
+[data-dashboard-theme] .dashboard-shell .tg-root :is(.tg-t, .tg-line) { color: var(--tg-t) !important; }
+[data-dashboard-theme] .dashboard-shell .tg-root :is(.tg-divide, .tg-box, .tg-field, .tg-line) { border-color: var(--tg-line) !important; }
+[data-dashboard-theme] .dashboard-shell .tg-root .tg-field { background: transparent !important; }
+[data-dashboard-theme] .dashboard-shell .tg-root .tg-field:focus-within { border-color: var(--tg-h) !important; }
+[data-dashboard-theme] .dashboard-shell .tg-root .tg-input { color: var(--tg-h) !important; background: transparent !important; }
+[data-dashboard-theme] .dashboard-shell .tg-root .tg-input::placeholder { color: var(--tg-t) !important; opacity: 0.55; }
+[data-dashboard-theme] .dashboard-shell .tg-root .tg-icon { background: var(--tg-icon) !important; color: var(--tg-h) !important; }
+[data-dashboard-theme] .dashboard-shell .tg-root .tg-close { background: transparent !important; color: var(--tg-t) !important; }
+[data-dashboard-theme] .dashboard-shell .tg-root .tg-close:hover:not(:disabled) { background: var(--tg-hover) !important; color: var(--tg-h) !important; }
+[data-dashboard-theme] .dashboard-shell .tg-root .tg-btn { background: transparent !important; border-color: var(--tg-btn) !important; color: var(--tg-h) !important; }
+[data-dashboard-theme] .dashboard-shell .tg-root .tg-btn:hover:not(:disabled) { background: var(--tg-hover) !important; border-color: var(--tg-h) !important; }
+[data-dashboard-theme] .dashboard-shell .tg-root .tg-primary, [data-dashboard-theme] .dashboard-shell .tg-root .tg-primary:hover { background: var(--tg-pri-bg) !important; border-color: var(--tg-pri-bg) !important; color: var(--tg-pri-fg) !important; }
+[data-dashboard-theme] .dashboard-shell .tg-root .tg-option { background: transparent !important; border-color: var(--tg-line) !important; }
+[data-dashboard-theme] .dashboard-shell .tg-root .tg-option:hover { background: var(--tg-hover) !important; }
+[data-dashboard-theme] .dashboard-shell .tg-root .tg-option.tg-option-on { border-color: var(--tg-h) !important; box-shadow: inset 0 0 0 1px var(--tg-h); }
+[data-dashboard-theme] .dashboard-shell .tg-root .tg-num { border-color: var(--tg-line) !important; color: var(--tg-h) !important; }
+[data-dashboard-theme] .dashboard-shell .tg-root .tg-error { color: var(--tg-err) !important; }
+[data-dashboard-theme] .dashboard-shell .tg-root .tg-ok { color: var(--tg-ok) !important; }
+[data-dashboard-theme] .dashboard-shell .tg-root .tg-radio { border-color: var(--tg-btn) !important; }
+[data-dashboard-theme] .dashboard-shell .tg-root .tg-option-on .tg-radio { border-color: var(--tg-h) !important; }
+[data-dashboard-theme] .dashboard-shell .tg-root .tg-radio-dot { background: var(--tg-h) !important; }
+[data-dashboard-theme] .dashboard-shell .tg-root .tg-rail { background: var(--tg-line) !important; }
+[data-dashboard-theme] .dashboard-shell .tg-root .tg-chip { background: var(--tg-icon) !important; border-color: transparent !important; color: var(--tg-h) !important; }
+[data-dashboard-theme] .dashboard-shell .tg-root .tg-status-ok { border-color: var(--tg-ok) !important; }
+[data-dashboard-theme] .dashboard-shell .tg-root .tg-status-ok .tg-icon { color: var(--tg-ok) !important; }
