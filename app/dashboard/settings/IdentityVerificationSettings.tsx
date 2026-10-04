@@ -9,10 +9,18 @@ import { Switch } from "@/components/ui/switch";
 // who their logged-in user is, so the AI agent can look up that person's own
 // payments and connected-system records. The business's server signs a
 // short-lived token with this secret; the page passes it to the tag.
+//
+// The cards and buttons share the .tag-* styles of the Website page (see globals.css), scoped to .identity-page as well.
 
 type SecretState = { configured: boolean; secret: string | null };
 
 export const IDENTITY_GUIDE_HREF = "/docs/identity-verification";
+
+const STEPS: [string, string][] = [
+  ["Your server signs a token", "When a customer logs in, your server creates a short-lived token signed with the secret above."],
+  ["Your page hands it to Elpino", "Pass the token to $elpino on the page. No separate endpoint is needed. Call logout when the customer signs out."],
+  ["The AI knows who they are", "Signed-in customers are recognised, so the AI can look up their own payments and records. Guests can still chat, with no access to accounts."],
+];
 
 export function IdentityVerificationSettingsPage() {
   const [expanded, setExpanded] = useState(false);
@@ -31,39 +39,63 @@ export function IdentityVerificationSettingsPage() {
   }, []);
 
   return (
-    <div className="mx-auto w-full max-w-[1120px] px-7 pb-14 pt-8 text-[#17181a] sm:px-9 lg:px-10">
-      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[#E5E8EA] pb-7">
+    <div className="identity-page mx-auto w-full max-w-[1120px] px-7 pb-14 pt-8 sm:px-9 lg:px-10">
+      <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Website data</p>
-          <h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em] text-[#17181a]">Identity verification</h2>
-          <p className="mt-2 max-w-xl text-[14px] leading-6 text-[#667069]">
-            Prove who your logged-in users are, so a visitor can&apos;t chat as someone else by typing their email.
-          </p>
+          <h2 className="tag-heading text-[30px] font-normal tracking-[-0.04em]">Identity verification</h2>
+          <p className="tag-paragraph mt-2 max-w-xl text-[16px] leading-7">Prove who your logged-in customers are, so no one can chat as someone else just by typing their email.</p>
         </div>
-        <Link href={IDENTITY_GUIDE_HREF} target="_blank" className="flex h-9 shrink-0 items-center gap-1.5 rounded-lg border border-[#D8DDE1] px-3.5 text-[12px] font-semibold transition hover:bg-black/5">
-          Read the guide <ArrowUpRight size={14} />
+      </header>
+
+      <section className="tag-card mt-8 rounded-2xl border p-6 sm:p-7">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex min-w-0 items-center gap-4">
+            <span className="tag-card-icon flex size-12 shrink-0 items-center justify-center rounded-xl"><ShieldCheck size={22} /></span>
+            <div className="min-w-0">
+              <p className="tag-heading text-[19px] font-semibold tracking-[-0.02em]">Verify signed-in customers</p>
+              <p className="tag-paragraph mt-0.5 max-w-xl text-[15px] leading-6">Let the AI safely look up a logged-in customer&apos;s own payments and records.</p>
+            </div>
+          </div>
+          <div className="flex shrink-0 items-center gap-3">
+            {loaded && (
+              <span className={`${expanded ? "tag-badge tag-badge-verified" : "id-badge-off"} inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[14px] font-semibold`}>
+                {expanded ? <><Check size={14} aria-hidden="true" /> On</> : "Off"}
+              </span>
+            )}
+            <Switch checked={expanded} disabled={!loaded} onCheckedChange={setExpanded} aria-label="Turn identity verification on" className="shrink-0" />
+          </div>
+        </div>
+
+        {loaded && expanded && <IdentitySecretBlock />}
+      </section>
+
+      <div className="mt-4 flex justify-end">
+        <Link href={IDENTITY_GUIDE_HREF} target="_blank" className="tag-btn flex h-10 shrink-0 items-center gap-2 rounded-full border px-5 text-[15px] font-medium transition">
+          Read the guide <ArrowUpRight size={16} />
         </Link>
       </div>
 
-      <div className="mt-6 flex items-center justify-between gap-4 rounded-xl border border-[#e7e8ea] px-4 py-3.5">
-        <p className="text-[13px] font-semibold text-[#17181a]">Identity verification</p>
-        <Switch checked={expanded} disabled={!loaded} onCheckedChange={setExpanded} aria-label="Show identity verification setup" className="shrink-0" />
-      </div>
-
       {loaded && expanded && (
-        <>
-          <p className="mt-4 text-[12px] leading-5 text-[#687178]">
-            Go to <Link href={IDENTITY_GUIDE_HREF} target="_blank" className="font-medium text-[#428ce5] underline underline-offset-2">the identity verification guide</Link> for full setup details.
-          </p>
-
-          <IdentitySecretCard />
-        </>
+        <section data-tour="identity-setup" className="tag-card mt-6 rounded-2xl border p-6 sm:p-7">
+          <h3 className="tag-heading text-[19px] font-semibold tracking-[-0.02em]">How it works</h3>
+          <ol className="mt-5 space-y-6">
+            {STEPS.map(([title, detail], index) => (
+              <li key={title} className="flex gap-4">
+                <span className="tag-heading flex size-8 shrink-0 items-center justify-center rounded-full border border-current text-[14px] font-semibold" aria-hidden="true">{index + 1}</span>
+                <div className="min-w-0">
+                  <p className="tag-heading text-[16px] font-semibold">{title}</p>
+                  <p className="tag-paragraph mt-1 text-[15px] leading-6">{detail}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
       )}
     </div>
   );
 }
 
-function IdentitySecretCard() {
+function IdentitySecretBlock() {
   const [state, setState] = useState<SecretState | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -87,7 +119,6 @@ function IdentitySecretCard() {
       })
       .catch(() => { if (!cancelled) setError("Could not load identity verification settings."); });
     return () => { cancelled = true; };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function createOrRotate() {
@@ -118,51 +149,48 @@ function IdentitySecretCard() {
   const masked = state?.secret ? `${state.secret.slice(0, 9)}${"•".repeat(24)}` : "";
 
   return (
-    <section data-tour="identity-secret" className="mt-8 rounded-xl border border-[#e7e8ea] p-5">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div className="flex items-start gap-3">
-          <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#428ce5]/10 text-[#428ce5]"><ShieldCheck size={17} /></span>
-          <div>
-            <h3 className="text-[14px] font-semibold">Identity secret</h3>
-            {state && (
-              <p className="mt-1 max-w-2xl text-[12px] leading-5 text-[#687178]">
-                {state.configured
-                  ? "On. Keep this on your server only. Anyone with it can sign in as any of your users."
-                  : "Off. Turn it on to generate the secret your server signs tokens with."}
-              </p>
-            )}
-          </div>
-        </div>
-        {state && !state.configured && (
-          <button type="button" disabled={busy} onClick={() => void createOrRotate()} className="inline-flex h-9 shrink-0 items-center gap-2 rounded-lg bg-[#202020] px-3.5 text-[12px] font-medium text-white disabled:opacity-50">
-            {busy ? <LoaderCircle size={14} className="animate-spin" /> : <KeyRound size={14} />}Turn on
-          </button>
-        )}
+    <div data-tour="identity-secret" className="tag-card-actions mt-6 border-t pt-6">
+      <div className="flex items-center gap-2.5">
+        <KeyRound size={18} className="tag-heading" aria-hidden="true" />
+        <h3 className="tag-heading text-[17px] font-semibold tracking-[-0.01em]">Identity secret</h3>
       </div>
+      <p className="tag-paragraph mt-1.5 max-w-2xl text-[15px] leading-6">
+        {state?.configured
+          ? "Keep this on your server only. Anyone who has it can sign in as any of your users."
+          : "Generating the secret your server signs tokens with…"}
+      </p>
 
-      {!state && !error && <p className="mt-4 flex items-center gap-2 text-[12px] text-[#687178]"><LoaderCircle size={14} className="animate-spin" />Loading</p>}
-      {error && <p role="alert" className="mt-4 rounded-lg bg-[#FFF2F2] px-3 py-2 text-[12px] font-medium text-[#A64A53]">{error}</p>}
+      {!state && !error && <p className="tag-paragraph mt-4 flex items-center gap-2 text-[15px]"><LoaderCircle size={15} className="animate-spin" />Loading</p>}
+      {error && <p role="alert" className="mt-4 rounded-xl bg-[#FFF2F2] px-4 py-3 text-[14px] font-medium text-[#A64A53]">{error}</p>}
 
       {state?.configured && state.secret && (
         <div className="mt-5">
-          <div className="flex flex-wrap items-center gap-2">
-            <code className="min-w-0 flex-1 truncate rounded-lg border border-[#e7e8ea] px-3 py-2 font-mono text-[12px]">{revealed ? state.secret : masked}</code>
-            <button type="button" onClick={() => setRevealed((value) => !value)} aria-label={revealed ? "Hide secret" : "Show secret"} className="flex size-9 items-center justify-center rounded-lg border border-[#e7e8ea] text-[#687178] hover:text-[#17181a]">{revealed ? <EyeOff size={14} /> : <Eye size={14} />}</button>
-            <button type="button" onClick={() => void copySecret(state.secret!)} className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-[#e7e8ea] px-3 text-[12px] font-medium">{copied ? <Check size={14} /> : <Copy size={14} />}Copy</button>
+          <code className="id-secret block min-w-0 truncate rounded-xl border px-4 py-3 font-mono text-[14px]">{revealed ? state.secret : masked}</code>
+          <div className="mt-3 flex flex-wrap items-center gap-2.5">
+            <button type="button" onClick={() => setRevealed((value) => !value)} className="tag-btn inline-flex h-10 cursor-pointer items-center gap-2 rounded-full border px-5 text-[14px] font-medium transition">
+              {revealed ? <EyeOff size={16} /> : <Eye size={16} />}{revealed ? "Hide" : "Show"}
+            </button>
+            <button type="button" onClick={() => void copySecret(state.secret!)} className="tag-btn inline-flex h-10 cursor-pointer items-center gap-2 rounded-full border px-5 text-[14px] font-medium transition">
+              {copied ? <Check size={16} /> : <Copy size={16} />}{copied ? "Copied" : "Copy"}
+            </button>
             {confirmRotate ? (
               <>
-                <button type="button" disabled={busy} onClick={() => void createOrRotate()} className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-[#A64A53] px-3 text-[12px] font-medium text-white disabled:opacity-50">{busy ? <LoaderCircle size={14} className="animate-spin" /> : <RefreshCw size={14} />}Rotate now</button>
-                <button type="button" onClick={() => setConfirmRotate(false)} className="h-9 rounded-lg px-3 text-[12px] font-medium text-[#687178]">Cancel</button>
+                <button type="button" disabled={busy} onClick={() => void createOrRotate()} className="tag-btn tag-btn-danger inline-flex h-10 cursor-pointer items-center gap-2 rounded-full border px-5 text-[14px] font-medium transition disabled:cursor-not-allowed disabled:opacity-50">
+                  {busy ? <LoaderCircle size={16} className="animate-spin" /> : <RefreshCw size={16} />}Rotate now
+                </button>
+                <button type="button" onClick={() => setConfirmRotate(false)} className="tag-paragraph inline-flex h-10 cursor-pointer items-center rounded-full px-3 text-[14px] font-medium underline-offset-4 hover:underline">Cancel</button>
               </>
             ) : (
-              <button type="button" onClick={() => setConfirmRotate(true)} className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-[#e7e8ea] px-3 text-[12px] font-medium"><RefreshCw size={14} />Rotate</button>
+              <button type="button" onClick={() => setConfirmRotate(true)} className="tag-btn inline-flex h-10 cursor-pointer items-center gap-2 rounded-full border px-5 text-[14px] font-medium transition">
+                <RefreshCw size={16} />Rotate
+              </button>
             )}
           </div>
           {confirmRotate && (
-            <p className="mt-2 text-[11px] leading-4 text-[#A64A53]">Rotating signs out every visitor using a token made with the current secret. Update your server first.</p>
+            <p className="mt-3 text-[14px] leading-6 text-[#D9777F]">Rotating signs out every visitor using a token made with the current secret. Update your server first.</p>
           )}
         </div>
       )}
-    </section>
+    </div>
   );
 }

@@ -27,11 +27,11 @@ function pageSteps(path: string): Step[] {
     step('.dashboard-analytics-canvas', 'Explore the results', 'Review the report below these controls. Data appears as your installed widget records visitor activity.'), search];
   if (path.startsWith('/dashboard/knowledge')) return [
     step('.dashboard-knowledge-main-surface', 'Give your AI the answers', 'Keep the information your support team relies on in one place. Browse your pages and connected website sources here.'),
-    step('.dashboard-knowledge-add-button', 'Build your knowledge', 'Create a page or add a website source. Clear, current content helps your AI answer customer questions.'),
+    step('[data-tour="knowledge-add"]', 'Build your knowledge', 'Create a page or add a website source. Clear, current content helps your AI answer customer questions.'),
     step('#knowledge-source-url', 'Connect a source', 'Add the URL of the website you want to use as a knowledge source.'), search];
   if (path.startsWith('/dashboard/contacts')) return [
     step('#dashboard-contacts-page', 'Get to know your customers', 'Browse people who shared their details through your widget. Open a contact to see their details and available conversation history.'),
-    step('.dashboard-contacts-search', 'Find the right person', 'Narrow the contact list using this search field.'), search];
+    step('.ct-search', 'Find the right person', 'Narrow the contact list using this search field.'), search];
   if (path.startsWith('/dashboard/settings/identity')) return [
     step('[data-tour="identity-secret"]', 'Verify your logged-in customers', 'Turn on verification and keep the generated secret on your server. Elpino can then distinguish signed-in customers from guests.'),
     step('[data-tour="identity-setup"]', 'Connect your existing login', 'Generate a signed token on your server, then pass it to $elpino. No separate identity endpoint is required. Call logout when your customer signs out.'), search];

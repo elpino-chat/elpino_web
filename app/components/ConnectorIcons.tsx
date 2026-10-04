@@ -161,7 +161,27 @@ function MonogramIcon({ letter, bg, fg = "#fff", className = base }: { letter: s
 }
 
 export function ShopifyIcon({ className = base }: IconProps) {
-  return <MonogramIcon letter="S" bg="#95BF47" className={className} />;
+  return <BrandLogoImg src="/connector-logos/shopify.webp" alt="Shopify" className={className} />;
+}
+
+export function AsanaIcon({ className = base }: IconProps) {
+  return <BrandLogoImg src="/connector-logos/asana.webp" alt="Asana" className={className} />;
+}
+
+export function CashfreeIcon({ className = base }: IconProps) {
+  return <BrandLogoImg src="/connector-logos/cashfree.webp" alt="Cashfree" className={className} />;
+}
+
+export function PaystackIcon({ className = base }: IconProps) {
+  return <BrandLogoImg src="/connector-logos/paystack.webp" alt="Paystack" className={className} />;
+}
+
+export function WooCommerceIcon({ className = base }: IconProps) {
+  return <BrandLogoImg src="/connector-logos/woocommerce.webp" alt="WooCommerce" className={className} />;
+}
+
+export function HubSpotIcon({ className = base }: IconProps) {
+  return <BrandLogoImg src="/connector-logos/hubspot.webp" alt="HubSpot" className={className} />;
 }
 
 export function CalendlyIcon({ className = base }: IconProps) {

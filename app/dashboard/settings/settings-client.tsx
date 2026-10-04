@@ -1,13 +1,15 @@
 "use client";
 
-import { UpgradeDialog } from "@/app/components/dashboard/UpgradeDialog";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { UpgradeDialog, useUpgradeDialog } from "@/app/components/dashboard/UpgradeDialog";
+import { normalizePath, type UrlRules } from "./url-rules";
+import { HighlightedCode, HighlightedCsp } from "@/app/components/code-highlight";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import QRCode from "qrcode";
 import { useRouter } from "next/navigation";
-import posthog from "posthog-js";
 import Link from "next/link";
 import {
+  ANNUAL_SAVING_PERCENT,
   getAnnualTotal,
   getPlanPrice,
   plans as pricingPlans,
@@ -98,8 +100,6 @@ import {
   X,
   UsersRound,
   Link2 as LinkIcon,
-  ToggleLeft,
-  ToggleRight,
   Filter,
   ShieldOff,
   UserMinus,
@@ -333,21 +333,17 @@ function TimeSavedSection() {
     return () => { cancelled = true; window.clearTimeout(timer); };
   }, [minutes]);
 
-  function changeMinutes(raw: string) {
-    const value = Number(raw);
-    if (!Number.isFinite(value)) return;
-    const next = Math.min(30, Math.max(0.5, value));
-    setMinutes(next);
-    try { window.localStorage.setItem(HUMAN_MINUTES_KEY, String(next)); } catch { /* keep in memory only */ }
-  }
-
   const localToday = new Date(Date.now() - new Date().getTimezoneOffset() * 60_000).toISOString().slice(0, 10);
   const today = data?.daily.find((day) => day.date === localToday);
   const peak = Math.max(1, ...(data?.daily.map((day) => day.savedSeconds) ?? [0]));
+  // How much sooner the AI answers than the assumed person: 100% would be instant, 0% no faster. Empty until there is a measured reply.
+  const fasterPercent = data && data.avgResponseSeconds > 0 && data.humanSecondsPerReply > 0
+    ? Math.round(Math.min(1, Math.max(0, 1 - data.avgResponseSeconds / data.humanSecondsPerReply)) * 100)
+    : null;
   const replyWord = (count: number) => `${count.toLocaleString()} AI repl${count === 1 ? "y" : "ies"}`;
 
   return (
-    <section className="mt-6 rounded-xl bg-white p-6">
+    <section className="mt-6 rounded-xl bg-white px-0 py-6">
       <div>
         <p className="text-[14px] font-medium">Time saved by AI</p>
         <p className="mt-0.5 text-[12px] text-[#8b9398]">How much sooner your customers got an answer than if a person had written every reply.</p>
@@ -363,19 +359,19 @@ function TimeSavedSection() {
         <>
           <div className="mt-5 grid gap-5 sm:grid-cols-3">
             <div>
-              <p className="text-[12px] text-[#8b9398]">Today</p>
+              <p className="usage-heading text-[12px] text-[#8b9398]">Today</p>
               <p className="mt-1 text-[28px] font-medium leading-none tracking-[-0.03em] tabular-nums">{formatSaved(today?.savedSeconds ?? 0)}</p>
               <p className="mt-1.5 text-[12px] text-[#667069]">{replyWord(today?.replies ?? 0)}</p>
             </div>
             <div>
-              <p className="text-[12px] text-[#8b9398]">This month</p>
+              <p className="usage-heading text-[12px] text-[#8b9398]">This month</p>
               <p className="mt-1 text-[28px] font-medium leading-none tracking-[-0.03em] tabular-nums">{formatSaved(data.savedSeconds)}</p>
               <p className="mt-1.5 text-[12px] text-[#667069]">{replyWord(data.replies)}</p>
             </div>
             <div>
-              <p className="text-[12px] text-[#8b9398]">Average AI response</p>
-              <p className="mt-1 text-[28px] font-medium leading-none tracking-[-0.03em] tabular-nums">{data.avgResponseSeconds ? `${data.avgResponseSeconds}s` : "—"}</p>
-              <p className="mt-1.5 text-[12px] text-[#667069]">from message received to reply sent</p>
+              <p className="usage-heading text-[12px] text-[#8b9398]">Faster than a person</p>
+              <p className="mt-1 text-[28px] font-medium leading-none tracking-[-0.03em] tabular-nums">{fasterPercent === null ? "—" : `${fasterPercent}%`}</p>
+              <p className="mt-1.5 text-[12px] text-[#667069]">{fasterPercent === null ? "Appears after the AI's first reply" : `AI takes ${data.avgResponseSeconds}s on average, a person ${formatSaved(data.humanSecondsPerReply)}`}</p>
             </div>
           </div>
 
@@ -397,25 +393,11 @@ function TimeSavedSection() {
               </div>
             </div>
           ) : (
-            <p className="mt-5 text-[12.5px] text-[#667069]">No AI replies yet this month. Time saved will appear here as the AI answers customers.</p>
+            <p className="usage-paragraph mt-5 text-[12.5px] text-[#667069]">No AI replies yet this month. Time saved will appear here as the AI answers customers.</p>
           )}
         </>
       )}
 
-      <p className="mt-5 flex flex-wrap items-center gap-x-1.5 gap-y-1 border-t border-[#eceeef] pt-4 text-[12px] text-[#667069]">
-        This is an estimate: it assumes a person would take
-        <input
-          type="number"
-          min={0.5}
-          max={30}
-          step={0.5}
-          value={minutes}
-          onChange={(event) => changeMinutes(event.target.value)}
-          aria-label="Minutes a person would take per reply"
-          className="h-7 w-16 rounded-md border border-[#dde3e6] bg-white px-2 text-center text-[12px] text-[#17181a] outline-none focus:border-[#8f989e]"
-        />
-        min per reply. Adjust it to match your team. Days are in your local time.
-      </p>
     </section>
   );
 }
@@ -426,7 +408,7 @@ function AIUsageSettingsPage() {
   // credits" and auto-recharge only make sense on credit-based (paid) plans.
   // null while loading, so they don't flash in and out for Free workspaces.
   const [billing, setBilling] = useState<BillingStatus | null>(null);
-  const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [upgradeOpen, setUpgradeOpen] = useUpgradeDialog();
   useEffect(() => {
     fetch("/api/billing/status")
       .then((response) => (response.ok ? response.json() : null))
@@ -586,9 +568,7 @@ function AIUsageSettingsPage() {
         )}
       </header>
 
-      <TimeSavedSection />
-
-      <section className="mt-6 rounded-xl bg-white p-6">
+      <section className="mt-6 rounded-xl bg-white px-0 py-6">
         {!entitlement ? (
           <div role="status" aria-busy="true" aria-label="Loading plan" className="space-y-3 py-2"><Bone className="h-5 w-32" /><Bone className="h-3.5 w-3/5" /><Bone className="h-9 w-40" /></div>
         ) : (
@@ -606,7 +586,7 @@ function AIUsageSettingsPage() {
               </div>
             </div>
 
-            <div className="mt-2 flex gap-4 rounded-xl p-5">
+            <div className="mt-2 flex gap-4 rounded-xl px-0 py-5">
               <Hourglass size={32} strokeWidth={1.2} className="mt-0.5 shrink-0 text-[#9aa2a7]" />
               <div className="min-w-0">
                 <p className="text-[14px] font-semibold">Resets</p>
@@ -633,6 +613,8 @@ function AIUsageSettingsPage() {
           </>
         )}
       </section>
+
+      <TimeSavedSection />
 
       {creditBased && (
       <section className="mt-4 rounded-xl border border-[#dfe3e6] bg-white p-6">
@@ -827,6 +809,11 @@ const STATUS_DOT: Record<string, { label: string; dot: string }> = {
  * people; every row (member, pending invite, or empty seat) counts toward
  * the plan's seat limit, which is bought in the same packs as Billing.
  */
+type MemberRoleOption = "owner" | "member";
+type MemberStatusOption = "online" | "away" | "brb" | "pending";
+const MEMBER_ROLE_OPTIONS: [MemberRoleOption, string][] = [["owner", "Owner"], ["member", "Member"]];
+const MEMBER_STATUS_OPTIONS: [MemberStatusOption, string][] = [["online", "Online"], ["away", "Away"], ["brb", "Be right back"], ["pending", "Pending invite"]];
+
 function TeamsSettingsPage() {
   const myRole = useMyRole();
   const isOwner = myRole === "owner";
@@ -836,22 +823,49 @@ function TeamsSettingsPage() {
   const [entitlement, setEntitlement] = useState<Entitlement | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const [joinLink, setJoinLink] = useState<{ enabled: boolean; token: string | null } | null>(null);
-  const [linkBusy, setLinkBusy] = useState(false);
-  const [linkCopied, setLinkCopied] = useState(false);
-  const [emailDraft, setEmailDraft] = useState("");
-
   const [inviteOpen, setInviteOpen] = useState(false);
-  const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [upgradeOpen, setUpgradeOpen] = useUpgradeDialog();
   const [notice, setNotice] = useState<{ ok: boolean; text: string } | null>(null);
   const [rowBusy, setRowBusy] = useState<string | null>(null);
   const [manageOpenFor, setManageOpenFor] = useState<string | null>(null);
+  // Phones show a row collapsed to its name; tapping it opens the rest. Desktop always shows the full table.
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  function toggleExpanded(id: string) {
+    setExpanded((current) => {
+      const next = new Set(current);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
 
   const [search, setSearch] = useState("");
   const [filterOpen, setFilterOpen] = useState(false);
-  const [roleFilter, setRoleFilter] = useState<"all" | "owner" | "member">("all");
-  const [statusFilter, setStatusFilter] = useState<"all" | "online" | "away" | "brb" | "pending">("all");
+  // Each filter is the set of values the person ticked; an empty set means "don't filter by this".
+  const [roleFilter, setRoleFilter] = useState<Set<MemberRoleOption>>(new Set());
+  const [statusFilter, setStatusFilter] = useState<Set<MemberStatusOption>>(new Set());
   const [selected, setSelected] = useState<Set<string>>(new Set());
+
+  // The filter dropdown and the per-row menus close on a click anywhere outside them, and on Esc. Opening one closes the others.
+  useEffect(() => {
+    if (!filterOpen && manageOpenFor === null) return;
+    function onPointerDown(event: MouseEvent) {
+      const inside = (event.target as Element | null)?.closest("[data-members-menu]")?.getAttribute("data-members-menu");
+      if (inside !== "filter") setFilterOpen(false);
+      if (inside !== manageOpenFor) setManageOpenFor(null);
+    }
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key !== "Escape") return;
+      setFilterOpen(false);
+      setManageOpenFor(null);
+    }
+    document.addEventListener("mousedown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [filterOpen, manageOpenFor]);
 
   function load() {
     return Promise.all([
@@ -868,75 +882,9 @@ function TeamsSettingsPage() {
   }
   useEffect(() => { void load().finally(() => setLoading(false)); }, []);
 
-  function loadJoinLink() {
-    if (!isOwner) return;
-    fetch("/api/organizations/join-link", { cache: "no-store" })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data: { enabled?: boolean; token?: string | null } | null) => setJoinLink({ enabled: data?.enabled ?? false, token: data?.token ?? null }))
-      .catch(() => undefined);
-  }
-  useEffect(loadJoinLink, [isOwner]);
-
   // Seats are unlimited on every plan and are not sold, so there is no ceiling to count against.
   const seatsUsed = members.length + invitations.length;
   const ownerCount = members.filter((m) => m.role === "owner").length;
-
-  const joinUrl = joinLink?.token && typeof window !== "undefined" ? `${window.location.origin}/join/${joinLink.token}` : "";
-
-  async function toggleJoinLink(enabled: boolean) {
-    setLinkBusy(true);
-    try {
-      const response = await fetch("/api/organizations/join-link", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ enabled }),
-      });
-      const data = (await response.json().catch(() => ({}))) as { enabled?: boolean; token?: string | null; message?: string };
-      if (response.ok) setJoinLink({ enabled: data.enabled ?? false, token: data.token ?? null });
-      else setNotice({ ok: false, text: data.message ?? "Could not update the join link." });
-    } finally {
-      setLinkBusy(false);
-    }
-  }
-
-  async function regenerateJoinLink() {
-    setLinkBusy(true);
-    try {
-      const response = await fetch("/api/organizations/join-link/regenerate", { method: "POST" });
-      const data = (await response.json().catch(() => ({}))) as { enabled?: boolean; token?: string | null; message?: string };
-      if (response.ok) setJoinLink({ enabled: data.enabled ?? true, token: data.token ?? null });
-      else setNotice({ ok: false, text: data.message ?? "Could not regenerate the join link." });
-    } finally {
-      setLinkBusy(false);
-    }
-  }
-
-  function copyJoinLink() {
-    if (!joinUrl) return;
-    void navigator.clipboard?.writeText(joinUrl).then(() => {
-      setLinkCopied(true);
-      window.setTimeout(() => setLinkCopied(false), 1500);
-    });
-  }
-
-  async function sendInviteEmail() {
-    const email = emailDraft.trim();
-    if (!email) return;
-    setNotice(null);
-    try {
-      const response = await fetch("/api/invitations", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ emails: [email] }) });
-      const data = (await response.json().catch(() => ({}))) as { invited?: string[]; skipped?: { reason: string }[]; message?: string };
-      if (response.ok && data.invited?.length) {
-        setEmailDraft("");
-        setNotice({ ok: true, text: `Invite sent to ${email}.` });
-        await load();
-      } else {
-        setNotice({ ok: false, text: data.skipped?.[0]?.reason ?? data.message ?? "Could not send the invite." });
-      }
-    } catch {
-      setNotice({ ok: false, text: "Could not send the invite." });
-    }
-  }
 
   async function revokeInvite(invite: PendingInvitation) {
     setRowBusy(invite.id);
@@ -1002,13 +950,25 @@ function TeamsSettingsPage() {
 
   const term = search.trim().toLowerCase();
   const filteredMembers = members.filter((member) => {
-    if (roleFilter !== "all" && (member.role ?? "member") !== roleFilter) return false;
-    if (statusFilter !== "all" && statusFilter !== "pending" && (member.presenceStatus ?? "online") !== statusFilter) return false;
-    if (statusFilter === "pending") return false;
+    if (roleFilter.size > 0 && !roleFilter.has((member.role ?? "member") as MemberRoleOption)) return false;
+    if (statusFilter.size > 0 && !statusFilter.has((member.presenceStatus ?? "online") as MemberStatusOption)) return false;
     if (!term) return true;
     return member.email.toLowerCase().includes(term) || (member.name ?? "").toLowerCase().includes(term);
   });
-  const filteredInvites = statusFilter !== "all" && statusFilter !== "pending" ? [] : invitations.filter((invite) => !term || invite.email.toLowerCase().includes(term));
+  // A pending invite is a "member" who is "pending", so it only shows when both groups allow that.
+  const invitesAllowed = (roleFilter.size === 0 || roleFilter.has("member")) && (statusFilter.size === 0 || statusFilter.has("pending"));
+  const filteredInvites = invitesAllowed ? invitations.filter((invite) => !term || invite.email.toLowerCase().includes(term)) : [];
+  const activeFilterCount = roleFilter.size + statusFilter.size;
+  function toggleIn<T>(current: Set<T>, setter: (next: Set<T>) => void, value: T) {
+    const next = new Set(current);
+    if (next.has(value)) next.delete(value);
+    else next.add(value);
+    setter(next);
+  }
+  function clearFilters() {
+    setRoleFilter(new Set());
+    setStatusFilter(new Set());
+  }
   const totalShown = filteredMembers.length + filteredInvites.length;
 
   function toggleRow(id: string) {
@@ -1025,62 +985,17 @@ function TeamsSettingsPage() {
 
   const smallBtn = "inline-flex h-9 items-center gap-1.5 rounded-full border border-[var(--b-border)] px-4 text-[12.5px] font-medium transition hover:bg-[var(--b-surface-2)] disabled:opacity-50";
   const cellClass = "min-w-0 text-[13px]";
-  const gridCols = "grid-cols-[28px_1.7fr_1.6fr_1fr_1fr_0.9fr_36px]";
+  // Phones get one card per person (checkbox | name and email | menu, then role, joined and status on a
+  // line of their own); md and up get the full seven-column table.
+  const gridCols = "grid-cols-[28px_minmax(0,1fr)_36px] md:grid-cols-[28px_1.7fr_1.6fr_1fr_1fr_0.9fr_36px]";
 
   return (
-    <div className="billing-v2 members-v2 mx-auto w-full max-w-[1120px] px-6 pb-20 pt-8 sm:px-9 lg:px-10">
-      <header className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h2 className="text-[30px] font-normal tracking-[-0.04em]">Members</h2>
-          <p className="mt-1.5 text-[13px] text-[var(--b-muted)]">Everyone in this workspace shares one inbox. Invite as many people as you like: seats are unlimited.</p>
-        </div>
-      </header>
-
+    <div className="billing-v2 members-v2 mx-auto w-full max-w-[1120px] px-6 pb-20 pt-4 sm:px-9 lg:px-10">
       {notice && (
         <p role={notice.ok ? "status" : "alert"} className={`mt-5 rounded-[10px] px-4 py-3 text-[13px] ${notice.ok ? "bg-[var(--b-good-bg)] text-[var(--b-good)]" : "bg-[var(--b-bad-bg)] text-[var(--b-bad)]"}`}>
           {notice.text}
           {!notice.ok && notice.text.includes("Upgrade") && <> <button type="button" onClick={() => setUpgradeOpen(true)} className="font-semibold underline underline-offset-2">See plans</button></>}
         </p>
-      )}
-
-      {/* -------------------------------------------------------- invite block */}
-      {isOwner && (
-        <section className="mt-6 rounded-[10px] border border-[var(--b-border)] bg-[var(--b-surface)] p-6 sm:p-7">
-          <h3 className="text-[17px] font-medium tracking-[-0.02em]">Add people to this workspace</h3>
-          <p className="mt-1 text-[12.5px] text-[var(--b-muted)]">Share this link with anyone you want to join, or invite a specific email. <Link href="/dashboard/settings/security-permissions" className="underline underline-offset-2 hover:text-[var(--b-text)]">Learn more.</Link></p>
-
-          <div className="mt-4 flex flex-col gap-2.5 sm:flex-row sm:items-center">
-            <button type="button" disabled={!joinLink?.enabled || !joinUrl} onClick={copyJoinLink} className={smallBtn}>
-              <Copy size={13} /> {linkCopied ? "Copied" : "Copy link"}
-            </button>
-            <button type="button" disabled={linkBusy} onClick={() => void toggleJoinLink(!(joinLink?.enabled ?? false))} className={smallBtn}>
-              {linkBusy ? <LoaderCircle size={13} className="animate-spin" /> : joinLink?.enabled ? <ToggleRight size={15} className="text-[var(--b-good)]" /> : <ToggleLeft size={15} />}
-              {joinLink?.enabled ? "On" : "Off"}
-            </button>
-            {joinLink?.enabled && (
-              <button type="button" disabled={linkBusy} onClick={() => void regenerateJoinLink()} className={smallBtn} title="Invalidate the old link and make a new one">
-                <RefreshCw size={13} /> Regenerate
-              </button>
-            )}
-          </div>
-
-          <div className="mt-3 flex flex-col gap-2.5 sm:flex-row sm:items-center">
-            <div className="flex h-11 min-w-0 flex-1 items-center gap-2 rounded-[10px] border border-[var(--b-border)] px-3.5">
-              <Mail size={14} className="shrink-0 text-[var(--b-muted)]" />
-              <input
-                type="email"
-                value={emailDraft}
-                onChange={(event) => setEmailDraft(event.target.value)}
-                onKeyDown={(event) => { if (event.key === "Enter") void sendInviteEmail(); }}
-                placeholder="Enter email to send invite…"
-                className="min-w-0 flex-1 bg-transparent text-[13px] outline-none placeholder:text-[var(--b-muted)]"
-              />
-            </div>
-            <button type="button" onClick={() => void sendInviteEmail()} disabled={!emailDraft.trim()} className="inline-flex h-11 items-center gap-2 rounded-full bg-[var(--b-ink)] px-5 text-[13px] font-medium text-[var(--b-ink-text)] transition hover:opacity-85 disabled:opacity-50">
-              <Send size={13} /> Send invite
-            </button>
-          </div>
-        </section>
       )}
 
       {/* -------------------------------------------------------- members table */}
@@ -1090,26 +1005,39 @@ function TeamsSettingsPage() {
             <h3 className="text-[20px] font-normal tracking-[-0.03em]">Team members</h3>
             <p className="mt-0.5 text-[12.5px] text-[var(--b-muted)]">Manage your current team members and their access. {`${seatsUsed} ${seatsUsed === 1 ? "person" : "people"} so far, and seats are unlimited.`}</p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex w-full flex-wrap items-center justify-between gap-2 sm:w-auto sm:justify-start">
             <div className="flex h-9 items-center gap-2 rounded-full border border-[var(--b-border)] px-3.5">
               <Search size={13} className="text-[var(--b-muted)]" />
               <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search" className="w-32 bg-transparent text-[13px] outline-none placeholder:text-[var(--b-muted)] sm:w-44" />
             </div>
-            <div className="relative">
-              <button type="button" onClick={() => setFilterOpen((open) => !open)} className={smallBtn}><Filter size={13} /> Filter</button>
+            <div className="relative" data-members-menu="filter">
+              <button type="button" onClick={() => setFilterOpen((open) => !open)} aria-expanded={filterOpen} className={`${smallBtn} cursor-pointer`}>
+                <Filter size={13} /> Filter
+                {activeFilterCount > 0 && <span className="flex size-5 items-center justify-center rounded-full bg-[var(--b-ink)] text-[11px] font-semibold leading-none text-[var(--b-ink-text)]">{activeFilterCount}</span>}
+              </button>
               {filterOpen && (
-                <div className="absolute right-0 top-11 z-30 w-[200px] rounded-xl border border-[var(--b-border)] bg-[var(--b-surface)] p-3 shadow-[0_18px_45px_rgba(15,23,42,0.16)]">
+                <div className="absolute right-0 top-11 z-30 w-[230px] rounded-xl border border-[var(--b-border)] bg-[var(--b-surface)] p-3 shadow-[0_18px_45px_rgba(15,23,42,0.16)]">
                   <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--b-muted)]">Role</p>
-                  <div className="mt-1.5 flex flex-col gap-1">
-                    {(["all", "owner", "member"] as const).map((value) => (
-                      <button key={value} type="button" onClick={() => setRoleFilter(value)} className={`rounded-lg px-2 py-1.5 text-left text-[13px] capitalize transition hover:bg-[var(--b-surface-2)] ${roleFilter === value ? "font-semibold" : ""}`}>{value}</button>
+                  <div className="mt-1.5 flex flex-col gap-0.5">
+                    {MEMBER_ROLE_OPTIONS.map(([value, label]) => (
+                      <button key={value} type="button" role="checkbox" aria-checked={roleFilter.has(value)} onClick={() => toggleIn(roleFilter, setRoleFilter, value)} className="flex cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1.5 text-left text-[13px] transition hover:bg-[var(--b-surface-2)]">
+                        <span className={`flex size-4 shrink-0 items-center justify-center rounded border ${roleFilter.has(value) ? "border-[var(--b-text)] bg-[var(--b-text)] text-[var(--b-surface)]" : "border-[var(--b-border)]"}`}>{roleFilter.has(value) && <Check size={11} strokeWidth={3} />}</span>
+                        {label}
+                      </button>
                     ))}
                   </div>
                   <p className="mt-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--b-muted)]">Status</p>
-                  <div className="mt-1.5 flex flex-col gap-1">
-                    {(["all", "online", "away", "brb", "pending"] as const).map((value) => (
-                      <button key={value} type="button" onClick={() => setStatusFilter(value)} className={`rounded-lg px-2 py-1.5 text-left text-[13px] capitalize transition hover:bg-[var(--b-surface-2)] ${statusFilter === value ? "font-semibold" : ""}`}>{value === "brb" ? "Be right back" : value}</button>
+                  <div className="mt-1.5 flex flex-col gap-0.5">
+                    {MEMBER_STATUS_OPTIONS.map(([value, label]) => (
+                      <button key={value} type="button" role="checkbox" aria-checked={statusFilter.has(value)} onClick={() => toggleIn(statusFilter, setStatusFilter, value)} className="flex cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1.5 text-left text-[13px] transition hover:bg-[var(--b-surface-2)]">
+                        <span className={`flex size-4 shrink-0 items-center justify-center rounded border ${statusFilter.has(value) ? "border-[var(--b-text)] bg-[var(--b-text)] text-[var(--b-surface)]" : "border-[var(--b-border)]"}`}>{statusFilter.has(value) && <Check size={11} strokeWidth={3} />}</span>
+                        {label}
+                      </button>
                     ))}
+                  </div>
+                  <div className="mt-3 flex items-center justify-between gap-2 border-t border-[var(--b-border)] pt-3">
+                    <button type="button" onClick={clearFilters} disabled={activeFilterCount === 0} className="cursor-pointer text-[12.5px] font-medium text-[var(--b-muted)] transition hover:text-[var(--b-text)] disabled:cursor-not-allowed disabled:opacity-40">Clear all</button>
+                    <button type="button" onClick={() => setFilterOpen(false)} className="inline-flex h-8 cursor-pointer items-center rounded-full border border-[var(--b-text)] px-4 text-[12.5px] font-medium transition hover:bg-[var(--b-surface-2)]">Done</button>
                   </div>
                 </div>
               )}
@@ -1117,19 +1045,42 @@ function TeamsSettingsPage() {
             {isOwner && selected.size > 0 && (
               <button type="button" onClick={() => void removeSelected()} className={`${smallBtn} text-[var(--b-bad)]`}><Trash2 size={13} /> Remove selected ({selected.size})</button>
             )}
+            {isOwner && (
+              <button type="button" onClick={() => setInviteOpen(true)} className="inline-flex h-9 items-center gap-2 rounded-full bg-[var(--b-ink)] px-4 text-[13px] font-medium text-[var(--b-ink-text)] transition hover:opacity-85">
+                <UserPlus size={13} /> Invite member
+              </button>
+            )}
           </div>
         </div>
 
-        <div className="mt-4 overflow-hidden rounded-[10px] border border-[var(--b-border)] bg-[var(--b-surface)]">
+        {activeFilterCount > 0 && (
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            {[...roleFilter].map((value) => (
+              <span key={`role-${value}`} className="inline-flex items-center gap-1.5 rounded-full border border-[var(--b-border)] py-1 pl-3 pr-1.5 text-[12.5px]">
+                <span className="text-[var(--b-muted)]">Role:</span> {MEMBER_ROLE_OPTIONS.find(([key]) => key === value)?.[1]}
+                <button type="button" onClick={() => toggleIn(roleFilter, setRoleFilter, value)} aria-label={`Remove ${value} filter`} className="flex size-5 cursor-pointer items-center justify-center rounded-full text-[var(--b-muted)] transition hover:bg-[var(--b-surface-2)] hover:text-[var(--b-text)]"><X size={12} /></button>
+              </span>
+            ))}
+            {[...statusFilter].map((value) => (
+              <span key={`status-${value}`} className="inline-flex items-center gap-1.5 rounded-full border border-[var(--b-border)] py-1 pl-3 pr-1.5 text-[12.5px]">
+                <span className="text-[var(--b-muted)]">Status:</span> {MEMBER_STATUS_OPTIONS.find(([key]) => key === value)?.[1]}
+                <button type="button" onClick={() => toggleIn(statusFilter, setStatusFilter, value)} aria-label={`Remove ${value} filter`} className="flex size-5 cursor-pointer items-center justify-center rounded-full text-[var(--b-muted)] transition hover:bg-[var(--b-surface-2)] hover:text-[var(--b-text)]"><X size={12} /></button>
+              </span>
+            ))}
+            <button type="button" onClick={clearFilters} className="inline-flex cursor-pointer items-center gap-1 px-1 text-[12.5px] font-medium text-[var(--b-muted)] underline-offset-2 transition hover:text-[var(--b-text)] hover:underline"><X size={12} /> Clear filters</button>
+          </div>
+        )}
+
+        <div className="mt-4 overflow-hidden rounded-[10px] border border-[var(--b-border)]">
           <div className="overflow-x-auto">
-            <div className="min-w-[760px]">
-              <div className={`grid ${gridCols} items-center gap-3 border-b border-[var(--b-border)] bg-[var(--b-surface-2)] px-5 py-3 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--b-muted)]`}>
+            <div className="md:min-w-[760px]">
+              <div className={`hidden md:grid ${gridCols} items-center gap-3 border-b border-[var(--b-border)] px-5 py-3 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--b-muted)]`}>
                 <input type="checkbox" checked={filteredMembers.length > 0 && selected.size === filteredMembers.length} onChange={toggleAll} disabled={!isOwner || filteredMembers.length === 0} className="h-4 w-4 rounded" aria-label="Select all" />
                 <span>Team member</span>
                 <span>Email</span>
                 <span>Role</span>
                 <span>Joined</span>
-                <span className="flex items-center justify-between">Status <span className="normal-case tracking-normal text-[var(--b-muted)]">Total {seatsUsed} member{seatsUsed === 1 ? "" : "s"}</span></span>
+                <span>Status</span>
                 <span />
               </div>
 
@@ -1142,16 +1093,28 @@ function TeamsSettingsPage() {
                   {filteredMembers.map((member) => {
                     const status = STATUS_DOT[member.presenceStatus ?? "online"] ?? STATUS_DOT.online;
                     const isSelf = member.id === myId;
+                    const open = expanded.has(member.id);
+                    const details = open ? "" : "max-md:hidden";
                     return (
-                      <div key={member.id} className={`grid ${gridCols} items-center gap-3 border-b border-[var(--b-border)] px-5 py-3 transition-colors hover:bg-[var(--b-surface-2)]`}>
-                        <input type="checkbox" checked={selected.has(member.id)} onChange={() => toggleRow(member.id)} disabled={!isOwner || isSelf} className="h-4 w-4 rounded" aria-label={`Select ${member.email}`} />
-                        <div className={`flex items-center gap-2.5 ${cellClass}`}>
+                      <div key={member.id} className={`grid ${gridCols} items-center gap-x-3 gap-y-1.5 border-b border-[var(--b-border)] px-5 py-3 transition-colors hover:bg-[var(--b-surface-2)]`}>
+                        <input type="checkbox" checked={selected.has(member.id)} onChange={() => toggleRow(member.id)} disabled={!isOwner || isSelf} className="h-4 w-4 rounded max-md:col-start-1 max-md:row-start-1" aria-label={`Select ${member.email}`} />
+                        <div
+                          role="button"
+                          tabIndex={0}
+                          aria-expanded={open}
+                          onClick={() => toggleExpanded(member.id)}
+                          onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); toggleExpanded(member.id); } }}
+                          className={`flex items-center gap-2.5 ${cellClass} max-md:col-start-2 max-md:row-start-1 max-md:cursor-pointer`}
+                        >
                           <span className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[var(--b-surface-2)] text-[12px] font-semibold">
                             {member.avatarUrl ? <img src={member.avatarUrl} alt="" className="h-full w-full object-cover" /> : memberInitial(member)}
                           </span>
                           <span className="truncate font-medium text-[var(--b-text)]">{member.name?.trim() || member.email}{isSelf ? " (you)" : ""}</span>
+                          <span className={`h-2 w-2 shrink-0 rounded-full md:hidden ${status.dot}`} aria-hidden="true" />
+                          <ChevronDown size={14} className={`ml-auto shrink-0 text-[var(--b-muted)] transition-transform md:hidden ${open ? "rotate-180" : ""}`} aria-hidden="true" />
                         </div>
-                        <span className={`${cellClass} truncate text-[var(--b-muted)]`}>{member.email}</span>
+                        <span className={`${cellClass} truncate text-[var(--b-muted)] max-md:col-start-2 max-md:row-start-2 ${details}`}>{member.email}</span>
+                        <div className={`flex flex-wrap items-center gap-x-4 gap-y-1 max-md:col-start-2 max-md:col-end-4 max-md:row-start-3 md:contents ${details}`}>
                         <span className={cellClass}>
                           {member.role === "owner" ? (
                             <span className="inline-flex items-center gap-1 rounded-full bg-[var(--b-good-bg)] px-2.5 py-0.5 text-[11px] font-medium text-[var(--b-good)]">Owner</span>
@@ -1161,7 +1124,8 @@ function TeamsSettingsPage() {
                         </span>
                         <span className={`${cellClass} text-[var(--b-muted)]`}>{member.joinedAt ? new Date(member.joinedAt).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" }) : "—"}</span>
                         <span className="flex items-center gap-1.5 text-[12.5px]"><span className={`h-2 w-2 rounded-full ${status.dot}`} />{status.label}</span>
-                        <div className="relative flex justify-end">
+                        </div>
+                        <div data-members-menu={member.id} className="relative flex justify-end max-md:col-start-3 max-md:row-start-1">
                           {isOwner && !isSelf && (
                             <button type="button" onClick={() => setManageOpenFor(manageOpenFor === member.id ? null : member.id)} className="flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-[var(--b-surface-2)]" aria-label={`Manage ${member.email}`}>
                               {rowBusy === member.id ? <LoaderCircle size={14} className="animate-spin" /> : <MoreHorizontal size={16} />}
@@ -1188,18 +1152,31 @@ function TeamsSettingsPage() {
                     );
                   })}
 
-                  {filteredInvites.map((invite) => (
-                    <div key={invite.id} className={`grid ${gridCols} items-center gap-3 border-b border-[var(--b-border)] px-5 py-3 opacity-90`}>
-                      <span />
-                      <div className={`flex items-center gap-2.5 ${cellClass}`}>
+                  {filteredInvites.map((invite) => {
+                    const open = expanded.has(invite.id);
+                    const details = open ? "" : "max-md:hidden";
+                    return (
+                    <div key={invite.id} className={`grid ${gridCols} items-center gap-x-3 gap-y-1.5 border-b border-[var(--b-border)] px-5 py-3 opacity-90`}>
+                      <span className="max-md:col-start-1 max-md:row-start-1" />
+                      <div
+                        role="button"
+                        tabIndex={0}
+                        aria-expanded={open}
+                        onClick={() => toggleExpanded(invite.id)}
+                        onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); toggleExpanded(invite.id); } }}
+                        className={`flex items-center gap-2.5 ${cellClass} max-md:col-start-2 max-md:row-start-1 max-md:cursor-pointer`}
+                      >
                         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-dashed border-[var(--b-border)] text-[var(--b-muted)]"><Mail size={14} /></span>
                         <span className="truncate font-medium text-[var(--b-muted)]">Invited</span>
+                        <ChevronDown size={14} className={`ml-auto shrink-0 text-[var(--b-muted)] transition-transform md:hidden ${open ? "rotate-180" : ""}`} aria-hidden="true" />
                       </div>
-                      <span className={`${cellClass} truncate text-[var(--b-muted)]`}>{invite.email}</span>
+                      <span className={`${cellClass} truncate text-[var(--b-muted)] max-md:col-start-2 max-md:row-start-2`}>{invite.email}</span>
+                      <div className={`flex flex-wrap items-center gap-x-4 gap-y-1 max-md:col-start-2 max-md:col-end-4 max-md:row-start-3 md:contents ${details}`}>
                       <span className={`${cellClass} text-[var(--b-muted)]`}>Member</span>
                       <span className={`${cellClass} text-[var(--b-muted)]`}>—</span>
                       <span className="flex items-center gap-1.5 text-[12.5px] text-[var(--b-muted)]"><span className="h-2 w-2 rounded-full bg-[var(--b-track)]" />Pending</span>
-                      <div className="relative flex justify-end">
+                      </div>
+                      <div data-members-menu={invite.id} className="relative flex justify-end max-md:col-start-3 max-md:row-start-1">
                         {isOwner && (
                           <button type="button" onClick={() => setManageOpenFor(manageOpenFor === invite.id ? null : invite.id)} className="flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-[var(--b-surface-2)]" aria-label={`Manage invite to ${invite.email}`}>
                             {rowBusy === invite.id ? <LoaderCircle size={14} className="animate-spin" /> : <MoreHorizontal size={16} />}
@@ -1213,7 +1190,7 @@ function TeamsSettingsPage() {
                         )}
                       </div>
                     </div>
-                  ))}
+                  );})}
 
                 </div>
               )}
@@ -1285,73 +1262,116 @@ export function UpgradeSettingsPage() {
   }
 
   return (
-    <div className="dashboard-upgrade-page mx-auto w-full max-w-[1240px] bg-[#262626] px-7 pb-16 pt-8 text-white/90 sm:px-9 lg:px-10">
-      <div className="flex flex-wrap items-end justify-between gap-5">
+    <div className="billing-v2 plan-picker w-full px-7 pb-16 pt-4 sm:px-10">
+      <header className="flex flex-wrap items-end justify-between gap-5">
         <div>
-          <p className="text-xs font-normal uppercase tracking-[0.16em] text-white/40">Plans</p>
-          <h2 className="mt-2 text-3xl font-normal tracking-[-0.03em] text-white/95">Choose the right plan</h2>
-          <p className="mt-2 max-w-2xl text-[13px] leading-6 text-white/60">Upgrade as your team grows. Change or cancel your plan anytime from Billing.</p>
+          <h2 className="text-[30px] font-normal tracking-[-0.04em]">Choose your plan</h2>
+          <p className="mt-1.5 max-w-xl text-[14px] leading-6 text-[var(--b-muted)]">Upgrade as your team grows. Change or cancel your plan anytime from Billing.</p>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="dashboard-pricing-pill flex items-center gap-1 rounded-xl border border-white/10 bg-white/[0.035] p-1" role="group" aria-label="Billing cadence">
-            {(["monthly", "annual"] as const).map((option) => (
-              <button
-                key={option}
-                type="button"
-                onClick={() => setCadence(option)}
-                aria-pressed={cadence === option}
-                className={`dashboard-pricing-option rounded-lg px-3.5 py-2 text-[12px] font-medium capitalize transition ${cadence === option ? "dashboard-pricing-option-active bg-[#428ce5] text-white" : "text-white/55 hover:bg-white/[0.05] hover:text-white/90"}`}
-              >
-                {option}
-                {option === "annual" && <span className="ml-1.5 text-[10px] font-bold uppercase tracking-[0.08em]">2 months free</span>}
-              </button>
-            ))}
-          </div>
+        <div className="flex rounded-full border border-[var(--b-border)] p-1" role="group" aria-label="Billing cadence">
+          {(["monthly", "annual"] as const).map((option) => (
+            <button
+              key={option}
+              type="button"
+              onClick={() => setCadence(option)}
+              aria-pressed={cadence === option}
+              className={`plan-picker-cadence inline-flex h-9 cursor-pointer items-center gap-2 rounded-full px-4 text-[13px] font-medium capitalize transition ${cadence === option ? "plan-picker-cadence-on bg-[var(--b-ink)] text-[var(--b-ink-text)]" : "text-[var(--b-muted)] hover:text-[var(--b-text)]"}`}
+            >
+              {option}
+              {option === "annual" && <span className="plan-picker-recommended rounded-full bg-gradient-to-r from-[#6466E9] via-[#CB548A] to-[#C25D08] px-2 py-0.5 text-[11px] font-semibold normal-case leading-none text-white">Save {ANNUAL_SAVING_PERCENT}%</span>}
+            </button>
+          ))}
         </div>
-      </div>
+      </header>
 
-      {checkoutError && <div role="alert" className="dashboard-checkout-error mt-5 rounded-xl border border-[#ecc9cd] bg-[#fff6f7] px-4 py-3 text-[12px] text-[#a33f49]">{checkoutError}</div>}
+      {checkoutError && <div role="alert" className="mt-5 rounded-[10px] bg-[var(--b-bad-bg)] px-4 py-3 text-[13px] text-[var(--b-bad)]">{checkoutError}</div>}
 
-      <div className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {pricingPlans.map((plan) => (
-          <article key={plan.id} className={`dashboard-plan-card ${plan.highlighted ? "dashboard-plan-highlighted" : ""} relative flex min-h-[480px] flex-col overflow-hidden rounded-xl border p-5 transition ${plan.highlighted ? "border-[#428ce5]/35 bg-[#428ce5]/[0.07]" : "border-white/10 bg-white/[0.035]"}`}>
-            <div className="flex min-h-6 items-center justify-between gap-2">{plan.id === currentPlanId ? <span className="dashboard-plan-current-badge rounded-full bg-[#428ce5]/15 px-2.5 py-1 text-[10px] font-medium text-[#91c4ff]">Current plan</span> : <span />}{plan.highlighted && <span className="dashboard-plan-badge rounded-full bg-[#428ce5]/15 px-2.5 py-1 text-[10px] font-medium text-[#b8d9ff]">Recommended</span>}</div>
-            <div className="pt-5">
-              <h3 className="text-[24px] font-medium tracking-[-0.04em] text-white/90">{plan.name}</h3>
-              <p className="mt-2 min-h-[60px] text-[13px] leading-5 text-white/60">{plan.description}</p>
-              <div className="dashboard-plan-price mt-5 flex items-end gap-1 border-b border-white/10 pb-4"><span className="text-[38px] font-medium tracking-[-0.06em] text-white/90">{getPlanPrice(plan, cadence === "annual" ? "yearly" : "monthly")}</span>{plan.id !== "free" && <span className="pb-1.5 text-[13px] text-white/60">/mo</span>}</div>
-              {plan.id !== "free" && <p className="mt-2 text-[12px] text-white/45">{cadence === "annual" ? `${getAnnualTotal(plan)} billed yearly` : "Billed monthly"}</p>}
-            </div>
-            <ul className="mt-5 space-y-3">
-              {plan.features.map((feature) => <li key={feature} className="flex gap-2.5 text-[12.5px] leading-5 text-white/70"><Check size={15} strokeWidth={2.2} className="mt-0.5 shrink-0 text-[#5ca5fa]" /> {feature}</li>)}
-            </ul>
-            <div className="mt-auto pt-6">
-              {plan.id === currentPlanId ? (
-                <button type="button" disabled className="dashboard-current-plan h-10 w-full rounded-lg border border-white/10 bg-white/[0.04] text-[12px] font-medium text-white/50">Current plan</button>
-              ) : plan.id === "free" ? (
-                // Moving back to Free is a cancellation, not a checkout —
-                // there is nothing to charge for, so it goes through the
-                // billing page's cancel flow rather than Razorpay.
-                <Link href="/dashboard/settings/billing" className="dashboard-plan-cta flex h-10 w-full items-center justify-center gap-2 rounded-lg border border-white/10 text-[12px] font-medium text-white/70 transition hover:bg-white/[0.06] hover:text-white/90">
-                  Downgrade to Free <ArrowRight size={13} />
-                </Link>
-              ) : (
-                <button type="button" disabled={checkoutPlan !== null} onClick={() => void startCheckout(plan.id)} className={`dashboard-plan-cta flex h-10 w-full items-center justify-center gap-2 rounded-lg text-[12px] font-medium transition disabled:opacity-60 ${plan.highlighted ? "dashboard-plan-cta-primary bg-[#428ce5] text-white hover:bg-[#347dce]" : "border border-white/10 bg-white/[0.05] text-white/90 hover:bg-white/[0.1]"}`}>
-                  {checkoutPlan === plan.id ? (
-                    <><LoaderCircle size={14} className="animate-spin" /> Opening checkout</>
-                  ) : (
-                    <>{currentRank > -1 && pricingPlans.findIndex((item) => item.id === plan.id) < currentRank ? "Switch to" : "Upgrade to"} {plan.name} <ArrowRight size={13} /></>
-                  )}
-                </button>
+      {/* The /pricing page's layout: four joined, square-cornered cards on one shared grid. */}
+      <div className="mt-8 grid grid-cols-1 border-l border-t border-[var(--plan-card-line)] sm:grid-cols-2 xl:grid-cols-4">
+        {pricingPlans.map((plan) => {
+          const isCurrent = plan.id === currentPlanId;
+          const planRank = pricingPlans.findIndex((item) => item.id === plan.id);
+          const isFree = plan.id === "free";
+          const cta = "flex min-h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-none border px-4 text-[15px] font-medium transition disabled:cursor-not-allowed disabled:opacity-60";
+          return (
+            <article key={plan.id} className="relative isolate flex flex-col overflow-hidden border-b border-r border-[var(--plan-card-line)]">
+              {plan.highlighted && (
+                <div aria-hidden="true" className="plan-picker-glow pointer-events-none absolute inset-x-0 top-0 -z-10 h-[300px] bg-[radial-gradient(ellipse_85%_30%_at_50%_0%,#80A7FF_0%,transparent_100%),radial-gradient(ellipse_110%_24%_at_50%_65%,#FFCB57_0%,#FFB87A_45%,transparent_100%)]" />
               )}
-            </div>
-          </article>
-        ))}
+
+              <div className="px-6 pb-6 pt-7">
+                <div className="flex min-h-9 items-start justify-between gap-2">
+                  <h3 className={`w-fit text-[28px] font-semibold leading-none tracking-[-0.04em] ${plan.highlighted ? "" : "plan-picker-name bg-gradient-to-r from-[#6466E9] via-[#CB548A] to-[#C25D08] bg-clip-text text-transparent"}`}>{plan.name}</h3>
+                  {isCurrent ? (
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--b-good-bg)] px-2.5 py-1 text-[11px] font-semibold text-[var(--b-good)]">
+                      <span className="size-1.5 rounded-full bg-[var(--b-good)]" aria-hidden="true" /> Current plan
+                    </span>
+                  ) : plan.highlighted ? (
+                    <span className="plan-picker-recommended rounded-full bg-gradient-to-r from-[#6466E9] via-[#CB548A] to-[#C25D08] px-2.5 py-1 text-[11px] font-semibold text-white">Recommended</span>
+                  ) : null}
+                </div>
+
+                <div className="mt-5 flex min-h-[64px] flex-wrap items-center gap-x-3 gap-y-1">
+                  <span className="text-[clamp(2.5rem,3.2vw,3.25rem)] font-semibold leading-none tracking-[-0.065em]">{getPlanPrice(plan, cadence === "annual" ? "yearly" : "monthly")}</span>
+                  <div className="text-[13px] leading-5 text-[var(--b-muted)]">
+                    <span className="block">{isFree ? "Free forever" : "per workspace / month"}</span>
+                    <span className="block">{isFree ? "No card required" : `billed ${cadence === "annual" ? "annually" : "monthly"}`}</span>
+                  </div>
+                </div>
+                <p className="mt-2 min-h-5 text-[13px] text-[var(--b-muted)]">
+                  {isFree ? `${plan.resolutions} AI messages every month` : cadence === "annual" ? `${getAnnualTotal(plan)} per year · save ${ANNUAL_SAVING_PERCENT}%` : "Monthly billing, per workspace"}
+                </p>
+
+                <div className="mt-6">
+                  {isCurrent ? (
+                    <button type="button" disabled className={`${cta} border-[var(--b-border)] text-[var(--b-muted)]`}>Current plan</button>
+                  ) : isFree ? (
+                    // Moving back to Free is a cancellation, not a checkout: there is nothing to charge for, so it goes
+                    // through the billing page's cancel flow rather than Razorpay.
+                    <Link href="/dashboard/settings/billing" className={`${cta} border-[var(--plan-line)] hover:bg-[var(--b-surface-2)]`}>
+                      Downgrade to Free <ArrowRight size={14} />
+                    </Link>
+                  ) : (
+                    <button
+                      type="button"
+                      disabled={checkoutPlan !== null}
+                      onClick={() => void startCheckout(plan.id)}
+                      className={`plan-picker-cta ${cta} ${plan.highlighted ? "plan-picker-cta-primary border-transparent bg-[var(--b-ink)] text-[var(--b-ink-text)] hover:opacity-85" : "border-[var(--plan-line)] hover:bg-[var(--b-surface-2)]"}`}
+                    >
+                      {checkoutPlan === plan.id ? (
+                        <><LoaderCircle size={15} className="animate-spin" /> Opening checkout</>
+                      ) : (
+                        <>{currentRank > -1 && planRank < currentRank ? "Switch to" : "Upgrade to"} {plan.name} <ArrowRight size={14} /></>
+                      )}
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <div className={`flex flex-1 flex-col px-6 pb-7 pt-7 ${plan.highlighted ? "" : "border-t border-[var(--b-border)]"}`}>
+                <ul className="space-y-4">
+                  {plan.features.map((feature) => (
+                    <li key={feature} className="flex items-start gap-3 text-[15px] leading-6 tracking-[-0.015em]">
+                      <Check size={16} strokeWidth={2.2} className="mt-1 shrink-0" /> <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link href="/contact" className="mt-auto w-fit pt-8 text-[13px] text-[var(--b-muted)] transition hover:text-[var(--b-text)] hover:underline">Need higher limits?</Link>
+              </div>
+            </article>
+          );
+        })}
       </div>
 
-      <div className="dashboard-tailored-plan mt-4 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.035] px-5 py-4">
-        <div><p className="text-[14px] font-medium text-white/90">Need a custom plan?</p><p className="mt-1 text-[12px] text-white/60">Talk to us about custom seats, security, and support.</p></div>
-        <div className="flex items-center gap-2"><Link href="/pricing" className="flex h-9 items-center px-3 text-[12px] font-medium text-white/60 hover:text-white/90">Compare details</Link><Link href="/contact" className="dashboard-contact-sales flex h-9 items-center gap-2 rounded-lg border border-white/10 px-3.5 text-[12px] font-medium text-white/90 transition hover:bg-white/[0.06]">Contact sales <ArrowRight size={13} /></Link></div>
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-4 rounded-[14px] border border-[var(--b-border)] px-6 py-5">
+        <div>
+          <p className="text-[15px] font-medium">Need a custom plan?</p>
+          <p className="mt-1 text-[14px] text-[var(--b-muted)]">Talk to us about custom seats, security, and support.</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Link href="/pricing" className="inline-flex h-10 items-center rounded-full px-4 text-[13px] font-medium text-[var(--b-muted)] transition hover:text-[var(--b-text)]">Compare details</Link>
+          <Link href="/contact" className="inline-flex h-10 items-center rounded-full border border-[var(--b-text)] px-5 text-[13px] font-medium transition hover:bg-[var(--b-surface-2)]">Contact sales</Link>
+        </div>
       </div>
     </div>
   );
@@ -1467,36 +1487,6 @@ function PaymentDetailRow({ label, value, mono, copyable }: { label: string; val
   );
 }
 
-// A circular gauge: how far through the billing period you are (paid) or how
-// much of the Free message allowance is used. The label goes in the middle.
-function BillingRing({ percent, children }: { percent: number; children: React.ReactNode }) {
-  const size = 148;
-  const stroke = 8;
-  const radius = (size - stroke) / 2;
-  const circumference = 2 * Math.PI * radius;
-  const value = Math.max(0, Math.min(100, percent));
-  return (
-    <div className="relative" style={{ width: size, height: size }}>
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90" aria-hidden>
-        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="var(--b-track)" strokeWidth={stroke} />
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          fill="none"
-          stroke="var(--b-info)"
-          strokeWidth={stroke}
-          strokeLinecap="round"
-          strokeDasharray={circumference}
-          strokeDashoffset={circumference - (value / 100) * circumference}
-          className="transition-[stroke-dashoffset] duration-700"
-        />
-      </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center text-center">{children}</div>
-    </div>
-  );
-}
-
 function BillingSettingsPage() {
   const [billing, setBilling] = useState<BillingStatus | null>(null);
   const [loading, setLoading] = useState(true);
@@ -1506,7 +1496,7 @@ function BillingSettingsPage() {
   // with real charges behind them. The payments endpoint is the actual
   // source, and it has existed all along with nothing calling it.
   const [payments, setPayments] = useState<BillingPayment[]>([]);
-  const [tab, setTab] = useState<"plan" | "history">("plan");
+  const [tab, setTab] = useState<"overview" | "method" | "history">("overview");
   const [selectedPayment, setSelectedPayment] = useState<BillingPayment | null>(null);
   // A seat is held by a member or by a pending invite, the same rule the backend applies when inviting.
   const [seatsInUse, setSeatsInUse] = useState<{ members: number; pending: number } | null>(null);
@@ -1514,7 +1504,7 @@ function BillingSettingsPage() {
   const [cancelBusy, setCancelBusy] = useState(false);
   const [cancelError, setCancelError] = useState<string | null>(null);
   const [cancelNotice, setCancelNotice] = useState<string | null>(null);
-  const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [upgradeOpen, setUpgradeOpen] = useUpgradeDialog();
 
   function loadStatus() {
     return fetch("/api/billing/status")
@@ -1582,16 +1572,9 @@ function BillingSettingsPage() {
   const currencyCode = entitlement?.currency ?? "USD";
   const planMinor = entitlement?.effectiveMonthlyMinor ?? 0;
   const renewAt = entitlement ? (periodEnd ? new Date(periodEnd) : nextAllowanceReset(entitlement)) : null;
-  const periodStartMs = entitlement ? new Date(entitlement.currentPeriodStart).getTime() : NaN;
-  const daysLeft = renewAt ? Math.max(0, Math.ceil((renewAt.getTime() - Date.now()) / 86_400_000)) : 0;
-  const elapsedPercent =
-    renewAt && Number.isFinite(periodStartMs) && renewAt.getTime() > periodStartMs
-      ? Math.min(100, Math.max(0, ((Date.now() - periodStartMs) / (renewAt.getTime() - periodStartMs)) * 100))
-      : 0;
   const messagesUsed = entitlement?.resolutionsUsed ?? 0;
   const messagesTotal = entitlement?.resolutionsIncluded ?? 0;
   const messagesPercent = messagesTotal > 0 ? Math.min(100, (messagesUsed / messagesTotal) * 100) : 0;
-  const ringPercent = isFree ? messagesPercent : elapsedPercent;
   const billedInOtherCurrency = !isFree && currencyCode !== "USD";
   const priceMain = isFree ? "$0" : billedInOtherCurrency ? getPlanPrice(plan, cadence === "annual" ? "yearly" : "monthly") : planMinor > 0 ? formatMoney(planMinor, currencyCode) : plan.price;
   const renewLabel = renewAt ? renewAt.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" }) : null;
@@ -1609,238 +1592,158 @@ function BillingSettingsPage() {
     bad: "bg-[var(--b-bad-bg)] text-[var(--b-bad)]",
     info: "bg-[var(--b-info-bg)] text-[var(--b-info)]",
   };
-  const card = "rounded-[10px] border border-[var(--b-border)] bg-[var(--b-surface)]";
   const primaryBtn = "inline-flex h-10 items-center gap-2 rounded-full bg-[var(--b-ink)] px-5 text-[13px] font-medium text-[var(--b-ink-text)] transition hover:opacity-85";
   const ghostBtn = "inline-flex h-10 items-center gap-2 rounded-full border border-[var(--b-border)] px-4 text-[13px] font-medium text-[var(--b-text)] transition hover:bg-[var(--b-surface-2)]";
-  // The homepage's language: ink outlines, flat sticker fills, mono "stamp" labels.
-  const sticker = "rounded-[10px] border border-[var(--b-border)]";
-  const stamp = "inline-flex items-center gap-1.5 rounded-full border border-[var(--b-border)] px-2.5 py-1 text-[11.5px] font-medium text-[var(--b-muted)]";
-  const chipBtn = "inline-flex h-9 items-center gap-1.5 rounded-full border border-[var(--b-border)] bg-[var(--b-surface)] px-3.5 text-[12.5px] font-medium transition hover:bg-[var(--b-surface-2)]";
-  const pillBtn = "inline-flex h-11 items-center gap-2 rounded-full bg-[var(--b-ink)] px-6 text-[13.5px] font-medium text-[var(--b-ink-text)] transition hover:opacity-85";
+
+  const rowClass = "flex items-center justify-between gap-4 border-t border-[var(--b-border)] px-5 py-4 first:border-t-0";
+  const linkClass = "inline-flex shrink-0 cursor-pointer items-center gap-1 text-[13px] font-medium underline-offset-2 hover:underline";
+  const methodSummary = paymentMethod?.last4 ? `${paymentMethod.brand ?? "Card"} •••• ${paymentMethod.last4}` : "None saved";
+  const nextLabel = cancelling ? "Plan ends" : isFree ? "AI messages reset" : "Next payment";
+  const nextValue = entitlement?.pendingPlanId
+    ? "Finishing your plan change"
+    : renewLabel
+      ? !isFree && !cancelling && planMinor > 0 ? `${renewLabel} · ${formatMoney(planMinor, currencyCode)}` : renewLabel
+      : "Monthly";
+  const tabs = [["overview", "Overview"], ["method", "Payment method"], ["history", "Payment history"]] as const;
 
   return (
-    <div className="billing-v2 mx-auto w-full max-w-[1080px] px-6 pb-20 pt-8 sm:px-9">
-      <header className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h2 className="text-[30px] font-normal tracking-[-0.04em]">Billing</h2>
-          <p className="mt-1.5 text-[13px] text-[var(--b-muted)]">Your plan, what&apos;s included, and how you pay.</p>
-        </div>
-        <button type="button" onClick={() => setUpgradeOpen(true)} className={ghostBtn}>View plans <ArrowRight size={14} /></button>
+    <div className="billing-v2 billing-page w-full px-4 pb-20 pt-6 sm:px-6">
+      <header>
+        <h2 className="text-[30px] font-normal tracking-[-0.04em]">Billing</h2>
+        <p className="billing-lede mt-1.5 max-w-xl text-[14px] leading-6 text-[var(--b-muted)]">Your plan, what&apos;s included, and how you pay.</p>
       </header>
 
+      <div role="tablist" aria-label="Billing sections" className="mt-5 flex gap-6 overflow-x-auto border-b border-[var(--b-border)] [scrollbar-width:none]">
+        {tabs.map(([id, label]) => (
+          <button
+            key={id}
+            type="button"
+            role="tab"
+            aria-selected={tab === id}
+            onClick={() => setTab(id)}
+            className={`-mb-px inline-flex h-11 shrink-0 cursor-pointer items-center gap-2 border-b-2 text-[14px] font-medium transition ${tab === id ? "border-[var(--b-ink)] text-[var(--b-text)]" : "border-transparent text-[var(--b-muted)] hover:text-[var(--b-text)]"}`}
+          >
+            {label}
+            {id === "history" && payments.length > 0 && <span className="rounded-full bg-[var(--b-surface-2)] px-1.5 py-0.5 text-[10.5px] leading-none text-[var(--b-muted)]">{payments.length}</span>}
+          </button>
+        ))}
+      </div>
+
       {loading && (
-        <div role="status" aria-busy="true" aria-label="Loading billing" className="mt-7 space-y-4">
-          <div className="elpino-skel-card grid gap-8 p-7 md:grid-cols-[minmax(0,1fr)_auto] md:p-9">
-            <div className="space-y-4">
-              <div className="flex gap-2"><Bone className="h-6 w-28 rounded-full" /><Bone className="h-6 w-20 rounded-full" /></div>
-              <Bone className="h-11 w-44" />
-              <Bone className="h-6 w-56" />
-              <Bone className="h-4 w-full max-w-md" />
-              <div className="flex gap-2 pt-2"><Bone className="h-10 w-36" /><Bone className="h-10 w-28" /></div>
-            </div>
-            <Bone className="hidden size-36 rounded-full md:block" />
-          </div>
-          <div className="grid gap-4 md:grid-cols-3">
-            {[0, 1, 2].map((card) => (
-              <div key={card} className="elpino-skel-card space-y-3 p-5"><Bone className="h-3.5 w-24" /><Bone className="h-7 w-28" /><Bone className="h-3 w-3/4" /></div>
-            ))}
-          </div>
-          <div className="elpino-skel-card p-5"><Bone className="mb-5 h-4 w-40" /><SkeletonRows rows={3} /></div>
+        <div role="status" aria-busy="true" aria-label="Loading billing" className="mt-6 space-y-4">
+          <Bone className="h-9 w-48" />
+          <div className="elpino-skel-card p-5"><SkeletonRows rows={4} /></div>
         </div>
       )}
       {loadError && !loading && (
-        <div className="mt-7 rounded-2xl bg-[var(--b-bad-bg)] px-5 py-4 text-[13px] text-[var(--b-bad)]">Billing information could not be loaded. You can still change your plan from View plans.</div>
+        <div className="mt-6 rounded-[10px] bg-[var(--b-bad-bg)] px-5 py-4 text-[13px] text-[var(--b-bad)]">Billing information could not be loaded. You can still change your plan from the Overview tab.</div>
       )}
-      {cancelNotice && <div role="status" className="mt-7 rounded-2xl bg-[var(--b-good-bg)] px-5 py-4 text-[13px] text-[var(--b-good)]">{cancelNotice}</div>}
+      {cancelNotice && <div role="status" className="mt-6 rounded-[10px] bg-[var(--b-good-bg)] px-5 py-4 text-[13px] text-[var(--b-good)]">{cancelNotice}</div>}
       {!loading && billedInOtherCurrency && (
-        <div className="mt-7 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-[var(--b-info-bg)] px-5 py-4 text-[13px] text-[var(--b-info)]">
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-[10px] bg-[var(--b-info-bg)] px-5 py-4 text-[13px] text-[var(--b-info)]">
           <p>This subscription was started in {currencyCode}, so it is still charged as {formatMoney(planMinor, currencyCode)} a month. Plans and top-ups are now priced in dollars, and changing your plan moves you to dollar billing.</p>
-          <button type="button" onClick={() => setUpgradeOpen(true)} className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-current px-3 text-[12px] font-semibold">Switch to dollars <ArrowRight size={13} /></button>
+          <button type="button" onClick={() => setUpgradeOpen(true)} className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-lg border border-current px-3 text-[12px] font-semibold">Switch to dollars <ArrowRight size={13} /></button>
         </div>
       )}
 
-      {!loading && (
-        <>
-          {/* ------------------------------------------------------------- plan hero */}
-          <section className="relative mt-7 overflow-hidden rounded-[10px] border border-[var(--b-border)] bg-[var(--b-surface)] p-7 md:p-9">
-            <div className="relative grid items-center gap-8 md:grid-cols-[minmax(0,1fr)_auto]">
-              <div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="rounded-full border border-[var(--b-border)] px-2.5 py-1 text-[11.5px] font-medium text-[var(--b-muted)]">Current plan</span>
-                  <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${tone[statusPill.tone]}`}>{statusPill.label}</span>
-                </div>
-                <h3 className="mt-5 text-[44px] font-normal leading-none tracking-[-0.045em]">{plan.name}</h3>
-                <p className="mt-3 flex items-baseline gap-1.5">
-                  <span className="text-[24px] font-medium tabular-nums tracking-[-0.03em]">{priceMain}</span>
-                  <span className="text-[13px] text-[var(--b-muted)]">{isFree ? "forever" : cadence === "annual" ? "/ month · billed yearly" : "/ month"}</span>
-                </p>
-                <p className="mt-3 max-w-md text-[13px] leading-6 text-[var(--b-muted)]">{plan.description}</p>
-                <div className="mt-6 flex flex-wrap items-center gap-2">
-                  <button type="button" onClick={() => setUpgradeOpen(true)} className={primaryBtn}>{isFree ? <><Rocket size={14} /> Upgrade plan</> : <>Change plan <ArrowRight size={14} /></>}</button>
-                  {!isFree && !cancelling && <button type="button" onClick={() => setCancelOpen(true)} className="h-10 rounded-full px-3 text-[13px] font-medium text-[var(--b-muted)] transition hover:bg-[var(--b-surface-2)] hover:text-[var(--b-text)]">Cancel plan</button>}
-                </div>
+      {/* ------------------------------------------------------------------- overview */}
+      {!loading && tab === "overview" && (
+        <section className="mt-6">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <div className="flex flex-wrap items-center gap-2.5">
+                <h3 className="text-[28px] font-normal leading-none tracking-[-0.03em]">{plan.name}</h3>
+                <span className={`rounded-full px-2.5 py-1 text-[11.5px] font-semibold ${tone[statusPill.tone]}`}>{statusPill.label}</span>
               </div>
-
-              <div className="flex flex-col items-center">
-                <BillingRing percent={ringPercent}>
-                  {isFree ? (
-                    <>
-                      <span className="text-[30px] font-semibold leading-none tabular-nums tracking-[-0.04em]">{messagesUsed.toLocaleString()}</span>
-                      <span className="mt-1 text-[11px] text-[var(--b-muted)]">of {messagesTotal.toLocaleString()} messages</span>
-                    </>
-                  ) : (
-                    <>
-                      <span className="text-[34px] font-semibold leading-none tabular-nums tracking-[-0.04em]">{daysLeft}</span>
-                      <span className="mt-1 text-[11px] text-[var(--b-muted)]">{daysLeft === 1 ? "day left" : "days left"}</span>
-                    </>
-                  )}
-                </BillingRing>
-                <p className="mt-3 max-w-[170px] text-center text-[12px] leading-5 text-[var(--b-muted)]">
-                  {isFree
-                    ? renewLabel ? `AI messages reset ${renewLabel}` : "AI messages reset monthly"
-                    : cancelling
-                      ? `Plan ends ${renewLabel ?? "at the end of the period"}`
-                      : entitlement?.pendingPlanId
-                        ? "Finishing your plan change"
-                        : renewLabel ? `Renews ${renewLabel}` : "Renews monthly"}
-                </p>
-              </div>
+              <p className="mt-2 text-[14px] text-[var(--b-muted)]">
+                <span className="font-medium tabular-nums text-[var(--b-text)]">{priceMain}</span> {isFree ? "forever" : cadence === "annual" ? "/ month, billed yearly" : "/ month"}
+              </p>
             </div>
-            {cancelling && (
-              <p className="relative mt-6 rounded-xl bg-[var(--b-warn-bg)] px-4 py-3 text-[12.5px] text-[var(--b-warn)]">This plan is cancelled. It keeps working until {renewLabel ?? "the end of the period"}, then your workspace moves to Free.</p>
-            )}
-          </section>
-
-          <div role="tablist" aria-label="Billing sections" className="mt-9 flex gap-6 border-b border-[var(--b-border)]">
-            {([["plan", "What's included"], ["history", "Payment history"]] as const).map(([id, label]) => (
-              <button
-                key={id}
-                type="button"
-                role="tab"
-                aria-selected={tab === id}
-                onClick={() => setTab(id)}
-                className={`-mb-px inline-flex h-11 items-center gap-2 border-b-2 text-[14px] font-medium transition ${tab === id ? "border-[var(--b-ink)] text-[var(--b-text)]" : "border-transparent text-[var(--b-muted)] hover:text-[var(--b-text)]"}`}
-              >
-                {label}
-                {id === "history" && payments.length > 0 && <span className={`rounded-full px-1.5 py-0.5 text-[10.5px] leading-none bg-[var(--b-surface-2)] text-[var(--b-muted)]`}>{payments.length}</span>}
-              </button>
-            ))}
+            <div className="flex flex-wrap items-center gap-2">
+              <button type="button" onClick={() => setUpgradeOpen(true)} className={primaryBtn}>{isFree ? <><Rocket size={14} /> Upgrade plan</> : <>Change plan <ArrowRight size={14} /></>}</button>
+              {!isFree && !cancelling && <button type="button" onClick={() => setCancelOpen(true)} className="h-10 cursor-pointer rounded-full px-3 text-[13px] font-medium text-[var(--b-muted)] transition hover:bg-[var(--b-surface-2)] hover:text-[var(--b-text)]">Cancel plan</button>}
+            </div>
           </div>
 
-          {tab === "plan" && (
-          <>
-          {/* ------------------------------------------------------------ what's included */}
-          <section className="mt-5">
-            <div className={`${sticker} divide-y divide-[var(--b-border)] overflow-hidden bg-[var(--b-surface)]`}>
-              <div className="grid items-center gap-4 px-6 py-5 md:grid-cols-[210px_minmax(0,1fr)_auto]">
-                <div className="flex items-center gap-3">
-                  <span className="grid size-10 shrink-0 place-items-center rounded-full bg-[var(--b-surface-2)] text-[var(--b-info)]"><CircleGauge size={18} /></span>
-                  <p className="text-[15px] font-medium">{isFree ? "AI messages" : "AI credit"}</p>
-                </div>
-                {isFree ? (
-                  <div className="flex items-center gap-4">
-                    <div className="h-2 min-w-0 flex-1 overflow-hidden rounded-full bg-[var(--b-track)]"><div className="h-full rounded-full bg-[var(--b-info)] transition-all" style={{ width: `${messagesPercent}%` }} /></div>
-                    <p className="shrink-0 text-[26px] font-normal leading-none tracking-[-0.04em] tabular-nums">{messagesUsed.toLocaleString()}<span className="text-[16px] font-medium tracking-normal text-[var(--b-muted)]"> / {messagesTotal.toLocaleString()}</span></p>
-                  </div>
-                ) : (
-                  <p className="text-[26px] font-normal leading-none tracking-[-0.04em] tabular-nums">{formatCents(entitlement?.aiCreditGrantUsdCents ?? 0)}<span className="text-[16px] font-medium tracking-normal text-[var(--b-muted)]"> of AI credit every month</span></p>
-                )}
-                <Link href="/dashboard/settings/ai-usage" className={`${chipBtn}`}>View usage <ArrowRight size={13} /></Link>
-              </div>
-
-              <div className="grid items-center gap-4 px-6 py-5 md:grid-cols-[210px_minmax(0,1fr)_auto]">
-                <div className="flex items-center gap-3">
-                  <span className="grid size-10 shrink-0 place-items-center rounded-full bg-[var(--b-surface-2)] text-[var(--b-info)]"><UsersRound size={18} /></span>
-                  <p className="text-[15px] font-medium">Seats</p>
-                </div>
-                <div className="min-w-0">
-                  <p className="text-[26px] font-normal leading-none tracking-[-0.04em]">Unlimited</p>
-                  <p className="mt-1.5 text-[12.5px] text-[var(--b-muted)]">{seatsInUse ? `${seatsInUse.members + seatsInUse.pending} ${seatsInUse.members + seatsInUse.pending === 1 ? "person" : "people"} in this workspace. ` : ""}Every plan includes unlimited seats, and adding teammates never changes your AI allowance.</p>
-                </div>
-                <Link href="/dashboard/settings/teams" className={`${chipBtn}`}>View members <ArrowRight size={13} /></Link>
-              </div>
-            </div>
-          </section>
-
-          {/* ------------------------------------------- bill (or upgrade pitch) + card */}
-          <div className="mt-5 grid gap-5 md:grid-cols-2">
-            {!isFree && entitlement ? (
-              <article className={`${sticker} bg-[var(--b-surface)] p-7`}>
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className={`${stamp} text-[var(--b-text)]`}>Monthly bill</span>
-                  <span className={`${stamp}`}>{cadence === "annual" ? "Billed yearly" : "Billed monthly"}</span>
-                </div>
-                <div className="mt-6 space-y-3.5 text-[14px]">
-                  <div className="flex items-center justify-between"><span className="text-[var(--b-muted)]">{plan.name} plan</span><span className="font-semibold tabular-nums">{formatMoney(planMinor, currencyCode)}</span></div>
-                  <div className="flex items-end justify-between border-t border-[var(--b-border)] pt-4">
-                    <span className="font-semibold">Total per month</span>
-                    <span className="text-[30px] font-normal leading-none tracking-[-0.045em] tabular-nums">{formatMoney(planMinor, currencyCode)}</span>
-                  </div>
-                </div>
-                <p className="mt-5 flex items-center gap-2 text-[12.5px] text-[var(--b-muted)]"><CalendarDays size={14} />{cancelling ? `No further charges. Plan ends ${renewLabel ?? "at the end of the period"}.` : renewLabel ? `Next payment on ${renewLabel}` : "Charged every period"}</p>
-              </article>
-            ) : (
-              <article className={`${sticker} relative overflow-hidden bg-[var(--b-surface-2)] p-7`}>
-                <div className="relative">
-                  <span className={`${stamp}`}><Rocket size={11} /> Upgrade</span>
-                  <h3 className="mt-5 text-[30px] font-normal leading-[1.05] tracking-[-0.04em]">Outgrowing Free?</h3>
-                  <p className="mt-2 text-[14px] text-[var(--b-muted)]">Paid plans swap the message limit for a monthly AI credit.</p>
-                  <ul className="mt-5 space-y-2.5 text-[14.5px]">
-                    {(pricingPlans[1]?.features ?? []).slice(0, 5).map((feature) => (
-                      <li key={feature} className="flex items-center gap-2.5"><Check size={16} strokeWidth={3} className="shrink-0 text-[var(--b-good)]" />{feature}</li>
-                    ))}
-                  </ul>
-                  <button type="button" onClick={() => setUpgradeOpen(true)} className={`${pillBtn} mt-7`}>See plans <ArrowRight size={14} /></button>
-                </div>
-              </article>
-            )}
-
-            <article className={`${sticker} bg-[var(--b-surface)] p-7`}>
-              <span className={`${stamp}`}><CreditCard size={11} /> Payment method</span>
-              {paymentMethod?.last4 ? (
-                <div className="relative mt-6 overflow-hidden rounded-xl bg-[var(--b-ink)] p-5 text-[var(--b-ink-text)]">
-                  <div className="relative flex items-center justify-between">
-                    <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em]">{paymentMethod.brand ?? "Card"}</span>
-                    <CreditCard size={18} />
-                  </div>
-                  <p className="relative mt-8 font-mono text-[18px] tracking-[0.16em]">•••• •••• •••• {paymentMethod.last4}</p>
-                  <div className="relative mt-5 flex items-end justify-between text-[11.5px]">
-                    <span>{paymentMethod.expiryMonth && paymentMethod.expiryYear ? `Expires ${String(paymentMethod.expiryMonth).padStart(2, "0")}/${String(paymentMethod.expiryYear).slice(-2)}` : "Saved card"}</span>
-                    <span className="rounded-full border border-current px-2.5 py-0.5 font-mono text-[10.5px] font-medium uppercase tracking-[0.1em] opacity-80">Default</span>
-                  </div>
-                </div>
-              ) : (
-                <div className="mt-6 flex flex-col items-center rounded-xl border border-dashed border-[var(--b-border)] px-5 py-9 text-center">
-                  <span className="grid size-12 place-items-center rounded-full bg-[var(--b-surface-2)]"><CreditCard size={20} /></span>
-                  <p className="mt-3 text-[16px] font-medium tracking-[-0.02em]">No card saved yet</p>
-                  <p className="mt-1 max-w-[250px] text-[12.5px] leading-5 text-[var(--b-muted)]">Your card is saved securely by our payment provider when you pay for a plan.</p>
-                </div>
-              )}
-            </article>
-          </div>
-
-          </>
+          {cancelling && (
+            <p className="mt-5 rounded-[10px] bg-[var(--b-warn-bg)] px-4 py-3 text-[13px] text-[var(--b-warn)]">This plan is cancelled. It keeps working until {renewLabel ?? "the end of the period"}, then your workspace moves to Free.</p>
           )}
 
-          {/* ------------------------------------------------------------------- history */}
-          {tab === "history" && (
-          <>
-            <section className="mt-5 overflow-hidden rounded-2xl border border-[var(--b-border)] bg-[var(--b-surface)]">
-              <div className="flex items-baseline justify-between gap-3 px-6 py-5">
-                <div>
-                  <h3 className="text-[15px] font-semibold">Payment history</h3>
-                  <p className="mt-0.5 text-[12.5px] text-[var(--b-muted)]">Every charge on this workspace{payments.length >= 100 ? " (latest 100)" : ""}. Select one to see its details.</p>
-                </div>
-                {payments.length > 0 && <span className="text-[12.5px] text-[var(--b-muted)]">{payments.length} payment{payments.length === 1 ? "" : "s"}</span>}
+          <div className="mt-6 overflow-hidden rounded-[10px] border border-[var(--b-border)]">
+            <div className={rowClass}>
+              <span className="text-[14px] text-[var(--b-muted)]">{nextLabel}</span>
+              <span className="text-right text-[14px] font-medium tabular-nums">{nextValue}</span>
+            </div>
+            <div className={rowClass}>
+              <span className="text-[14px] text-[var(--b-muted)]">{isFree ? "AI messages" : "AI credit"}</span>
+              <span className="flex min-w-0 items-center gap-4">
+                {isFree && <span className="hidden h-1.5 w-28 overflow-hidden rounded-full bg-[var(--b-track)] sm:block"><span className="block h-full rounded-full bg-[var(--b-info)]" style={{ width: `${messagesPercent}%` }} /></span>}
+                <span className="text-[14px] font-medium tabular-nums">{isFree ? `${messagesUsed.toLocaleString()} of ${messagesTotal.toLocaleString()} used` : `${formatCents(entitlement?.aiCreditGrantUsdCents ?? 0)} every month`}</span>
+                <Link href="/dashboard/settings/ai-usage" className={linkClass}>Usage <ArrowRight size={12} /></Link>
+              </span>
+            </div>
+            <div className={rowClass}>
+              <span className="text-[14px] text-[var(--b-muted)]">Seats</span>
+              <span className="flex min-w-0 items-center gap-4">
+                <span className="text-[14px] font-medium">Unlimited{seatsInUse ? <span className="font-normal text-[var(--b-muted)]"> · {seatsInUse.members + seatsInUse.pending} {seatsInUse.members + seatsInUse.pending === 1 ? "person" : "people"}</span> : null}</span>
+                <Link href="/dashboard/settings/teams" className={linkClass}>Members <ArrowRight size={12} /></Link>
+              </span>
+            </div>
+            <div className={rowClass}>
+              <span className="text-[14px] text-[var(--b-muted)]">Payment method</span>
+              <span className="flex min-w-0 items-center gap-4">
+                <span className="text-[14px] font-medium">{methodSummary}</span>
+                <button type="button" onClick={() => setTab("method")} className={linkClass}>{paymentMethod?.last4 ? "View" : "Details"} <ArrowRight size={12} /></button>
+              </span>
+            </div>
+          </div>
+
+          {isFree && (
+            <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-[10px] border border-dashed border-[var(--b-border)] px-5 py-4">
+              <p className="text-[14px] text-[var(--b-muted)]"><span className="font-medium text-[var(--b-text)]">Outgrowing Free?</span> Paid plans swap the message limit for a monthly AI credit.</p>
+              <button type="button" onClick={() => setUpgradeOpen(true)} className={ghostBtn}>See plans <ArrowRight size={14} /></button>
+            </div>
+          )}
+        </section>
+      )}
+
+      {/* --------------------------------------------------------------- payment method */}
+      {!loading && tab === "method" && (
+        <section className="billing-method mt-6 w-full">
+          {paymentMethod?.last4 ? (
+            <div className="w-full max-w-[460px] overflow-hidden rounded-xl bg-[var(--b-ink)] p-5 text-[var(--b-ink-text)]">
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-[12px] font-semibold uppercase tracking-[0.16em]">{paymentMethod.brand ?? "Card"}</span>
+                <CreditCard size={18} />
               </div>
+              <p className="mt-8 font-mono text-[18px] tracking-[0.16em]">•••• •••• •••• {paymentMethod.last4}</p>
+              <div className="mt-5 flex items-end justify-between text-[12.5px]">
+                <span>{paymentMethod.expiryMonth && paymentMethod.expiryYear ? `Expires ${String(paymentMethod.expiryMonth).padStart(2, "0")}/${String(paymentMethod.expiryYear).slice(-2)}` : "Saved card"}</span>
+                <span className="rounded-full border border-current px-2.5 py-0.5 font-mono text-[11px] font-medium uppercase tracking-[0.1em] opacity-80">Default</span>
+              </div>
+            </div>
+          ) : (
+            <div className="billing-method-empty flex flex-col items-center px-5 py-10 text-center">
+              <span className="grid size-12 place-items-center rounded-full"><CreditCard size={22} /></span>
+              <p className="mt-3 text-[16px] font-medium tracking-[-0.02em]">No card saved yet</p>
+              <p className="mt-1 max-w-[260px] text-[13px] leading-5 text-[var(--b-muted)]">When you pay for a plan, your card will show up here.</p>
+            </div>
+          )}
+        </section>
+      )}
+
+      {/* ------------------------------------------------------------------- history */}
+      {!loading && tab === "history" && (
+        <>
+            <section className="billing-history-list mt-5 overflow-hidden rounded-2xl">
               {payments.length ? (
-                <div className="border-t border-[var(--b-border)]">
+                <div>
                   <div className="hidden grid-cols-[130px_minmax(0,1fr)_90px_110px_20px] gap-4 px-6 py-2.5 text-[11.5px] font-medium text-[var(--b-muted)] sm:grid">
                     <span>Date</span><span>Description</span><span>Status</span><span className="text-right">Amount</span><span />
                   </div>
                   <ul>
                     {payments.map((payment) => (
-                      <li key={payment.id} className="border-t border-[var(--b-border)]">
+                      <li key={payment.id}>
                         <button
                           type="button"
                           onClick={() => setSelectedPayment(payment)}
@@ -1857,7 +1760,7 @@ function BillingSettingsPage() {
                   </ul>
                 </div>
               ) : (
-                <div className="border-t border-[var(--b-border)] px-6 py-12 text-center">
+                <div className="px-6 py-12 text-center">
                   <p className="text-[14px] font-medium">No payments yet</p>
                   <p className="mt-1 text-[12.5px] text-[var(--b-muted)]">When you pay for a plan, each charge shows up here.</p>
                 </div>
@@ -1897,8 +1800,6 @@ function BillingSettingsPage() {
                 </aside>
               </div>
             )}
-          </>
-          )}
         </>
       )}
 
@@ -2015,77 +1916,95 @@ function DangerZoneSection() {
   const requiredText = open === "workspace" ? workspace?.name ?? "" : "DELETE";
   const confirmReady = open === "account" ? confirmText === "DELETE" : confirmText.trim() === requiredText.trim() && requiredText.trim() !== "";
 
-  return (
-    <div className="mx-auto mt-8 w-full max-w-[1120px] px-8 sm:px-10 lg:px-12">
-      <div className="dashboard-danger-zone rounded-xl border border-red-400/25 bg-[#262626] p-6">
-        <div className="flex items-center gap-2 text-[#8f3d45]">
-          <CircleAlert size={16} />
-          <h3 className="text-[14px] font-semibold">Danger zone</h3>
-        </div>
+  const sectionGrid = "grid grid-cols-[310px_minmax(0,1fr)] gap-10 max-xl:grid-cols-[270px_minmax(0,1fr)] max-lg:grid-cols-1 max-lg:gap-5";
+  const deleteButton = "danger-action flex h-10 shrink-0 cursor-pointer items-center gap-2 rounded-lg border px-4 text-[13px] font-medium transition disabled:cursor-not-allowed disabled:opacity-50";
 
-        {!loadingWorkspace && workspace && (
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-[#f2dede] pt-4">
+  return (
+    <div className="mx-auto mt-9 w-full max-w-[1120px] px-8 sm:px-10 lg:px-12">
+      {!loadingWorkspace && workspace && (
+        <>
+          <div className={sectionGrid}>
             <div>
-              <p className="text-[13px] font-medium text-[#17181a]">{isOwner ? "Delete this workspace" : "Remove this workspace"}</p>
-              <p className="mt-1 max-w-md text-[12px] text-[#8a7373]">
-                {isOwner
-                  ? `Permanently deletes "${workspace.name}" — every conversation, customer, knowledge base article, and its subscription. This cannot be undone.`
-                  : `Removes you from "${workspace.name}". Your open conversations are handed to a teammate first. You can be re-invited later.`}
+              <h3 className="dashboard-settings-heading text-[17px] font-semibold">{isOwner ? "Delete workspace" : "Remove workspace"}</h3>
+              <p className="dashboard-settings-subdesc mt-1 max-w-[280px] text-[15px] leading-[1.55] text-[#858585]">
+                {isOwner ? "Permanently delete this workspace and everything in it." : "Leave this workspace and lose access to it."}
               </p>
             </div>
-            {isOwner ? (
-              <button type="button" onClick={() => { setOpen("workspace"); setError(null); setConfirmText(""); }} className="dashboard-danger-action flex h-10 shrink-0 items-center gap-2 rounded-md border border-red-400/30 bg-transparent px-4 text-[12px] font-normal text-red-300 transition hover:bg-red-400/10">
-                <Trash2 size={13} /> Delete workspace
-              </button>
-            ) : (
-              <button type="button" disabled={busy} onClick={() => void removeWorkspace()} className="flex h-10 shrink-0 items-center gap-2 rounded-full border border-[#e5b3b3] bg-white px-4 text-[12px] font-semibold text-[#A64A53] transition hover:bg-[#fff3f3] disabled:cursor-not-allowed disabled:opacity-60">
-                {busy ? <LoaderCircle size={13} className="animate-spin" /> : <LogOut size={13} />} Remove workspace
-              </button>
-            )}
+            <div className="danger-card flex flex-wrap items-center justify-between gap-4 rounded-xl border px-5 py-4">
+              <div className="min-w-0 flex-1">
+                <p className="danger-title text-[14px] font-medium">{workspace.name}</p>
+                <p className="danger-text mt-1 max-w-md text-[13px] leading-5">
+                  {isOwner
+                    ? `Permanently deletes "${workspace.name}": every conversation, customer, knowledge base article, and its subscription. This cannot be undone.`
+                    : `Removes you from "${workspace.name}". Your open conversations are handed to a teammate first. You can be re-invited later.`}
+                </p>
+              </div>
+              {isOwner ? (
+                <button type="button" onClick={() => { setOpen("workspace"); setError(null); setConfirmText(""); }} className={deleteButton}>
+                  <Trash2 size={14} /> Delete workspace
+                </button>
+              ) : (
+                <button type="button" disabled={busy} onClick={() => void removeWorkspace()} className={deleteButton}>
+                  {busy ? <LoaderCircle size={14} className="animate-spin" /> : <LogOut size={14} />} Remove workspace
+                </button>
+              )}
+            </div>
           </div>
-        )}
 
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-[#f2dede] pt-4">
-          <div>
-            <p className="text-[13px] font-medium text-[#17181a]">Delete your account</p>
-            <p className="mt-1 max-w-md text-[12px] text-[#8a7373]">Permanently deletes your account and every workspace only you own. Workspaces you share with teammates are left, not destroyed.</p>
+          <div className="my-7 h-px bg-[#e7e7e7]" />
+        </>
+      )}
+
+      <div className={sectionGrid}>
+        <div>
+          <h3 className="dashboard-settings-heading text-[17px] font-semibold">Delete account</h3>
+          <p className="dashboard-settings-subdesc mt-1 max-w-[280px] text-[15px] leading-[1.55] text-[#858585]">Permanently delete your own account.</p>
+        </div>
+        <div className="danger-card flex flex-wrap items-center justify-between gap-4 rounded-xl border px-5 py-4">
+          <div className="min-w-0 flex-1">
+            <p className="danger-title text-[14px] font-medium">Your account</p>
+            <p className="danger-text mt-1 max-w-md text-[13px] leading-5">Permanently deletes your account and every workspace only you own. Workspaces you share with teammates are left, not destroyed.</p>
           </div>
-          <button type="button" onClick={() => void openAccountDialog()} className="dashboard-danger-action flex h-10 shrink-0 items-center gap-2 rounded-md border border-red-400/30 bg-transparent px-4 text-[12px] font-normal text-red-300 transition hover:bg-red-400/10">
-            <Trash2 size={13} /> Delete account
+          <button type="button" onClick={() => void openAccountDialog()} className={deleteButton}>
+            <Trash2 size={14} /> Delete account
           </button>
         </div>
+      </div>
 
+      {/* The confirmation dialog keeps the old .dashboard-danger-zone wrapper so its existing styles still apply;
+          display: contents means the wrapper itself draws no box. */}
+      <div className="dashboard-danger-zone contents">
         {open && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/35 p-4 backdrop-blur-[2px]" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) closeDialog(); }}>
             <div role="dialog" aria-modal="true" className="w-full max-w-[420px] overflow-hidden rounded-[24px] border border-black/10 bg-white shadow-[0_28px_80px_rgba(15,23,42,0.24)]">
               <div className="flex items-start justify-between border-b border-[#E5E9EB] px-6 py-5">
                 <div>
-                  <h3 className="text-[16px] font-semibold tracking-[-0.02em] text-[#8f3d45]">
+                  <h3 className="text-[17px] font-semibold tracking-[-0.02em] text-[#8f3d45]">
                     {open === "workspace" ? `Delete "${workspace?.name}"?` : "Delete your account?"}
                   </h3>
-                  <p className="mt-1 text-[12px] text-[#667069]">This cannot be undone.</p>
+                  <p className="mt-1 text-[13px] text-[#667069]">This cannot be undone.</p>
                 </div>
                 <button type="button" onClick={closeDialog} className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg hover:bg-[#F0F2F3]"><X size={16} /></button>
               </div>
 
               <div className="p-6">
-                {open === "account" && loadingPlan && <p className="text-[12.5px] text-[#667069]">Checking your workspaces…</p>}
+                {open === "account" && loadingPlan && <p className="text-[13.5px] text-[#667069]">Checking your workspaces…</p>}
 
                 {open === "account" && !loadingPlan && plan && !plan.canDelete && (
                   <div>
-                    <p className="text-[12.5px] leading-5 text-[#667069]">
+                    <p className="text-[13.5px] leading-5 text-[#667069]">
                       You're the only owner of workspaces that still have other people in them. Delete these, or remove the other members, before deleting your account:
                     </p>
                     <ul className="mt-3 space-y-1.5">
                       {plan.blocked.map((item) => (
-                        <li key={item.id} className="rounded-lg bg-[#FAF9F6] px-3 py-2 text-[12.5px] font-medium">{item.name}</li>
+                        <li key={item.id} className="rounded-lg bg-[#FAF9F6] px-3 py-2 text-[13.5px] font-medium">{item.name}</li>
                       ))}
                     </ul>
                   </div>
                 )}
 
                 {open === "account" && !loadingPlan && plan?.canDelete && (
-                  <div className="text-[12.5px] leading-5 text-[#667069]">
+                  <div className="text-[13.5px] leading-5 text-[#667069]">
                     {plan.soloOwned.length > 0 && (
                       <p>
                         Deletes {plan.soloOwned.length === 1 ? "the workspace" : `all ${plan.soloOwned.length} workspaces`} you solely own: {plan.soloOwned.map((w) => `"${w.name}"`).join(", ")}.
@@ -2099,26 +2018,26 @@ function DangerZoneSection() {
 
                 {(open === "workspace" || (open === "account" && plan?.canDelete)) && (
                   <div className="mt-4">
-                    <label className="block text-[11.5px] font-semibold text-[#17233A]">
+                    <label className="block text-[12.5px] font-semibold text-[#17233A]">
                       {open === "workspace" ? `Type "${requiredText}" to confirm` : 'Type "DELETE" to confirm'}
                     </label>
                     <input
                       value={confirmText}
                       onChange={(event) => setConfirmText(event.target.value)}
                       placeholder={requiredText}
-                      className="mt-2 h-11 w-full rounded-xl border border-[#DDE4E8] px-3 text-[13px] outline-none focus:border-[#A64A53] focus:ring-2 focus:ring-[#A64A53]/10"
+                      className="mt-2 h-11 w-full rounded-xl border border-[#DDE4E8] px-3 text-[14px] outline-none focus:border-[#A64A53] focus:ring-2 focus:ring-[#A64A53]/10"
                     />
                   </div>
                 )}
 
-                {error && <p role="alert" className="mt-3 text-[11.5px] text-[#c63f4d]">{error}</p>}
+                {error && <p role="alert" className="mt-3 text-[12.5px] text-[#c63f4d]">{error}</p>}
 
                 {(open === "workspace" || (open === "account" && plan?.canDelete)) && (
                   <button
                     type="button"
                     disabled={busy || !confirmReady}
                     onClick={() => void confirmDestroy()}
-                    className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#A64A53] text-[13px] font-semibold text-white transition hover:bg-[#8f3d45] disabled:cursor-not-allowed disabled:opacity-50"
+                    className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#A64A53] text-[14px] font-semibold text-white transition hover:bg-[#8f3d45] disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {busy ? <LoaderCircle size={14} className="animate-spin" /> : <Trash2 size={14} />}
                     {open === "workspace" ? "Delete workspace" : "Delete account"}
@@ -2304,93 +2223,114 @@ function ChatbotBehaviorSettingsPage() {
   );
 }
 
-type ChatbotUrlRules = { show: string[]; hide: string[] };
+type ChatbotUrlRules = UrlRules;
 
-function UrlRuleSection({
+function RuleSection({
   title,
   description,
+  placeholder,
   paths,
   loading,
-  open,
-  onOpenChange,
-  draft,
-  setDraft,
   onAdd,
   onRemove,
 }: {
   title: string;
   description: string;
+  placeholder: string;
   paths: string[];
   loading: boolean;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  draft: string;
-  setDraft: (value: string) => void;
-  onAdd: () => void;
+  onAdd: (path: string) => void;
   onRemove: (path: string) => void;
 }) {
-  return (
-    <div className="mt-8">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h3 className="text-[15px] font-semibold">{title}</h3>
-          <p className="mt-1 max-w-md text-[12px] leading-5 text-[#687178]">{description}</p>
-        </div>
-        <button type="button" onClick={() => onOpenChange(true)} className="flex h-9 shrink-0 items-center gap-1.5 rounded-lg bg-[#202020] px-3.5 text-[12px] font-medium text-white hover:bg-black">
-          <Plus size={14} /> Add URL
-        </button>
-      </div>
+  const [adding, setAdding] = useState(false);
+  const [draft, setDraft] = useState("");
+  const dialogId = useId();
 
-      <div className="mt-4 overflow-hidden rounded-xl border border-[#e7e8ea]">
-        {loading ? (
-          <SkeletonRows rows={3} className="px-4 py-5" />
-        ) : paths.length === 0 ? (
-          <p className="px-4 py-5 text-[12px] text-[#687178]">No URL added</p>
-        ) : (
-          paths.map((path, index) => (
-            <div key={path} className={`flex items-center justify-between gap-3 px-4 py-3 ${index ? "border-t border-[#e7e8ea]" : ""}`}>
-              <code className="min-w-0 truncate font-mono text-[12.5px]">{path}</code>
-              <button type="button" aria-label={`Remove ${path}`} onClick={() => onRemove(path)} className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-[#8b8d90] hover:bg-[#f7f8f8] hover:text-black">
-                <X size={14} />
-              </button>
-            </div>
-          ))
+  function close() {
+    setAdding(false);
+    setDraft("");
+  }
+
+  function submit(event: React.FormEvent) {
+    event.preventDefault();
+    const path = normalizePath(draft);
+    if (!path) return;
+    onAdd(path);
+    close();
+  }
+
+  return (
+    <section>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h3 className="text-[17px] font-medium tracking-[-0.02em]">{title}</h3>
+          <p className="mt-1 max-w-xl text-[14px] leading-6 text-[var(--b-muted)]">{description}</p>
+        </div>
+        {!adding && (
+          <button type="button" onClick={() => setAdding(true)} className="inline-flex h-9 shrink-0 cursor-pointer items-center gap-1.5 rounded-full border border-[var(--b-text)] px-4 text-[13px] font-medium transition hover:bg-[var(--b-surface-2)]">
+            <Plus size={14} /> Add page
+          </button>
         )}
       </div>
 
-      {open && (
-        <div className="fixed inset-0 z-[120] flex items-center justify-center bg-[#0b0f14]/40 p-4 backdrop-blur-[2px]" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onOpenChange(false); }}>
-          <div role="dialog" aria-modal="true" aria-label={title} className="w-full max-w-[480px] rounded-2xl bg-white p-6 shadow-[0_24px_70px_rgba(15,23,42,0.24)]">
-            <label className="block text-[14px] font-semibold text-[#17181a]">
-              Allow a page by path (use <code className="font-mono text-[13px]">{"/*"}</code> for its sub-pages) <span className="text-[#e5484d]">*</span>
-            </label>
+      {adding && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
+          role="presentation"
+          onMouseDown={(event) => { if (event.target === event.currentTarget) close(); }}
+        >
+          <form
+            onSubmit={submit}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={`${dialogId}-title`}
+            onKeyDown={(event) => { if (event.key === "Escape") close(); }}
+            className="w-full max-w-[440px] rounded-[18px] border border-[var(--b-border)] bg-[var(--b-surface)] p-6 text-[var(--b-text)] shadow-[0_28px_80px_rgba(0,0,0,0.35)]"
+          >
+            <div className="flex items-start justify-between gap-4">
+              <h3 id={`${dialogId}-title`} className="text-[18px] font-medium tracking-[-0.02em]">{title}</h3>
+              <button type="button" onClick={close} aria-label="Close" className="flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-[var(--b-muted)] transition hover:bg-[var(--b-surface-2)] hover:text-[var(--b-text)]">
+                <X size={16} />
+              </button>
+            </div>
+            <p className="mt-2 text-[14px] leading-6 text-[var(--b-muted)]">
+              Choose which pages show the chat widget. Use <code className="font-mono text-[13px] text-[var(--b-text)]">/docs/*</code> to match a page and everything under it.
+            </p>
             <input
               autoFocus
               value={draft}
               onChange={(event) => setDraft(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter") { event.preventDefault(); onAdd(); }
-              }}
-              placeholder="/docs/*"
-              className="mt-3 h-12 w-full rounded-xl border border-[#DDE4E8] bg-[#f7f8f8] px-3.5 text-[14px] outline-none focus:border-[#428ce5] focus:bg-white focus:ring-2 focus:ring-[#428ce5]/15"
+              placeholder={placeholder}
+              aria-label="Page path"
+              className="rule-input mt-5 h-11 w-full rounded-full border border-[var(--b-border)] bg-transparent px-4 font-mono text-[13.5px] outline-none placeholder:font-sans placeholder:text-[var(--b-muted)] focus:border-[var(--b-text)]"
             />
-            <div className="mt-6 flex items-center justify-end gap-3">
-              <button type="button" onClick={() => onOpenChange(false)} className="h-10 rounded-xl border border-[#17181a] px-4 text-[13px] font-semibold text-[#17181a] hover:bg-[#f7f8f8]">
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={onAdd}
-                disabled={!draft.trim()}
-                className="flex h-10 items-center gap-1.5 rounded-xl bg-[#428ce5] px-4 text-[13px] font-semibold text-white transition disabled:cursor-not-allowed disabled:bg-[#428ce5]/40"
-              >
-                <Plus size={15} /> Add Allowed Page
-              </button>
+            <div className="mt-5 flex justify-end gap-2">
+              <button type="button" onClick={close} className="inline-flex h-10 cursor-pointer items-center rounded-full px-4 text-[13px] text-[var(--b-muted)] transition hover:text-[var(--b-text)]">Cancel</button>
+              <button type="submit" disabled={!draft.trim()} className="inline-flex h-10 cursor-pointer items-center rounded-full border border-[var(--b-text)] px-5 text-[13px] font-medium transition hover:bg-[var(--b-surface-2)] disabled:cursor-not-allowed disabled:opacity-40">Add page</button>
             </div>
-          </div>
+          </form>
         </div>
       )}
-    </div>
+
+      <div className="mt-4">
+        {loading ? (
+          <div className="h-12 animate-pulse rounded-[10px] bg-[var(--b-surface-2)]" />
+        ) : paths.length ? (
+          <ul className="overflow-hidden rounded-[10px] border border-[var(--b-border)]">
+            {paths.map((path) => (
+              <li key={path} className="flex items-center justify-between gap-3 border-t border-[var(--b-border)] px-4 py-2.5 first:border-t-0 hover:bg-[var(--b-surface-2)]">
+                <span className="min-w-0 truncate font-mono text-[13.5px]">{path}</span>
+                <button type="button" onClick={() => onRemove(path)} aria-label={`Remove ${path}`} title="Remove" className="flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-[var(--b-muted)] transition hover:bg-[var(--b-bad-bg)] hover:text-[var(--b-bad)]">
+                  <Trash2 size={15} />
+                </button>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="rounded-[10px] border border-dashed border-[var(--b-border)] px-4 py-3.5 text-[14px] text-[var(--b-muted)]">No pages added.</p>
+        )}
+      </div>
+    </section>
   );
 }
 
@@ -2398,9 +2338,8 @@ function ChatbotUrlRestrictionsSettingsPage() {
   const [rules, setRules] = useState<ChatbotUrlRules>({ show: [], hide: [] });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [addOpen, setAddOpen] = useState<"show" | "hide" | null>(null);
-  const [draft, setDraft] = useState("");
 
   useEffect(() => {
     fetch("/api/workspace/chatbot-restrictions", { cache: "no-store" })
@@ -2413,6 +2352,7 @@ function ChatbotUrlRestrictionsSettingsPage() {
   async function save(next: ChatbotUrlRules) {
     setRules(next);
     setSaving(true);
+    setSaved(false);
     setError(null);
     const response = await fetch("/api/workspace/chatbot-restrictions", {
       method: "PATCH",
@@ -2420,90 +2360,106 @@ function ChatbotUrlRestrictionsSettingsPage() {
       body: JSON.stringify(next),
     }).catch(() => null);
     const data = response ? ((await response.json().catch(() => ({}))) as { rules?: ChatbotUrlRules; message?: string }) : {};
-    if (!response?.ok) setError(data.message ?? "Could not save. Try again.");
-    else if (data.rules) setRules(data.rules);
+    if (!response?.ok) {
+      setError(data.message ?? "Could not save. Try again.");
+    } else {
+      if (data.rules) setRules(data.rules);
+      setSaved(true);
+      window.setTimeout(() => setSaved(false), 2000);
+    }
     setSaving(false);
   }
 
-  function addPath(list: "show" | "hide") {
-    const path = draft.trim();
-    if (!path) return;
-    if (!path.startsWith("/")) {
-      setError("A path must start with /, e.g. /docs or /docs/*");
-      return;
-    }
-    const next = { ...rules, [list]: Array.from(new Set([...rules[list], path])) };
-    setDraft("");
-    setAddOpen(null);
-    void save(next);
-  }
-
-  function removePath(list: "show" | "hide", path: string) {
-    void save({ ...rules, [list]: rules[list].filter((item) => item !== path) });
-  }
+  const addPath = (list: "show" | "hide") => (path: string) => void save({ ...rules, [list]: Array.from(new Set([...rules[list], path])) });
+  const removePath = (list: "show" | "hide") => (path: string) => void save({ ...rules, [list]: rules[list].filter((item) => item !== path) });
 
   return (
-    <div className="mx-auto w-full max-w-[1120px] px-7 pb-14 pt-8 text-[#17181a] sm:px-9 lg:px-10">
-      <div className="border-b border-[#E5E8EA] pb-7">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Chatbot</p>
-        <h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em] text-[#17181a]">Restrictions</h2>
-        <p className="mt-2 max-w-xl text-[14px] leading-6 text-[#667069]">
-          Control which pages of your site show the chat widget. Use <code className="rounded bg-[#f1f1f1] px-1 py-0.5 font-mono text-[12px]">/docs/*</code> to match every page under a path.
+    <div className="billing-v2 members-v2 mx-auto w-full max-w-[1120px] px-6 pb-20 pt-6 sm:px-9 lg:px-10">
+      <header className="flex flex-wrap items-center justify-between gap-3">
+        <h2 className="text-[30px] font-normal tracking-[-0.04em]">Restrictions</h2>
+        <p aria-live="polite" className="flex h-6 items-center gap-1.5 text-[13px] text-[var(--b-muted)]">
+          {saving ? <><LoaderCircle size={13} className="animate-spin" /> Saving…</> : saved ? <span className="flex items-center gap-1.5 text-[var(--b-good)]"><Check size={14} /> Saved</span> : null}
         </p>
+      </header>
+
+      {error && <p role="alert" className="mt-5 rounded-[10px] bg-[var(--b-bad-bg)] px-4 py-3 text-[13.5px] font-medium text-[var(--b-bad)]">{error}</p>}
+
+      <div className="mt-7">
+        <RuleSection
+          title="Show only on these pages"
+          description="Leave empty to show the widget on every page."
+          placeholder="/pricing"
+          paths={rules.show}
+          loading={loading}
+          onAdd={addPath("show")}
+          onRemove={removePath("show")}
+        />
+
+        <div className="my-8 h-px bg-[var(--b-border)]" />
+
+        <RuleSection
+          title="Hide on these pages"
+          description="The widget never shows on these pages, even if a show rule also matches."
+          placeholder="/checkout/*"
+          paths={rules.hide}
+          loading={loading}
+          onAdd={addPath("hide")}
+          onRemove={removePath("hide")}
+        />
       </div>
-
-      {error && <p role="alert" className="mt-4 rounded-lg bg-[#FFF2F2] px-3 py-2 text-[12px] font-medium text-[#A64A53]">{error}</p>}
-
-      <UrlRuleSection
-        title="Show only on these pages"
-        description="Leave empty to show the widget everywhere. Add a path to limit it to just these pages."
-        paths={rules.show}
-        loading={loading}
-        open={addOpen === "show"}
-        onOpenChange={(open) => setAddOpen(open ? "show" : null)}
-        draft={draft}
-        setDraft={setDraft}
-        onAdd={() => addPath("show")}
-        onRemove={(path) => removePath("show", path)}
-      />
-
-      <UrlRuleSection
-        title="Hide on these pages"
-        description="The widget never shows on a matching page, even if it's also covered by a show rule above."
-        paths={rules.hide}
-        loading={loading}
-        open={addOpen === "hide"}
-        onOpenChange={(open) => setAddOpen(open ? "hide" : null)}
-        draft={draft}
-        setDraft={setDraft}
-        onAdd={() => addPath("hide")}
-        onRemove={(path) => removePath("hide", path)}
-      />
-
-      {saving && (
-        <p className="mt-4 flex items-center gap-1.5 text-[12px] text-[#687178]">
-          <LoaderCircle size={13} className="animate-spin" /> Saving…
-        </p>
-      )}
     </div>
   );
 }
 
-type CompanyInfo = { domain: string | null; createdAt: string; logoUrl: string | null };
+type CompanyInfo = {
+  domain: string | null;
+  createdAt: string;
+  logoUrl: string | null;
+  workspaceType: string | null;
+  industry: string | null;
+  teamSize: string | null;
+  about: string | null;
+};
+type ConnectedSite = { id: string; name: string | null; domain: string; status: "verified" | "unverified"; createdAt: string; lastUsedAt?: string };
+
+// Mirrors companies/workspace-profile.ts in workspace-service, which refuses anything not on these lists.
+const WORKSPACE_TYPES = ["Company", "Agency", "Freelancer", "Nonprofit", "Education", "Other"];
+const WORKSPACE_INDUSTRIES = ["E-commerce", "Software / SaaS", "Education", "Healthcare", "Finance", "Travel & hospitality", "Media & entertainment", "Real estate", "Professional services", "Other"];
+const WORKSPACE_TEAM_SIZES = ["Just me", "2-10", "11-50", "51-200", "201+"];
+const ABOUT_MAX_CHARS = 1000;
+
+type ProfileDraft = { workspaceType: string; industry: string; teamSize: string; about: string };
+const profileFrom = (info: CompanyInfo | null): ProfileDraft => ({
+  workspaceType: info?.workspaceType ?? "",
+  industry: info?.industry ?? "",
+  teamSize: info?.teamSize ?? "",
+  about: info?.about ?? "",
+});
+
+const infoInputClass = "h-11 w-full rounded-xl border border-[#d3d3d3] bg-white px-3 text-[13px] outline-none transition focus:border-[#777] focus:ring-1 focus:ring-[#777]/10";
 
 function WorkspaceInformationSettingsPage() {
   const { workspace, loading } = useCurrentWorkspace();
   const [info, setInfo] = useState<CompanyInfo | null>(null);
+  const [sites, setSites] = useState<ConnectedSite[] | null>(null);
   const [infoLoading, setInfoLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [draft, setDraft] = useState<ProfileDraft>(profileFrom(null));
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    fetch("/api/workspace/company-info", { cache: "no-store" })
-      .then((response) => (response.ok ? response.json() : null))
-      .then((data: CompanyInfo | null) => setInfo(data))
-      .catch(() => undefined)
-      .finally(() => setInfoLoading(false));
+    Promise.all([
+      fetch("/api/workspace/company-info", { cache: "no-store" }).then((response) => (response.ok ? (response.json() as Promise<CompanyInfo>) : null)).catch(() => null),
+      fetch("/api/workspace/sites", { cache: "no-store" }).then((response) => (response.ok ? response.json() : null)).catch(() => null),
+    ]).then(([company, siteData]: [CompanyInfo | null, { sites?: ConnectedSite[] } | null]) => {
+      setInfo(company);
+      setDraft(profileFrom(company));
+      setSites(siteData?.sites ?? []);
+      setInfoLoading(false);
+    });
   }, []);
 
   async function saveLogo(logoUrl: string | null) {
@@ -2532,67 +2488,221 @@ function WorkspaceInformationSettingsPage() {
     reader.readAsDataURL(file);
   }
 
-  const createdLabel = info?.createdAt ? new Date(info.createdAt).toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" }) : null;
+  function change(field: keyof ProfileDraft, value: string) {
+    setDraft((current) => ({ ...current, [field]: value }));
+    setSaved(false);
+  }
+
+  const saved_ = profileFrom(info);
+  const dirty = (Object.keys(draft) as (keyof ProfileDraft)[]).some((key) => draft[key] !== saved_[key]);
+
+  async function saveProfile() {
+    setSaving(true);
+    setError(null);
+    const response = await fetch("/api/workspace/company-info", {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ profile: draft }),
+    }).catch(() => null);
+    const data = response ? ((await response.json().catch(() => ({}))) as Partial<CompanyInfo> & { message?: string }) : {};
+    if (!response?.ok) {
+      setError(data.message ?? "Could not save. Try again.");
+    } else {
+      setInfo((current) => (current ? { ...current, workspaceType: data.workspaceType ?? null, industry: data.industry ?? null, teamSize: data.teamSize ?? null, about: data.about ?? null } : current));
+      setSaved(true);
+      window.setTimeout(() => setSaved(false), 2200);
+    }
+    setSaving(false);
+  }
+
+  function copyId() {
+    if (!workspace) return;
+    void navigator.clipboard?.writeText(workspace.id).then(() => {
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1500);
+    });
+  }
+
+  const createdLabel = info?.createdAt ? new Date(info.createdAt).toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" }) : "—";
+  const sectionGrid = "grid grid-cols-[310px_minmax(0,1fr)] gap-10 max-xl:grid-cols-[270px_minmax(0,1fr)] max-lg:grid-cols-1 max-lg:gap-5";
+  const canEdit = workspace?.role === "owner";
 
   return (
-    <div className="mx-auto w-full max-w-[1120px] px-7 pb-14 pt-8 text-[#17181a] sm:px-9 lg:px-10">
-      <div className="border-b border-[#E5E8EA] pb-7">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Workspace</p>
-        <h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em] text-[#17181a]">Information</h2>
-        <p className="mt-2 max-w-xl text-[14px] leading-6 text-[#667069]">The basics of this workspace, and your role in it.</p>
-      </div>
+    <>
+      <div className="mx-auto w-full max-w-[1120px] px-8 pb-6 pt-9 sm:px-10 lg:px-12">
+        <h2 className="text-[26px] font-semibold tracking-[-0.025em] text-[#121315]">Workspace information</h2>
 
-      <div className="mt-6 flex items-center gap-5">
-        <div className="relative shrink-0">
-          <span className="flex size-16 items-center justify-center overflow-hidden rounded-2xl border border-[#e7e8ea] bg-[#f7f8f8] text-[20px] font-bold text-[#687178]">
-            {info?.logoUrl ? <img src={info.logoUrl} alt="Workspace logo" className="h-full w-full object-cover" /> : (workspace?.name || "W").charAt(0).toUpperCase()}
-          </span>
-          <label className="absolute -bottom-2 -right-2 flex size-7 cursor-pointer items-center justify-center rounded-full border-2 border-white bg-[#202020] text-white shadow-sm transition hover:bg-black">
-            {uploading ? <LoaderCircle size={12} className="animate-spin" /> : <Upload size={12} />}
-            <input type="file" accept="image/png,image/jpeg,image/webp" onChange={chooseLogo} className="sr-only" disabled={uploading} />
-          </label>
-        </div>
-        <div>
-          <p className="text-[13px] font-semibold">Workspace logo</p>
-          <p className="mt-0.5 text-[12px] text-[#687178]">PNG, JPG, or WebP — up to 2 MB.</p>
-          {info?.logoUrl && (
-            <button type="button" onClick={() => void saveLogo(null)} disabled={uploading} className="mt-1 text-[12px] font-medium text-[#A64A53] hover:underline disabled:opacity-50">
-              Remove logo
-            </button>
-          )}
-        </div>
-      </div>
-      {error && <p role="alert" className="mt-3 text-[12px] font-medium text-[#A64A53]">{error}</p>}
+        {/* ------------------------------------------------------------ identity */}
+        <div className={`mt-9 ${sectionGrid}`}>
+          <div>
+            <h3 className="dashboard-settings-heading text-base font-semibold">Workspace</h3>
+            <p className="dashboard-settings-subdesc mt-1 max-w-[280px] text-sm leading-[1.55] text-[#858585]">Your workspace&apos;s name, logo and your role in it.</p>
+          </div>
+          <div className="min-w-0">
+            <p className="text-[12px] font-medium">Logo</p>
+            <div className="mt-2 flex items-center gap-5">
+              <div className="relative h-[82px] w-[82px] shrink-0">
+                <span className="flex h-[82px] w-[82px] items-center justify-center overflow-hidden rounded-2xl border border-[#e7e8ea] bg-[#f7f8f8] text-[29px] font-medium text-[#687178]">
+                  {uploading ? <LoaderCircle size={20} className="animate-spin opacity-60" /> : info?.logoUrl ? <img src={info.logoUrl} alt="Workspace logo" className="h-full w-full object-cover" /> : (workspace?.name || "W").charAt(0).toUpperCase()}
+                </span>
+                <label className="dashboard-avatar-upload absolute -bottom-1 -right-1 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border-2 border-white bg-[#202225] text-white shadow-sm transition hover:bg-black" title="Upload logo">
+                  <Upload size={13} />
+                  <input type="file" accept="image/png,image/jpeg,image/webp" onChange={chooseLogo} className="sr-only" disabled={uploading} />
+                </label>
+              </div>
+              <div>
+                <p className="text-[11px] text-[#9a9a9a]">PNG, JPG, or WebP — up to 2 MB</p>
+                {info?.logoUrl && (
+                  <button type="button" onClick={() => void saveLogo(null)} disabled={uploading} className="mt-1.5 cursor-pointer text-[11.5px] font-medium text-[#a64a53] hover:underline disabled:cursor-not-allowed disabled:opacity-50">Remove logo</button>
+                )}
+              </div>
+            </div>
 
-      <div className="mt-6 overflow-hidden rounded-xl border border-[#e7e8ea]">
-        {loading && <SkeletonRows rows={3} className="px-5 py-5" />}
-        {!loading && workspace && (
-          <>
+            <label className="mt-5 block text-[12px] font-medium" htmlFor="workspace-name">Workspace name</label>
+            <div className="relative mt-2">
+              <UsersRound size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#6f7073]" />
+              <input id="workspace-name" value={loading ? "" : workspace?.name ?? ""} readOnly className="h-11 w-full rounded-xl border border-[#d3d3d3] bg-[#fcfcfc] pl-10 pr-20 text-[13px] text-[#333] outline-none" />
+              {workspace && <span className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-[#EEF1F3] px-2 py-1 text-[10px] font-semibold capitalize text-[#4c5459]">{workspace.role}</span>}
+            </div>
+          </div>
+        </div>
+
+        <div className="my-7 h-px bg-[#e7e7e7]" />
+
+        {/* ------------------------------------------------------------ profile */}
+        <div className={sectionGrid}>
+          <div>
+            <h3 className="dashboard-settings-heading text-base font-semibold">About your workspace</h3>
+            <p className="dashboard-settings-subdesc mt-1 max-w-[280px] text-sm leading-[1.55] text-[#858585]">What kind of workspace this is and what you do. Your team sees it here, and it tells us who we&apos;re helping.</p>
+          </div>
+          <div className="min-w-0">
+            <label className="block text-[12px] font-medium" htmlFor="workspace-type">Workspace type</label>
+            <select id="workspace-type" value={draft.workspaceType} onChange={(event) => change("workspaceType", event.target.value)} disabled={!canEdit} className={`${infoInputClass} mt-2`}>
+              <option value="">Select a type</option>
+              {WORKSPACE_TYPES.map((value) => <option key={value} value={value}>{value}</option>)}
+            </select>
+
+            <div className="mt-5 grid gap-5 sm:grid-cols-2">
+              <div>
+                <label className="block text-[12px] font-medium" htmlFor="workspace-industry">Industry</label>
+                <select id="workspace-industry" value={draft.industry} onChange={(event) => change("industry", event.target.value)} disabled={!canEdit} className={`${infoInputClass} mt-2`}>
+                  <option value="">Select an industry</option>
+                  {WORKSPACE_INDUSTRIES.map((value) => <option key={value} value={value}>{value}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="block text-[12px] font-medium" htmlFor="workspace-team-size">Team size</label>
+                <select id="workspace-team-size" value={draft.teamSize} onChange={(event) => change("teamSize", event.target.value)} disabled={!canEdit} className={`${infoInputClass} mt-2`}>
+                  <option value="">Select a size</option>
+                  {WORKSPACE_TEAM_SIZES.map((value) => <option key={value} value={value}>{value}</option>)}
+                </select>
+              </div>
+            </div>
+
+            <label className="mt-5 block text-[12px] font-medium" htmlFor="workspace-about">What does your workspace do?</label>
+            <textarea
+              id="workspace-about"
+              value={draft.about}
+              onChange={(event) => change("about", event.target.value.slice(0, ABOUT_MAX_CHARS))}
+              disabled={!canEdit}
+              rows={5}
+              placeholder="Describe your work: what you sell or offer, who your customers are, and what they usually ask about."
+              className="mt-2 w-full resize-y rounded-xl border border-[#d3d3d3] bg-white px-3 py-3 text-[13px] leading-6 outline-none transition placeholder:text-[#898989] focus:border-[#777] focus:ring-1 focus:ring-[#777]/10"
+            />
+            <div className="mt-1.5 flex items-center justify-between text-[11px] text-[#9a9a9a]">
+              <span>{canEdit ? "Visible to everyone in this workspace." : "Only the workspace owner can edit this."}</span>
+              <span>{draft.about.length}/{ABOUT_MAX_CHARS}</span>
+            </div>
+            {error && <p role="alert" className="mt-2 text-[11px] text-[#b8444f]">{error}</p>}
+          </div>
+        </div>
+
+        <div className="my-7 h-px bg-[#e7e7e7]" />
+
+        {/* ------------------------------------------------------------ websites */}
+        <div className={sectionGrid}>
+          <div>
+            <h3 className="dashboard-settings-heading text-base font-semibold">Connected websites</h3>
+            <p className="dashboard-settings-subdesc mt-1 max-w-[280px] text-sm leading-[1.55] text-[#858585]">The websites where your chat widget is installed.</p>
+          </div>
+          <div className="min-w-0">
+            {infoLoading ? (
+              <SkeletonRows rows={2} className="py-2" />
+            ) : sites && sites.length > 0 ? (
+              <ul className="overflow-hidden rounded-xl border border-[#e7e8ea]">
+                {sites.map((site) => (
+                  <li key={site.id} className="flex items-center gap-3 border-t border-[#e7e8ea] px-4 py-3.5 first:border-t-0">
+                    <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#f1f3f4] text-[#687178]"><Globe2 size={16} /></span>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-[13px] font-medium">{site.name?.trim() || site.domain}</p>
+                      <p className="truncate text-[12px] text-[#687178]">{site.name?.trim() ? `${site.domain} · ` : ""}Added {new Date(site.createdAt).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })}</p>
+                    </div>
+                    {site.status === "verified" ? (
+                      <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#EAF5EE] px-2.5 py-1 text-[11px] font-semibold text-[#257A4D]"><CheckCircle2 size={12} /> Verified</span>
+                    ) : (
+                      <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#FFF4E0] px-2.5 py-1 text-[11px] font-semibold text-[#9A6410]">Not verified yet</span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="rounded-xl border border-dashed border-[#d3d3d3] px-5 py-7 text-center">
+                <Globe2 size={20} className="mx-auto text-[#a4acb1]" />
+                <p className="mt-2 text-[13px] font-medium">No website connected yet</p>
+                <p className="mt-1 text-[12px] text-[#687178]">Add your website to install the chat widget on it.</p>
+              </div>
+            )}
+            <Link href="/dashboard/settings/tags" className="mt-3 inline-flex items-center gap-1.5 text-[12.5px] font-medium hover:underline">
+              {sites && sites.length > 0 ? "Manage websites" : "Connect a website"} <ArrowRight size={13} />
+            </Link>
+          </div>
+        </div>
+
+        <div className="my-7 h-px bg-[#e7e7e7]" />
+
+        {/* ------------------------------------------------------------ details */}
+        <div className={sectionGrid}>
+          <div>
+            <h3 className="dashboard-settings-heading text-base font-semibold">Details</h3>
+            <p className="dashboard-settings-subdesc mt-1 max-w-[280px] text-sm leading-[1.55] text-[#858585]">When it was created, and the ID support may ask for.</p>
+          </div>
+          <div className="min-w-0 overflow-hidden rounded-xl border border-[#e7e8ea]">
             <div className="flex items-center justify-between gap-4 px-5 py-4">
-              <span className="text-[12px] font-medium text-[#687178]">Workspace name</span>
-              <span className="text-[13px] font-medium">{workspace.name}</span>
+              <span className="info-key text-[12px] font-medium text-[#687178]">Created</span>
+              <span className="info-value text-[13px] font-medium">{infoLoading ? "…" : createdLabel}</span>
             </div>
             <div className="flex items-center justify-between gap-4 border-t border-[#e7e8ea] px-5 py-4">
-              <span className="text-[12px] font-medium text-[#687178]">Your role</span>
-              <span className="text-[13px] font-medium capitalize">{workspace.role}</span>
+              <span className="info-key text-[12px] font-medium text-[#687178]">Workspace ID</span>
+              <span className="flex min-w-0 items-center gap-2">
+                <span className="info-value truncate font-mono text-[12px] text-[#687178]">{workspace?.id ?? "…"}</span>
+                <button type="button" onClick={copyId} disabled={!workspace} aria-label="Copy workspace ID" className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md text-[#687178] transition hover:bg-[#f1f3f4] disabled:cursor-not-allowed disabled:opacity-40">
+                  {copied ? <Check size={14} /> : <Copy size={14} />}
+                </button>
+              </span>
             </div>
-            <div className="flex items-center justify-between gap-4 border-t border-[#e7e8ea] px-5 py-4">
-              <span className="text-[12px] font-medium text-[#687178]">Connected domain</span>
-              <span className="text-[13px] font-medium">{infoLoading ? "…" : info?.domain ?? "Not connected yet"}</span>
-            </div>
-            <div className="flex items-center justify-between gap-4 border-t border-[#e7e8ea] px-5 py-4">
-              <span className="text-[12px] font-medium text-[#687178]">Created</span>
-              <span className="text-[13px] font-medium">{infoLoading ? "…" : createdLabel ?? "—"}</span>
-            </div>
-            <div className="flex items-center justify-between gap-4 border-t border-[#e7e8ea] px-5 py-4">
-              <span className="text-[12px] font-medium text-[#687178]">Workspace ID</span>
-              <span className="font-mono text-[12px] text-[#687178]">{workspace.id}</span>
-            </div>
-          </>
-        )}
-        {!loading && !workspace && <p className="px-5 py-5 text-[12px] text-[#687178]">Could not load workspace details.</p>}
+          </div>
+        </div>
       </div>
-    </div>
+
+      {canEdit && (
+        // Pinned to the bottom of the scrolling settings area so it is always in view while you edit.
+        <div className="info-save-bar sticky bottom-[calc(88px+env(safe-area-inset-bottom))] z-10 border-t border-[#e5e5e5] md:bottom-0">
+          <div className="mx-auto flex w-full max-w-[1120px] items-center justify-end gap-3 px-8 py-3 sm:px-10 lg:px-12">
+            {saved ? (
+              <span className="flex items-center gap-1.5 text-[12px] font-medium text-[#2e8a5c]"><Check size={14} /> Changes saved</span>
+            ) : dirty ? (
+              <span className="text-[12px] font-medium text-[#b9770e]">You have unsaved changes</span>
+            ) : null}
+            {dirty && !saving && (
+              <button type="button" onClick={() => setDraft(profileFrom(info))} className="info-discard-button h-9 cursor-pointer rounded-lg border px-3.5 text-[12px] font-medium transition">Discard</button>
+            )}
+            <button type="button" onClick={() => void saveProfile()} disabled={saving || !dirty} className="info-save-button flex h-9 cursor-pointer items-center gap-2 rounded-lg border px-3.5 text-[12px] font-medium transition disabled:cursor-not-allowed disabled:opacity-50">
+              {saving ? <><RefreshCw size={14} className="animate-spin" /> Saving...</> : <><Save size={14} /> Save changes</>}
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -2616,19 +2726,15 @@ function SetupIntegrationSettingsPage() {
         <p className="mt-1.5 max-w-xl text-[13px] leading-6 text-[var(--b-muted)]">Configure the chat widget and connect the tools your team already uses.</p>
       </header>
 
-      <Link
-        href="/dashboard/settings/identity"
-        className="group mt-6 flex items-center justify-between gap-4 rounded-[10px] border border-[var(--b-border)] bg-[var(--b-surface)] px-5 py-4 transition hover:bg-[var(--b-surface-2)]"
-      >
-        <div className="flex items-center gap-3">
-          <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[var(--b-surface-2)] text-[var(--b-info)]"><UserCheck size={17} /></span>
-          <div>
-            <p className="text-[14px] font-medium">Enable verification</p>
-            <p className="mt-0.5 text-[12.5px] text-[var(--b-muted)]">Verify logged-in customers before they chat, so no one can pretend to be someone else.</p>
-          </div>
+      <div className="mt-6 flex flex-col gap-4 rounded-xl border border-[var(--b-border)] px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
+          <h3 className="text-[15px] font-semibold">Customer verification</h3>
+          <p className="mt-0.5 text-[13px] text-[var(--b-muted)]">Confirm who is chatting, so no one can pretend to be someone else.</p>
         </div>
-        <ArrowRight size={15} className="shrink-0 text-[var(--b-muted)] transition group-hover:translate-x-0.5 group-hover:text-[var(--b-text)]" />
-      </Link>
+        <Link href="/dashboard/settings/identity" className="inline-flex h-9 shrink-0 items-center justify-center rounded-lg border border-[var(--b-text)] px-4 text-[13px] font-semibold transition hover:bg-[var(--b-surface-2)]">
+          Enable
+        </Link>
+      </div>
 
       <div className="dashboard-connect-embedded mt-8">
         <ConnectPageContent />
@@ -2639,11 +2745,10 @@ function SetupIntegrationSettingsPage() {
 
 function WorkspaceDangerZoneSettingsPage() {
   return (
-    <div className="pb-14 pt-8">
-      <div className="mx-auto w-full max-w-[1120px] px-8 text-[#17181a] sm:px-10 lg:px-12">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Workspace</p>
-        <h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em] text-[#17181a]">Danger Zone</h2>
-        <p className="mt-2 max-w-xl text-[14px] leading-6 text-[#667069]">Irreversible actions. Read the descriptions carefully before continuing.</p>
+    <div className="pb-6 pt-9">
+      <div className="mx-auto w-full max-w-[1120px] px-8 sm:px-10 lg:px-12">
+        <h2 className="text-[26px] font-semibold tracking-[-0.025em] text-[#121315]">Danger zone</h2>
+        <p className="mt-2 max-w-xl text-[15px] leading-6 text-[#667069]">Irreversible actions. Read the descriptions carefully before continuing.</p>
       </div>
       <DangerZoneSection />
     </div>
@@ -2936,7 +3041,6 @@ function GeneralSettingsPage({ user }: { user: SettingsUser }) {
                 Remove photo
               </button>
             )}
-            <p className="mt-4 text-[12px] font-medium">{name.trim() || originalName}</p>
 
             <label className="mt-5 block text-[12px] font-medium" htmlFor="settings-full-name">Full Name</label>
             <div className="relative mt-2">
@@ -3081,6 +3185,8 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
   const [avatarTab, setAvatarTab] = useState<"stock" | "upload">("stock");
   const [stockIconIds, setStockIconIds] = useState<string[]>([]);
   const [stockIconsLoading, setStockIconsLoading] = useState(true);
+  // What is saved right now, so autosave only fires for a real change (not once on every visit just because the page loaded).
+  const savedSnapshot = useRef<string | null>(null);
 
   useEffect(() => {
     fetch("/api/stock-icons")
@@ -3102,12 +3208,21 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
         setReplyLanguage(data.persona.chatbotReplyLanguage ?? "auto");
         const saved = Array.isArray(data.persona.greetingLines) ? data.persona.greetingLines.map((line) => line.trim()).filter(Boolean).join(" ") : "";
         setGreeting(saved || DEFAULT_GREETING);
+        savedSnapshot.current = JSON.stringify([
+          data.persona.aiName ?? "Elpino AI",
+          data.persona.aiAvatarUrl ?? "",
+          data.persona.chatbotTheme ?? "light",
+          data.persona.chatbotReplyLanguage ?? "auto",
+          saved || DEFAULT_GREETING,
+        ]);
       })
       .catch(() => undefined)
       .finally(() => setLoading(false));
   }, []);
 
   const cleanGreetingLines = greeting.trim() ? [greeting.trim()] : [];
+
+  const currentSnapshot = JSON.stringify([aiName, aiAvatarUrl, theme, replyLanguage, greeting]);
 
   async function save() {
     if (!aiName.trim() || cleanGreetingLines.length === 0 || saving) return;
@@ -3131,6 +3246,7 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
         setError(data.message ?? "Could not save changes");
         return;
       }
+      savedSnapshot.current = currentSnapshot;
       setSaved(true);
       window.setTimeout(() => setSaved(false), 2200);
     } finally {
@@ -3148,6 +3264,8 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
 
   useEffect(() => {
     if (loading || !aiName.trim() || cleanGreetingLines.length === 0) return;
+    // Nothing to save until the person actually changes something.
+    if (savedSnapshot.current === currentSnapshot) return;
     const timer = window.setTimeout(() => { void save(); }, 700);
     return () => window.clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -4729,6 +4847,7 @@ function PresenceLogSettingsPage() {
   const [events, setEvents] = useState<PresenceEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"all" | "online" | "offline">("all");
 
   useEffect(() => {
     if (!canView) { setLoading(false); return; }
@@ -4739,67 +4858,152 @@ function PresenceLogSettingsPage() {
       .finally(() => setLoading(false));
   }, [canView]);
 
+  const byNewest = (a: PresenceEvent, b: PresenceEvent) => new Date(b.occurredAt).getTime() - new Date(a.occurredAt).getTime();
   const normalizedQuery = query.trim().toLowerCase();
-  const visibleEvents = events.filter((event) => !normalizedQuery || `${event.name ?? ""} ${event.email}`.toLowerCase().includes(normalizedQuery));
+  const visibleEvents = events
+    .filter((event) => statusFilter === "all" || event.status === statusFilter)
+    .filter((event) => !normalizedQuery || `${event.name ?? ""} ${event.email}`.toLowerCase().includes(normalizedQuery))
+    .sort(byNewest);
 
-  const onlineNow = (() => {
+  // Each teammate's latest event is their status right now: online ones first, then the most recently seen.
+  const team = (() => {
     const latest = new Map<string, PresenceEvent>();
     for (const event of events) {
       const seen = latest.get(event.userId);
       if (!seen || new Date(event.occurredAt) > new Date(seen.occurredAt)) latest.set(event.userId, event);
     }
-    return [...latest.values()].filter((event) => event.status === "online").length;
+    return [...latest.values()].sort((a, b) => (a.status === b.status ? byNewest(a, b) : a.status === "online" ? -1 : 1));
   })();
 
+  const timeAgo = (iso: string) => {
+    const minutes = Math.max(0, Math.round((Date.now() - new Date(iso).getTime()) / 60_000));
+    if (minutes < 1) return "just now";
+    if (minutes < 60) return `${minutes}m ago`;
+    if (minutes < 1440) return `${Math.round(minutes / 60)}h ago`;
+    return `${Math.round(minutes / 1440)}d ago`;
+  };
+
+  // Newest first, grouped under a heading per calendar day.
+  const dayLabel = (iso: string) => {
+    const day = new Date(iso);
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+    if (day.toDateString() === today.toDateString()) return "Today";
+    if (day.toDateString() === yesterday.toDateString()) return "Yesterday";
+    return day.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" });
+  };
+  const groups: { label: string; items: PresenceEvent[] }[] = [];
+  for (const event of visibleEvents) {
+    const label = dayLabel(event.occurredAt);
+    const last = groups[groups.length - 1];
+    if (last && last.label === label) last.items.push(event);
+    else groups.push({ label, items: [event] });
+  }
+
+  const filtering = Boolean(normalizedQuery) || statusFilter !== "all";
+
   return (
-    <div className="billing-v2 members-v2 mx-auto w-full max-w-[1120px] px-6 pb-20 pt-8 sm:px-9 lg:px-10">
+    <div className="billing-v2 members-v2 mx-auto w-full max-w-[1120px] px-6 pb-20 pt-6 sm:px-9 lg:px-10">
       <header>
-        <h2 className="text-[30px] font-normal tracking-[-0.04em]">Presence log</h2>
-        <p className="mt-1.5 max-w-2xl text-[13px] leading-6 text-[var(--b-muted)]">Every time a teammate comes online or goes offline, driven by their actual connection, not a status they set themselves.</p>
+        <h2 className="text-[30px] font-normal tracking-[-0.04em]">Recent activity</h2>
+        <p className="mt-1.5 max-w-xl text-[13px] leading-6 text-[var(--b-muted)]">See when your teammates come online and go offline, based on their real connection.</p>
       </header>
 
       {myRole !== null && !canView ? (
         <p className="mt-6 rounded-[10px] bg-[var(--b-warn-bg)] px-4 py-3 text-[13px] font-medium text-[var(--b-warn)]">Only the workspace owner can view the presence log.</p>
       ) : (
-        <section className="mt-6 overflow-hidden rounded-[10px] border border-[var(--b-border)] bg-[var(--b-surface)]">
-          <div className="flex flex-wrap items-center gap-3 border-b border-[var(--b-border)] px-5 py-4">
-            <div>
-              <h3 className="text-[17px] font-normal tracking-[-0.02em]">Recent activity</h3>
-              {!loading && events.length > 0 && <p className="mt-0.5 text-[12.5px] text-[var(--b-muted)]">{events.length} {events.length === 1 ? "event" : "events"}{onlineNow > 0 ? ` · ${onlineNow} online now` : ""}</p>}
-            </div>
-            <label className="ml-auto flex h-9 min-w-[230px] items-center gap-2 rounded-full border border-[var(--b-border)] px-3.5">
-              <Search size={14} className="shrink-0 text-[var(--b-muted)]" />
-              <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search teammate" className="min-w-0 flex-1 bg-transparent text-[13px] outline-none placeholder:text-[var(--b-muted)]" />
-            </label>
-          </div>
+        <div className="mt-8 grid items-start gap-8 lg:grid-cols-[300px_minmax(0,1fr)]">
+          {/* ------------------------------------------------------------ team */}
+          <section aria-label="Team" className="rounded-[10px] border border-[var(--b-border)] lg:sticky lg:top-6">
+            <h3 className="presence-meta border-b border-[var(--b-border)] px-4 py-3 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--b-muted)]">Team</h3>
+            {loading ? (
+              <SkeletonRows rows={3} className="px-4 py-4" />
+            ) : team.length ? (
+              <ul>
+                {team.map((member) => {
+                  const online = member.status === "online";
+                  return (
+                    <li key={member.userId} className="flex items-center gap-3 border-t border-[var(--b-border)] px-4 py-3 first:border-t-0">
+                      <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--b-surface-2)] text-[12px] font-medium">
+                        {(member.name || member.email).trim().charAt(0).toUpperCase()}
+                        <span className={`absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-[var(--b-surface)] ${online ? "bg-[var(--b-good)]" : "bg-[var(--b-track)]"}`} />
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <p className="presence-name truncate text-[13.5px] font-medium">{member.name || member.email}</p>
+                        <p className="presence-meta mt-0.5 text-[12px] text-[var(--b-muted)]">{online ? "Online now" : `Offline · ${timeAgo(member.occurredAt)}`}</p>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            ) : (
+              <p className="presence-meta px-4 py-5 text-[12.5px] text-[var(--b-muted)]">Teammates appear here once they have been online.</p>
+            )}
+          </section>
 
-          {loading ? (
-            <SkeletonRows rows={5} className="px-5 py-5" />
-          ) : visibleEvents.length ? (
-            <ul>
-              {visibleEvents.map((event) => (
-                <li key={event.id} className="flex items-center gap-4 border-t border-[var(--b-border)] px-5 py-3.5 transition-colors first:border-t-0 hover:bg-[var(--b-surface-2)]">
-                  <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--b-surface-2)] text-[12px] font-medium">
-                    {(event.name || event.email).trim().charAt(0).toUpperCase()}
-                    <span className={`absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-[var(--b-surface)] ${event.status === "online" ? "bg-[var(--b-good)]" : "bg-[var(--b-track)]"}`} />
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-[14px] font-medium">{event.name || event.email}</p>
-                    <p className="mt-0.5 truncate text-[12px] text-[var(--b-muted)]">{event.email}</p>
-                  </div>
-                  <span className={`shrink-0 rounded-full px-2.5 py-0.5 text-[11.5px] font-medium capitalize ${event.status === "online" ? "bg-[var(--b-good-bg)] text-[var(--b-good)]" : "border border-[var(--b-border)] text-[var(--b-muted)]"}`}>{event.status}</span>
-                  <time className="w-[150px] shrink-0 text-right text-[12.5px] text-[var(--b-muted)]">{new Date(event.occurredAt).toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}</time>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <div className="flex flex-col items-center px-6 py-14 text-center">
-              <span className="grid size-11 place-items-center rounded-full bg-[var(--b-surface-2)] text-[var(--b-muted)]"><Search size={18} /></span>
-              <p className="mt-3 text-[14px] font-medium">{normalizedQuery ? "No teammate matches this search" : "No presence activity yet"}</p>
-              <p className="mt-1 text-[12.5px] text-[var(--b-muted)]">{normalizedQuery ? "Try a different name or email." : "Online and offline events will appear here as teammates come and go."}</p>
+          {/* ------------------------------------------------------------ timeline */}
+          <section className="min-w-0">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <label className="flex h-9 items-center gap-2 rounded-full border border-[var(--b-border)] px-3.5">
+                <Search size={13} className="shrink-0 text-[var(--b-muted)]" />
+                <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search teammate" className="w-40 bg-transparent text-[13px] outline-none placeholder:text-[var(--b-muted)] sm:w-52" />
+              </label>
+              <div className="flex rounded-full border border-[var(--b-border)] p-0.5" role="group" aria-label="Filter by status">
+                {(["all", "online", "offline"] as const).map((value) => (
+                  <button
+                    key={value}
+                    type="button"
+                    aria-pressed={statusFilter === value}
+                    onClick={() => setStatusFilter(value)}
+                    className={`cursor-pointer rounded-full px-3 py-1.5 text-[12.5px] capitalize transition ${statusFilter === value ? "bg-[var(--b-surface-2)] font-medium text-[var(--b-text)]" : "text-[var(--b-muted)] hover:text-[var(--b-text)]"}`}
+                  >
+                    {value}
+                  </button>
+                ))}
+              </div>
             </div>
-          )}
-        </section>
+
+            {loading ? (
+              <SkeletonRows rows={5} className="mt-5 py-2" />
+            ) : groups.length ? (
+              <div className="mt-5 space-y-6">
+                {groups.map((group) => (
+                  <div key={group.label}>
+                    <p className="presence-meta px-1 pb-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--b-muted)]">{group.label}</p>
+                    <ul className="overflow-hidden rounded-[10px] border border-[var(--b-border)]">
+                      {group.items.map((event) => {
+                        const online = event.status === "online";
+                        return (
+                          <li key={event.id} className="flex items-center gap-3 border-t border-[var(--b-border)] px-4 py-3 transition-colors first:border-t-0 hover:bg-[var(--b-surface-2)]">
+                            <span className={`h-2 w-2 shrink-0 rounded-full ${online ? "bg-[var(--b-good)]" : "bg-[var(--b-track)]"}`} aria-hidden="true" />
+                            <p className="min-w-0 flex-1 truncate text-[14px]">
+                              <span className="presence-name font-medium">{event.name || event.email}</span>
+                              <span className="presence-meta text-[var(--b-muted)]"> {online ? "came online" : "went offline"}</span>
+                            </p>
+                            <time
+                              dateTime={event.occurredAt}
+                              title={new Date(event.occurredAt).toLocaleString()}
+                              className="presence-meta shrink-0 text-[12.5px] tabular-nums text-[var(--b-muted)]"
+                            >
+                              {new Date(event.occurredAt).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })}
+                            </time>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="mt-5 flex flex-col items-center rounded-[10px] border border-dashed border-[var(--b-border)] px-6 py-14 text-center">
+                <span className="grid size-11 place-items-center rounded-full bg-[var(--b-surface-2)] text-[var(--b-muted)]"><Search size={18} /></span>
+                <p className="mt-3 text-[14px] font-medium">{filtering ? "No activity matches this search or filter" : "No presence activity yet"}</p>
+                <p className="mt-1 text-[12.5px] text-[var(--b-muted)]">{filtering ? "Try a different name, or show all activity." : "Online and offline events will appear here as teammates come and go."}</p>
+              </div>
+            )}
+          </section>
+        </div>
       )}
     </div>
   );
@@ -4820,24 +5024,12 @@ function TagManagerSettingsPage() {
   const [verificationMessage, setVerificationMessage] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [cspCopied, setCspCopied] = useState(false);
-  const [actionMenu, setActionMenu] = useState<string | null>(null);
-  const [actionMenuPos, setActionMenuPos] = useState<{ top: number; left: number } | null>(null);
-  const actionMenuRef = useRef<HTMLDivElement>(null);
   const [capabilities, setCapabilities] = useState({ chat: true, visitors: true, identify: true });
   const [creatingTag, setCreatingTag] = useState(false);
-  const [tagPage, setTagPage] = useState(1);
   const [deleteTarget, setDeleteTarget] = useState<SiteTag | null>(null);
   const [deletingTagId, setDeletingTagId] = useState<string | null>(null);
-  const TAGS_PER_PAGE = 8;
 
   function openTagDialog(tag: SiteTag, nextDialog: "install" | "permissions") { setSelectedTag(tag); setDialog(nextDialog); setCopied(false); setVerificationMessage(null); }
-
-  function toggleActionMenu(event: React.MouseEvent<HTMLButtonElement>, tagId: string) {
-    if (actionMenu === tagId) { setActionMenu(null); return; }
-    const rect = event.currentTarget.getBoundingClientRect();
-    setActionMenuPos({ top: rect.bottom + 6, left: Math.max(8, rect.right - 160) });
-    setActionMenu(tagId);
-  }
 
   async function deleteTag(tag: SiteTag) {
     setDeletingTagId(tag.id);
@@ -4850,27 +5042,6 @@ function TagManagerSettingsPage() {
     }
   }
 
-  // The menu is portaled to <body> with position:fixed (see render below), so
-  // it isn't clipped by the table's overflow-x-auto or the page's
-  // overflow-y-auto ancestors. Close it on outside click or on any scroll —
-  // a fixed-position menu would otherwise drift away from its anchor.
-  useEffect(() => {
-    if (!actionMenu) return;
-    function handlePointerDown(event: MouseEvent) {
-      const target = event.target as HTMLElement;
-      if (target.closest("[data-tag-menu-trigger]")) return;
-      if (actionMenuRef.current && !actionMenuRef.current.contains(target)) setActionMenu(null);
-    }
-    function handleClose() { setActionMenu(null); }
-    document.addEventListener("mousedown", handlePointerDown);
-    window.addEventListener("scroll", handleClose, true);
-    window.addEventListener("resize", handleClose);
-    return () => {
-      document.removeEventListener("mousedown", handlePointerDown);
-      window.removeEventListener("scroll", handleClose, true);
-      window.removeEventListener("resize", handleClose);
-    };
-  }, [actionMenu]);
   useEffect(() => {
     let active = true;
     fetch("/api/workspace/sites", { cache: "no-store" })
@@ -4943,89 +5114,122 @@ function TagManagerSettingsPage() {
     `frame-src ${WIDGET_APP_ORIGIN};`,
   ].join("\n");
 
+  async function verifyTag() {
+    if (!selectedTag) return;
+    setVerifying(true);
+    setVerificationMessage(null);
+    const response = await fetch("/api/workspace/sites", { cache: "no-store" });
+    const result = (await response.json()) as { sites?: SiteTag[] };
+    const refreshed = result.sites?.find((item) => item.id === selectedTag.id);
+    if (refreshed) {
+      setSelectedTag(refreshed);
+      setTags(result.sites ?? []);
+      setVerificationMessage(refreshed.status === "verified" ? "Tag connected successfully." : "No visit detected yet. Open the installed website, then try again.");
+    } else {
+      setVerificationMessage("Could not find this tag.");
+    }
+    setVerifying(false);
+  }
+
   return (
-    <div className="dashboard-tag-manager-page mx-auto w-full max-w-[1120px] px-7 pb-14 pt-8 text-[#17181a] sm:px-9 lg:px-10">
-      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[#E5E8EA] pb-7"><div><p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6D7D85]">Website data</p><h2 className="mt-2 text-[34px] font-medium tracking-[-0.04em] text-white/90">Website tags</h2><p className="mt-2 max-w-xl text-[14px] leading-6 text-[#667069]">Install and manage the secure connection between Elpino and your website.</p></div>{tags.length === 0 && <button type="button" onClick={() => setDialog("create")} className="flex h-9 shrink-0 items-center gap-2 rounded-lg bg-[#202225] px-4 text-[12px] font-semibold text-white transition hover:bg-black"><Plus size={14} /> New tag</button>}</div>
-      {/* One domain per workspace, enforced server-side (SitesController's
-          SITE_LIMIT) — once a tag exists, don't offer a control that the
-          backend will just reject after a full form fill-out. A second
-          domain means a second workspace instead. */}
-      {tags.length > 0 && <p className="dashboard-tag-note mt-4 rounded-lg border border-[#DFE3E6] bg-[#FAFBFB] px-3.5 py-2.5 text-[12px] leading-5 text-[#667069]">A workspace can only connect one website. To support another domain, create a separate workspace for it.</p>}
-
-      <div className="dashboard-tag-table-surface mt-5 bg-transparent">
-        {tagError && !dialog && <div role="alert" className="mb-4 flex items-center justify-between rounded-lg bg-[#FFF2F2] px-3.5 py-2.5 text-[11px] font-medium text-[#A64A53]"><span>{tagError}</span><button type="button" onClick={() => setTagError(null)} aria-label="Dismiss error"><X size={14} /></button></div>}
-        {loadingTags ? <SkeletonRows rows={4} className="px-5 py-6" /> : tags.length === 0 ? (
-          <div className="flex flex-col items-center px-6 py-16 text-center"><span className="dashboard-tag-empty-icon flex h-11 w-11 items-center justify-center rounded-xl bg-[rgba(255,255,255,0.05)] text-[#667078]"><Code2 size={19} /></span><h4 className="mt-3 text-[14px] font-semibold">No website tags</h4><p className="mt-1 max-w-sm text-[11px] leading-5 text-[#687178]">Create a tag and install it on your website to begin receiving visitor activity.</p><button type="button" onClick={() => setDialog("create")} className="mt-4 h-9 rounded-lg border border-[#D8DDE1] px-4 text-[12px] font-semibold transition hover:bg-[#F7F8FA]">Create first tag</button></div>
-        ) : (
-          <div className="overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            <div className="min-w-[900px] pb-2">
-              <div className="dashboard-tag-table-header grid grid-cols-[1.35fr_0.72fr_1fr_0.8fr_0.85fr_0.75fr_40px] gap-3 rounded-lg border border-[#DFE3E6] bg-transparent px-4 py-2.5 text-[12px] font-semibold text-white"><span>Website</span><span>Status</span><span>Public key</span><span>Access</span><span>Last activity</span><span>Created</span><span /></div>
-              {(() => {
-                const totalPages = Math.max(1, Math.ceil(tags.length / TAGS_PER_PAGE));
-                const page = Math.min(tagPage, totalPages);
-                const pageTags = tags.slice((page - 1) * TAGS_PER_PAGE, page * TAGS_PER_PAGE);
-                return (
-                  <>
-                    {pageTags.map((tag) => {
-                      const permissionCount = Object.values(tag.permissions).filter(Boolean).length;
-                      return <div key={tag.id} className="dashboard-tag-table-row grid grid-cols-[1.35fr_0.72fr_1fr_0.8fr_0.85fr_0.75fr_40px] items-center gap-3 border-b border-[#E8ECEE] px-4 py-3 transition hover:bg-[rgba(255,255,255,0.05)]">
-                        <div className="flex min-w-0 items-center gap-3"><span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#EAF5EE] text-[#257A4D]"><KeyRound size={14} /></span><span className="min-w-0"><span className="dashboard-tag-table-text block truncate text-[14px] font-semibold text-white/80">{tag.name}</span><span className="mt-0.5 block truncate text-[12px] text-[#7B858A]">{tag.domain}</span></span></div>
-                        <span className={`inline-flex w-fit items-center gap-1.5 rounded-full px-2 py-1 text-[11px] font-semibold ${tag.status === "verified" ? "text-[#257A4D]" : "text-[#93651D]"}`}><span className={`h-1.5 w-1.5 rounded-full ${tag.status === "verified" ? "bg-[#2FA266]" : "bg-[#D89831]"}`} />{tag.status === "verified" ? "Verified" : "Pending"}</span>
-                        <code className="dashboard-tag-table-text w-fit max-w-full truncate rounded-md px-2 py-1 text-[12px] text-white/80">{tag.publicKey.slice(0, 12)}…</code>
-                        <span className="dashboard-tag-table-text text-[13px] font-medium text-white/80">{permissionCount === 3 ? "Full access" : `${permissionCount} enabled`}</span>
-                        <span className="dashboard-tag-table-text text-[13px] text-white/80">{tag.lastUsedAt ? new Date(tag.lastUsedAt).toLocaleDateString() : "Never"}</span>
-                        <span className="dashboard-tag-table-text text-[13px] text-white/80">{new Date(tag.createdAt).toLocaleDateString()}</span>
-                        <div className="relative"><button type="button" data-tag-menu-trigger aria-label={`Actions for ${tag.name}`} onClick={(event) => toggleActionMenu(event, tag.id)} className="dashboard-tag-table-text dashboard-tag-action-trigger flex h-8 w-8 items-center justify-center rounded-md text-white/80 hover:bg-[rgba(255,255,255,0.1)]"><MoreHorizontal size={16} /></button></div>
-                      </div>;
-                    })}
-                    <div className="flex items-center justify-between px-1 py-3 text-[10px] text-[#768087]">
-                      <span>{tags.length} {tags.length === 1 ? "tag" : "tags"}</span>
-                      {totalPages > 1 ? (
-                        <div className="flex items-center gap-3">
-                          <button type="button" disabled={page <= 1} onClick={() => setTagPage(page - 1)} className="rounded-md border border-[#DDE4E8] px-2.5 py-1 font-medium text-[#3F474C] transition hover:bg-[#F3F4F5] disabled:cursor-not-allowed disabled:opacity-40">Previous</button>
-                          <span>Page {page} of {totalPages}</span>
-                          <button type="button" disabled={page >= totalPages} onClick={() => setTagPage(page + 1)} className="rounded-md border border-[#DDE4E8] px-2.5 py-1 font-medium text-[#3F474C] transition hover:bg-[#F3F4F5] disabled:cursor-not-allowed disabled:opacity-40">Next</button>
-                        </div>
-                      ) : (
-                        <span>Page 1 of 1</span>
-                      )}
-                    </div>
-                  </>
-                );
-              })()}
-            </div>
-          </div>
+    <div className="dashboard-tag-manager-page tag-page mx-auto w-full max-w-[1120px] px-7 pb-14 pt-8 sm:px-9 lg:px-10">
+      <header className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h2 className="tag-heading text-[29px] font-normal tracking-[-0.04em]">Website</h2>
+          <p className="tag-paragraph mt-2 max-w-xl text-[15px] leading-7">Connect your website so the chat widget can appear on it.</p>
+        </div>
+        {/* One domain per workspace, enforced server-side (SitesController's SITE_LIMIT): once a website is connected there is
+            nothing to add. A second domain means a second workspace instead. */}
+        {tags.length === 0 && !loadingTags && (
+          <button type="button" onClick={() => setDialog("create")} className="tag-btn tag-btn-primary flex h-11 shrink-0 cursor-pointer items-center gap-2 rounded-full border px-6 text-[14px] font-semibold transition">
+            <Plus size={16} /> Connect website
+          </button>
         )}
-      </div>
+      </header>
 
-      {actionMenu && actionMenuPos && typeof document !== "undefined" && (() => {
-        const tag = tags.find((item) => item.id === actionMenu);
-        if (!tag) return null;
-        return createPortal(
-          <div
-            ref={actionMenuRef}
-            style={{ position: "fixed", top: actionMenuPos.top, left: actionMenuPos.left }}
-            className="dashboard-tag-action-menu z-[110] w-40 rounded-lg border border-black/10 p-1 shadow-[0_12px_30px_rgba(15,23,42,0.14)]"
-          >
-            <button type="button" onClick={() => { openTagDialog(tag, "install"); setActionMenu(null); }} className="dashboard-tag-menu-item flex h-8 w-full items-center rounded-md px-2.5 text-[11px] font-medium">Installation</button>
-            <button type="button" onClick={() => { openTagDialog(tag, "permissions"); setActionMenu(null); }} className="dashboard-tag-menu-item flex h-8 w-full items-center rounded-md px-2.5 text-[11px] font-medium">Permissions</button>
-            <button
-              type="button"
-              onClick={() => { setDeleteTarget(tag); setActionMenu(null); }}
-              className="dashboard-tag-menu-delete flex h-8 w-full items-center rounded-md px-2.5 text-[11px] font-medium text-[#A64A53]"
-            >
-              Delete
-            </button>
-          </div>,
-          // Portaling to document.body would escape the dashboard-shell
-          // subtree that every dark-mode override is scoped to (the
-          // data-dashboard-theme attribute lives on an ancestor div, not
-          // <body>), so the menu would always render light regardless of
-          // theme. Portal inside .dashboard-shell instead so it inherits
-          // the same dark/light cascade as everything else.
-          document.querySelector(".dashboard-shell") ?? document.body,
-        );
-      })()}
+      {tagError && !dialog && (
+        <div role="alert" className="mt-6 flex items-center justify-between gap-3 rounded-xl bg-[#FFF2F2] px-4 py-3 text-[13px] font-medium text-[#A64A53]">
+          <span>{tagError}</span>
+          <button type="button" onClick={() => setTagError(null)} aria-label="Dismiss error" className="cursor-pointer"><X size={16} /></button>
+        </div>
+      )}
+
+      {loadingTags ? (
+        <SkeletonRows rows={3} className="mt-8 py-4" />
+      ) : tags.length === 0 ? (
+        <div className="tag-card mt-8 flex flex-col items-center rounded-2xl border border-dashed px-6 py-16 text-center">
+          <span className="tag-card-icon flex size-14 items-center justify-center rounded-2xl"><Globe2 size={26} /></span>
+          <h3 className="tag-heading mt-5 text-[21px] font-semibold tracking-[-0.02em]">No website connected yet</h3>
+          <p className="tag-paragraph mt-2 max-w-md text-[15px] leading-7">Add your website to get a short snippet. Paste it into your site and the chat widget goes live.</p>
+          <button type="button" onClick={() => setDialog("create")} className="tag-btn tag-btn-primary mt-6 flex h-11 cursor-pointer items-center gap-2 rounded-full border px-6 text-[14px] font-semibold transition">
+            <Plus size={16} /> Connect website
+          </button>
+        </div>
+      ) : (
+        tags.map((tag) => {
+          const permissionCount = Object.values(tag.permissions).filter(Boolean).length;
+          const verified = tag.status === "verified";
+          const facts: [string, string][] = [
+            ["Access", permissionCount === 3 ? "Full access" : `${permissionCount} of 3 enabled`],
+            ["Last activity", tag.lastUsedAt ? new Date(tag.lastUsedAt).toLocaleDateString() : "Never"],
+            ["Added", new Date(tag.createdAt).toLocaleDateString()],
+            ["Public key", `${tag.publicKey.slice(0, 12)}…`],
+          ];
+          return (
+            <article key={tag.id} className="tag-card mt-7 rounded-2xl border p-6 sm:p-7">
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div className="flex min-w-0 items-center gap-4">
+                  <span className="tag-card-icon flex size-12 shrink-0 items-center justify-center rounded-xl"><Globe2 size={22} /></span>
+                  <div className="min-w-0">
+                    <p className="tag-heading truncate text-[19px] font-semibold tracking-[-0.02em]">{tag.name}</p>
+                    <p className="tag-paragraph mt-0.5 truncate text-[15px]">{tag.domain}</p>
+                  </div>
+                </div>
+                <span
+                  className={`tag-badge ${verified ? "tag-badge-verified" : "tag-badge-pending"} inline-flex w-fit items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[13px] font-semibold`}
+                  title={verified ? "The tag has reported in from your site." : "No visit detected yet. Install the tag, open your site, then verify."}
+                >
+                  {verified ? (
+                    <CheckCircle2 size={15} aria-hidden="true" />
+                  ) : (
+                    <span className="relative flex size-2" aria-hidden="true">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-current opacity-50" />
+                      <span className="relative inline-flex size-2 rounded-full bg-current" />
+                    </span>
+                  )}
+                  {verified ? "Verified" : "Pending"}
+                </span>
+              </div>
+
+              {!verified && (
+                <div className="tag-callout mt-6 flex flex-wrap items-center justify-between gap-4 rounded-xl border px-5 py-4">
+                  <p className="tag-heading text-[15px] leading-6"><strong className="font-semibold">One step left.</strong> <span className="tag-paragraph">Install the snippet on your website, then verify it.</span></p>
+                  <button type="button" onClick={() => openTagDialog(tag, "install")} className="tag-btn tag-btn-primary flex h-10 shrink-0 cursor-pointer items-center gap-2 rounded-full border px-5 text-[14px] font-semibold transition">
+                    Install and verify <ArrowRight size={15} />
+                  </button>
+                </div>
+              )}
+
+              <dl className="mt-7 grid gap-x-8 gap-y-5 sm:grid-cols-2 lg:grid-cols-4">
+                {facts.map(([label, value]) => (
+                  <div key={label} className="min-w-0">
+                    <dt className="tag-paragraph text-[13px]">{label}</dt>
+                    <dd className={`tag-heading mt-1 truncate text-[15px] font-medium ${label === "Public key" ? "font-mono text-[14px]" : ""}`}>{value}</dd>
+                  </div>
+                ))}
+              </dl>
+
+              <div className="tag-card-actions mt-7 flex flex-wrap items-center gap-2.5 border-t pt-5">
+                <button type="button" onClick={() => openTagDialog(tag, "install")} className="tag-btn flex h-10 cursor-pointer items-center gap-2 rounded-full border px-5 text-[14px] font-medium transition"><Code2 size={16} /> Install snippet</button>
+                <button type="button" onClick={() => openTagDialog(tag, "permissions")} className="tag-btn flex h-10 cursor-pointer items-center gap-2 rounded-full border px-5 text-[14px] font-medium transition"><ShieldCheck size={16} /> Permissions</button>
+                <button type="button" onClick={() => setDeleteTarget(tag)} className="tag-btn tag-btn-danger ml-auto flex h-10 cursor-pointer items-center gap-2 rounded-full border px-5 text-[14px] font-medium transition"><Trash2 size={16} /> Delete</button>
+              </div>
+            </article>
+          );
+        })
+      )}
+
+      {tags.length > 0 && <p className="tag-paragraph mt-5 text-[14px] leading-6">A workspace can connect one website. To support another domain, create a separate workspace for it.</p>}
 
       {deleteTarget && (
         <div className="fixed inset-0 z-[120] flex items-center justify-center bg-[#0b0f14]/40 p-4 backdrop-blur-[2px]" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget && deletingTagId !== deleteTarget.id) setDeleteTarget(null); }}>
@@ -5121,15 +5325,80 @@ function TagManagerSettingsPage() {
         </div>
       )}
 
-      <Link href="/dashboard/settings/identity" className="mt-8 flex items-center gap-3 rounded-xl border border-[#e7e8ea] p-4 transition hover:bg-black/[0.03]">
-        <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#F3EEFF] text-[#6246DF]"><UserCheck size={16} /></span>
-        <span className="min-w-0 flex-1"><span className="block text-[13px] font-semibold">Verify signed-in customers</span><span className="mt-0.5 block text-[12px] leading-5 text-[#687178]">Let the AI safely look up a logged-in customer&apos;s own payments and records.</span></span>
-        <span className="text-[12px] font-medium text-[#428ce5]">Set up</span>
+      <Link href="/dashboard/settings/identity" className="tag-verify-card group mt-8 flex flex-wrap items-center gap-x-5 gap-y-4 rounded-2xl border p-5 transition sm:flex-nowrap">
+        <span className="tag-verify-icon flex size-12 shrink-0 items-center justify-center rounded-xl"><UserCheck size={22} /></span>
+        <span className="min-w-0 flex-1">
+          <span className="tag-verify-title block text-[15px] font-semibold tracking-[-0.01em]">Verify signed-in customers</span>
+          <span className="tag-verify-text mt-1 block max-w-xl text-[13px] leading-6">Let the AI safely look up a logged-in customer&apos;s own payments and records.</span>
+        </span>
+        <span className="tag-verify-action inline-flex h-10 shrink-0 items-center gap-2 rounded-full border px-5 text-[13px] font-medium transition">
+          Set up <ArrowRight size={15} className="transition group-hover:translate-x-0.5" />
+        </span>
       </Link>
 
-      {(dialog === "install" || dialog === "permissions") && selectedTag && <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/35 p-4 backdrop-blur-[2px]" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setDialog(null); }}><div role="dialog" aria-modal="true" className="dashboard-tag-install-panel w-full max-w-[580px] overflow-hidden rounded-[24px] border border-black/10 shadow-[0_28px_80px_rgba(15,23,42,0.24)]"><div className="dashboard-tag-install-header flex items-start justify-between border-b border-[#E5E9EB] px-6 py-5"><div><h3 className="text-[19px] font-semibold tracking-[-0.02em]">{dialog === "install" ? `Install ${selectedTag.name}` : `Permissions for ${selectedTag.name}`}</h3><p className="dashboard-tag-table-text mt-1 text-[12px] text-white/80">{dialog === "install" ? "Add the public snippet before the closing head tag." : "Choose what this site tag is allowed to collect."}</p></div><button type="button" onClick={() => setDialog(null)} className="dashboard-tag-install-close flex h-9 w-9 items-center justify-center rounded-lg"><X size={17} /></button></div>
-        {dialog === "install" && <div className="p-6"><div className="rounded-2xl bg-[#11120f] p-4 text-white"><div className="mb-3 flex items-center justify-between"><span className="text-[10px] font-bold uppercase tracking-[0.12em] text-white/50">Install snippet</span><button type="button" onClick={async () => { await navigator.clipboard.writeText(snippet); setCopied(true); }} className="flex items-center gap-1.5 text-[10px] font-semibold text-white/75 hover:text-white"><Copy size={13} /> {copied ? "Copied" : "Copy"}</button></div><code className="block break-all text-[11px] leading-5 text-[#D8E2E7]">{snippet}</code></div><div className="dashboard-tag-steps mt-4 rounded-xl border border-[#E2DFD8] bg-[rgba(255,255,255,0.05)] p-4"><p className="text-[12px] font-semibold">Installation steps</p><ol className="mt-2 space-y-2 text-[11px] leading-5 text-[#667069]"><li>1. Copy the snippet above.</li><li>2. Paste it into every page before <code>&lt;/head&gt;</code>.</li><li>3. Publish your website, then verify the tag.</li></ol></div><div className="dashboard-tag-csp mt-4 rounded-xl border border-[#E2DFD8] bg-[#FAFBFB] p-4"><p className="text-[12px] font-semibold text-[#17181a]">Have a Content-Security-Policy?</p><p className="mt-1 text-[11px] leading-5 text-[#667069]">Add these to your existing policy — a strict CSP is enforced by your site, so this is the one thing we can’t fix from our side. Without it the tag loads but the chat bubble silently never appears.</p><div className="mt-3 rounded-lg bg-[#11120f] p-3"><div className="mb-2 flex items-center justify-between"><span className="text-[10px] font-bold uppercase tracking-[0.12em] text-white/50">Add to script-src / connect-src / frame-src</span><button type="button" onClick={async () => { await navigator.clipboard.writeText(cspSnippet); setCspCopied(true); setTimeout(() => setCspCopied(false), 2000); }} className="flex items-center gap-1.5 text-[10px] font-semibold text-white/75 hover:text-white"><Copy size={12} /> {cspCopied ? "Copied" : "Copy"}</button></div><pre className="whitespace-pre-wrap break-all text-[11px] leading-5 text-[#D8E2E7]">{cspSnippet}</pre></div></div>{verificationMessage && <p className={`mt-4 text-[11px] font-medium ${selectedTag.status === "verified" ? "text-[#257A4D]" : "text-[#A66A2C]"}`}>{verificationMessage}</p>}<div className="mt-5 flex items-center justify-between gap-4"><span className="text-[11px] text-[#667069]">{selectedTag.allowLocalhost ? `Allowed on ${selectedTag.domain} and localhost.` : `Restricted to ${selectedTag.domain}.`}</span><button type="button" disabled={verifying} onClick={async () => { setVerifying(true); setVerificationMessage(null); const response = await fetch("/api/workspace/sites", { cache: "no-store" }); const result = await response.json() as { sites?: SiteTag[] }; const refreshed = result.sites?.find((item) => item.id === selectedTag.id); if (refreshed) { setSelectedTag(refreshed); setTags(result.sites ?? []); setVerificationMessage(refreshed.status === "verified" ? "Tag connected successfully." : "No visit detected yet. Open the installed website, then try again."); } else setVerificationMessage("Could not find this tag."); setVerifying(false); }} className="flex h-10 shrink-0 items-center gap-2 rounded-full bg-[#11120f] px-5 text-[12px] font-semibold text-white disabled:opacity-60">{verifying ? <><LoaderCircle size={14} className="animate-spin" /> Verifying</> : <><CheckCircle2 size={14} /> Verify tag</>}</button></div></div>}
-        {dialog === "permissions" && <div className="divide-y divide-[#E9ECEE]">{([{ key: "analytics", title: "Analytics", description: "Collect page views, referrers, and engagement events." }, { key: "visitors", title: "Visitor counts", description: "Count unique and returning visitors for reporting." }, { key: "support", title: "Support context", description: "Attach the current page and session context to support conversations." }] as const).map((permission) => <div key={permission.key} className="flex items-start gap-4 px-6 py-5"><div className="min-w-0 flex-1"><p className="text-[13px] font-semibold">{permission.title}</p><p className="mt-1 text-[11px] leading-5 text-[#667069]">{permission.description}</p></div><Toggle checked={selectedTag.permissions[permission.key]} onChange={() => updateSelectedTag({ ...selectedTag, permissions: { ...selectedTag.permissions, [permission.key]: !selectedTag.permissions[permission.key] } })} label={permission.title} /></div>)}<div className="flex items-start gap-4 px-6 py-5"><div className="min-w-0 flex-1"><p className="text-[13px] font-semibold">Allow localhost</p><p className="mt-1 text-[11px] leading-5 text-[#667069]">Let this tag run on localhost and 127.0.0.1 while you develop. Turn it off for a site that is only used in production.</p></div><Toggle checked={selectedTag.allowLocalhost} onChange={() => updateSelectedTag({ ...selectedTag, allowLocalhost: !selectedTag.allowLocalhost })} label="Allow localhost" /></div></div>}
+      {(dialog === "install" || dialog === "permissions") && selectedTag && <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/35 p-4 backdrop-blur-[2px]" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setDialog(null); }}><div role="dialog" aria-modal="true" className="dashboard-tag-install-panel w-full max-w-[660px] overflow-hidden rounded-[24px] border border-black/10 shadow-[0_28px_80px_rgba(15,23,42,0.24)]"><div className="dashboard-tag-install-header flex items-start justify-between border-b border-[#E5E9EB] px-6 py-5"><div><h3 className="text-[22px] font-semibold tracking-[-0.02em]">{dialog === "install" ? "Installation requirements" : `Permissions for ${selectedTag.name}`}</h3><p className="dashboard-tag-table-text mt-1 text-[14px] text-white/80">{dialog === "install" ? `What you need to get the chat widget live on ${selectedTag.domain}.` : "Choose what this site tag is allowed to collect."}</p></div><button type="button" onClick={() => setDialog(null)} className="dashboard-tag-install-close flex h-9 w-9 items-center justify-center rounded-lg"><X size={17} /></button></div>
+        {dialog === "install" && (
+          <div className="max-h-[calc(100vh-200px)] overflow-y-auto p-6 sm:p-7">
+            <ol className="dashboard-tag-steps space-y-7">
+              <li className="flex gap-4">
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-full border border-current text-[14px] font-semibold" aria-hidden="true">1</span>
+                <div className="min-w-0 flex-1">
+                  <p className="tag-heading text-[16px] font-semibold">Copy the snippet</p>
+                  <div className="mt-3 rounded-2xl bg-[#11120f] p-4 text-white">
+                    <div className="mb-3 flex items-center justify-between gap-3">
+                      <span className="text-[12px] font-bold uppercase tracking-[0.12em] text-white/60">Install snippet</span>
+                      <button type="button" onClick={async () => { await navigator.clipboard.writeText(snippet); setCopied(true); setTimeout(() => setCopied(false), 2000); }} className="flex h-9 cursor-pointer items-center gap-1.5 rounded-full border border-white/25 px-3.5 text-[13px] font-semibold text-white/90 transition hover:bg-white/10">
+                        {copied ? <><Check size={14} /> Copied</> : <><Copy size={14} /> Copy</>}
+                      </button>
+                    </div>
+                    <HighlightedCode code={snippet} lang="markup" className="text-[13.5px]" />
+                  </div>
+                </div>
+              </li>
+
+              <li className="flex gap-4">
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-full border border-current text-[14px] font-semibold" aria-hidden="true">2</span>
+                <div className="min-w-0 flex-1">
+                  <p className="tag-heading text-[16px] font-semibold">Paste it into your site</p>
+                  <p className="tag-paragraph dashboard-tag-table-text mt-1 text-[14px] leading-6 text-[#667069]">Add it to every page, just before the closing <code className="rounded bg-black/10 px-1.5 py-0.5 font-mono text-[13px]">&lt;/head&gt;</code> tag.</p>
+                </div>
+              </li>
+
+              <li className="flex gap-4">
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-full border border-current text-[14px] font-semibold" aria-hidden="true">3</span>
+                <div className="min-w-0 flex-1">
+                  <p className="tag-heading text-[16px] font-semibold">Publish, then verify</p>
+                  <p className="tag-paragraph dashboard-tag-table-text mt-1 text-[14px] leading-6 text-[#667069]">Publish your website and open it once, then check that the tag reports in.</p>
+                  <div className="mt-3 flex flex-wrap items-center justify-end gap-3">
+                    {verificationMessage && <p role="status" className={`text-[14px] font-medium ${selectedTag.status === "verified" ? "text-[#257A4D]" : "text-[#A66A2C]"}`}>{verificationMessage}</p>}
+                    <button type="button" disabled={verifying} onClick={() => void verifyTag()} className="tag-verify-button flex h-11 shrink-0 cursor-pointer items-center gap-2 rounded-full bg-[#11120f] px-6 text-[14px] font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60">
+                      {verifying ? <><LoaderCircle size={15} className="animate-spin" /> Verifying</> : <><CheckCircle2 size={15} /> Verify tag</>}
+                    </button>
+                  </div>
+                </div>
+              </li>
+            </ol>
+
+            <details className="dashboard-tag-csp group mt-7 rounded-xl border border-[#E2DFD8] bg-[#FAFBFB] p-4">
+              <summary className="tag-heading flex cursor-pointer list-none items-center justify-between gap-3 text-[15px] font-semibold text-[#17181a]">
+                Have a Content-Security-Policy?
+                <ChevronDown size={16} className="shrink-0 transition-transform group-open:rotate-180" />
+              </summary>
+              <p className="tag-paragraph mt-3 text-[14px] leading-6 text-[#667069]">Add these to your existing policy. A strict policy is enforced by your own site, so this is the one thing we can&apos;t fix from our side. Without it the tag loads but the chat bubble silently never appears.</p>
+              <div className="mt-3 rounded-lg bg-[#11120f] p-4">
+                <div className="mb-2 flex items-center justify-between gap-3">
+                  <span className="text-[12px] font-bold uppercase tracking-[0.12em] text-white/60">script-src / connect-src / frame-src</span>
+                  <button type="button" onClick={async () => { await navigator.clipboard.writeText(cspSnippet); setCspCopied(true); setTimeout(() => setCspCopied(false), 2000); }} className="flex h-8 cursor-pointer items-center gap-1.5 rounded-full border border-white/25 px-3 text-[12.5px] font-semibold text-white/90 transition hover:bg-white/10">
+                    {cspCopied ? <><Check size={13} /> Copied</> : <><Copy size={13} /> Copy</>}
+                  </button>
+                </div>
+                <HighlightedCsp code={cspSnippet} className="text-[13px]" />
+              </div>
+            </details>
+
+          </div>
+        )}
+        {dialog === "permissions" && <div className="divide-y divide-[#E9ECEE]">{([{ key: "analytics", title: "Analytics", description: "Collect page views, referrers, and engagement events." }, { key: "visitors", title: "Visitor counts", description: "Count unique and returning visitors for reporting." }, { key: "support", title: "Support context", description: "Attach the current page and session context to support conversations." }] as const).map((permission) => <div key={permission.key} className="flex items-start gap-4 px-6 py-5"><div className="min-w-0 flex-1"><p className="tag-heading text-[16px] font-semibold">{permission.title}</p><p className="tag-paragraph mt-1 text-[14px] leading-6 text-[#667069]">{permission.description}</p></div><Toggle checked={selectedTag.permissions[permission.key]} onChange={() => updateSelectedTag({ ...selectedTag, permissions: { ...selectedTag.permissions, [permission.key]: !selectedTag.permissions[permission.key] } })} label={permission.title} /></div>)}<div className="flex items-start gap-4 px-6 py-5"><div className="min-w-0 flex-1"><p className="tag-heading text-[16px] font-semibold">Allow localhost</p><p className="tag-paragraph mt-1 text-[14px] leading-6 text-[#667069]">Let this tag run on localhost and 127.0.0.1 while you develop. Turn it off for a site that is only used in production.</p></div><Toggle checked={selectedTag.allowLocalhost} onChange={() => updateSelectedTag({ ...selectedTag, allowLocalhost: !selectedTag.allowLocalhost })} label="Allow localhost" /></div></div>}
       </div></div>}
     </div>
   );
@@ -5163,65 +5432,80 @@ function TwoFactorSetupDialog({
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/35 p-4 backdrop-blur-[2px]"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4 backdrop-blur-[2px]"
       role="presentation"
       onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}
     >
-      <div role="dialog" aria-modal="true" aria-label="Set up authenticator app" className="w-full max-w-[400px] overflow-hidden rounded-2xl border border-black/10 bg-white shadow-[0_28px_80px_rgba(15,23,42,0.24)]">
-        <div className="flex items-start justify-between border-b border-[#eceeef] px-5 py-4">
-          <div className="flex items-center gap-3">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#EAF5EE] text-[#257A4D]"><ShieldCheck size={17} /></span>
+      <div role="dialog" aria-modal="true" aria-label="Set up authenticator app" className="twofa-dialog flex max-h-[calc(100dvh-32px)] w-full max-w-[460px] flex-col overflow-hidden rounded-2xl border shadow-[0_28px_80px_rgba(0,0,0,0.4)]">
+        <div className="twofa-divider flex shrink-0 items-start justify-between gap-3 border-b px-6 py-5">
+          <div className="flex items-center gap-3.5">
+            <span className="twofa-icon flex size-11 shrink-0 items-center justify-center rounded-xl"><ShieldCheck size={21} /></span>
             <div>
-              <h3 className="text-[14px] font-semibold text-black">Set up authenticator app</h3>
-              <p className="text-[11px] text-[#858585]">Scan, then verify with a code</p>
+              <h3 className="twofa-heading text-[19px] font-semibold tracking-[-0.02em]">Set up authenticator app</h3>
+              <p className="twofa-text mt-0.5 text-[14px]">Scan, then verify with a code</p>
             </div>
           </div>
-          <button type="button" aria-label="Close" onClick={onClose} className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[#858585] hover:bg-[#f5f5f5] hover:text-black"><X size={16} /></button>
+          <button type="button" aria-label="Close" onClick={onClose} className="twofa-close flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-lg transition"><X size={18} /></button>
         </div>
 
-        <div className="px-5 py-5">
-          <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-[#9aa1a6]">Step 1</p>
-          <p className="mt-1 text-[12.5px] text-[#333]">Scan this QR code with Google Authenticator, 1Password, or a similar app.</p>
+        <div className="min-h-0 flex-1 overflow-y-auto px-6 py-6">
+          <ol className="space-y-7">
+            <li className="flex gap-4">
+              <span className="twofa-heading flex size-8 shrink-0 items-center justify-center rounded-full border border-current text-[14px] font-semibold" aria-hidden="true">1</span>
+              <div className="min-w-0 flex-1">
+                <p className="twofa-heading text-[16px] font-semibold">Scan the QR code</p>
+                <p className="twofa-text mt-1 text-[14.5px] leading-6">Use Google Authenticator, 1Password, or a similar app.</p>
 
-          <div className="mt-3 flex items-center justify-center rounded-xl border border-[#e1e5e8] bg-[#FAFBFB] py-5">
-            {qrDataUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={qrDataUrl} alt="Scan this QR code with your authenticator app" width={176} height={176} className="h-44 w-44 rounded-lg bg-white p-1.5" />
-            ) : (
-              <div className="flex h-44 w-44 items-center justify-center"><LoaderCircle size={20} className="animate-spin text-[#9aa1a6]" /></div>
-            )}
-          </div>
+                {/* The QR code sits on white in both themes: scanners need the contrast. */}
+                <div className="mt-4 flex items-center justify-center rounded-2xl bg-white p-4">
+                  {qrDataUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={qrDataUrl} alt="Scan this QR code with your authenticator app" width={176} height={176} className="h-44 w-44" />
+                  ) : (
+                    <div className="flex h-44 w-44 items-center justify-center"><LoaderCircle size={22} className="animate-spin text-[#9aa1a6]" /></div>
+                  )}
+                </div>
 
-          <button type="button" onClick={() => setShowSecret(!showSecret)} className="mt-3 text-[11.5px] font-medium text-[#337bc9] hover:underline">
-            {showSecret ? "Hide manual entry code" : "Can't scan it? Enter the code manually"}
-          </button>
-          {showSecret && (
-            <div className="mt-2 flex items-center gap-2 rounded-lg border border-[#e1e5e8] bg-[#FAFBFB] px-3 py-2">
-              <code className="min-w-0 flex-1 truncate text-[12px] tracking-wider text-[#333]">{secret}</code>
-              <button type="button" onClick={() => void copySecret()} className="flex shrink-0 items-center gap-1 text-[11px] font-semibold text-[#5f696f] hover:text-black">
-                <Copy size={12} /> {copied ? "Copied" : "Copy"}
-              </button>
-            </div>
-          )}
+                <button type="button" onClick={() => setShowSecret(!showSecret)} aria-expanded={showSecret} className="twofa-link mt-3 cursor-pointer text-[14px] font-medium underline underline-offset-4">
+                  {showSecret ? "Hide manual entry code" : "Can't scan it? Enter the code manually"}
+                </button>
+                {showSecret && (
+                  <div className="twofa-field mt-3 flex items-center gap-3 rounded-xl border px-4 py-3">
+                    <code className="twofa-heading min-w-0 flex-1 truncate font-mono text-[14.5px] tracking-wider">{secret}</code>
+                    <button type="button" onClick={() => void copySecret()} className="twofa-link flex shrink-0 cursor-pointer items-center gap-1.5 text-[14px] font-semibold">
+                      <Copy size={14} /> {copied ? "Copied" : "Copy"}
+                    </button>
+                  </div>
+                )}
+              </div>
+            </li>
 
-          <p className="mt-5 text-[11px] font-bold uppercase tracking-[0.1em] text-[#9aa1a6]">Step 2</p>
-          <p className="mt-1 text-[12.5px] text-[#333]">Enter the 6-digit code your app just generated.</p>
-          <input
-            autoFocus
-            value={code}
-            onChange={(event) => setCode(event.target.value.replace(/\D/g, "").slice(0, 6))}
-            onKeyDown={(event) => { if (event.key === "Enter") onVerify(); }}
-            placeholder="123456"
-            inputMode="numeric"
-            className="mt-2 h-11 w-full rounded-lg border border-[#d3d3d3] px-3 text-center text-[16px] tracking-[0.35em] outline-none focus:border-[#777]"
-          />
-          {error && <p className="mt-2 text-[11px] text-[#b8444f]">{error}</p>}
+            <li className="flex gap-4">
+              <span className="twofa-heading flex size-8 shrink-0 items-center justify-center rounded-full border border-current text-[14px] font-semibold" aria-hidden="true">2</span>
+              <div className="min-w-0 flex-1">
+                <p className="twofa-heading text-[16px] font-semibold">Enter the 6-digit code</p>
+                <p className="twofa-text mt-1 text-[14.5px] leading-6">Type the code your app just generated.</p>
+                <input
+                  autoFocus
+                  value={code}
+                  onChange={(event) => setCode(event.target.value.replace(/\D/g, "").slice(0, 6))}
+                  onKeyDown={(event) => { if (event.key === "Enter") onVerify(); }}
+                  placeholder="123456"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  aria-label="6-digit code"
+                  className="twofa-input mt-3 h-12 w-full rounded-xl border bg-transparent px-3 text-center text-[22px] font-medium tracking-[0.4em] outline-none"
+                />
+                {error && <p role="alert" className="mt-2 text-[14px] font-medium text-[#e5636f]">{error}</p>}
+              </div>
+            </li>
+          </ol>
         </div>
 
-        <div className="flex gap-3 border-t border-[#eceeef] px-5 py-4">
-          <button type="button" onClick={onClose} className="h-10 flex-1 rounded-lg border border-[#d3d3d3] text-[12.5px] font-semibold text-[#333] hover:bg-[#f5f5f5]">Cancel</button>
-          <button type="button" disabled={busy || code.length !== 6} onClick={onVerify} className="flex h-10 flex-1 items-center justify-center gap-2 rounded-lg bg-[#202225] text-[12.5px] font-semibold text-white transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-50">
-            {busy ? <LoaderCircle size={14} className="animate-spin" /> : null} Verify &amp; enable
+        <div className="twofa-divider flex shrink-0 gap-3 border-t px-6 py-4">
+          <button type="button" onClick={onClose} className="twofa-btn h-11 flex-1 cursor-pointer rounded-full border text-[15px] font-medium transition">Cancel</button>
+          <button type="button" disabled={busy || code.length !== 6} onClick={onVerify} className="twofa-btn twofa-btn-primary flex h-11 flex-1 cursor-pointer items-center justify-center gap-2 rounded-full border text-[15px] font-semibold transition disabled:cursor-not-allowed disabled:opacity-50">
+            {busy ? <LoaderCircle size={15} className="animate-spin" /> : null} Verify &amp; enable
           </button>
         </div>
       </div>
@@ -5254,7 +5538,7 @@ function SidebarNavGroup({ title, items, currentPage, spacingClassName = "mt-3" 
         <div className="overflow-hidden">
           <nav className="space-y-0.5">
             {items.map(({ label, slug, icon: Icon }) => (
-              <Link key={label} href={slug ? `/dashboard/settings/${slug}` : "/dashboard/settings"} aria-current={currentPage === label ? "page" : undefined} className={`flex h-9 w-full items-center gap-3 rounded-md px-2.5 text-left text-[13px] font-normal text-black/90 transition ${currentPage === label ? "dashboard-secondary-nav-active bg-[#eeeeee]" : "hover:bg-[#f0f0f0]"}`}>
+              <Link key={label} href={slug ? `/dashboard/settings/${slug}` : "/dashboard/settings"} aria-current={currentPage === label ? "page" : undefined} className={`flex h-9 w-full items-center gap-3 rounded-md px-2.5 text-left text-[14px] font-normal text-black/90 transition ${currentPage === label ? "dashboard-secondary-nav-active bg-[#eeeeee]" : "hover:bg-[#f0f0f0]"}`}>
                 <Icon size={16} strokeWidth={1.8} className={currentPage === label ? "text-[#55585c]" : "text-[#8b8d90]"} />
                 <span className="truncate">{label}</span>
               </Link>
@@ -5267,24 +5551,10 @@ function SidebarNavGroup({ title, items, currentPage, spacingClassName = "mt-3" 
 }
 
 export function SettingsClient({ user, page = "General", auditView = "all" }: { user: SettingsUser; page?: string; auditView?: "all" | AuditStatus }) {
-  const router = useRouter();
   const currentPage = page;
   const { open: sidebarOpen, setOpen: setSidebarOpen } = useMobileDrawer();
-  const [signingOut, setSigningOut] = useState(false);
   const [previewPanel, setPreviewPanel] = useState<HTMLDivElement | null>(null);
   const showPreviewPanel = currentPage === "Chatbot Interface";
-
-  async function signOut() {
-    setSigningOut(true);
-    try {
-      await fetch("/api/auth/logout", { method: "POST" });
-    } finally {
-      posthog.reset();
-      window.ElpinoTag?.logout?.();
-      router.push("/login");
-      router.refresh();
-    }
-  }
 
   return (
     <div id="dashboard-settings-page" className="flex h-full min-h-0 overflow-hidden bg-[#262626] text-white">
@@ -5304,11 +5574,6 @@ export function SettingsClient({ user, page = "General", auditView = "all" }: { 
           <SidebarNavGroup title="Account" items={accountItems} currentPage={currentPage} spacingClassName="mt-1" />
           <SidebarNavGroup title="Chatbot" items={chatbotItems} currentPage={currentPage} />
           <SidebarNavGroup title="Workspace" items={workspaceItems} currentPage={currentPage} />
-        </div>
-        <div className="border-t border-[#e4e4e4] p-3">
-          <button type="button" disabled={signingOut} onClick={() => void signOut()} className="flex h-10 w-full items-center gap-3 rounded-md px-3 text-[13px] text-black hover:bg-[#eeeeee] disabled:opacity-50">
-            <LogOut size={16} strokeWidth={1.8} /> {signingOut ? "Signing out..." : "Log out"}
-          </button>
         </div>
       </div>
 
@@ -5349,8 +5614,6 @@ export function SettingsClient({ user, page = "General", auditView = "all" }: { 
           <IdentityVerificationSettingsPage />
         ) : currentPage === "Translations" ? (
           <TranslationSettingsPage />
-        ) : currentPage === "Plugins" ? (
-          <ConnectPageContent />
         ) : (
           <FeatureSettingsPage title={currentPage} />
         )}

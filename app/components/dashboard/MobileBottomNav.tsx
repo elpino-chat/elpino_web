@@ -9,24 +9,27 @@ import { primaryNavItems, NavGlyph } from "./nav-items";
 
 type Conversation = { status: "open" | "waiting" | "resolved"; assignedUserId?: string | null };
 
-// First 4 are the day-to-day items, reachable in one tap; the rest are
-// config/setup work people reach for less often on a phone, tucked behind
-// "More" instead of squeezing all 7 into one row.
-const VISIBLE_COUNT = 4;
+// The first three are the day-to-day tabs, one tap away. The rest sit behind "More", which opens a menu above the dock.
+const VISIBLE_COUNT = 3;
 const visibleItems = primaryNavItems.slice(0, VISIBLE_COUNT);
 const overflowItems = primaryNavItems.slice(VISIBLE_COUNT);
 
 /**
- * Material-style bottom tab bar — the mobile replacement for the desktop
- * rail (Sidebar.tsx), which hides itself below md. Same items, same order,
- * same Inbox badge, so switching between phone and desktop widths never
- * changes what's reachable. Items past VISIBLE_COUNT live behind a "More"
- * tab that opens a small menu anchored right above it.
+ * The phone navigation: a floating dock, centred along the bottom with a gap around it, in place of the desktop rail
+ * (Sidebar.tsx), which hides itself below md. Same items, same order and same Inbox badge as the rail, so switching between
+ * phone and desktop widths never changes what is reachable.
+ *
+ * The dock is about 64px tall plus a 12px gap. DashboardMain, the setup badge and the chat bubble's
+ * --elpino-bottom-offset all reserve 88px (plus the device safe area) to stay clear of it.
  */
 export default function MobileBottomNav() {
   const pathname = usePathname();
   const [aiHandledCount, setAiHandledCount] = useState(0);
-  const [moreOpen, setMoreOpen] = useState(false);
+  // The menu is open "for" the page it was opened on, so any navigation (including picking an item from the menu) closes it
+  // without an effect having to reset anything.
+  const [openFor, setOpenFor] = useState<string | null>(null);
+  const moreOpen = openFor === pathname;
+  const setMoreOpen = (open: boolean) => setOpenFor(open ? pathname : null);
   const moreRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -39,97 +42,84 @@ export default function MobileBottomNav() {
       .catch(() => setAiHandledCount(0));
   }, [pathname]);
 
-  // Route change (including picking an item from the menu itself) always
-  // closes it — nothing should linger open over the new page.
-  useEffect(() => setMoreOpen(false), [pathname]);
-
   useEffect(() => {
     if (!moreOpen) return;
-    function handlePointerDown(event: PointerEvent) {
-      if (moreRef.current && !moreRef.current.contains(event.target as Node)) setMoreOpen(false);
+    function onPointerDown(event: PointerEvent) {
+      if (moreRef.current && !moreRef.current.contains(event.target as Node)) setOpenFor(null);
     }
-    function handleKey(event: KeyboardEvent) {
-      if (event.key === "Escape") setMoreOpen(false);
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setOpenFor(null);
     }
-    document.addEventListener("pointerdown", handlePointerDown);
-    document.addEventListener("keydown", handleKey);
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
     return () => {
-      document.removeEventListener("pointerdown", handlePointerDown);
-      document.removeEventListener("keydown", handleKey);
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
     };
   }, [moreOpen]);
 
   const isActive = (href: string) => (href === "/dashboard" ? pathname === "/dashboard" : pathname.startsWith(href));
   const overflowActive = overflowItems.some((item) => isActive(item.href));
+  const itemClass = "dock-item relative flex min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-[20px] px-0.5 py-2 text-center transition active:scale-95";
 
   return (
     <nav
       aria-label="Dashboard navigation"
-      className="dashboard-bottom-nav fixed inset-x-0 bottom-0 z-40 flex items-stretch justify-between border-t border-white/10 bg-[#1c1c1c] pb-[env(safe-area-inset-bottom)] md:hidden"
+      className="dashboard-dock pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center px-3 pb-[calc(12px+env(safe-area-inset-bottom))] md:hidden"
     >
-      {visibleItems.map(({ icon, label, href }) => {
-        const active = isActive(href);
-        return (
-          <Link
-            key={label}
-            href={href}
-            aria-current={active ? "page" : undefined}
-            className="dashboard-bottom-nav-item relative flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 py-1.5 text-center"
-          >
-            <span className={`relative ${active ? "text-white" : "text-white/50"}`}>
-              <NavGlyph name={icon} size={20} />
-              {label === "Inbox" && aiHandledCount > 0 && (
-                <span className="absolute -right-2 -top-1.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full border-2 border-[#1c1c1c] bg-[#27895d] px-0.5 text-[7px] font-bold text-white">
-                  {aiHandledCount > 99 ? "99+" : aiHandledCount}
-                </span>
-              )}
-            </span>
-            <span className={`truncate text-[9.5px] leading-3 ${active ? "font-medium text-white" : "text-white/50"}`}>{label}</span>
-            {active && <span className="absolute inset-x-3 top-0 h-[2px] rounded-full bg-white" />}
-          </Link>
-        );
-      })}
+      <div className="dock-bar pointer-events-auto flex w-full max-w-[360px] items-center justify-between gap-0.5 rounded-[26px] border p-1.5">
+        {visibleItems.map(({ icon, label, href }) => {
+          const active = isActive(href);
+          return (
+            <Link key={label} href={href} aria-current={active ? "page" : undefined} className={`${itemClass} ${active ? "dock-item-active" : ""}`}>
+              <span className="relative">
+                <NavGlyph name={icon} size={22} />
+                {label === "Inbox" && aiHandledCount > 0 && (
+                  <span className="dock-badge absolute -right-2.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full border-2 bg-[#27895d] px-1 text-[9px] font-bold leading-none text-white">
+                    {aiHandledCount > 99 ? "99+" : aiHandledCount}
+                  </span>
+                )}
+              </span>
+              <span className="w-full truncate text-[11px] font-medium leading-3">{label}</span>
+            </Link>
+          );
+        })}
 
-      {overflowItems.length > 0 && (
-        <div ref={moreRef} className="relative flex min-w-0 flex-1">
-          {moreOpen && (
-            <div
-              role="menu"
-              aria-label="More navigation"
-              className="dashboard-bottom-nav-more absolute bottom-full right-0 mb-2 w-44 overflow-hidden rounded-xl border border-white/10 bg-[#232323] shadow-[0_-8px_30px_rgba(0,0,0,0.4)]"
+        {overflowItems.length > 0 && (
+          <div ref={moreRef} className="relative flex min-w-0 flex-1">
+            {moreOpen && (
+              <div role="menu" aria-label="More navigation" className="dock-menu absolute bottom-full right-0 mb-3 w-52 overflow-hidden rounded-2xl border p-1.5">
+                {overflowItems.map(({ icon, label, href }) => {
+                  const active = isActive(href);
+                  return (
+                    <Link
+                      key={label}
+                      href={href}
+                      role="menuitem"
+                      aria-current={active ? "page" : undefined}
+                      onClick={() => setMoreOpen(false)}
+                      className={`dock-menu-item ${active ? "dock-menu-item-active" : ""} flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium`}
+                    >
+                      <NavGlyph name={icon} size={18} />
+                      {label}
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+            <button
+              type="button"
+              onClick={() => setMoreOpen(!moreOpen)}
+              aria-expanded={moreOpen}
+              aria-haspopup="menu"
+              className={`${itemClass} ${overflowActive || moreOpen ? "dock-item-active" : ""} cursor-pointer`}
             >
-              {overflowItems.map(({ icon, label, href }) => {
-                const active = isActive(href);
-                return (
-                  <Link
-                    key={label}
-                    href={href}
-                    role="menuitem"
-                    onClick={() => setMoreOpen(false)}
-                    className={`flex items-center gap-3 px-3.5 py-2.5 text-[13px] ${active ? "bg-white/[0.06] font-medium text-white" : "text-white/70 hover:bg-white/[0.04]"}`}
-                  >
-                    <NavGlyph name={icon} size={17} />
-                    {label}
-                  </Link>
-                );
-              })}
-            </div>
-          )}
-          <button
-            type="button"
-            onClick={() => setMoreOpen((current) => !current)}
-            aria-expanded={moreOpen}
-            aria-haspopup="menu"
-            className="dashboard-bottom-nav-item relative flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 py-1.5 text-center"
-          >
-            <span className={overflowActive || moreOpen ? "text-white" : "text-white/50"}>
-              <MoreHorizontal size={20} />
-            </span>
-            <span className={`truncate text-[9.5px] leading-3 ${overflowActive || moreOpen ? "font-medium text-white" : "text-white/50"}`}>More</span>
-            {overflowActive && !moreOpen && <span className="absolute inset-x-3 top-0 h-[2px] rounded-full bg-white" />}
-          </button>
-        </div>
-      )}
+              <MoreHorizontal size={22} />
+              <span className="w-full truncate text-[11px] font-medium leading-3">More</span>
+            </button>
+          </div>
+        )}
+      </div>
     </nav>
   );
 }

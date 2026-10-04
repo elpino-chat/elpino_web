@@ -293,10 +293,12 @@ export function GET(request: Request) {
     // the full-screen layout by default instead of a shrunk-down panel.
     // Only the loader can touch this — the iframe is a different origin and
     // can't resize itself, only ask via postMessage.
-    var PANEL_STYLE = 'position:fixed;bottom:88px;right:20px;width:420px;max-width:calc(100vw - 16px);height:640px;max-height:calc(100vh - 104px);border:none;border-radius:26px;box-shadow:0 18px 48px rgba(15,23,42,0.24);z-index:2147483000;background:#f7f7f8;';
+    // --elpino-bottom-offset: a host page with its own fixed bottom bar (the Elpino dashboard's phone tab bar, say) can set this
+    // CSS variable (for example body { --elpino-bottom-offset: 56px }) to lift the bubble, its popups and the chat panel above that bar.
+    var PANEL_STYLE = 'position:fixed;bottom:calc(88px + var(--elpino-bottom-offset,0px));right:20px;width:420px;max-width:calc(100vw - 16px);height:640px;max-height:calc(100vh - 104px - var(--elpino-bottom-offset,0px));border:none;border-radius:26px;box-shadow:0 18px 48px rgba(15,23,42,0.24);z-index:2147483000;background:#f7f7f8;';
     // A reply preview is rendered by the cross-origin widget iframe itself.
     // The host page can resize the frame but never receives the reply text.
-    var PREVIEW_STYLE = 'position:fixed;bottom:88px;right:20px;width:340px;max-width:calc(100vw - 32px);height:132px;border:none;border-radius:18px;box-shadow:0 16px 40px rgba(15,23,42,0.25);z-index:2147483000;background:transparent;';
+    var PREVIEW_STYLE = 'position:fixed;bottom:calc(88px + var(--elpino-bottom-offset,0px));right:20px;width:340px;max-width:calc(100vw - 32px);height:132px;border:none;border-radius:18px;box-shadow:0 16px 40px rgba(15,23,42,0.25);z-index:2147483000;background:transparent;';
     var FULLSCREEN_STYLE = 'position:fixed;inset:0;width:100%;height:100%;max-width:100%;max-height:100%;border:none;border-radius:0;box-shadow:none;z-index:2147483000;background:#f7f7f8;';
     var MOBILE_BREAKPOINT = 640;
     function isMobile() {
@@ -372,7 +374,7 @@ export function GET(request: Request) {
 
       var button = document.createElement('button');
       button.setAttribute('aria-label', 'Open chat');
-      button.style.cssText = 'position:fixed;bottom:20px;right:20px;width:56px;height:56px;border-radius:9999px;border:none;background:' + ACCENT + ';box-shadow:0 10px 28px rgba(15,23,42,0.28);cursor:pointer;z-index:2147483000;display:flex;align-items:center;justify-content:center;overflow:hidden;transition:transform .15s ease;';
+      button.style.cssText = 'position:fixed;bottom:calc(20px + var(--elpino-bottom-offset,0px));right:20px;width:56px;height:56px;border-radius:9999px;border:none;background:' + ACCENT + ';box-shadow:0 10px 28px rgba(15,23,42,0.28);cursor:pointer;z-index:2147483000;display:flex;align-items:center;justify-content:center;overflow:hidden;transition:transform .15s ease;';
       button.onmouseenter = function () { button.style.transform = 'scale(1.05)'; };
       button.onmouseleave = function () { button.style.transform = 'scale(1)'; };
       button.innerHTML = launcherIcon();
@@ -380,7 +382,7 @@ export function GET(request: Request) {
       document.body.appendChild(button);
 
       badge = document.createElement('span');
-      badge.style.cssText = 'position:fixed;bottom:64px;right:14px;width:18px;height:18px;border-radius:9999px;background:#e5484d;color:#fff;font:700 10px/18px system-ui,sans-serif;text-align:center;z-index:2147483001;display:none;box-shadow:0 0 0 2px #fff;';
+      badge.style.cssText = 'position:fixed;bottom:calc(64px + var(--elpino-bottom-offset,0px));right:14px;width:18px;height:18px;border-radius:9999px;background:#e5484d;color:#fff;font:700 10px/18px system-ui,sans-serif;text-align:center;z-index:2147483001;display:none;box-shadow:0 0 0 2px #fff;';
       badge.textContent = '1';
       document.body.appendChild(badge);
 
@@ -426,7 +428,7 @@ export function GET(request: Request) {
       function showGreeting() {
         if (open || greeting) return;
         greeting = document.createElement('div');
-        greeting.style.cssText = 'position:fixed;bottom:88px;right:20px;width:300px;max-width:calc(100vw - 32px);z-index:2147483000;cursor:pointer;font-family:system-ui,-apple-system,sans-serif;display:flex;flex-direction:column;align-items:flex-end;gap:6px;';
+        greeting.style.cssText = 'position:fixed;bottom:calc(88px + var(--elpino-bottom-offset,0px));right:20px;width:300px;max-width:calc(100vw - 32px);z-index:2147483000;cursor:pointer;font-family:system-ui,-apple-system,sans-serif;display:flex;flex-direction:column;align-items:flex-end;gap:6px;';
 
         // One popup, however the greeting is stored: workspaces saved with several lines get them joined.
         // The message leads, in larger text; the assistant's name and how long ago it "arrived" sit underneath.

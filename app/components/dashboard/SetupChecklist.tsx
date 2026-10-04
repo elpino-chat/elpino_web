@@ -118,22 +118,24 @@ export default function SetupChecklist() {
   // Re-check on every dashboard navigation: the usual way a step gets
   // completed is the user walking off to that page and coming back, and a
   // stale "0 of 5" after doing the work reads as the feature being broken.
+  // The badge only lives on the main dashboard page, so there is nothing to check anywhere else.
+  const onDashboardHome = pathname === "/dashboard";
   useEffect(() => {
-    void load();
-  }, [load, pathname]);
+    if (onDashboardHome) void load();
+  }, [load, pathname, onDashboardHome]);
 
   const doneCount = steps.filter((step) => step.done).length;
   const complete = loaded && steps.length > 0 && doneCount === steps.length;
 
   // Nothing to nag about once every step is ticked; the badge retires itself.
-  if (!loaded || complete) return null;
+  if (!onDashboardHome || !loaded || complete) return null;
 
   return (
     // Bottom-left, not bottom-right: several dashboard pages (Chatbot
     // Interface settings, the live widget preview panel) dock their own
     // content flush against the bottom-right corner, and this fixed badge
     // sat on top of it. Nothing else currently claims bottom-left.
-    <div id="dashboard-setup-badge" className="dashboard-setup-badge fixed bottom-[calc(56px+env(safe-area-inset-bottom)+12px)] right-5 z-40 flex flex-col items-end gap-2 md:bottom-5">
+    <div id="dashboard-setup-badge" className="dashboard-setup-badge fixed bottom-[calc(88px+env(safe-area-inset-bottom)+12px)] right-5 z-40 flex flex-col items-end gap-2 md:bottom-5">
       {/* A 6px black frame via padding on the outer box below, rather than a
           multi-layer background-clip trick — that technique (fill on
           padding-box, border color on border-box, both from one

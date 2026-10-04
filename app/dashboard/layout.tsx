@@ -12,6 +12,7 @@ import DashboardMain from "@/app/components/dashboard/DashboardMain";
 import { MobileDrawerProvider } from "@/app/components/dashboard/mobile-drawer-context";
 import { DashboardShellSkeleton } from "@/app/components/dashboard/DashboardSkeleton";
 import InvitationPrompt from "@/app/components/dashboard/InvitationPrompt";
+import PlanOfferBanner from "@/app/components/dashboard/PlanOfferBanner";
 
 // The session check is the only thing this layout waits for. It sits inside a
 // Suspense boundary so the frame of the dashboard (sidebar, header) is on screen
@@ -29,18 +30,22 @@ async function AuthedDashboard({ children }: { children: React.ReactNode }) {
   if (!session) redirect("/login");
 
   return <MobileDrawerProvider>
-      <div className="dashboard-shell relative flex h-dvh w-full flex-row overflow-hidden">
-        <Sidebar />
-        {/* Top safe-area padding — without it, on a phone with a notch or
-            Dynamic Island, the header renders underneath that cutout instead
-            of below it, reading as if the header and the OS status bar have
-            merged into one strip. */}
-        <div className="flex min-h-0 min-w-0 flex-1 flex-col pt-[env(safe-area-inset-top)]">
-          <DashboardHeader user={{ email: session.email, name: session.name }} />
-          <div className="relative flex min-h-0 min-w-0 flex-1 flex-row">
-            <SpacePanel />
-            <HomePanel user={{ email: session.email, name: session.name }} />
-            <DashboardMain>{children}</DashboardMain>
+      {/* Top safe-area padding — without it, on a phone with a notch or
+          Dynamic Island, the top of the page renders underneath that cutout
+          instead of below it, reading as if the header and the OS status bar
+          have merged into one strip. The offer strip spans the full width
+          above the rail and every sidebar; the row below holds the rest. */}
+      <div className="dashboard-shell relative flex h-dvh w-full flex-col overflow-hidden pt-[env(safe-area-inset-top)]">
+        <PlanOfferBanner />
+        <div className="flex min-h-0 min-w-0 flex-1 flex-row">
+          <Sidebar />
+          <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+            <DashboardHeader user={{ email: session.email, name: session.name }} />
+            <div className="relative flex min-h-0 min-w-0 flex-1 flex-row">
+              <SpacePanel />
+              <HomePanel user={{ email: session.email, name: session.name }} />
+              <DashboardMain>{children}</DashboardMain>
+            </div>
           </div>
         </div>
         <SetupChecklist />

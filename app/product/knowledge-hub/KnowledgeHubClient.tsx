@@ -654,7 +654,7 @@ const FAQS_EN: [string, string][] = [
   ["What can I add?", "Web pages by URL, a sitemap (up to 20 pages), a crawl from one link (up to 50 pages), PDF, Word, text and Markdown files, and pages you write yourself."],
   ["Does it read JavaScript-built pages?", "Yes. If a page has little readable text, it's rendered in a browser first and the result is read."],
   ["Can I keep content private?", "Yes. Each source has a visibility switch, so internal notes stay internal."],
-  ["Can I connect Notion, Zendesk or Confluence?", "Not yet. Today you add sources by URL, sitemap, file upload, or by writing pages."],
+  ["Can I connect Notion, Zendesk or Confluence?", "Notion, yes: connect it and pick the pages to import. Zendesk and Confluence are not available yet; for those, add sources by URL, sitemap, file upload, or by writing pages."],
   ["What if the answer isn't there?", "Elpino says it doesn't have that information and offers to connect the customer with your team, rather than guessing."],
 ];
 

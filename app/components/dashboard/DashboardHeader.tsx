@@ -10,7 +10,6 @@ import { connectPresenceSocket } from "@/lib/presence-socket";
 import { clearUnseenMessages, countUnseenMessage, playAssignmentChime, playMessageChimeOnce, primeOnFirstInteraction } from "@/lib/notification-sound";
 import { toast } from "sonner";
 import { InvitePeopleDialog } from "./InvitePeopleDialog";
-import { UpgradeDialog } from "./UpgradeDialog";
 import { NotificationsBell } from "./NotificationsBell";
 import { AssignmentToast } from "./AssignmentToast";
 import { useMobileDrawer } from "./mobile-drawer-context";
@@ -35,6 +34,7 @@ import {
   Plus,
   Rocket,
   Search,
+  X,
   Settings,
   Users,
   UserPlus,
@@ -56,11 +56,6 @@ type SearchPerson = { id: string; email: string };
 // conversation on selection, WhatsApp-style — so they need no hamburger at
 // all, on any route.
 const SPACE_ROUTES = ["/dashboard", "/dashboard/notifications", "/dashboard/issues"];
-const CONTACTS_ROUTE = "/dashboard/contacts";
-// The editor routes (/knowledge/new, /knowledge/page/[id]) render their own
-// full-page editor with no sidebar at all, so they're deliberately excluded
-// — only the three routes KnowledgeClient itself handles have one.
-const KNOWLEDGE_ROUTES = ["/dashboard/knowledge", "/dashboard/knowledge/articles", "/dashboard/knowledge/sources"];
 const SETTINGS_ROUTE_PREFIX = "/dashboard/settings";
 
 export default function DashboardHeader({ user }: { user: HeaderUser }) {
@@ -68,15 +63,13 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
   const pathname = usePathname();
   const { toggle: toggleDrawer } = useMobileDrawer();
   const isSpaceRoute = SPACE_ROUTES.includes(pathname);
-  const isContactsRoute = pathname === CONTACTS_ROUTE;
-  const isKnowledgeRoute = KNOWLEDGE_ROUTES.includes(pathname);
   const isSettingsRoute = pathname === SETTINGS_ROUTE_PREFIX || pathname.startsWith(`${SETTINGS_ROUTE_PREFIX}/`);
   // Live notifications (unread activity, escalations, secure requests) plus
   // unresolved issues — both drop on their own as things get read/resolved,
   // so this stays accurate without a separate "seen it" flag to maintain.
   const [spaceBadgeCount, setSpaceBadgeCount] = useState(0);
   const hamburgerBreakpoint =
-    isSpaceRoute || isKnowledgeRoute || isSettingsRoute ? "md:hidden" : isContactsRoute ? "lg:hidden" : null;
+    isSpaceRoute || isSettingsRoute ? "md:hidden" : null;
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [selected, setSelected] = useState<Organization | null>(null);
   const [open, setOpen] = useState(false);
@@ -86,7 +79,6 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
   const [accountOpen, setAccountOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const [inviteOpen, setInviteOpen] = useState(false);
-  const [upgradeOpen, setUpgradeOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [notificationsMuted, setNotificationsMuted] = useState(false);
   // Read inside the presence socket's event handler instead of
@@ -106,6 +98,10 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
+  // On phones the search bar is a row below the header that the search icon opens and the close icon puts away. From md up it is
+  // always in the header, so this only matters below md.
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const [searchLoaded, setSearchLoaded] = useState(false);
   const [searchConversations, setSearchConversations] = useState<SearchConversation[]>([]);
   const [searchPeople, setSearchPeople] = useState<SearchPerson[]>([]);
@@ -312,6 +308,16 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
     return () => document.removeEventListener("mousedown", closeDropdown);
   }, []);
 
+  useEffect(() => {
+    if (mobileSearchOpen) searchInputRef.current?.focus();
+  }, [mobileSearchOpen]);
+
+  function closeMobileSearch() {
+    setMobileSearchOpen(false);
+    setSearchOpen(false);
+    setSearchQuery("");
+  }
+
   function loadSearchData() {
     if (searchLoaded) return;
     setSearchLoaded(true);
@@ -327,18 +333,21 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
 
   function goToConversation(id: string) {
     setSearchOpen(false);
+    setMobileSearchOpen(false);
     setSearchQuery("");
     router.push(`/dashboard/inbox?conversation=${id}`);
   }
 
   function goToPeople() {
     setSearchOpen(false);
+    setMobileSearchOpen(false);
     setSearchQuery("");
     router.push("/dashboard/settings/people");
   }
 
   async function goToWorkspace(organization: Organization) {
     setSearchOpen(false);
+    setMobileSearchOpen(false);
     setSearchQuery("");
     await selectWorkspace(organization);
     router.push("/dashboard");
@@ -423,7 +432,7 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
       : statusOptions.find((option) => option.value === presenceStatus) ?? statusOptions[0];
 
   return (
-    <header className="relative z-50 mx-2 my-0.5 flex h-12 shrink-0 items-center rounded-xl bg-transparent px-2.5 text-[#354052]">
+    <header className="relative z-50 mx-2 my-0.5 flex min-h-12 shrink-0 flex-wrap items-center gap-y-1 rounded-xl bg-transparent px-2.5 py-1 text-[#354052] md:h-12 md:flex-nowrap md:py-0">
       {hamburgerBreakpoint && (
         <button
           type="button"
@@ -509,7 +518,11 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
       </div>
 
       <DashboardTour userKey={user.email} />
-      <div id="dashboard-global-search" ref={searchRef} className="relative mx-4 hidden min-w-0 max-w-2xl flex-1 md:block">
+      <div
+        id="dashboard-global-search"
+        ref={searchRef}
+        className={`relative order-last w-full min-w-0 max-w-2xl basis-full pb-1.5 md:order-none md:mx-4 md:block md:w-auto md:flex-1 md:basis-auto md:pb-0 ${mobileSearchOpen ? "block" : "hidden"}`}
+      >
         <div className="dashboard-header-search flex h-9 items-center gap-2.5 rounded-lg border border-white/10 bg-white/[0.045] px-3.5 transition focus-within:border-white/25 focus-within:bg-white/[0.07]">
           <Search size={15} className="shrink-0 text-white/45" />
           <input
@@ -518,12 +531,14 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
             onFocus={() => { setSearchOpen(true); loadSearchData(); }}
             placeholder="Search people, chats, workspaces…"
             aria-label="Search"
+            ref={searchInputRef}
             className="min-w-0 flex-1 bg-transparent text-[14px] font-normal text-white/90 outline-none placeholder:text-white/35"
           />
+          <button type="button" onClick={closeMobileSearch} aria-label="Close search" className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md text-white/70 transition hover:bg-white/10 hover:text-white md:hidden"><X size={16} /></button>
         </div>
 
         {searchOpen && searchTerm && (
-          <div className="dashboard-search-results absolute left-0 top-11 z-50 max-h-[420px] w-[360px] overflow-y-auto rounded-xl border border-[#e1e5e9] bg-white p-2 shadow-[0_18px_50px_rgba(15,23,42,0.14)]">
+          <div className="dashboard-search-results absolute left-0 top-11 z-50 max-h-[420px] w-full overflow-y-auto md:w-[360px] rounded-xl border border-[#e1e5e9] bg-white p-2 shadow-[0_18px_50px_rgba(15,23,42,0.14)]">
             {!hasSearchResults ? (
               <p className="px-3 py-4 text-center text-[12px] text-[#8a929c]">No results for &quot;{searchQuery.trim()}&quot;</p>
             ) : (
@@ -571,22 +586,19 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
       </div>
 
       <div className="ml-auto flex shrink-0 items-center gap-1.5">
-        {/* Secondary actions — dropped below sm rather than shrunk further,
-            since an icon with no label and no room to breathe reads as
-            clutter next to Upgrade and the account avatar. Both stay
-            reachable on mobile from the account menu below. */}
+        {/* Usage is always one tap away (icon-only on phones). On phones the search icon opens the search bar as a row below the header.
+            Invite team is hidden below sm to leave room; it is also on the Members page. */}
         <button type="button" onClick={() => setInviteOpen(true)} className="hidden h-9 items-center gap-2 rounded-lg border border-white/10 px-3 text-[13px] font-normal text-white/90 transition hover:bg-white/[0.07] hover:text-white sm:flex">
-          <UserPlus size={16} strokeWidth={1.7} />
+          <UserPlus size={17} strokeWidth={1.7} />
           <span className="hidden lg:inline">Invite team</span>
         </button>
-        <Link href="/dashboard/settings/ai-usage" className="hidden h-9 items-center gap-2 rounded-lg border border-white/10 px-3 text-[13px] font-normal text-white/90 transition hover:bg-white/[0.07] hover:text-white sm:flex">
-          <Gauge size={16} strokeWidth={1.7} />
+        <button type="button" onClick={() => { setMobileSearchOpen((open) => !open); loadSearchData(); }} aria-label="Search" aria-expanded={mobileSearchOpen} className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-white/10 text-white/90 transition hover:bg-white/[0.07] hover:text-white md:hidden">
+          <Search size={17} strokeWidth={1.7} />
+        </button>
+        <Link href="/dashboard/settings/ai-usage" aria-label="Usage" className="flex h-9 items-center gap-2 rounded-lg border border-white/10 px-3 text-[13px] font-normal text-white/90 transition hover:bg-white/[0.07] hover:text-white">
+          <Gauge size={17} strokeWidth={1.7} />
           <span className="hidden lg:inline">Usage</span>
         </Link>
-        <button type="button" onClick={() => setUpgradeOpen(true)} className="dashboard-upgrade-cta flex h-9 items-center gap-2 rounded-lg border border-violet-300/20 bg-gradient-to-r from-[#7c3aed] via-[#a855f7] to-[#ec4899] px-2.5 text-[13px] font-normal text-white/90 shadow-[0_4px_16px_rgba(168,85,247,0.28)] transition hover:from-[#8b4cf5] hover:via-[#b866fb] hover:to-[#f472b6] hover:text-white sm:px-3">
-          <Rocket size={16} strokeWidth={1.7} />
-          <span className="hidden lg:inline">Upgrade</span>
-        </button>
       </div>
 
       <div className="hidden">
@@ -792,7 +804,6 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
           )}
         </div>
       <InvitePeopleDialog open={inviteOpen} onClose={() => setInviteOpen(false)} />
-      <UpgradeDialog open={upgradeOpen} onClose={() => setUpgradeOpen(false)} />
     </header>
   );
 }

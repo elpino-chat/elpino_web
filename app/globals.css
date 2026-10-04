@@ -1069,22 +1069,29 @@ body {
    the canvas. The canvas color itself now lives only here (not as a
    hardcoded class in layout.tsx) so it always tracks the chosen appearance. */
 .dashboard-shell,
-.dashboard-shell > div,
-.dashboard-shell main {
+.dashboard-shell > div {
   background-color: #262626;
 }
 
 [data-dashboard-theme="dark"] .dashboard-shell,
-[data-dashboard-theme="dark"] .dashboard-shell > div,
-[data-dashboard-theme="dark"] .dashboard-shell main {
+[data-dashboard-theme="dark"] .dashboard-shell > div {
   background-color: #262626 !important;
   color: rgba(255, 255, 255, 0.9);
 }
 
 [data-dashboard-theme="light"] .dashboard-shell,
-[data-dashboard-theme="light"] .dashboard-shell > div,
-[data-dashboard-theme="light"] .dashboard-shell main {
+[data-dashboard-theme="light"] .dashboard-shell > div {
   background-color: #f5f6f7 !important;
+  color: rgba(0, 0, 0, 0.9);
+}
+
+/* The page area (<main>) has no fill of its own: the shell behind it already paints the canvas, so whatever sits in the
+   space under the page (the phone dock's gap, for one) is not covered by a second layer. Only its text colour is set here. */
+[data-dashboard-theme="dark"] .dashboard-shell main {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+[data-dashboard-theme="light"] .dashboard-shell main {
   color: rgba(0, 0, 0, 0.9);
 }
 
@@ -1612,9 +1619,16 @@ body {
   color: rgba(255, 255, 255, 0.95) !important;
 }
 
-[data-dashboard-theme="dark"] .dashboard-shell .dashboard-settings-surface :is(input, textarea, select) {
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-settings-surface :is(input, textarea, select):not([class*="bg-transparent"]) {
   background-color: #1b1e21 !important;
   border-color: rgba(255, 255, 255, 0.16) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Inputs authored as bg-transparent (e.g. the Plugins page's connector search) sit inside a
+   wrapper that already draws the box; a fill of their own shows as a second box. */
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-settings-surface :is(input, textarea, select)[class*="bg-transparent"] {
+  background-color: transparent !important;
   color: rgba(255, 255, 255, 0.9) !important;
 }
 
@@ -2613,7 +2627,7 @@ body:has([data-dashboard-theme="dark"]) .dashboard-assignment-toast-close:hover 
 }
 
 [data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page {
-  color: rgba(255, 255, 255, 0.9) !important;
+  color: rgb(255 255 255 / 1) !important;
 }
 
 [data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page [class*="border"] {
@@ -2635,7 +2649,7 @@ body:has([data-dashboard-theme="dark"]) .dashboard-assignment-toast-close:hover 
 [data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page [class*="text-[#11120f]"],
 [data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page [class*="text-[#17233A]"],
 [data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page [class*="text-[#33383c]"] {
-  color: rgba(255, 255, 255, 0.92) !important;
+  color: rgb(255 255 255 / 1) !important;
 }
 
 [data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page [class*="text-[#707980]"],
@@ -2652,8 +2666,38 @@ body:has([data-dashboard-theme="dark"]) .dashboard-assignment-toast-close:hover 
 [data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page [class*="text-[#7a8389]"],
 [data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page [class*="text-[#7b848a]"],
 [data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page [class*="text-[#a5acb0]"] {
-  color: rgba(255, 255, 255, 0.6) !important;
+  color: rgb(255 255 255 / 0.8) !important;
 }
+
+/* Usage page (dark theme): the page's own white-alpha text classes follow the same two shades,
+   100% for headings and values, 80% for everything secondary. */
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page [class*="text-white/90"],
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page [class*="text-white/100"] {
+  color: rgb(255 255 255 / 1) !important;
+}
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page [class*="text-white/70"],
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page [class*="text-white/60"],
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page [class*="text-white/50"],
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page [class*="text-white/45"],
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page [class*="text-white/40"] {
+  color: rgb(255 255 255 / 0.8) !important;
+}
+
+/* Usage page text is one pixel larger than the sizes written in its markup. Both themes. */
+.dashboard-ai-usage-page [class*="text-[10px]"] { font-size: 11px; }
+.dashboard-ai-usage-page [class*="text-[11px]"] { font-size: 12px; }
+.dashboard-ai-usage-page [class*="text-[11.5px]"] { font-size: 12.5px; }
+.dashboard-ai-usage-page [class*="text-[12px]"] { font-size: 13px; }
+.dashboard-ai-usage-page [class*="text-[12.5px]"] { font-size: 13.5px; }
+.dashboard-ai-usage-page [class*="text-[13px]"] { font-size: 14px; }
+.dashboard-ai-usage-page [class*="text-[14px]"] { font-size: 15px; }
+.dashboard-ai-usage-page [class*="text-[15px]"] { font-size: 16px; }
+.dashboard-ai-usage-page [class*="text-[16px]"] { font-size: 17px; }
+.dashboard-ai-usage-page [class*="text-[28px]"] { font-size: 29px; }
+.dashboard-ai-usage-page [class*="text-[30px]"] { font-size: 31px; }
+.dashboard-ai-usage-page .text-xs { font-size: 13px; }
+.dashboard-ai-usage-page .text-sm { font-size: 15px; }
+.dashboard-ai-usage-page .text-base { font-size: 17px; }
 
 /* Unconditional, like the rest of this page's dark styling: the Usage page
    is always dark, so this can't be gated behind the light/dark toggle. */
@@ -3179,7 +3223,7 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
 }
 :is([data-dashboard-theme="light"], [data-dashboard-theme="dark"])
   .dashboard-shell aside.dashboard-primary-sidebar:not([role="dialog"]) .dashboard-nav-active :is(span, svg) {
-  color: rgb(255 255 255 / 0.9) !important;
+  color: #fff !important;
 }
 :is([data-dashboard-theme="light"], [data-dashboard-theme="dark"])
   .dashboard-shell aside.dashboard-primary-sidebar:not([role="dialog"]) .sidebar-account {
@@ -3191,7 +3235,7 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
   aside.dashboard-primary-sidebar:not([role="dialog"])
   a.sidebar-nav-item:not(.dashboard-nav-active)
   :is(span, svg) {
-  color: rgb(255 255 255 / 0.6) !important;
+  color: #fff !important;
 }
 :is([data-dashboard-theme="light"], [data-dashboard-theme="dark"])
   .dashboard-shell
@@ -3528,18 +3572,18 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
 /* This id beats the .dashboard-shell header rules above on specificity
    alone, so it needs its own dark/light split rather than relying on them. */
 [data-dashboard-theme="dark"] #dashboard-global-search .dashboard-header-search {
-  background: rgb(255 255 255 / 0.045) !important;
-  border-color: rgb(255 255 255 / 0.1) !important;
+  background: transparent !important;
+  border-color: rgb(255 255 255 / 0.3) !important;
 }
 [data-dashboard-theme="dark"] #dashboard-global-search .dashboard-header-search:focus-within {
-  background: rgb(255 255 255 / 0.07) !important;
-  border-color: rgb(255 255 255 / 0.25) !important;
+  background: transparent !important;
+  border-color: rgb(255 255 255 / 0.55) !important;
 }
 [data-dashboard-theme="dark"] #dashboard-global-search .dashboard-header-search :is(input, svg) {
   color: rgb(255 255 255 / 0.9) !important;
 }
 [data-dashboard-theme="dark"] #dashboard-global-search .dashboard-header-search input::placeholder {
-  color: rgb(255 255 255 / 0.35) !important;
+  color: rgb(255 255 255 / 0.5) !important;
 }
 [data-dashboard-theme="dark"] #dashboard-global-search .dashboard-search-results {
   background: #292a2b !important;
@@ -3717,9 +3761,19 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
 [data-dashboard-theme="dark"] #dashboard-knowledge-sidebar a:not([aria-current="page"]) {
   color: rgb(255 255 255 / 0.6) !important;
 }
+/* Active tab and hover share one fill: white/10. */
 [data-dashboard-theme="dark"] #dashboard-knowledge-sidebar a[aria-current="page"] {
   background: rgb(255 255 255 / 0.1) !important;
   color: rgb(255 255 255 / 0.9) !important;
+}
+[data-dashboard-theme="dark"] #dashboard-knowledge-sidebar :is(a, button):hover {
+  background: rgb(255 255 255 / 0.1) !important;
+}
+/* Library nav (Pages, URLs): full white whether or not the option is active, so the
+   active state is carried by its background alone. */
+[data-dashboard-theme="dark"] #dashboard-knowledge-sidebar nav a,
+[data-dashboard-theme="dark"] #dashboard-knowledge-sidebar nav a svg {
+  color: #fff !important;
 }
 [data-dashboard-theme="dark"] #dashboard-knowledge-page .dashboard-knowledge-main-surface .bg-white,
 [data-dashboard-theme="dark"] #dashboard-knowledge-page .dashboard-knowledge-main-surface [class*="bg-[#f8f9f9]"],
@@ -3732,9 +3786,14 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
 [data-dashboard-theme="dark"] #dashboard-knowledge-page .dashboard-knowledge-main-surface :is(h1, h2, h3, h4, p, span, input, button) {
   color: rgb(255 255 255 / 0.9) !important;
 }
-[data-dashboard-theme="dark"] #dashboard-knowledge-page .dashboard-knowledge-main-surface :is(input, textarea) {
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .dashboard-knowledge-main-surface :is(input, textarea):not([class*="bg-transparent"]) {
   background: rgb(255 255 255 / 0.045) !important;
   border-color: rgb(255 255 255 / 0.1) !important;
+}
+/* Inputs authored as bg-transparent (the Pages search bar) sit inside a wrapper that already
+   draws the box; a fill of their own shows as a second box inside it. */
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .dashboard-knowledge-main-surface :is(input, textarea)[class*="bg-transparent"] {
+  background: transparent !important;
 }
 /* Add-button, editor-save and source-add carry no native color classes of
    their own (pure layout classes in JSX) or are already theme-neutral —
@@ -3910,12 +3969,13 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
 [data-dashboard-theme="dark"] #dashboard-settings-sidebar :is(a, button) :is(span, svg) {
   color: inherit !important;
 }
+/* Active tab and hover share one fill: white/10. */
 [data-dashboard-theme="dark"] #dashboard-settings-sidebar a[aria-current="page"] {
   background: rgb(255 255 255 / 0.1) !important;
   color: rgb(255 255 255 / 0.9) !important;
 }
 [data-dashboard-theme="dark"] #dashboard-settings-sidebar :is(a, button):hover {
-  background: rgb(255 255 255 / 0.06) !important;
+  background: rgb(255 255 255 / 0.1) !important;
   color: rgb(255 255 255 / 0.9) !important;
 }
 [data-dashboard-theme="dark"] #dashboard-settings-sidebar > div > p {
@@ -3945,7 +4005,7 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
 [data-dashboard-theme="dark"] #dashboard-settings-page .dashboard-settings-surface :is(.dashboard-settings-subdesc, [class*="text-[#858585]"], [class*="text-[#686d71]"]) {
   color: rgb(255 255 255 / 0.55) !important;
 }
-[data-dashboard-theme="dark"] #dashboard-settings-page .dashboard-settings-surface :is(input, textarea, select) {
+[data-dashboard-theme="dark"] #dashboard-settings-page .dashboard-settings-surface :is(input, textarea, select):not([class*="bg-transparent"]) {
   background: rgb(255 255 255 / 0.035) !important;
   border-color: rgb(255 255 255 / 0.12) !important;
   color: rgb(255 255 255 / 0.9) !important;
@@ -4590,15 +4650,15 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
   box-shadow: none !important;
 }
 [data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page :is([class*="text-[#17191b]"], [class*="text-[#11120f]"], [class*="text-[#17233A]"], [class*="text-[#33383c]"]) {
-  color: rgb(255 255 255 / 0.9) !important;
+  color: rgb(255 255 255 / 1) !important;
 }
 [data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page :is([class*="text-[#707980]"], [class*="text-[#6D7D85]"], [class*="text-[#69737a]"], [class*="text-[#8a9298]"], [class*="text-[#8A9299]"], [class*="text-[#8b9398]"], [class*="text-[#92999e]"], [class*="text-[#939a9e]"], [class*="text-[#5f686d]"], [class*="text-[#667069]"], [class*="text-[#737c82]"], [class*="text-[#7B858A]"], [class*="text-[#7a8389]"], [class*="text-[#7b848a]"], [class*="text-[#a5acb0]"]) {
-  color: rgb(255 255 255 / 0.6) !important;
+  color: rgb(255 255 255 / 0.8) !important;
 }
 [data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page :is(input, select, [role="dialog"], [class*="bg-white"]) {
   background-color: #2d2d2d !important;
   border-color: rgb(255 255 255 / 0.12) !important;
-  color: rgb(255 255 255 / 0.9) !important;
+  color: rgb(255 255 255 / 1) !important;
 }
 [data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page input {
   color-scheme: dark;
@@ -5850,12 +5910,12 @@ body:has(.dashboard-ai-usage-page) .dashboard-add-credits-dialog [class*="hover:
   [data-fx-on] [data-fx]:not([data-fx-in]) { opacity: 1 !important; translate: none !important; filter: none !important; }
 }
 
-/* Dashboard navigation text is full white (text-white/100). The icon rail and the settings sidebar are dark
-   (#262626) in both themes, so their labels are white in both. The repeated .dashboard-shell raises the
+/* Dashboard navigation text is full white (text-white/100) in the DARK theme. In the light theme the secondary
+   sidebars are transparent on the light page and keep their own dark text, so white there made the labels vanish. The repeated .dashboard-shell raises the
    specificity above the older per-theme sidebar colour rules; the yellow Upgrade chip keeps its dark text.
    The Space panel and the primary icon rail are excluded: both are light in the light theme and have their
    own colour rules (the rail keeps charcoal with white icons in the dark theme through its own rules). */
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell.dashboard-shell.dashboard-shell :is(aside:not(.dashboard-space-sidebar):not(.dashboard-primary-sidebar), .dashboard-secondary-sidebar):not([role="dialog"]) :is(a, button, h1, h2, h3, p, span, svg):not(.sidebar-upgrade, .sidebar-upgrade *) {
+[data-dashboard-theme="dark"] .dashboard-shell.dashboard-shell.dashboard-shell :is(aside:not(.dashboard-space-sidebar):not(.dashboard-primary-sidebar), .dashboard-secondary-sidebar):not([role="dialog"]) :is(a, button, h1, h2, h3, p, span, svg):not(.sidebar-upgrade, .sidebar-upgrade *) {
   color: rgb(255 255 255 / 1) !important;
 }
 
@@ -5874,14 +5934,15 @@ body:has(.dashboard-ai-usage-page) .dashboard-add-credits-dialog [class*="hover:
   border-color: rgb(0 0 0 / 0.4) !important;
 }
 
-/* The settings sidebar (Account, General, Billing … Danger Zone, Log out) is full white, text-white/100, in both
-   themes. The older per-state rules for it are keyed on #dashboard-settings-sidebar, so these use the same ID to
-   win over them: normal, current page, and hover. */
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) #dashboard-settings-sidebar :is(a, button, p),
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) #dashboard-settings-sidebar :is(a, button) :is(span, svg),
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) #dashboard-settings-sidebar a[aria-current="page"],
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) #dashboard-settings-sidebar :is(a, button):hover,
-:is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) #dashboard-settings-sidebar > div > p {
+/* The settings sidebar (Account, General, Billing … Danger Zone) is full white, text-white/100, in the DARK theme only.
+   Its links are authored with dark text for the light theme, so forcing white there made them vanish on the light page.
+   The older per-state rules for it are keyed on #dashboard-settings-sidebar, so these use the same ID to win over
+   them: normal, current page, and hover. */
+[data-dashboard-theme="dark"] #dashboard-settings-sidebar :is(a, button, p),
+[data-dashboard-theme="dark"] #dashboard-settings-sidebar :is(a, button) :is(span, svg),
+[data-dashboard-theme="dark"] #dashboard-settings-sidebar a[aria-current="page"],
+[data-dashboard-theme="dark"] #dashboard-settings-sidebar :is(a, button):hover,
+[data-dashboard-theme="dark"] #dashboard-settings-sidebar > div > p {
   color: rgb(255 255 255 / 1) !important;
 }
 
@@ -5983,3 +6044,859 @@ body:has(.dashboard-ai-usage-page) .dashboard-add-credits-dialog [class*="hover:
 .dashboard-shell .connect-dialog input.connect-dialog-input::placeholder {
   color: var(--cd-muted) !important;
 }
+
+/* Knowledge "add" popovers (URL, sitemap, Notion) are portalled to <body>, outside
+   .dashboard-shell, so they pick up the dashboard appearance through :has() like the
+   status and notifications menus above. Inputs stay transparent inside the dark panel. */
+body:has([data-dashboard-theme="dark"]) .knowledge-popover {
+  background-color: #1b1e21 !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+body:has([data-dashboard-theme="dark"]) .knowledge-popover :is(p, span, label, div) {
+  color: rgba(255, 255, 255, 0.78);
+}
+body:has([data-dashboard-theme="dark"]) .knowledge-popover input:not([type="checkbox"]) {
+  background: transparent !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+body:has([data-dashboard-theme="dark"]) .knowledge-popover input::placeholder {
+  color: rgba(255, 255, 255, 0.4) !important;
+}
+body:has([data-dashboard-theme="dark"]) .knowledge-popover :is([class*="border-[#e6eaec]"], [class*="border-[#eef1f2]"]) {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+body:has([data-dashboard-theme="dark"]) .knowledge-popover :is(label, button):hover {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+}
+body:has([data-dashboard-theme="dark"]) .knowledge-popover :is(button, a)[class*="bg-[#17191b]"] {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  color: #202020 !important;
+}
+body:has([data-dashboard-theme="dark"]) .knowledge-popover :is(button, a)[class*="bg-[#17191b]"]:hover {
+  background-color: #ffffff !important;
+}
+
+/* "Import from Notion" is an outlined button, not the filled add pill: transparent with a
+   full-strength border and text in the theme's foreground colour. */
+[data-dashboard-theme="dark"] .dashboard-shell .knowledge-notion-trigger,
+[data-dashboard-theme="dark"] .dashboard-shell .knowledge-notion-trigger:hover,
+[data-dashboard-theme="dark"] .dashboard-shell .knowledge-notion-trigger:focus-visible {
+  background: transparent !important;
+  border-color: #fff !important;
+  color: #fff !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .knowledge-notion-trigger,
+[data-dashboard-theme="light"] .dashboard-shell .knowledge-notion-trigger:hover,
+[data-dashboard-theme="light"] .dashboard-shell .knowledge-notion-trigger:focus-visible {
+  background: transparent !important;
+  border-color: #000 !important;
+  color: #000 !important;
+}
+[data-dashboard-theme="dark"] .knowledge-notion-mark {
+  filter: invert(1);
+}
+
+/* Connect page category tabs (dark theme): 70% white outline on inactive tabs; the active tab
+   gets the gradient outline below. */
+[data-dashboard-theme="dark"] .dashboard-shell .connect-category-tab {
+  border-color: rgb(255 255 255 / 0.7) !important;
+  color: rgb(255 255 255 / 0.9) !important;
+}
+/* Active tab: gradient outline (the offer bar's orange → pink → blue) over a solid fill. */
+[data-dashboard-theme="dark"] .dashboard-shell .connect-category-tab[aria-pressed="true"] {
+  border-color: transparent !important;
+  background:
+    linear-gradient(#262626, #262626) padding-box,
+    linear-gradient(90deg, #e0713a 0%, #d6479a 50%, #4a8df0 100%) border-box !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .connect-category-tab[aria-pressed="true"] {
+  border-color: transparent !important;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(90deg, #e0713a 0%, #d6479a 50%, #4a8df0 100%) border-box !important;
+}
+
+/* Connect cards' "Connect" button: a quiet outline that brightens on hover, so a grid of them
+   doesn't pull the eye away from the cards themselves. */
+[data-dashboard-theme="dark"] .dashboard-shell .connect-card-button {
+  background-color: transparent !important;
+  border-color: rgb(255 255 255 / 0.22) !important;
+  color: rgb(255 255 255 / 0.75) !important;
+}
+[data-dashboard-theme="dark"] .dashboard-shell .connect-card-button:hover {
+  background-color: rgb(255 255 255 / 0.06) !important;
+  border-color: rgb(255 255 255 / 0.5) !important;
+  color: #fff !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .connect-card-button {
+  background-color: transparent !important;
+  border-color: rgb(0 0 0 / 0.2) !important;
+  color: rgb(0 0 0 / 0.7) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .connect-card-button:hover {
+  background-color: rgb(0 0 0 / 0.04) !important;
+  border-color: rgb(0 0 0 / 0.5) !important;
+  color: #000 !important;
+}
+
+/* Settings sidebar, dark theme: inactive tabs (links and buttons that are neither the current page nor hovered)
+   are white/80; the current page and hover stay full white. In the light theme the links keep their own dark text. */
+[data-dashboard-theme="dark"] #dashboard-settings-sidebar :is(a:not([aria-current="page"]), button):not(:hover),
+[data-dashboard-theme="dark"] #dashboard-settings-sidebar :is(a:not([aria-current="page"]), button):not(:hover) :is(span, svg) {
+  color: rgb(255 255 255 / 0.8) !important;
+}
+
+/* Connector card names are full white in the dark theme. */
+[data-dashboard-theme="dark"] .dashboard-shell .connect-card-title {
+  color: #fff !important;
+}
+
+/* The plan offer strip keeps its own colours in both themes: white copy on the gradient, white button. */
+.dashboard-shell .plan-offer-banner,
+.dashboard-shell .plan-offer-banner :is(p, span) {
+  color: #fff !important;
+}
+.dashboard-shell .plan-offer-banner .plan-offer-banner-button {
+  background-color: #fff !important;
+  color: #111 !important;
+}
+
+/* Primary rail: the active tab gets a soft background block (white/10 in the dark theme, a light
+   grey in the light theme), matching the secondary sidebars. The extra .sidebar-nav-item class
+   makes this win over the rail's older "active is transparent" rules. */
+[data-dashboard-theme="dark"] .dashboard-shell aside.dashboard-primary-sidebar:not([role="dialog"]) a.sidebar-nav-item.dashboard-nav-active {
+  background: rgb(255 255 255 / 0.1) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell aside.dashboard-primary-sidebar:not([role="dialog"]) a.sidebar-nav-item.dashboard-nav-active {
+  background: rgb(0 0 0 / 0.07) !important;
+}
+
+/* Settings > Information, Details card (dark theme): labels white/70, values full white. */
+[data-dashboard-theme="dark"] #dashboard-settings-page .info-key {
+  color: rgb(255 255 255 / 0.7) !important;
+}
+[data-dashboard-theme="dark"] #dashboard-settings-page .info-value {
+  color: rgb(255 255 255 / 1) !important;
+}
+
+/* The Information page's pinned Save bar needs a solid fill so content scrolls cleanly beneath it. */
+[data-dashboard-theme="dark"] #dashboard-settings-page .info-save-bar {
+  background: #262626 !important;
+  border-color: rgb(255 255 255 / 0.12) !important;
+}
+[data-dashboard-theme="light"] #dashboard-settings-page .info-save-bar {
+  background: #ffffff !important;
+}
+/* The Information page's Save changes and Discard buttons. Both are outlined; each theme gets its
+   own rest and hover colours so the text always has contrast (a light hover fill must never sit
+   under light text). */
+[data-dashboard-theme="dark"] #dashboard-settings-page .info-save-bar .info-save-button {
+  background: transparent !important;
+  border-color: #fff !important;
+  color: #fff !important;
+}
+[data-dashboard-theme="dark"] #dashboard-settings-page .info-save-bar .info-save-button:not(:disabled):hover {
+  background: rgb(255 255 255 / 0.14) !important;
+}
+[data-dashboard-theme="dark"] #dashboard-settings-page .info-save-bar .info-discard-button {
+  background: transparent !important;
+  border-color: rgb(255 255 255 / 0.3) !important;
+  color: rgb(255 255 255 / 0.9) !important;
+}
+[data-dashboard-theme="dark"] #dashboard-settings-page .info-save-bar .info-discard-button:hover {
+  background: rgb(255 255 255 / 0.1) !important;
+  border-color: rgb(255 255 255 / 0.5) !important;
+  color: #fff !important;
+}
+[data-dashboard-theme="light"] #dashboard-settings-page .info-save-bar .info-save-button {
+  background: transparent !important;
+  border-color: #000 !important;
+  color: #000 !important;
+}
+[data-dashboard-theme="light"] #dashboard-settings-page .info-save-bar .info-save-button:not(:disabled):hover {
+  background: rgb(0 0 0 / 0.07) !important;
+}
+[data-dashboard-theme="light"] #dashboard-settings-page .info-save-bar .info-discard-button {
+  background: transparent !important;
+  border-color: rgb(0 0 0 / 0.25) !important;
+  color: rgb(0 0 0 / 0.8) !important;
+}
+[data-dashboard-theme="light"] #dashboard-settings-page .info-save-bar .info-discard-button:hover {
+  background: rgb(0 0 0 / 0.06) !important;
+  border-color: rgb(0 0 0 / 0.5) !important;
+  color: #000 !important;
+}
+
+/* Presence log (dark theme): teammate names are full white, everything else in the rows white/80. */
+[data-dashboard-theme="dark"] #dashboard-settings-page .presence-name {
+  color: rgb(255 255 255 / 1) !important;
+}
+[data-dashboard-theme="dark"] #dashboard-settings-page .presence-meta {
+  color: rgb(255 255 255 / 0.8) !important;
+}
+
+/* Usage page tile labels (Today, This month, Average AI response) are headings: full white, not the
+   80% used for paragraphs. Placed last so it wins over the grey-text mapping above. */
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page .usage-heading {
+  color: rgb(255 255 255 / 1) !important;
+}
+
+/* Usage page paragraphs that must read as white at 80% in the dark theme, whatever grey class they carry. */
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page .usage-paragraph {
+  color: rgb(255 255 255 / 0.8) !important;
+}
+
+/* Usage page: a paragraph with no colour class of its own is a heading ("AI usage", "Resets", ...). The
+   generic `.dashboard-page-surface p` rule paints those white/66, so they are set to full white here.
+   Paragraphs that carry a grey class keep their white/80 from the rules above. */
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-ai-usage-page p:not([class*="text-[#"]):not([class*="text-white"]) {
+  color: rgb(255 255 255 / 1) !important;
+}
+
+/* Danger zone page: red-outlined action cards. Titles are full white and descriptions white/80 in the
+   dark theme; each theme gets its own button colours. */
+[data-dashboard-theme="dark"] #dashboard-settings-page .danger-card {
+  border-color: rgb(248 113 113 / 0.35) !important;
+}
+[data-dashboard-theme="dark"] #dashboard-settings-page .danger-title {
+  color: rgb(255 255 255 / 1) !important;
+}
+[data-dashboard-theme="dark"] #dashboard-settings-page .danger-text {
+  color: rgb(255 255 255 / 0.8) !important;
+}
+[data-dashboard-theme="dark"] #dashboard-settings-page .danger-action {
+  background: transparent !important;
+  border-color: rgb(248 113 113 / 0.5) !important;
+  color: rgb(252 165 165) !important;
+}
+[data-dashboard-theme="dark"] #dashboard-settings-page .danger-action:not(:disabled):hover {
+  background: rgb(248 113 113 / 0.12) !important;
+  border-color: rgb(248 113 113 / 0.8) !important;
+  color: rgb(254 202 202) !important;
+}
+[data-dashboard-theme="light"] #dashboard-settings-page .danger-card {
+  border-color: rgba(220, 38, 38, 0.25) !important;
+}
+[data-dashboard-theme="light"] #dashboard-settings-page .danger-title {
+  color: rgba(0, 0, 0, 0.9) !important;
+}
+[data-dashboard-theme="light"] #dashboard-settings-page .danger-text {
+  color: rgba(0, 0, 0, 0.65) !important;
+}
+[data-dashboard-theme="light"] #dashboard-settings-page .danger-action {
+  background: transparent !important;
+  border-color: rgba(220, 38, 38, 0.4) !important;
+  color: #b91c1c !important;
+}
+[data-dashboard-theme="light"] #dashboard-settings-page .danger-action:not(:disabled):hover {
+  background: rgba(220, 38, 38, 0.08) !important;
+  border-color: rgba(220, 38, 38, 0.7) !important;
+}
+
+/* Restrictions page: its "Add page" inputs are not inside a bordered wrapper, so they keep their own border. The
+   Members-style rule above strips the border from every transparent input on these pages. */
+[data-dashboard-theme="dark"] #dashboard-settings-page .dashboard-settings-surface .members-v2 input.rule-input.bg-transparent:not([type="checkbox"]) {
+  border-color: rgb(255 255 255 / 0.35) !important;
+}
+[data-dashboard-theme="dark"] #dashboard-settings-page .dashboard-settings-surface .members-v2 input.rule-input.bg-transparent:not([type="checkbox"]):focus {
+  border-color: rgb(255 255 255 / 0.8) !important;
+}
+
+/* Billing > Payment history (dark theme): the list has no borders, and every piece of text in it is full white. */
+[data-dashboard-theme="dark"] .billing-v2 .billing-history-list :is(li, span, p, time, button, h3) {
+  color: rgb(255 255 255 / 1) !important;
+}
+[data-dashboard-theme="dark"] .billing-v2 .billing-history-list,
+[data-dashboard-theme="light"] .billing-v2 .billing-history-list {
+  background: transparent !important;
+}
+
+/* Billing > Payment method (dark theme): the empty state has no border or fill, and its text is full white. */
+[data-dashboard-theme="dark"] .billing-v2 .billing-method-empty :is(p, span) {
+  color: rgb(255 255 255 / 1) !important;
+}
+
+/* Billing page intro paragraph (dark theme): white at 80%. */
+[data-dashboard-theme="dark"] #dashboard-settings-page .billing-v2 .billing-lede,
+[data-dashboard-theme="dark"] #dashboard-settings-page .dashboard-settings-surface .billing-v2 p.billing-lede {
+  color: rgb(255 255 255 / 0.8) !important;
+}
+
+/* ---- Billing page: text colours and sizes. Scoped to .billing-page so the other settings pages that share the
+   .billing-v2 tokens are untouched. Dark theme: headings and values full white, everything secondary white at 80%.
+   Both themes: every text size is one pixel larger than the size written in the markup. ---- */
+[data-dashboard-theme="dark"] #dashboard-settings-page .billing-page {
+  --b-text: rgb(255 255 255 / 1);
+  --b-muted: rgb(255 255 255 / 0.8);
+  color: rgb(255 255 255 / 1);
+}
+/* The page-wide `.dashboard-page-surface p` rule paints every plain paragraph grey; ones with no colour of their own are headings or values. */
+[data-dashboard-theme="dark"] #dashboard-settings-page .billing-page :is(p, h2, h3):not([class*="text-[var("]):not([class*="font-mono"]) {
+  color: rgb(255 255 255 / 1) !important;
+}
+[data-dashboard-theme="dark"] #dashboard-settings-page .billing-page [class*="text-[var(--b-muted)]"] {
+  color: rgb(255 255 255 / 0.8) !important;
+}
+/* A class list like "text-[var(--b-muted)] hover:text-[var(--b-text)]" contains both names, so the hover variant must not
+   count as the element's resting colour. */
+[data-dashboard-theme="dark"] #dashboard-settings-page .billing-page [class*="text-[var(--b-text)]"]:not([class*="hover:text-[var(--b-text)]"]) {
+  color: rgb(255 255 255 / 1) !important;
+}
+/* Tabs: the selected one is full white, the others white at 80%, and a tab goes full white as you point at it. */
+[data-dashboard-theme="dark"] #dashboard-settings-page .billing-page [role="tab"][aria-selected="true"],
+[data-dashboard-theme="dark"] #dashboard-settings-page .billing-page [role="tab"]:hover {
+  color: rgb(255 255 255 / 1) !important;
+}
+[data-dashboard-theme="dark"] #dashboard-settings-page .billing-page [role="tab"][aria-selected="false"]:not(:hover) {
+  color: rgb(255 255 255 / 0.8) !important;
+}
+.billing-page [class*="text-[10.5px]"] { font-size: 11.5px; }
+.billing-page [class*="text-[11px]"] { font-size: 12px; }
+.billing-page [class*="text-[11.5px]"] { font-size: 12.5px; }
+.billing-page [class*="text-[12px]"] { font-size: 13px; }
+.billing-page [class*="text-[12.5px]"] { font-size: 13.5px; }
+.billing-page [class*="text-[13px]"] { font-size: 14px; }
+.billing-page [class*="text-[13.5px]"] { font-size: 14.5px; }
+.billing-page [class*="text-[14px]"] { font-size: 15px; }
+.billing-page [class*="text-[15px]"] { font-size: 16px; }
+.billing-page [class*="text-[16px]"] { font-size: 17px; }
+.billing-page [class*="text-[17px]"] { font-size: 18px; }
+.billing-page [class*="text-[18px]"] { font-size: 19px; }
+.billing-page [class*="text-[28px]"] { font-size: 29px; }
+.billing-page [class*="text-[30px]"] { font-size: 31px; }
+
+/* ---- Plan picker (the "Choose your plan" dialog): on the shared billing tokens, with the same dark-theme text as
+   the Billing page (headings and values white, secondary text white at 80%). ---- */
+[data-dashboard-theme="dark"] .dashboard-settings-surface .plan-picker {
+  --b-text: rgb(255 255 255 / 1);
+  --b-muted: rgb(255 255 255 / 0.8);
+  color: rgb(255 255 255 / 1);
+}
+[data-dashboard-theme="dark"] .dashboard-settings-surface .plan-picker :is(p, h2, h3, li):not([class*="text-[var("]):not([class*="font-mono"]):not([class*="text-transparent"]) {
+  color: rgb(255 255 255 / 1) !important;
+}
+[data-dashboard-theme="dark"] .dashboard-settings-surface .plan-picker [class*="text-[var(--b-muted)]"]:not([class*="hover:text-[var(--b-muted)]"]) {
+  color: rgb(255 255 255 / 0.8) !important;
+}
+
+/* Plan picker, active states. The page's dark-theme button rules would otherwise force every button's text white, which
+   made the selected Monthly / Annual pill and the filled Upgrade button unreadable (white on white). */
+[data-dashboard-theme="dark"] .dashboard-settings-surface .plan-picker .plan-picker-cadence-on,
+[data-dashboard-theme="dark"] .dashboard-settings-surface .plan-picker .plan-picker-cta-primary {
+  background: #ffffff !important;
+  color: #111111 !important;
+}
+[data-dashboard-theme="light"] .dashboard-settings-surface .plan-picker .plan-picker-cadence-on,
+[data-dashboard-theme="light"] .dashboard-settings-surface .plan-picker .plan-picker-cta-primary {
+  background: #17191b !important;
+  color: #ffffff !important;
+}
+.dashboard-settings-surface .plan-picker .plan-picker-recommended {
+  color: #ffffff !important;
+}
+
+
+/* Plan picker, /pricing style: hairlines between the joined cards, and a softer version of /pricing's glow behind the recommended plan. */
+[data-dashboard-theme="dark"] .dashboard-settings-surface .plan-picker {
+  /* Every border in the picker (card edges, dividers, the cadence toggle, the footer box) is white at 60%. */
+  --plan-line: rgb(255 255 255 / 0.6);
+  --b-border: rgb(255 255 255 / 0.6);
+  /* The edges of the joined plan cards are quieter than the lines inside them. */
+  --plan-card-line: rgb(255 255 255 / 0.3);
+}
+[data-dashboard-theme="light"] .dashboard-settings-surface .plan-picker {
+  --plan-line: rgb(0 0 0 / 0.4);
+  --plan-card-line: rgb(0 0 0 / 0.4);
+}
+[data-dashboard-theme="dark"] .dashboard-settings-surface .plan-picker .plan-picker-glow {
+  opacity: 0.32;
+}
+[data-dashboard-theme="light"] .dashboard-settings-surface .plan-picker .plan-picker-glow {
+  opacity: 0.85;
+}
+
+/* Plan picker: the settings-wide rule that paints every `border-t` / `border-b` element white at 10% would otherwise win
+   over the card edges and dividers, so the picker restates its own border colour with a stronger selector. */
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-settings-surface .plan-picker [class*="border"]:not([class*="border-transparent"]) {
+  border-color: var(--plan-line) !important;
+}
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-settings-surface .plan-picker [class*="plan-card-line"]:not([class*="border-transparent"]) {
+  border-color: var(--plan-card-line) !important;
+}
+
+/* Invite people dialog, light theme: the email you type is full black (the dialog's other text stays at 85%). */
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-invite-surface .dashboard-invite-input {
+  color: rgb(0 0 0 / 1) !important;
+}
+
+/* Tag Manager install dialog: the Verify tag button is white with dark text in the dark theme, and the dark button
+   with white text in the light theme (white on the light dialog would disappear). */
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-tag-install-panel .tag-verify-button {
+  background: #ffffff !important;
+  color: #111111 !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .dashboard-tag-install-panel .tag-verify-button {
+  background: #17191b !important;
+  color: #ffffff !important;
+}
+
+/* Tag Manager install dialog (dark theme): step headings and the policy heading are full white, the paragraphs white at 80%. */
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-tag-install-panel .tag-heading {
+  color: rgb(255 255 255 / 1) !important;
+}
+[data-dashboard-theme="dark"] .dashboard-shell .dashboard-tag-install-panel .tag-paragraph {
+  color: rgb(255 255 255 / 0.8) !important;
+}
+
+/* Tag Manager: status badges and the "Verify signed-in customers" card. Each theme sets its own colours so the
+   text always has contrast on the badge or card behind it. */
+.tag-badge { line-height: 1.2; }
+[data-dashboard-theme="dark"] .dashboard-shell .tag-badge-verified {
+  background: rgb(52 211 153 / 0.14) !important;
+  border-color: rgb(52 211 153 / 0.4) !important;
+  color: #6ee7b7 !important;
+}
+[data-dashboard-theme="dark"] .dashboard-shell .tag-badge-pending {
+  background: rgb(251 191 36 / 0.13) !important;
+  border-color: rgb(251 191 36 / 0.4) !important;
+  color: #fcd34d !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .tag-badge-verified {
+  background: #e8f6ee !important;
+  border-color: #bfe3cf !important;
+  color: #1c6b43 !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .tag-badge-pending {
+  background: #fff4dc !important;
+  border-color: #f3d99a !important;
+  color: #8a5a0c !important;
+}
+
+[data-dashboard-theme="dark"] .dashboard-shell .tag-verify-card {
+  border-color: rgb(255 255 255 / 0.3) !important;
+}
+[data-dashboard-theme="dark"] .dashboard-shell .tag-verify-card:hover {
+  background: rgb(255 255 255 / 0.04) !important;
+  border-color: rgb(255 255 255 / 0.5) !important;
+}
+[data-dashboard-theme="dark"] .dashboard-shell .tag-verify-icon {
+  background: rgb(139 92 246 / 0.2) !important;
+  color: #c4b5fd !important;
+}
+[data-dashboard-theme="dark"] .dashboard-shell .tag-verify-title { color: rgb(255 255 255 / 1) !important; }
+[data-dashboard-theme="dark"] .dashboard-shell .tag-verify-text { color: rgb(255 255 255 / 0.8) !important; }
+[data-dashboard-theme="dark"] .dashboard-shell .tag-verify-action {
+  border-color: rgb(255 255 255 / 0.5) !important;
+  color: #ffffff !important;
+}
+[data-dashboard-theme="dark"] .dashboard-shell .tag-verify-card:hover .tag-verify-action {
+  background: rgb(255 255 255 / 0.1) !important;
+  border-color: #ffffff !important;
+}
+
+[data-dashboard-theme="light"] .dashboard-shell .tag-verify-card {
+  border-color: rgba(0, 0, 0, 0.14) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .tag-verify-card:hover {
+  background: rgba(0, 0, 0, 0.025) !important;
+  border-color: rgba(0, 0, 0, 0.3) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .tag-verify-icon {
+  background: #f3eeff !important;
+  color: #6246df !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .tag-verify-title { color: #111111 !important; }
+[data-dashboard-theme="light"] .dashboard-shell .tag-verify-text { color: rgba(0, 0, 0, 0.62) !important; }
+[data-dashboard-theme="light"] .dashboard-shell .tag-verify-action {
+  border-color: rgba(0, 0, 0, 0.45) !important;
+  color: #111111 !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .tag-verify-card:hover .tag-verify-action {
+  background: rgba(0, 0, 0, 0.06) !important;
+  border-color: #111111 !important;
+}
+
+/* ---- Tag Manager page (Settings > Website): a simple card for the connected website. Dark theme: headings full white,
+   paragraphs white at 80%. Each theme sets its own colours so every button and badge keeps its contrast. ---- */
+[data-dashboard-theme="dark"] .dashboard-shell :is(.dashboard-tag-manager-page, .identity-page) .tag-heading { color: rgb(255 255 255 / 1) !important; }
+[data-dashboard-theme="dark"] .dashboard-shell :is(.dashboard-tag-manager-page, .identity-page) .tag-paragraph { color: rgb(255 255 255 / 0.8) !important; }
+[data-dashboard-theme="light"] .dashboard-shell :is(.dashboard-tag-manager-page, .identity-page) .tag-heading { color: #111111 !important; }
+[data-dashboard-theme="light"] .dashboard-shell :is(.dashboard-tag-manager-page, .identity-page) .tag-paragraph { color: rgba(0, 0, 0, 0.65) !important; }
+
+[data-dashboard-theme="dark"] .dashboard-shell :is(.dashboard-tag-manager-page, .identity-page) .tag-card {
+  border-color: rgb(255 255 255 / 0.3) !important;
+  background: transparent !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell :is(.dashboard-tag-manager-page, .identity-page) .tag-card {
+  border-color: rgba(0, 0, 0, 0.14) !important;
+  background: transparent !important;
+}
+[data-dashboard-theme="dark"] .dashboard-shell :is(.dashboard-tag-manager-page, .identity-page) .tag-card-icon { background: rgb(255 255 255 / 0.09) !important; color: #ffffff !important; }
+[data-dashboard-theme="light"] .dashboard-shell :is(.dashboard-tag-manager-page, .identity-page) .tag-card-icon { background: #f1f3f4 !important; color: #111111 !important; }
+[data-dashboard-theme="dark"] .dashboard-shell :is(.dashboard-tag-manager-page, .identity-page) .tag-card-actions { border-color: rgb(255 255 255 / 0.18) !important; }
+[data-dashboard-theme="light"] .dashboard-shell :is(.dashboard-tag-manager-page, .identity-page) .tag-card-actions { border-color: rgba(0, 0, 0, 0.1) !important; }
+
+[data-dashboard-theme="dark"] .dashboard-shell :is(.dashboard-tag-manager-page, .identity-page) .tag-callout {
+  background: rgb(251 191 36 / 0.1) !important;
+  border-color: rgb(251 191 36 / 0.35) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell :is(.dashboard-tag-manager-page, .identity-page) .tag-callout {
+  background: #fff8e6 !important;
+  border-color: #f3d99a !important;
+}
+
+[data-dashboard-theme="dark"] .dashboard-shell :is(.dashboard-tag-manager-page, .identity-page) .tag-btn {
+  background: transparent !important;
+  border-color: rgb(255 255 255 / 0.5) !important;
+  color: #ffffff !important;
+}
+[data-dashboard-theme="dark"] .dashboard-shell :is(.dashboard-tag-manager-page, .identity-page) .tag-btn:hover {
+  background: rgb(255 255 255 / 0.1) !important;
+  border-color: #ffffff !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell :is(.dashboard-tag-manager-page, .identity-page) .tag-btn {
+  background: transparent !important;
+  border-color: rgba(0, 0, 0, 0.35) !important;
+  color: #111111 !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell :is(.dashboard-tag-manager-page, .identity-page) .tag-btn:hover {
+  background: rgba(0, 0, 0, 0.06) !important;
+  border-color: #111111 !important;
+}
+[data-dashboard-theme="dark"] .dashboard-shell :is(.dashboard-tag-manager-page, .identity-page) .tag-btn-primary,
+[data-dashboard-theme="dark"] .dashboard-shell :is(.dashboard-tag-manager-page, .identity-page) .tag-btn-primary:hover {
+  background: #ffffff !important;
+  border-color: #ffffff !important;
+  color: #111111 !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell :is(.dashboard-tag-manager-page, .identity-page) .tag-btn-primary,
+[data-dashboard-theme="light"] .dashboard-shell :is(.dashboard-tag-manager-page, .identity-page) .tag-btn-primary:hover {
+  background: #17191b !important;
+  border-color: #17191b !important;
+  color: #ffffff !important;
+}
+[data-dashboard-theme="dark"] .dashboard-shell :is(.dashboard-tag-manager-page, .identity-page) .tag-btn-danger {
+  border-color: rgb(248 113 113 / 0.55) !important;
+  color: #fca5a5 !important;
+}
+[data-dashboard-theme="dark"] .dashboard-shell :is(.dashboard-tag-manager-page, .identity-page) .tag-btn-danger:hover {
+  background: rgb(248 113 113 / 0.12) !important;
+  border-color: rgb(248 113 113 / 0.9) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell :is(.dashboard-tag-manager-page, .identity-page) .tag-btn-danger {
+  border-color: rgba(185, 28, 28, 0.4) !important;
+  color: #b91c1c !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell :is(.dashboard-tag-manager-page, .identity-page) .tag-btn-danger:hover {
+  background: rgba(185, 28, 28, 0.06) !important;
+  border-color: rgba(185, 28, 28, 0.7) !important;
+}
+
+/* Phones: the dashboard has a floating dock along the bottom (88px including its gap, plus the device's safe area). The Elpino chat bubble, its popups
+   and its panel read this variable (see tag.js) so they sit above that bar instead of covering its last tab. */
+@media (max-width: 767.98px) {
+  body:has(.dashboard-shell) {
+    --elpino-bottom-offset: calc(88px + env(safe-area-inset-bottom));
+  }
+}
+
+/* ---- Phone dock (MobileBottomNav): only the floating bar is filled (white in both themes); the strip around it has no background,
+   so the page shows through on either side and in the gap below. Text and icons are dark to read on the white bar. ---- */
+.dashboard-dock {
+  background: transparent !important;
+  --dock-bg: #ffffff;
+  --dock-border: rgb(0 0 0 / 0.1);
+}
+.dashboard-dock .dock-bar {
+  background: var(--dock-bg);
+  border-color: var(--dock-border);
+  box-shadow: 0 14px 40px rgb(0 0 0 / 0.28);
+}
+.dashboard-dock .dock-badge { border-color: var(--dock-bg); }
+.dashboard-dock .dock-item { color: rgb(0 0 0 / 0.65); }
+.dashboard-dock .dock-item-active { color: #000000; background: rgb(0 0 0 / 0.08); }
+
+/* Phones: on Settings, Knowledge and Analytics the page runs under the floating dock. Their scroll area gets the bottom padding so the
+   last item can scroll clear of it (DashboardMain no longer reserves a strip on these routes). */
+@media (max-width: 767.98px) {
+  .dashboard-shell .dashboard-page-surface:is(.dashboard-settings-surface, .dashboard-knowledge-main-surface, .dashboard-visitors-main-surface) {
+    padding-bottom: calc(88px + env(safe-area-inset-bottom));
+  }
+}
+
+/* Identity verification page: the "Off" tag, and the secret field. The cards and buttons reuse the Website page's styles. */
+[data-dashboard-theme="dark"] .dashboard-shell .identity-page .id-badge-off {
+  background: rgb(255 255 255 / 0.08) !important;
+  border-color: rgb(255 255 255 / 0.3) !important;
+  color: rgb(255 255 255 / 0.8) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .identity-page .id-badge-off {
+  background: #f1f3f4 !important;
+  border-color: rgba(0, 0, 0, 0.15) !important;
+  color: rgba(0, 0, 0, 0.65) !important;
+}
+[data-dashboard-theme="dark"] .dashboard-shell .identity-page .id-secret {
+  background: transparent !important;
+  border-color: rgb(255 255 255 / 0.3) !important;
+  color: rgb(255 255 255 / 1) !important;
+}
+[data-dashboard-theme="light"] .dashboard-shell .identity-page .id-secret {
+  background: transparent !important;
+  border-color: rgba(0, 0, 0, 0.2) !important;
+  color: #111111 !important;
+}
+
+/* The dock's "More" menu: it opens upward from the dock, white like the bar, with dark text. */
+.dashboard-dock .dock-menu {
+  background: var(--dock-bg);
+  border-color: var(--dock-border);
+  box-shadow: 0 -10px 36px rgb(0 0 0 / 0.28);
+}
+.dashboard-dock .dock-menu-item { color: rgb(0 0 0 / 0.75); }
+.dashboard-dock .dock-menu-item:hover { background: rgb(0 0 0 / 0.05); }
+.dashboard-dock .dock-menu-item-active { color: #000000; background: rgb(0 0 0 / 0.08); }
+
+/* ---- Two-factor setup dialog (Settings > General). Each theme gets its own panel, line and text colours; the QR code stays on white
+   so it scans. Dark theme: headings full white, paragraphs white at 80%. ---- */
+[data-dashboard-theme="dark"] .dashboard-shell .twofa-dialog { background: #262626; border-color: rgb(255 255 255 / 0.3); }
+[data-dashboard-theme="light"] .dashboard-shell .twofa-dialog { background: #ffffff; border-color: rgba(0, 0, 0, 0.12); }
+[data-dashboard-theme="dark"] .dashboard-shell .twofa-divider { border-color: rgb(255 255 255 / 0.18) !important; }
+[data-dashboard-theme="light"] .dashboard-shell .twofa-divider { border-color: rgba(0, 0, 0, 0.1) !important; }
+[data-dashboard-theme="dark"] .dashboard-shell .twofa-heading { color: rgb(255 255 255 / 1) !important; }
+[data-dashboard-theme="dark"] .dashboard-shell .twofa-text { color: rgb(255 255 255 / 0.8) !important; }
+[data-dashboard-theme="light"] .dashboard-shell .twofa-heading { color: #111111 !important; }
+[data-dashboard-theme="light"] .dashboard-shell .twofa-text { color: rgba(0, 0, 0, 0.65) !important; }
+[data-dashboard-theme="dark"] .dashboard-shell .twofa-icon { background: rgb(52 211 153 / 0.16) !important; color: #6ee7b7 !important; }
+[data-dashboard-theme="light"] .dashboard-shell .twofa-icon { background: #e8f6ee !important; color: #1c6b43 !important; }
+[data-dashboard-theme="dark"] .dashboard-shell .twofa-close { color: rgb(255 255 255 / 0.8) !important; }
+[data-dashboard-theme="dark"] .dashboard-shell .twofa-close:hover { background: rgb(255 255 255 / 0.1) !important; color: #ffffff !important; }
+[data-dashboard-theme="light"] .dashboard-shell .twofa-close { color: rgba(0, 0, 0, 0.6) !important; }
+[data-dashboard-theme="light"] .dashboard-shell .twofa-close:hover { background: rgba(0, 0, 0, 0.06) !important; color: #000000 !important; }
+[data-dashboard-theme="dark"] .dashboard-shell .twofa-link { color: #8cc0ff !important; }
+[data-dashboard-theme="light"] .dashboard-shell .twofa-link { color: #1d5fb5 !important; }
+[data-dashboard-theme="dark"] .dashboard-shell .twofa-field { border-color: rgb(255 255 255 / 0.3) !important; background: transparent !important; }
+[data-dashboard-theme="light"] .dashboard-shell .twofa-field { border-color: rgba(0, 0, 0, 0.18) !important; background: #fafbfb !important; }
+[data-dashboard-theme="dark"] .dashboard-shell .twofa-input { border-color: rgb(255 255 255 / 0.4) !important; color: #ffffff !important; }
+[data-dashboard-theme="dark"] .dashboard-shell .twofa-input:focus { border-color: #ffffff !important; }
+[data-dashboard-theme="dark"] .dashboard-shell .twofa-input::placeholder { color: rgb(255 255 255 / 0.4) !important; }
+[data-dashboard-theme="light"] .dashboard-shell .twofa-input { border-color: rgba(0, 0, 0, 0.25) !important; color: #000000 !important; }
+[data-dashboard-theme="light"] .dashboard-shell .twofa-input:focus { border-color: #000000 !important; }
+[data-dashboard-theme="dark"] .dashboard-shell .twofa-btn { border-color: rgb(255 255 255 / 0.5) !important; color: #ffffff !important; background: transparent !important; }
+[data-dashboard-theme="dark"] .dashboard-shell .twofa-btn:hover { background: rgb(255 255 255 / 0.1) !important; }
+[data-dashboard-theme="dark"] .dashboard-shell .twofa-btn-primary,
+[data-dashboard-theme="dark"] .dashboard-shell .twofa-btn-primary:hover { background: #ffffff !important; border-color: #ffffff !important; color: #111111 !important; }
+[data-dashboard-theme="light"] .dashboard-shell .twofa-btn { border-color: rgba(0, 0, 0, 0.35) !important; color: #111111 !important; background: transparent !important; }
+[data-dashboard-theme="light"] .dashboard-shell .twofa-btn:hover { background: rgba(0, 0, 0, 0.06) !important; }
+[data-dashboard-theme="light"] .dashboard-shell .twofa-btn-primary,
+[data-dashboard-theme="light"] .dashboard-shell .twofa-btn-primary:hover { background: #17191b !important; border-color: #17191b !important; color: #ffffff !important; }
+
+/* ---- Import from Notion dialog (Knowledge). Same treatment as the other dialogs: a panel per theme, headings full white and
+   paragraphs white at 80% in the dark theme, outlined buttons with a filled primary. ---- */
+[data-dashboard-theme="dark"] .dashboard-shell .nimp-dialog { background: #262626; border-color: rgb(255 255 255 / 0.3); }
+[data-dashboard-theme="light"] .dashboard-shell .nimp-dialog { background: #ffffff; border-color: rgba(0, 0, 0, 0.12); }
+[data-dashboard-theme="dark"] .dashboard-shell .nimp-divider { border-color: rgb(255 255 255 / 0.18) !important; }
+[data-dashboard-theme="light"] .dashboard-shell .nimp-divider { border-color: rgba(0, 0, 0, 0.1) !important; }
+[data-dashboard-theme="dark"] .dashboard-shell .nimp-heading { color: rgb(255 255 255 / 1) !important; }
+[data-dashboard-theme="dark"] .dashboard-shell .nimp-text { color: rgb(255 255 255 / 0.8) !important; }
+[data-dashboard-theme="light"] .dashboard-shell .nimp-heading { color: #111111 !important; }
+[data-dashboard-theme="light"] .dashboard-shell .nimp-text { color: rgba(0, 0, 0, 0.65) !important; }
+[data-dashboard-theme="dark"] .dashboard-shell .nimp-icon { background: rgb(255 255 255 / 0.09) !important; }
+[data-dashboard-theme="light"] .dashboard-shell .nimp-icon { background: #f1f3f4 !important; }
+[data-dashboard-theme="dark"] .dashboard-shell .nimp-close { color: rgb(255 255 255 / 0.8) !important; }
+[data-dashboard-theme="dark"] .dashboard-shell .nimp-close:hover { background: rgb(255 255 255 / 0.1) !important; color: #ffffff !important; }
+[data-dashboard-theme="light"] .dashboard-shell .nimp-close { color: rgba(0, 0, 0, 0.6) !important; }
+[data-dashboard-theme="light"] .dashboard-shell .nimp-close:hover { background: rgba(0, 0, 0, 0.06) !important; color: #000000 !important; }
+[data-dashboard-theme="dark"] .dashboard-shell .nimp-field { border-color: rgb(255 255 255 / 0.3) !important; background: transparent !important; }
+[data-dashboard-theme="dark"] .dashboard-shell .nimp-field:focus-within { border-color: #ffffff !important; }
+[data-dashboard-theme="dark"] .dashboard-shell .nimp-input { color: #ffffff !important; background: transparent !important; }
+[data-dashboard-theme="dark"] .dashboard-shell .nimp-input::placeholder { color: rgb(255 255 255 / 0.5) !important; }
+[data-dashboard-theme="light"] .dashboard-shell .nimp-field { border-color: rgba(0, 0, 0, 0.2) !important; background: #ffffff !important; }
+[data-dashboard-theme="light"] .dashboard-shell .nimp-field:focus-within { border-color: #000000 !important; }
+[data-dashboard-theme="light"] .dashboard-shell .nimp-input { color: #000000 !important; background: transparent !important; }
+[data-dashboard-theme="dark"] .dashboard-shell .nimp-row:hover { background: rgb(255 255 255 / 0.07); }
+[data-dashboard-theme="light"] .dashboard-shell .nimp-row:hover { background: rgba(0, 0, 0, 0.04); }
+[data-dashboard-theme="dark"] .dashboard-shell .nimp-box { border-color: rgb(255 255 255 / 0.5) !important; }
+[data-dashboard-theme="dark"] .dashboard-shell .nimp-box-on { background: #ffffff !important; border-color: #ffffff !important; color: #111111 !important; }
+[data-dashboard-theme="light"] .dashboard-shell .nimp-box { border-color: rgba(0, 0, 0, 0.35) !important; }
+[data-dashboard-theme="light"] .dashboard-shell .nimp-box-on { background: #17191b !important; border-color: #17191b !important; color: #ffffff !important; }
+[data-dashboard-theme="dark"] .dashboard-shell .nimp-row:focus-within .nimp-box { outline: 2px solid rgb(255 255 255 / 0.7); outline-offset: 2px; }
+[data-dashboard-theme="light"] .dashboard-shell .nimp-row:focus-within .nimp-box { outline: 2px solid rgba(0, 0, 0, 0.6); outline-offset: 2px; }
+[data-dashboard-theme="dark"] .dashboard-shell .nimp-btn { border-color: rgb(255 255 255 / 0.5) !important; color: #ffffff !important; background: transparent !important; }
+[data-dashboard-theme="dark"] .dashboard-shell .nimp-btn:not(:disabled):hover { background: rgb(255 255 255 / 0.1) !important; }
+[data-dashboard-theme="dark"] .dashboard-shell .nimp-btn-primary,
+[data-dashboard-theme="dark"] .dashboard-shell .nimp-btn-primary:not(:disabled):hover { background: #ffffff !important; border-color: #ffffff !important; color: #111111 !important; }
+[data-dashboard-theme="light"] .dashboard-shell .nimp-btn { border-color: rgba(0, 0, 0, 0.35) !important; color: #111111 !important; background: transparent !important; }
+[data-dashboard-theme="light"] .dashboard-shell .nimp-btn:not(:disabled):hover { background: rgba(0, 0, 0, 0.06) !important; }
+[data-dashboard-theme="light"] .dashboard-shell .nimp-btn-primary,
+[data-dashboard-theme="light"] .dashboard-shell .nimp-btn-primary:not(:disabled):hover { background: #17191b !important; border-color: #17191b !important; color: #ffffff !important; }
+
+/* ---- Knowledge page (no second sidebar): title row, Pages / URLs tabs, and a plain list of pages. The selectors carry the page id so
+   they beat the page's older blanket text-colour rules. Dark theme: headings full white, paragraphs white at 80%. The page canvas in the
+   light theme is #f5f6f7 (see the .dashboard-knowledge-shell rule above). ---- */
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .dashboard-knowledge-main-surface .kn-heading { color: rgb(255 255 255 / 1) !important; }
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .dashboard-knowledge-main-surface .kn-text { color: rgb(255 255 255 / 0.8) !important; }
+[data-dashboard-theme="light"] #dashboard-knowledge-page .dashboard-knowledge-main-surface .kn-heading { color: #111111 !important; }
+[data-dashboard-theme="light"] #dashboard-knowledge-page .dashboard-knowledge-main-surface .kn-text { color: rgba(0, 0, 0, 0.65) !important; }
+
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .kn-tabs,
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .kn-row { border-color: rgb(255 255 255 / 0.18) !important; }
+[data-dashboard-theme="light"] #dashboard-knowledge-page .kn-tabs,
+[data-dashboard-theme="light"] #dashboard-knowledge-page .kn-row { border-color: rgba(0, 0, 0, 0.1) !important; }
+
+/* Tabs: the selected one is full strength with an underline; the others are 80% and go full on hover. */
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .kn-tab { color: rgb(255 255 255 / 0.8) !important; border-color: transparent !important; }
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .kn-tab:hover { color: #ffffff !important; }
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .kn-tab-active { color: #ffffff !important; border-color: #ffffff !important; }
+[data-dashboard-theme="light"] #dashboard-knowledge-page .kn-tab { color: rgba(0, 0, 0, 0.6) !important; border-color: transparent !important; }
+[data-dashboard-theme="light"] #dashboard-knowledge-page .kn-tab:hover { color: #000000 !important; }
+[data-dashboard-theme="light"] #dashboard-knowledge-page .kn-tab-active { color: #000000 !important; border-color: #000000 !important; }
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .kn-count { background: rgb(255 255 255 / 0.12) !important; color: rgb(255 255 255 / 0.9) !important; }
+[data-dashboard-theme="light"] #dashboard-knowledge-page .kn-count { background: rgba(0, 0, 0, 0.07) !important; color: rgba(0, 0, 0, 0.7) !important; }
+
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .kn-field { border-color: rgb(255 255 255 / 0.3) !important; background: transparent !important; }
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .kn-field:focus-within { border-color: #ffffff !important; }
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .kn-input { color: #ffffff !important; background: transparent !important; }
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .kn-input::placeholder { color: rgb(255 255 255 / 0.5) !important; }
+[data-dashboard-theme="light"] #dashboard-knowledge-page .kn-field { border-color: rgba(0, 0, 0, 0.2) !important; background: transparent !important; }
+[data-dashboard-theme="light"] #dashboard-knowledge-page .kn-field:focus-within { border-color: #000000 !important; }
+[data-dashboard-theme="light"] #dashboard-knowledge-page .kn-input { color: #000000 !important; background: transparent !important; }
+[data-dashboard-theme="light"] #dashboard-knowledge-page .kn-input::placeholder { color: rgba(0, 0, 0, 0.45) !important; }
+
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .kn-icon { background: rgb(255 255 255 / 0.09) !important; color: #ffffff !important; }
+[data-dashboard-theme="light"] #dashboard-knowledge-page .kn-icon { background: rgba(0, 0, 0, 0.06) !important; color: #111111 !important; }
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .kn-row:hover { background: rgb(255 255 255 / 0.04); }
+[data-dashboard-theme="light"] #dashboard-knowledge-page .kn-row:hover { background: rgba(0, 0, 0, 0.03); }
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .kn-delete { color: rgb(255 255 255 / 0.7) !important; }
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .kn-delete:hover { background: rgb(248 113 113 / 0.14) !important; color: #fca5a5 !important; }
+[data-dashboard-theme="light"] #dashboard-knowledge-page .kn-delete { color: rgba(0, 0, 0, 0.55) !important; }
+[data-dashboard-theme="light"] #dashboard-knowledge-page .kn-delete:hover { background: rgba(185, 28, 28, 0.08) !important; color: #b91c1c !important; }
+
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .kn-btn-primary,
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .kn-btn-primary:hover { background: #ffffff !important; border-color: #ffffff !important; color: #111111 !important; }
+[data-dashboard-theme="light"] #dashboard-knowledge-page .kn-btn-primary,
+[data-dashboard-theme="light"] #dashboard-knowledge-page .kn-btn-primary:hover { background: #17191b !important; border-color: #17191b !important; color: #ffffff !important; }
+
+/* Knowledge page, light theme: the page area is #f5f6f7. The blanket rule above that whitens every `bg-[#262626]` element inside the page
+   was also catching the page area itself (it has that class), so it came out white. This repeats its selector parts so it is stronger. */
+[data-dashboard-theme="light"] .dashboard-shell #dashboard-knowledge-page .dashboard-knowledge-main-surface[class*="bg-[#262626]"]:not(#dashboard-knowledge-sidebar) {
+  background: #f5f6f7 !important;
+  background-color: #f5f6f7 !important;
+}
+
+/* Knowledge: the outlined button used on the URLs tab. */
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .kn-btn-outline { background: transparent !important; border-color: rgb(255 255 255 / 0.5) !important; color: #ffffff !important; }
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .kn-btn-outline:hover { background: rgb(255 255 255 / 0.1) !important; border-color: #ffffff !important; }
+[data-dashboard-theme="light"] #dashboard-knowledge-page .kn-btn-outline { background: transparent !important; border-color: rgba(0, 0, 0, 0.35) !important; color: #111111 !important; }
+[data-dashboard-theme="light"] #dashboard-knowledge-page .kn-btn-outline:hover { background: rgba(0, 0, 0, 0.06) !important; border-color: #111111 !important; }
+
+/* Contacts page: simple list + details dialog, themed through tokens. */
+[data-dashboard-theme="dark"] #dashboard-contacts-page {
+  --ct-bg: #262626; --ct-card: #2b2b2b; --ct-h: #ffffff; --ct-t: rgb(255 255 255 / 0.8); --ct-faint: rgb(255 255 255 / 0.4);
+  --ct-line: rgb(255 255 255 / 0.12); --ct-hover: rgb(255 255 255 / 0.05); --ct-btn: rgb(255 255 255 / 0.5);
+  --ct-avatar-bg: rgb(255 255 255 / 0.1); --ct-in: rgb(255 255 255 / 0.08); --ct-out-bg: #ffffff; --ct-out-fg: #111111;
+}
+[data-dashboard-theme="light"] #dashboard-contacts-page {
+  --ct-bg: #f5f6f7; --ct-card: #ffffff; --ct-h: #000000; --ct-t: rgba(0, 0, 0, 0.7); --ct-faint: rgba(0, 0, 0, 0.35);
+  --ct-line: rgba(0, 0, 0, 0.12); --ct-hover: rgba(0, 0, 0, 0.035); --ct-btn: rgba(0, 0, 0, 0.35);
+  --ct-avatar-bg: rgba(0, 0, 0, 0.07); --ct-in: rgba(0, 0, 0, 0.06); --ct-out-bg: #17191b; --ct-out-fg: #ffffff;
+}
+#dashboard-contacts-page.ct-page, #dashboard-contacts-page .ct-main { background: var(--ct-bg) !important; box-shadow: none !important; }
+#dashboard-contacts-page :is(.ct-h, .ct-h *) { color: var(--ct-h) !important; }
+#dashboard-contacts-page :is(.ct-t, .ct-t *) { color: var(--ct-t) !important; }
+#dashboard-contacts-page .ct-faint { color: var(--ct-faint) !important; }
+#dashboard-contacts-page .ct-list, #dashboard-contacts-page .ct-box, #dashboard-contacts-page .ct-field { border-color: var(--ct-line) !important; }
+#dashboard-contacts-page .ct-list { background: var(--ct-card) !important; }
+#dashboard-contacts-page .ct-divide { border-color: var(--ct-line) !important; }
+#dashboard-contacts-page .ct-row:hover { background: var(--ct-hover) !important; }
+#dashboard-contacts-page .ct-field { background: transparent !important; }
+#dashboard-contacts-page .ct-field:focus-within { border-color: var(--ct-h) !important; }
+#dashboard-contacts-page .ct-input { color: var(--ct-h) !important; background: transparent !important; }
+#dashboard-contacts-page .ct-input::placeholder { color: var(--ct-faint) !important; }
+#dashboard-contacts-page .ct-btn { background: transparent !important; border-color: var(--ct-btn) !important; color: var(--ct-h) !important; }
+#dashboard-contacts-page .ct-btn:hover:not(:disabled) { background: var(--ct-hover) !important; border-color: var(--ct-h) !important; }
+#dashboard-contacts-page .ct-avatar, #dashboard-contacts-page .ct-icon { background: var(--ct-avatar-bg) !important; color: var(--ct-h) !important; }
+#dashboard-contacts-page .ct-chip { background: transparent !important; border-color: var(--ct-line) !important; color: var(--ct-t) !important; }
+#dashboard-contacts-page .ct-close { color: var(--ct-t) !important; }
+#dashboard-contacts-page .ct-close:hover { background: var(--ct-hover) !important; color: var(--ct-h) !important; }
+#dashboard-contacts-page .ct-dialog { background: var(--ct-card) !important; border-color: var(--ct-line) !important; }
+#dashboard-contacts-page .ct-bubble-in { background: var(--ct-in) !important; }
+#dashboard-contacts-page .ct-bubble-in, #dashboard-contacts-page .ct-bubble-in * { color: var(--ct-h) !important; }
+#dashboard-contacts-page .ct-bubble-out { background: var(--ct-out-bg) !important; }
+#dashboard-contacts-page .ct-bubble-out, #dashboard-contacts-page .ct-bubble-out * { color: var(--ct-out-fg) !important; }
+
+/* Inbox conversation list (Team Inbox + AI Assist share inbox-list-ui.tsx). The Team Inbox list lives outside #dashboard-inbox-page,
+   so every rule is scoped to both. */
+[data-dashboard-theme="dark"] #dashboard-inbox-page .il-root,
+[data-dashboard-theme="dark"] #dashboard-inbox-list.il-root { --il-h: #ffffff; --il-t: rgb(255 255 255 / 0.8); --il-line: rgb(255 255 255 / 0.12); --il-hover: rgb(255 255 255 / 0.05); --il-on: rgb(255 255 255 / 0.1); --il-badge-bg: #ffffff; --il-badge-fg: #111111; --il-ok: #4ade80; }
+[data-dashboard-theme="light"] #dashboard-inbox-page .il-root,
+[data-dashboard-theme="light"] #dashboard-inbox-list.il-root { --il-h: #000000; --il-t: rgba(0, 0, 0, 0.7); --il-line: rgba(0, 0, 0, 0.12); --il-hover: rgba(0, 0, 0, 0.035); --il-on: rgba(0, 0, 0, 0.07); --il-badge-bg: #17191b; --il-badge-fg: #ffffff; --il-ok: #1f8a4c; }
+[data-dashboard-theme] #dashboard-inbox-page .il-root .il-name,
+[data-dashboard-theme] #dashboard-inbox-page .il-root .il-name *,
+[data-dashboard-theme] #dashboard-inbox-list.il-root .il-name,
+[data-dashboard-theme] #dashboard-inbox-list.il-root .il-name * { color: var(--il-h) !important; }
+[data-dashboard-theme] #dashboard-inbox-page .il-root .il-muted,
+[data-dashboard-theme] #dashboard-inbox-page .il-root .il-preview,
+[data-dashboard-theme] #dashboard-inbox-page .il-root .il-link,
+[data-dashboard-theme] #dashboard-inbox-list.il-root .il-muted,
+[data-dashboard-theme] #dashboard-inbox-list.il-root .il-preview,
+[data-dashboard-theme] #dashboard-inbox-list.il-root .il-link { color: var(--il-t) !important; }
+[data-dashboard-theme] #dashboard-inbox-page .il-root .il-preview-unread,
+[data-dashboard-theme] #dashboard-inbox-list.il-root .il-preview-unread { color: var(--il-h) !important; }
+[data-dashboard-theme] #dashboard-inbox-page .il-root .il-resolved,
+[data-dashboard-theme] #dashboard-inbox-list.il-root .il-resolved { color: var(--il-ok) !important; }
+[data-dashboard-theme] #dashboard-inbox-page .il-root .il-tab,
+[data-dashboard-theme] #dashboard-inbox-list.il-root .il-tab { color: var(--il-t) !important; font-weight: 500 !important; background: transparent !important; border-bottom: 2px solid transparent !important; }
+[data-dashboard-theme] #dashboard-inbox-page .il-root .il-tab[aria-current="page"],
+[data-dashboard-theme] #dashboard-inbox-list.il-root .il-tab[aria-current="page"] { color: var(--il-h) !important; font-weight: 600 !important; border-bottom: 2px solid var(--il-h) !important; }
+[data-dashboard-theme] #dashboard-inbox-page .il-root .il-tab:not([aria-current="page"]):hover,
+[data-dashboard-theme] #dashboard-inbox-list.il-root .il-tab:not([aria-current="page"]):hover { color: var(--il-h) !important; }
+[data-dashboard-theme] #dashboard-inbox-page .il-root .il-head,
+[data-dashboard-theme] #dashboard-inbox-list.il-root .il-head { border: 0 !important; }
+[data-dashboard-theme] #dashboard-inbox-page .il-root .il-field,
+[data-dashboard-theme] #dashboard-inbox-list.il-root .il-field { background: transparent !important; border-color: var(--il-line) !important; }
+[data-dashboard-theme] #dashboard-inbox-page .il-root .il-field:focus-within,
+[data-dashboard-theme] #dashboard-inbox-list.il-root .il-field:focus-within { border-color: var(--il-h) !important; }
+[data-dashboard-theme] #dashboard-inbox-page .il-root .il-input,
+[data-dashboard-theme] #dashboard-inbox-list.il-root .il-input { color: var(--il-h) !important; background: transparent !important; }
+[data-dashboard-theme] #dashboard-inbox-page .il-root .il-input::placeholder,
+[data-dashboard-theme] #dashboard-inbox-list.il-root .il-input::placeholder { color: var(--il-t) !important; opacity: 0.6; }
+[data-dashboard-theme] #dashboard-inbox-page .il-root .il-chip,
+[data-dashboard-theme] #dashboard-inbox-list.il-root .il-chip { background: transparent !important; border-color: var(--il-line) !important; color: var(--il-t) !important; }
+[data-dashboard-theme] #dashboard-inbox-page .il-root .il-chip:hover,
+[data-dashboard-theme] #dashboard-inbox-list.il-root .il-chip:hover { background: var(--il-hover) !important; color: var(--il-h) !important; }
+[data-dashboard-theme] #dashboard-inbox-page .il-root .il-chip.il-chip-on,
+[data-dashboard-theme] #dashboard-inbox-list.il-root .il-chip.il-chip-on { border-color: var(--il-h) !important; color: var(--il-h) !important; }
+[data-dashboard-theme] #dashboard-inbox-page .il-root .il-row,
+[data-dashboard-theme] #dashboard-inbox-list.il-root .il-row { background: transparent !important; }
+[data-dashboard-theme] #dashboard-inbox-page .il-root .il-row:hover,
+[data-dashboard-theme] #dashboard-inbox-list.il-root .il-row:hover { background: var(--il-hover) !important; }
+[data-dashboard-theme] #dashboard-inbox-page .il-root .il-row.il-row-on,
+[data-dashboard-theme] #dashboard-inbox-list.il-root .il-row.il-row-on { background: var(--il-on) !important; }
+[data-dashboard-theme] #dashboard-inbox-page .il-root .il-badge,
+[data-dashboard-theme] #dashboard-inbox-list.il-root .il-badge { background: var(--il-badge-bg) !important; color: var(--il-badge-fg) !important; }
+[data-dashboard-theme] #dashboard-inbox-page .il-root .il-icon,
+[data-dashboard-theme] #dashboard-inbox-list.il-root .il-icon { background: var(--il-on) !important; color: var(--il-h) !important; }
+/* Light theme: the empty-list lines are solid black. */
+[data-dashboard-theme="light"] #dashboard-inbox-page .il-root .il-empty-text,
+[data-dashboard-theme="light"] #dashboard-inbox-list.il-root .il-empty-text { color: #000000 !important; }
+
+/* Inbox empty state (workspace with no conversations). */
+[data-dashboard-theme="dark"] #dashboard-inbox-page .iw-root { --iw-bg: #262626; --iw-h: #ffffff; --iw-t: rgb(255 255 255 / 0.8); --iw-btn: rgb(255 255 255 / 0.5); --iw-hover: rgb(255 255 255 / 0.08); --iw-icon: rgb(255 255 255 / 0.1); }
+[data-dashboard-theme="light"] #dashboard-inbox-page .iw-root { --iw-bg: #f5f6f7; --iw-h: #000000; --iw-t: rgba(0, 0, 0, 0.7); --iw-btn: rgba(0, 0, 0, 0.35); --iw-hover: rgba(0, 0, 0, 0.05); --iw-icon: rgba(0, 0, 0, 0.07); }
+[data-dashboard-theme] #dashboard-inbox-page .iw-root { background: var(--iw-bg) !important; }
+[data-dashboard-theme] #dashboard-inbox-page .iw-root .iw-h { color: var(--iw-h) !important; }
+[data-dashboard-theme] #dashboard-inbox-page .iw-root .iw-t { color: var(--iw-t) !important; }
+[data-dashboard-theme] #dashboard-inbox-page .iw-root .iw-icon { background: var(--iw-icon) !important; color: var(--iw-h) !important; }
+[data-dashboard-theme] #dashboard-inbox-page .iw-root .iw-btn { background: transparent !important; border-color: var(--iw-btn) !important; color: var(--iw-h) !important; }
+[data-dashboard-theme] #dashboard-inbox-page .iw-root .iw-btn:hover { background: var(--iw-hover) !important; border-color: var(--iw-h) !important; }
+/* Light theme: the "Chats from your website will show up here." lines are solid black. */
+[data-dashboard-theme="light"] #dashboard-inbox-page .il-root .il-empty-text,
+[data-dashboard-theme="light"] #dashboard-inbox-page .iw-root .iw-t { color: #000000 !important; }
+/* Light theme: "No conversations yet" headings are black at 100%. */
+[data-dashboard-theme="light"] .dashboard-shell #dashboard-inbox-page .il-root p.il-name,
+[data-dashboard-theme="light"] .dashboard-shell #dashboard-inbox-page .iw-root h1.iw-h { color: rgb(0 0 0 / 1) !important; opacity: 1 !important; }
+
+/* Active Team Inbox / AI Assist tab: a bottom border under the label. */
+[data-dashboard-theme] #dashboard-inbox-page .il-root .il-tab[aria-current="page"] { border-bottom: 2px solid var(--il-h) !important; }

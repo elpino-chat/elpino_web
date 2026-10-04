@@ -3,9 +3,9 @@
 import { ConversationListSkeleton } from "@/app/components/dashboard/DashboardSkeleton";
 import { fetchConversations } from "@/app/lib/fetch-conversations";
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { CheckCheck, ChevronDown, Filter, Globe2, MessageSquarePlus, Search } from "lucide-react";
+import { ChevronDown, Globe2 } from "lucide-react";
+import { ConversationRow, InboxViewTabs, ListEmpty, ListToolbar, type ListFilter } from "@/app/components/dashboard/inbox-list-ui";
 
 type PanelUser = { email: string; name?: string };
 type ConversationStatus = "open" | "waiting" | "resolved";
@@ -27,13 +27,6 @@ type Workspace = { id: string; name: string };
 type Site = { id: string; domain: string; name: string | null };
 
 const POLL_MS = 2000;
-
-const filters: Array<{ label: string; value: "all" | "resolved" | "unread" | "read" }> = [
-  { label: "All", value: "all" },
-  { label: "Unread", value: "unread" },
-  { label: "Read", value: "read" },
-  { label: "Resolved", value: "resolved" },
-];
 
 // No avatar color is stored server-side, so derive a stable one from the
 // conversation id — same conversation always renders the same color.
@@ -60,7 +53,7 @@ export default function HomePanel({ user: _user }: { user: PanelUser }) {
   const openedConversationId = searchParams.get("conversation");
 
   const [query, setQuery] = useState("");
-  const [filter, setFilter] = useState<(typeof filters)[number]["value"]>("all");
+  const [filter, setFilter] = useState<ListFilter>("all");
   const [activeId, setActiveId] = useState<string | null>(null);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [workspace, setWorkspace] = useState<Workspace | null>(null);
@@ -120,7 +113,7 @@ export default function HomePanel({ user: _user }: { user: PanelUser }) {
     return assigned.filter((conversation) => {
       const matchesFilter =
         filter === "all" ||
-        (filter === "unread" ? !!conversation.unread : filter === "read" ? !conversation.unread : conversation.status === filter);
+        conversation.status === filter;
       const matchesQuery =
         !normalizedQuery ||
         conversation.name.toLowerCase().includes(normalizedQuery) ||
@@ -178,43 +171,14 @@ export default function HomePanel({ user: _user }: { user: PanelUser }) {
   return (
     <aside
       id="dashboard-inbox-list"
-      className={`dashboard-secondary-sidebar h-full w-full shrink-0 flex-col overflow-hidden border-r border-white/10 bg-[#262626] lg:static lg:flex lg:w-[304px] ${
+      className={`il-root dashboard-secondary-sidebar h-full w-full shrink-0 flex-col overflow-hidden border-r border-white/10 bg-[#262626] lg:static lg:flex lg:w-[304px] ${
         openedConversationId ? "hidden" : "flex"
       }`}
     >
-      <nav className="inbox-view-nav flex items-center gap-5 px-3" aria-label="Inbox views">
-        <Link href="/dashboard/inbox" aria-current="page" className="flex w-fit items-center gap-1.5 border-b-2 border-white/80 px-0 py-2 text-[13.5px] font-normal text-white">
-          Team Inbox
-          {teamBadgeCount > 0 && (
-            <span className="flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-[#27895d] px-1 text-[9px] font-bold text-white">
-              {teamBadgeCount > 99 ? "99+" : teamBadgeCount}
-            </span>
-          )}
-        </Link>
-        <Link href="/dashboard/inbox?view=ai" className="flex w-fit items-center gap-1.5 px-0 py-2 text-[13.5px] font-normal text-white/70 hover:text-white/90">
-          AI Assist
-          {aiBadgeCount > 0 && (
-            <span className="flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-[#27895d] px-1 text-[9px] font-bold text-white">
-              {aiBadgeCount > 99 ? "99+" : aiBadgeCount}
-            </span>
-          )}
-        </Link>
-      </nav>
-      <div className="border-b border-[#e4e7ea] px-3 pb-3 pt-3">
-        <div className="inbox-list-summary flex items-start justify-end gap-2">
-          {unreadCount > 0 && (
-            <button
-              type="button"
-              onClick={() => void markAllRead()}
-              className="mt-1 shrink-0 whitespace-nowrap rounded-full border border-[#dfe3e7] px-2.5 py-1 text-[10.5px] font-semibold text-[#3f474d] transition-colors hover:bg-[#f4f6f7]"
-            >
-              Mark all read
-            </button>
-          )}
-        </div>
-
+      <InboxViewTabs active="team" teamBadge={teamBadgeCount} aiBadge={aiBadgeCount} />
+      <ListToolbar query={query} onQuery={setQuery} filter={filter} onFilter={setFilter} unreadCount={unreadCount} onMarkAllRead={() => void markAllRead()}>
         {sites.length > 1 && (
-          <div className="relative mt-3">
+          <div className="relative mb-3">
             <button
               type="button"
               onClick={() => setDomainMenuOpen((open) => !open)}
@@ -258,82 +222,28 @@ export default function HomePanel({ user: _user }: { user: PanelUser }) {
             )}
           </div>
         )}
+      </ListToolbar>
 
-        <div className="dashboard-search-box mt-3 flex h-9 items-center rounded-lg border px-3 transition-colors">
-          <Search size={16} className="shrink-0" />
-          <input
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search conversations"
-            className="min-w-0 flex-1 bg-transparent px-2 text-[12px] outline-none placeholder:text-[#9aa2ac]"
-          />
-          <Filter size={14} />
-        </div>
-
-        <div className="mt-2 flex gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {filters.map((item) => (
-            <button
-              key={item.value}
-              type="button"
-              onClick={() => setFilter(item.value)}
-              className={`rounded-full px-2.5 py-1 text-[12.5px] font-semibold transition-colors ${
-                filter === item.value ? "dashboard-filter-tab-active" : "dashboard-filter-tab text-[#7e8791]"
-              }`}
-            >
-              {item.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="min-h-0 flex-1 overflow-y-auto p-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="min-h-0 flex-1 overflow-y-auto px-2 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {loading && <ConversationListSkeleton />}
-        {visibleConversations.map((conversation) => {
-          const active = conversation.id === (openedConversationId ?? activeId);
-          return (
-            <Link
-              key={conversation.id}
-              href={`/dashboard/inbox?conversation=${conversation.id}`}
-              onClick={() => setActiveId(conversation.id)}
-              className={`dashboard-chat-row group mb-1 flex items-start gap-3 rounded-xl px-2.5 py-3 transition-colors ${active ? "dashboard-chat-row-active" : ""}`}
-            >
-              <span
-                className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold text-white"
-                style={{ backgroundColor: colorForId(conversation.id) }}
-              >
-                {conversation.initials}
-              </span>
-
-              <span className="min-w-0 flex-1">
-                <span className="flex items-center gap-2">
-                  <span className={`min-w-0 flex-1 truncate text-[13px] ${conversation.unread ? "font-semibold text-[#17253a]" : "font-medium text-[#34445a]"}`}>
-                    {conversation.name}
-                  </span>
-                  <span className="shrink-0 text-[9px] text-[#969ea7]">{formatTime(conversation.time)}</span>
-                </span>
-                <span className="mt-1 flex items-center gap-1.5">
-                  {conversation.status === "resolved" && <CheckCheck size={13} className="shrink-0 text-[#32a880]" />}
-                  <span className={`min-w-0 flex-1 truncate text-[11px] leading-4 ${conversation.unread ? "font-medium text-[#4a596c]" : "text-[#89929c]"}`}>
-                    {conversation.preview}
-                  </span>
-                  {!!conversation.unread && (
-                    <span className="flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-[#428ce5] px-1 text-[9px] font-bold text-white">
-                      {conversation.unread}
-                    </span>
-                  )}
-                </span>
-              </span>
-            </Link>
-          );
-        })}
+        {visibleConversations.map((conversation) => (
+          <ConversationRow
+            key={conversation.id}
+            href={`/dashboard/inbox?conversation=${conversation.id}`}
+            onSelect={() => setActiveId(conversation.id)}
+            name={conversation.name}
+            initials={conversation.initials}
+            color={colorForId(conversation.id)}
+            preview={conversation.preview}
+            time={formatTime(conversation.time)}
+            unread={conversation.unread}
+            resolved={conversation.status === "resolved"}
+            active={conversation.id === (openedConversationId ?? activeId)}
+          />
+        ))}
 
         {!loading && visibleConversations.length === 0 && (
-          <div className="px-4 py-12 text-center">
-            <MessageSquarePlus size={25} className="mx-auto text-[#b4bbc3]" />
-            <p className="mt-2 text-xs text-[#8c959f]">
-              {conversations.length === 0 ? "No conversations yet" : "No conversations found"}
-            </p>
-          </div>
+          <ListEmpty hasAny={conversations.length > 0} onShowAll={() => { setQuery(""); setFilter("all"); setSelectedSiteId(null); }} />
         )}
       </div>
     </aside>

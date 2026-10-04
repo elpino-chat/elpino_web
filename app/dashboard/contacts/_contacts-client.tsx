@@ -2,8 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Bot, Download, LifeBuoy, Lightbulb, Lock, LoaderCircle, Mail, MessageSquare, Phone, RefreshCw, Search, User, Users, X } from "lucide-react";
-import { useMobileDrawer } from "@/app/components/dashboard/mobile-drawer-context";
+import { ArrowLeft, Bot, Download, Lock, LoaderCircle, Mail, MessageSquare, Phone, RefreshCw, Search, User, Users, X } from "lucide-react";
 
 type Contact = {
   id: string;
@@ -35,7 +34,6 @@ type SessionMessage = {
 };
 
 export function ContactsClient() {
-  const { open: toolsOpen, setOpen: setToolsOpen } = useMobileDrawer();
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
@@ -96,170 +94,103 @@ export function ContactsClient() {
   }
 
   return (
-    <div id="dashboard-contacts-page" className="dashboard-contacts-shell relative flex h-full min-h-0 overflow-hidden bg-[#262626] text-white">
-      <main className="dashboard-page-surface dashboard-contacts-main-surface flex min-h-0 flex-1 flex-col overflow-hidden bg-[#262626] shadow-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <div className="shrink-0 border-b border-white/10 px-6 py-7 lg:px-10">
-          <p className="text-xs font-normal uppercase tracking-[0.16em] text-white/40">People</p>
-          <h1 className="mt-2 text-3xl font-normal tracking-[-0.03em] text-white/95">Contacts</h1>
-          <p className="mt-2 text-sm text-white/45">People who left their details through your website widget</p>
+    <div id="dashboard-contacts-page" className="ct-page relative flex h-full min-h-0 flex-col overflow-hidden">
+      <main className="dashboard-page-surface ct-main flex min-h-0 flex-1 flex-col overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="mx-auto w-full max-w-[1000px] px-4 pb-10 pt-8 sm:px-6 lg:px-8">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div className="min-w-0">
+              <h1 className="ct-h text-[26px] font-semibold tracking-[-0.02em] sm:text-[30px]">Contacts</h1>
+              <p className="ct-t mt-1.5 text-[15px] leading-6">People who left their details through your website widget.</p>
+            </div>
+            <div className="flex items-center gap-2.5">
+              <button type="button" onClick={() => void downloadXlsx()} disabled={filtered.length === 0} className="ct-btn flex h-10 cursor-pointer items-center gap-2 rounded-full border px-4 text-[14px] font-medium transition disabled:cursor-not-allowed disabled:opacity-40">
+                <Download size={15} /> <span className="hidden sm:inline">Download</span> XLSX
+              </button>
+              <button type="button" onClick={() => void refreshContacts()} disabled={refreshing} aria-label="Refresh" className="ct-btn flex h-10 cursor-pointer items-center gap-2 rounded-full border px-4 text-[14px] font-medium transition disabled:opacity-50">
+                <RefreshCw size={15} className={refreshing ? "animate-spin" : ""} /> <span className="hidden sm:inline">Refresh</span>
+              </button>
+            </div>
+          </div>
 
-          <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
-            <div className="dashboard-contacts-search flex h-9 w-full max-w-sm items-center gap-2 rounded-lg border border-white/10 bg-white/[0.045] px-3">
-              <Search size={14} className="text-white/40" />
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
+            <label className="ct-search ct-field flex h-11 w-full max-w-md items-center gap-2.5 rounded-full border px-4">
+              <Search size={15} className="ct-t shrink-0" aria-hidden="true" />
               <input
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search contacts"
-                className="w-full bg-transparent text-[13px] text-white/90 outline-none placeholder:text-white/35"
+                placeholder="Search by name, email or phone"
+                aria-label="Search contacts"
+                className="ct-input min-w-0 flex-1 bg-transparent text-[14.5px] outline-none"
               />
-            </div>
-            <div className="flex items-center gap-2">
-              <button type="button" onClick={() => void downloadXlsx()} disabled={filtered.length === 0} className="flex h-9 items-center gap-2 rounded-lg border border-white/10 px-3 text-xs font-normal text-white/70 transition hover:bg-white/[0.07] hover:text-white disabled:cursor-not-allowed disabled:opacity-35">
-                <Download size={15} /> Download XLSX
-              </button>
-              <button type="button" onClick={() => void refreshContacts()} disabled={refreshing} className="flex h-9 items-center gap-2 rounded-lg border border-white/10 px-3 text-xs font-normal text-white/70 transition hover:bg-white/[0.07] hover:text-white disabled:opacity-50">
-                <RefreshCw size={15} className={refreshing ? "animate-spin" : ""} /> Refresh
-              </button>
-            </div>
+            </label>
+            <p className="ct-t text-[14px]">{loading ? "Loading…" : `${filtered.length} contact${filtered.length === 1 ? "" : "s"}`}</p>
           </div>
 
-          <p className="mt-3 text-[10px] font-bold uppercase tracking-[0.12em] text-[#74787c]">
-            {loading ? "Loading…" : `${filtered.length} contact${filtered.length === 1 ? "" : "s"}`}
-          </p>
-        </div>
-
-        <div className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {loading ? (
-            <div className="flex items-center justify-center py-16 text-[12px] text-[#687178]">
-              <LoaderCircle size={15} className="mr-2 animate-spin" /> Loading contacts
-            </div>
-          ) : upgradeRequired ? (
-            <UpgradeRequired message={upgradeRequired} />
-          ) : filtered.length === 0 ? (
-            <EmptyState />
-          ) : (
-            <>
-              {/* A 5-column table has no honest way to fit a phone screen —
-                  below md this becomes a stacked card list instead, same
-                  tap-to-open-details behavior either way. */}
-              <div className="divide-y divide-white/[0.07] md:hidden">
-                {filtered.map((contact) => (
-                  <button
-                    key={contact.id}
-                    type="button"
-                    onClick={() => setOpenContact(contact)}
-                    className="flex w-full items-center gap-3 px-4 py-3.5 text-left transition hover:bg-white/[0.04]"
-                  >
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#EAF0F5] text-[11px] font-semibold text-[#2b5b82]">
-                      {initials(contact.name)}
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-[13.5px] font-medium text-white/90">{contact.name}</span>
-                      <span className="mt-0.5 block truncate text-[12px] text-white/45">
-                        {contact.email ?? contact.phone ?? "No contact details"}
-                      </span>
-                    </span>
-                    <span className="shrink-0 text-[11px] text-white/35">{contact.sourceCount} session{contact.sourceCount === 1 ? "" : "s"}</span>
-                  </button>
-                ))}
-              </div>
-              <table className="dashboard-contacts-table hidden w-full border-collapse text-left text-[14px] md:table">
-                <thead className="sticky top-0 z-[1] bg-[#292a2b]">
-                  <tr className="border-b border-[#eceeef] text-[11.5px] font-bold uppercase tracking-[0.08em] text-[#8a9298]">
-                    <th className="px-6 py-3 font-bold">Name</th>
-                    <th className="px-4 py-3 font-bold">Email</th>
-                    <th className="px-4 py-3 font-bold">Phone</th>
-                    <th className="px-4 py-3 font-bold">First seen</th>
-                    <th className="px-4 py-3 font-bold">Sessions</th>
-                  </tr>
-                </thead>
-                <tbody>
+          <div className="mt-5">
+            {loading ? (
+              <p className="ct-t flex items-center justify-center gap-2 py-16 text-[14.5px]"><LoaderCircle size={15} className="animate-spin" /> Loading contacts</p>
+            ) : upgradeRequired ? (
+              <UpgradeRequired message={upgradeRequired} />
+            ) : filtered.length === 0 ? (
+              <EmptyState searching={query.trim().length > 0} />
+            ) : (
+              <>
+                {/* A table has no honest way to fit a phone — below md it becomes stacked rows, same tap-to-open either way. */}
+                <ul className="ct-list overflow-hidden rounded-2xl border md:hidden">
                   {filtered.map((contact) => (
-                    <tr
-                      key={contact.id}
-                      onClick={() => setOpenContact(contact)}
-                      className="cursor-pointer border-b border-white/[0.07] transition hover:bg-white/[0.04]"
-                    >
-                      <td className="px-6 py-3">
-                        <span className="flex min-w-0 items-center gap-2.5">
-                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#EAF0F5] text-[11px] font-semibold text-[#2b5b82]">
-                            {initials(contact.name)}
-                          </span>
-                          <span className="truncate font-medium text-black">{contact.name}</span>
+                    <li key={contact.id} className="ct-divide border-t first:border-t-0">
+                      <button type="button" onClick={() => setOpenContact(contact)} className="ct-row flex w-full cursor-pointer items-center gap-3 px-4 py-3.5 text-left">
+                        <span className="ct-avatar flex size-10 shrink-0 items-center justify-center rounded-full text-[13px] font-semibold">{initials(contact.name)}</span>
+                        <span className="min-w-0 flex-1">
+                          <span className="ct-h block truncate text-[15px] font-medium">{contact.name}</span>
+                          <span className="ct-t block truncate text-[13.5px]">{contact.email ?? contact.phone ?? "No contact details"}</span>
                         </span>
-                      </td>
-                      <td className="px-4 py-3 text-black">{contact.email ?? <span className="text-[#a5acb0]">—</span>}</td>
-                      <td className="px-4 py-3 text-black">{contact.phone ?? <span className="text-[#a5acb0]">—</span>}</td>
-                      <td className="px-4 py-3 text-black">{new Date(contact.createdAt).toLocaleDateString()}</td>
-                      <td className="px-4 py-3 text-black">{contact.sourceCount}</td>
-                    </tr>
+                        <span className="ct-t shrink-0 text-[13px]">{contact.sourceCount} chat{contact.sourceCount === 1 ? "" : "s"}</span>
+                      </button>
+                    </li>
                   ))}
-                </tbody>
-              </table>
-            </>
-          )}
+                </ul>
+                <div className="ct-list hidden overflow-hidden rounded-2xl border md:block">
+                  <table className="w-full border-collapse text-left">
+                    <thead>
+                      <tr className="ct-divide border-b text-[13px]">
+                        <th className="ct-t px-5 py-3 font-medium">Name</th>
+                        <th className="ct-t px-4 py-3 font-medium">Email</th>
+                        <th className="ct-t px-4 py-3 font-medium">Phone</th>
+                        <th className="ct-t px-4 py-3 font-medium">First seen</th>
+                        <th className="ct-t px-5 py-3 text-right font-medium">Chats</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filtered.map((contact) => (
+                        <tr key={contact.id} onClick={() => setOpenContact(contact)} className="ct-row ct-divide cursor-pointer border-t first:border-t-0">
+                          <td className="px-5 py-3">
+                            <span className="flex min-w-0 items-center gap-3">
+                              <span className="ct-avatar flex size-9 shrink-0 items-center justify-center rounded-full text-[12px] font-semibold">{initials(contact.name)}</span>
+                              <span className="ct-h truncate text-[15px] font-medium">{contact.name}</span>
+                            </span>
+                          </td>
+                          <td className="ct-t px-4 py-3 text-[14.5px]">{contact.email ?? <span className="ct-faint">—</span>}</td>
+                          <td className="ct-t px-4 py-3 text-[14.5px]">{contact.phone ?? <span className="ct-faint">—</span>}</td>
+                          <td className="ct-t px-4 py-3 text-[14.5px]">{new Date(contact.createdAt).toLocaleDateString()}</td>
+                          <td className="ct-t px-5 py-3 text-right text-[14.5px]">{contact.sourceCount}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </main>
 
-      {/* Kept mounted (not `hidden`) below lg so the slide has something to
-          animate — see SpacePanel.tsx for the same trick and why. This one
-          slides from the right, matching where it docks at lg+. */}
-      <div
-        className={`fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 lg:hidden ${toolsOpen ? "opacity-100" : "pointer-events-none opacity-0"}`}
-        onClick={() => setToolsOpen(false)}
-      />
-      <aside
-        id="dashboard-contacts-tools"
-        className={`dashboard-secondary-sidebar dashboard-contacts-tools fixed inset-y-0 right-0 z-50 flex h-full w-[320px] shrink-0 flex-col overflow-hidden border-l border-white/10 bg-[#262626] shadow-[-8px_0_30px_rgba(0,0,0,0.35)] transition-transform duration-300 ease-in-out lg:static lg:z-auto lg:w-[320px] lg:translate-x-0 lg:shadow-none ${
-          toolsOpen ? "translate-x-0" : "translate-x-full"
-        }`}
-      >
-        <div className="flex items-center justify-between border-b border-white/10 px-4 py-3 lg:hidden">
-          <p className="text-[13px] font-medium text-white/80">Resources</p>
-          <button
-            type="button"
-            onClick={() => setToolsOpen(false)}
-            aria-label="Close"
-            className="flex h-8 w-8 items-center justify-center rounded-full text-white/70 transition hover:bg-white/[0.07]"
-          >
-            <X size={17} />
-          </button>
-        </div>
-        <div className="space-y-3 p-3">
-          <div className="dashboard-contact-tool-card min-h-44 rounded-xl border border-white/10 bg-[#262626] p-[2.5px]">
-            <div className="flex h-full flex-col justify-between rounded-[9px] bg-[#262626] p-4">
-              <div>
-                <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#EAF0F5]"><LifeBuoy size={18} color="#2b5b82" /></span>
-                <h3 className="mt-2.5 text-[15px] font-semibold text-white/90">Need help?</h3>
-                <p className="mt-1 line-clamp-2 text-[13px] leading-5 text-white/60">Questions about contacts or widget data? We're happy to help.</p>
-              </div>
-              <Link href="/contact" className="mt-4 flex h-8 w-fit items-center gap-1.5 rounded-md border border-white/15 bg-transparent px-3.5 text-[12.5px] font-normal text-white/90 transition hover:bg-white/[0.06]">
-                Contact support
-              </Link>
-            </div>
-          </div>
-
-          <div className="dashboard-contact-tool-card min-h-44 rounded-xl border border-white/10 bg-[#262626] p-4">
-            <div className="flex h-full flex-col justify-between">
-              <div>
-                <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#FDF0E4]"><Lightbulb size={18} color="#B8621B" /></span>
-                <h3 className="mt-2.5 text-[15px] font-semibold text-white/90">Request a feature</h3>
-                <p className="mt-1 line-clamp-2 text-[13px] leading-5 text-white/60">Missing something in Contacts? Tell us what you'd like to see next.</p>
-              </div>
-              <Link href="/contact" className="mt-4 flex h-8 w-fit items-center gap-1.5 rounded-md border border-white/15 bg-transparent px-3.5 text-[12.5px] font-normal text-white/90 transition hover:bg-white/[0.06]">
-                Send feedback
-              </Link>
-            </div>
-          </div>
-        </div>
-      </aside>
-
-      {openContact && <ContactPanel contact={openContact} onClose={() => setOpenContact(null)} />}
+      {openContact && <ContactDialog contact={openContact} onClose={() => setOpenContact(null)} />}
     </div>
   );
 }
 
-function ContactPanel({ contact, onClose }: { contact: Contact; onClose: () => void }) {
+function ContactDialog({ contact, onClose }: { contact: Contact; onClose: () => void }) {
   const [sessions, setSessions] = useState<ContactSession[] | null>(null);
   const [activeSession, setActiveSession] = useState<ContactSession | null>(null);
 
@@ -273,126 +204,109 @@ function ContactPanel({ contact, onClose }: { contact: Contact; onClose: () => v
       .catch(() => setSessions([]));
   }, [contact.id, contact.customerIds]);
 
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") onClose();
+    }
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [onClose]);
+
   const latestTopic = sessions?.find((session) => session.topic)?.topic ?? null;
+  const customFields = Object.entries(contact.customFields);
 
   return (
-    <div className="absolute inset-0 z-20 flex justify-end">
-      <button type="button" aria-label="Close panel" onClick={onClose} className="absolute inset-0 bg-black/20" />
-      <aside className="dashboard-contact-drawer relative flex h-full w-full max-w-[440px] flex-col overflow-hidden border-l border-white/10 bg-[#292a2b] shadow-[-12px_0_36px_rgba(0,0,0,0.32)]">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4 backdrop-blur-[2px]" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
+      <div role="dialog" aria-modal="true" aria-label="Contact details" className="ct-dialog flex max-h-[min(720px,calc(100dvh-32px))] w-full max-w-[520px] flex-col overflow-hidden rounded-2xl border shadow-[0_28px_80px_rgba(0,0,0,0.4)]">
         {activeSession ? (
-          <SessionThread session={activeSession} onBack={() => setActiveSession(null)} />
+          <SessionThread session={activeSession} onBack={() => setActiveSession(null)} onClose={onClose} />
         ) : (
           <>
-            <div className="flex items-center justify-between border-b border-[#eceeef] px-6 py-4">
-              <h2 className="text-[15px] font-semibold text-black">Contact details</h2>
-              <button type="button" onClick={onClose} aria-label="Close" className="rounded-md p-1 text-[#8a9298] hover:bg-[#f0f0f0] hover:text-black">
-                <X size={16} />
-              </button>
-            </div>
-
-            <div className="min-h-0 flex-1 overflow-y-auto px-6 py-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              <div className="flex items-center gap-3.5">
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#EAF0F5] text-[16px] font-semibold text-[#2b5b82]">
-                  {initials(contact.name)}
-                </span>
+            <div className="ct-divide flex shrink-0 items-start justify-between gap-3 border-b px-6 py-5">
+              <div className="flex min-w-0 items-center gap-3.5">
+                <span className="ct-avatar flex size-12 shrink-0 items-center justify-center rounded-full text-[16px] font-semibold">{initials(contact.name)}</span>
                 <div className="min-w-0">
-                  <h3 className="truncate text-[17px] font-semibold tracking-[-0.01em] text-black">{contact.name}</h3>
-                  <p className="mt-0.5 text-[12px] text-[#667069]">
+                  <h2 className="ct-h truncate text-[19px] font-semibold tracking-[-0.02em]">{contact.name}</h2>
+                  <p className="ct-t mt-0.5 text-[14px]">
                     First seen {new Date(contact.createdAt).toLocaleDateString()}
-                    {contact.sourceCount > 1 && ` · ${contact.sourceCount} sessions merged`}
+                    {contact.sourceCount > 1 && ` · ${contact.sourceCount} chats merged`}
                   </p>
                 </div>
               </div>
+              <button type="button" onClick={onClose} aria-label="Close" className="ct-close flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-lg transition"><X size={18} /></button>
+            </div>
 
-              <div className="mt-6 space-y-2.5">
-                <div className="flex items-center gap-2.5 rounded-lg border border-[#E3E4DF] px-3 py-2.5">
-                  <Mail size={14} className="shrink-0 text-[#8a9298]" />
-                  <span className="truncate text-[13px] text-[#2b2923]">{contact.email ?? <span className="text-[#8A929C]">No email on file</span>}</span>
+            <div className="min-h-0 flex-1 overflow-y-auto px-6 py-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <div className="space-y-2.5">
+                <div className="ct-box flex items-center gap-3 rounded-xl border px-4 py-3">
+                  <Mail size={15} className="ct-t shrink-0" />
+                  <span className="ct-h truncate text-[14.5px]">{contact.email ?? <span className="ct-faint">No email on file</span>}</span>
                 </div>
-                <div className="flex items-center gap-2.5 rounded-lg border border-[#E3E4DF] px-3 py-2.5">
-                  <Phone size={14} className="shrink-0 text-[#8a9298]" />
-                  <span className="truncate text-[13px] text-[#2b2923]">{contact.phone ?? <span className="text-[#8A929C]">No phone on file</span>}</span>
+                <div className="ct-box flex items-center gap-3 rounded-xl border px-4 py-3">
+                  <Phone size={15} className="ct-t shrink-0" />
+                  <span className="ct-h truncate text-[14.5px]">{contact.phone ?? <span className="ct-faint">No phone on file</span>}</span>
                 </div>
               </div>
 
-              <div className="mt-6">
-                <h4 className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#74787c]">What they asked about</h4>
-                {latestTopic ? (
-                  <span className="mt-2 inline-flex max-w-full items-center truncate rounded-full bg-[#EAF0F5] px-3 py-1 text-[12.5px] font-semibold text-[#2b5b82]">
-                    {latestTopic}
-                  </span>
-                ) : (
-                  <p className="mt-2 text-[13px] leading-5 text-[#8A929C]">No topic recorded</p>
-                )}
-              </div>
+              <h3 className="ct-h mt-6 text-[15px] font-semibold">What they asked about</h3>
+              {latestTopic ? (
+                <span className="ct-chip mt-2 inline-flex max-w-full items-center truncate rounded-full border px-3 py-1 text-[13.5px] font-medium">{latestTopic}</span>
+              ) : (
+                <p className="ct-t mt-1.5 text-[14px]">No topic recorded.</p>
+              )}
 
-              {Object.keys(contact.customFields).length > 0 && (
-                <div className="mt-6 space-y-2.5">
-                  <h4 className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#74787c]">Other details</h4>
-                  {Object.entries(contact.customFields).map(([key, value]) => (
-                    <div key={key} className="rounded-lg border border-[#E3E4DF] px-3 py-2.5">
-                      <p className="text-[10.5px] font-medium text-[#8a9298]">{key}</p>
-                      <p className="mt-0.5 truncate text-[13px] text-[#2b2923]">{value}</p>
-                    </div>
+              {customFields.length > 0 && (
+                <>
+                  <h3 className="ct-h mt-6 text-[15px] font-semibold">Other details</h3>
+                  <div className="mt-2 space-y-2.5">
+                    {customFields.map(([key, value]) => (
+                      <div key={key} className="ct-box rounded-xl border px-4 py-2.5">
+                        <p className="ct-t text-[13px]">{key}</p>
+                        <p className="ct-h truncate text-[14.5px]">{value}</p>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+
+              <h3 className="ct-h mt-6 text-[15px] font-semibold">Recent chats</h3>
+              {sessions === null ? (
+                <p className="ct-t flex items-center gap-2 py-5 text-[14px]"><LoaderCircle size={14} className="animate-spin" /> Loading chats</p>
+              ) : sessions.length === 0 ? (
+                <p className="ct-t mt-1.5 text-[14px]">No chats yet.</p>
+              ) : (
+                <div className="mt-2 space-y-2">
+                  {sessions.map((session) => (
+                    <button key={session.id} type="button" onClick={() => setActiveSession(session)} className="ct-box ct-row flex w-full cursor-pointer flex-col gap-1.5 rounded-xl border px-4 py-3 text-left">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="flex min-w-0 items-center gap-2">
+                          <HandledByBadge handledBy={session.handledBy} />
+                          {session.topic && <span className="ct-h truncate text-[14px] font-medium">{session.topic}</span>}
+                        </span>
+                        <span className="ct-t shrink-0 text-[13px]">{new Date(session.time).toLocaleDateString()}</span>
+                      </div>
+                      <p className="ct-t truncate text-[14px]">{session.preview || "No messages yet"}</p>
+                    </button>
                   ))}
                 </div>
               )}
-
-              <div className="mt-7">
-                <h4 className="mb-2.5 text-[10px] font-bold uppercase tracking-[0.1em] text-[#74787c]">Last sessions</h4>
-                {sessions === null ? (
-                  <div className="flex items-center justify-center py-8 text-[12px] text-[#687178]">
-                    <LoaderCircle size={14} className="mr-2 animate-spin" /> Loading sessions
-                  </div>
-                ) : sessions.length === 0 ? (
-                  <p className="text-[12.5px] text-[#8A929C]">No chat sessions yet.</p>
-                ) : (
-                  <div className="space-y-2">
-                    {sessions.map((session) => (
-                      <button
-                        key={session.id}
-                        type="button"
-                        onClick={() => setActiveSession(session)}
-                        className="flex w-full flex-col gap-1.5 rounded-xl border border-[#E3E4DF] px-3.5 py-3 text-left transition hover:border-[#c7cdd1] hover:bg-[#fafbfb]"
-                      >
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="flex min-w-0 items-center gap-1.5">
-                            <HandledByBadge handledBy={session.handledBy} />
-                            {session.topic && (
-                              <span className="truncate rounded-full bg-[#EAF0F5] px-2 py-0.5 text-[11px] font-semibold text-[#2b5b82]">
-                                {session.topic}
-                              </span>
-                            )}
-                          </span>
-                          <span className="shrink-0 text-[10.5px] text-[#9aa1a6]">{new Date(session.time).toLocaleDateString()}</span>
-                        </div>
-                        <p className="truncate text-[12px] text-[#667069]">{session.preview || "No messages yet"}</p>
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
             </div>
           </>
         )}
-      </aside>
+      </div>
     </div>
   );
 }
 
 function HandledByBadge({ handledBy }: { handledBy: "ai" | "human" }) {
-  return handledBy === "ai" ? (
-    <span className="flex items-center gap-1 rounded-full bg-[#EFEAFB] px-2 py-0.5 text-[10px] font-semibold text-[#6B4FCF]">
-      <Bot size={11} /> AI
-    </span>
-  ) : (
-    <span className="flex items-center gap-1 rounded-full bg-[#EAF5EE] px-2 py-0.5 text-[10px] font-semibold text-[#257A4D]">
-      <User size={11} /> Human
+  return (
+    <span className="ct-chip flex shrink-0 items-center gap-1 rounded-full border px-2 py-0.5 text-[12px] font-medium">
+      {handledBy === "ai" ? <Bot size={12} /> : <User size={12} />} {handledBy === "ai" ? "AI" : "Team"}
     </span>
   );
 }
 
-function SessionThread({ session, onBack }: { session: ContactSession; onBack: () => void }) {
+function SessionThread({ session, onBack, onClose }: { session: ContactSession; onBack: () => void; onClose: () => void }) {
   const [messages, setMessages] = useState<SessionMessage[] | null>(null);
 
   useEffect(() => {
@@ -405,28 +319,25 @@ function SessionThread({ session, onBack }: { session: ContactSession; onBack: (
 
   return (
     <>
-      <div className="flex items-center gap-2.5 border-b border-[#eceeef] px-4 py-4">
-        <button type="button" onClick={onBack} aria-label="Back" className="rounded-md p-1.5 text-[#8a9298] hover:bg-[#f0f0f0] hover:text-black">
-          <ArrowLeft size={16} />
-        </button>
+      <div className="ct-divide flex shrink-0 items-center gap-3 border-b px-4 py-4">
+        <button type="button" onClick={onBack} aria-label="Back" className="ct-close flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-lg transition"><ArrowLeft size={18} /></button>
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             <HandledByBadge handledBy={session.handledBy} />
-            <h2 className="truncate text-[14px] font-semibold text-black">{session.topic ?? "Chat session"}</h2>
+            <h2 className="ct-h truncate text-[16px] font-semibold">{session.topic ?? "Chat"}</h2>
           </div>
-          <p className="mt-0.5 text-[11px] text-[#8a9298]">{new Date(session.time).toLocaleString()}</p>
+          <p className="ct-t mt-0.5 text-[13px]">{new Date(session.time).toLocaleString()}</p>
         </div>
+        <button type="button" onClick={onClose} aria-label="Close" className="ct-close flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-lg transition"><X size={18} /></button>
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto px-4 py-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="min-h-[220px] flex-1 overflow-y-auto px-5 py-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {messages === null ? (
-          <div className="flex items-center justify-center py-10 text-[12px] text-[#687178]">
-            <LoaderCircle size={14} className="mr-2 animate-spin" /> Loading messages
-          </div>
+          <p className="ct-t flex items-center justify-center gap-2 py-10 text-[14px]"><LoaderCircle size={14} className="animate-spin" /> Loading messages</p>
         ) : messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 text-center">
-            <MessageSquare size={20} className="text-[#a0a8ae]" />
-            <p className="mt-2 text-[12.5px] text-[#8A929C]">No messages in this session.</p>
+          <div className="flex flex-col items-center justify-center py-14 text-center">
+            <MessageSquare size={20} className="ct-t" />
+            <p className="ct-t mt-2 text-[14px]">No messages in this chat.</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -434,16 +345,8 @@ function SessionThread({ session, onBack }: { session: ContactSession; onBack: (
               const fromCustomer = message.senderType === "customer";
               return (
                 <div key={message.id} className={`flex ${fromCustomer ? "justify-start" : "justify-end"}`}>
-                  <div
-                    className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 text-[13px] leading-5 ${
-                      fromCustomer ? "bg-[#F0F2F4] text-[#17181a]" : "bg-[#17181a] text-white"
-                    }`}
-                  >
-                    {!fromCustomer && (
-                      <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.06em] opacity-70">
-                        {message.senderType === "ai" ? "AI" : "Team"}
-                      </p>
-                    )}
+                  <div className={`max-w-[82%] rounded-2xl px-4 py-2.5 text-[14.5px] leading-6 ${fromCustomer ? "ct-bubble-in" : "ct-bubble-out"}`}>
+                    {!fromCustomer && <p className="mb-0.5 text-[12px] font-semibold opacity-70">{message.senderType === "ai" ? "AI" : "Team"}</p>}
                     <p>{message.body}</p>
                   </div>
                 </div>
@@ -456,25 +359,25 @@ function SessionThread({ session, onBack }: { session: ContactSession; onBack: (
   );
 }
 
-function EmptyState() {
+function EmptyState({ searching }: { searching: boolean }) {
   return (
-    <div className="mt-7 flex min-h-[420px] flex-col items-center justify-center bg-transparent text-center">
-      <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F0F2F4] text-[#667078]"><Users size={20} /></span>
-      <p className="mt-3 text-[14px] font-semibold">No contacts yet</p>
-      <p className="mt-1 max-w-sm text-[11.5px] leading-5 text-[#687178]">Contacts appear here automatically once a visitor fills in their name and email or phone in the chat widget.</p>
+    <div className="flex min-h-[320px] flex-col items-center justify-center text-center">
+      <span className="ct-icon flex size-12 items-center justify-center rounded-xl"><Users size={22} /></span>
+      <p className="ct-h mt-4 text-[17px] font-semibold">{searching ? "No contacts match that search" : "No contacts yet"}</p>
+      <p className="ct-t mt-1.5 max-w-sm text-[14.5px] leading-6">
+        {searching ? "Try a different name, email or phone number." : "Contacts appear here once a visitor shares their name and email or phone in your chat widget."}
+      </p>
     </div>
   );
 }
 
 function UpgradeRequired({ message }: { message: string }) {
   return (
-    <div className="mt-7 flex min-h-[420px] flex-col items-center justify-center rounded-xl border border-white/10 bg-[#292a2b] text-center">
-      <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F0F2F4] text-[#667078]"><Lock size={20} /></span>
-      <p className="mt-3 text-[14px] font-semibold">Upgrade to unlock customer profiles</p>
-      <p className="mt-1 max-w-sm text-[11.5px] leading-5 text-[#687178]">{message}</p>
-      <Link href="/pricing#plans" className="mt-4 flex h-9 items-center gap-2 rounded-lg bg-white/10 px-4 text-[12px] font-semibold text-white transition hover:bg-white/20">
-        <Lock size={14} /> View plans
-      </Link>
+    <div className="ct-list flex min-h-[320px] flex-col items-center justify-center rounded-2xl border px-6 text-center">
+      <span className="ct-icon flex size-12 items-center justify-center rounded-xl"><Lock size={22} /></span>
+      <p className="ct-h mt-4 text-[17px] font-semibold">Upgrade to unlock customer profiles</p>
+      <p className="ct-t mt-1.5 max-w-sm text-[14.5px] leading-6">{message}</p>
+      <Link href="/dashboard/settings/billing?plans=open" className="ct-btn mt-5 flex h-11 items-center gap-2 rounded-full border px-6 text-[15px] font-medium transition">View plans</Link>
     </div>
   );
 }

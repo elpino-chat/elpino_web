@@ -18,7 +18,6 @@ const SETTINGS_SECTIONS: Record<string, string> = {
   tags: "Tag Manager",
   identity: "Identity Verification",
   translations: "Translations",
-  plugins: "Plugins",
   information: "Information",
   "setup-integration": "Setup & Integration",
   "danger-zone": "Danger Zone",
@@ -30,10 +29,18 @@ export async function generateMetadata({ params }: { params: Promise<{ section: 
   return title ? { title: `${title} Settings`, robots: { index: false, follow: false } } : {};
 }
 
-export default async function SettingsSectionPage({ params }: { params: Promise<{ section: string }> }) {
+export default async function SettingsSectionPage({ params, searchParams }: { params: Promise<{ section: string }>; searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const { section } = await params;
   // The old standalone Upgrade page is gone: plans open in the full-screen dialog now.
   if (section === "upgrade") redirect("/dashboard/settings/billing");
+  // Connectors live on Setup & Integration only; the separate Plugins page is gone. Old links
+  // and bookmarks land there, with any query string (e.g. ?connected=stripe) carried through.
+  if (section === "plugins") {
+    const query = new URLSearchParams();
+    for (const [key, value] of Object.entries(await searchParams)) if (typeof value === "string") query.set(key, value);
+    const suffix = query.toString();
+    redirect(`/dashboard/settings/setup-integration${suffix ? `?${suffix}` : ""}`);
+  }
   const page = SETTINGS_SECTIONS[section];
   if (!page) notFound();
 

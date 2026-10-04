@@ -8,9 +8,6 @@ import { useSearchParams } from "next/navigation";
 import posthog from "posthog-js";
 import {
   ArrowLeft,
-  ArrowRight,
-  BookOpen,
-  Bot,
   ChevronDown,
   CheckCircle2,
   ChevronRight,
@@ -34,7 +31,6 @@ import {
   UserRound,
   X,
 } from "lucide-react";
-import { BRAND_GRADIENT } from "@/lib/gradient";
 import { SUPPORTED_LANGUAGES } from "@/app/dashboard/settings/languages";
 import MessageMarkdown from "@/app/components/MessageMarkdown";
 import TypingDots from "@/app/components/TypingDots";
@@ -696,55 +692,20 @@ function DashboardContent({ name }: { name: string }) {
     // that instruction is only useful once there's something to pick.
     if (hasAnyConversations === false) {
       return (
-        <div className="dashboard-page-surface dashboard-conversation flex h-full min-w-0 flex-col items-center justify-center overflow-y-auto px-8 py-10 text-center">
-          <span
-            className="flex h-16 w-16 items-center justify-center rounded-2xl text-white shadow-[0_16px_36px_-14px_rgba(168,85,247,0.55)]"
-            style={{ backgroundImage: BRAND_GRADIENT }}
-          >
-            <Sparkles size={26} />
-          </span>
-          <h1 className="mt-5 text-[22px] font-semibold tracking-[-0.02em]">Welcome to your inbox</h1>
-          <p className="mt-2 max-w-sm text-[13px] leading-5 text-[var(--chat-muted)]">
-            It&apos;s quiet in here — once your AI or a teammate handles a customer chat, it&apos;ll show up on the left.
-            A few minutes on these get you ready for the first one:
-          </p>
-
-          <div className="mt-7 grid w-full max-w-[560px] gap-3 sm:grid-cols-3">
-            {[
-              { href: "/dashboard/settings/chatbot", icon: Bot, label: "Set up your AI", detail: "Name, look and tone" },
-              { href: "/dashboard/knowledge", icon: BookOpen, label: "Add knowledge", detail: "What it should know" },
-              { href: "/dashboard/connect", icon: Globe2, label: "Connect your site", detail: "Where chats come from" },
-            ].map(({ href, icon: Icon, label, detail }) => (
-              <a
-                key={href}
-                href={href}
-                className="dashboard-welcome-card group flex flex-col items-start gap-2.5 rounded-2xl border border-[var(--chat-divider)] bg-[var(--chat-customer-bg)] p-4 text-left transition hover:-translate-y-0.5 hover:shadow-[0_14px_30px_-16px_rgba(15,18,22,0.35)]"
-              >
-                <span
-                  className="flex h-9 w-9 items-center justify-center rounded-xl text-white"
-                  style={{ backgroundImage: BRAND_GRADIENT }}
-                >
-                  <Icon size={16} />
-                </span>
-                <span className="min-w-0">
-                  <span className="flex items-center gap-1 text-[12.5px] font-semibold">
-                    {label}
-                    <ArrowRight size={12} className="shrink-0 text-[var(--chat-muted)] transition group-hover:translate-x-0.5 group-hover:text-current" />
-                  </span>
-                  <span className="mt-0.5 block text-[11px] leading-4 text-[var(--chat-muted)]">{detail}</span>
-                </span>
-              </a>
-            ))}
-          </div>
+        <div className="dashboard-page-surface dashboard-conversation iw-root flex h-full min-w-0 flex-col items-center justify-center px-8 text-center">
+          <span className="iw-icon flex size-12 items-center justify-center rounded-xl"><MessageCircle size={22} /></span>
+          <h1 className="iw-h mt-4 text-[20px] font-semibold tracking-[-0.02em]">No conversations yet</h1>
+          <p className="iw-t mt-1.5 max-w-sm text-[14.5px] leading-6">Chats from your website will show up here.</p>
+          <a href="/dashboard/connect" className="iw-btn mt-5 flex h-11 items-center rounded-full border px-6 text-[15px] font-medium transition">Connect your site</a>
         </div>
       );
     }
 
     return (
       <div className="dashboard-page-surface dashboard-conversation flex h-full min-w-0 flex-col items-center justify-center px-8 text-center">
-        <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--chat-customer-bg)] text-[var(--chat-customer-text)]"><MessageCircle size={24} /></span>
-        <h1 className="mt-5 text-[20px] font-semibold tracking-[-0.02em]">Pick a conversation</h1>
-        <p className="mt-2 max-w-sm text-[13px] leading-5 text-[var(--chat-muted)]">Select a chat from the list on the left to see the conversation.</p>
+        <span className="flex size-12 items-center justify-center rounded-xl bg-[var(--chat-customer-bg)] text-[var(--chat-customer-text)]"><MessageCircle size={22} /></span>
+        <h1 className="mt-4 text-[20px] font-semibold tracking-[-0.02em]">Pick a conversation</h1>
+        <p className="mt-1.5 max-w-sm text-[14.5px] leading-6 text-[var(--chat-muted)]">Select a chat from the list on the left to see the conversation.</p>
       </div>
     );
   }

@@ -144,7 +144,7 @@ export function InvitePeopleDialog({
             <span className="dashboard-invite-label text-[12.5px] font-semibold text-white/90">Email addresses</span>
             <div
               onClick={(event) => { if (event.currentTarget === event.target) (event.currentTarget.querySelector("input") as HTMLInputElement | null)?.focus(); }}
-              className={`dashboard-invite-input-shell mt-2 flex min-h-[52px] w-full flex-wrap items-center gap-2 rounded-xl border bg-[#1d2023] px-3 py-2 transition ${invalidDraft ? "border-[#e0707c]" : "border-white/[0.18] focus-within:border-[#7b6be8] focus-within:ring-2 focus-within:ring-[#7b6be8]/25"}`}
+              className={`dashboard-invite-input-shell mt-2 flex min-h-[52px] w-full flex-wrap items-center gap-2 rounded-xl border bg-transparent px-3 py-2 transition ${invalidDraft ? "border-[#e0707c]" : "border-white/[0.18] focus-within:border-[#7b6be8] focus-within:ring-2 focus-within:ring-[#7b6be8]/25"}`}
             >
               {chips.map((email) => (
                 <span key={email} className="dashboard-invite-chip flex items-center gap-1.5 rounded-full border border-white/10 bg-white/10 py-1 pl-3 pr-1.5 text-[12px] font-medium text-white/90">

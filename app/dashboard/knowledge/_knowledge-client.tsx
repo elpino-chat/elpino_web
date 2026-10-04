@@ -5,25 +5,17 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import posthog from "posthog-js";
-import { ArrowDownUp, ArrowLeft, FileText, Folder, Globe2, Link2, ListChecks, LoaderCircle, RefreshCw, Search, Sparkles, Trash2, Upload, X } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { useMobileDrawer } from "@/app/components/dashboard/mobile-drawer-context";
+import { ArrowLeft, CheckCircle2, FileText, Folder, Globe2, Link2, ListChecks, LoaderCircle, Search, Sparkles, Trash2, Upload, X } from "lucide-react";
+import { NotionImportButton, NotionPagesList } from "./_notion-import";
 
 export type KnowledgeView = "overview" | "articles" | "sources";
-type SourceType = "text" | "url" | "sitemap" | "file";
+type SourceType = "text" | "url" | "sitemap" | "file" | "notion";
 type KnowledgeItem = { id: string; title: string; content: string; siteId: string | null; createdAt: string; chunkCount: number; sourceType: SourceType; sourceUrl: string | null; visibleToVisitors?: boolean };
 type Site = { id: string; name: string; domain: string; verifiedAt?: string | null };
 type AddTab = "text" | "file";
 
-const SOURCE_LABEL: Record<SourceType, string> = { text: "Pasted", url: "Crawled page", sitemap: "Crawled sitemap", file: "Uploaded file" };
+const SOURCE_LABEL: Record<SourceType, string> = { text: "Pasted", url: "Crawled page", sitemap: "Crawled sitemap", file: "Uploaded file", notion: "Notion page" };
 
-// Colors are our own palette, not any third-party brand's — "Docs" uses a
-// blue document glyph in the spirit of a docs product, not a reproduction
-// of any specific logo.
-const nav = [
-  { id: "articles", label: "Pages", icon: FileText },
-  { id: "sources", label: "URLs", icon: Link2 },
-] as const;
 
 export function KnowledgeClient({ view }: { view: KnowledgeView }) {
   const router = useRouter();
@@ -32,6 +24,9 @@ export function KnowledgeClient({ view }: { view: KnowledgeView }) {
   const [selectedSiteId, setSelectedSiteId] = useState("");
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
+  // Pages and URLs are two views of the same screen: switching between them is a state change, not a navigation, so nothing reloads and
+  // the search text stays. `view` only says which one the page was opened on (/dashboard/knowledge or /dashboard/knowledge/sources).
+  const [tab, setTab] = useState<"articles" | "sources">(view === "sources" ? "sources" : "articles");
   const [editorOpen, setEditorOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<KnowledgeItem | null>(null);
   const [addTab, setAddTab] = useState<AddTab>("text");
@@ -192,35 +187,49 @@ export function KnowledgeClient({ view }: { view: KnowledgeView }) {
     }
   }
 
-  const pageCopy = view === "overview"
-    ? ["Knowledge", "Keep trusted answers, documents, and sources connected to your AI."]
-    : view === "articles"
-      ? ["Pages", "Create and manage the answers your AI can use."]
-      : ["URLs", "Add website URLs and keep their content searchable."];
+  const pagesActive = tab !== "sources";
+  function switchTab(next: "articles" | "sources") {
+    setTab(next);
+    // Keep the address matching the tab without navigating: a refresh or a copied link then opens the same one.
+    window.history.replaceState(null, "", next === "sources" ? "/dashboard/knowledge/sources" : "/dashboard/knowledge");
+  }
+  const tabClass = (active: boolean) => `kn-tab ${active ? "kn-tab-active" : ""} -mb-px inline-flex h-11 shrink-0 items-center gap-2 border-b-2 text-[15px] font-medium transition`;
 
-  return <div id="dashboard-knowledge-page" className="dashboard-knowledge-shell flex h-full min-h-0 overflow-hidden bg-[#262626] text-white">
-    <KnowledgeSidebar view={view} items={items} sites={sites} selectedSiteId={selectedSiteId} onOpen={openEditor} loading={loading} />
-    <main className="dashboard-page-surface dashboard-knowledge-main-surface min-w-0 flex-1 overflow-y-auto bg-[#262626] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-      <div className="mx-auto w-full max-w-[1320px] px-6 pb-16 pt-7 sm:px-10 lg:px-12">
-        <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
+  return <div id="dashboard-knowledge-page" className="dashboard-knowledge-shell h-full min-h-0 overflow-hidden bg-[#262626] text-white">
+    <main className="dashboard-page-surface dashboard-knowledge-main-surface h-full min-w-0 overflow-y-auto bg-[#262626] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="mx-auto w-full max-w-[1120px] px-6 pb-16 pt-7 sm:px-9 lg:px-10">
+        <header className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="text-xs font-normal uppercase tracking-[0.16em] text-white/40">Knowledge</p>
-            <h1 className="mt-2 text-3xl font-normal tracking-[-0.03em] text-white/95">{pageCopy[0]}</h1>
-            <p className="mt-2 text-sm text-white/45">{pageCopy[1]}</p>
+            <h1 className="kn-heading text-[30px] font-normal tracking-[-0.04em]">Knowledge</h1>
+            <p className="kn-text mt-1.5 max-w-xl text-[16px] leading-7">{pagesActive ? "Create and manage the answers your AI can use." : "Add website addresses and keep their content searchable."}</p>
           </div>
-          <button type="button" onClick={() => view === "sources" ? document.getElementById("knowledge-source-url")?.focus() : openEditor()} className="dashboard-knowledge-add-button flex h-9 items-center gap-2 rounded-lg bg-white/90 px-4 text-xs font-normal text-[#202020] transition hover:bg-white">
-            {view === "sources" ? <Link2 size={15} /> : <FileText size={15} />} {view === "sources" ? "Add URL" : "Create page"}
+          {/* Import from Notion works whether or not a website is connected, so it is in the header on both tabs. */}
+          <div className="flex flex-wrap items-center gap-2.5">
+            <NotionImportButton onImported={load} />
+            {pagesActive && (
+              <button type="button" data-tour="knowledge-add" onClick={() => openEditor()} className="kn-btn kn-btn-primary flex h-10 cursor-pointer items-center gap-2 rounded-full border px-5 text-[15px] font-medium transition">
+                <FileText size={16} /> Create page
+              </button>
+            )}
+          </div>
+        </header>
+
+        <nav role="tablist" aria-label="Knowledge sections" className="kn-tabs mt-6 flex gap-6 overflow-x-auto border-b [scrollbar-width:none]">
+          <button type="button" role="tab" aria-selected={pagesActive} onClick={() => switchTab("articles")} className={tabClass(pagesActive)}>
+            Pages
+            {!loading && items.length > 0 && <span className="kn-count rounded-full px-2 py-0.5 text-[12px] leading-none">{items.length}</span>}
           </button>
-        </div>
-        {view !== "sources" && <Toolbar loading={loading} />}
-        {error && <p className="mt-4 rounded-lg bg-[#fff1f1] px-3 py-2 text-[11px] font-medium text-[#a64a53]">{error}</p>}
+          <button type="button" role="tab" aria-selected={!pagesActive} onClick={() => switchTab("sources")} className={tabClass(!pagesActive)}>URLs</button>
+        </nav>
+
+        {error && <p role="alert" className="mt-5 rounded-lg bg-[#fff1f1] px-4 py-3 text-[14px] font-medium text-[#a64a53]">{error}</p>}
         {importing && (
-          <div role="status" className="mt-4 flex items-center gap-2.5 rounded-lg border border-white/10 bg-white/[0.04] px-3.5 py-3 text-[13px] text-white/70">
-            <LoaderCircle size={15} className="shrink-0 animate-spin" />
+          <div role="status" className="kn-text mt-5 flex items-center gap-2.5 rounded-xl border px-4 py-3.5 text-[14.5px]">
+            <LoaderCircle size={16} className="shrink-0 animate-spin" />
             <span>We&apos;re reading your website and adding its most useful pages. They&apos;ll appear here in a moment.</span>
           </div>
         )}
-        {loading ? <KnowledgeSkeleton view={view} /> : view === "overview" ? <Overview items={scopedItems} sites={sites} onNew={() => openEditor()} /> : view === "articles" ? <PagesTable items={filtered} sites={sites} query={query} setQuery={setQuery} onDelete={setConfirmDeleteItem} onNew={() => openEditor()} onOpen={openEditor} onToggleVisible={(item, visible) => void setArticleVisibility(item, visible)} /> : <Sources sites={sites} items={items} defaultSiteId={selectedSiteId} onReload={load} />}
+        {loading ? <KnowledgeSkeleton view={view === "overview" ? view : tab} /> : view === "overview" ? <Overview items={scopedItems} sites={sites} onNew={() => openEditor()} /> : tab === "articles" ? <PagesList items={filtered} sites={sites} query={query} setQuery={setQuery} onDelete={setConfirmDeleteItem} onNew={() => openEditor()} onOpen={openEditor} onToggleVisible={(item, visible) => void setArticleVisibility(item, visible)} /> : <Sources sites={sites} items={items} defaultSiteId={selectedSiteId} onReload={load} />}
       </div>
     </main>
     {editorOpen && (
@@ -423,82 +432,6 @@ function Favicon({ domain, size = 20 }: { domain?: string | null; size?: number 
   );
 }
 
-function KnowledgeSidebar({
-  view, items, sites, selectedSiteId, onOpen, loading,
-}: {
-  view: KnowledgeView; items: KnowledgeItem[]; sites: Site[]; selectedSiteId: string; onOpen: (item: KnowledgeItem) => void; loading: boolean;
-}) {
-  const selected = sites.find((site) => site.id === selectedSiteId) ?? sites[0] ?? null;
-  const { open, setOpen } = useMobileDrawer();
-
-  return (
-    <>
-      {/* Kept mounted (not `hidden`) below md so the slide has something to
-          animate — see SpacePanel.tsx for the same trick and why. */}
-      <div
-        className={`fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 md:hidden ${open ? "opacity-100" : "pointer-events-none opacity-0"}`}
-        onClick={() => setOpen(false)}
-      />
-      <div
-        id="dashboard-knowledge-sidebar"
-        className={`dashboard-secondary-sidebar dashboard-knowledge-sidebar fixed inset-y-0 left-0 z-50 flex h-full w-72 shrink-0 flex-col overflow-hidden border-r border-white/10 bg-[#262626] shadow-[8px_0_30px_rgba(0,0,0,0.35)] transition-transform duration-300 ease-in-out md:static md:z-auto md:w-[210px] md:translate-x-0 md:shadow-none lg:w-[230px] ${
-          open ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-      {loading ? (
-        // Same shape as the loaded sidebar: title, website chip, Library links, then Recent pages.
-        <div role="status" aria-busy="true" aria-label="Loading sidebar" className="min-h-0 flex-1 px-4 pt-3">
-          <Bone className="mb-3 ml-1 h-4 w-20" />
-          <Bone className="h-[38px] w-full" />
-          <Bone className="mb-3 ml-1 mt-5 h-3 w-14" />
-          <div className="space-y-1.5">{nav.map(({ id }) => <Bone key={id} className="h-10 w-full" />)}</div>
-          <div className="my-4 border-t border-white/10" />
-          <Bone className="mb-3 ml-1 h-3 w-14" />
-          <div className="space-y-1.5">{[0, 1, 2, 3, 4].map((row) => <Bone key={row} className="h-9 w-full" />)}</div>
-        </div>
-      ) : (
-      <div className="min-h-0 flex-1 px-4 pt-3">
-        <p className="mb-3 px-1 text-sm font-normal text-white/45">Knowledge</p>
-        {/* One domain per workspace — no switcher needed, just show it. */}
-        <div className="flex w-full items-center gap-2 rounded-md border border-[#dde3e6] bg-transparent px-3 py-1.5">
-          <Favicon domain={selected?.domain} />
-          <span className="min-w-0 flex-1 truncate text-[15px] text-[#17181a]">{selected ? selected.domain : "No website connected"}</span>
-        </div>
-
-        <p className="mb-2 mt-5 px-1 text-[11px] font-normal text-white/40">Library</p>
-        <nav className="space-y-0.5">
-          {nav.map(({ id, label, icon: Icon }) => {
-            const active = id === "articles" ? view === "articles" || view === "overview" : view === id;
-            return (
-            <Link
-              key={id}
-              href={id === "articles" ? "/dashboard/knowledge" : `/dashboard/knowledge/${id}`}
-              aria-current={active ? "page" : undefined}
-              className={`flex h-10 items-center gap-2.5 rounded-lg px-3 text-[13px] font-normal transition ${active ? "dashboard-secondary-nav-active text-white/90" : "text-white/60 hover:text-white"}`}
-            >
-              <Icon size={16} className="shrink-0" />
-              {label}
-            </Link>
-          );})}
-        </nav>
-        <div className="my-4 border-t border-white/10" />
-        <p className="mb-2 px-1 text-[11px] font-normal text-white/40">Recent</p>
-        <div className="space-y-0.5">
-          {items.slice(0, 6).map((item) => (
-            <button key={item.id} type="button" onClick={() => onOpen(item)} className="flex h-9 w-full min-w-0 items-center gap-2 rounded-lg px-3 text-left text-[13px] font-normal text-white/60 transition hover:bg-white/[0.06] hover:text-white/90">
-              <FileText size={15} className="shrink-0" /><span className="truncate">{item.title}</span>
-            </button>
-          ))}
-          {items.length === 0 && <p className="px-3 py-2 text-[12px] text-white/35">No recent pages</p>}
-        </div>
-      </div>
-      )}
-      </div>
-    </>
-  );
-}
-
-/** Grey placeholder in the shape of the page being loaded: card grid for Overview, search + rows for Pages/Sources. */
 function KnowledgeSkeleton({ view }: { view: string }) {
   if (view === "overview") {
     return (
@@ -539,19 +472,6 @@ function KnowledgeSkeleton({ view }: { view: string }) {
           </div>
         ))}
       </div>
-    </div>
-  );
-}
-
-function Toolbar({ loading }: { loading: boolean }) {
-  return (
-    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#e5e8ea] pb-4">
-      <span className="flex h-9 items-center gap-2 text-[12px] text-white/50"><ArrowDownUp size={13} /> Last modified</span>
-      {loading && (
-        <span className="flex items-center gap-1.5 text-[12px] text-[#9aa1a6]">
-          <RefreshCw size={12} className="animate-spin" /> Refreshing…
-        </span>
-      )}
     </div>
   );
 }
@@ -669,49 +589,45 @@ function HelpTabToggle({ item, onToggle }: { item: KnowledgeItem; onToggle: (ite
   );
 }
 
-function PagesTable({ items, sites, query, setQuery, onDelete, onNew, onOpen, onToggleVisible }: { items: KnowledgeItem[]; sites: Site[]; query: string; setQuery: (value: string) => void; onDelete: (item: KnowledgeItem) => void; onNew: () => void; onOpen: (item: KnowledgeItem) => void; onToggleVisible: (item: KnowledgeItem, visible: boolean) => void }) {
+function PagesList({ items, sites, query, setQuery, onDelete, onNew, onOpen, onToggleVisible }: { items: KnowledgeItem[]; sites: Site[]; query: string; setQuery: (value: string) => void; onDelete: (item: KnowledgeItem) => void; onNew: () => void; onOpen: (item: KnowledgeItem) => void; onToggleVisible: (item: KnowledgeItem, visible: boolean) => void }) {
   const sortedItems = [...items].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   return (
-    <div className="mt-5">
-      <div className="ml-auto flex h-10 w-full max-w-sm items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] px-3.5">
-        <Search size={15} className="text-white/40" />
-        <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search pages" className="min-w-0 flex-1 bg-transparent text-[13px] text-white/90 outline-none placeholder:text-white/35" />
+    <div className="mt-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <label className="kn-field flex h-11 w-full max-w-md items-center gap-2.5 rounded-full border px-4">
+          <Search size={16} className="kn-text shrink-0" aria-hidden="true" />
+          <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search pages" aria-label="Search pages" className="kn-input min-w-0 flex-1 bg-transparent text-[15px] outline-none" />
+        </label>
+        {sortedItems.length > 0 && <p className="kn-text text-[14px]">{sortedItems.length} {sortedItems.length === 1 ? "page" : "pages"}, newest first</p>}
       </div>
-      <div className="mt-4 overflow-hidden border-y border-white/10">
-        {/* A 5-column grid has no honest way to fit a phone screen — below md
-            this becomes a stacked card list instead, same tap-to-open and
-            delete behavior either way. */}
-        <div className="md:hidden">
-          {sortedItems.length ? sortedItems.map((item) => (
-            <div key={item.id} role="button" tabIndex={0} onClick={(event) => { if (!(event.target as HTMLElement).closest("button")) onOpen(item); }} onKeyDown={(event) => { if (event.key === "Enter") onOpen(item); }} className="flex cursor-pointer items-start gap-3 border-t border-white/10 px-4 py-3.5 transition first:border-t-0 hover:bg-white/[0.025]">
-              <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-white/10 bg-white/[0.04] text-white/50"><FileText size={15} /></span>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-[13px] font-medium text-white/90">{item.title}</p>
-                <p className="mt-0.5 truncate text-[11px] text-white/40">{sites.find((site) => site.id === item.siteId)?.domain ?? "All websites"} · {new Date(item.createdAt).toLocaleDateString()}</p>
-                <div className="mt-2"><HelpTabToggle item={item} onToggle={onToggleVisible} /></div>
+
+      {sortedItems.length ? (
+        <ul className="mt-3">
+          {sortedItems.map((item) => (
+            <li key={item.id} className="kn-row flex flex-wrap items-center gap-x-4 gap-y-3 border-b py-4 sm:flex-nowrap">
+              <button type="button" onClick={() => onOpen(item)} className="flex min-w-0 flex-1 cursor-pointer items-center gap-4 text-left">
+                <span className="kn-icon flex size-11 shrink-0 items-center justify-center rounded-xl"><FileText size={19} /></span>
+                <span className="min-w-0 flex-1">
+                  <span className="kn-heading block truncate text-[16px] font-medium">{item.title}</span>
+                  <span className="kn-text mt-0.5 block truncate text-[14px]">{item.content}</span>
+                  <span className="kn-text mt-1 block truncate text-[13px]">{SOURCE_LABEL[item.sourceType] ?? "Page"} · {sites.find((site) => site.id === item.siteId)?.domain ?? "All websites"} · {new Date(item.createdAt).toLocaleDateString()}</span>
+                </span>
+              </button>
+              <div className="flex shrink-0 items-center gap-3 pl-[60px] sm:pl-0">
+                <HelpTabToggle item={item} onToggle={onToggleVisible} />
+                <button type="button" aria-label={`Delete ${item.title}`} title="Delete" onClick={() => onDelete(item)} className="kn-delete flex size-10 cursor-pointer items-center justify-center rounded-full transition"><Trash2 size={17} /></button>
               </div>
-              <button type="button" aria-label={`Delete ${item.title}`} onClick={(event) => { event.stopPropagation(); onDelete(item); }} className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-white/40 hover:bg-white/10 hover:text-red-300"><Trash2 size={14} /></button>
-            </div>
-          )) : <Empty onNew={onNew} />}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div className="flex flex-col items-center px-5 py-20 text-center">
+          <span className="kn-icon flex size-14 items-center justify-center rounded-2xl"><FileText size={26} /></span>
+          <p className="kn-heading mt-5 text-[22px] font-semibold tracking-[-0.02em]">{query.trim() ? "No pages match that search" : "No pages yet"}</p>
+          <p className="kn-text mt-2 max-w-md text-[16px] leading-7">{query.trim() ? "Try a different word." : "Add the first trusted answer your AI can use. Write a page, import from Notion, or add a website address."}</p>
+          {!query.trim() && <button type="button" onClick={onNew} className="kn-btn kn-btn-primary mt-6 flex h-11 cursor-pointer items-center gap-2 rounded-full border px-6 text-[15px] font-semibold transition"><FileText size={16} /> Create page</button>}
         </div>
-        <div className="hidden md:block">
-          <div className="grid grid-cols-[minmax(0,1.4fr)_110px_minmax(130px,.7fr)_120px_42px] px-5 py-3 text-[12px] font-normal text-white/45">
-            <span>Name</span><span title="Whether visitors can read this in the widget's Help tab">Help tab</span><span>Attached to</span><span>Last modified</span><span />
-          </div>
-          {sortedItems.length ? sortedItems.map((item) => (
-            <div key={item.id} role="button" tabIndex={0} onClick={(event) => { if (!(event.target as HTMLElement).closest("button")) onOpen(item); }} onKeyDown={(event) => { if (event.key === "Enter") onOpen(item); }} className="grid cursor-pointer grid-cols-[minmax(0,1.4fr)_110px_minmax(130px,.7fr)_120px_42px] items-center border-t border-white/10 px-5 py-4 transition hover:bg-white/[0.025]">
-              <div className="flex min-w-0 items-center gap-3">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-white/10 bg-white/[0.04] text-white/50"><FileText size={15} /></span>
-                <div className="min-w-0"><p className="truncate text-[13px] font-medium text-white/90">{item.title}</p><p className="mt-0.5 truncate text-[10.5px] text-white/35">{item.content}</p></div>
-              </div>
-              <HelpTabToggle item={item} onToggle={onToggleVisible} />
-              <span className="truncate text-[12px] text-white/60">{sites.find((site) => site.id === item.siteId)?.domain ?? "All websites"}</span>
-              <span className="text-[12px] text-white/45">{new Date(item.createdAt).toLocaleDateString()}</span>
-              <button type="button" aria-label={`Delete ${item.title}`} onClick={(event) => { event.stopPropagation(); onDelete(item); }} className="flex h-8 w-8 items-center justify-center rounded-md text-white/40 hover:bg-white/10 hover:text-red-300"><Trash2 size={14} /></button>
-            </div>
-          )) : <Empty onNew={onNew} />}
-        </div>
-      </div>
+      )}
     </div>
   );
 }
@@ -732,6 +648,11 @@ function Sources({ sites, items, defaultSiteId, onReload }: { sites: Site[]; ite
   const [watchImports, setWatchImports] = useState(true);
 
   const activeSite = sites.find((site) => site.id === activeSiteId) ?? null;
+  // Notion pages belong to the workspace, not to one website.
+  const notionRows = useMemo(
+    () => items.filter((item) => item.sourceType === "notion").sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
+    [items],
+  );
 
   useEffect(() => {
     setUrlInput("");
@@ -789,10 +710,11 @@ function Sources({ sites, items, defaultSiteId, onReload }: { sites: Site[]; ite
 
   if (sites.length === 0) {
     return (
-      <div className="mt-7 flex min-h-[330px] flex-col items-center justify-center rounded-2xl border border-[#dde3e6] text-center">
-        <Upload size={21} className="text-[#98a0a5]" />
-        <p className="mt-3 text-[14px] font-semibold">No sources connected</p>
-        <Link href="/dashboard/connect" className="mt-4 rounded-md bg-[#17191b] px-4 py-2.5 text-[12px] font-semibold text-white">Connect a website</Link>
+      <div className="mt-6 flex flex-col items-center px-5 py-20 text-center">
+        <span className="kn-icon flex size-14 items-center justify-center rounded-2xl"><Globe2 size={26} /></span>
+        <p className="kn-heading mt-5 text-[22px] font-semibold tracking-[-0.02em]">No website connected yet</p>
+        <p className="kn-text mt-2 max-w-md text-[16px] leading-7">Connect your website, then add its pages or a sitemap here and we&apos;ll read them into your knowledge.</p>
+        <Link href="/dashboard/settings/tags" className="kn-btn kn-btn-primary mt-6 flex h-11 items-center gap-2 rounded-full border px-6 text-[15px] font-semibold transition">Connect website</Link>
       </div>
     );
   }
@@ -800,126 +722,141 @@ function Sources({ sites, items, defaultSiteId, onReload }: { sites: Site[]; ite
   return (
     <div className="mt-6">
       {activeSite && (
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
-          <span className="flex min-w-0 items-center gap-2 text-[13px] text-white/75"><Favicon domain={activeSite.domain} size={18} /><span className="truncate">{activeSite.domain}</span></span>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[10.5px] font-normal text-white/65">
-            <span className={`h-1.5 w-1.5 rounded-full ${activeSite.verifiedAt ? "bg-[#2FA266]" : "bg-[#D89831]"}`} />
-            {activeSite.verifiedAt ? "Crawlable" : "Not crawlable — verify the tag first"}
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <span className="flex min-w-0 items-center gap-3"><Favicon domain={activeSite.domain} size={22} /><span className="kn-heading truncate text-[17px] font-medium">{activeSite.domain}</span></span>
+          <span className={`tag-badge ${activeSite.verifiedAt ? "tag-badge-verified" : "tag-badge-pending"} inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[13px] font-semibold`}>
+            {activeSite.verifiedAt ? <><CheckCircle2 size={14} aria-hidden="true" /> Crawlable</> : "Not crawlable: verify the tag first"}
           </span>
         </div>
       )}
 
-      <div className="mt-4 flex flex-wrap gap-2.5">
-        <Popover open={urlOpen} onOpenChange={setUrlOpen}>
-          <PopoverTrigger className="knowledge-source-add flex h-9 items-center justify-center gap-1.5 rounded-md px-3.5 text-[12.5px] font-normal">
-            <Link2 size={14} /> Add URL
-          </PopoverTrigger>
-          <PopoverContent align="start" className="w-[340px] p-3">
-            <p className="px-1 pb-2 text-[10.5px] font-bold uppercase tracking-[0.1em] text-[#8a9298]">Add a page</p>
-            <input
-              id="knowledge-source-url"
-              autoFocus
-              value={urlInput}
-              onChange={(event) => setUrlInput(event.target.value)}
-              onKeyDown={(event) => { if (event.key === "Enter") void addUrl(); }}
-              placeholder="https://example.com/help/refunds"
-              aria-label="Page URL"
-              className="h-10 w-full rounded-lg border border-[#dde3e6] bg-white px-3 text-[13px] text-[#17181a] outline-none placeholder:text-[#8a9298] focus:border-[#8f989e]"
-            />
-            {addError && <p className="mt-2 text-[11px] font-medium text-[#a64a53]">{addError}</p>}
-            <button type="button" disabled={!urlInput.trim() || adding} onClick={() => void addUrl()} className="mt-2.5 flex h-9 w-full items-center justify-center gap-1.5 rounded-md bg-[#17191b] text-[12.5px] font-normal text-white disabled:opacity-40">
-              {adding && <LoaderCircle size={12} className="animate-spin" />} Add page
-            </button>
-          </PopoverContent>
-        </Popover>
-
-        <Popover open={sitemapOpen} onOpenChange={setSitemapOpen}>
-          <PopoverTrigger className="knowledge-source-add flex h-9 items-center justify-center gap-1.5 rounded-md px-3.5 text-[12.5px] font-normal">
-            <ListChecks size={14} /> Add sitemap
-          </PopoverTrigger>
-          <PopoverContent align="start" className="w-[340px] p-3">
-            <p className="px-1 pb-2 text-[10.5px] font-bold uppercase tracking-[0.1em] text-[#8a9298]">Crawl a sitemap</p>
-            <input
-              id="knowledge-source-sitemap"
-              autoFocus
-              value={sitemapInput}
-              onChange={(event) => setSitemapInput(event.target.value)}
-              onKeyDown={(event) => { if (event.key === "Enter") void addSitemap(); }}
-              placeholder="https://example.com/sitemap.xml"
-              aria-label="Sitemap URL"
-              className="h-10 w-full rounded-lg border border-[#dde3e6] bg-white px-3 text-[13px] text-[#17181a] outline-none placeholder:text-[#8a9298] focus:border-[#8f989e]"
-            />
-            {sitemapError && <p className="mt-2 text-[11px] font-medium text-[#a64a53]">{sitemapError}</p>}
-            {sitemapResult && <p className="mt-2 text-[11px] font-medium text-[#2FA266]">Found {sitemapResult.pagesFound} page{sitemapResult.pagesFound === 1 ? "" : "s"} — crawling now.</p>}
-            <button type="button" disabled={!sitemapInput.trim() || addingSitemap} onClick={() => void addSitemap()} className="mt-2.5 flex h-9 w-full items-center justify-center gap-1.5 rounded-md bg-[#17191b] text-[12.5px] font-normal text-white disabled:opacity-40">
-              {addingSitemap && <LoaderCircle size={12} className="animate-spin" />} Add sitemap
-            </button>
-          </PopoverContent>
-        </Popover>
+      <div className="mt-5 flex flex-wrap gap-2.5">
+        <button type="button" onClick={() => { setAddError(null); setUrlOpen(true); }} className="kn-btn kn-btn-outline flex h-10 cursor-pointer items-center gap-2 rounded-full border px-5 text-[15px] font-medium transition"><Link2 size={16} /> Add URL</button>
+        <button type="button" onClick={() => { setSitemapError(null); setSitemapResult(null); setSitemapOpen(true); }} className="kn-btn kn-btn-outline flex h-10 cursor-pointer items-center gap-2 rounded-full border px-5 text-[15px] font-medium transition"><ListChecks size={16} /> Add sitemap</button>
       </div>
 
       {importing && (
-        <div className="mt-4 rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3 text-[12px] text-white/70" role="status">
+        <div className="kn-text mt-5 rounded-xl border px-4 py-3.5 text-[14.5px]" role="status">
           {importing.left > 0 && (
-            <p className="flex items-center gap-2"><LoaderCircle size={12} className="animate-spin" /> Importing {importing.left} page{importing.left === 1 ? "" : "s"} in the background. You can leave this page.</p>
+            <p className="flex items-center gap-2"><LoaderCircle size={15} className="animate-spin" /> Importing {importing.left} page{importing.left === 1 ? "" : "s"} in the background. You can leave this page.</p>
           )}
           {importing.failed.length > 0 && (
-            <div className={importing.left > 0 ? "mt-2" : ""}>
-              <p className="text-[#a64a53]">{importing.failed.length} page{importing.failed.length === 1 ? "" : "s"} could not be imported:</p>
-              <ul className="mt-1 space-y-0.5 text-[11px] text-white/50">
-                {importing.failed.slice(0, 5).map((page) => <li key={page.url} className="truncate">{page.url} — {page.error}</li>)}
+            <div className={importing.left > 0 ? "mt-2.5" : ""}>
+              <p className="font-medium text-[#e5636f]">{importing.failed.length} page{importing.failed.length === 1 ? "" : "s"} could not be imported:</p>
+              <ul className="mt-1 space-y-0.5 text-[13.5px]">
+                {importing.failed.slice(0, 5).map((page) => <li key={page.url} className="truncate">{page.url}: {page.error}</li>)}
               </ul>
             </div>
           )}
         </div>
       )}
 
-      <div className="mt-6 overflow-hidden border-y border-white/10">
-        {/* A 4-column grid has no honest way to fit a phone screen — below md
-            this becomes a stacked card list instead. */}
-        <div className="md:hidden">
-          {rows.length ? rows.map((row) => (
-            <div key={row.id} className="flex flex-col gap-1.5 border-t border-white/10 px-4 py-3.5 transition first:border-t-0 hover:bg-white/[0.025]">
-              <a href={row.sourceUrl ?? "#"} target="_blank" rel="noreferrer" className="truncate text-[12.5px] text-white/80 hover:text-white hover:underline">{row.sourceUrl ?? row.title}</a>
-              <span className="flex items-center gap-2.5 text-[11px] text-white/45">
-                <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-emerald-400/10 px-2 py-0.5 text-[10.5px] font-normal text-emerald-300">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#2FA266]" /> Crawled
-                </span>
-                {new Date(row.createdAt).toLocaleDateString()}
+      {rows.length ? (
+        <ul className="mt-5">
+          {rows.map((row) => (
+            <li key={row.id} className="kn-row flex items-center gap-4 border-b py-4">
+              <span className="kn-icon flex size-11 shrink-0 items-center justify-center rounded-xl"><Link2 size={19} /></span>
+              <span className="min-w-0 flex-1">
+                <a href={row.sourceUrl ?? "#"} target="_blank" rel="noreferrer" className="kn-heading block truncate text-[15.5px] font-medium hover:underline">{row.sourceUrl ?? row.title}</a>
+                <span className="kn-text mt-0.5 block text-[13.5px]">{SOURCE_LABEL[row.sourceType] ?? "Page"} · crawled {new Date(row.createdAt).toLocaleString()}</span>
               </span>
-            </div>
-          )) : (
-            <div className="flex min-h-[220px] flex-col items-center justify-center px-5 text-center">
-              <Link2 size={20} className="text-[#a0a7ab]" />
-              <p className="mt-3 text-[13px] font-semibold">No page links yet</p>
-              <p className="mt-1 max-w-xs text-[11px] leading-5 text-[#7b858a]">Add a URL above and we'll crawl it into your knowledge base.</p>
-            </div>
-          )}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div className="flex flex-col items-center px-5 py-16 text-center">
+          <span className="kn-icon flex size-14 items-center justify-center rounded-2xl"><Link2 size={26} /></span>
+          <p className="kn-heading mt-5 text-[22px] font-semibold tracking-[-0.02em]">No pages crawled yet</p>
+          <p className="kn-text mt-2 max-w-md text-[16px] leading-7">Add a page address or a sitemap and we&apos;ll read it into your knowledge base.</p>
         </div>
-        <div className="hidden md:block">
-          <div className="grid grid-cols-[minmax(0,1.6fr)_110px_110px_160px] px-5 py-3 text-[12px] font-normal text-white/45">
-            <span>URL</span><span>Status</span><span>Crawlable</span><span>Last crawl</span>
-          </div>
-          {rows.length ? rows.map((row) => (
-            <div key={row.id} className="grid grid-cols-[minmax(0,1.6fr)_110px_110px_160px] items-center border-t border-white/10 px-5 py-4 transition hover:bg-white/[0.025]">
-              <a href={row.sourceUrl ?? "#"} target="_blank" rel="noreferrer" className="truncate text-[12.5px] text-white/80 hover:text-white hover:underline">{row.sourceUrl ?? row.title}</a>
-              <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-emerald-400/10 px-2 py-0.5 text-[10.5px] font-normal text-emerald-300">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#2FA266]" /> Crawled
-              </span>
-              <span className="text-[11px] text-white/60">{activeSite?.verifiedAt ? "Yes" : "No"}</span>
-              <span className="text-[11px] text-white/45">{new Date(row.createdAt).toLocaleString()}</span>
-            </div>
-          )) : (
-            <div className="flex min-h-[220px] flex-col items-center justify-center px-5 text-center">
-              <Link2 size={20} className="text-[#a0a7ab]" />
-              <p className="mt-3 text-[13px] font-semibold">No page links yet</p>
-              <p className="mt-1 max-w-xs text-[11px] leading-5 text-[#7b858a]">Add a URL above and we'll crawl it into your knowledge base.</p>
-            </div>
-          )}
-        </div>
-      </div>
+      )}
+
+      {urlOpen && (
+        <SourceDialog
+          title="Add a page"
+          description={`We'll read this page and add it to your knowledge. It has to be on ${activeSite?.domain ?? "your website"}.`}
+          inputId="knowledge-source-url"
+          label="Page address"
+          placeholder="https://example.com/help/refunds"
+          value={urlInput}
+          onChange={setUrlInput}
+          onSubmit={() => void addUrl()}
+          submitLabel="Add page"
+          busy={adding}
+          error={addError}
+          onClose={() => setUrlOpen(false)}
+        />
+      )}
+      {sitemapOpen && (
+        <SourceDialog
+          title="Add a sitemap"
+          description="We'll read every page the sitemap lists, in the background. You can leave the page while it runs."
+          inputId="knowledge-source-sitemap"
+          label="Sitemap address"
+          placeholder="https://example.com/sitemap.xml"
+          value={sitemapInput}
+          onChange={setSitemapInput}
+          onSubmit={() => void addSitemap()}
+          submitLabel="Add sitemap"
+          busy={addingSitemap}
+          error={sitemapError}
+          success={sitemapResult ? `Found ${sitemapResult.pagesFound} page${sitemapResult.pagesFound === 1 ? "" : "s"}. Crawling now.` : null}
+          onClose={() => setSitemapOpen(false)}
+        />
+      )}
+
+      <NotionPagesList rows={notionRows} />
     </div>
   );
 }
 
-function Empty({ onNew }: { onNew: () => void }) { return <div className="flex min-h-[260px] flex-col items-center justify-center px-5 text-center"><FileText size={22} className="text-[#a0a7ab]" /><p className="mt-3 text-[13px] font-semibold">Your knowledge base is empty</p><p className="mt-1 max-w-xs text-[11px] leading-5 text-[#7b858a]">Add the first trusted answer your AI can use.</p><button type="button" onClick={onNew} className="mt-4 rounded-md border border-[#d9dee1] px-3.5 py-2 text-[11px] font-semibold">Create article</button></div>; }
+// One text field in a dialog, in the same style as the Import from Notion dialog: used for adding a page address or a sitemap.
+function SourceDialog({
+  title, description, inputId, label, placeholder, value, onChange, onSubmit, submitLabel, busy, error, success, onClose,
+}: {
+  title: string; description: string; inputId: string; label: string; placeholder: string; value: string; onChange: (value: string) => void;
+  onSubmit: () => void; submitLabel: string; busy: boolean; error: string | null; success?: string | null; onClose: () => void;
+}) {
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") onClose();
+    }
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [onClose]);
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4 backdrop-blur-[2px]" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
+      <form
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        onSubmit={(event) => { event.preventDefault(); onSubmit(); }}
+        className="nimp-dialog w-full max-w-[480px] overflow-hidden rounded-2xl border shadow-[0_28px_80px_rgba(0,0,0,0.4)]"
+      >
+        <div className="nimp-divider flex items-start justify-between gap-3 border-b px-6 py-5">
+          <div>
+            <h3 className="nimp-heading text-[19px] font-semibold tracking-[-0.02em]">{title}</h3>
+            <p className="nimp-text mt-1 text-[14.5px] leading-6">{description}</p>
+          </div>
+          <button type="button" onClick={onClose} aria-label="Close" className="nimp-close flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-lg transition"><X size={18} /></button>
+        </div>
+        <div className="px-6 py-5">
+          <label htmlFor={inputId} className="nimp-heading block text-[14.5px] font-medium">{label}</label>
+          <div className="nimp-field mt-2 flex h-12 items-center rounded-full border px-4">
+            <input id={inputId} autoFocus value={value} onChange={(event) => onChange(event.target.value)} placeholder={placeholder} inputMode="url" className="nimp-input min-w-0 flex-1 bg-transparent text-[15px] outline-none" />
+          </div>
+          {error && <p role="alert" className="mt-3 text-[14px] font-medium text-[#e5636f]">{error}</p>}
+          {success && <p role="status" className="mt-3 text-[14px] font-medium text-[#2FA266]">{success}</p>}
+        </div>
+        <div className="nimp-divider flex items-center justify-end gap-3 border-t px-6 py-4">
+          <button type="button" onClick={onClose} className="nimp-btn h-11 cursor-pointer rounded-full border px-5 text-[15px] font-medium transition">{success ? "Done" : "Cancel"}</button>
+          <button type="submit" disabled={!value.trim() || busy} className="nimp-btn nimp-btn-primary flex h-11 cursor-pointer items-center gap-2 rounded-full border px-5 text-[15px] font-semibold transition disabled:cursor-not-allowed disabled:opacity-50">
+            {busy && <LoaderCircle size={15} className="animate-spin" />} {submitLabel}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+

@@ -2,11 +2,11 @@
 
 import { fetchConversations } from "@/app/lib/fetch-conversations";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, CheckCheck, Filter, Globe, LoaderCircle, MapPin, MessageCircle, MessageSquarePlus, MonitorSmartphone, Search, Send, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowLeft, CheckCheck, Globe, LoaderCircle, MapPin, MessageCircle, MonitorSmartphone, Send, ShieldCheck, Sparkles } from "lucide-react";
+import { ConversationRow, InboxViewTabs, ListEmpty, ListToolbar, type ListFilter } from "@/app/components/dashboard/inbox-list-ui";
 import MessageMarkdown from "@/app/components/MessageMarkdown";
 import TypingDots from "@/app/components/TypingDots";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import {
   DEFAULT_BOT_AVATAR,
   formatDevice,
@@ -72,13 +72,6 @@ function formatListTime(iso: string) {
   return date.toLocaleDateString(undefined, { month: "short", day: "numeric", year: isThisYear ? undefined : "numeric" });
 }
 
-const filters: Array<{ label: string; value: "all" | "resolved" | "unread" | "read" }> = [
-  { label: "All", value: "all" },
-  { label: "Unread", value: "unread" },
-  { label: "Read", value: "read" },
-  { label: "Resolved", value: "resolved" },
-];
-
 function TakeoverBanner({ aiName }: { aiName: string }) {
   return (
     <div className="flex items-center justify-center gap-3">
@@ -101,7 +94,7 @@ export default function AiAssistPage() {
   const router = useRouter();
 
   const [query, setQuery] = useState("");
-  const [filter, setFilter] = useState<(typeof filters)[number]["value"]>("all");
+  const [filter, setFilter] = useState<ListFilter>("all");
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [conversationsLoading, setConversationsLoading] = useState(true);
   const [joining, setJoining] = useState(false);
@@ -155,7 +148,7 @@ export default function AiAssistPage() {
     return aiHandled.filter((conversation) => {
       const matchesFilter =
         filter === "all" ||
-        (filter === "unread" ? !!conversation.unread : filter === "read" ? !conversation.unread : conversation.status === filter);
+        conversation.status === filter;
       const matchesQuery =
         !normalizedQuery ||
         conversation.name.toLowerCase().includes(normalizedQuery) ||
@@ -303,138 +296,48 @@ export default function AiAssistPage() {
   return (
     <div id="dashboard-ai-assist" className="flex h-full min-h-0 overflow-hidden bg-[#262626] text-white">
       <aside
-        className={`dashboard-ai-list dashboard-secondary-sidebar h-full w-full shrink-0 flex-col overflow-hidden border-r border-white/10 bg-[#262626] md:static md:flex md:w-[260px] lg:w-[304px] ${
+        className={`il-root dashboard-ai-list dashboard-secondary-sidebar h-full w-full shrink-0 flex-col overflow-hidden border-r border-white/10 bg-[#262626] lg:static lg:flex lg:w-[304px] ${
           selectedId ? "hidden" : "flex"
-        } md:flex`}
+        }`}
       >
-        <nav className="inbox-view-nav flex items-center gap-5 px-3" aria-label="Inbox views">
-          <Link href="/dashboard/inbox" className="flex w-fit items-center gap-1.5 px-0 py-2 text-[13.5px] font-normal text-white/70 hover:text-white/90">
-            Team Inbox
-            {teamBadgeCount > 0 && (
-              <span className="flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-[#27895d] px-1 text-[9px] font-bold text-white">
-                {teamBadgeCount > 99 ? "99+" : teamBadgeCount}
-              </span>
-            )}
-          </Link>
-          <Link href="/dashboard/inbox?view=ai" aria-current="page" className="flex w-fit items-center gap-1.5 border-b-2 border-white/80 px-0 py-2 text-[13.5px] font-normal text-white">
-            AI Assist
-            {aiBadgeCount > 0 && (
-              <span className="flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-[#27895d] px-1 text-[9px] font-bold text-white">
-                {aiBadgeCount > 99 ? "99+" : aiBadgeCount}
-              </span>
-            )}
-          </Link>
-        </nav>
-        <div className="px-3 pt-3">
-          <div className="inbox-list-summary flex items-start justify-between gap-2">
-            <div>
-              <h2 className="text-[24px] font-semibold tracking-[-0.02em]">Chats</h2>
-              <p className="mt-0.5 text-[13px] text-[#8a929c]">
-                {conversationsLoading
-                  ? "Loading…"
-                  : `${aiHandled.length} handled by ${aiName || "AI"}`}
-              </p>
-            </div>
-            {unreadCount > 0 && (
-              <button
-                type="button"
-                onClick={() => void markAllRead()}
-                className="mt-1 shrink-0 whitespace-nowrap rounded-full border border-[#dfe3e7] px-2.5 py-1 text-[10.5px] font-semibold text-[#3f474d] transition-colors hover:bg-[#f4f6f7]"
-              >
-                Mark all read
-              </button>
-            )}
-          </div>
+        <InboxViewTabs active="ai" teamBadge={teamBadgeCount} aiBadge={aiBadgeCount} />
+        <ListToolbar query={query} onQuery={setQuery} filter={filter} onFilter={setFilter} unreadCount={unreadCount} onMarkAllRead={() => void markAllRead()} />
 
-          <div className="dashboard-search-box mt-3 flex h-9 items-center rounded-lg border px-3 transition-colors">
-            <Search size={16} className="shrink-0" />
-            <input
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search conversations"
-              className="min-w-0 flex-1 bg-transparent px-2 text-[12px] outline-none placeholder:text-[#9aa2ac]"
-            />
-            <Filter size={14} />
-          </div>
-
-          <div className="mt-3 flex gap-4 border-b border-[#e4e7ea] overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {filters.map((item) => (
-              <button
-                key={item.value}
-                type="button"
-                onClick={() => setFilter(item.value)}
-                className={`relative shrink-0 pb-2 text-[13.5px] font-semibold transition-colors ${
-                  filter === item.value ? "text-[#17181a]" : "text-[#8a929c] hover:text-[#3f474d]"
-                }`}
-              >
-                {item.label}
-                {filter === item.value && <span className="absolute inset-x-0 -bottom-px h-[2px] rounded-full bg-[var(--chat-line-text)]" />}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="min-h-0 flex-1 overflow-y-auto p-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="min-h-0 flex-1 overflow-y-auto px-2 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {conversationsLoading ? (
             <div className="flex min-h-[140px] items-center justify-center text-[12px] text-[#7b858a]"><LoaderCircle size={15} className="mr-2 animate-spin" /> Loading</div>
           ) : (
             visibleConversations.map((conversation) => (
-              <button
+              <ConversationRow
                 key={conversation.id}
-                type="button"
-                onClick={() => { setSelectedId(conversation.id); setJustJoined(null); }}
-                className={`dashboard-chat-row mb-1 flex w-full items-start gap-3 rounded-xl px-2.5 py-3 text-left transition-colors ${selectedId === conversation.id ? "dashboard-chat-row-active" : ""}`}
-              >
-                <span
-                  className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold text-white"
-                  style={{ backgroundColor: colorForId(conversation.id) }}
-                >
-                  {conversation.initials}
-                </span>
-
-                <span className="min-w-0 flex-1">
-                  <span className="flex items-center gap-2">
-                    <span className={`min-w-0 flex-1 truncate text-[13px] ${conversation.unread ? "font-semibold text-[#17253a]" : "font-medium text-[#34445a]"}`}>
-                      {conversation.name}
-                    </span>
-                    <span className="shrink-0 text-[9px] text-[#969ea7]">{formatListTime(conversation.time)}</span>
-                  </span>
-                  <span className="mt-1 flex items-center gap-1.5">
-                    {conversation.status === "resolved" && <CheckCheck size={13} className="shrink-0 text-[#32a880]" />}
-                    <span className={`min-w-0 flex-1 truncate text-[11px] leading-4 ${conversation.unread ? "font-medium text-[#4a596c]" : "text-[#89929c]"}`}>
-                      {conversation.preview || "No messages yet"}
-                    </span>
-                    {!!conversation.unread && (
-                      <span className="chat-action-primary flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full px-1 text-[9px] font-bold">
-                        {conversation.unread}
-                      </span>
-                    )}
-                  </span>
-                </span>
-              </button>
+                onSelect={() => { setSelectedId(conversation.id); setJustJoined(null); }}
+                name={conversation.name}
+                initials={conversation.initials}
+                color={colorForId(conversation.id)}
+                preview={conversation.preview || "No messages yet"}
+                time={formatListTime(conversation.time)}
+                unread={conversation.unread}
+                resolved={conversation.status === "resolved"}
+                active={selectedId === conversation.id}
+              />
             ))
           )}
 
           {!conversationsLoading && visibleConversations.length === 0 && (
-            <div className="px-4 py-12 text-center">
-              <MessageSquarePlus size={25} className="mx-auto text-[#b4bbc3]" />
-              <p className="mt-2 text-xs text-[#8c959f]">
-                {aiHandled.length === 0 ? "No conversations right now" : "No conversations found"}
-              </p>
-            </div>
+            <ListEmpty hasAny={aiHandled.length > 0} onShowAll={() => { setQuery(""); setFilter("all"); }} />
           )}
         </div>
       </aside>
 
-      <main className={`dashboard-page-surface dashboard-ai-assist-main dashboard-conversation relative min-h-0 flex-1 flex-col overflow-hidden bg-[#262626] md:flex ${selected ? "flex" : "hidden"}`}>
+      <main className={`dashboard-page-surface dashboard-ai-assist-main dashboard-conversation relative min-h-0 flex-1 flex-col overflow-hidden bg-[#262626] lg:flex ${selected ? "flex" : "hidden"}`}>
         {!selected ? (
-          <div className="flex flex-1 flex-col items-center justify-center px-8 text-center">
-            <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--chat-customer-bg)] text-[var(--chat-line-text)]"><Sparkles size={24} /></span>
-            <h1 className="mt-5 text-[26px] font-semibold tracking-[-0.02em]">{aiName || "Your AI"} is on it</h1>
-            <p className="mt-2 max-w-sm text-[13px] leading-5 text-[#74808c]">
+          <div className="iw-root flex flex-1 flex-col items-center justify-center px-8 text-center">
+            <span className="iw-icon flex size-12 items-center justify-center rounded-xl"><Sparkles size={22} /></span>
+            <h1 className="iw-h mt-4 text-[20px] font-semibold tracking-[-0.02em]">{aiName || "Your AI"} is on it</h1>
+            <p className="iw-t mt-1.5 max-w-sm text-[14.5px] leading-6">
               {aiHandled.length
-                ? `Pick a conversation from the list to preview it — join it to start replying yourself.`
-                : `${aiName || "Your AI"} is handling every open chat for ${workspaceName || "this workspace"} right now. Nothing needs you yet.`}
+                ? "Pick a conversation from the list to preview it. Join it to start replying yourself."
+                : `${aiName || "Your AI"} is handling every open chat right now. Nothing needs you yet.`}
             </p>
             {error && <p className="mt-4 rounded-lg bg-[#fff1f1] px-3 py-2 text-[11.5px] font-medium text-[#a64a53]">{error}</p>}
           </div>
@@ -447,7 +350,7 @@ export default function AiAssistPage() {
                 type="button"
                 onClick={() => { setSelectedId(null); setJustJoined(null); }}
                 aria-label="Back to conversations"
-                className="-ml-1.5 mr-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[var(--chat-muted)] transition hover:bg-[var(--chat-customer-bg)] md:hidden"
+                className="-ml-1.5 mr-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[var(--chat-muted)] transition hover:bg-[var(--chat-customer-bg)] lg:hidden"
               >
                 <ArrowLeft size={18} />
               </button>

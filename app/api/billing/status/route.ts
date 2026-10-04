@@ -21,7 +21,12 @@ type Entitlement = {
   razorpayConfigured: boolean;
 };
 
-/** Both billing meters for the current workspace — what the settings page draws. */
+// How long the page waits for Razorpay to describe the card before showing the plan without it.
+const CARD_LOOKUP_TIMEOUT_MS = 4000;
+
+type PaymentMethod = { brand: string | null; last4: string; expiryMonth?: number; expiryYear?: number; source: "saved-card" | "last-payment" };
+
+/** Both billing meters for the current workspace, plus the card on file when Razorpay can tell us — what the settings page draws. */
 export async function GET() {
   const session = await requireSession();
   if (!session) return Response.json({ message: "Unauthenticated" }, { status: 401 });
@@ -29,12 +34,17 @@ export async function GET() {
   const workspace = await selectedWorkspace(session.email);
   if (!workspace) return Response.json({ message: "No workspace selected" }, { status: 404 });
 
-  const result = await callGateway<{ entitlement?: Entitlement; error?: string }>(
-    `/api/billing/entitlement?companyId=${encodeURIComponent(workspace.id)}`,
-  ).catch(() => null);
+  // The card comes from Razorpay and can be slow or unavailable; it must never hold up or break the plan details.
+  const [result, method] = await Promise.all([
+    callGateway<{ entitlement?: Entitlement; error?: string }>(`/api/billing/entitlement?companyId=${encodeURIComponent(workspace.id)}`).catch(() => null),
+    Promise.race([
+      callGateway<{ paymentMethod?: PaymentMethod | null }>(`/api/billing/payment-method?companyId=${encodeURIComponent(workspace.id)}`),
+      new Promise<null>((resolve) => setTimeout(() => resolve(null), CARD_LOOKUP_TIMEOUT_MS)),
+    ]).catch(() => null),
+  ]);
 
   if (!result || result.error || !result.entitlement) {
     return Response.json({ message: result?.error ?? "Billing service unreachable" }, { status: 502 });
   }
-  return Response.json({ entitlement: result.entitlement });
+  return Response.json({ entitlement: result.entitlement, paymentMethod: method?.paymentMethod ?? null });
 }
