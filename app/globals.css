@@ -6900,3 +6900,8 @@ body:has([data-dashboard-theme="dark"]) .knowledge-popover :is(button, a)[class*
 
 /* Active Team Inbox / AI Assist tab: a bottom border under the label. */
 [data-dashboard-theme] #dashboard-inbox-page .il-root .il-tab[aria-current="page"] { border-bottom: 2px solid var(--il-h) !important; }
+
+/* Contacts: status filter and status buttons. */
+[data-dashboard-theme] #dashboard-contacts-page .ct-pill { background: transparent !important; border-color: var(--ct-line) !important; color: var(--ct-t) !important; }
+[data-dashboard-theme] #dashboard-contacts-page .ct-pill:hover { background: var(--ct-hover) !important; color: var(--ct-h) !important; }
+[data-dashboard-theme] #dashboard-contacts-page .ct-pill.ct-pill-on { border-color: var(--ct-h) !important; color: var(--ct-h) !important; }

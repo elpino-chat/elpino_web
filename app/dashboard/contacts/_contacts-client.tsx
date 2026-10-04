@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Bot, Download, Lock, LoaderCircle, Mail, MessageSquare, Phone, RefreshCw, Search, User, Users, X } from "lucide-react";
+import { ArrowLeft, Bot, Download, Lock, LoaderCircle, Mail, MessageSquare, Phone, Plus, RefreshCw, Search, User, Users, X } from "lucide-react";
 
 type Contact = {
   id: string;
@@ -14,7 +14,19 @@ type Contact = {
   sourceCount: number;
   customerIds: string[];
   customFields: Record<string, string>;
+  status?: string;
+  tags?: string[];
 };
+
+const STATUSES = [
+  { value: "new", label: "New" },
+  { value: "sales", label: "Sales" },
+  { value: "support", label: "Support" },
+  { value: "other", label: "Other" },
+] as const;
+const MAX_TAGS = 10;
+
+const statusLabel = (status?: string) => STATUSES.find((item) => item.value === status)?.label ?? "New";
 
 type ContactSession = {
   id: string;
@@ -37,6 +49,7 @@ export function ContactsClient() {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   const [openContact, setOpenContact] = useState<Contact | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [upgradeRequired, setUpgradeRequired] = useState<string | null>(null);
@@ -54,13 +67,20 @@ export function ContactsClient() {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return contacts;
     return contacts.filter((contact) =>
-      contact.name.toLowerCase().includes(q) ||
-      (contact.email ?? "").toLowerCase().includes(q) ||
-      (contact.phone ?? "").toLowerCase().includes(q),
+      (statusFilter === "all" || (contact.status ?? "new") === statusFilter) &&
+      (!q ||
+        contact.name.toLowerCase().includes(q) ||
+        (contact.email ?? "").toLowerCase().includes(q) ||
+        (contact.phone ?? "").toLowerCase().includes(q) ||
+        (contact.tags ?? []).some((tag) => tag.toLowerCase().includes(q))),
     );
-  }, [contacts, query]);
+  }, [contacts, query, statusFilter]);
+
+  function updateContact(next: Contact) {
+    setContacts((current) => current.map((contact) => (contact.id === next.id ? next : contact)));
+    setOpenContact(next);
+  }
 
   async function refreshContacts() {
     setRefreshing(true);
@@ -82,11 +102,13 @@ export function ContactsClient() {
       Phone: contact.phone ?? "",
       "First seen": new Date(contact.createdAt),
       "Last updated": new Date(contact.updatedAt),
+      Status: statusLabel(contact.status),
+      Tags: (contact.tags ?? []).join(", "),
       Sessions: contact.sourceCount,
       "Custom fields": Object.entries(contact.customFields).map(([key, value]) => `${key}: ${value}`).join("; "),
     }));
     const sheet = XLSX.utils.json_to_sheet(rows, { cellDates: true });
-    sheet["!cols"] = [{ wch: 24 }, { wch: 30 }, { wch: 18 }, { wch: 14 }, { wch: 14 }, { wch: 10 }, { wch: 38 }];
+    sheet["!cols"] = [{ wch: 24 }, { wch: 30 }, { wch: 18 }, { wch: 14 }, { wch: 14 }, { wch: 10 }, { wch: 24 }, { wch: 10 }, { wch: 38 }];
     if (sheet["!ref"]) sheet["!autofilter"] = { ref: sheet["!ref"] };
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, sheet, "Contacts");
@@ -126,6 +148,14 @@ export function ContactsClient() {
             <p className="ct-t text-[14px]">{loading ? "Loading…" : `${filtered.length} contact${filtered.length === 1 ? "" : "s"}`}</p>
           </div>
 
+          <div className="mt-3 flex items-center gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {[{ value: "all", label: "All" }, ...STATUSES].map((item) => (
+              <button key={item.value} type="button" onClick={() => setStatusFilter(item.value)} aria-pressed={statusFilter === item.value} className={`ct-pill h-8 shrink-0 cursor-pointer rounded-full border px-3.5 text-[13.5px] font-medium transition ${statusFilter === item.value ? "ct-pill-on" : ""}`}>
+                {item.label}
+              </button>
+            ))}
+          </div>
+
           <div className="mt-5">
             {loading ? (
               <p className="ct-t flex items-center justify-center gap-2 py-16 text-[14.5px]"><LoaderCircle size={15} className="animate-spin" /> Loading contacts</p>
@@ -145,7 +175,7 @@ export function ContactsClient() {
                           <span className="ct-h block truncate text-[15px] font-medium">{contact.name}</span>
                           <span className="ct-t block truncate text-[13.5px]">{contact.email ?? contact.phone ?? "No contact details"}</span>
                         </span>
-                        <span className="ct-t shrink-0 text-[13px]">{contact.sourceCount} chat{contact.sourceCount === 1 ? "" : "s"}</span>
+                        <span className="ct-chip shrink-0 rounded-full border px-2.5 py-0.5 text-[12.5px] font-medium">{statusLabel(contact.status)}</span>
                       </button>
                     </li>
                   ))}
@@ -157,6 +187,8 @@ export function ContactsClient() {
                         <th className="ct-t px-5 py-3 font-medium">Name</th>
                         <th className="ct-t px-4 py-3 font-medium">Email</th>
                         <th className="ct-t px-4 py-3 font-medium">Phone</th>
+                        <th className="ct-t px-4 py-3 font-medium">Status</th>
+                        <th className="ct-t px-4 py-3 font-medium">Tags</th>
                         <th className="ct-t px-4 py-3 font-medium">First seen</th>
                         <th className="ct-t px-5 py-3 text-right font-medium">Chats</th>
                       </tr>
@@ -172,6 +204,14 @@ export function ContactsClient() {
                           </td>
                           <td className="ct-t px-4 py-3 text-[14.5px]">{contact.email ?? <span className="ct-faint">—</span>}</td>
                           <td className="ct-t px-4 py-3 text-[14.5px]">{contact.phone ?? <span className="ct-faint">—</span>}</td>
+                          <td className="px-4 py-3"><span className="ct-chip rounded-full border px-2.5 py-0.5 text-[13px] font-medium">{statusLabel(contact.status)}</span></td>
+                          <td className="px-4 py-3">
+                            <span className="flex flex-wrap gap-1">
+                              {(contact.tags ?? []).slice(0, 2).map((tag) => <span key={tag} className="ct-chip max-w-[110px] truncate rounded-full border px-2.5 py-0.5 text-[13px]">{tag}</span>)}
+                              {(contact.tags ?? []).length > 2 && <span className="ct-t text-[13px]">+{(contact.tags ?? []).length - 2}</span>}
+                              {!(contact.tags ?? []).length && <span className="ct-faint">—</span>}
+                            </span>
+                          </td>
                           <td className="ct-t px-4 py-3 text-[14.5px]">{new Date(contact.createdAt).toLocaleDateString()}</td>
                           <td className="ct-t px-5 py-3 text-right text-[14.5px]">{contact.sourceCount}</td>
                         </tr>
@@ -185,14 +225,35 @@ export function ContactsClient() {
         </div>
       </main>
 
-      {openContact && <ContactDialog contact={openContact} onClose={() => setOpenContact(null)} />}
+      {openContact && <ContactDialog contact={openContact} onChange={updateContact} onClose={() => setOpenContact(null)} />}
     </div>
   );
 }
 
-function ContactDialog({ contact, onClose }: { contact: Contact; onClose: () => void }) {
+function ContactDialog({ contact, onChange, onClose }: { contact: Contact; onChange: (contact: Contact) => void; onClose: () => void }) {
   const [sessions, setSessions] = useState<ContactSession[] | null>(null);
   const [activeSession, setActiveSession] = useState<ContactSession | null>(null);
+  const [tagDraft, setTagDraft] = useState("");
+  const [saveError, setSaveError] = useState<string | null>(null);
+
+  async function saveLabels(changes: { status?: string; tags?: string[] }) {
+    const previous = contact;
+    onChange({ ...contact, ...changes });
+    setSaveError(null);
+    const response = await fetch(`/api/contacts/${encodeURIComponent(contact.id)}`, { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify(changes) }).catch(() => null);
+    if (!response?.ok) {
+      onChange(previous);
+      setSaveError("Could not save that change. Try again.");
+    }
+  }
+
+  function addTag() {
+    const tag = tagDraft.trim().replace(/;/g, " ").slice(0, 30);
+    setTagDraft("");
+    const tags = contact.tags ?? [];
+    if (!tag || tags.length >= MAX_TAGS || tags.some((item) => item.toLowerCase() === tag.toLowerCase())) return;
+    void saveLabels({ tags: [...tags, tag] });
+  }
 
   useEffect(() => {
     setSessions(null);
@@ -247,6 +308,32 @@ function ContactDialog({ contact, onClose }: { contact: Contact; onClose: () => 
                   <span className="ct-h truncate text-[14.5px]">{contact.phone ?? <span className="ct-faint">No phone on file</span>}</span>
                 </div>
               </div>
+
+              <h3 className="ct-h mt-6 text-[15px] font-semibold">Status</h3>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {STATUSES.map((item) => (
+                  <button key={item.value} type="button" onClick={() => void saveLabels({ status: item.value })} aria-pressed={(contact.status ?? "new") === item.value} className={`ct-pill h-9 cursor-pointer rounded-full border px-4 text-[14px] font-medium transition ${(contact.status ?? "new") === item.value ? "ct-pill-on" : ""}`}>
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+
+              <h3 className="ct-h mt-6 text-[15px] font-semibold">Tags</h3>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {(contact.tags ?? []).map((tag) => (
+                  <span key={tag} className="ct-chip flex items-center gap-1 rounded-full border py-1 pl-3 pr-1.5 text-[14px]">
+                    {tag}
+                    <button type="button" onClick={() => void saveLabels({ tags: (contact.tags ?? []).filter((item) => item !== tag) })} aria-label={`Remove ${tag}`} className="ct-close flex size-5 cursor-pointer items-center justify-center rounded-full"><X size={12} /></button>
+                  </span>
+                ))}
+                {(contact.tags ?? []).length < MAX_TAGS && (
+                  <form onSubmit={(event) => { event.preventDefault(); addTag(); }} className="ct-field flex h-8 items-center gap-1.5 rounded-full border pl-3 pr-1">
+                    <input value={tagDraft} onChange={(event) => setTagDraft(event.target.value)} placeholder="Add a tag" aria-label="Add a tag" maxLength={30} className="ct-input w-24 bg-transparent text-[14px] outline-none" />
+                    <button type="submit" aria-label="Add tag" disabled={!tagDraft.trim()} className="ct-close flex size-6 cursor-pointer items-center justify-center rounded-full disabled:opacity-40"><Plus size={14} /></button>
+                  </form>
+                )}
+              </div>
+              {saveError && <p role="alert" className="mt-2 text-[13.5px] font-medium text-[#e5636f]">{saveError}</p>}
 
               <h3 className="ct-h mt-6 text-[15px] font-semibold">What they asked about</h3>
               {latestTopic ? (

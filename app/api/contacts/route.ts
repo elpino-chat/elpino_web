@@ -14,6 +14,8 @@ export type Contact = {
   sourceCount: number;
   customerIds: string[];
   customFields: Record<string, string>;
+  status?: string;
+  tags?: string[];
 };
 
 export async function GET() {
