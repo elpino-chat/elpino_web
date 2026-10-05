@@ -24,7 +24,7 @@ const primaryButtonClass =
   "mt-8 flex h-14 w-fit min-w-[160px] cursor-pointer items-center justify-center gap-2 rounded-[10px] bg-[#18191b] px-6 text-[16px] font-semibold text-white transition hover:bg-black focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black/15 active:scale-[0.99] disabled:cursor-not-allowed disabled:bg-[#d5d5d8] disabled:text-white";
 const spinner = <span className="size-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />;
 
-type SiteTag = { id: string; name: string; domain: string; publicKey: string };
+type SiteTag = { id: string; name: string; domain: string; publicKey: string; allowedHosts?: string[]; allowLocalhost?: boolean };
 
 function normalizeHost(value: string): string {
   try {
@@ -148,12 +148,24 @@ export function WordpressConnectClient({ session }: { session: ConnectSession | 
       if (!sitesResponse.ok) throw new Error(sitesData.message ?? "Could not load your sites.");
       const sites = sitesData.sites ?? [];
 
-      // Reuse a site that already matches this exact WordPress install,
-      // otherwise the workspace's first site, otherwise create one —
-      // mirrors onboarding-client.tsx's own ensureSite() step, so a
-      // WordPress admin is never asked to pick or name anything themselves.
-      const matched = siteUrl ? sites.find((site) => normalizeHost(site.domain) === normalizeHost(siteUrl)) : undefined;
-      let publicKey = matched?.publicKey ?? (sites.length > 0 ? sites[0].publicKey : undefined);
+      if (!siteUrl) throw new Error("This connect link is missing the site's URL.");
+      const hostname = normalizeHost(siteUrl);
+      const matched = sites.find(site => normalizeHost(site.domain) === hostname || site.allowedHosts?.includes(hostname));
+      let selected = matched;
+      if (!selected && sites.length) {
+        selected = sites.find(site => hostname.endsWith(`.${normalizeHost(site.domain)}`));
+        if (!selected && isLocalDevHostname(hostname) && sites.length === 1) selected = sites[0];
+        if (!selected) throw new Error("This workspace is connected to another domain. Select the workspace for this website.");
+      }
+      if (selected && (!matched || (isLocalDevHostname(hostname) && !selected.allowLocalhost))) {
+        const response = await fetch(`/api/workspace/sites/${encodeURIComponent(selected.id)}`, {
+          method: "PATCH", headers: { "content-type": "application/json" },
+          body: JSON.stringify(isLocalDevHostname(hostname) ? { allowLocalhost: true } : { allowedHosts: [...new Set([...(selected.allowedHosts ?? []), hostname])] }),
+        });
+        const result = await response.json();
+        if (!response.ok || !result.ok) throw new Error(result.message ?? "Could not authorize this website.");
+      }
+      let publicKey = selected?.publicKey;
 
       if (!publicKey) {
         if (!siteUrl) throw new Error("This connect link is missing the site's URL.");
@@ -161,7 +173,7 @@ export function WordpressConnectClient({ session }: { session: ConnectSession | 
         const createResponse = await fetch("/api/workspace/sites", {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ name: normalizeHost(siteUrl), domain, allowLocalhost: isLocalDevHostname(normalizeHost(siteUrl)), permissions: { chat: true, visitors: true, identify: true } }),
+          body: JSON.stringify({ name: normalizeHost(siteUrl), domain, allowLocalhost: isLocalDevHostname(normalizeHost(siteUrl)), permissions: { support: true, visitors: true, analytics: true } }),
         });
         const createData = (await createResponse.json()) as { site?: SiteTag; message?: string };
         if (!createResponse.ok || !createData.site) throw new Error(createData.message ?? "Could not connect this site.");
@@ -203,8 +215,9 @@ export function WordpressConnectClient({ session }: { session: ConnectSession | 
           </div>
 
           <h1 className="text-balance text-[clamp(1.9rem,3.2vw,2.35rem)] font-normal leading-[1.12] tracking-[-0.03em]">Link Elpino with WordPress</h1>
-          <p className="mt-3 text-[16px] text-black/55">WordPress needs access to connect the chat widget to your site.</p>
+          <p className="mt-3 text-[16px] text-black/55">Connect this WordPress website to your selected Elpino workspace.</p>
 
+          {siteUrl && <p className="mt-3 text-sm text-black/55">Continuing authorizes <strong>{normalizeHost(siteUrl)}</strong> for this widget. An existing key is reused for this domain or an explicitly added subdomain. Local testing enables localhost access.</p>}
           {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
 
           <button type="button" disabled={submitting} onClick={() => void handleContinue()} className={primaryButtonClass}>

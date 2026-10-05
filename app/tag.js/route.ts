@@ -210,12 +210,38 @@ export function GET(request: Request) {
       return false;
     }
 
+    var pageConfig = null;
+    var widgetMounted = false;
+    var widgetRoot = null;
+    function syncPageVisibility() {
+      if (!pageConfig) return;
+      var allowed = pathAllowed(pageConfig.urlRules);
+      if (allowed && !widgetMounted) {
+        widgetMounted = true;
+        mount(pageConfig);
+      }
+      if (widgetRoot) widgetRoot.hidden = !allowed;
+      window.dispatchEvent(new CustomEvent('elpino:route'));
+    }
+    ['pushState', 'replaceState'].forEach(function (method) {
+      var original = history[method];
+      if (typeof original !== 'function') return;
+      history[method] = function () {
+        var result = original.apply(this, arguments);
+        syncPageVisibility();
+        return result;
+      };
+    });
+    window.addEventListener('popstate', syncPageVisibility);
+    window.addEventListener('hashchange', syncPageVisibility);
+
     fetch(TAG_ORIGIN + '/api/widget/config?key=' + encodeURIComponent(key) + '&hostname=' + encodeURIComponent(location.hostname))
       .then(function (response) { if (!response.ok) throw new Error('Tag is not allowed on this domain'); return response.json(); })
       .then(function (payload) {
         window.ElpinoTag = { key: key, config: payload.config, identify: identify, logout: logout };
         window.dispatchEvent(new CustomEvent('elpino:ready', { detail: payload.config }));
-        if (pathAllowed(payload.config && payload.config.urlRules)) mount(payload.config || {});
+        pageConfig = payload.config || {};
+        syncPageVisibility();
         track();
       })
       .catch(function (error) {
@@ -309,6 +335,9 @@ export function GET(request: Request) {
     }
 
     function mount(config) {
+      widgetRoot = document.createElement('div');
+      widgetRoot.setAttribute('data-elpino-widget', '');
+      document.body.appendChild(widgetRoot);
       var open = false;
       var iframe = null;
       var maximized = false;
@@ -379,12 +408,12 @@ export function GET(request: Request) {
       button.onmouseleave = function () { button.style.transform = 'scale(1)'; };
       button.innerHTML = launcherIcon();
       button.onclick = function () { toggle(false); };
-      document.body.appendChild(button);
+      widgetRoot.appendChild(button);
 
       badge = document.createElement('span');
       badge.style.cssText = 'position:fixed;bottom:calc(64px + var(--elpino-bottom-offset,0px));right:14px;width:18px;height:18px;border-radius:9999px;background:#e5484d;color:#fff;font:700 10px/18px system-ui,sans-serif;text-align:center;z-index:2147483001;display:none;box-shadow:0 0 0 2px #fff;';
       badge.textContent = '1';
-      document.body.appendChild(badge);
+      widgetRoot.appendChild(badge);
 
       // Replies that arrived while the panel was closed or this tab was in
       // the background: counted on the launcher badge and, while the tab is
@@ -426,7 +455,7 @@ export function GET(request: Request) {
       }
 
       function showGreeting() {
-        if (open || greeting) return;
+        if (!pathAllowed(config.urlRules) || open || greeting) return;
         greeting = document.createElement('div');
         greeting.style.cssText = 'position:fixed;bottom:calc(88px + var(--elpino-bottom-offset,0px));right:20px;width:300px;max-width:calc(100vw - 32px);z-index:2147483000;cursor:pointer;font-family:system-ui,-apple-system,sans-serif;display:flex;flex-direction:column;align-items:flex-end;gap:6px;';
 
@@ -451,7 +480,7 @@ export function GET(request: Request) {
           dismissGreeting();
         };
         greeting.onclick = function () { dismissGreeting(); if (!open) toggle(true); };
-        document.body.appendChild(greeting);
+        widgetRoot.appendChild(greeting);
         // "Just now" ages while the popup stays up.
         greetingTimer = setInterval(function () {
           var label = greeting && greeting.querySelector('[data-elpino-ago]');
@@ -548,17 +577,7 @@ export function GET(request: Request) {
         lastPageSent = signature;
         postToWidget({ type: 'elpino:page', path: location.pathname, title: title });
       }
-      ['pushState', 'replaceState'].forEach(function (method) {
-        var original = history[method];
-        if (typeof original !== 'function') return;
-        history[method] = function () {
-          var result = original.apply(this, arguments);
-          // Give the app a moment to set the new page's title first.
-          setTimeout(sendPage, 200);
-          return result;
-        };
-      });
-      window.addEventListener('popstate', function () { setTimeout(sendPage, 200); });
+      window.addEventListener('elpino:route', function () { setTimeout(sendPage, 200); });
 
       // Opening the panel pushes a history entry, so the browser's back
       // button doesn't navigate the visitor off the page mid-conversation.
@@ -596,12 +615,13 @@ export function GET(request: Request) {
         iframe.setAttribute('allow', 'microphone');
         iframe.style.cssText = panelStyle(false);
         iframe.style.display = 'none';
-        document.body.appendChild(iframe);
+        widgetRoot.appendChild(iframe);
       };
       // Exchange signed tokens now, even if the visitor opens chat much later.
       if (!signedOut && (identityToken || typeof settings.getIdentityToken === 'function')) ensureIdentityFrame();
 
       function setOpen(next, startNew) {
+        if (next && !pathAllowed(config.urlRules)) return;
         if (next === open) return;
         open = next;
         postToWidget({ type: 'elpino:panel', open: open });
@@ -620,7 +640,7 @@ export function GET(request: Request) {
               + (view ? '&tab=' + view.tab + '&view=' + view.chatView + (view.conversationId ? '&conversation=' + view.conversationId : '') : '');
             iframe.setAttribute('allow', 'microphone');
             iframe.style.cssText = panelStyle(false);
-            document.body.appendChild(iframe);
+            widgetRoot.appendChild(iframe);
           }
           iframe.style.cssText = panelStyle(maximized);
           iframe.style.display = 'block';

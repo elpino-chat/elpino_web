@@ -1,3 +1,4 @@
+import { ownerGuard } from "@/app/api/_lib/owner-guard";
 import { callGateway, deleteGateway, patchGateway } from "@/app/api/auth/_lib/gateway";
 import { requireSession } from "@/app/api/onboarding/_lib/require-user";
 
@@ -7,6 +8,8 @@ async function workspaceId(email: string) {
 }
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const blocked = await ownerGuard("change website tags");
+  if (blocked) return blocked;
   const session = await requireSession();
   if (!session) return Response.json({ message: "Unauthenticated" }, { status: 401 });
   const companyId = await workspaceId(session.email);
@@ -18,6 +21,8 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 }
 
 export async function DELETE(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const blocked = await ownerGuard("delete website tags");
+  if (blocked) return blocked;
   const session = await requireSession();
   if (!session) return Response.json({ message: "Unauthenticated" }, { status: 401 });
   const companyId = await workspaceId(session.email);

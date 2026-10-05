@@ -31,7 +31,7 @@ new vm.Script(script);
 // Exercise the real identity bridge without controlling a browser. A pending
 // refresh must never sign a user back in after the host has logged them out.
 const begin = script.indexOf('    var settings =');
-const end = script.indexOf("    fetch(TAG_ORIGIN + '/api/widget/config");
+const end = script.indexOf("    var pageConfig = null;");
 assert(begin >= 0 && end > begin);
 let resolveToken;
 const messages = [];
@@ -114,14 +114,16 @@ const directQueue = [['identify', { token }]];
 const host = {
   URL, console: { warn: (...args) => sdkWarnings.push(args) },
   CustomEvent: class { constructor(type, options) { this.type = type; this.detail = options?.detail; } },
-  location: { href: 'https://shop.example/account', origin: 'https://shop.example', hostname: 'shop.example' },
+  location: { href: 'https://shop.example/account', origin: 'https://shop.example', hostname: 'shop.example', pathname: '/account' },
+  history: { pushState() {}, replaceState() {} },
   setTimeout: () => 0,
   sessionStorage: { getItem: () => null },
   document: {
+    documentElement: { clientWidth: 1200 },
     currentScript: { dataset: { siteKey: 'pk' } },
     body: { appendChild: element => elements.push(element) },
     addEventListener: () => {},
-    createElement: tag => ({ tag, style: {}, setAttribute: () => {}, contentWindow: { postMessage: (message, origin) => sent.push({ message, origin }) } }),
+    createElement: tag => ({ tag, appendChild: element => elements.push(element), style: {}, setAttribute: () => {}, contentWindow: { postMessage: (message, origin) => sent.push({ message, origin }) } }),
   },
   window: {
     $elpino: directQueue,
@@ -163,3 +165,38 @@ finishOldProvider({ ok: true, json: async () => ({ token: 'old-account' }) });
 await new Promise(resolve => setImmediate(resolve));
 assert.equal(sdkBridge.identityToken, token);
 console.log('Direct-token SDK, hidden iframe, backend verification and account-switch checks passed.');
+
+// Rules must react to SPA navigation in both directions without mounting twice.
+const routeListeners = {};
+let mounts = 0;
+const navigation = {
+  location: { pathname: '/dashboard' },
+  history: {
+    pushState(_state, _title, path) { if (path) navigation.location.pathname = path; },
+    replaceState(_state, _title, path) { if (path) navigation.location.pathname = path; },
+  },
+  window: { addEventListener(type, fn) { routeListeners[type] = fn; }, dispatchEvent() {} },
+  CustomEvent: class { constructor(type) { this.type = type; } },
+  mount() { mounts++; navigation.widgetRoot = { hidden: false }; },
+};
+vm.createContext(navigation);
+const rulesStart = script.indexOf('    function matchesPattern(');
+vm.runInContext(script.slice(rulesStart, script.indexOf("    fetch(TAG_ORIGIN + '/api/widget/config")), navigation);
+navigation.pageConfig = { urlRules: { hide: ['/dashboard/*', '/onboarding/*'], show: [] } };
+navigation.syncPageVisibility();
+assert.equal(mounts, 0);
+navigation.history.pushState({}, '', '/pricing');
+assert.equal(mounts, 1);
+assert.equal(navigation.widgetRoot.hidden, false);
+navigation.history.pushState({}, '', '/dashboard/inbox');
+assert.equal(navigation.widgetRoot.hidden, true);
+navigation.history.replaceState({}, '', '/onboarding/setup');
+assert.equal(navigation.widgetRoot.hidden, true);
+navigation.location.pathname = '/';
+routeListeners.popstate();
+assert.equal(navigation.widgetRoot.hidden, false);
+assert.equal(mounts, 1);
+navigation.pageConfig.urlRules.show = ['/dashboard/*'];
+navigation.history.pushState({}, '', '/dashboard');
+assert.equal(navigation.widgetRoot.hidden, true);
+console.log('SPA page visibility: hidden initial route, push/replace/back, and hide precedence passed.');
