@@ -159,24 +159,14 @@ export default function AiAssistPage() {
 
   const unreadCount = useMemo(() => aiHandled.filter((conversation) => !!conversation.unread).length, [aiHandled]);
 
-  // Team Inbox's own unread count, so its tab can carry a badge the same way
-  // the Inbox icon in the primary sidebar does — computed locally since this
-  // view already has the full conversation list.
-  const teamUnreadCount = useMemo(
-    () => conversations.filter((conversation) => !!conversation.assignedUserId && !!conversation.unread).length,
-    [conversations],
-  );
-
-  // When nothing is actually unread, fall back to "how many are still open"
-  // — the same thing the sidebar's Inbox badge counts — so the tab isn't
-  // silent about conversations that still need attention.
+  // Navigation badges count unresolved conversations; unread counts stay in the toolbar.
   const aiOpenCount = useMemo(() => aiHandled.filter((conversation) => conversation.status !== "resolved").length, [aiHandled]);
   const teamOpenCount = useMemo(
     () => conversations.filter((conversation) => !!conversation.assignedUserId && conversation.status !== "resolved").length,
     [conversations],
   );
-  const aiBadgeCount = unreadCount > 0 ? unreadCount : aiOpenCount;
-  const teamBadgeCount = teamUnreadCount > 0 ? teamUnreadCount : teamOpenCount;
+  const aiBadgeCount = aiOpenCount;
+  const teamBadgeCount = teamOpenCount;
 
   async function markAllRead() {
     await fetch("/api/workspace/conversations/mark-all-read", { method: "POST" }).catch(() => undefined);

@@ -125,17 +125,7 @@ export default function HomePanel({ user: _user }: { user: PanelUser }) {
 
   const unreadCount = useMemo(() => assigned.filter((conversation) => !!conversation.unread).length, [assigned]);
 
-  // AI Assist's own unread count, so its tab can carry a badge the same way
-  // the Inbox icon in the primary sidebar does — computed locally since this
-  // view already has the full conversation list.
-  const aiUnreadCount = useMemo(
-    () => conversations.filter((conversation) => !conversation.assignedUserId && !!conversation.unread).length,
-    [conversations],
-  );
-
-  // When nothing is actually unread, fall back to "how many are still open"
-  // — the same thing the sidebar's Inbox badge counts — so the tab isn't
-  // silent about conversations that still need attention.
+  // Navigation badges count unresolved conversations; unread counts stay in the toolbar.
   const teamOpenCount = useMemo(
     () => assigned.filter((conversation) => conversation.status !== "resolved").length,
     [assigned],
@@ -144,8 +134,8 @@ export default function HomePanel({ user: _user }: { user: PanelUser }) {
     () => conversations.filter((conversation) => !conversation.assignedUserId && conversation.status !== "resolved").length,
     [conversations],
   );
-  const teamBadgeCount = unreadCount > 0 ? unreadCount : teamOpenCount;
-  const aiBadgeCount = aiUnreadCount > 0 ? aiUnreadCount : aiOpenCount;
+  const teamBadgeCount = teamOpenCount;
+  const aiBadgeCount = aiOpenCount;
 
   // How many of this teammate's assigned conversations came from each site
   // — shown next to its name in the picker so "All domains" vs. one

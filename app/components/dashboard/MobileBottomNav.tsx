@@ -33,13 +33,17 @@ export default function MobileBottomNav() {
   const moreRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    fetchConversations()
+    let cancelled = false;
+    const loadCount = () => fetchConversations()
       .then((response) => (response.ok ? response.json() : { conversations: [] }))
       .then((data: { conversations?: Conversation[] }) => {
         const count = (data.conversations ?? []).filter((conversation) => !conversation.assignedUserId && conversation.status !== "resolved").length;
-        setAiHandledCount(count);
+        if (!cancelled) setAiHandledCount(count);
       })
-      .catch(() => setAiHandledCount(0));
+      .catch(() => { if (!cancelled) setAiHandledCount(0); });
+    void loadCount();
+    const interval = window.setInterval(loadCount, 2000);
+    return () => { cancelled = true; window.clearInterval(interval); };
   }, [pathname]);
 
   useEffect(() => {
