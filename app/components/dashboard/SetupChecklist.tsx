@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Check, ChevronDown, X } from "lucide-react";
+import { useIsMember } from "./use-is-member";
 
 type Step = { id: string; label: string; detail: string; href: string; done: boolean };
 
@@ -44,6 +45,8 @@ function get<T>(url: string): Promise<T | null> {
 
 export default function SetupChecklist() {
   const pathname = usePathname();
+  // Every step points at a page only the owner can change.
+  const isMember = useIsMember();
   // Expanded on arrival: a collapsed pill is easy to walk past, and the
   // whole point is that a new workspace sees what's still unfinished.
   // Collapsing sticks for the session; the next visit opens it again.
@@ -128,7 +131,7 @@ export default function SetupChecklist() {
   const complete = loaded && steps.length > 0 && doneCount === steps.length;
 
   // Nothing to nag about once every step is ticked; the badge retires itself.
-  if (!onDashboardHome || !loaded || complete) return null;
+  if (!onDashboardHome || !loaded || complete || isMember) return null;
 
   return (
     // Bottom-left, not bottom-right: several dashboard pages (Chatbot

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { X } from "lucide-react";
+import { useIsMember } from "./use-is-member";
 import { chooseOffer, type Offer, type OfferEntitlement, type OfferPart } from "./plan-offer";
 
 const BILLING_HREF = "/dashboard/settings/billing";
@@ -24,6 +25,8 @@ function renderPart(part: OfferPart, index: number) {
 /** A gradient strip at the top of the dashboard showing the offer that fits this workspace's plan. */
 export default function PlanOfferBanner() {
   const [offer, setOffer] = useState<Offer | null>(null);
+  // The offer links to billing, which only the owner can change.
+  const isMember = useIsMember();
 
   useEffect(() => {
     let cancelled = false;
@@ -38,7 +41,7 @@ export default function PlanOfferBanner() {
     return () => { cancelled = true; };
   }, []);
 
-  if (!offer) return null;
+  if (!offer || isMember) return null;
 
   function dismiss() {
     if (!offer) return;

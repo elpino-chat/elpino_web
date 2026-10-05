@@ -1,3 +1,4 @@
+import { ownerGuard } from "@/app/api/_lib/owner-guard";
 import { callGateway, patchGateway } from "@/app/api/auth/_lib/gateway";
 import { requireSession } from "@/app/api/onboarding/_lib/require-user";
 import { getAuthRedirectBaseUrl } from "@/app/api/auth/_lib/redirect-url";
@@ -49,6 +50,8 @@ export async function GET(request: Request) {
 }
 
 export async function PATCH(request: Request) {
+  const blocked = await ownerGuard("change the chatbot");
+  if (blocked) return blocked;
   const session = await requireSession();
   if (!session) return Response.json({ message: "Unauthenticated" }, { status: 401 });
 

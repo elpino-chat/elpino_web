@@ -200,8 +200,8 @@ export function ConnectPageContent() {
             <div className="flex items-start gap-4">
               <span className="cw-icon flex size-11 shrink-0 items-center justify-center rounded-xl"><Code2 size={20} /></span>
               <div>
-                <h2 className="cw-h text-[17px] font-semibold">Install the chat widget</h2>
-                <p className="cw-t mt-0.5 max-w-xl text-[14.5px] leading-6">Your website isn&apos;t connected yet. Add the install tag to your site so visitors can chat with your AI.</p>
+                <h2 className="cw-h text-[16px] font-semibold">Install the chat widget</h2>
+                <p className="cw-t mt-0.5 max-w-xl text-[13.5px] leading-6">Your website isn&apos;t connected yet. Add the install tag to your site so visitors can chat with your AI.</p>
               </div>
             </div>
             <Link href="/dashboard/settings/tags" className="cw-btn flex h-11 shrink-0 items-center justify-center gap-2 rounded-full border px-6 text-[15px] font-medium transition">Install tag <ArrowRight size={15} /></Link>

@@ -1,3 +1,4 @@
+import { ownerGuard } from "@/app/api/_lib/owner-guard";
 import { callGateway, patchGateway } from "@/app/api/auth/_lib/gateway";
 import { selectedWorkspaceId } from "@/app/api/workspace/integrations/_lib/workspace";
 
@@ -24,6 +25,8 @@ export async function GET() {
 }
 
 export async function PATCH(request: Request) {
+  const blocked = await ownerGuard("change the workspace information");
+  if (blocked) return blocked;
   const companyId = await selectedWorkspaceId();
   if (!companyId) return Response.json({ message: "Create a workspace first." }, { status: 400 });
 

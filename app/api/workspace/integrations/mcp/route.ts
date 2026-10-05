@@ -1,9 +1,12 @@
+import { ownerGuard } from "@/app/api/_lib/owner-guard";
 import { callGateway } from "@/app/api/auth/_lib/gateway";
 import { selectedWorkspaceId } from "../_lib/workspace";
 
 // Connecting runs tool discovery against the customer's server straight away,
 // so a wrong URL or rejected token comes back here as a readable message.
 export async function POST(request: Request) {
+  const blocked = await ownerGuard("connect MCP servers");
+  if (blocked) return blocked;
   const companyId = await selectedWorkspaceId();
   if (!companyId) return Response.json({ message: "Create a workspace first." }, { status: 400 });
 

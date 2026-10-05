@@ -1,7 +1,10 @@
+import { ownerGuard } from "@/app/api/_lib/owner-guard";
 import { callGateway } from "@/app/api/auth/_lib/gateway";
 import { selectedWorkspaceId } from "../../../_lib/workspace";
 
 export async function POST(request: Request, { params }: { params: Promise<{ slug: string }> }) {
+  const blocked = await ownerGuard("change MCP server tools");
+  if (blocked) return blocked;
   const companyId = await selectedWorkspaceId();
   if (!companyId) return Response.json({ message: "Create a workspace first." }, { status: 400 });
 

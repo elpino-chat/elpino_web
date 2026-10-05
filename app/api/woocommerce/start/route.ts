@@ -1,3 +1,4 @@
+import { ownerGuard } from "@/app/api/_lib/owner-guard";
 import { requireSession } from "@/app/api/onboarding/_lib/require-user";
 import { selectedWorkspaceId } from "@/app/api/workspace/integrations/_lib/workspace";
 import { normalizeStoreOrigin, signStoreState, siteOrigin } from "@/lib/store-connect";
@@ -21,6 +22,8 @@ export async function GET(request: Request) {
   if (!session) {
     return Response.redirect(`${siteOrigin()}/login?next=${encodeURIComponent(`/api/woocommerce/start?${url.searchParams.toString()}`)}`);
   }
+  const blocked = await ownerGuard("connect WooCommerce");
+  if (blocked) return blocked;
   const companyId = await selectedWorkspaceId();
   if (!companyId) return connectError("create_a_workspace_first");
 

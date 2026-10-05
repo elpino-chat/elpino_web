@@ -96,7 +96,7 @@ export default async function DashboardPage() {
         <p className="text-sm font-normal text-white/70">{date}</p>
         <h1 className="mt-2 text-3xl font-normal tracking-[-0.03em] sm:text-4xl">{greeting}, {firstName}</h1>
 
-        {!sites.some((site) => site.status === "verified") && (
+        {workspace?.role !== "member" && !sites.some((site) => site.status === "verified") && (
           <article className="mt-7 flex flex-col gap-5 rounded-xl border border-white/10 bg-white/[0.035] p-5 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-start gap-3.5">
               <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-white/[0.07] text-[#8db8ff]"><Code2 size={18} /></span>

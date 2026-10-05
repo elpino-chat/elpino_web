@@ -1,3 +1,4 @@
+import { ownerGuard } from "@/app/api/_lib/owner-guard";
 import { callGateway } from "@/app/api/auth/_lib/gateway";
 import { getAuthRedirectBaseUrl, resolveOAuthCallbackUrl } from "@/app/api/auth/_lib/redirect-url";
 import { selectedWorkspaceId } from "@/app/api/workspace/integrations/_lib/workspace";
@@ -5,6 +6,7 @@ import { selectedWorkspaceId } from "@/app/api/workspace/integrations/_lib/works
 const HUBSPOT_CALLBACK_PATH = "/api/integrations/hubspot/callback";
 
 export async function GET(request: Request) {
+  if (await ownerGuard("connect integrations")) return Response.redirect(`${getAuthRedirectBaseUrl(request)}/dashboard/connect?integration_error=only_the_owner_can_connect_integrations`);
   const baseUrl = getAuthRedirectBaseUrl(request);
   const companyId = await selectedWorkspaceId();
   if (!companyId) return Response.redirect(`${baseUrl}/dashboard/connect?integration_error=no_workspace`);

@@ -1,3 +1,4 @@
+import { ownerGuard } from "@/app/api/_lib/owner-guard";
 import { callGateway, patchGateway } from "@/app/api/auth/_lib/gateway";
 import { requireSession } from "@/app/api/onboarding/_lib/require-user";
 
@@ -21,6 +22,8 @@ export async function GET() {
 }
 
 export async function PATCH(request: Request) {
+  const blocked = await ownerGuard("change how contact details are collected");
+  if (blocked) return blocked;
   const session = await requireSession();
   if (!session) return Response.json({ message: "Unauthenticated" }, { status: 401 });
   const selected = await resolveSelectedOrg(session.email);

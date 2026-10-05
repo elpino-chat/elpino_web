@@ -6991,3 +6991,12 @@ body:has([data-dashboard-theme="dark"]) .knowledge-popover :is(button, a)[class*
 [data-dashboard-theme] .dashboard-shell .tg-root .tg-chip { background: var(--tg-icon) !important; border-color: transparent !important; color: var(--tg-h) !important; }
 [data-dashboard-theme] .dashboard-shell .tg-root .tg-status-ok { border-color: var(--tg-ok) !important; }
 [data-dashboard-theme] .dashboard-shell .tg-root .tg-status-ok .tg-icon { color: var(--tg-ok) !important; }
+
+/* Owner-only notice shown to workspace members. */
+[data-dashboard-theme="dark"] #dashboard-settings-page .owner-only { --oo-h: #ffffff; --oo-t: rgb(255 255 255 / 0.8); --oo-icon: rgb(255 255 255 / 0.1); --oo-btn: rgb(255 255 255 / 0.5); --oo-hover: rgb(255 255 255 / 0.08); }
+[data-dashboard-theme="light"] #dashboard-settings-page .owner-only { --oo-h: #000000; --oo-t: rgba(0, 0, 0, 0.7); --oo-icon: rgba(0, 0, 0, 0.07); --oo-btn: rgba(0, 0, 0, 0.35); --oo-hover: rgba(0, 0, 0, 0.05); }
+[data-dashboard-theme] #dashboard-settings-page .owner-only .owner-only-h { color: var(--oo-h) !important; }
+[data-dashboard-theme] #dashboard-settings-page .owner-only .owner-only-t { color: var(--oo-t) !important; }
+[data-dashboard-theme] #dashboard-settings-page .owner-only .owner-only-icon { background: var(--oo-icon) !important; color: var(--oo-h) !important; }
+[data-dashboard-theme] #dashboard-settings-page .owner-only .owner-only-btn { background: transparent !important; border-color: var(--oo-btn) !important; color: var(--oo-h) !important; }
+[data-dashboard-theme] #dashboard-settings-page .owner-only .owner-only-btn:hover { background: var(--oo-hover) !important; border-color: var(--oo-h) !important; }

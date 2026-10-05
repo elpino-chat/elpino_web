@@ -26,6 +26,7 @@ import { useMobileDrawer } from "@/app/components/dashboard/mobile-drawer-contex
 import { SUPPORTED_LANGUAGES } from "@/app/dashboard/settings/languages";
 import { IdentityVerificationSettingsPage } from "@/app/dashboard/settings/IdentityVerificationSettings";
 import { ConnectPageContent } from "@/app/dashboard/connect/ConnectPageContent";
+import { canOpenPage, pageNeedsOwner } from "@/app/dashboard/settings/member-access";
 import {
   defaultAvailability,
   describeWindow,
@@ -5696,9 +5697,23 @@ function SidebarNavGroup({ title, items, currentPage, spacingClassName = "mt-3" 
   );
 }
 
+// Shown to a member who opens a configuration page by its address.
+function OwnerOnlyNotice() {
+  return (
+    <div className="owner-only mx-auto flex min-h-[60vh] w-full max-w-[520px] flex-col items-center justify-center px-6 text-center">
+      <span className="owner-only-icon flex size-12 items-center justify-center rounded-xl"><ShieldCheck size={22} /></span>
+      <h2 className="owner-only-h mt-4 text-[20px] font-semibold tracking-[-0.02em]">Only the workspace owner can change this</h2>
+      <p className="owner-only-t mt-1.5 text-[14.5px] leading-6">These settings control the AI, your website and your plan. Ask the workspace owner if something needs to change.</p>
+      <Link href="/dashboard/settings" className="owner-only-btn mt-5 flex h-11 items-center rounded-full border px-6 text-[15px] font-medium transition">Back to settings</Link>
+    </div>
+  );
+}
+
 export function SettingsClient({ user, page = "General", auditView = "all" }: { user: SettingsUser; page?: string; auditView?: "all" | AuditStatus }) {
   const currentPage = page;
+  const role = useMyRole();
   const { open: sidebarOpen, setOpen: setSidebarOpen } = useMobileDrawer();
+  const visibleItems = <T extends { label: string }>(items: T[]) => items.filter((item) => canOpenPage(item.label, role));
   const [previewPanel, setPreviewPanel] = useState<HTMLDivElement | null>(null);
   const showPreviewPanel = currentPage === "Chatbot Interface";
 
@@ -5717,14 +5732,18 @@ export function SettingsClient({ user, page = "General", auditView = "all" }: { 
         }`}
       >
         <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-4 pt-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <SidebarNavGroup title="Account" items={accountItems} currentPage={currentPage} spacingClassName="mt-1" />
-          <SidebarNavGroup title="Chatbot" items={chatbotItems} currentPage={currentPage} />
-          <SidebarNavGroup title="Workspace" items={workspaceItems} currentPage={currentPage} />
+          <SidebarNavGroup title="Account" items={visibleItems(accountItems)} currentPage={currentPage} spacingClassName="mt-1" />
+          {visibleItems(chatbotItems).length > 0 && <SidebarNavGroup title="Chatbot" items={visibleItems(chatbotItems)} currentPage={currentPage} />}
+          <SidebarNavGroup title="Workspace" items={visibleItems(workspaceItems)} currentPage={currentPage} />
         </div>
       </div>
 
       <section className="dashboard-page-surface dashboard-settings-surface relative h-full min-w-0 flex-1 overflow-y-auto bg-[#262626] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {currentPage === "General" ? (
+        {pageNeedsOwner(currentPage) && role === null ? (
+          <div role="status" aria-busy="true" aria-label="Loading" className="mx-auto w-full max-w-[1120px] space-y-4 px-8 pt-10"><Bone className="h-8 w-56" /><Bone className="h-4 w-80" /><Bone className="h-40 w-full" /></div>
+        ) : !canOpenPage(currentPage, role) ? (
+          <OwnerOnlyNotice />
+        ) : currentPage === "General" ? (
           <GeneralSettingsPage user={user} />
         ) : currentPage === "Chatbot Interface" ? (
           <ChatbotInterfaceSettingsPage previewContainer={previewPanel} />

@@ -52,3 +52,8 @@ export async function patchGateway<T>(path: string, body: unknown): Promise<{ ok
     payload: (await res.json().catch(() => ({}))) as T,
   };
 }
+
+/** Preserve streamed file extraction progress rather than buffering it as JSON. */
+export async function streamGateway(path: string, body: unknown, signal?: AbortSignal): Promise<Response> {
+  return fetch(`${gatewayUrl}${path}`, { method: 'POST', headers: gatewayHeaders(true), body: JSON.stringify(body), cache: 'no-store', signal });
+}

@@ -9,17 +9,18 @@ async function selectedWorkspace(email: string) {
   return organizations.find((item) => item.id === result.selectedOrganizationId) ?? organizations[0] ?? null;
 }
 
-// What the workspace still has importing in the background: pages waiting, pages being read,
-// and the ones that recently failed.
-export async function GET() {
+export async function POST(request: Request) {
   const session = await requireSession();
   if (!session) return Response.json({ message: "Unauthenticated" }, { status: 401 });
   const workspace = await selectedWorkspace(session.email);
   if (!workspace) return Response.json({ message: "Create a workspace first." }, { status: 400 });
 
-  const result = await callGateway<{ pages?: unknown[]; crawls?: unknown[]; pending?: number; active?: number; failed?: { url: string; error: string }[]; error?: string }>(
-    `/api/workspace/knowledge/import-status?companyId=${encodeURIComponent(workspace.id)}`,
+  const body = (await request.json().catch(() => ({}))) as { url?: string; siteId?: string };
+  if (!body.url?.trim() || !body.siteId?.trim()) return Response.json({ message: "Website and site ID are required" }, { status: 400 });
+
+  const result = await callGateway<{ ok?: boolean; groupId?: string; chunkCount?: number; error?: string }>(
+    "/api/workspace/knowledge/website",
+    { companyId: workspace.id, url: body.url.trim(), siteId: body.siteId || undefined },
   );
-  if (result.error) return Response.json({ message: result.error }, { status: 400 });
-  return Response.json({ pending: result.pending ?? 0, active: result.active ?? 0, failed: result.failed ?? [], crawls: result.crawls ?? [], pages: result.pages ?? [] });
+  return Response.json(result.error ? { message: result.error } : result, { status: result.error ? 400 : 201 });
 }

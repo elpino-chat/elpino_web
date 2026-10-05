@@ -13,6 +13,7 @@ import {
   Copy,
   GraduationCap,
   Landmark,
+  Mail,
   Layers,
   Mic2,
   Sparkles,
@@ -21,6 +22,7 @@ import {
   Store,
   Users,
 } from "lucide-react";
+import { TrainingStep } from "./TrainingStep";
 import { LanguageSwitcher } from "@/app/components/LanguageSwitcher";
 import { setStoredLanguage, useStoredLanguage } from "@/app/hooks/useStoredLanguage";
 import { PAGE_SNIPPET } from "@/lib/identity-snippets";
@@ -1129,11 +1131,11 @@ const PHONE_COUNTRIES = [
   { code: "NZ", name: "New Zealand", dial: "+64", flag: "🇳🇿" },
 ] as const;
 
-const TOTAL_STEPS = 5;
+const TOTAL_STEPS = 3;
 const CRAWL_LIMIT_OPTIONS = [10, 25, 50] as const;
 const DEVELOPER_EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// Step 5's platform picker. Only these two get shown, on purpose: WordPress
+// Step 3's platform picker. Only these two get shown, on purpose: WordPress
 // has its own real, automated flow (the actual plugin — see
 // plugins/wordpress/elpino-chat.php — connects with no code to paste), and
 // HTML is the honest, working fallback for literally everything else. Every
@@ -1148,13 +1150,32 @@ const PLATFORMS: { id: PlatformId; label: string }[] = [
 
 function PlatformIcon({ id }: { id: PlatformId }) {
   const [logoFailed, setLogoFailed] = useState(false);
-  if (id === "html") return <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-[#3b82f6] text-white"><Code2 className="size-[18px]" /></span>;
-  if (logoFailed) return <span className="grid size-9 shrink-0 place-items-center rounded-lg text-[13px] font-bold text-white" style={{ backgroundColor: "#21759b" }}>W</span>;
+  if (id === "html") return <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-[#3b82f6] text-white"><Code2 className="size-[18px]" /></span>;
+  if (logoFailed) return <span className="grid size-11 shrink-0 place-items-center rounded-xl text-[13px] font-bold text-white" style={{ backgroundColor: "#21759b" }}>W</span>;
   return (
-    <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-white p-1 ring-1 ring-black/10">
+    <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-white p-2 ring-1 ring-black/10">
       <img src="https://cdn.brandfetch.io/wordpress.org?c=1bxec69tls8qaj83i3hc2bbf373tgfgTpns" alt="" onError={() => setLogoFailed(true)} className="size-full object-contain" />
     </span>
   );
+}
+
+// A tiny HTML highlighter for the install snippet: tags, attribute names and quoted values get their own colours.
+function HighlightedHtml({ code }: { code: string }) {
+  const parts: { text: string; className?: string }[] = [];
+  const tag = /(<\/?)([a-zA-Z][\w-]*)((?:\s+[^\s=>]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+))?)*)\s*(\/?>)/g;
+  let last = 0;
+  for (const match of code.matchAll(tag)) {
+    if (match.index > last) parts.push({ text: code.slice(last, match.index) });
+    parts.push({ text: match[1], className: "text-[#9399b2]" }, { text: match[2], className: "text-[#f38ba8]" });
+    for (const attr of match[3].matchAll(/(\s+)([^\s=>]+)(?:(\s*=\s*)("[^"]*"|'[^']*'|[^\s>]+))?/g)) {
+      parts.push({ text: attr[1] }, { text: attr[2], className: "text-[#fab387]" });
+      if (attr[3]) parts.push({ text: attr[3], className: "text-[#9399b2]" }, { text: attr[4], className: "text-[#a6e3a1]" });
+    }
+    parts.push({ text: match[4], className: "text-[#9399b2]" });
+    last = match.index + match[0].length;
+  }
+  if (last < code.length) parts.push({ text: code.slice(last) });
+  return <>{parts.map((part, i) => (part.className ? <span key={i} className={part.className}>{part.text}</span> : part.text))}</>;
 }
 
 type PagePriority = "high" | "medium" | "low";
@@ -1336,32 +1357,29 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
   const [languageOpen, setLanguageOpen] = useState(false);
   const [avatarOpen, setAvatarOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
-  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1);
+  const [step, setStep] = useState<1 | 2 | 3>(1);
   const [profileName, setProfileName] = useState("");
   const [websiteUrl, setWebsiteUrl] = useState(() => siteUrlFromNext(next));
-  const [siteDescription, setSiteDescription] = useState("");
-  const [siteType, setSiteType] = useState("");
   const [profilePhone, setProfilePhone] = useState("");
   const [phoneCountry, setPhoneCountry] = useState("IN");
   const [profileLoading, setProfileLoading] = useState(false);
   const [profileError, setProfileError] = useState<string | null>(null);
   const [timezone, setTimezone] = useState<string>("UTC");
   const [connectedProviders, setConnectedProviders] = useState<Set<string>>(new Set());
-  const [businessLoading, setBusinessLoading] = useState(false);
-  const [businessError, setBusinessError] = useState<string | null>(null);
   const [hearAboutUs, setHearAboutUs] = useState("");
-  const [hearAboutUsLoading, setHearAboutUsLoading] = useState(false);
-  const [hearAboutUsError, setHearAboutUsError] = useState<string | null>(null);
-  const [companySize, setCompanySize] = useState("");
   const [widgetKey, setWidgetKey] = useState<string | null>(null);
   const [siteId, setSiteId] = useState<string | null>(null);
+  // Set the moment step 1 is submitted, so the site is created and its first
+  // crawl starts while the profile saves — step 2 opens with pages already coming in.
+  const [siteRequested, setSiteRequested] = useState(false);
+  const crawlStartedFor = useRef<string | null>(null);
   const [siteVerified, setSiteVerified] = useState(false);
   const [verifiedInCurrentSession, setVerifiedInCurrentSession] = useState(false);
   const [verifying, setVerifying] = useState(false);
   const [verifyMessage, setVerifyMessage] = useState<string | null>(null);
   const [widgetKeyError, setWidgetKeyError] = useState<string | null>(null);
   const [snippetCopied, setSnippetCopied] = useState(false);
-  // Step 5's platform picker — null shows the grid, otherwise the matching
+  // Step 3's platform picker — null shows the grid, otherwise the matching
   // instructions open as a dialog on top of it.
   const [openPlatform, setOpenPlatform] = useState<PlatformId | null>(null);
   const [developerEmails, setDeveloperEmails] = useState<string[]>([]);
@@ -1465,7 +1483,7 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
           setProfileName((current) => current || data.organizationName || nameFallback);
         }
         // websiteUrl was already saved in step 1 on a previous visit — restore
-        // it so a page refresh on step 4/5 doesn't lose the site the rest of
+        // it so a page refresh on step 3/4 doesn't lose the site the rest of
         // this flow (verification, crawling) needs.
         if (data.websiteUrl) {
           setWebsiteUrl((current) => current || data.websiteUrl || "");
@@ -1488,13 +1506,13 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
         if (onboarding.hearAboutUs) setHearAboutUs(onboarding.hearAboutUs);
         if (onboarding.googleConnected) setConnectedProviders(new Set(["gmail", "calendar"]));
         if (onboarding.source) {
-          setStep(onboarding.hearAboutUs ? 4 : 3);
+          setStep(onboarding.hearAboutUs ? 2 : 1);
           void fetch("/api/onboarding/timezone", {
             method: "POST",
             headers: { "content-type": "application/json" },
             body: JSON.stringify({ timezone: Intl.DateTimeFormat().resolvedOptions().timeZone }),
           }).catch(() => null);
-        } else if (onboarding.profileCompleted) {
+        } else if (onboarding.profileCompleted && onboarding.hearAboutUs) {
           // Name/phone already saved — resume at the source step after refresh.
           setStep(2);
         }
@@ -1526,7 +1544,7 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
     : visibleConnectors;
 
   function goBack() {
-    setStep((s) => (s > 1 ? ((s - 1) as 1 | 2 | 3 | 4 | 5) : s));
+    setStep((s) => (s > 1 ? ((s - 1) as 1 | 2 | 3) : s));
   }
 
   function isConnected(provider: string) {
@@ -1633,7 +1651,7 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
   // same /api/workspace/sites endpoint Tag Manager itself uses means this
   // is the same row, visible in the same place, with a working snippet.
   useEffect(() => {
-    if (step < 4 || widgetKey || widgetKeyError) return;
+    if ((step < 2 && !siteRequested) || widgetKey || widgetKeyError) return;
     const hostname = (() => {
       try { return new URL(normalizeWebsiteUrl(websiteUrl) ?? websiteUrl).hostname.toLowerCase().replace(/^www\./, ""); }
       catch { return null; }
@@ -1647,7 +1665,7 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
         .catch(() => [] as SiteRow[]);
       const match = hostname ? existing.find((site) => site.domain === hostname) : undefined;
       if (match) return match;
-      if (existing.length > 0) return existing[0]; // resuming onboarding after a site was already made
+      if (!hostname && existing.length > 0) return existing[0];
 
       const created = await fetch("/api/workspace/sites", {
         method: "POST",
@@ -1670,7 +1688,17 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
         setSiteVerified(site.status === "verified");
       })
       .catch((err: unknown) => setWidgetKeyError(err instanceof Error ? err.message : "Could not create a site tag"));
-  }, [step, widgetKey, widgetKeyError, websiteUrl, profileName]);
+  }, [step, siteRequested, widgetKey, widgetKeyError, websiteUrl, profileName]);
+
+  // First crawl: begins as soon as the site exists, once per site, whichever step the admin is on.
+  useEffect(() => {
+    if (!siteId || crawlStartedFor.current === siteId) return;
+    crawlStartedFor.current = siteId;
+    void fetch("/api/workspace/knowledge/website", {
+      method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ siteId, url: normalizeWebsiteUrl(websiteUrl) ?? websiteUrl }),
+    }).catch(() => { crawlStartedFor.current = null; });
+  }, [siteId, websiteUrl]);
 
   const siteHostname = (() => {
     try { return new URL(normalizeWebsiteUrl(websiteUrl) ?? websiteUrl).hostname; }
@@ -1835,7 +1863,7 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
   }
 
   async function submitProfile() {
-    if (!profileName.trim()) return;
+    if (!profileName.trim() || !hearAboutUs) return;
     const normalizedUrl = normalizeWebsiteUrl(websiteUrl);
     if (!normalizedUrl) {
       setProfileError("Enter a valid website URL, e.g. yourcompany.com");
@@ -1843,6 +1871,10 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
     }
     setProfileError(null);
     setProfileLoading(true);
+    setWidgetKey(null);
+    setSiteId(null);
+    setWidgetKeyError(null);
+    setSiteRequested(true);
     try {
       const res = await fetch("/api/onboarding/profile", {
         method: "POST",
@@ -1856,9 +1888,15 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
         const err = (await res.json().catch(() => null)) as { message?: string } | null;
         throw new Error(err?.message ?? "save_failed");
       }
+      const sourceResponse = await fetch("/api/onboarding/progress", {
+        method: "POST", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ hearAboutUs }),
+      });
+      if (!sourceResponse.ok) throw new Error("save_failed");
       posthog.capture("onboarding_profile_completed");
       setStep(2);
     } catch (err) {
+      setSiteRequested(false);
       setProfileError(
         err instanceof Error && err.message !== "save_failed"
           ? err.message
@@ -1866,44 +1904,6 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
       );
     } finally {
       setProfileLoading(false);
-    }
-  }
-
-  async function submitBusiness() {
-    if (!siteDescription.trim() || !siteType) return;
-    setBusinessError(null);
-    setBusinessLoading(true);
-    try {
-      const res = await fetch("/api/onboarding/progress", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ businessDescription: siteDescription.trim(), businessType: siteType }),
-      });
-      if (!res.ok) throw new Error("save_failed");
-      setStep(3);
-    } catch {
-      setBusinessError("Something went wrong saving your organization. Please try again.");
-    } finally {
-      setBusinessLoading(false);
-    }
-  }
-
-  async function submitHearAboutUs() {
-    if (!hearAboutUs) return;
-    setHearAboutUsError(null);
-    setHearAboutUsLoading(true);
-    try {
-      const res = await fetch("/api/onboarding/progress", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ hearAboutUs }),
-      });
-      if (!res.ok) throw new Error("save_failed");
-      setStep(4);
-    } catch {
-      setHearAboutUsError("Something went wrong saving that. Please try again.");
-    } finally {
-      setHearAboutUsLoading(false);
     }
   }
 
@@ -1918,25 +1918,6 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
       });
       if (!res.ok) throw new Error("save_failed");
       router.push(next || "/dashboard");
-    } catch {
-      setSkipError("Something went wrong finishing setup. Please try again.");
-    } finally {
-      setSkipLoading(false);
-    }
-  }
-
-  async function submitCompanySize() {
-    if (!companySize || skipLoading) return;
-    setSkipError(null);
-    setSkipLoading(true);
-    try {
-      const res = await fetch("/api/onboarding/progress", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ companySize }),
-      });
-      if (!res.ok) throw new Error("save_failed");
-      setStep(5);
     } catch {
       setSkipError("Something went wrong finishing setup. Please try again.");
     } finally {
@@ -1966,7 +1947,7 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
   const primaryButtonClass =
     "mt-8 flex h-14 w-fit min-w-[118px] cursor-pointer items-center justify-center gap-2 rounded-[10px] bg-[#18191b] px-6 text-[16px] font-semibold text-white transition hover:bg-black focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black/15 active:scale-[0.99] disabled:cursor-not-allowed disabled:bg-[#d5d5d8] disabled:text-white";
   const inputClass =
-    "h-[68px] w-full rounded-[11px] border-2 bg-white px-5 text-[15px] text-[#111214] outline-none transition placeholder:text-[15px] placeholder:text-[#9a9da3] hover:border-black focus:border-black focus:ring-4 focus:ring-black/[0.06]";
+    "h-12 w-full rounded-[11px] border-2 bg-white px-5 text-[15px] text-[#111214] outline-none transition placeholder:text-[15px] placeholder:text-[#9a9da3] hover:border-black focus:border-black focus:ring-4 focus:ring-black/[0.06]";
   const chipClass = (selected: boolean) =>
     `flex min-h-12 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-[10px] border px-6 py-2.5 text-[14px] transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black/10 ${
       selected
@@ -2019,91 +2000,50 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
         </div>
       </header>
 
-      <div className="flex flex-1 flex-col items-center px-6 pb-28 pt-[clamp(2.5rem,8vh,6rem)]">
-        <div key={step} className={`onb-enter w-full text-left ${step === 5 ? "max-w-[1080px]" : "max-w-[660px]"}`}>
-        <div className="mb-7" aria-label={`Step ${step} of ${TOTAL_STEPS}`}>
+      <div className="flex flex-1 flex-col items-center px-6 pb-16 pt-6 lg:pt-8">
+        <div key={step} className={`onb-enter w-full text-left ${step >= 2 ? "max-w-[1080px]" : "max-w-[660px]"}`}>
+        <div className="mb-7 flex justify-end" aria-label={`Step ${step} of ${TOTAL_STEPS}`}>
           <p className="mb-2 text-[16px] text-[#676b72]">{step}/{TOTAL_STEPS}</p>
-          <div className="flex gap-1.5">
-            {Array.from({ length: TOTAL_STEPS }, (_, index) => <span key={index} className={`h-[5px] max-w-28 flex-1 rounded-full transition-colors ${index < step ? "bg-[#202124]" : "bg-[#e1e2e4]"}`} />)}
-          </div>
+
         </div>
         {step === 1 && (
           <section>
-            <h1 className="text-balance text-[clamp(1.9rem,3.2vw,2.35rem)] font-normal leading-[1.12] tracking-[-0.03em]">
-              Let&rsquo;s set up your organization
+            <h1 className="text-balance text-xl font-normal leading-[1.12] tracking-[-0.03em]">
+              Let&rsquo;s set up your website
             </h1>
-            <p className="mt-3 text-[16px] text-black/55">
+            <p className="mt-2 text-lg text-black/55">
               Share a few details so Elpino can personalize support for your business.
             </p>
             <div className="mt-9 w-full space-y-5 text-left">
               <div>
-                <label htmlFor="onb-org" className="mb-2 block text-[14px] font-normal">Organization name</label>
-                <input id="onb-org" value={profileName} onChange={(e) => setProfileName(e.target.value)} placeholder="E.g. Acme Inc." autoFocus className={`${inputClass} border-black/15`} />
+                <label htmlFor="onb-org" className="mb-2 block text-base font-normal">Site name</label>
+                <input id="onb-org" value={profileName} onChange={(e) => setProfileName(e.target.value)} placeholder="E.g. Acme" autoFocus className={`${inputClass} border-black/40`} />
               </div>
               <div>
-                <label htmlFor="onb-url" className="mb-2 block text-[14px] font-normal">Website URL</label>
-                <input
-                  id="onb-url"
-                  value={websiteUrl}
-                  onChange={(e) => {
-                    setWebsiteUrl(e.target.value);
-                    if (profileError) setProfileError(null);
-                  }}
-                  placeholder="https://yourcompany.com"
-                  type="url"
-                  inputMode="url"
-                  autoComplete="url"
-                  className={`${inputClass} ${profileError ? "border-red-400" : "border-black/15"}`}
-                />
+                <label htmlFor="onb-url" className="mb-2 block text-base font-normal">Website URL</label>
+                <div className={`flex h-12 w-full items-center overflow-hidden rounded-[11px] border-2 bg-white transition hover:border-black focus-within:border-black focus-within:ring-4 focus-within:ring-black/[0.06] ${profileError ? "border-red-400" : "border-black/40"}`}>
+                  <span className="flex h-full shrink-0 items-center border-r border-black/10 bg-black/[0.025] px-4 text-[15px] text-black/50" aria-hidden="true">https://</span>
+                  <input
+                    id="onb-url"
+                    value={websiteUrl.replace(/^https?:\/\//i, "")}
+                    onChange={(e) => {
+                      const domain = e.target.value.replace(/^https?:\/\//i, "");
+                      setWebsiteUrl(domain ? `https://${domain}` : "");
+                      if (profileError) setProfileError(null);
+                    }}
+                    placeholder="yourcompany.com"
+                    type="text"
+                    inputMode="url"
+                    autoComplete="url"
+                    aria-label="Website URL, https prefix included"
+                    className="h-full min-w-0 flex-1 border-0 bg-transparent px-4 text-[15px] text-[#111214] outline-none placeholder:text-[#9a9da3]"
+                  />
+                </div>
                 {profileError && <p className="mt-2 text-sm text-red-600">{profileError}</p>}
               </div>
-            </div>
-            <button type="button" disabled={!profileName.trim() || !websiteUrl.trim() || profileLoading} onClick={() => void submitProfile()} className={primaryButtonClass}>
-              {profileLoading ? <>{spinner}Saving…</> : "Continue"}
-            </button>
-          </section>
-        )}
-
-        {step === 2 && (
-          <section>
-            <h1 className="text-balance text-[15px] font-normal leading-6">
-              What does your organization help customers with?
-            </h1>
+              <fieldset>
+                <legend className="text-base font-normal">Where did you hear about us?</legend>
             <div className="mt-3 flex flex-wrap justify-start gap-3">
-              {[
-                { label: "SaaS", icon: Layers },
-                { label: "Online store", icon: ShoppingBag },
-                { label: "Agency", icon: Briefcase },
-                { label: "Marketplace", icon: Store },
-                { label: "Education", icon: GraduationCap },
-                { label: "Healthcare", icon: Stethoscope },
-                { label: "Financial services", icon: Landmark },
-                { label: "Other", icon: Sparkles },
-              ].map(({ label: option, icon: OptionIcon }) => (
-                <button key={option} type="button" onClick={() => setSiteType(option)} aria-pressed={siteType === option} className={chipClass(siteType === option)}>
-                  <OptionIcon className="size-4 shrink-0" />
-                  {option}
-                </button>
-              ))}
-            </div>
-            <div className="mt-9 w-full text-left">
-              <label htmlFor="onb-desc" className="mb-2 block text-[15px] font-normal">Describe what you offer</label>
-              <input id="onb-desc" value={siteDescription} onChange={(e) => setSiteDescription(e.target.value)} placeholder="E.g. Project management software for small agencies" className={`${inputClass} border-black/15`} />
-            </div>
-            {businessError && <p className="mt-4 text-sm text-red-600">{businessError}</p>}
-            <button type="button" disabled={!siteDescription.trim() || !siteType || businessLoading} onClick={() => void submitBusiness()} className={primaryButtonClass}>
-              {businessLoading ? <>{spinner}Saving…</> : "Continue"}
-            </button>
-          </section>
-        )}
-
-        {step === 3 && (
-          <section>
-            <h1 className="text-balance text-[clamp(1.9rem,3.2vw,2.35rem)] font-normal leading-[1.12] tracking-[-0.03em]">
-              Where did you hear about us?
-            </h1>
-            <p className="mt-3 text-[16px] text-black/55">This helps us understand how people find Elpino.</p>
-            <div className="mt-9 flex flex-wrap justify-start gap-3">
               {[
                 { value: "google", label: "Google search", domain: "google.com" },
                 { value: "twitter", label: "Twitter / X", domain: "x.com" },
@@ -2122,19 +2062,21 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
                 </button>
               ))}
             </div>
-            {hearAboutUsError && <p className="mt-4 text-sm text-red-600">{hearAboutUsError}</p>}
-            <button type="button" disabled={!hearAboutUs || hearAboutUsLoading} onClick={() => void submitHearAboutUs()} className={primaryButtonClass}>
-              {hearAboutUsLoading ? <>{spinner}Saving…</> : "Continue"}
+              </fieldset>
+            </div>
+            <button type="button" disabled={!profileName.trim() || !websiteUrl.trim() || !hearAboutUs || profileLoading} onClick={() => void submitProfile()} className={primaryButtonClass}>
+              {profileLoading ? <>{spinner}Saving…</> : "Continue"}
             </button>
           </section>
         )}
 
+
         {false && (
           <section>
-            <h1 className="text-balance text-[clamp(1.9rem,3.2vw,2.35rem)] font-normal leading-[1.12] tracking-[-0.03em]">
+            <h1 className="text-balance text-xl font-normal leading-[1.12] tracking-[-0.03em]">
               Add Elpino to your website
             </h1>
-            <p className="mt-3 text-[16px] text-black/55">Install the tag on {siteHostname}, then verify it&rsquo;s live.</p>
+            <p className="mt-2 text-lg text-black/55">Install the tag on {siteHostname}, then verify it&rsquo;s live.</p>
 
             <div className="mt-9 w-full rounded-[12px] border-2 border-black/15 bg-[#fafafa] p-5 text-left">
               <div className="flex items-start gap-3">
@@ -2219,7 +2161,7 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
             </div>
 
             {siteVerified ? (
-              <button type="button" onClick={() => setStep(5)} className={primaryButtonClass}>
+              <button type="button" onClick={() => setStep(2)} className={primaryButtonClass}>
                 Continue
               </button>
             ) : (
@@ -2227,7 +2169,7 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
                 <button type="button" disabled={!widgetKey || verifying} onClick={() => void verifyInstall()} className={primaryButtonClass}>
                   {verifying ? <>{spinner}Checking…</> : "Verify installation"}
                 </button>
-                <button type="button" onClick={() => setStep(5)} className="mx-auto mt-4 block cursor-pointer text-[14px] text-black/50 underline-offset-4 transition hover:text-black hover:underline">
+                <button type="button" onClick={() => setStep(2)} className="mx-auto mt-4 block cursor-pointer text-[14px] text-black/50 underline-offset-4 transition hover:text-black hover:underline">
                   Skip for now
                 </button>
               </>
@@ -2235,51 +2177,52 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
           </section>
         )}
 
-        {step === 4 && (
-          <section>
-            <h1 className="text-balance text-[clamp(1.9rem,3.2vw,2.35rem)] font-normal leading-[1.12] tracking-[-0.03em]">
-              How big is your company?
-            </h1>
-            <p className="mt-3 text-[15px] text-black/55">We&apos;ll tailor Elpino to the size of your support team.</p>
-            <div className="mt-6 flex flex-wrap justify-start gap-3">
-              {["Just me", "2–5", "6–10", "11–25", "26–50", "51–100", "101–500", "500+"].map((option) => (
-                <button key={option} type="button" onClick={() => setCompanySize(option)} aria-pressed={companySize === option} className={chipClass(companySize === option)}>
-                  {option}
-                </button>
-              ))}
-            </div>
-            {skipError && <p className="mt-4 text-sm text-red-600">{skipError}</p>}
-            <button type="button" disabled={!companySize || skipLoading} onClick={() => void submitCompanySize()} className={primaryButtonClass}>
-              {skipLoading ? <>{spinner}Saving…</> : "Continue"}
-            </button>
-          </section>
-        )}
+        {step === 2 && <TrainingStep siteId={siteId} siteError={widgetKeyError} websiteUrl={websiteUrl} onContinue={() => setStep(3)} />}
 
-        {step === 5 && (
-          <section>
-            <h1 className="text-balance text-[clamp(1.9rem,3.2vw,2.35rem)] font-normal leading-[1.12] tracking-[-0.03em]">
+        {step === 3 && (
+          <section className="mx-auto w-full max-w-[660px]">
+            <h1 className="text-balance text-xl font-normal leading-[1.12] tracking-[-0.03em]">
               Add Elpino to your website
             </h1>
-            <p className="mt-3 max-w-xl text-[15px] leading-6 text-black/55">Select your website builder to see how to add Elpino.</p>
+            <p className="mt-2 max-w-xl text-lg leading-relaxed text-black/55">Choose how your site is built and we&rsquo;ll walk you through the last step.</p>
 
-            <div className="mt-8 grid max-w-md grid-cols-2 gap-3">
-              {PLATFORMS.map((platform) => (
+            <div className={`mt-7 flex items-center gap-3 rounded-xl px-4 py-3 text-sm ${siteVerified ? "bg-emerald-50 text-emerald-800" : "bg-black/[0.03] text-black/60"}`} aria-live="polite">
+              <span className={`flex size-7 shrink-0 items-center justify-center rounded-full ${siteVerified ? "bg-emerald-100 text-emerald-700" : "bg-black/5 text-black/40"}`}>{siteVerified ? <Check className="size-4" /> : <Code2 className="size-4" />}</span>
+              <span className="min-w-0 flex-1">{siteVerified ? <>Elpino is live on <strong className="font-medium">{siteHostname}</strong>.</> : <>Not installed yet on <strong className="font-medium text-black/75">{siteHostname}</strong>. Takes about two minutes.</>}</span>
+            </div>
+
+            <div className="mt-5 grid gap-3">
+              {([
+                { id: "wordpress" as const, title: "WordPress", description: "Install our plugin and connect with one click. No code to paste.", badge: "Easiest" },
+                { id: "html" as const, title: "HTML / any other site", description: "Paste one line of code before your closing head tag. Works on Shopify, Webflow, Wix and more.", badge: null },
+              ]).map((option) => (
                 <button
-                  key={platform.id}
+                  key={option.id}
                   type="button"
-                  onClick={() => setOpenPlatform(platform.id)}
-                  className="flex items-center gap-3 rounded-xl border border-black/10 bg-white px-4 py-3.5 text-left transition hover:border-black/25 hover:bg-black/[0.015]"
+                  onClick={() => setOpenPlatform(option.id)}
+                  className="group flex w-full cursor-pointer items-center gap-4 rounded-xl border border-black/10 bg-white p-4 text-left shadow-[0_1px_2px_rgba(0,0,0,0.03)] transition hover:border-black/25 hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black/10"
                 >
-                  <PlatformIcon id={platform.id} />
-                  <span className="text-[15px] font-normal text-[#111214]">{platform.label}</span>
+                  <PlatformIcon id={option.id} />
+                  <span className="min-w-0 flex-1">
+                    <span className="flex flex-wrap items-center gap-2">
+                      <span className="text-base font-medium text-[#111214]">{option.title}</span>
+                      {option.badge && <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">{option.badge}</span>}
+                    </span>
+                    <span className="mt-0.5 block text-sm leading-relaxed text-black/50">{option.description}</span>
+                  </span>
+                  <span className="flex size-8 shrink-0 items-center justify-center rounded-full border border-black/10 text-black/55 transition group-hover:border-black group-hover:bg-black group-hover:text-white">
+                    <svg className="size-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2"><path d="m8 4 6 6-6 6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                  </span>
                 </button>
               ))}
             </div>
 
-            {skipError && <p className="mt-4 text-sm text-red-600">{skipError}</p>}
-            <div className="mt-8 flex items-center gap-5">
-              <button type="button" disabled={skipLoading} onClick={() => void finishOnboarding()} className="inline-flex h-11 items-center rounded-lg bg-black px-5 text-sm text-white transition hover:bg-black/80 disabled:opacity-50">{skipLoading ? "Finishing setup…" : siteVerified ? "Go to dashboard" : "Continue"}</button>
-              <button type="button" disabled={skipLoading} onClick={() => void finishOnboarding()} className="text-[14px] text-black/50 underline-offset-4 transition hover:text-black hover:underline disabled:opacity-50">Skip for now</button>
+            <p className="mt-4 text-sm text-black/45">Someone else handles your site? You can send them the instructions from either option.</p>
+
+            {skipError && <p role="alert" className="mt-4 rounded-lg bg-red-50 px-3 py-2.5 text-sm text-red-700">{skipError}</p>}
+            <div className="mt-8 flex flex-col-reverse items-stretch gap-3 sm:flex-row sm:items-center">
+              {!siteVerified && <button type="button" disabled={skipLoading} onClick={() => void finishOnboarding()} className="h-12 cursor-pointer rounded-[10px] px-5 text-[15px] text-black/55 transition hover:bg-black/5 hover:text-black disabled:opacity-50">I&rsquo;ll do this later</button>}
+              <button type="button" disabled={skipLoading} onClick={() => void finishOnboarding()} className="h-12 cursor-pointer rounded-[10px] bg-[#18191b] px-6 text-[16px] font-semibold text-white transition hover:bg-black focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black/15 active:scale-[0.99] disabled:opacity-50 sm:min-w-[200px]">{skipLoading ? "Finishing setup…" : siteVerified ? "Go to dashboard" : "Continue to dashboard"}</button>
             </div>
           </section>
         )}
@@ -2287,10 +2230,10 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
         {/* Portalled to <body>: the step wrapper's onb-enter animation leaves a transform
             on it, which would make this fixed overlay relative to the wrapper and put it
             under the z-30 header. */}
-        {step === 5 && openPlatform && createPortal(
-          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 p-4" role="dialog" aria-modal="true" aria-label={`Integrate Elpino with ${PLATFORMS.find((p) => p.id === openPlatform)?.label}`}>
+        {step === 3 && openPlatform && createPortal(
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 p-4 backdrop-blur-[2px]" role="dialog" aria-modal="true" aria-label={`Integrate Elpino with ${PLATFORMS.find((p) => p.id === openPlatform)?.label}`}>
             <button type="button" aria-label="Close" onClick={() => setOpenPlatform(null)} className="absolute inset-0 cursor-default" />
-            <div className="relative min-h-80 max-h-[85vh] w-full max-w-[80vw] overflow-y-auto rounded-2xl bg-white p-5 sm:p-6">
+            <div className="relative min-h-80 max-h-[85vh] w-full max-w-5xl overflow-y-auto rounded-2xl bg-white p-5 shadow-2xl sm:p-6">
               <div className="mb-6 flex items-center gap-3">
                 <button type="button" onClick={() => setOpenPlatform(null)} aria-label="Back" className="flex size-8 items-center justify-center rounded-full text-black/50 transition hover:bg-black/5 hover:text-black">
                   <svg className="size-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2"><path d="m12 4-6 6 6 6" strokeLinecap="round" strokeLinejoin="round" /></svg>
@@ -2304,31 +2247,34 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
               <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px]">
                 <div className="min-w-0">
                   {openPlatform === "wordpress" ? (
-                    <div className="space-y-3">
-                      <div className="rounded-xl border border-black/10 bg-white">
-                        <p className="flex items-center gap-3 border-b border-black/[0.07] px-5 py-4"><span className="flex size-7 items-center justify-center rounded-full bg-black text-xs text-white">1</span><span className="text-[15px] font-normal">Get the plugin</span></p>
-                        <div className="px-5 py-4">
-                          <p className="text-sm leading-6 text-black/55">
-                            Go to your WordPress dashboard. Click on <strong>Plugins / Add New</strong> and search <strong>Elpino Chat</strong>. Install it and activate it.
-                          </p>
-                          <p className="mt-2 text-sm leading-6 text-black/55">
-                            Not listed yet? <a href="https://github.com/elpino-chat/wordpress-plugin/archive/refs/heads/plugin/elpino-chat.zip" className="text-[#2563eb] underline underline-offset-2">Download the plugin</a> and upload it under <code className="rounded bg-black/[0.05] px-1">Plugins → Add New → Upload Plugin</code>.
-                          </p>
-                        </div>
-                      </div>
-                      <div className="rounded-xl border border-black/10 bg-white">
-                        <p className="flex items-center gap-3 border-b border-black/[0.07] px-5 py-4"><span className="flex size-7 items-center justify-center rounded-full bg-black text-xs text-white">2</span><span className="text-[15px] font-normal">Connect with Elpino</span></p>
-                        <div className="px-5 py-4">
-                          <p className="text-sm leading-6 text-black/55">Click <strong>Elpino Chat</strong> in your WordPress admin menu, then <strong>Connect to Elpino</strong>. Log in and it connects automatically — no code to paste.</p>
-                        </div>
-                      </div>
-                      <div className="rounded-xl border border-black/10 bg-white">
-                        <p className="flex items-center gap-3 border-b border-black/[0.07] px-5 py-4"><span className="flex size-7 items-center justify-center rounded-full bg-black text-xs text-white">3</span><span className="text-[15px] font-normal">Play with Elpino</span></p>
-                        <div className="px-5 py-4">
-                          <p className="text-sm leading-6 text-black/55">Go to your site — Elpino is live immediately after connecting. If you don&apos;t see it, reset your cache and check the plugin&apos;s own settings page.</p>
-                        </div>
-                      </div>
-                    </div>
+                    <ol className="relative space-y-4">
+                      <span className="absolute bottom-8 left-[21px] top-8 w-px bg-gradient-to-b from-blue-200 via-violet-200 to-emerald-200" aria-hidden="true" />
+                      {[
+                        { n: 1, title: "Get the plugin", tone: "bg-blue-600", soft: "border-blue-100 bg-blue-50/50", chip: "bg-blue-100 text-blue-700", tag: "2 min", body: (
+                          <>
+                            <p className="text-sm leading-6 text-black/60">Go to your WordPress dashboard. Click <strong className="text-black/80">Plugins → Add New</strong>, search <strong className="text-black/80">Elpino Chat</strong>, then install and activate it.</p>
+                            <p className="mt-2 text-sm leading-6 text-black/60">Not listed yet? <a href="https://github.com/elpino-chat/wordpress-plugin/archive/refs/heads/plugin/elpino-chat.zip" className="font-medium text-blue-700 underline underline-offset-2">Download the plugin</a> and upload it under <code className="rounded bg-white px-1.5 py-0.5 text-[12px] ring-1 ring-black/10">Plugins → Add New → Upload Plugin</code>.</p>
+                          </>
+                        ) },
+                        { n: 2, title: "Connect with Elpino", tone: "bg-violet-600", soft: "border-violet-100 bg-violet-50/50", chip: "bg-violet-100 text-violet-700", tag: "1 click", body: (
+                          <p className="text-sm leading-6 text-black/60">Click <strong className="text-black/80">Elpino Chat</strong> in your WordPress admin menu, then <strong className="text-black/80">Connect to Elpino</strong>. Log in and it connects automatically — no code to paste.</p>
+                        ) },
+                        { n: 3, title: "Play with Elpino", tone: "bg-emerald-600", soft: "border-emerald-100 bg-emerald-50/50", chip: "bg-emerald-100 text-emerald-700", tag: "Done", body: (
+                          <p className="text-sm leading-6 text-black/60">Go to your site — Elpino is live right after connecting. If you don&apos;t see it, clear your cache and check the plugin&apos;s own settings page.</p>
+                        ) },
+                      ].map((step) => (
+                        <li key={step.n} className="relative flex gap-4">
+                          <span className={`relative z-10 flex size-11 shrink-0 items-center justify-center rounded-full text-base font-semibold text-white shadow-sm ring-4 ring-white ${step.tone}`}>{step.n}</span>
+                          <div className={`min-w-0 flex-1 rounded-2xl border p-4 ${step.soft}`}>
+                            <div className="flex items-center justify-between gap-3">
+                              <p className="text-[15px] font-medium text-[#111214]">{step.title}</p>
+                              <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${step.chip}`}>{step.tag}</span>
+                            </div>
+                            <div className="mt-2">{step.body}</div>
+                          </div>
+                        </li>
+                      ))}
+                    </ol>
                   ) : (
                     <div className="space-y-3">
                       <details open className="group rounded-xl border border-black/10 bg-white">
@@ -2336,7 +2282,7 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
                         <div className="border-t border-black/[0.07] px-5 pb-5 pt-4">
                           <p className="text-sm leading-6 text-black/55">Place this before the closing <code className="rounded bg-black/[0.05] px-1">&lt;/head&gt;</code> tag on {siteHostname}.</p>
                           <div className="relative mt-3 overflow-hidden rounded-lg bg-[#17181a]">
-                            <pre className="overflow-x-auto p-4 pr-12 text-xs leading-5 text-white/85"><code>{`<script async src="https://cdn.elpino.chat/tag.js" data-site-key="${widgetKey ?? "YOUR_SITE_KEY"}"></script>`}</code></pre>
+                            <pre className="overflow-x-auto p-4 pr-16 font-mono text-[12.5px] leading-6 text-[#cdd6f4]"><code><HighlightedHtml code={`<script async src="https://cdn.elpino.chat/tag.js" data-site-key="${widgetKey ?? "YOUR_SITE_KEY"}"></script>`} /></code></pre>
                             <button type="button" disabled={!widgetKey} onClick={() => { if (!widgetKey) return; void navigator.clipboard.writeText(`<script async src="https://cdn.elpino.chat/tag.js" data-site-key="${widgetKey}"></script>`).then(() => { setSnippetCopied(true); setTimeout(() => setSnippetCopied(false), 2000); }); }} className="absolute right-2 top-2 rounded-md bg-white/10 px-2 py-1 text-[11px] text-white transition hover:bg-white/20 disabled:opacity-40">{snippetCopied ? "Copied" : "Copy"}</button>
                           </div>
                           <div className="mt-4 flex flex-wrap items-center gap-3">
@@ -2360,8 +2306,9 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
                 </div>
 
                 <aside>
-                  <div className="rounded-2xl bg-[#f5f5f2] p-5 sm:p-6">
-                    <p className="text-[15px] font-normal text-black">Send to a developer</p>
+                  <div className="rounded-2xl border border-amber-100 bg-gradient-to-br from-amber-50 via-rose-50 to-violet-50 p-5 sm:p-6">
+                    <span className="flex size-10 items-center justify-center rounded-xl bg-white text-amber-600 shadow-sm ring-1 ring-amber-100"><Mail className="size-5" /></span>
+                    <p className="mt-3 text-[15px] font-medium text-black">Send to a developer</p>
                     <p className="mt-1.5 text-[13px] leading-5 text-black/50">Add one or more developer emails. We&rsquo;ll prepare the installation instructions and widget code for you.</p>
                     <form className="mt-5 space-y-4" onSubmit={async (event) => {
                       event.preventDefault();
@@ -2461,10 +2408,10 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
           const busy = crawlStatus === "discovering" || crawlStatus === "saving";
           return (
             <section>
-              <h1 className="text-balance text-[clamp(1.9rem,3.2vw,2.35rem)] font-normal leading-[1.12] tracking-[-0.03em]">
+              <h1 className="text-balance text-xl font-normal leading-[1.12] tracking-[-0.03em]">
                 Teach Elpino about your business
               </h1>
-              <p className="mt-3 text-[16px] text-black/55">
+              <p className="mt-2 text-lg text-black/55">
                 We&rsquo;ll scan {siteHostname} from the homepage outward, then save the pages you choose to your knowledge base.
               </p>
 
@@ -2566,20 +2513,7 @@ export function OnboardingClient({ session }: { session: OnboardingSession }) {
         </div>
       </div>
 
-      <footer className="relative z-20 mt-auto flex items-center gap-4 bg-transparent px-6 py-6 sm:px-10">
-        <div className="w-20 shrink-0">
-          {step > 1 && (
-            <button type="button" onClick={goBack} className="flex cursor-pointer items-center gap-1.5 text-[15px] text-black/60 transition hover:text-black">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M19 12H5m6-6-6 6 6 6" /></svg>
-              Back
-            </button>
-          )}
-        </div>
-        <p className="flex-1 text-center text-[12px] leading-5 text-black/40">
-          We collect this information to personalize your experience. You&rsquo;re signing up as {session.email}.
-        </p>
-        <div className="hidden w-20 shrink-0 sm:block" />
-      </footer>
+
     </main>
   );
 }

@@ -1,7 +1,10 @@
+import { ownerGuard } from "@/app/api/_lib/owner-guard";
 import { deleteGateway } from "@/app/api/auth/_lib/gateway";
 import { selectedWorkspaceId } from "../_lib/workspace";
 
 export async function DELETE(request: Request, { params }: { params: Promise<{ provider: string }> }) {
+  const blocked = await ownerGuard("disconnect integrations");
+  if (blocked) return blocked;
   const companyId = await selectedWorkspaceId();
   if (!companyId) return Response.json({ message: "Create a workspace first." }, { status: 400 });
 
