@@ -30,7 +30,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const isBareAuthPage =
     pathname === "/forgot-password" || pathname === "/reset-password";
   const isMinimalHeaderAuthPage = pathname === "/login" || pathname === "/signup";
-  const isAppPage = pathname === "/onboarding" || pathname.startsWith("/dashboard") || pathname.startsWith("/connect");
+  const isAppPage = pathname === "/onboarding" || pathname.startsWith("/dashboard") || pathname.startsWith("/connect") || pathname.startsWith("/partner");
   const isEmbeddedWidget = pathname.startsWith("/widget");
   const isDocsPage = pathname === "/docs" || pathname.startsWith("/docs/");
   const language = useStoredLanguage();

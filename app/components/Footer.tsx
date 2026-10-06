@@ -18,7 +18,13 @@ const columns = [
   { title: "Solutions", links: groupLinks("Solutions") },
   { title: "Resources", links: groupLinks("Resources", ["Company"]) },
   { title: "Compare", links: compareFooterLinks },
-  { title: "Company", links: navGroups.find((g) => g.label === "Resources")?.sections.find((s) => s.title === "Company")?.items ?? [] },
+  {
+    title: "Company",
+    links: [
+      ...(navGroups.find((g) => g.label === "Resources")?.sections.find((s) => s.title === "Company")?.items ?? []),
+      { label: "Become a partner", href: "/partner/signup" },
+    ],
+  },
 ];
 
 // Where the footer's social icons go. An entry with an empty href is left out until its profile URL is filled in,

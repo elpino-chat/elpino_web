@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import type { NextFetchEvent, NextRequest } from "next/server";
 import { verifyAuthToken } from "@/app/api/auth/_lib/auth-store";
+import { callGateway } from "@/app/api/auth/_lib/gateway";
+import { REFERRAL_COOKIE, REFERRAL_COOKIE_MAX_AGE, normalizeReferralCode } from "@/app/lib/referral";
 
-export async function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest, event: NextFetchEvent) {
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith("/dashboard") || pathname === "/onboarding" || pathname.startsWith("/connect")) {
@@ -34,6 +36,21 @@ export async function proxy(request: NextRequest) {
       maxAge: 60 * 60 * 24,
       sameSite: "lax",
     });
+  }
+
+  // A partner's referral link (any page with ?ref=<code>). Every visit through it is counted; the code is
+  // remembered for 60 days so a signup days later still counts, and the first partner to bring a visitor keeps
+  // them. The click is recorded in the background so the page is never held up by it.
+  const ref = normalizeReferralCode(request.nextUrl.searchParams.get("ref"));
+  if (ref) {
+    if (!request.cookies.get(REFERRAL_COOKIE)?.value) {
+      response.cookies.set(REFERRAL_COOKIE, ref, { path: "/", maxAge: REFERRAL_COOKIE_MAX_AGE, sameSite: "lax", httpOnly: true, secure: request.nextUrl.protocol === "https:" });
+    }
+    let referrerHost: string | null = null;
+    try { referrerHost = new URL(request.headers.get("referer") ?? "").hostname || null; } catch { /* No or bad referrer. */ }
+    // The partner's own tag for where they shared the link (?c=whatsapp), or a standard utm_campaign.
+    const campaign = request.nextUrl.searchParams.get("c") ?? request.nextUrl.searchParams.get("utm_campaign");
+    event.waitUntil(callGateway("/api/workspace/referrals/click", { code: ref, landingPath: pathname, referrerHost, campaign, country }).catch(() => undefined));
   }
   return response;
 }
