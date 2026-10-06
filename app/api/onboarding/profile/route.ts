@@ -1,25 +1,8 @@
 import { cookies } from "next/headers";
 import { callGateway } from "@/app/api/auth/_lib/gateway";
-import { REFERRAL_COOKIE, normalizeReferralCode } from "@/app/lib/referral";
+import { REFERRAL_COOKIE } from "@/app/lib/referral";
+import { creditReferral } from "@/app/lib/credit-referral";
 import { requireSession } from "../_lib/require-user";
-
-type Organization = { id: string; name: string };
-
-// The workspace this signup just created is credited to the partner whose referral link brought the visitor in.
-// Never allowed to fail the onboarding step: a missed referral is fixable by hand, a broken signup is not.
-async function creditReferral(email: string) {
-  const code = normalizeReferralCode((await cookies()).get(REFERRAL_COOKIE)?.value);
-  if (!code) return;
-  try {
-    const result = await callGateway<{ organizations?: Organization[]; selectedOrganizationId?: string }>(`/api/auth/organizations?email=${encodeURIComponent(email)}`);
-    const workspace = result.organizations?.find((org) => org.id === result.selectedOrganizationId) ?? result.organizations?.[0];
-    if (!workspace) return;
-    await callGateway("/api/workspace/companies", { organizationId: workspace.id, name: workspace.name });
-    await callGateway("/api/workspace/referrals/attribute", { companyId: workspace.id, code, email });
-  } catch {
-    // See above.
-  }
-}
 
 export async function POST(request: Request) {
   const session = await requireSession();
@@ -41,6 +24,7 @@ export async function POST(request: Request) {
   if (result?.error) {
     return Response.json({ message: result.error }, { status: 400 });
   }
-  await creditReferral(session.email);
+  // The workspace this signup just created goes to the partner whose link brought the visitor in.
+  await creditReferral(session.email, (await cookies()).get(REFERRAL_COOKIE)?.value);
   return Response.json({ ok: true });
 }
