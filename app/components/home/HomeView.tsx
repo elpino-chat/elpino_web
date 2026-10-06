@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
-  ArrowLeft, ArrowRight, ArrowUp, ArrowUpRight, BadgeCheck, BookOpen, Bot, Check, ChevronDown, ChevronLeft, Code2, Eye, FileText, Globe, Inbox, KeyRound, Languages, Lock, MessageSquare, MoreHorizontal, Palette, Paperclip, PenLine, Plug, Plus, Rocket, ShieldCheck, Smile, Ticket, Upload, Users, Wallet,
+  ArrowLeft, ArrowRight, ArrowUp, ArrowUpRight, BadgeCheck, BookOpen, Bookmark, Bot, Check, CheckCheck, ChevronDown, ChevronLeft, CircleHelp, Code2, Compass, Eye, FileText, Gauge, Globe, Inbox, KeyRound, Languages, LayoutGrid, Lock, MapPin, MessageCircle, MessageSquare, MonitorSmartphone, MoreHorizontal, Palette, Paperclip, PenLine, Plug, Plus, Rocket, Search, Settings, ShieldCheck, Smile, Ticket, Upload, UserPlus, Users, Wallet, Zap,
 } from "lucide-react";
 import { Rv } from "@/app/components/RevealOnScroll";
 import { ConnectorLogo } from "@/app/components/ConnectorLogo";
@@ -173,8 +173,182 @@ function HeroStage({ t }: { t: T }) {
   );
 }
 
+// The team inbox, drawn in code to match the real dashboard, so it stays crisp and tells the same story as the
+// widget floating over it: the AI checks the payment and fixes the plan, then hands the refund to Billing. It
+// is laid out once at the real dashboard's size and scaled to whatever width it gets, so it reads like a
+// screenshot at every breakpoint. Every name, email and address in it is made up.
+const INBOX_W = 1914, INBOX_H = 928;
+function InboxMock({ t }: { t: T }) {
+  const boxRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(0);
+  useEffect(() => {
+    const el = boxRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    // Fires once on observe, so this also sets the first scale.
+    const observer = new ResizeObserver(([entry]) => setScale(entry.contentRect.width / INBOX_W));
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+  const rail = [
+    { icon: LayoutGrid, label: t("home.hero.inbox.space", "Space") },
+    { icon: Inbox, label: t("home.hero.inbox.inbox", "Inbox"), active: true },
+    { icon: Globe, label: t("home.hero.inbox.analytics", "Analytics") },
+    { icon: Users, label: t("home.hero.inbox.contacts", "Contacts") },
+    { icon: FileText, label: t("home.hero.inbox.knowledge", "Knowledge") },
+    { icon: Settings, label: t("home.hero.inbox.settings", "Settings") },
+  ];
+  const visitorName = t("home.hero.inbox.visitor", "Website visitor");
+  const threads = [
+    { initials: "NG", color: "#b8743a", name: "Neha Gupta", when: "Oct 6", preview: t("home.hero.chat.a2", "Refunds need a teammate's approval, so I've passed this to Billing with your payment details. They'll reply right here."), active: true },
+    { initials: "AM", color: "#c4573f", name: "Alex Morgan", when: "Oct 6", preview: t("home.hero.inbox.p2", "Where's my invoice for September?"), plain: true },
+    { initials: "WV", color: "#7a4fc4", name: visitorName, when: "Oct 5", preview: t("home.hero.inbox.p3", "Hey! What can I help you with today?") },
+    { initials: "WV", color: "#3a6fc0", name: visitorName, when: "Oct 5", preview: t("home.hero.inbox.p4", "Your order #4821 ships tomorrow.") },
+    { initials: "RK", color: "#c4573f", name: "Riya Kapoor", when: "Sep 30", preview: t("home.hero.inbox.p5", "Here's the lineup: Free, Starter, Growth…") },
+    { initials: "WV", color: "#7a4fc4", name: visitorName, when: "Sep 29", preview: t("home.hero.inbox.p6", "Updated with the correct address.") },
+    { initials: "AM", color: "#3a6fc0", name: "Arjun Mehta", when: "Sep 27", preview: t("home.hero.inbox.p7", "I've passed this to the team.") },
+    { initials: "TB", color: "#b8743a", name: "Tom Becker", when: "Sep 25", preview: t("home.hero.inbox.p8", "ok thanks") },
+  ];
+  // The AI's messages sit on the right as plain text with its logo beside them; the visitor's sit on the left in a grey bubble.
+  const logo = (size: number) => <span className="block shrink-0 overflow-hidden" style={{ width: size * 0.9, height: size }}><Image src="/elpino.png" alt="" width={906} height={275} className="h-full w-auto max-w-none" /></span>;
+  const ai = (text: ReactNode) => (
+    <div className="flex justify-end gap-5">
+      <div className="max-w-[600px]"><p className="text-[14px] leading-[1.55]">{text}</p><p className="mt-2 text-right text-[12px]">1:43 PM</p></div>
+      {logo(26)}
+    </div>
+  );
+  const visitor = (text: string) => (
+    <div>
+      <div className="flex items-center gap-4">
+        <span className="grid size-[30px] shrink-0 place-items-center rounded-full bg-[#f1f1f1] text-[13px] font-semibold">NG</span>
+        <p className="max-w-[520px] rounded-2xl bg-[#f1f1f1] px-4 py-3 text-[14px]">{text}</p>
+      </div>
+      <p className="ml-[52px] mt-2 text-[12px]">1:43 PM</p>
+    </div>
+  );
+  const verified = <span className="inline-flex items-center gap-1 rounded-md bg-[#eef8f1] px-2 py-0.5 text-[11.5px] font-medium"><ShieldCheck size={12} />{t("home.hero.inbox.verified", "Verified")}</span>;
+  return (
+    <div ref={boxRef} className="relative aspect-[1914/928] w-full overflow-hidden rounded-2xl border border-black/10 bg-white shadow-[0_30px_80px_rgba(17,18,15,0.18)]">
+      <div aria-hidden="true" className="absolute left-0 top-0 flex text-[#11120f]" style={{ width: INBOX_W, height: INBOX_H, transform: `scale(${scale})`, transformOrigin: "0 0", opacity: scale ? 1 : 0 }}>
+        {/* Navigation rail */}
+        <div className="flex w-[80px] shrink-0 flex-col items-center bg-[#f7f7f7] pt-3.5 pb-8">
+          {logo(46)}
+          <div className="mt-8 flex flex-col items-center gap-3">
+            {rail.map(({ icon: Icon, label, active }) => (
+              <span key={label} className={`relative flex w-[62px] flex-col items-center gap-1.5 rounded-xl py-2.5 text-[12px] ${active ? "bg-[#ececec] text-[#11120f]" : "text-[#11120f]/70"}`}>
+                <Icon size={18} strokeWidth={1.6} />{label}
+                {active && <span className="absolute right-3 top-2 grid size-4 place-items-center rounded-full bg-[#2c8a63] text-[9.5px] font-semibold text-white">1</span>}
+              </span>
+            ))}
+          </div>
+          <span className="mt-auto text-[#11120f]/80"><CircleHelp size={20} strokeWidth={1.6} /></span>
+        </div>
+        <div className="flex min-w-0 flex-1 flex-col">
+          {/* Top bar */}
+          <div className="flex h-[66px] shrink-0 items-center px-8">
+            <span className="flex items-center gap-2.5 text-[15px]">{t("home.hero.inbox.workspace", "Elpino's Workspace")}<ChevronDown size={15} /></span>
+            <span className="ml-10 flex items-center gap-2.5 text-[13px]"><Compass size={15} />{t("home.hero.inbox.tour", "Page tour")}</span>
+            <span className="ml-8 flex h-[36px] w-[806px] items-center gap-3 rounded-xl border border-black/15 px-4 text-[14px] text-[#11120f]/55"><Search size={15} className="text-[#11120f]" />{t("home.hero.inbox.searchAll", "Search people, chats, workspaces...")}</span>
+            <span className="ml-auto flex items-center gap-2.5 text-[14px]"><UserPlus size={15} />{t("home.hero.inbox.invite", "Invite team")}</span>
+            <span className="ml-9 flex items-center gap-2.5 text-[14px]"><Gauge size={15} />{t("home.hero.inbox.usage", "Usage")}</span>
+            <span className="relative ml-7 grid size-[30px] place-items-center rounded-full bg-[#1f1f1f] text-[13px] text-white">J<span className="absolute -bottom-0.5 -right-0.5 size-3 rounded-full border-2 border-white bg-[#2c8a63]" /></span>
+            <ChevronDown size={13} className="ml-1.5" />
+          </div>
+          <div className="flex min-h-0 flex-1">
+            {/* Conversation list */}
+            <div className="flex w-[364px] shrink-0 flex-col overflow-hidden px-2.5">
+              <div className="flex gap-7 px-4 text-[15px]">
+                <span className="pb-3 pt-0.5 text-[#11120f]/75">{t("home.hero.inbox.team", "Team Inbox")}</span>
+                <span className="flex items-center gap-2.5 border-b-2 border-[#11120f] pb-3 pt-0.5 font-medium">{t("home.hero.inbox.ai", "AI Assist")}<span className="grid size-[21px] place-items-center rounded-full bg-[#11120f] text-[11px] font-semibold text-white">1</span></span>
+              </div>
+              <span className="mx-2.5 mt-2 flex h-[38px] items-center gap-2.5 rounded-full border border-black/15 px-5 text-[14.5px] text-[#11120f]/55"><Search size={15} className="text-[#11120f]" />{t("home.hero.inbox.search", "Search conversations")}</span>
+              <div className="mx-2.5 mt-4 flex gap-2.5 text-[14px]">
+                <span className="rounded-full border border-[#11120f] px-4 py-1.5 font-medium">{t("home.hero.inbox.all", "All")}</span>
+                <span className="rounded-full border border-black/15 px-4 py-1.5 text-[#11120f]/75">{t("home.hero.inbox.resolved", "Resolved")}</span>
+              </div>
+              <div className="mt-3 space-y-1">
+                {threads.map((c, i) => (
+                  <div key={i} className={`flex items-center gap-4 rounded-xl px-3 py-3 ${c.active ? "bg-[#ececec]" : ""}`}>
+                    <span className="grid size-[40px] shrink-0 place-items-center rounded-full text-[14px] font-medium text-white/95" style={{ backgroundColor: c.color }}>{c.initials}</span>
+                    <span className="min-w-0 flex-1">
+                      <span className="flex items-baseline justify-between gap-2"><span className="truncate text-[15px]">{c.name}</span><span className="shrink-0 text-[13px] text-[#11120f]/80">{c.when}</span></span>
+                      <span className="mt-1 flex items-center gap-2 text-[14px] text-[#11120f]/80">{!c.plain && <CheckCheck size={13} className="shrink-0 text-[#2c8a63]" />}<span className="truncate">{c.preview}</span></span>
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {/* The open conversation */}
+            <div className="flex min-w-0 flex-1 flex-col border-x border-black/[0.08]">
+              <div className="flex items-center gap-4 border-b border-black/[0.08] px-6 pb-4 pt-2">
+                <span className="grid size-[36px] place-items-center rounded-full bg-[#b8743a] text-[13px] font-medium text-white">NG</span>
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-center gap-3 text-[15px] font-medium">Neha Gupta{verified}</span>
+                  <span className="mt-1 flex items-center gap-4 text-[12px]">
+                    <span>{t("home.hero.inbox.handed", "Assigned to Billing — waiting for a teammate")}</span>
+                    <span className="flex items-center gap-1"><MapPin size={13} />IN</span>
+                    <span className="flex items-center gap-1"><Globe size={13} />203.0.113.42</span>
+                    <span className="flex items-center gap-1"><MonitorSmartphone size={13} />Chrome · macOS</span>
+                  </span>
+                </span>
+                <span className="flex items-center gap-2.5 rounded-xl bg-[#1f1f1f] px-5 py-3 text-[14px] font-medium text-white"><MessageCircle size={14} />{t("home.hero.inbox.join", "Join")}</span>
+              </div>
+              <div className="flex min-h-0 flex-1 flex-col justify-end gap-7 overflow-hidden px-10 pb-8">
+                {ai(t("home.hero.inbox.greet", "Hi Neha 👋 How can I help you today?"))}
+                {visitor(t("home.hero.chat.q1", "I paid for Growth but my account still says Free"))}
+                {ai(t("home.hero.chat.a1", "Found it: your ₹4,999 payment from this morning went through. Growth is now active, so refresh and you'll see it."))}
+                {visitor(t("home.hero.chat.q2", "Thanks! Can I get a refund for last month?"))}
+                {ai(t("home.hero.chat.a2", "Refunds need a teammate's approval, so I've passed this to Billing with your payment details. They'll reply right here."))}
+                <div className="flex items-center gap-4 text-[12px]"><span className="h-px flex-1 bg-black/15" />{t("home.hero.inbox.assigned", "Assigned to Billing: refunds need a teammate's approval")}<span className="h-px flex-1 bg-black/15" /></div>
+              </div>
+              {/* The teammate's reply box: reply mode, the shortcut hint, quick tools and Send. */}
+              <div className="mx-4 mb-4 rounded-2xl border border-black/10 px-5 pb-3.5 pt-4 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
+                <span className="flex items-center gap-1.5 text-[13px] font-semibold"><MessageSquare size={13} />{t("home.hero.inbox.reply", "Reply")}<ChevronDown size={12} /></span>
+                <p className="mt-3 text-[13px] text-[#11120f]/45">{t("home.hero.inbox.shortcuts", "Use ⌘K for shortcuts")}</p>
+                <div className="mt-6 flex items-center justify-between text-[#11120f]/75">
+                  <span className="flex items-center gap-4"><Zap size={14} /><Bookmark size={14} /><Smile size={14} /><span className="rounded-[4px] border border-current px-1 text-[9.5px] font-bold leading-[13px]">AI</span></span>
+                  <span className="flex items-center gap-3 rounded-lg bg-[#f1f1f1] px-4 py-1.5 text-[13px] text-[#11120f]/55">{t("home.hero.inbox.send", "Send")}<ChevronDown size={12} /></span>
+                </div>
+              </div>
+            </div>
+            {/* Visitor details */}
+            <div className="w-[374px] shrink-0">
+              <div className="border-b border-black/[0.08] px-6 pb-6 pt-3">
+                <div className="flex items-center gap-4">
+                  <span className="grid size-[48px] place-items-center rounded-full bg-[#b8743a] text-[18px] font-medium text-white">NG</span>
+                  <span><span className="flex items-center gap-3 text-[15px] font-medium">Neha Gupta{verified}</span><span className="mt-1 block text-[12.5px] text-[#11120f]/70">{visitorName}</span></span>
+                </div>
+                <p className="mt-5 rounded-xl bg-[#fafafa] px-4 py-4 text-[13px] shadow-[0_1px_3px_rgba(0,0,0,0.06)]"><span className="font-semibold">{t("home.hero.inbox.email", "Email")}:</span> neha@example.com</p>
+              </div>
+              <div className="space-y-4 border-b border-black/[0.08] px-5 py-7 text-[13.5px]">
+                <p className="text-[11.5px] font-semibold tracking-[0.1em] text-[#11120f]/70">{t("home.hero.inbox.device", "LOCATION & DEVICE")}</p>
+                <p className="flex items-center gap-3"><MapPin size={13} />IN</p>
+                <p className="flex items-center gap-3"><Globe size={13} />203.0.113.42</p>
+                <p className="flex items-center gap-3"><MonitorSmartphone size={13} />Chrome · macOS</p>
+                <p className="text-[12px] text-[#11120f]/65">{t("home.hero.inbox.lastSeen", "Last seen 10/6/2026, 2:00:04 PM")}</p>
+              </div>
+              <div className="px-5 py-7">
+                <p className="text-[11.5px] font-semibold tracking-[0.1em] text-[#11120f]/70">{t("home.hero.inbox.other", "OTHER CONVERSATIONS")}</p>
+                {[
+                  { text: t("home.hero.inbox.o1", "Where's my invoice for September?"), when: "Sep 30" },
+                  { text: t("home.hero.inbox.o2", "ok thanks"), when: "Sep 25" },
+                ].map((o) => (
+                  <div key={o.when} className="px-3 pt-6">
+                    <p className="flex justify-between gap-3 text-[13.5px] font-medium"><span className="truncate">{o.text}</span><span className="shrink-0 text-[11px] font-normal text-[#11120f]/60">{o.when}</span></p>
+                    <p className="mt-2 flex items-center gap-1.5 text-[11.5px]"><CheckCheck size={13} />{t("home.hero.inbox.resolvedTag", "Resolved")}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Hero({ t }: { t: T }) {
   const trust = tList(t, "home.hero.trust", ["100 free AI messages a month", "No card required"]);
+  const [widgetRef, widgetSeen] = useSeen<HTMLDivElement>();
   return (
     <section className="relative isolate -mt-16 -mb-8 overflow-hidden bg-white text-[#11120f]">
       <div className="relative w-full px-12 pb-14 pt-44 lg:pt-52">
@@ -197,6 +371,7 @@ function Hero({ t }: { t: T }) {
           {/* The screenshot sits on a padded colour panel: a blue glow from the bottom, pink in both
               corners and a soft violet top, the same palette used earlier in the hero. */}
           <div
+            ref={widgetRef}
             className="relative rounded-3xl p-4 sm:p-8 lg:p-12"
             style={{
               backgroundColor: "#eef2ff",
@@ -208,12 +383,17 @@ function Hero({ t }: { t: T }) {
               ].join(", "),
             }}
           >
-          {/* The inbox is blurred and dimmed so the widget in front is what the eye lands on. */}
-          <div aria-hidden="true" className="overflow-hidden rounded-2xl border border-black/10 bg-white opacity-90 shadow-[0_30px_80px_rgba(17,18,15,0.18)] blur-[1px]">
-            <Image src="/inbox_prev.png" alt="The Elpino team inbox: conversation list, an AI-handled thread and the visitor's details" width={1915} height={812} priority className="h-auto w-full" sizes="(min-width: 1024px) 90vw, 100vw" />
-          </div>
-          {/* The chat widget visitors see, floating over the bottom-right corner of the inbox. */}
-          <Image src="/images/widget.png" alt="The Elpino chat widget answering a pricing question" width={511} height={779} className="absolute bottom-3 right-3 z-10 w-[34%] max-w-[340px] rounded-2xl shadow-[0_30px_80px_rgba(17,18,15,0.35),0_0_0_1px_rgba(255,255,255,0.7)] ring-4 ring-white/60 sm:bottom-6 sm:right-8 lg:-bottom-8 lg:right-12" sizes="(min-width: 1024px) 340px, 34vw" />
+          <InboxMock t={t} />
+          {/* The chat widget visitors see, floating over the bottom-right corner of the inbox. Hidden on
+              phones, where it would cover most of the screenshot. */}
+          {/* The story it tells is the headline's: the AI settles the routine question itself, with a real check behind
+              the answer, and hands the one that needs a person to the team. */}
+          <ChatWidgetPreview large seen={widgetSeen} className="hidden sm:-bottom-6 sm:right-8 sm:flex lg:-bottom-8 lg:right-12" lines={[
+            { ai: false, text: t("home.hero.chat.q1", "I paid for Growth but my account still says Free") },
+            { ai: true, meta: t("home.hero.chat.m1", "AI agent · Payment verified"), text: t("home.hero.chat.a1", "Found it: your ₹4,999 payment from this morning went through. Growth is now active, so refresh and you'll see it.") },
+            { ai: false, text: t("home.hero.chat.q2", "Thanks! Can I get a refund for last month?") },
+            { ai: true, meta: t("home.hero.chat.m2", "AI agent · Handed to Billing"), text: t("home.hero.chat.a2", "Refunds need a teammate's approval, so I've passed this to Billing with your payment details. They'll reply right here.") },
+          ]} />
           </div>
         </Rv>
       </div>
@@ -410,6 +590,43 @@ function useSeen<T extends HTMLElement>() {
   return [ref, seen] as const;
 }
 
+// One message in a ChatWidgetPreview: the AI's in a grey bubble with a byline under it, the visitor's plain and right-aligned.
+type ChatLine = { ai: boolean; text: ReactNode; meta?: string };
+
+// The chat widget a visitor sees, drawn in code; its `lines` arrive one by one once `seen`, as in a real chat.
+// `className` places it (position and display) over whatever it floats on. `large` is the hero's size: the
+// proportions of a real widget (511x779), with type scaled up to match.
+function ChatWidgetPreview({ seen, lines, className, large = false }: { seen: boolean; lines: ChatLine[]; className: string; large?: boolean }) {
+  const msg = (ms: number) => ({ opacity: seen ? 1 : 0, transform: seen ? "none" : "translateY(8px)", transition: `opacity 450ms ease ${ms}ms, transform 450ms ease ${ms}ms` });
+  const z = large
+    ? { box: "aspect-[511/779] w-[34%] min-w-[260px] max-w-[340px] p-4", icon: "size-8", iconPx: 15, name: "text-[14px]", role: "text-[11.5px]", body: "mt-4 space-y-3 text-[13px] leading-[1.5]", bubble: "rounded-2xl px-3 py-2", meta: "mt-1 text-[10px]", box2: "mt-3 px-3 pb-2 pt-2.5", hint: "text-[12.5px]", tool: 14, send: "size-7", sendPx: 13, foot: "mt-2 text-[10px]" }
+    : { box: "w-[38%] min-w-[200px] max-w-[290px] p-3", icon: "size-6", iconPx: 12, name: "text-[11px]", role: "text-[9.5px]", body: "mt-3 space-y-2 text-[10.5px] leading-[1.45]", bubble: "rounded-xl px-2.5 py-1.5", meta: "mt-0.5 text-[8.5px]", box2: "mt-2.5 px-2.5 pb-1.5 pt-2", hint: "text-[10px]", tool: 11, send: "size-5", sendPx: 10, foot: "mt-1.5 text-[8px]" };
+  return (
+    <div aria-hidden="true" className={`absolute z-10 flex-col rounded-2xl bg-[#fafafa] text-[#11120f] shadow-[0_30px_80px_rgba(15,22,41,0.55)] ring-4 ring-[#8b7cf6]/60 ${z.box} ${className}`}>
+      <div className="flex items-center gap-2">
+        <span className={`grid ${z.icon} shrink-0 place-items-center rounded-full bg-black/5`}><ChevronLeft size={z.iconPx} /></span>
+        <span className="min-w-0 flex-1"><span className={`block ${z.name} font-semibold leading-tight`}>Elpino AI</span><span className={`block ${z.role} leading-tight text-[#11120f]/50`}>AI Assistant</span></span>
+        <span className={`grid ${z.icon} shrink-0 place-items-center rounded-full bg-black/5`}><MoreHorizontal size={z.iconPx} /></span>
+      </div>
+      {/* flex-1 so, at the hero's fixed proportions, the composer sits at the bottom like a real widget's; anything
+          that does not fit is cut off at the top, as an older message scrolled out of a real chat would be. */}
+      <div className={`flex min-h-0 flex-1 flex-col justify-end overflow-hidden ${z.body}`}>
+        {lines.map((line, i) => line.ai
+          ? <div key={i} style={msg(500 + i * 1000)}><p className={`w-fit max-w-[92%] bg-[#eef1f4] ${z.bubble}`}>{line.text}</p><p className={`${z.meta} text-[#11120f]/45`}>{line.meta ?? "AI agent · Just now"}</p></div>
+          : <p key={i} className="ml-auto w-fit max-w-[85%] text-left" style={msg(500 + i * 1000)}>{line.text}</p>)}
+      </div>
+      <div className={`rounded-2xl border border-black/15 bg-white ${z.box2}`}>
+        <p className={`${z.hint} text-[#11120f]/45`}>Ask anything...</p>
+        <div className="mt-3 flex items-center justify-between text-[#11120f]/55">
+          <span className="flex items-center gap-1.5"><Paperclip size={z.tool} /><Smile size={z.tool} /></span>
+          <span className={`grid ${z.send} place-items-center rounded-full bg-black/10`}><ArrowUp size={z.sendPx} /></span>
+        </div>
+      </div>
+      <p className={`${z.foot} text-center text-[#11120f]/45`}>Powered by <span className="underline">elpino.chat</span></p>
+    </div>
+  );
+}
+
 // The four previews: a reply with the checks behind it, the numbers, the contacts it collects, the plugins it uses.
 function TeamPreview({ k, t }: { k: string; t: T }) {
   const [ref, seen] = useSeen<HTMLDivElement>();
@@ -473,34 +690,17 @@ function TeamPreview({ k, t }: { k: string; t: T }) {
   }
   // The team's inbox with the visitor's chat widget floating over its corner: both sides of the same conversation.
   if (k === "reply") {
-    // The widget's messages arrive one by one once it is in view, as in a real chat.
-    const msg = (ms: number) => ({ opacity: seen ? 1 : 0, transform: seen ? "none" : "translateY(8px)", transition: `opacity 450ms ease ${ms}ms, transform 450ms ease ${ms}ms` });
     return (
       <div ref={ref} className="relative">
         <Image src="/images/ai_repli.png" alt="The Elpino inbox: the AI replying to a visitor while the team watches" width={1462} height={877} className="h-auto w-full rounded-2xl" sizes="(min-width: 1024px) 560px, 90vw" />
         {/* The visitor's side of the same chat as the inbox screenshot, drawn in code so the two always agree. */}
-        <div aria-hidden="true" className="absolute -bottom-10 right-4 z-10 flex w-[38%] min-w-[200px] max-w-[290px] flex-col rounded-2xl bg-[#fafafa] p-3 text-[#11120f] shadow-[0_30px_80px_rgba(15,22,41,0.55)] ring-4 ring-[#8b7cf6]/60 sm:right-8">
-          <div className="flex items-center gap-2">
-            <span className="grid size-6 shrink-0 place-items-center rounded-full bg-black/5"><ChevronLeft size={12} /></span>
-            <span className="min-w-0 flex-1"><span className="block text-[11px] font-semibold leading-tight">Elpino AI</span><span className="block text-[9.5px] leading-tight text-[#11120f]/50">AI Assistant</span></span>
-            <span className="grid size-6 shrink-0 place-items-center rounded-full bg-black/5"><MoreHorizontal size={12} /></span>
-          </div>
-          <div className="mt-3 space-y-2 text-[10.5px] leading-[1.45]">
-            <div style={msg(500)}><p className="w-fit max-w-[90%] rounded-xl bg-[#eef1f4] px-2.5 py-1.5">Hi there 👋 How can I help you today?</p><p className="mt-0.5 text-[8.5px] text-[#11120f]/45">AI agent · Just now</p></div>
-            <p className="ml-auto w-fit" style={msg(1500)}>Hi</p>
-            <div style={msg(2500)}><p className="w-fit max-w-[90%] rounded-xl bg-[#eef1f4] px-2.5 py-1.5">Hey! What can I help you with today?</p><p className="mt-0.5 text-[8.5px] text-[#11120f]/45">AI agent · Just now</p></div>
-            <p className="ml-auto w-fit" style={msg(3500)}>Who are you</p>
-            <div style={msg(4600)}><p className="w-fit max-w-[94%] rounded-xl bg-[#eef1f4] px-2.5 py-1.5">I&apos;m <strong>Elpino AI</strong>, the AI assistant for this site. I answer questions, help with support and billing, and hand things over to a real teammate when you need one.</p><p className="mt-0.5 text-[8.5px] text-[#11120f]/45">AI agent · Just now</p></div>
-          </div>
-          <div className="mt-2.5 rounded-2xl border border-black/15 bg-white px-2.5 pb-1.5 pt-2">
-            <p className="text-[10px] text-[#11120f]/45">Ask anything...</p>
-            <div className="mt-3 flex items-center justify-between text-[#11120f]/55">
-              <span className="flex items-center gap-1.5"><Paperclip size={11} /><Smile size={11} /></span>
-              <span className="grid size-5 place-items-center rounded-full bg-black/10"><ArrowUp size={10} /></span>
-            </div>
-          </div>
-          <p className="mt-1.5 text-center text-[8px] text-[#11120f]/45">Powered by <span className="underline">elpino.chat</span></p>
-        </div>
+        <ChatWidgetPreview seen={seen} className="-bottom-10 right-4 flex sm:right-8" lines={[
+          { ai: true, text: "Hi there 👋 How can I help you today?" },
+          { ai: false, text: "Hi" },
+          { ai: true, text: "Hey! What can I help you with today?" },
+          { ai: false, text: "Who are you" },
+          { ai: true, text: <>I&apos;m <strong>Elpino AI</strong>, the AI assistant for this site. I answer questions, help with support and billing, and hand things over to a real teammate when you need one.</> },
+        ]} />
       </div>
     );
   }
