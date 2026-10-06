@@ -44,6 +44,24 @@ const nextConfig: NextConfig = {
       ...to('/product/knowledge-hub', '/solutions/self-service'),
       ...to('/product/ai-agent', '/solutions/workflows'),
       ...to('/product/inbox', '/solutions/visitor-intelligence', '/solutions/teammate-handoff', '/solutions/omnichannel-triage', '/solutions/omnichannel'),
+      // Blog posts from the operator era -> the closest support article, or the blog itself.
+      ...to('/blog/paid-but-plan-not-active', '/blog/stripe-razorpay-webhook-integrations'),
+      ...to('/blog/keeping-customer-data-away-from-ai', '/blog/oauth-token-isolation-security'),
+      ...to('/blog/ai-customer-support-pricing', '/blog/budget-caps-overage-prevention'),
+      ...to('/blog/when-ai-should-hand-off-to-a-human', '/blog/the-consent-loop'),
+      ...to('/blog', '/blog/inbox-to-action', '/blog/protecting-the-calendar', '/blog/database-connections-briefings',
+        '/blog/designing-for-zero-distraction', '/blog/vector-memory-vs-relational-state', '/blog/automatic-calendar-buffer-blocking',
+        '/blog/resilient-telegram-bot-webhook-handlers', '/blog/fine-tuning-open-source-models-tool-calling',
+        '/blog/the-vision-autonomous-workspace-operations'),
+      // Roles no longer open.
+      ...to('/careers', '/careers/staff-frontend-engineer', '/careers/product-designer', '/careers/backend-systems-architect',
+        '/careers/ai-research-scientist', '/careers/security-researcher', '/careers/customer-success-architect'),
+      // partner.elpino.chat is the partner area's own address. Its pages live under /partner, so every other path
+      // there is sent to the same path under /partner (the app's own assets and API routes excepted).
+      { source: '/', has: [{ type: 'host' as const, value: 'partner.elpino.chat' }], destination: '/partner', permanent: false },
+      { source: '/:path((?!partner|_next|api)(?!.*\\.[a-zA-Z0-9]+$).+)', has: [{ type: 'host' as const, value: 'partner.elpino.chat' }], destination: '/partner/:path', permanent: false },
+      // One canonical host: www serves nothing of its own.
+      { source: '/:path*', has: [{ type: 'host' as const, value: 'www.elpino.chat' }], destination: 'https://elpino.chat/:path*', permanent: true },
     ];
   },
   // Server secrets (AUTH_INTERNAL_SECRET, AUTH_JWT_SECRET, RESEND_API_KEY, TELEGRAM_BOT_TOKEN,

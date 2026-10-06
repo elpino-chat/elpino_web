@@ -121,6 +121,11 @@ function ShareMenu({ post, align, showToast, className }: { post: BlogPost; alig
   );
 }
 
+// Renders **text** as bold; everything else stays plain text.
+function withBold(text: string) {
+  return text.split(/\*\*(.+?)\*\*/g).map((part, i) => (i % 2 ? <strong key={i} className="font-semibold text-[#11120f]">{part}</strong> : part));
+}
+
 export function BlogPostClient({ post, allPosts }: { post: BlogPost; allPosts: BlogPost[] }) {
   const [progress, setProgress] = useState(0);
   const [toast, setToast] = useState<string | null>(null);
@@ -195,9 +200,16 @@ export function BlogPostClient({ post, allPosts }: { post: BlogPost; allPosts: B
         {/* ── Body: full width, sticky rail on the right ── */}
         <div className="grid gap-12 px-5 py-14 sm:px-8 sm:py-16 lg:grid-cols-[minmax(0,1fr)_300px] lg:px-20 lg:py-20">
           <div className="min-w-0 space-y-8 text-[18px] leading-9 text-black/75">
-            {paragraphs.map((p, i) => (
-              <p key={i} className={i === 0 ? "text-[21px] font-medium leading-9 text-[#11120f]" : ""}>{p}</p>
-            ))}
+            {/* Post content is plain text with three light markers: "## " starts a section heading, a block of
+                "- " lines is a list, and **text** is bold. */}
+            {paragraphs.map((p, i) => {
+              if (p.startsWith("## ")) return <h2 key={i} className="pt-4 text-[28px] font-normal leading-tight tracking-[-0.03em] text-[#11120f]">{p.slice(3)}</h2>;
+              const lines = p.split("\n");
+              if (lines.every((line) => line.startsWith("- "))) {
+                return <ul key={i} className="list-disc space-y-2 pl-6">{lines.map((line, j) => <li key={j}>{withBold(line.slice(2))}</li>)}</ul>;
+              }
+              return <p key={i} className={i === 0 ? "text-[21px] font-medium leading-9 text-[#11120f]" : ""}>{withBold(p)}</p>;
+            })}
 
             <div className="relative !mt-14 overflow-hidden rounded-tl-[2rem] bg-[#11120f] p-8 text-white sm:p-10">
               <div aria-hidden="true" className="absolute inset-0 opacity-40" style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.14) 1px, transparent 1px)", backgroundSize: "20px 20px", maskImage: "radial-gradient(70% 90% at 80% 100%, #000 0%, transparent 75%)", WebkitMaskImage: "radial-gradient(70% 90% at 80% 100%, #000 0%, transparent 75%)" }} />

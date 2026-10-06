@@ -922,8 +922,8 @@ function Autopilot({ t }: { t: T }) {
         <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
           <div className="flex flex-col gap-10">
             <Rv>
-              <h2 className="whitespace-nowrap text-[clamp(2.8rem,5.2vw,4.6rem)] font-normal leading-none tracking-[-0.035em] tabular-nums" style={{ color: "#a6e05a" }} aria-live="polite">{saving > 0 ? `${t("home.autopilot.save", "Save")} ${money(shown)}` : t("home.autopilot.close", "About the same")}</h2>
-              <p className="mt-4 text-base text-white/65">{`${t("home.autopilot.aYearVs", "a year, compared with")} ${all[target].name}${vs ? "" : `, ${t("home.autopilot.cheapest", "the cheapest of the three")}`}`}</p>
+              <h2 className="text-[clamp(2.8rem,5.2vw,4.6rem)] font-normal leading-none tracking-[-0.035em] tabular-nums" style={{ color: "#a6e05a" }} aria-live="polite">{saving > 0 ? `${t("home.autopilot.save", "Save")} ${money(shown)} ${t("home.autopilot.perYear", "a year")}` : t("home.autopilot.close", "About the same")}</h2>
+              <p className="mt-4 text-base text-white/65">{`${t("home.autopilot.comparedWith", "compared with")} ${all[target].name}${vs ? "" : `, ${t("home.autopilot.cheapest", "the cheapest of the three")}`}`}</p>
               {/* Every comparison, so nothing is hidden behind the headline. */}
               <ul className="mt-6 max-w-sm divide-y divide-white/15 border-y border-white/15 text-[15px]" aria-label={t("home.autopilot.each", "Saving against each")}>
                 {RIVALS.map((r) => {
