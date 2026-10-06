@@ -839,7 +839,9 @@ function DashboardContent({ name }: { name: string }) {
                 <UserRound size={12} /> {joinedBy.name} joined
               </span>
             )}
-            {!isMine && (
+            {/* A closed conversation (resolved, or closed after 24 quiet hours) has nothing to join; the
+                Closed state below says so instead. */}
+            {!isMine && !isResolved && (
               <button
                 type="button"
                 onClick={() => void joinConversation()}
@@ -977,16 +979,25 @@ function DashboardContent({ name }: { name: string }) {
               error={ticketError}
               onCreate={createTicket}
             />
-            <button
-              type="button"
-              onClick={() => void resolveConversation()}
-              disabled={resolving || conversation?.status === "resolved"}
-              title={conversation?.status === "resolved" ? "This conversation is already resolved" : "Mark this conversation as resolved"}
-              className="chat-action-primary ml-2 flex h-9 items-center gap-2 rounded-lg px-2.5 text-[13px] font-semibold disabled:opacity-50 sm:px-4"
-            >
-              {resolving ? <LoaderCircle size={15} className="animate-spin" /> : <CheckCircle2 size={15} />}
-              <span className="hidden sm:inline">{conversation?.status === "resolved" ? "Resolved" : resolving ? "Resolving…" : "Resolve"}</span>
-            </button>
+            {/* Once closed there is nothing left to do from the header, so a plain status takes the place of
+                both Join and Resolve. Replying after closing stays available from the thread itself. */}
+            {isResolved ? (
+              <span title="This conversation is closed" className="ml-2 flex h-9 items-center gap-1.5 rounded-lg border border-[var(--chat-divider)] px-2.5 text-[12.5px] font-semibold text-[var(--chat-muted)] sm:px-3.5">
+                <CheckCircle2 size={15} />
+                <span className="hidden sm:inline">Closed</span>
+              </span>
+            ) : (
+              <button
+                type="button"
+                onClick={() => void resolveConversation()}
+                disabled={resolving}
+                title="Mark this conversation as resolved"
+                className="chat-action-primary ml-2 flex h-9 items-center gap-2 rounded-lg px-2.5 text-[13px] font-semibold disabled:opacity-50 sm:px-4"
+              >
+                {resolving ? <LoaderCircle size={15} className="animate-spin" /> : <CheckCircle2 size={15} />}
+                <span className="hidden sm:inline">{resolving ? "Resolving…" : "Resolve"}</span>
+              </button>
+            )}
           </div>
         </header>
 

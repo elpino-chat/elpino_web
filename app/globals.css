@@ -4221,10 +4221,15 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
   color: rgb(255 255 255 / 0.92) !important;
 }
 [data-dashboard-theme="dark"] #dashboard-chat-interface .chat-action-primary,
-[data-dashboard-theme="dark"] #dashboard-chat-interface .chat-action-primary :is(span, svg),
-[data-dashboard-theme="dark"] #dashboard-customer-details .chat-action-primary,
-[data-dashboard-theme="dark"] #dashboard-customer-details .chat-action-primary :is(span, svg) {
+[data-dashboard-theme="dark"] #dashboard-customer-details .chat-action-primary {
   background: rgb(255 255 255 / 0.9) !important;
+  color: #202020 !important;
+}
+/* The label and icon only take the text color. Giving them the button's fill too left solid blocks inside a
+   disabled button, whose own fill turns pale while theirs stayed dark. */
+[data-dashboard-theme="dark"] #dashboard-chat-interface .chat-action-primary :is(span, svg),
+[data-dashboard-theme="dark"] #dashboard-customer-details .chat-action-primary :is(span, svg) {
+  background: transparent !important;
   color: #202020 !important;
 }
 [data-dashboard-theme="dark"] #dashboard-chat-interface .chat-action-primary:disabled,
@@ -4463,10 +4468,15 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
   color: rgba(0, 0, 0, 0.88) !important;
 }
 [data-dashboard-theme="light"] #dashboard-chat-interface .chat-action-primary,
-[data-dashboard-theme="light"] #dashboard-chat-interface .chat-action-primary :is(span, svg),
-[data-dashboard-theme="light"] #dashboard-customer-details .chat-action-primary,
-[data-dashboard-theme="light"] #dashboard-customer-details .chat-action-primary :is(span, svg) {
+[data-dashboard-theme="light"] #dashboard-customer-details .chat-action-primary {
   background: #17191b !important;
+  color: #ffffff !important;
+}
+/* The label and icon only take the text color. Giving them the button's fill too left solid blocks inside a
+   disabled button, whose own fill turns pale while theirs stayed dark. */
+[data-dashboard-theme="light"] #dashboard-chat-interface .chat-action-primary :is(span, svg),
+[data-dashboard-theme="light"] #dashboard-customer-details .chat-action-primary :is(span, svg) {
+  background: transparent !important;
   color: #ffffff !important;
 }
 [data-dashboard-theme="light"] #dashboard-chat-interface .chat-action-primary:disabled,

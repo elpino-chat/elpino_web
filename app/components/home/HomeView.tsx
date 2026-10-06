@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
-  ArrowLeft, ArrowRight, ArrowUp, ArrowUpRight, BadgeCheck, BookOpen, Bookmark, Bot, Check, CheckCheck, ChevronDown, ChevronLeft, CircleHelp, Code2, Compass, Eye, FileText, Gauge, Globe, Inbox, KeyRound, Languages, LayoutGrid, Lock, MapPin, MessageCircle, MessageSquare, MonitorSmartphone, MoreHorizontal, Palette, Paperclip, PenLine, Plug, Plus, Rocket, Search, Settings, ShieldCheck, Smile, Ticket, Upload, UserPlus, Users, Wallet, Zap,
+  ArrowLeft, ArrowRight, ArrowUp, ArrowUpRight, BadgeCheck, BookOpen, Bot, Check, CheckCheck, ChevronDown, ChevronLeft, CircleHelp, Code2, Compass, Eye, FileText, Gauge, Globe, Inbox, KeyRound, Languages, LayoutGrid, Lock, MapPin, MessageCircle, MessageSquare, MonitorSmartphone, MoreHorizontal, Palette, Paperclip, PenLine, Plug, Plus, Rocket, Search, Send, Settings, ShieldCheck, Smile, Ticket, Upload, UserPlus, Users, Wallet,
 } from "lucide-react";
 import { Rv } from "@/app/components/RevealOnScroll";
 import { ConnectorLogo } from "@/app/components/ConnectorLogo";
@@ -300,13 +300,16 @@ function InboxMock({ t }: { t: T }) {
                 {ai(t("home.hero.chat.a2", "Refunds need a teammate's approval, so I've passed this to Billing with your payment details. They'll reply right here."))}
                 <div className="flex items-center gap-4 text-[12px]"><span className="h-px flex-1 bg-black/15" />{t("home.hero.inbox.assigned", "Assigned to Billing: refunds need a teammate's approval")}<span className="h-px flex-1 bg-black/15" /></div>
               </div>
-              {/* The teammate's reply box: reply mode, the shortcut hint, quick tools and Send. */}
-              <div className="mx-4 mb-4 rounded-2xl border border-black/10 px-5 pb-3.5 pt-4 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
-                <span className="flex items-center gap-1.5 text-[13px] font-semibold"><MessageSquare size={13} />{t("home.hero.inbox.reply", "Reply")}<ChevronDown size={12} /></span>
-                <p className="mt-3 text-[13px] text-[#11120f]/45">{t("home.hero.inbox.shortcuts", "Use ⌘K for shortcuts")}</p>
-                <div className="mt-6 flex items-center justify-between text-[#11120f]/75">
-                  <span className="flex items-center gap-4"><Zap size={14} /><Bookmark size={14} /><Smile size={14} /><span className="rounded-[4px] border border-current px-1 text-[9.5px] font-bold leading-[13px]">AI</span></span>
-                  <span className="flex items-center gap-3 rounded-lg bg-[#f1f1f1] px-4 py-1.5 text-[13px] text-[#11120f]/55">{t("home.hero.inbox.send", "Send")}<ChevronDown size={12} /></span>
+              {/* The dashboard's own reply bar: the prompt, attachment, emoji, ticket, private-info and translate
+                  tools, and the black Send button with its options. */}
+              <div className="mx-6 mb-5 rounded-2xl border border-black/10 px-6 pb-3.5 pt-5 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
+                <p className="text-[14px] text-[#11120f]/55">{t("home.hero.inbox.composer", "Write your reply to the customer, press 'space' for AI, '/' for commands")}</p>
+                <div className="mt-7 flex items-center gap-5 text-[#11120f]/75">
+                  <Paperclip size={16} /><Smile size={16} /><Ticket size={16} /><Lock size={16} /><Languages size={16} />
+                  <span className="ml-auto flex h-[34px] items-center overflow-hidden rounded-lg bg-[#17191b] text-white">
+                    <span className="flex h-full w-11 items-center justify-center"><Send size={16} /></span>
+                    <span className="flex h-5 w-7 items-center justify-center border-l border-white/25"><ChevronDown size={13} /></span>
+                  </span>
                 </div>
               </div>
             </div>
