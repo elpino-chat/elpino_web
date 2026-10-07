@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Script from "next/script";
 import { usePathname } from "next/navigation";
 
@@ -40,12 +41,11 @@ const EXCLUDED_PREFIXES = [
 // whatever's running locally instead of production's cdn.elpino.chat.
 const TAG_SRC = process.env.NODE_ENV === "development" ? "/tag.js" : "https://cdn.elpino.chat/tag.js";
 
-// Production's site key is only valid for elpino.chat. Local dev uses its own,
-// registered for localhost by scripts/seed-dev-widget.sh.
-const SITE_KEY =
-  process.env.NODE_ENV === "development"
-    ? (process.env.NEXT_PUBLIC_WIDGET_SITE_KEY ?? "rz_site_devlocalhost00000000000000")
-    : "rz_site_22006bb0f7f000862ef24b9f240420";
+// Local dev uses its own key, registered for localhost (see .env.local). In production the key comes from the
+// service's environment through /api/widget-key, so it follows the Cloud Run setting instead of the build; the
+// original Elpino workspace key is only the fallback while that is not set.
+const DEV_SITE_KEY = process.env.NEXT_PUBLIC_WIDGET_SITE_KEY ?? "rz_site_devlocalhost00000000000000";
+const FALLBACK_SITE_KEY = "rz_site_22006bb0f7f000862ef24b9f240420";
 
 // Lets the widget recognise a logged-in visitor so the AI can look up their
 // account without asking who they are. tag.js reads ElpinoSettings once when
@@ -66,14 +66,24 @@ function installIdentityProvider() {
 export function SiteWidgetTag() {
   const pathname = usePathname();
   const excluded = EXCLUDED_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
-  if (excluded) return null;
+  const [siteKey, setSiteKey] = useState<string | null>(process.env.NODE_ENV === "development" ? DEV_SITE_KEY : null);
+  useEffect(() => {
+    if (process.env.NODE_ENV === "development") return;
+    let cancelled = false;
+    fetch("/api/widget-key", { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: { key?: string | null } | null) => { if (!cancelled) setSiteKey(data?.key || FALLBACK_SITE_KEY); })
+      .catch(() => { if (!cancelled) setSiteKey(FALLBACK_SITE_KEY); });
+    return () => { cancelled = true; };
+  }, []);
+  if (excluded || !siteKey) return null;
 
   installIdentityProvider();
 
   return (
     <Script
       src={TAG_SRC}
-      data-site-key={SITE_KEY}
+      data-site-key={siteKey}
       strategy="afterInteractive"
     />
   );
