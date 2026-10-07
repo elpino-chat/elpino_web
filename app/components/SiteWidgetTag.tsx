@@ -31,6 +31,8 @@ const EXCLUDED_PREFIXES = [
   "/widget",
   // The demo page loads its own widget, wired to the visitor's website, and must not also show Elpino's.
   "/demo",
+  // The local test page loads the signed-in workspace's own widget; Elpino's marketing one must not sit on top of it.
+  "/dev",
 ];
 
 // Same origin as tag.js/route.ts's own dev/prod split: in local dev, load the

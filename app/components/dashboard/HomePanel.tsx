@@ -4,8 +4,12 @@ import { ConversationListSkeleton } from "@/app/components/dashboard/DashboardSk
 import { fetchConversations } from "@/app/lib/fetch-conversations";
 import { useEffect, useMemo, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
-import { ChevronDown, Globe2 } from "lucide-react";
-import { ConversationRow, InboxViewTabs, ListEmpty, ListToolbar, type ListFilter } from "@/app/components/dashboard/inbox-list-ui";
+import Link from "next/link";
+import { ArrowLeft, ChevronDown, Globe2 } from "lucide-react";
+import {
+  ConversationRow, ListEmpty, ListToolbar, inView, inboxViewHref, inboxListHref, matchesStatus, parseInboxView, sortConversations, statusCounts, shortAge,
+  type SortOrder, type StatusFilter,
+} from "@/app/components/dashboard/inbox-list-ui";
 
 type PanelUser = { email: string; name?: string };
 type ConversationStatus = "open" | "waiting" | "resolved";
@@ -19,6 +23,7 @@ type Conversation = {
   unread?: number;
   status: ConversationStatus;
   assignedUserId?: string | null;
+  handledBy?: string;
   siteId?: string | null;
   siteDomain?: string | null;
 };
@@ -37,23 +42,24 @@ function colorForId(id: string) {
   return AVATAR_COLORS[hash % AVATAR_COLORS.length];
 }
 
-function formatTime(iso: string) {
-  const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return "";
-  const isToday = new Date().toDateString() === date.toDateString();
-  if (isToday) return date.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
-  const isThisYear = new Date().getFullYear() === date.getFullYear();
-  return date.toLocaleDateString(undefined, { month: "short", day: "numeric", year: isThisYear ? undefined : "numeric" });
-}
 
 export default function HomePanel({ user: _user }: { user: PanelUser }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const showPanel = pathname === "/dashboard/inbox" && searchParams.get("view") !== "ai";
+  const showPanel = pathname === "/dashboard/inbox";
   const openedConversationId = searchParams.get("conversation");
+  const view = parseInboxView(searchParams.get("view"));
+  // Phones open on the list of views (InboxNavPanel); the conversations only show once one is picked.
+  const mobileMenu = !openedConversationId && !searchParams.get("list");
 
   const [query, setQuery] = useState("");
-  const [filter, setFilter] = useState<ListFilter>("all");
+  // The Inbox sidebar's AI agent > Open / Closed links set ?status=; the dropdown in the list still works.
+  const statusParam = searchParams.get("status");
+  const [status, setStatus] = useState<StatusFilter>("open");
+  useEffect(() => { setStatus(statusParam === "closed" ? "closed" : statusParam === "all" ? "all" : "open"); }, [statusParam]);
+  const [sort, setSort] = useState<SortOrder>("newest");
+  // "Your inbox" needs to know who "you" are; the conversation only carries an assignee id.
+  const [myAccountId, setMyAccountId] = useState<string | null>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [workspace, setWorkspace] = useState<Workspace | null>(null);
@@ -72,6 +78,10 @@ export default function HomePanel({ user: _user }: { user: PanelUser }) {
     fetch("/api/workspace/sites")
       .then((response) => (response.ok ? response.json() : null))
       .then((data: { sites?: Site[] } | null) => setSites(data?.sites ?? []))
+      .catch(() => undefined);
+    fetch("/api/account", { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: { account?: { id?: string } } | null) => setMyAccountId(data?.account?.id ?? null))
       .catch(() => undefined);
   }, [showPanel]);
 
@@ -103,39 +113,29 @@ export default function HomePanel({ user: _user }: { user: PanelUser }) {
     };
   }, [showPanel]);
 
-  // The Inbox is for conversations a teammate has actually taken on —
-  // anything still unclaimed belongs in AI Assist instead, until someone
-  // joins it (assigning it here).
-  const assigned = useMemo(() => conversations.filter((conversation) => !!conversation.assignedUserId), [conversations]);
+  // The conversations the chosen view covers (the view menu picks which), before status, search and domain.
+  const assigned = useMemo(() => conversations.filter((conversation) => inView(conversation, view, myAccountId)), [conversations, view, myAccountId]);
 
-  const visibleConversations = useMemo(() => {
+  // Search and domain narrow the list first, so the status menu's counts match what each choice will show.
+  const searched = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
     return assigned.filter((conversation) => {
-      const matchesFilter =
-        filter === "all" ||
-        conversation.status === filter;
       const matchesQuery =
         !normalizedQuery ||
         conversation.name.toLowerCase().includes(normalizedQuery) ||
         conversation.preview.toLowerCase().includes(normalizedQuery);
       const matchesDomain = !selectedSiteId || conversation.siteId === selectedSiteId;
-      return matchesFilter && matchesQuery && matchesDomain;
+      return matchesQuery && matchesDomain;
     });
-  }, [assigned, filter, query, selectedSiteId]);
+  }, [assigned, query, selectedSiteId]);
+
+  const visibleConversations = useMemo(
+    () => sortConversations(searched.filter((conversation) => matchesStatus(conversation, status)), sort),
+    [searched, status, sort],
+  );
 
   const unreadCount = useMemo(() => assigned.filter((conversation) => !!conversation.unread).length, [assigned]);
 
-  // Navigation badges count unresolved conversations; unread counts stay in the toolbar.
-  const teamOpenCount = useMemo(
-    () => assigned.filter((conversation) => conversation.status !== "resolved").length,
-    [assigned],
-  );
-  const aiOpenCount = useMemo(
-    () => conversations.filter((conversation) => !conversation.assignedUserId && conversation.status !== "resolved").length,
-    [conversations],
-  );
-  const teamBadgeCount = teamOpenCount;
-  const aiBadgeCount = aiOpenCount;
 
   // How many of this teammate's assigned conversations came from each site
   // — shown next to its name in the picker so "All domains" vs. one
@@ -161,12 +161,19 @@ export default function HomePanel({ user: _user }: { user: PanelUser }) {
   return (
     <aside
       id="dashboard-inbox-list"
-      className={`il-root dashboard-secondary-sidebar h-full w-full shrink-0 flex-col overflow-hidden border-r border-white/10 bg-[#262626] lg:static lg:flex lg:w-[304px] ${
-        openedConversationId ? "hidden" : "flex"
+      className={`il-root dashboard-secondary-sidebar h-full w-full shrink-0 flex-col overflow-hidden bg-[#262626] lg:static lg:flex lg:w-[304px] ${
+        openedConversationId || mobileMenu ? "hidden" : "flex"
       }`}
     >
-      <InboxViewTabs active="team" teamBadge={teamBadgeCount} aiBadge={aiBadgeCount} />
-      <ListToolbar query={query} onQuery={setQuery} filter={filter} onFilter={setFilter} unreadCount={unreadCount} onMarkAllRead={() => void markAllRead()}>
+      <Link href="/dashboard/inbox" className="il-muted flex h-10 shrink-0 items-center gap-1.5 px-4 text-[13px] lg:hidden">
+        <ArrowLeft size={15} /> Inbox
+      </Link>
+      <ListToolbar
+        view={view} query={query} onQuery={setQuery}
+        status={status} onStatus={setStatus} statusCount={statusCounts(searched)}
+        sort={sort} onSort={setSort}
+        unreadCount={unreadCount} onMarkAllRead={() => void markAllRead()}
+      >
         {sites.length > 1 && (
           <div className="relative mb-3">
             <button
@@ -219,13 +226,13 @@ export default function HomePanel({ user: _user }: { user: PanelUser }) {
         {visibleConversations.map((conversation) => (
           <ConversationRow
             key={conversation.id}
-            href={`/dashboard/inbox?conversation=${conversation.id}`}
+            href={inboxViewHref(view, conversation.id)}
             onSelect={() => setActiveId(conversation.id)}
             name={conversation.name}
             initials={conversation.initials}
             color={colorForId(conversation.id)}
             preview={conversation.preview}
-            time={formatTime(conversation.time)}
+            time={shortAge(conversation.time)}
             unread={conversation.unread}
             resolved={conversation.status === "resolved"}
             active={conversation.id === (openedConversationId ?? activeId)}
@@ -233,7 +240,7 @@ export default function HomePanel({ user: _user }: { user: PanelUser }) {
         ))}
 
         {!loading && visibleConversations.length === 0 && (
-          <ListEmpty hasAny={conversations.length > 0} onShowAll={() => { setQuery(""); setFilter("all"); setSelectedSiteId(null); }} />
+          <ListEmpty hasAny={conversations.length > 0} onShowAll={() => { setQuery(""); setStatus("all"); setSelectedSiteId(null); }} />
         )}
       </div>
     </aside>

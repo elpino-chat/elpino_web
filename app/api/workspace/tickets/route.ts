@@ -9,6 +9,12 @@ type RecentTicket = {
   title: string;
   conversationId: string;
   createdAt: string;
+  resolved?: boolean;
+  source?: string;
+  reason?: string | null;
+  category?: string;
+  note?: string | null;
+  customerName?: string | null;
 };
 
 export async function GET() {
@@ -19,7 +25,7 @@ export async function GET() {
 
   const result = await callGateway<{ tickets?: RecentTicket[] }>("/api/workspace/agent/tickets", {
     companyId: workspace.id,
-    limit: 12,
+    limit: 200,
   }).catch(() => null);
   return Response.json({ tickets: result?.tickets ?? [] });
 }

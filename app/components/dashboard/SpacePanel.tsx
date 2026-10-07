@@ -6,15 +6,16 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Bell, ChevronRight, CircleAlert, Home, MessageCircle } from "lucide-react";
 import { useMobileDrawer } from "./mobile-drawer-context";
+import { inboxViewHref } from "./inbox-list-ui";
 
-type RecentChat = { id: string; name: string; preview?: string; status: string; assignedUserId?: string | null };
+type RecentChat = { id: string; name: string; preview?: string; status: string; assignedUserId?: string | null; handledBy?: string };
 
 const spaceRoutes = ["/dashboard", "/dashboard/notifications", "/dashboard/issues"];
 
+// Opens the chat in the Inbox view that lists it, so the list beside it shows the same thread.
 function recentChatHref(chat: RecentChat) {
-  const params = new URLSearchParams({ conversation: chat.id });
-  if (!chat.assignedUserId) params.set("view", "ai");
-  return `/dashboard/inbox?${params.toString()}`;
+  if (chat.assignedUserId) return inboxViewHref("all", chat.id);
+  return inboxViewHref(chat.handledBy === "ai" ? "ai" : "unassigned", chat.id);
 }
 
 export default function SpacePanel() {
@@ -84,10 +85,6 @@ export default function SpacePanel() {
         </div>
         <div className="mt-2 min-h-0 flex-1 space-y-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {openChats.slice(0, 6).map((chat) => (
-            // Unassigned conversations live in AI Assist, not Team Inbox —
-            // opening one there instead of AI Assist 404s the AI Assist tab
-            // out from under the visible chat (Team Inbox only lists chats
-            // someone has joined, same filter HomePanel's own list uses).
             <Link key={chat.id} href={recentChatHref(chat)} className="space-panel-chat-row group flex items-start gap-2.5 rounded-lg px-2.5 py-2.5 transition">
               <MessageCircle size={16} strokeWidth={1.6} className="space-panel-faint mt-0.5 shrink-0" />
               <span className="min-w-0 flex-1"><span className="space-panel-chat-name block truncate text-xs font-normal">{chat.name}</span><span className="space-panel-faint mt-0.5 block truncate text-[11px]">{chat.preview || "Open conversation"}</span></span>

@@ -619,6 +619,10 @@ export function GET(request: Request) {
       };
       // Exchange signed tokens now, even if the visitor opens chat much later.
       if (!signedOut && (identityToken || typeof settings.getIdentityToken === 'function')) ensureIdentityFrame();
+      // A visitor with a conversation under way in this tab keeps the chat frame loaded even while the panel is
+      // closed: that frame is what rings when a teammate calls, and what reports replies to the launcher badge.
+      var resumedView = savedView();
+      if (!signedOut && resumedView && resumedView.conversationId) ensureIdentityFrame();
 
       function setOpen(next, startNew) {
         if (next && !pathAllowed(config.urlRules)) return;

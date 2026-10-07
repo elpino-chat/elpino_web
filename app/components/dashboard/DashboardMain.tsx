@@ -13,7 +13,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 export default function DashboardMain({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const isTeamInboxRoute = pathname === "/dashboard/inbox" && searchParams.get("view") !== "ai";
+  const isTeamInboxRoute = pathname === "/dashboard/inbox";
   const hasConversation = !!searchParams.get("conversation");
   const mobileHidden = isTeamInboxRoute && !hasConversation;
   // Pages that are plain scrolling content run all the way to the bottom of the screen, under the floating phone dock; their own scroll

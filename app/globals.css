@@ -3429,6 +3429,25 @@ body:has([data-dashboard-theme="dark"]) .dashboard-ai-scope-menu svg {
 :is([data-dashboard-theme="light"], [data-dashboard-theme="dark"]) .dashboard-shell aside.dashboard-space-sidebar:not([role="dialog"]) .space-panel-divider {
   border-color: var(--space-sidebar-border) !important;
 }
+/* Inbox sidebar: the selected view is a raised card, as in Intercom. */
+[data-dashboard-theme="light"] .dashboard-shell aside#dashboard-inbox-nav.dashboard-space-sidebar .inbox-nav-item[aria-current="page"] {
+  background: #ffffff !important;
+  border-color: #e4e4e4 !important;
+  box-shadow: 0 1px 2px rgba(15, 18, 22, 0.06);
+  color: #000000 !important;
+}
+[data-dashboard-theme="dark"] .dashboard-shell aside#dashboard-inbox-nav.dashboard-space-sidebar .inbox-nav-item[aria-current="page"] {
+  background: #333333 !important;
+  border-color: rgb(255 255 255 / 0.1) !important;
+  color: #ffffff !important;
+}
+/* Inbox sidebar: every view reads at near-full strength, not only the selected one. */
+[data-dashboard-theme="light"] .dashboard-shell aside#dashboard-inbox-nav.dashboard-space-sidebar .space-panel-nav:not([aria-current="page"]) {
+  color: rgb(0 0 0 / 0.9) !important;
+}
+[data-dashboard-theme="dark"] .dashboard-shell aside#dashboard-inbox-nav.dashboard-space-sidebar .space-panel-nav:not([aria-current="page"]) {
+  color: rgb(255 255 255 / 0.9) !important;
+}
 
 /* Light theme: Settings/Knowledge nav rails already carry their own light
    JSX colors (text-black etc.) — just clear the forced-dark background so
@@ -6888,6 +6907,28 @@ body:has([data-dashboard-theme="dark"]) .knowledge-popover :is(button, a)[class*
 [data-dashboard-theme] #dashboard-inbox-list.il-root .il-badge { background: var(--il-badge-bg) !important; color: var(--il-badge-fg) !important; }
 [data-dashboard-theme] #dashboard-inbox-page .il-root .il-icon,
 [data-dashboard-theme] #dashboard-inbox-list.il-root .il-icon { background: var(--il-on) !important; color: var(--il-h) !important; }
+/* Inbox view, status and sort dropdowns. */
+[data-dashboard-theme="dark"] #dashboard-inbox-page .il-root .il-menu,
+[data-dashboard-theme="dark"] #dashboard-inbox-list.il-root .il-menu { background: #2f2f2f !important; }
+[data-dashboard-theme="light"] #dashboard-inbox-page .il-root .il-menu,
+[data-dashboard-theme="light"] #dashboard-inbox-list.il-root .il-menu { background: #ffffff !important; }
+[data-dashboard-theme] #dashboard-inbox-page .il-root .il-menu,
+[data-dashboard-theme] #dashboard-inbox-list.il-root .il-menu { border-color: var(--il-line) !important; box-shadow: 0 16px 40px -20px rgba(15, 18, 22, 0.45); }
+[data-dashboard-theme] #dashboard-inbox-page .il-root .il-menu-divider,
+[data-dashboard-theme] #dashboard-inbox-list.il-root .il-menu-divider { border-color: var(--il-line) !important; }
+[data-dashboard-theme] #dashboard-inbox-page .il-root .il-menu-item,
+[data-dashboard-theme] #dashboard-inbox-list.il-root .il-menu-item { color: var(--il-h) !important; background: transparent !important; }
+[data-dashboard-theme] #dashboard-inbox-page .il-root .il-menu-item:hover,
+[data-dashboard-theme] #dashboard-inbox-list.il-root .il-menu-item:hover { background: var(--il-hover) !important; }
+[data-dashboard-theme] #dashboard-inbox-page .il-root .il-menu-item:is([aria-current="page"], [aria-selected="true"]),
+[data-dashboard-theme] #dashboard-inbox-list.il-root .il-menu-item:is([aria-current="page"], [aria-selected="true"]) { background: var(--il-on) !important; }
+/* The open conversation sits on the list as a raised card, as in Intercom. */
+[data-dashboard-theme="dark"] #dashboard-inbox-page .il-root .il-row.il-row-on,
+[data-dashboard-theme="dark"] #dashboard-inbox-list.il-root .il-row.il-row-on { background: #333333 !important; }
+[data-dashboard-theme="light"] #dashboard-inbox-page .il-root .il-row.il-row-on,
+[data-dashboard-theme="light"] #dashboard-inbox-list.il-root .il-row.il-row-on { background: #ffffff !important; }
+[data-dashboard-theme] #dashboard-inbox-page .il-root .il-row.il-row-on,
+[data-dashboard-theme] #dashboard-inbox-list.il-root .il-row.il-row-on { border-color: var(--il-line) !important; box-shadow: 0 1px 2px rgba(15, 18, 22, 0.06), 0 4px 14px -6px rgba(15, 18, 22, 0.18); }
 /* Light theme: the empty-list lines are solid black. */
 [data-dashboard-theme="light"] #dashboard-inbox-page .il-root .il-empty-text,
 [data-dashboard-theme="light"] #dashboard-inbox-list.il-root .il-empty-text { color: #000000 !important; }
@@ -7010,3 +7051,114 @@ body:has([data-dashboard-theme="dark"]) .knowledge-popover :is(button, a)[class*
 [data-dashboard-theme] #dashboard-settings-page .owner-only .owner-only-icon { background: var(--oo-icon) !important; color: var(--oo-h) !important; }
 [data-dashboard-theme] #dashboard-settings-page .owner-only .owner-only-btn { background: transparent !important; border-color: var(--oo-btn) !important; color: var(--oo-h) !important; }
 [data-dashboard-theme] #dashboard-settings-page .owner-only .owner-only-btn:hover { background: var(--oo-hover) !important; border-color: var(--oo-h) !important; }
+
+/* AI activity lines read as quiet metadata between the messages. */
+[data-dashboard-theme="light"] #dashboard-chat-interface .chat-ai-steps :is(span, button, svg) { color: rgba(0, 0, 0, 0.55) !important; }
+[data-dashboard-theme="dark"] #dashboard-chat-interface .chat-ai-steps :is(span, button, svg) { color: rgb(255 255 255 / 0.55) !important; }
+[data-dashboard-theme] #dashboard-chat-interface .chat-ai-steps .bg-\[\#c0554f\] { background: #c0554f !important; }
+/* Round icon buttons in the chat header (search, ticket, call, email, details, more). */
+#dashboard-chat-interface .chat-icon-btn { display: flex; width: 32px; height: 32px; flex-shrink: 0; align-items: center; justify-content: center; border-radius: 9999px; transition: background-color 0.15s; }
+[data-dashboard-theme="light"] #dashboard-chat-interface .chat-icon-btn { background: #f1f1f1 !important; }
+[data-dashboard-theme="light"] #dashboard-chat-interface .chat-icon-btn:hover,
+[data-dashboard-theme="light"] #dashboard-chat-interface .chat-icon-btn[aria-pressed="true"] { background: #e4e4e4 !important; }
+[data-dashboard-theme="dark"] #dashboard-chat-interface .chat-icon-btn { background: rgb(255 255 255 / 0.08) !important; }
+[data-dashboard-theme="dark"] #dashboard-chat-interface .chat-icon-btn:hover,
+[data-dashboard-theme="dark"] #dashboard-chat-interface .chat-icon-btn[aria-pressed="true"] { background: rgb(255 255 255 / 0.16) !important; }
+/* Search and email are extra on narrower screens (both are also in the "..." menu and the details panel). */
+#dashboard-chat-interface .chat-icon-btn.chat-icon-wide { display: none; }
+@media (min-width: 1536px) { #dashboard-chat-interface .chat-icon-btn.chat-icon-wide { display: flex; } }
+@media (min-width: 1280px) { #dashboard-chat-interface .chat-icon-btn.xl\:hidden { display: none; } }
+/* A text pill in the same grey as the round icon buttons (Join chat, Leave chat). */
+#dashboard-chat-interface .chat-icon-btn.chat-pill-btn { width: auto; gap: 6px; }
+
+/* The conversation as one rounded white card with a soft black border, set in from the page edge. */
+#dashboard-chat-interface .dashboard-chat-center {
+  margin: 8px 8px 8px 0;
+  border: 1px solid rgb(0 0 0 / 0.2) !important;
+  border-radius: 10px;
+  overflow: hidden;
+}
+[data-dashboard-theme="light"] #dashboard-chat-interface .dashboard-chat-center { background: #ffffff !important; }
+[data-dashboard-theme="dark"] #dashboard-chat-interface .dashboard-chat-center { border-color: rgb(255 255 255 / 0.2) !important; }
+/* The chat header is white too, with a light line under it. */
+[data-dashboard-theme="light"] #dashboard-chat-interface .dashboard-chat-header { background: #ffffff !important; border-bottom-color: rgb(0 0 0 / 0.08) !important; }
+/* The conversation list has no line on its right edge; the chat card beside it has its own border. */
+#dashboard-inbox-list.dashboard-secondary-sidebar,
+#dashboard-ai-assist .dashboard-ai-list { border-right-width: 0 !important; }
+/* The older theme rules force every border in the chat to black at 10%; the card's own border wins here. */
+[data-dashboard-theme="light"] .dashboard-shell #dashboard-chat-interface section.dashboard-chat-center.dashboard-chat-center { border-color: rgb(0 0 0 / 0.2) !important; }
+[data-dashboard-theme="dark"] .dashboard-shell #dashboard-chat-interface section.dashboard-chat-center.dashboard-chat-center { border-color: rgb(255 255 255 / 0.2) !important; }
+/* Inbox, wide screens: the top bar collapses to the avatar menu in the corner of the icon rail. */
+@media (min-width: 1280px) {
+  .dashboard-header-compact > :not(.dashboard-header-account):not(.dashboard-header-keep) { display: none !important; }
+}
+
+/* Conversation messages, Intercom layout without the bubble fill: plain text, the time underneath inside the message. */
+[data-dashboard-theme] :is(#dashboard-chat-interface, #dashboard-ai-assist) .chat-line.chat-bubble {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  padding: 2px 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+[data-dashboard-theme] :is(#dashboard-chat-interface, #dashboard-ai-assist) .chat-line.chat-bubble.chat-line-team { margin-left: auto; }
+[data-dashboard-theme="light"] :is(#dashboard-chat-interface, #dashboard-ai-assist) .chat-line.chat-bubble,
+[data-dashboard-theme="light"] :is(#dashboard-chat-interface, #dashboard-ai-assist) .chat-line.chat-bubble :is(p, span, li, strong) { color: rgba(0, 0, 0, 0.88) !important; }
+[data-dashboard-theme="light"] :is(#dashboard-chat-interface, #dashboard-ai-assist) .chat-line.chat-bubble .chat-bubble-time,
+[data-dashboard-theme="light"] :is(#dashboard-chat-interface, #dashboard-ai-assist) .chat-line.chat-bubble .chat-bubble-time svg { color: rgba(0, 0, 0, 0.5) !important; }
+[data-dashboard-theme="dark"] :is(#dashboard-chat-interface, #dashboard-ai-assist) .chat-line.chat-bubble,
+[data-dashboard-theme="dark"] :is(#dashboard-chat-interface, #dashboard-ai-assist) .chat-line.chat-bubble :is(p, span, li, strong) { color: rgb(255 255 255 / 0.9) !important; }
+[data-dashboard-theme="dark"] :is(#dashboard-chat-interface, #dashboard-ai-assist) .chat-line.chat-bubble .chat-bubble-time { color: rgb(255 255 255 / 0.5) !important; }
+/* The AI's thoughts read a little stronger than the step lines around them. */
+[data-dashboard-theme="light"] #dashboard-chat-interface .chat-ai-steps .chat-ai-thought { color: rgba(0, 0, 0, 0.62) !important; }
+[data-dashboard-theme="dark"] #dashboard-chat-interface .chat-ai-steps .chat-ai-thought { color: rgb(255 255 255 / 0.65) !important; }
+/* The AI's handoff summary: Intercom's yellow card with a small black "AI" badge. */
+[data-dashboard-theme="light"] #dashboard-chat-interface .chat-summary-card { background: #fbefc1 !important; }
+[data-dashboard-theme="light"] #dashboard-chat-interface .chat-summary-card :is(p, span) { color: rgba(0, 0, 0, 0.85) !important; }
+[data-dashboard-theme="dark"] #dashboard-chat-interface .chat-summary-card { background: #3d3418 !important; }
+[data-dashboard-theme="dark"] #dashboard-chat-interface .chat-summary-card :is(p, span) { color: rgb(255 255 255 / 0.88) !important; }
+[data-dashboard-theme] #dashboard-chat-interface .chat-summary-card .chat-ai-chip { background: #111111 !important; color: #ffffff !important; }
+
+/* Inbox → Tickets: the selected ticket sits in the same white card as an open conversation. */
+#dashboard-tickets .ticket-card { margin: 8px 8px 8px 0; border: 1px solid; border-radius: 10px; }
+[data-dashboard-theme="light"] #dashboard-tickets .ticket-card { background: #ffffff !important; border-color: rgb(0 0 0 / 0.2) !important; color: rgba(0, 0, 0, 0.88) !important; }
+[data-dashboard-theme="dark"] #dashboard-tickets .ticket-card { background: #262626 !important; border-color: rgb(255 255 255 / 0.2) !important; color: rgb(255 255 255 / 0.88) !important; }
+[data-dashboard-theme="light"] #dashboard-tickets .ticket-card :is(h1, h3, p, span, dt, dd, li, a, button, svg) { color: rgba(0, 0, 0, 0.85); }
+[data-dashboard-theme="dark"] #dashboard-tickets .ticket-card :is(h1, h3, p, span, dt, dd, li, a, button, svg) { color: rgb(255 255 255 / 0.85); }
+[data-dashboard-theme="light"] #dashboard-tickets .ticket-card .ticket-divider { border-color: rgb(0 0 0 / 0.08) !important; }
+[data-dashboard-theme="dark"] #dashboard-tickets .ticket-card .ticket-divider { border-color: rgb(255 255 255 / 0.08) !important; }
+[data-dashboard-theme="light"] #dashboard-tickets .ticket-card .ticket-muted,
+[data-dashboard-theme="light"] #dashboard-tickets .ticket-card .ticket-muted * { color: rgba(0, 0, 0, 0.5) !important; }
+[data-dashboard-theme="dark"] #dashboard-tickets .ticket-card .ticket-muted,
+[data-dashboard-theme="dark"] #dashboard-tickets .ticket-card .ticket-muted * { color: rgb(255 255 255 / 0.5) !important; }
+[data-dashboard-theme="light"] #dashboard-tickets .ticket-card :is(.ticket-chip, .ticket-button) { background: #f1f1f1 !important; }
+[data-dashboard-theme="light"] #dashboard-tickets .ticket-card .ticket-button:hover { background: #e4e4e4 !important; }
+[data-dashboard-theme="dark"] #dashboard-tickets .ticket-card :is(.ticket-chip, .ticket-button) { background: rgb(255 255 255 / 0.08) !important; }
+[data-dashboard-theme="dark"] #dashboard-tickets .ticket-card .ticket-button:hover { background: rgb(255 255 255 / 0.16) !important; }
+[data-dashboard-theme="light"] #dashboard-tickets .ticket-card .ticket-chip.ticket-chip-done { background: #e6f5ec !important; color: #1f8a4c !important; }
+[data-dashboard-theme="dark"] #dashboard-tickets .ticket-card .ticket-chip.ticket-chip-done { background: rgb(74 222 128 / 0.15) !important; color: #4ade80 !important; }
+
+/* Inbox → Tickets: the list is one card across the page; the details slide in from the right. */
+#dashboard-tickets > .ticket-card.il-root { margin: 0; }
+/* ...across the whole area, with no margin, border or rounded corners of its own. */
+[data-dashboard-theme] #dashboard-tickets > .ticket-card.il-root { border-width: 0 !important; border-radius: 0; }
+[data-dashboard-theme="light"] #dashboard-tickets .ticket-row:hover { background: rgb(0 0 0 / 0.035) !important; }
+[data-dashboard-theme="light"] #dashboard-tickets .ticket-row.ticket-row-on { background: rgb(0 0 0 / 0.06) !important; }
+[data-dashboard-theme="dark"] #dashboard-tickets .ticket-row:hover { background: rgb(255 255 255 / 0.05) !important; }
+[data-dashboard-theme="dark"] #dashboard-tickets .ticket-row.ticket-row-on { background: rgb(255 255 255 / 0.09) !important; }
+#dashboard-tickets .ticket-drawer .ticket-card { margin: 0; border-radius: 0; border-width: 0 0 0 1px; height: 100%; }
+/* Open / Closed / All tabs above the ticket list. */
+[data-dashboard-theme="light"] #dashboard-tickets .ticket-tab { color: rgba(0, 0, 0, 0.55) !important; }
+[data-dashboard-theme="light"] #dashboard-tickets .ticket-tab[aria-selected="true"] { color: #000000 !important; border-bottom-color: #000000 !important; font-weight: 600; }
+[data-dashboard-theme="light"] #dashboard-tickets .ticket-tab:hover { color: #000000 !important; }
+[data-dashboard-theme="light"] #dashboard-tickets .ticket-tab-count { background: #f1f1f1; }
+[data-dashboard-theme="dark"] #dashboard-tickets .ticket-tab { color: rgb(255 255 255 / 0.55) !important; }
+[data-dashboard-theme="dark"] #dashboard-tickets .ticket-tab[aria-selected="true"] { color: #ffffff !important; border-bottom-color: #ffffff !important; font-weight: 600; }
+[data-dashboard-theme="dark"] #dashboard-tickets .ticket-tab:hover { color: #ffffff !important; }
+[data-dashboard-theme="dark"] #dashboard-tickets .ticket-tab-count { background: rgb(255 255 255 / 0.1); }
+
+/* The ticket list sits on the same background as the sidebars beside it; the details drawer stays on white. */
+[data-dashboard-theme] #dashboard-tickets > .ticket-card.il-root { background: var(--space-sidebar-bg) !important; }
+[data-dashboard-theme="light"] #dashboard-tickets > .ticket-card.il-root :is(.ticket-chip, .ticket-tab-count) { background: rgb(0 0 0 / 0.07) !important; }

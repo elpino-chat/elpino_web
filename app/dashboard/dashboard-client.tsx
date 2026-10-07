@@ -8,20 +8,32 @@ import { useSearchParams } from "next/navigation";
 import posthog from "posthog-js";
 import {
   ArrowLeft,
+  ArrowLeftRight,
+  BookOpen,
   ChevronDown,
   CheckCircle2,
   ChevronRight,
+  ChevronUp,
   Eye,
   Globe,
   Globe2,
+  Inbox,
   Info,
+  LayoutGrid,
+  ListChecks,
   LoaderCircle,
   Lock,
   MapPin,
   MessageCircle,
+  MessageSquare,
+  Mail,
+  Mic,
+  MicOff,
   MonitorSmartphone,
   MoreHorizontal,
   Paperclip,
+  Phone,
+  PhoneOff,
   Search,
   Send,
   ShieldCheck,
@@ -32,6 +44,9 @@ import {
   X,
 } from "lucide-react";
 import { SUPPORTED_LANGUAGES } from "@/app/dashboard/settings/languages";
+import { inboxListHref, parseInboxView, shortAge } from "@/app/components/dashboard/inbox-list-ui";
+import { useAgentCall } from "@/app/dashboard/lib/use-agent-call";
+import { formatTalkTime } from "@/lib/webrtc-call";
 import MessageMarkdown from "@/app/components/MessageMarkdown";
 import TypingDots from "@/app/components/TypingDots";
 import {
@@ -183,8 +198,119 @@ function looksLikeTranscriptDump(text: string): boolean {
   return (matches?.length ?? 0) >= 2;
 }
 
+// The AI's step lines above its replies, for the team only (the widget never sees them). Set to false to
+// hide them and stop fetching them.
+const SHOW_AI_STEPS = true;
+
+// One AI turn as the activity route reports it: when it started and which steps it took.
+type AiRun = { id: string; outcome: string; startedAt: string; steps: { tool: string; ok: boolean; note?: string }[] };
+
+// Plain-language names for the AI's steps. Anything not listed (the privacy filter, retries, token
+// usage, the polish pass) is internal plumbing and is not shown to the team.
+const STEP_LABELS: Record<string, string> = {
+  route_specialist: "Understood the request",
+  search_knowledge: "Searched the knowledge base",
+  read_knowledge: "Read a knowledge article",
+  read_official_page: "Read the website",
+  recall_conversation: "Looked back through this conversation",
+  get_past_conversations: "Checked past conversations",
+  find_payments: "Checked payment history",
+  find_subscriptions: "Checked subscriptions",
+  get_receipt: "Fetched a receipt",
+  send_payment_link: "Sent a payment link",
+  refund_payment: "Refunded a payment",
+  cancel_subscription: "Cancelled a subscription",
+  find_orders: "Looked up orders",
+  cancel_order: "Cancelled an order",
+  update_shipping_address: "Updated the shipping address",
+  save_lead: "Saved a sales lead",
+  save_contact_info: "Saved contact details",
+  send_resource_link: "Emailed a page to the customer",
+  check_team_availability: "Checked who on the team is free",
+  switch_specialist: "Switched specialist",
+  upgrade_model: "Took a closer look",
+  model_fallback: "Switched to the backup model",
+  review_reply: "Checked the reply against its sources",
+  handoff_check: "Checked whether a person is needed",
+  escalate_to_human: "Handed the conversation to the team",
+  mark_resolved: "Closed the conversation as resolved",
+};
+
+function stepLabel(tool: string) {
+  if (tool.startsWith("mcp_")) return "Checked a connected system";
+  return STEP_LABELS[tool] ?? null;
+}
+
+// An icon for each kind of step, as Intercom shows beside Fin's activity lines.
+function StepIcon({ tool }: { tool: string }) {
+  if (tool === "search_knowledge" || tool === "read_knowledge") return <BookOpen size={13} className="shrink-0" />;
+  if (tool === "read_official_page") return <Globe size={13} className="shrink-0" />;
+  if (tool === "escalate_to_human" || tool === "check_team_availability" || tool === "switch_specialist") return <UserRound size={13} className="shrink-0" />;
+  if (tool === "review_reply" || tool === "handoff_check") return <ShieldCheck size={13} className="shrink-0" />;
+  if (tool === "mark_resolved") return <CheckCircle2 size={13} className="shrink-0" />;
+  if (tool.startsWith("find_") || tool.startsWith("mcp_") || ["get_receipt", "get_past_conversations", "recall_conversation"].includes(tool)) return <ArrowLeftRight size={13} className="shrink-0" />;
+  return <ListChecks size={13} className="shrink-0" />;
+}
+
+// One AI turn as quiet activity lines above the reply it led to, laid out like Intercom's Fin: a time,
+// an icon and what happened. The router's reading of the request is the AI's "thoughts", which open
+// and close. Repeats in a row collapse into one line with a count.
+function AiSteps({ run, aiName, defaultOpen }: { run: AiRun; aiName: string; defaultOpen: boolean }) {
+  const [thoughtsOpen, setThoughtsOpen] = useState(defaultOpen);
+  const routed = run.steps.find((step) => step.tool === "route_specialist");
+  // A router that worked gives the AI's reading of the request; one that failed gives the reason instead.
+  const thought = routed?.ok ? routed.note : undefined;
+  const lines: { tool: string; label: string; ok: boolean; count: number; note?: string }[] = [];
+  for (const step of run.steps) {
+    // Only the main things: its thoughts, what it looked up and why it handed over. Model retries, the backup
+    // model and a failed router are plumbing; they only matter as the reason for a handoff (added below).
+    if (step.tool === "route_specialist" || step.tool === "model_fallback" || step.tool === "upgrade_model") continue;
+    const label = stepLabel(step.tool);
+    if (!label) continue;
+    const last = lines.at(-1);
+    if (last && last.label === label && last.ok === step.ok && !step.note && !last.note) last.count += 1;
+    else lines.push({ tool: step.tool, label, ok: step.ok, count: 1, note: step.note });
+  }
+  // The turn ended in a handoff the AI never decided on: its model could not be reached.
+  if (run.outcome === "escalated" && !run.steps.some((step) => step.tool === "escalate_to_human") && run.steps.some((step) => !step.ok)) {
+    lines.push({ tool: "escalate_to_human", label: "Handed the conversation to the team", ok: true, count: 1, note: "The AI couldn't get an answer from its model, so a person needs to reply." });
+  }
+  if (!lines.length && !thought) return null;
+  const age = shortAge(run.startedAt);
+  const time = <span className="w-9 shrink-0 whitespace-nowrap tabular-nums" title={new Date(run.startedAt).toLocaleString()}>{age}</span>;
+  return (
+    <div className="chat-ai-steps space-y-2 rounded-xl bg-black/5 px-3 py-2.5 text-[12.5px]">
+      {thought && (
+        <div>
+          <button type="button" onClick={() => setThoughtsOpen((value) => !value)} aria-expanded={thoughtsOpen} className="flex items-center gap-3 text-left">
+            {time}
+            <LayoutGrid size={13} className="shrink-0" />
+            <span>{aiName}&apos;s thoughts</span>
+            {thoughtsOpen ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
+          </button>
+          {thoughtsOpen && <p className="chat-ai-thought mt-1.5 pl-[73px] leading-5">{thought}</p>}
+        </div>
+      )}
+      {lines.map((line, index) => (
+        <div key={index}>
+          <div className="flex items-center gap-3">
+            {time}
+            <StepIcon tool={line.tool} />
+            <span>{line.label}{line.count > 1 ? ` (×${line.count})` : ""}{line.ok ? "" : " — didn't work"}</span>
+          </div>
+          {/* Why a chat went to a person: the check's verdict and the AI's own reason. */}
+          {line.note && <p className="chat-ai-thought mt-1 pl-[73px] leading-5">{line.tool === "escalate_to_human" ? `Reason: ${line.note}` : line.note}</p>}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function DashboardContent({ name }: { name: string }) {
-  const conversationId = useSearchParams().get("conversation");
+  const searchParams = useSearchParams();
+  const conversationId = searchParams.get("conversation");
+  // The list view this chat was opened from, so "back" returns to it.
+  const inboxView = parseInboxView(searchParams.get("view"));
   const [conversation, setConversation] = useState<ConversationSummary | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
@@ -249,6 +375,30 @@ function DashboardContent({ name }: { name: string }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const lastTypingPingRef = useRef(0);
+  // A voice call to the visitor's widget, placed from the header. The panel below follows it.
+  const { call, start: startCall, hangUp, toggleMute, dismiss: dismissCall } = useAgentCall();
+  const [calledName, setCalledName] = useState("");
+  // The "call ended" notice clears itself.
+  useEffect(() => {
+    if (call.phase !== "ended") return;
+    const timer = window.setTimeout(dismissCall, call.notice ? 7000 : 1500);
+    return () => window.clearTimeout(timer);
+  }, [call.phase, call.notice, dismissCall]);
+  // What the AI did on each turn, shown above its replies. Turns are slower than messages, so this
+  // polls less often than the thread itself.
+  const [aiRuns, setAiRuns] = useState<AiRun[]>([]);
+  useEffect(() => {
+    setAiRuns([]);
+    if (!conversationId || !SHOW_AI_STEPS) return;
+    let cancelled = false;
+    const load = () => fetch(`/api/workspace/conversations/${encodeURIComponent(conversationId)}/ai-steps`, { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: { runs?: AiRun[] } | null) => { if (!cancelled && data?.runs) setAiRuns(data.runs); })
+      .catch(() => undefined);
+    void load();
+    const interval = window.setInterval(load, 5000);
+    return () => { cancelled = true; window.clearInterval(interval); };
+  }, [conversationId]);
 
   // Only matters for the empty state (see the !conversationId branch below),
   // so it's skipped once something is actually open — no point re-asking
@@ -645,7 +795,7 @@ function DashboardContent({ name }: { name: string }) {
     setTicketDialogOpen(true);
   }
 
-  async function createTicket(input: { title: string; note: string; provider?: string; asanaProjectGid?: string }) {
+  async function createTicket(input: { title: string; note: string; provider?: string; asanaProjectGid?: string; category: TicketCategory }) {
     if (!conversationId || ticketState === "creating") return;
     setTicketState("creating");
     setTicketError(null);
@@ -721,6 +871,11 @@ function DashboardContent({ name }: { name: string }) {
   const assignedElsewhere = !!conversation?.assignedUserId && conversation.assignedUserId !== myAccountId;
   const isResolved = conversation?.status === "resolved";
   const visitorLeft = Boolean(conversation?.visitorLeft);
+  // Calling needs the chat to be yours (the server checks the same) and the visitor to still be reachable.
+  const canCall = isMine && !isResolved && !visitorLeft;
+  const callBusy = call.phase !== "idle" && call.phase !== "ended";
+  // An automatic handoff stores a log of the thread, not a summary; that is no use as a report.
+  const handoffSummary = conversation?.escalationSummary && !looksLikeTranscriptDump(conversation.escalationSummary) ? conversation.escalationSummary : null;
   // A visitor who left with no verified email can't receive a reply at all,
   // so there's no composer to offer.
   const showComposer = !isResolved || (wantsToReplyAfterResolve && (!visitorLeft || Boolean(conversation?.canEmailVisitor)));
@@ -800,37 +955,24 @@ function DashboardContent({ name }: { name: string }) {
               trade places instead of sitting side by side — this is what
               gets you back to it. */}
           <Link
-            href="/dashboard/inbox"
+            href={inboxListHref(inboxView)}
             aria-label="Back to conversations"
             className="-ml-1.5 mr-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[var(--chat-muted)] transition hover:bg-[var(--chat-customer-bg)] lg:hidden"
           >
             <ArrowLeft size={18} />
           </Link>
-          <span className="chat-avatar-customer relative flex h-9 w-9 items-center justify-center rounded-full text-xs font-bold">
-            {customerInitials}
-            <span className="absolute -bottom-px -right-px h-2.5 w-2.5 rounded-full border-2 border-[var(--chat-surface)] bg-[#35b92c]" />
-          </span>
-          <div className="ml-2.5 min-w-0 sm:ml-3">
+          {/* Just the name, as in Intercom: who they are and where they are live in the details panel. */}
+          <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <h1 className="truncate text-[15px] font-semibold">{customerName}</h1>
+              <h1 className="truncate text-[18px] font-semibold tracking-[-0.01em]" title={customerName}>{customerName}</h1>
               {conversation?.verified && (
                 <span title="Proved their identity — signed in, or confirmed with a code" className="flex shrink-0 items-center gap-1 rounded-full bg-[#edf7f1] px-2 py-0.5 text-[10px] font-semibold text-[#2e8a5c]">
                   <ShieldCheck size={11} /> Verified
                 </span>
               )}
-              {/* Redundant with the Resolve button's own state, and the
-                  first thing to go when space is tight. */}
-              {conversation && (
-                <span className="hidden shrink-0 rounded-full border border-[var(--chat-divider)] px-2 py-0.5 text-[10px] font-semibold text-[var(--chat-muted)] sm:inline-block">
-                  {conversation.status.toUpperCase()}
-                </span>
-              )}
             </div>
-            <p className="mt-0.5 hidden items-center gap-1 text-[11px] text-[var(--chat-muted)] sm:flex">
-              {place ? <><MapPin size={11} className="shrink-0" /> {place}</> : "Customer support"}
-            </p>
           </div>
-          <div className="ml-auto flex items-center gap-1">
+          <div className="ml-auto flex items-center gap-1.5">
             {/* Joining is the act that takes a thread off the AI and puts a
                 named person on it, so it is the primary thing to do from
                 here until it has happened. */}
@@ -847,9 +989,9 @@ function DashboardContent({ name }: { name: string }) {
                 onClick={() => void joinConversation()}
                 disabled={joining}
                 title="Take this conversation and reply yourself"
-                className="chat-action-primary flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-[12.5px] font-semibold sm:px-3.5"
+                className="chat-icon-btn chat-pill-btn mr-0.5 whitespace-nowrap px-3 text-[13px] font-semibold"
               >
-                {joining ? <LoaderCircle size={15} className="animate-spin" /> : <UserRound size={15} />}
+                {joining ? <LoaderCircle size={14} className="animate-spin" /> : <UserRound size={14} />}
                 <span className="hidden sm:inline">{joining ? "Joining…" : assignedElsewhere ? "Take over" : "Join chat"}</span>
               </button>
             )}
@@ -857,29 +999,52 @@ function DashboardContent({ name }: { name: string }) {
                 dropped when space is tight — the header's own "back to a
                 full list" context already implies this on mobile. */}
             {isMine && !isResolved && (
-              <span className="hidden h-9 items-center gap-1.5 rounded-lg border border-[var(--chat-divider)] px-3 text-[12px] font-semibold text-[var(--chat-muted)] sm:flex">
+              <span className="hidden h-8 items-center gap-1.5 whitespace-nowrap rounded-full border border-[var(--chat-divider)] px-3 text-[12px] font-semibold text-[var(--chat-muted)] 2xl:flex">
                 <UserRound size={14} /> You&apos;re handling this
               </span>
             )}
-            {/* Relocated into the "..." menu below sm — see moreOpen below. */}
+            {/* Round icon actions, as in Intercom. Call and email only appear when the visitor gave a
+                number or address to use, so none of these is a dead control. Search moves into the
+                "..." menu below sm. */}
             <button
               type="button"
               onClick={() => setSearchOpen((open) => { if (open) setSearchQuery(""); return !open; })}
               aria-label="Search conversation"
               aria-pressed={searchOpen}
-              className={`hidden rounded-lg p-2 hover:bg-[var(--chat-customer-bg)] hover:opacity-100 sm:block ${searchOpen ? "opacity-100 bg-[var(--chat-customer-bg)]" : "opacity-70"}`}
+              title="Search this conversation"
+              className="chat-icon-btn chat-icon-wide"
             >
-              <Search size={18} />
+              <Search size={15} />
             </button>
+            <button type="button" onClick={openTicketDialog} aria-label="Create a ticket" title="Create a ticket" className="chat-icon-btn">
+              <TicketPlus size={15} />
+            </button>
+            {canCall && (
+              <button
+                type="button"
+                onClick={() => { setCalledName(customerName); void startCall(conversationId!); }}
+                disabled={callBusy}
+                aria-label="Call the customer"
+                title={callBusy ? "A call is in progress" : "Call the customer through their chat widget"}
+                className="chat-icon-btn disabled:opacity-50"
+              >
+                <Phone size={15} />
+              </button>
+            )}
+            {conversation?.email && (
+              <a href={`mailto:${conversation.email}`} aria-label={`Email ${conversation.email}`} title={`Email ${conversation.email}`} className="chat-icon-btn chat-icon-wide">
+                <Mail size={15} />
+              </a>
+            )}
             <button
               type="button"
               onClick={() => setDetailsOpen((open) => !open)}
               aria-label="Conversation details"
               aria-pressed={detailsOpen}
-              title="Visitor location, secure requests, and history"
-              className={`rounded-lg p-2 hover:bg-[var(--chat-customer-bg)] hover:opacity-100 xl:hidden ${detailsOpen ? "opacity-100 bg-[var(--chat-customer-bg)]" : "opacity-70"}`}
+              title="Customer details"
+              className="chat-icon-btn"
             >
-              <Info size={18} />
+              <Info size={15} />
             </button>
             <div className="relative">
               <button
@@ -887,9 +1052,9 @@ function DashboardContent({ name }: { name: string }) {
                 onClick={() => setMoreOpen((open) => !open)}
                 aria-label="More actions"
                 aria-pressed={moreOpen}
-                className={`rounded-lg p-2 hover:bg-[var(--chat-customer-bg)] hover:opacity-100 ${moreOpen ? "opacity-100 bg-[var(--chat-customer-bg)]" : "opacity-70"}`}
+                className="chat-icon-btn"
               >
-                <MoreHorizontal size={19} />
+                <MoreHorizontal size={16} />
               </button>
               {moreOpen && (
                 <>
@@ -898,7 +1063,7 @@ function DashboardContent({ name }: { name: string }) {
                     <button
                       type="button"
                       onClick={() => { setMoreOpen(false); setSearchOpen((open) => { if (open) setSearchQuery(""); return !open; }); }}
-                      className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left text-[13px] hover:bg-[var(--chat-customer-bg)] sm:hidden"
+                      className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left text-[13px] hover:bg-[var(--chat-customer-bg)] 2xl:hidden"
                     >
                       <Search size={15} /> {searchOpen ? "Close search" : "Search conversation"}
                     </button>
@@ -924,9 +1089,9 @@ function DashboardContent({ name }: { name: string }) {
                 disabled={unclaiming}
                 onClick={() => setConfirmLeave(true)}
                 title="Leave this chat — it goes back to the AI, unless it was escalated"
-                className="ml-2 flex h-9 items-center gap-1.5 rounded-lg border border-[var(--chat-divider)] px-2.5 text-[12.5px] font-semibold hover:bg-[var(--chat-customer-bg)] disabled:opacity-60 sm:px-3"
+                className="chat-icon-btn chat-pill-btn whitespace-nowrap px-3 text-[13px] font-semibold disabled:opacity-60"
               >
-                {unclaiming ? <LoaderCircle size={15} className="animate-spin" /> : <UserRound size={15} />}
+                {unclaiming ? <LoaderCircle size={14} className="animate-spin" /> : <UserRound size={14} />}
                 <span className="hidden sm:inline">Leave chat</span>
               </button>
             )}
@@ -971,6 +1136,35 @@ function DashboardContent({ name }: { name: string }) {
               </div>
             )}
             <SecureRequestDialog open={secureOpen} onClose={() => setSecureOpen(false)} onCreate={createSecureRequest} />
+            {call.phase !== "idle" && (
+              <div role="status" aria-live="polite" className="fixed bottom-24 right-6 z-[90] flex w-[300px] items-center gap-3 rounded-2xl border border-[var(--chat-divider)] bg-[var(--chat-surface)] p-3.5 shadow-[0_18px_48px_rgba(25,39,58,0.28)]">
+                <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${call.phase === "active" ? "bg-[#e6f5ec] text-[#1f8a4c]" : "bg-[var(--chat-customer-bg)]"}`}>
+                  <Phone size={17} className={call.phase === "ringing" || call.phase === "starting" ? "animate-pulse" : ""} />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-[13.5px] font-semibold">{calledName || "Customer"}</p>
+                  <p className="truncate text-[12px] text-[var(--chat-muted)]">
+                    {call.phase === "starting" ? "Starting the call…"
+                      : call.phase === "ringing" ? "Ringing…"
+                      : call.phase === "connecting" ? "Connecting…"
+                      : call.phase === "active" ? `On a call · ${formatTalkTime(call.seconds)}`
+                      : call.notice ?? "Call ended"}
+                  </p>
+                </div>
+                {call.phase === "active" && (
+                  <button type="button" onClick={toggleMute} aria-pressed={call.muted} aria-label={call.muted ? "Unmute" : "Mute"} title={call.muted ? "Unmute" : "Mute"} className="chat-icon-btn">
+                    {call.muted ? <MicOff size={15} /> : <Mic size={15} />}
+                  </button>
+                )}
+                {callBusy ? (
+                  <button type="button" onClick={hangUp} aria-label={call.phase === "ringing" || call.phase === "starting" ? "Cancel the call" : "End the call"} title={call.phase === "ringing" || call.phase === "starting" ? "Cancel the call" : "End the call"} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#d6453d] text-white hover:bg-[#bd3a33]">
+                    <PhoneOff size={16} />
+                  </button>
+                ) : (
+                  <button type="button" onClick={dismissCall} aria-label="Dismiss" className="shrink-0 rounded-lg p-1.5 opacity-60 hover:opacity-100"><X size={15} /></button>
+                )}
+              </div>
+            )}
             <TicketDialog
               open={ticketDialogOpen}
               onClose={() => setTicketDialogOpen(false)}
@@ -991,11 +1185,11 @@ function DashboardContent({ name }: { name: string }) {
                 type="button"
                 onClick={() => void resolveConversation()}
                 disabled={resolving}
-                title="Mark this conversation as resolved"
-                className="chat-action-primary ml-2 flex h-9 items-center gap-2 rounded-lg px-2.5 text-[13px] font-semibold disabled:opacity-50 sm:px-4"
+                title="Close this conversation as resolved"
+                className="chat-action-primary ml-1.5 flex h-8 items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 text-[13px] font-semibold disabled:opacity-50 sm:px-3.5"
               >
-                {resolving ? <LoaderCircle size={15} className="animate-spin" /> : <CheckCircle2 size={15} />}
-                <span className="hidden sm:inline">{resolving ? "Resolving…" : "Resolve"}</span>
+                {resolving ? <LoaderCircle size={14} className="animate-spin" /> : <Inbox size={14} />}
+                <span className="hidden sm:inline">{resolving ? "Closing…" : "Close"}</span>
               </button>
             )}
           </div>
@@ -1060,8 +1254,8 @@ function DashboardContent({ name }: { name: string }) {
               </button>
             </div>
           )}
-          <div ref={scrollRef} className="dashboard-message-scroll flex-1 overflow-y-auto px-6 py-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            <div className="mx-auto max-w-[820px]">
+          <div ref={scrollRef} className="dashboard-message-scroll flex-1 overflow-y-auto px-6 pb-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="mx-auto mt-6 max-w-[820px]">
               {loading ? (
                 <ChatSkeleton />
               ) : messages.length === 0 ? (
@@ -1070,14 +1264,27 @@ function DashboardContent({ name }: { name: string }) {
                 <div className="flex min-h-[200px] items-center justify-center text-[12px] text-[var(--chat-muted)]">No messages match &quot;{searchQuery.trim()}&quot;.</div>
               ) : (
                 <div className="space-y-4">
-                  {groupMessages(visibleMessages).map((group) => {
+                  {groupMessages(visibleMessages).map((group, groupIndex, groups) => {
+                    // Each AI turn's steps go above the first message posted after the turn began: the
+                    // reply or handoff notice it produced. Hidden while searching the thread.
+                    const startOf = (run: AiRun) => new Date(run.startedAt).getTime();
+                    const after = (message: { createdAt: string }, run: AiRun) => new Date(message.createdAt).getTime() > startOf(run);
+                    const runsHere = searchTerm ? [] : aiRuns.filter((run) => {
+                      const target = groups.findIndex((candidate) => candidate.messages.some((message) => after(message, run)));
+                      return target === groupIndex;
+                    }).sort((a, b) => startOf(a) - startOf(b));
+                    const latestRunId = aiRuns.reduce<AiRun | null>((latest, run) => (!latest || startOf(run) > startOf(latest) ? run : latest), null)?.id;
+                    const steps = runsHere.map((run) => <AiSteps key={run.id} run={run} aiName={aiName} defaultOpen={run.id === latestRunId} />);
                     // A teammate joining or leaving is a thread event, not
                     // something anyone said — a centered rule, never a row
                     // with an avatar and an author.
                     if (group.kind === "system") {
                       return (
-                        <div key={group.key} className="chat-system-notice flex items-center gap-3 py-1 text-[11px]">
-                          <span className="whitespace-nowrap">{group.messages[0].body}</span>
+                        <div key={group.key} className="space-y-4">
+                          {steps}
+                          <div className="chat-system-notice flex items-center gap-3 py-1 text-[11px]">
+                            <span className="whitespace-nowrap">{group.messages[0].body}</span>
+                          </div>
                         </div>
                       );
                     }
@@ -1086,7 +1293,9 @@ function DashboardContent({ name }: { name: string }) {
                     const isAi = group.senderType === "ai";
 
                     return (
-                      <div key={group.key} className={`flex gap-3 ${isTeam ? "flex-row-reverse" : ""}`}>
+                      <div key={group.key} className="space-y-4">
+                      {steps}
+                      <div className={`flex items-end gap-2 ${isTeam ? "flex-row-reverse" : ""}`}>
                         {/* The AI wears the same face the visitor sees in the
                             widget — the avatar the workspace picked, not a
                             generic glyph — so an agent reading the thread
@@ -1096,19 +1305,19 @@ function DashboardContent({ name }: { name: string }) {
                             src={aiAvatarUrl}
                             alt={aiName}
                             title={aiName}
-                            className="h-8 w-8 shrink-0 rounded-full object-cover"
+                            className="mb-0.5 h-6 w-6 shrink-0 rounded-full object-cover"
                           />
                         ) : (
                           <span
                             title={isTeam ? (isAi ? aiName : name || "You") : customerName}
-                            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${isTeam ? "chat-avatar-team" : "chat-avatar-customer"}`}
+                            className={`mb-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[9px] font-bold ${isTeam ? "chat-avatar-team" : "chat-avatar-customer"}`}
                           >
                             {isTeam ? (isAi ? aiName.charAt(0).toUpperCase() || "A" : initial) : customerInitials}
                           </span>
                         )}
-                        <div className={`min-w-0 max-w-[76%] ${isTeam ? "text-right" : ""}`}>
+                        <div className={`min-w-0 ${isTeam ? "max-w-[88%] text-right" : "max-w-[70%]"}`}>
                           <div className="space-y-1.5">
-                            {group.messages.map((message) => (
+                            {group.messages.map((message, messageIndex) => (
                               <div key={message.id} className="space-y-1.5">
                                 {message.attachmentUrl && (message.attachmentType === "image" || message.attachmentType === "gif") && (
                                   <img src={message.attachmentUrl} alt={message.attachmentName ?? ""} className={`max-h-52 w-auto rounded-2xl object-cover ${isTeam ? "ml-auto" : ""}`} />
@@ -1135,38 +1344,41 @@ function DashboardContent({ name }: { name: string }) {
                                   // exact time lives on hover.
                                   <div
                                     title={new Date(message.createdAt).toLocaleString()}
-                                    className={`chat-line text-left text-[13.5px] leading-[1.55] ${isTeam ? "chat-line-team" : "chat-line-customer"}`}
+                                    className={`chat-line chat-bubble text-left text-[13.5px] leading-[1.55] ${isTeam ? "chat-line-team" : "chat-line-customer"}`}
                                   >
                                     <MessageMarkdown
                                       text={showingTranslation.has(message.id) ? translations[message.id]?.text ?? message.body : message.body}
                                     />
+                                    {/* The time sits inside the last bubble of a run, as in Intercom, with a customer
+                                        message's on-demand translation beside it (never fetched until clicked). */}
+                                    {(messageIndex === group.messages.length - 1 || !isTeam) && (
+                                      <span className={`chat-bubble-time mt-1.5 flex items-center gap-1.5 text-[11px] ${isTeam ? "justify-end" : ""}`}>
+                                        {messageIndex === group.messages.length - 1 && (
+                                          <span className="flex items-center gap-1">
+                                            {!isTeam && <MessageSquare size={11} className="shrink-0" />}
+                                            {shortAge(message.createdAt)}
+                                          </span>
+                                        )}
+                                        {!isTeam && (() => {
+                                          const cached = translations[message.id];
+                                          const alreadyMatches = cached && !cached.text;
+                                          return (
+                                            <button
+                                              type="button"
+                                              onClick={() => void toggleTranslation(message.id)}
+                                              disabled={translating.has(message.id) || alreadyMatches}
+                                              className="flex items-center gap-1 font-medium hover:underline disabled:cursor-default disabled:no-underline"
+                                            >
+                                              {messageIndex === group.messages.length - 1 && <span aria-hidden="true">·</span>}
+                                              <Globe2 size={11} />
+                                              {translating.has(message.id) ? "Translating…" : alreadyMatches ? `Already in ${cached.detectedLanguage || "your language"}` : showingTranslation.has(message.id) ? "See original" : "See translation"}
+                                            </button>
+                                          );
+                                        })()}
+                                      </span>
+                                    )}
                                   </div>
                                 )}
-                                {/* Translation is per customer message, on
-                                    demand — never shown for a teammate's own
-                                    reply, and never fetched until clicked. */}
-                                {message.body && !isTeam && (() => {
-                                  const cached = translations[message.id];
-                                  const alreadyMatches = cached && !cached.text;
-                                  return (
-                                    <button
-                                      type="button"
-                                      onClick={() => void toggleTranslation(message.id)}
-                                      disabled={translating.has(message.id) || alreadyMatches}
-                                      className="flex items-center gap-1 text-[11px] font-medium text-[var(--chat-muted)] transition hover:text-[var(--chat-text,inherit)] disabled:cursor-default"
-                                    >
-                                      {translating.has(message.id) ? (
-                                        <>Translating…</>
-                                      ) : alreadyMatches ? (
-                                        <><Globe2 size={11} /> Already in {cached.detectedLanguage || "your language"}</>
-                                      ) : showingTranslation.has(message.id) ? (
-                                        <><Globe2 size={11} /> See original</>
-                                      ) : (
-                                        <><Globe2 size={11} /> See translation</>
-                                      )}
-                                    </button>
-                                  );
-                                })()}
                               </div>
                             ))}
                           </div>
@@ -1174,13 +1386,26 @@ function DashboardContent({ name }: { name: string }) {
                               avatar already says who is speaking, so naming
                               them again above every group was the same fact
                               twice. */}
-                          <p className="mt-1 text-[11px] text-[var(--chat-muted)]">
-                            {formatTime(group.messages[group.messages.length - 1].createdAt)}
-                          </p>
+                          {!group.messages[group.messages.length - 1].body && (
+                            <p className="mt-1 text-[11px] text-[var(--chat-muted)]">
+                              {formatTime(group.messages[group.messages.length - 1].createdAt)}
+                            </p>
+                          )}
                         </div>
+                      </div>
                       </div>
                     );
                   })}
+                  {/* A turn's steps are only saved when it ends, so while the AI is still working on the customer's last
+                      message there is nothing above to show: say so here instead of leaving the thread looking stuck. */}
+                  {!searchTerm && conversation?.handledBy !== "human" && messages.at(-1)?.senderType === "customer" && (
+                    <div className="chat-ai-steps flex items-center gap-3 text-[12.5px]">
+                      <span className="w-9 shrink-0" />
+                      <ListChecks size={13} className="shrink-0" />
+                      <span>{aiName} is working on a reply</span>
+                      <TypingDots color="currentColor" />
+                    </div>
+                  )}
                   {customerTyping && (
                     <div className="flex items-center gap-3">
                       <span className="chat-avatar-customer flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[10px] font-bold">{customerInitials}</span>
@@ -1192,11 +1417,19 @@ function DashboardContent({ name }: { name: string }) {
                 </div>
               )}
 
-              {conversation?.escalationSummary && !looksLikeTranscriptDump(conversation.escalationSummary) && (
-                <div className="mt-7 rounded-2xl border border-[var(--chat-divider)] bg-[var(--chat-customer-bg)] p-4">
-                  <p className="text-xs font-semibold">Handoff notes</p>
-                  {conversation.escalationReason && <p className="mt-2 text-[13px] font-medium">{conversation.escalationReason}</p>}
-                  <p className="mt-2 whitespace-pre-wrap text-[13px] leading-6">{conversation.escalationSummary}</p>
+              {/* The AI's handoff notes as Intercom's yellow summary card. An automatic handoff (an outage,
+                  a spent budget) has no written summary, only a log of the thread, so only its reason shows. */}
+              {(conversation?.escalationReason || handoffSummary) && (
+                <div className="mt-4 flex items-end justify-end gap-2">
+                  <div className="chat-summary-card max-w-[88%] rounded-2xl px-4 py-3.5 text-left">
+                    <p className="flex items-center gap-2 text-[13px] font-semibold">
+                      <span className="chat-ai-chip rounded px-1 py-px text-[9px] font-bold leading-3">AI</span>
+                      Summary
+                    </p>
+                    {conversation?.escalationReason && <p className="mt-2 text-[13px] font-medium">{conversation.escalationReason}</p>}
+                    {handoffSummary && <p className="mt-1.5 whitespace-pre-wrap text-[13px] leading-6">{handoffSummary}</p>}
+                  </div>
+                  <img src={aiAvatarUrl} alt={aiName} title={aiName} className="mb-0.5 h-6 w-6 shrink-0 rounded-full object-cover" />
                 </div>
               )}
               {summary ? (
@@ -1209,7 +1442,9 @@ function DashboardContent({ name }: { name: string }) {
                   </div>
                   <p className="mt-2 text-[13px] leading-6">{summary}</p>
                 </div>
-              ) : (
+              ) : conversation?.assignedUserId ? (
+                // Offered once a teammate has joined: until then the AI is handling the chat and the
+                // handoff notes above already say what happened.
                 <div className="mt-7 flex flex-col items-center gap-1.5">
                   <button
                     type="button"
@@ -1222,12 +1457,15 @@ function DashboardContent({ name }: { name: string }) {
                   </button>
                   {summaryError && <p className="text-[11px] text-[#c0554f]">{summaryError}</p>}
                 </div>
-              )}
+              ) : null}
             </div>
           </div>
 
           <div className="relative shrink-0 px-5 pb-4">
-            {!showComposer ? (
+            {/* An open chat is replied to only by whoever has joined it: sending used to join silently (the
+                server still treats a reply as a join), which let anyone type into a chat the AI or a teammate
+                was handling. No reply box until you have joined (Join chat / Take over in the header). */}
+            {!isResolved && !isMine ? null : !showComposer ? (
               <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[var(--chat-divider)] bg-[var(--chat-customer-bg)] px-4 py-3.5">
                 <span className="flex items-center gap-2 text-[13px] text-[var(--chat-muted)]">
                   <CheckCircle2 size={15} className="shrink-0 text-[#35b92c]" />
@@ -1397,7 +1635,7 @@ function DashboardContent({ name }: { name: string }) {
       {detailsOpen && <div className="fixed inset-0 z-30 bg-black/30 xl:hidden" onClick={() => setDetailsOpen(false)} />}
       <aside
         id="dashboard-customer-details"
-        className={`${detailsOpen ? "fixed inset-y-0 right-0 z-40 flex w-full shadow-[-16px_0_40px_rgba(15,18,22,0.18)] sm:w-[340px]" : "hidden"} shrink-0 flex-col border-l border-[var(--chat-divider)] bg-[var(--chat-surface)] xl:static xl:z-auto xl:flex xl:w-[340px] xl:shadow-none`}
+        className={`${detailsOpen ? "fixed inset-y-0 right-0 z-40 flex w-full shadow-[-16px_0_40px_rgba(15,18,22,0.18)] sm:w-[340px] xl:static xl:z-auto xl:w-[340px] xl:shadow-none" : "hidden"} shrink-0 flex-col border-l border-[var(--chat-divider)] bg-[var(--chat-surface)]`}
       >
         <div className="border-b border-[var(--chat-divider)] p-5">
           <div className="flex items-center gap-3">
@@ -1407,7 +1645,7 @@ function DashboardContent({ name }: { name: string }) {
               type="button"
               onClick={() => setDetailsOpen(false)}
               aria-label="Close details"
-              className="-ml-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[var(--chat-muted)] transition hover:bg-[var(--chat-customer-bg)] xl:hidden"
+              className="-ml-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[var(--chat-muted)] transition hover:bg-[var(--chat-customer-bg)]"
             >
               <X size={18} />
             </button>
@@ -1532,8 +1770,8 @@ function DashboardContent({ name }: { name: string }) {
                   to it. Prefers the escalation summary the AI wrote when it
                   handed the thread over, since that one exists without
                   anyone having to ask for it. */}
-              {summary ?? conversation?.escalationSummary ? (
-                <p className="whitespace-pre-wrap">{summary ?? conversation?.escalationSummary}</p>
+              {summary ?? handoffSummary ? (
+                <p className="whitespace-pre-wrap">{summary ?? handoffSummary}</p>
               ) : (
                 <>
                   <p className="text-[var(--chat-muted)]">No summary yet.</p>
@@ -1691,7 +1929,15 @@ type TicketDraft = {
   asanaProjects: { gid: string; name: string }[];
   suggestedTitle: string;
   suggestedNote: string;
+  suggestedCategory?: TicketCategory;
 };
+type TicketCategory = "billing" | "sales" | "technical" | "support";
+const TICKET_CATEGORY_OPTIONS: { value: TicketCategory; label: string }[] = [
+  { value: "billing", label: "Billing" },
+  { value: "sales", label: "Sales" },
+  { value: "technical", label: "Technical" },
+  { value: "support", label: "Support" },
+];
 type ExistingTicket = { provider: string; id: string; url: string | null; title: string; createdAt: string };
 
 function TicketDialog({
@@ -1707,7 +1953,7 @@ function TicketDialog({
   conversationId: string | null;
   busy: boolean;
   error: string | null;
-  onCreate: (input: { title: string; note: string; provider?: string; asanaProjectGid?: string }) => Promise<void>;
+  onCreate: (input: { title: string; note: string; provider?: string; asanaProjectGid?: string; category: TicketCategory }) => Promise<void>;
 }) {
   // "list" shows what's already been filed for this conversation, so
   // clicking "Ticket" a second time doesn't just reopen a blank form as if
@@ -1723,6 +1969,7 @@ function TicketDialog({
   const [note, setNote] = useState("");
   const [provider, setProvider] = useState<string>("");
   const [asanaProjectGid, setAsanaProjectGid] = useState<string>("");
+  const [category, setCategory] = useState<TicketCategory>("support");
 
   // Checked fresh each time the dialog opens: whatever was already filed for
   // this conversation, since another agent could have filed one since the
@@ -1769,8 +2016,10 @@ function TicketDialog({
         setDraft(data);
         setTitle(data.suggestedTitle ?? "");
         setNote(data.suggestedNote ?? "");
+        // The ticket is always kept in Elpino; a connected tool gets a copy by default, and "" means don't send.
         setProvider(data.providers[0]?.provider ?? "");
         setAsanaProjectGid("");
+        setCategory(data.suggestedCategory ?? "support");
       })
       .catch((issue: unknown) => {
         if (!cancelled) setLoadError(issue instanceof Error ? issue.message : "Could not prepare the ticket.");
@@ -1792,6 +2041,7 @@ function TicketDialog({
       note: note.trim(),
       provider: provider || undefined,
       asanaProjectGid: provider === "asana" && asanaProjectGid ? asanaProjectGid : undefined,
+      category,
     });
   }
 
@@ -1826,7 +2076,7 @@ function TicketDialog({
                 >
                   <p className="text-[12.5px] font-medium">{t.title}</p>
                   <p className="mt-1 text-[11px] text-[var(--chat-muted)]">
-                    {t.provider === "asana" ? "Asana" : "Trello"} · {new Date(t.createdAt).toLocaleString()}
+                    {t.provider === "asana" ? "Elpino + Asana" : t.provider === "trello" ? "Elpino + Trello" : "Elpino"} · {new Date(t.createdAt).toLocaleString()}
                   </p>
                 </a>
               ))}
@@ -1848,19 +2098,33 @@ function TicketDialog({
         ) : draft ? (
           <div className="mt-4 space-y-3.5">
             <label className="block text-[12.5px] font-semibold">
-              Send to
+              Category
               <select
-                value={provider}
-                onChange={(event) => { setProvider(event.target.value); setAsanaProjectGid(""); }}
+                value={category}
+                onChange={(event) => setCategory(event.target.value as TicketCategory)}
                 className="mt-1.5 h-10 w-full rounded-lg border border-[var(--chat-divider)] bg-transparent px-2.5 text-[13px] font-normal outline-none focus:border-[var(--chat-line-text)]"
               >
-                {draft.providers.map((option) => (
-                  <option key={option.provider} value={option.provider}>
-                    {option.label}{option.detail ? ` — ${option.detail}` : ""}
-                  </option>
-                ))}
+                {TICKET_CATEGORY_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
               </select>
             </label>
+            {/* Every ticket is kept in Elpino and worked from Inbox → Tickets; a connected tool can get a copy. */}
+            {draft.providers.length > 0 && (
+              <label className="block text-[12.5px] font-semibold">
+                Also send to
+                <select
+                  value={provider}
+                  onChange={(event) => { setProvider(event.target.value); setAsanaProjectGid(""); }}
+                  className="mt-1.5 h-10 w-full rounded-lg border border-[var(--chat-divider)] bg-transparent px-2.5 text-[13px] font-normal outline-none focus:border-[var(--chat-line-text)]"
+                >
+                  {draft.providers.map((option) => (
+                    <option key={option.provider} value={option.provider}>
+                      {option.label}{option.detail ? ` — ${option.detail}` : ""}
+                    </option>
+                  ))}
+                  <option value="">Don&apos;t send (keep it in Elpino only)</option>
+                </select>
+              </label>
+            )}
             {provider === "asana" && draft.asanaProjects.length > 0 && (
               <label className="block text-[12.5px] font-semibold">
                 Project
@@ -1896,7 +2160,7 @@ function TicketDialog({
               />
             </label>
             <p className="text-[11.5px] leading-4 text-[var(--chat-muted)]">
-              Customer name, email, and topic are attached automatically below this.
+              Saved in Inbox → Tickets. Customer name, email, and topic are attached automatically.
             </p>
           </div>
         ) : null}

@@ -8,6 +8,8 @@ import MessageMarkdown from "@/app/components/MessageMarkdown";
 import TypingDots from "@/app/components/TypingDots";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { playMessageChime, primeOnFirstInteraction } from "@/lib/notification-sound";
+import { CallOverlay } from "./CallOverlay";
+import { useWidgetCall } from "./use-widget-call";
 
 type Attachment = { url: string; type: "image" | "file" | "gif"; name?: string };
 type WidgetMessage = {
@@ -1058,6 +1060,17 @@ function WidgetContent() {
     return () => { cancelled = true; window.clearInterval(interval); };
   }, [conversationId, visitorToken, tab, chatView, key, hostname, discardSession]);
 
+  // A voice call from the team. Its own socket, open for the whole conversation (not just while the thread is
+  // on screen), so the phone rings whichever tab the visitor is on; the loader is asked to open the panel.
+  const widgetCall = useWidgetCall({
+    gatewayWsOrigin: GATEWAY_WS_ORIGIN,
+    siteKey: key,
+    hostname,
+    visitorToken,
+    conversationId,
+    onRing: () => window.parent.postMessage({ type: "elpino:open" }, "*"),
+  });
+
   // Live push for the instant a reply is approved and saved — see
   // apps/gateway/src/realtime/realtime.service.ts's /rt/widget channel. The
   // poll above still runs alongside this as the reliability fallback (socket
@@ -1554,6 +1567,18 @@ function WidgetContent() {
 
   return (
     <div className="relative flex h-full flex-col" style={{ backgroundColor: BG, color: INK, colorScheme: "light" }}>
+      {widgetCall.call && (
+        <CallOverlay
+          call={widgetCall.call}
+          avatarUrl={botAvatarUrl}
+          accent={ACCENT}
+          onAccept={() => void widgetCall.accept()}
+          onDecline={widgetCall.decline}
+          onHangUp={widgetCall.hangUp}
+          onToggleMute={widgetCall.toggleMute}
+          onDismiss={widgetCall.dismiss}
+        />
+      )}
       <div className="min-h-0 flex-1 overflow-hidden">
         {tab === "chat" && chatView === "home" ? (
           <div className="flex h-full flex-col">

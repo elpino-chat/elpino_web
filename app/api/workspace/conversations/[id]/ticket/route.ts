@@ -25,7 +25,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
   return Response.json({ tickets: result?.tickets ?? [] });
 }
 
-/** Files a ticket about this conversation in the workspace's connected project tool. */
+/** Files a ticket about this conversation. It is always kept in Elpino; a connected project tool can get a copy. */
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await requireSession();
   if (!session) return Response.json({ message: "Unauthenticated" }, { status: 401 });
@@ -39,6 +39,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     note?: string;
     provider?: "trello" | "asana";
     asanaProjectGid?: string;
+    category?: string;
   };
 
   const result = await callGateway<TicketResult>("/api/workspace/agent/ticket", {
@@ -48,6 +49,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     note: body.note,
     provider: body.provider,
     asanaProjectGid: body.asanaProjectGid,
+    category: body.category,
   }).catch(() => null);
 
   if (!result || result.error) {

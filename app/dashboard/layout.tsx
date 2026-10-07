@@ -4,6 +4,8 @@ import { requireSession } from "@/app/api/onboarding/_lib/require-user";
 import Sidebar from "@/app/components/dashboard/Sidebar";
 import DashboardHeader from "@/app/components/dashboard/DashboardHeader";
 import HomePanel from "@/app/components/dashboard/HomePanel";
+import InboxNavPanel from "@/app/components/dashboard/InboxNavPanel";
+import TicketsNavPanel from "@/app/components/dashboard/TicketsNavPanel";
 import SpacePanel from "@/app/components/dashboard/SpacePanel";
 import DashboardThemeProvider from "@/app/components/dashboard/DashboardThemeProvider";
 import SetupChecklist from "@/app/components/dashboard/SetupChecklist";
@@ -43,6 +45,8 @@ async function AuthedDashboard({ children }: { children: React.ReactNode }) {
             <DashboardHeader user={{ email: session.email, name: session.name }} />
             <div className="relative flex min-h-0 min-w-0 flex-1 flex-row">
               <SpacePanel />
+              <InboxNavPanel />
+              <TicketsNavPanel />
               <HomePanel user={{ email: session.email, name: session.name }} />
               <DashboardMain>{children}</DashboardMain>
             </div>

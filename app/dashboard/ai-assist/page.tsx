@@ -3,10 +3,13 @@
 import { fetchConversations } from "@/app/lib/fetch-conversations";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, CheckCheck, Globe, LoaderCircle, MapPin, MessageCircle, MonitorSmartphone, Send, ShieldCheck, Sparkles } from "lucide-react";
-import { ConversationRow, InboxViewTabs, ListEmpty, ListToolbar, type ListFilter } from "@/app/components/dashboard/inbox-list-ui";
+import {
+  ConversationRow, ListEmpty, ListToolbar, inView, matchesStatus, sortConversations, statusCounts, shortAge,
+  type SortOrder, type StatusFilter,
+} from "@/app/components/dashboard/inbox-list-ui";
 import MessageMarkdown from "@/app/components/MessageMarkdown";
 import TypingDots from "@/app/components/TypingDots";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   DEFAULT_BOT_AVATAR,
   formatDevice,
@@ -94,7 +97,11 @@ export default function AiAssistPage() {
   const router = useRouter();
 
   const [query, setQuery] = useState("");
-  const [filter, setFilter] = useState<ListFilter>("all");
+  // The Inbox sidebar's AI agent > Open / Closed links set ?status=; the dropdown in the list still works.
+  const statusParam = useSearchParams().get("status");
+  const [status, setStatus] = useState<StatusFilter>(statusParam === "closed" ? "closed" : statusParam === "all" ? "all" : "open");
+  useEffect(() => { setStatus(statusParam === "closed" ? "closed" : statusParam === "all" ? "all" : "open"); }, [statusParam]);
+  const [sort, setSort] = useState<SortOrder>("newest");
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [conversationsLoading, setConversationsLoading] = useState(true);
   const [joining, setJoining] = useState(false);
@@ -138,35 +145,26 @@ export default function AiAssistPage() {
     return () => window.clearInterval(interval);
   }, []);
 
-  // "AI handled" = unassigned to any teammate — resolved ones stay in this
-  // list too now (under the Resolved tab) rather than disappearing outright,
-  // since the tabs are the thing responsible for status filtering.
-  const aiHandled = useMemo(() => conversations.filter((conversation) => !conversation.assignedUserId), [conversations]);
+  // "AI handled" = still the AI's, with no teammate on it. A thread handed to the team that nobody has
+  // joined yet is in the Team Inbox's "Unassigned" view instead. Resolved ones stay here under the
+  // Closed status rather than disappearing outright.
+  const aiHandled = useMemo(() => conversations.filter((conversation) => inView(conversation, "ai", myAccountId || null)), [conversations, myAccountId]);
 
-  const visibleConversations = useMemo(() => {
+  const searched = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
-    return aiHandled.filter((conversation) => {
-      const matchesFilter =
-        filter === "all" ||
-        conversation.status === filter;
-      const matchesQuery =
-        !normalizedQuery ||
-        conversation.name.toLowerCase().includes(normalizedQuery) ||
-        conversation.preview.toLowerCase().includes(normalizedQuery);
-      return matchesFilter && matchesQuery;
-    });
-  }, [aiHandled, filter, query]);
+    return aiHandled.filter((conversation) =>
+      !normalizedQuery ||
+      conversation.name.toLowerCase().includes(normalizedQuery) ||
+      conversation.preview.toLowerCase().includes(normalizedQuery));
+  }, [aiHandled, query]);
+
+  const visibleConversations = useMemo(
+    () => sortConversations(searched.filter((conversation) => matchesStatus(conversation, status)), sort),
+    [searched, status, sort],
+  );
 
   const unreadCount = useMemo(() => aiHandled.filter((conversation) => !!conversation.unread).length, [aiHandled]);
 
-  // Navigation badges count unresolved conversations; unread counts stay in the toolbar.
-  const aiOpenCount = useMemo(() => aiHandled.filter((conversation) => conversation.status !== "resolved").length, [aiHandled]);
-  const teamOpenCount = useMemo(
-    () => conversations.filter((conversation) => !!conversation.assignedUserId && conversation.status !== "resolved").length,
-    [conversations],
-  );
-  const aiBadgeCount = aiOpenCount;
-  const teamBadgeCount = teamOpenCount;
 
   async function markAllRead() {
     await fetch("/api/workspace/conversations/mark-all-read", { method: "POST" }).catch(() => undefined);
@@ -286,12 +284,16 @@ export default function AiAssistPage() {
   return (
     <div id="dashboard-ai-assist" className="flex h-full min-h-0 overflow-hidden bg-[#262626] text-white">
       <aside
-        className={`il-root dashboard-ai-list dashboard-secondary-sidebar h-full w-full shrink-0 flex-col overflow-hidden border-r border-white/10 bg-[#262626] lg:static lg:flex lg:w-[304px] ${
+        className={`il-root dashboard-ai-list dashboard-secondary-sidebar h-full w-full shrink-0 flex-col overflow-hidden bg-[#262626] lg:static lg:flex lg:w-[304px] ${
           selectedId ? "hidden" : "flex"
         }`}
       >
-        <InboxViewTabs active="ai" teamBadge={teamBadgeCount} aiBadge={aiBadgeCount} />
-        <ListToolbar query={query} onQuery={setQuery} filter={filter} onFilter={setFilter} unreadCount={unreadCount} onMarkAllRead={() => void markAllRead()} />
+        <ListToolbar
+          view="ai" query={query} onQuery={setQuery}
+          status={status} onStatus={setStatus} statusCount={statusCounts(searched)}
+          sort={sort} onSort={setSort}
+          unreadCount={unreadCount} onMarkAllRead={() => void markAllRead()}
+        />
 
         <div className="min-h-0 flex-1 overflow-y-auto px-2 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {conversationsLoading ? (
@@ -305,7 +307,7 @@ export default function AiAssistPage() {
                 initials={conversation.initials}
                 color={colorForId(conversation.id)}
                 preview={conversation.preview || "No messages yet"}
-                time={formatListTime(conversation.time)}
+                time={shortAge(conversation.time)}
                 unread={conversation.unread}
                 resolved={conversation.status === "resolved"}
                 active={selectedId === conversation.id}
@@ -314,7 +316,7 @@ export default function AiAssistPage() {
           )}
 
           {!conversationsLoading && visibleConversations.length === 0 && (
-            <ListEmpty hasAny={aiHandled.length > 0} onShowAll={() => { setQuery(""); setFilter("all"); }} />
+            <ListEmpty hasAny={aiHandled.length > 0} onShowAll={() => { setQuery(""); setStatus("all"); }} />
           )}
         </div>
       </aside>

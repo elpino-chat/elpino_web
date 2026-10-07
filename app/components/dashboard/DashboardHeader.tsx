@@ -29,6 +29,7 @@ import {
   Inbox,
   LogOut,
   Menu,
+  MessageCircle,
   Palette,
   Pin,
   Plus,
@@ -68,8 +69,13 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
   // unresolved issues — both drop on their own as things get read/resolved,
   // so this stays accurate without a separate "seen it" flag to maintain.
   const [spaceBadgeCount, setSpaceBadgeCount] = useState(0);
+  // The Inbox sidebar only fits beside the list and the open chat from xl up; below that it is a drawer.
   const hamburgerBreakpoint =
-    isSpaceRoute || isSettingsRoute ? "md:hidden" : null;
+    isSpaceRoute || isSettingsRoute ? "md:hidden" : pathname === "/dashboard/inbox" || pathname === "/dashboard/tickets" ? "xl:hidden" : null;
+  // On wide screens the inbox has no top bar: only the avatar menu stays, in the corner of the icon
+  // rail. The header itself stays mounted, because it owns presence, notification sounds and the
+  // invite dialog.
+  const compact = pathname === "/dashboard/inbox" || pathname === "/dashboard/tickets";
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [selected, setSelected] = useState<Organization | null>(null);
   const [open, setOpen] = useState(false);
@@ -432,7 +438,7 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
       : statusOptions.find((option) => option.value === presenceStatus) ?? statusOptions[0];
 
   return (
-    <header className="relative z-50 mx-2 my-0.5 flex min-h-12 shrink-0 flex-wrap items-center gap-y-1 rounded-xl bg-transparent px-2.5 py-1 text-[#354052] md:h-12 md:flex-nowrap md:py-0">
+    <header className={`relative z-50 mx-2 my-0.5 flex min-h-12 shrink-0 flex-wrap items-center gap-y-1 rounded-xl bg-transparent px-2.5 py-1 text-[#354052] md:h-12 md:flex-nowrap md:py-0 ${compact ? "dashboard-header-compact xl:fixed xl:bottom-[76px] xl:left-2 xl:z-[60] xl:m-0 xl:h-auto xl:min-h-0 xl:w-auto xl:p-0" : ""}`}>
       {hamburgerBreakpoint && (
         <button
           type="button"
@@ -627,7 +633,7 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
         </Link>
         <NotificationsBell open={notificationsOpen} onOpenChange={setNotificationsOpen} muted={notificationsMuted} />
       </div>
-        <div ref={accountRef} className="relative ml-1.5">
+        <div ref={accountRef} className="dashboard-header-account relative ml-1.5 xl:ml-0">
           <button
             type="button"
             aria-label="Account menu"
@@ -641,11 +647,11 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
               </span>
               <span className={`absolute -bottom-0.5 -right-0.5 z-10 h-3 w-3 rounded-full border-2 border-[#262626] ${displayStatus.dot}`} />
             </span>
-            <ChevronDown size={13} className={`text-white/60 transition-transform ${accountOpen ? "rotate-180" : ""}`} />
+            <ChevronDown size={13} className={`text-white/60 transition-transform ${accountOpen ? "rotate-180" : ""} ${compact ? "xl:hidden" : ""}`} />
           </button>
 
           {accountOpen && (
-            <div className="dashboard-account-menu absolute right-0 top-11 flex max-h-[calc(100vh-60px)] w-[360px] flex-col overflow-hidden rounded-2xl border border-[#d9dde2] bg-white text-[#24272c] shadow-[0_18px_48px_rgba(25,39,58,0.2)]">
+            <div className={`dashboard-account-menu absolute right-0 top-11 flex max-h-[calc(100vh-60px)] w-[360px] flex-col overflow-hidden rounded-2xl border border-[#d9dde2] bg-white text-[#24272c] shadow-[0_18px_48px_rgba(25,39,58,0.2)] ${compact ? "xl:bottom-0 xl:left-12 xl:right-auto xl:top-auto xl:max-h-[calc(100vh-130px)]" : ""}`}>
               <div className="overflow-y-auto p-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 <button
                   type="button"
@@ -746,6 +752,41 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
                   </button>
                 </div>
 
+                {/* With no top bar on the inbox, the workspace switcher and the Usage / Invite shortcuts live here. */}
+                {compact && (
+                  <div className="hidden xl:block">
+                    <p className="px-3 pb-1 pt-1 text-xs font-medium text-[#8a8e94]">Workspace</p>
+                    {(organizations.length ? organizations : selected ? [selected] : []).map((organization) => (
+                      <button
+                        key={organization.id}
+                        type="button"
+                        onClick={() => { setAccountOpen(false); void selectWorkspace(organization).then(() => router.refresh()); }}
+                        className="flex h-9 w-full items-center gap-3 rounded-lg px-3 text-left text-sm hover:bg-[#f1f2f3]"
+                      >
+                        <span className="flex-1 truncate">{organization.name}</span>
+                        {selected?.id === organization.id && <Check size={15} className="text-[#3a7a4e]" />}
+                      </button>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => { setAccountOpen(false); setInviteOpen(true); }}
+                      className="flex h-9 w-full items-center gap-3 rounded-lg px-3 text-left text-sm hover:bg-[#f1f2f3]"
+                    >
+                      <UserPlus size={17} className="text-[#686d73]" />
+                      Invite team
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => { setAccountOpen(false); router.push("/dashboard/settings/ai-usage"); }}
+                      className="flex h-9 w-full items-center gap-3 rounded-lg px-3 text-left text-sm hover:bg-[#f1f2f3]"
+                    >
+                      <Gauge size={17} className="text-[#686d73]" />
+                      Usage
+                    </button>
+                    <div className="my-2 border-t border-[#eceef0]" />
+                  </div>
+                )}
+
                 {[
                   { Icon: Settings, label: "Settings", href: "/dashboard/settings" },
                   { Icon: Palette, label: "Themes", href: "/dashboard#themes" },
@@ -764,6 +805,19 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
                     {label}
                   </button>
                 ))}
+
+                {/* Only while `npm run dev` is running: a pretend customer site with your workspace's own widget on it. */}
+                {process.env.NODE_ENV === "development" && (
+                  <button
+                    type="button"
+                    onClick={() => { setAccountOpen(false); window.open("/dev/widget", "_blank", "noopener"); }}
+                    className="flex h-9 w-full items-center gap-3 rounded-lg px-3 text-left text-sm hover:bg-[#f1f2f3]"
+                  >
+                    <MessageCircle size={17} className="text-[#686d73]" />
+                    <span className="flex-1">Test widget on localhost</span>
+                    <span className="rounded bg-[#fff4d6] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-[#8a5a00]">Dev</span>
+                  </button>
+                )}
 
                 <div className="mx-[-8px] my-3 border-t border-[#e5e7ea]" />
                 <p className="px-3 pb-1.5 text-xs font-medium text-[#8a8e94]">AI Support Tools</p>
@@ -803,7 +857,7 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
             </div>
           )}
         </div>
-      <InvitePeopleDialog open={inviteOpen} onClose={() => setInviteOpen(false)} />
+      <div className="dashboard-header-keep contents"><InvitePeopleDialog open={inviteOpen} onClose={() => setInviteOpen(false)} /></div>
     </header>
   );
 }

@@ -52,9 +52,10 @@ export default function Sidebar() {
       <nav className="relative z-10 flex min-h-0 flex-1 flex-col items-center overflow-y-auto px-2 py-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <div className="flex w-full flex-col items-center gap-1">
           {primaryNavItems.map(({ icon, label, href }) => {
+            // Tickets are opened from the Inbox, so the Inbox icon stays lit there.
             const active = href === "/dashboard"
               ? pathname === "/dashboard"
-              : pathname.startsWith(href);
+              : pathname.startsWith(href) || (href === "/dashboard/inbox" && pathname.startsWith("/dashboard/tickets"));
             return (
               <Link
                 key={label}
