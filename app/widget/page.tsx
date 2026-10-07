@@ -1033,7 +1033,15 @@ function WidgetContent() {
             }
             for (const message of data.messages) seenMessageIdsRef.current.add(message.id);
             if (replies.length) announceReplies(replies.length, replies[replies.length - 1]);
-            setMessages(data.messages);
+            const polled = data.messages;
+            // A poll that left before a reply was saved returns without it, while the live socket has already
+            // shown it: keep such a just-arrived message instead of making it vanish until the next poll.
+            setMessages((prev) => {
+              const known = new Set(polled.map((message) => message.id));
+              const recent = Date.now() - 15_000;
+              const arrived = prev.filter((message) => !known.has(message.id) && Date.parse(message.createdAt) > recent);
+              return arrived.length ? [...polled, ...arrived] : polled;
+            });
           }
           setAgentTyping(!!data.agentTyping);
           setAgentName(data.agent?.name?.trim() || null);
