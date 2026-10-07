@@ -275,6 +275,9 @@ function WidgetContent() {
   // A short confirmation shown once a detail is saved ("Nice to meet you, Jagdeep."); null when there is none.
   const [contactThanks, setContactThanks] = useState<string | null>(null);
   const [agentTyping, setAgentTyping] = useState(false);
+  // The AI's reply while it is being written (already approved, only its wording is still changing). The saved
+  // message replaces it; the backend can also take it back, and a stream that goes quiet is dropped.
+  const [streamingReply, setStreamingReply] = useState<{ streamId: string; seq: number; text: string } | null>(null);
   // While a reply is being written the visitor can keep typing but not send: a second message
   // mid-turn starts a second, overlapping answer. The block lifts by itself after a while so a
   // reply that never arrives can never leave the chat stuck.
@@ -1034,6 +1037,8 @@ function WidgetContent() {
             for (const message of data.messages) seenMessageIdsRef.current.add(message.id);
             if (replies.length) announceReplies(replies.length, replies[replies.length - 1]);
             const polled = data.messages;
+            // A reply that reached the thread by polling also ends any stream.
+            if (polled.length && polled[polled.length - 1].senderType !== "customer") setStreamingReply(null);
             // A poll that left before a reply was saved returns without it, while the live socket has already
             // shown it: keep such a just-arrived message instead of making it vanish until the next poll.
             setMessages((prev) => {
@@ -1099,10 +1104,22 @@ function WidgetContent() {
       socket.onopen = () => { reconnectDelay = 1000; };
       socket.onmessage = (event) => {
         if (closed || epoch !== sessionEpochRef.current) return;
-        let data: { type?: string; message?: WidgetMessage };
+        let data: { type?: string; message?: WidgetMessage; update?: { streamId?: unknown; seq?: unknown; text?: unknown; state?: unknown } };
         try {
           data = JSON.parse(event.data as string);
         } catch {
+          return;
+        }
+        if (data.type === "reply_stream" && data.update && typeof data.update.streamId === "string" && typeof data.update.seq === "number") {
+          const { streamId, seq, text, state } = data.update as { streamId: string; seq: number; text?: unknown; state?: unknown };
+          setStreamingReply((current) => {
+            if (state === "discard") return current?.streamId === streamId ? null : current;
+            if (typeof text !== "string" || !text.trim()) return current;
+            // Updates can arrive out of order: only a newer one counts.
+            if (current?.streamId === streamId && current.seq >= seq) return current;
+            return { streamId, seq, text };
+          });
+          if (state !== "discard") setAgentTyping(false);
           return;
         }
         if (data.type !== "message" || !data.message || data.message.id === undefined) return;
@@ -1112,6 +1129,8 @@ function WidgetContent() {
         const isReply = message.senderType === "agent" || message.senderType === "ai";
         setMessages((prev) => (prev.some((existing) => existing.id === message.id) ? prev : [...prev, message]));
         if (isReply) {
+          // The saved reply takes the place of the text that was streaming.
+          setStreamingReply(null);
           // The reply is the definitive end of "typing" — don't wait for the
           // next poll (up to POLL_MS later) to clear it, or the dots sit
           // there under a reply that's already on screen.
@@ -1171,6 +1190,13 @@ function WidgetContent() {
     if (!el) return;
     stickToBottomRef.current = el.scrollHeight - el.scrollTop - el.clientHeight < 80;
   }
+  // A different thread, or a stream nothing has updated for a while (the reply arrives by polling anyway).
+  useEffect(() => { setStreamingReply(null); }, [conversationId]);
+  useEffect(() => {
+    if (!streamingReply) return;
+    const timer = window.setTimeout(() => setStreamingReply(null), 20_000);
+    return () => window.clearTimeout(timer);
+  }, [streamingReply]);
   useEffect(() => {
     // Opening a thread (new conversation, switching back to it, or the
     // panel reopening) always starts at the bottom regardless of where a
@@ -1179,7 +1205,7 @@ function WidgetContent() {
   }, [conversationId, chatView]);
   useEffect(() => {
     if (stickToBottomRef.current) scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
-  }, [messages, tab, chatView, agentTyping, contactFields, contactAskId, contactDoneFor]);
+  }, [messages, tab, chatView, agentTyping, contactFields, contactAskId, contactDoneFor, streamingReply?.text]);
 
   async function sendPayload(body: string, attachment: Attachment | null, options?: { restoreDraft?: boolean }): Promise<boolean> {
     if (sending || !visitorToken || (!body && !attachment)) return false;
@@ -2103,7 +2129,15 @@ function WidgetContent() {
                   </div>
                 </div>
               )}
-              {agentTyping && (
+              {streamingReply && (
+                <div className="flex items-end">
+                  <div className="w-fit max-w-[85%] rounded-2xl px-3.5 py-2.5 text-[13.5px] leading-6" style={{ backgroundColor: BUBBLE, color: INK }} aria-live="polite">
+                    <MessageMarkdown text={streamingReply.text} />
+                    <span className="ml-0.5 inline-block h-3.5 w-[2px] translate-y-0.5 animate-pulse rounded-full" style={{ backgroundColor: MUTED }} aria-hidden="true" />
+                  </div>
+                </div>
+              )}
+              {agentTyping && !streamingReply && (
                 <div className="flex items-center">
                   <div className="flex items-center rounded-2xl px-3.5 py-3" style={{ backgroundColor: BUBBLE, width: "fit-content" }}>
                     <TypingDots color="rgba(24,24,27,.45)" />
