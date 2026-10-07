@@ -21,6 +21,7 @@ import {
   Info,
   LayoutGrid,
   ListChecks,
+  Loader2,
   LoaderCircle,
   Lock,
   MapPin,
@@ -204,6 +205,35 @@ const SHOW_AI_STEPS = true;
 
 // One AI turn as the activity route reports it: when it started and which steps it took.
 type AiRun = { id: string; outcome: string; startedAt: string; steps: { tool: string; ok: boolean; note?: string }[] };
+// The turn in progress right now: the steps so far, and the one still running (null while the model is thinking or writing).
+type AiLive = { startedAt: string; running: string | null; steps: { tool: string; ok: boolean; note?: string }[] };
+
+// What each step is called while it is still running.
+const RUNNING_LABELS: Record<string, string> = {
+  route_specialist: "Understanding the request",
+  search_knowledge: "Searching the knowledge base",
+  read_knowledge: "Reading a knowledge article",
+  read_official_page: "Reading the website",
+  recall_conversation: "Looking back through this conversation",
+  get_past_conversations: "Checking past conversations",
+  find_payments: "Checking payment history",
+  find_subscriptions: "Checking subscriptions",
+  get_receipt: "Fetching a receipt",
+  send_payment_link: "Sending a payment link",
+  find_orders: "Looking up orders",
+  save_lead: "Saving a sales lead",
+  save_contact_info: "Saving contact details",
+  send_resource_link: "Emailing a page to the customer",
+  check_team_availability: "Checking who on the team is free",
+  review_reply: "Checking the reply against its sources",
+  handoff_check: "Checking whether a person is needed",
+  escalate_to_human: "Handing the conversation to the team",
+};
+function runningLabel(tool: string | null, aiName: string) {
+  if (!tool) return `${aiName} is thinking`;
+  if (tool.startsWith("mcp_")) return "Checking a connected system";
+  return RUNNING_LABELS[tool] ?? `${aiName} is working`;
+}
 
 // Plain-language names for the AI's steps. Anything not listed (the privacy filter, retries, token
 // usage, the polish pass) is internal plumbing and is not shown to the team.
@@ -255,7 +285,7 @@ function StepIcon({ tool }: { tool: string }) {
 // One AI turn as quiet activity lines above the reply it led to, laid out like Intercom's Fin: a time,
 // an icon and what happened. The router's reading of the request is the AI's "thoughts", which open
 // and close. Repeats in a row collapse into one line with a count.
-function AiSteps({ run, aiName, defaultOpen }: { run: AiRun; aiName: string; defaultOpen: boolean }) {
+function AiSteps({ run, aiName, defaultOpen, trailing }: { run: AiRun; aiName: string; defaultOpen: boolean; trailing?: React.ReactNode }) {
   const [thoughtsOpen, setThoughtsOpen] = useState(defaultOpen);
   const routed = run.steps.find((step) => step.tool === "route_specialist");
   // A router that worked gives the AI's reading of the request; one that failed gives the reason instead.
@@ -275,7 +305,7 @@ function AiSteps({ run, aiName, defaultOpen }: { run: AiRun; aiName: string; def
   if (run.outcome === "escalated" && !run.steps.some((step) => step.tool === "escalate_to_human") && run.steps.some((step) => !step.ok)) {
     lines.push({ tool: "escalate_to_human", label: "Handed the conversation to the team", ok: true, count: 1, note: "The AI couldn't get an answer from its model, so a person needs to reply." });
   }
-  if (!lines.length && !thought) return null;
+  if (!lines.length && !thought && !trailing) return null;
   const age = shortAge(run.startedAt);
   const time = <span className="w-9 shrink-0 whitespace-nowrap tabular-nums" title={new Date(run.startedAt).toLocaleString()}>{age}</span>;
   return (
@@ -302,6 +332,7 @@ function AiSteps({ run, aiName, defaultOpen }: { run: AiRun; aiName: string; def
           {line.note && <p className="chat-ai-thought mt-1 pl-[73px] leading-5">{line.tool === "escalate_to_human" ? `Reason: ${line.note}` : line.note}</p>}
         </div>
       ))}
+      {trailing}
     </div>
   );
 }
@@ -387,17 +418,41 @@ function DashboardContent({ name }: { name: string }) {
   // What the AI did on each turn, shown above its replies. Turns are slower than messages, so this
   // polls less often than the thread itself.
   const [aiRuns, setAiRuns] = useState<AiRun[]>([]);
+  const [aiLive, setAiLive] = useState<AiLive | null>(null);
+  // The turn's steps arrive over the dashboard socket the moment they happen (see the "agent:progress" listener in the
+  // header). This fetch only fills in what the socket cannot: the saved runs, and the state on first opening a thread
+  // or after a missed message, so it runs at a relaxed pace.
+  const aiBusyRef = useRef(false);
   useEffect(() => {
     setAiRuns([]);
+    setAiLive(null);
     if (!conversationId || !SHOW_AI_STEPS) return;
     let cancelled = false;
+    let timer: number | undefined;
     const load = () => fetch(`/api/workspace/conversations/${encodeURIComponent(conversationId)}/ai-steps`, { cache: "no-store" })
       .then((response) => (response.ok ? response.json() : null))
-      .then((data: { runs?: AiRun[] } | null) => { if (!cancelled && data?.runs) setAiRuns(data.runs); })
-      .catch(() => undefined);
+      .then((data: { runs?: AiRun[]; live?: AiLive | null } | null) => {
+        if (cancelled || !data) return;
+        if (data.runs) setAiRuns(data.runs);
+        setAiLive(data.live ?? null);
+      })
+      .catch(() => undefined)
+      .finally(() => { if (!cancelled) { window.clearTimeout(timer); timer = window.setTimeout(load, aiBusyRef.current ? 3000 : 8000); } });
     void load();
-    const interval = window.setInterval(load, 5000);
-    return () => { cancelled = true; window.clearInterval(interval); };
+    // Pushed by the gateway: the steps so far and what is running, or done once the turn is saved.
+    const onProgress = (event: Event) => {
+      const progress = (event as CustomEvent<{ conversationId?: string; done?: boolean; startedAt?: string; running?: string | null; steps?: AiLive["steps"] }>).detail;
+      if (cancelled || progress?.conversationId !== conversationId) return;
+      if (progress.done) {
+        setAiLive(null);
+        // The run is saved by now: fetch it so its steps stay in place above the reply.
+        void load();
+        return;
+      }
+      setAiLive({ startedAt: progress.startedAt ?? new Date().toISOString(), running: progress.running ?? null, steps: progress.steps ?? [] });
+    };
+    window.addEventListener("elpino:ai-progress", onProgress);
+    return () => { cancelled = true; window.clearTimeout(timer); window.removeEventListener("elpino:ai-progress", onProgress); };
   }, [conversationId]);
 
   // Only matters for the empty state (see the !conversationId branch below),
@@ -895,6 +950,9 @@ function DashboardContent({ name }: { name: string }) {
   // the server for a search over a few dozen messages already in memory.
   const searchTerm = searchQuery.trim().toLowerCase();
   const visibleMessages = searchTerm ? messages.filter((message) => message.body.toLowerCase().includes(searchTerm)) : messages;
+  // The customer's last message is still waiting on the AI.
+  const aiAwaiting = !searchTerm && SHOW_AI_STEPS && conversation?.handledBy !== "human" && !conversation?.assignedUserId && messages.at(-1)?.senderType === "customer";
+  aiBusyRef.current = aiAwaiting || !!aiLive;
 
   return (
     <div id="dashboard-chat-interface" className="dashboard-page-surface dashboard-conversation flex h-full min-w-0">
@@ -1396,15 +1454,21 @@ function DashboardContent({ name }: { name: string }) {
                       </div>
                     );
                   })}
-                  {/* A turn's steps are only saved when it ends, so while the AI is still working on the customer's last
-                      message there is nothing above to show: say so here instead of leaving the thread looking stuck. */}
-                  {!searchTerm && conversation?.handledBy !== "human" && messages.at(-1)?.senderType === "customer" && (
-                    <div className="chat-ai-steps flex items-center gap-3 text-[12.5px]">
-                      <span className="w-9 shrink-0" />
-                      <ListChecks size={13} className="shrink-0" />
-                      <span>{aiName} is working on a reply</span>
-                      <TypingDots color="currentColor" />
-                    </div>
+                  {/* The turn in progress: steps appear as they finish and a spinner marks the one still running. The
+                      saved run (above the reply) takes over when the turn ends. */}
+                  {(aiAwaiting || aiLive) && (
+                    <AiSteps
+                      run={{ id: "live", outcome: "running", startedAt: aiLive?.startedAt ?? new Date().toISOString(), steps: aiLive?.steps ?? [] }}
+                      aiName={aiName}
+                      defaultOpen
+                      trailing={aiAwaiting ? (
+                        <div className="flex items-center gap-3">
+                          <span className="w-9 shrink-0" />
+                          <Loader2 size={13} className="shrink-0 animate-spin" />
+                          <span>{runningLabel(aiLive?.running ?? null, aiName)}…</span>
+                        </div>
+                      ) : undefined}
+                    />
                   )}
                   {customerTyping && (
                     <div className="flex items-center gap-3">

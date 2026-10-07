@@ -245,6 +245,11 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
       if (joined.userId !== accountId) toast(`${joined.name || "A teammate"} joined this chat`, { duration: 4000 });
       window.dispatchEvent(new CustomEvent("elpino:conversation-joined", { detail: joined }));
     });
+    // The AI's turn in a conversation, step by step as it happens: handed to the open inbox thread.
+    socket.on("agent:progress", (payload: { progress?: { conversationId?: string } }) => {
+      if (!payload.progress?.conversationId) return;
+      window.dispatchEvent(new CustomEvent("elpino:ai-progress", { detail: payload.progress }));
+    });
     // A customer wrote in a conversation this account is responsible for —
     // see WidgetService.postMessage. A sound and a tab-title count, never a
     // toast: a busy inbox would bury the screen in them.

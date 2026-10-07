@@ -28,16 +28,18 @@ function stepNote(step: { tool?: unknown; args?: unknown; summary?: unknown }): 
   return typeof text === "string" && text.trim() ? text.trim().slice(0, 200) : undefined;
 }
 
+type LiveProgress = { startedAt: number; running: string | null; steps: { tool?: unknown; ok?: unknown; args?: unknown; summary?: unknown }[] };
+
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await requireSession();
-  if (!session) return Response.json({ runs: [] }, { status: 401 });
+  if (!session) return Response.json({ runs: [], live: null }, { status: 401 });
 
   const { id } = await params;
   const workspace = await selectedWorkspace(session.email);
-  if (!workspace) return Response.json({ runs: [] });
+  if (!workspace) return Response.json({ runs: [], live: null });
 
   const query = new URLSearchParams({ companyId: workspace.id, conversationId: id, limit: "50" });
-  const result = await callGateway<{ runs?: AgentRun[] }>(`/api/workspace/agent/runs?${query.toString()}`).catch(() => null);
+  const result = await callGateway<{ runs?: AgentRun[]; live?: LiveProgress | null }>(`/api/workspace/agent/runs?${query.toString()}`).catch(() => null);
   const runs = (result?.runs ?? [])
     .filter((run) => run.conversationId === id)
     .map((run) => ({
@@ -49,5 +51,16 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
         .filter((step) => typeof step?.tool === "string")
         .map((step) => ({ tool: step.tool as string, ok: step.ok === true, note: stepNote(step) })),
     }));
-  return Response.json({ runs });
+  // The turn running right now, if any: the steps so far and what is in progress, in the same plain form.
+  const live = result?.live && Array.isArray(result.live.steps)
+    ? {
+        startedAt: new Date(result.live.startedAt).toISOString(),
+        // A tool name only; anything else is dropped.
+        running: typeof result.live.running === "string" && /^[a-z_]{1,40}$/.test(result.live.running) ? result.live.running : null,
+        steps: result.live.steps
+          .filter((step) => typeof step?.tool === "string")
+          .map((step) => ({ tool: step.tool as string, ok: step.ok === true, note: stepNote(step) })),
+      }
+    : null;
+  return Response.json({ runs, live });
 }
