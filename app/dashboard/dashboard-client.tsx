@@ -210,7 +210,8 @@ type AiLive = { startedAt: string; running: string | null; steps: { tool: string
 
 // What each step is called while it is still running.
 const RUNNING_LABELS: Record<string, string> = {
-  route_specialist: "Understanding the request",
+  route_specialist: "Planning the next steps",
+  replan: "Re-planning",
   search_knowledge: "Searching the knowledge base",
   read_knowledge: "Reading a knowledge article",
   read_official_page: "Reading the website",
@@ -263,6 +264,7 @@ const STEP_LABELS: Record<string, string> = {
   review_reply: "Checked the reply against its sources",
   handoff_check: "Checked whether a person is needed",
   escalate_to_human: "Handed the conversation to the team",
+  replan: "Changed plan after a step failed",
   mark_resolved: "Closed the conversation as resolved",
 };
 
@@ -318,7 +320,7 @@ function AiSteps({ run, aiName, defaultOpen, trailing }: { run: AiRun; aiName: s
             <span>{aiName}&apos;s thoughts</span>
             {thoughtsOpen ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
           </button>
-          {thoughtsOpen && <p className="chat-ai-thought mt-1.5 pl-[73px] leading-5">{thought}</p>}
+          {thoughtsOpen && <p className="chat-ai-thought mt-1.5 whitespace-pre-line pl-[73px] leading-5">{thought}</p>}
         </div>
       )}
       {lines.map((line, index) => (

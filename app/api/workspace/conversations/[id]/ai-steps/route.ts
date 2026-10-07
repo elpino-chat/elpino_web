@@ -17,8 +17,25 @@ type AgentRun = {
 // The few details a step may carry to the team, all plain text: the router's reading of what the customer
 // wants, the AI's own reason for a handoff, and the handoff check's verdict. Any other step argument stays on
 // the server.
+// The planner's steps as plain words: "search knowledge → reply".
+function planText(steps: unknown): string | undefined {
+  if (!Array.isArray(steps)) return undefined;
+  const names = steps.filter((name): name is string => typeof name === "string" && /^[a-z_]{1,40}$/.test(name)).map((name) => name.replace(/_/g, " "));
+  return names.length ? names.join(" → ") : undefined;
+}
+
 function stepNote(step: { tool?: unknown; args?: unknown; summary?: unknown }): string | undefined {
-  const args = (step.args ?? null) as { intent?: unknown; reason?: unknown } | null;
+  const args = (step.args ?? null) as { intent?: unknown; reason?: unknown; steps?: unknown } | null;
+  // The router's reading of the request, followed by the plan it made; a re-plan shows its new steps.
+  if (step.tool === "route_specialist" && typeof args?.intent === "string") {
+    const plan = planText(args.steps);
+    const text = `${args.intent.trim()}${plan ? `\nPlan: ${plan}` : ""}`;
+    return text.slice(0, 300);
+  }
+  if (step.tool === "replan") {
+    const plan = planText(args?.steps);
+    return plan ? `New plan: ${plan}` : typeof step.summary === "string" ? step.summary.slice(0, 200) : undefined;
+  }
   const text = step.tool === "route_specialist" ? args?.intent
     : step.tool === "escalate_to_human" ? args?.reason
     : step.tool === "handoff_check" ? step.summary
