@@ -435,6 +435,25 @@ function WidgetContent() {
   const [moreOpen, setMoreOpen] = useState(false);
   const [ratingChoice, setRatingChoice] = useState<1 | -1 | null>(null);
   const [leaving, setLeaving] = useState(false);
+  // A chat the team (or the AI) resolved: the message box gives way to a card that asks how it went, and a
+  // visitor with more to say starts a new conversation. `givenRating` is the thumb already given, if any.
+  const [chatResolved, setChatResolved] = useState(false);
+  const [givenRating, setGivenRating] = useState<1 | -1 | null>(null);
+  const [ratingSaving, setRatingSaving] = useState(false);
+  useEffect(() => { setChatResolved(false); setGivenRating(null); }, [conversationId]);
+  async function rateResolvedChat(rating: 1 | -1) {
+    if (ratingSaving || givenRating) return;
+    setRatingSaving(true);
+    try {
+      const response = await fetch("/api/widget/rate", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ key, hostname, visitorToken, conversationId, rating }),
+      });
+      if (response.ok) setGivenRating(rating);
+    } catch { /* the thumbs stay tappable for another try */ }
+    setRatingSaving(false);
+  }
 
   // Where "leaving" actually lands. The X button and the browser/phone back
   // button close the whole panel; the in-thread "Back to chats" arrow
@@ -978,6 +997,8 @@ function WidgetContent() {
   function startNewChat() {
     setConversationId("");
     setMessages([]);
+    setChatResolved(false);
+    setGivenRating(null);
     setChatView("thread");
     setTab("chat");
   }
@@ -996,7 +1017,7 @@ function WidgetContent() {
     const poll = () => {
       fetch("/api/widget/messages/read", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ key, hostname, visitorToken, conversationId }) })
         .then((response) => response.json())
-        .then((data: { messages?: WidgetMessage[]; agentTyping?: boolean; agent?: { name?: string } | null; joinDeadlineAt?: string | null; serverNow?: string; error?: string; ended?: boolean; contactAsk?: { fields?: ContactField[]; askId?: string } | null }) => {
+        .then((data: { messages?: WidgetMessage[]; agentTyping?: boolean; agent?: { name?: string } | null; joinDeadlineAt?: string | null; serverNow?: string; error?: string; ended?: boolean; resolved?: boolean; rating?: number | null; contactAsk?: { fields?: ContactField[]; askId?: string } | null }) => {
           if (cancelled || epoch !== sessionEpochRef.current) return;
           // Left with Leave Chat (in another tab, say): drop the thread and go
           // back to the list rather than treating it as a broken session.
@@ -1049,6 +1070,8 @@ function WidgetContent() {
             });
           }
           setAgentTyping(!!data.agentTyping);
+          setChatResolved(data.resolved === true);
+          setGivenRating(data.rating === 1 || data.rating === -1 ? data.rating : null);
           setAgentName(data.agent?.name?.trim() || null);
           // Convert the server's deadline into this device's clock so a wrong
           // local time can't shorten or stretch the countdown.
@@ -2211,8 +2234,40 @@ function WidgetContent() {
                 <p className="mb-2 px-1 text-[12.5px]" style={{ color: MUTED }}>{contactThanks}</p>
               )}
 
+              {/* A resolved chat has no message box: how it went is asked instead, and a new topic is a new conversation. */}
+              {chatResolved && conversationId && (
+                <div className="rounded-[24px] border px-4 py-4 text-center" style={{ borderColor: BORDER, backgroundColor: SURFACE }}>
+                  <p className="text-[14px] font-semibold" style={{ color: INK }}>This conversation was resolved</p>
+                  {givenRating ? (
+                    <p className="mt-1.5 text-[12.5px] leading-5" style={{ color: MUTED }}>Thanks for your feedback.</p>
+                  ) : (
+                    <>
+                      <p className="mt-1.5 text-[12.5px] leading-5" style={{ color: MUTED }}>How was your experience?</p>
+                      <div className="mt-3 flex justify-center gap-3">
+                        {([[1, "Good", ThumbsUp], [-1, "Not good", ThumbsDown]] as const).map(([value, label, Icon]) => (
+                          <button
+                            key={value}
+                            type="button"
+                            onClick={() => void rateResolvedChat(value)}
+                            disabled={ratingSaving}
+                            aria-label={label}
+                            className="flex h-11 w-11 items-center justify-center rounded-full transition hover:opacity-80 disabled:opacity-50"
+                            style={{ backgroundColor: BUBBLE }}
+                          >
+                            <Icon size={20} color={INK} />
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                  <button type="button" onClick={startNewChat} className="mt-4 w-full rounded-full py-2.5 text-[13px] font-semibold text-white" style={{ backgroundColor: ACCENT }}>
+                    Start a new conversation
+                  </button>
+                </div>
+              )}
+
               {/* While the AI is asking for a detail, the answer field in the conversation is the only input. */}
-              {!(contactActive && contactField) && (
+              {!(chatResolved && conversationId) && !(contactActive && contactField) && (
               // While the AI is replying the box is dimmed and inert, not just quietly refusing to send.
               <div
                 aria-disabled={composerLocked}
