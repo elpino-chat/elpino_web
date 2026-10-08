@@ -122,7 +122,7 @@ export default function VoiceNotePlayer({ src, label, fileName }: { src: string;
         onClick={toggle}
         disabled={!loaded}
         aria-label={playing ? "Pause the recording" : "Play the recording"}
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#11120f] text-white transition hover:bg-[#2b2d28] disabled:opacity-40"
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--chat-team-bg)] text-[var(--chat-team-text)] transition hover:opacity-85 disabled:opacity-40"
       >
         {playing ? <Pause size={16} fill="currentColor" /> : <Play size={16} fill="currentColor" className="translate-x-px" />}
       </button>
@@ -152,7 +152,7 @@ export default function VoiceNotePlayer({ src, label, fileName }: { src: string;
           {(loaded?.peaks ?? Array.from({ length: BARS }, () => 0.2)).map((height, index) => (
             <span
               key={index}
-              className={`w-full rounded-full transition-colors ${index / BARS < progress ? "bg-[#11120f]" : "bg-[var(--chat-divider)]"} ${loaded ? "" : "animate-pulse"}`}
+              className={`w-full rounded-full transition-colors ${index / BARS < progress ? "bg-[var(--chat-team-bg)]" : "bg-[color-mix(in_srgb,var(--chat-muted)_40%,transparent)]"} ${loaded ? "" : "animate-pulse"}`}
               style={{ height: `${Math.round(height * 100)}%` }}
             />
           ))}
