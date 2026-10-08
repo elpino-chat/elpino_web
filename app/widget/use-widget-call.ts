@@ -28,6 +28,8 @@ export type WidgetCall = {
 const CONNECT_TIMEOUT_MS = 20_000;
 const DISCONNECT_GRACE_MS = 8_000;
 const RING_PATTERN_MS = 2400;
+// Said when the two browsers could not find a network path for the audio, usually a strict firewall or NAT.
+const NETWORK_BLOCKED = "Couldn't connect the audio. Your network may be blocking calls.";
 
 // A phone-like double tone. Browsers may refuse sound in a frame the visitor has not touched yet; the visible
 // incoming-call screen is the call-to-action either way, so a refusal is silent.
@@ -140,7 +142,7 @@ export function useWidgetCall({ gatewayWsOrigin, siteKey, hostname, visitorToken
           void peerRef.current?.handleSignal(message.data).catch(() => finish("The call could not connect."));
         } else if (message.type === "call_state" && message.callId === callRef.current?.callId && message.state) {
           // Cancelled or missed while ringing, answered in another tab, or ended by the team.
-          finish(message.state === "taken" ? "This call was answered in another window." : message.state === "ended" ? "The call ended." : message.state === "cancelled" ? "The call was cancelled." : message.state === "missed" ? "Missed call." : null);
+          finish(message.state === "taken" ? "This call was answered in another window." : message.state === "ended" ? "The call ended." : message.state === "cancelled" ? "The call was cancelled." : message.state === "missed" ? "Missed call." : message.state === "failed" ? "The call could not connect. The team can try again." : null);
         }
       };
       socket.onclose = (event) => {
@@ -190,7 +192,7 @@ export function useWidgetCall({ gatewayWsOrigin, siteKey, hostname, visitorToken
             if (!timersRef.current.tick) timersRef.current.tick = window.setInterval(() => setCall((existing) => (existing ? { ...existing, seconds: existing.seconds + 1 } : existing)), 1000);
           } else if (state === "failed") {
             send({ type: "call_end", callId: current.callId });
-            finish("The call lost its connection.");
+            finish(NETWORK_BLOCKED);
           } else if (state === "disconnected") {
             window.clearTimeout(timersRef.current.drop);
             timersRef.current.drop = window.setTimeout(() => { send({ type: "call_end", callId: current.callId }); finish("The call lost its connection."); }, DISCONNECT_GRACE_MS);
@@ -199,7 +201,7 @@ export function useWidgetCall({ gatewayWsOrigin, siteKey, hostname, visitorToken
       });
       peerRef.current = peer;
       setCall((existing) => (existing ? { ...existing, phase: "connecting" } : existing));
-      timersRef.current.connect = window.setTimeout(() => { send({ type: "call_end", callId: current.callId }); finish("The call could not connect."); }, CONNECT_TIMEOUT_MS);
+      timersRef.current.connect = window.setTimeout(() => { send({ type: "call_end", callId: current.callId }); finish(NETWORK_BLOCKED); }, CONNECT_TIMEOUT_MS);
       // The peer exists before the team is told, so the offer that follows is never missed.
       send({ type: "call_accept", callId: current.callId });
     } catch (error) {

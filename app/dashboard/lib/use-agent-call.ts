@@ -32,6 +32,8 @@ const IDLE: AgentCall = { phase: "idle", notice: null, seconds: 0, muted: false,
 const CONNECT_TIMEOUT_MS = 20_000;
 // A brief drop in the audio path (wifi blip) is waited out before the call is ended.
 const DISCONNECT_GRACE_MS = 8_000;
+// Said when the two browsers could not find a network path for the audio, usually a strict firewall or NAT.
+const NETWORK_BLOCKED = "Couldn't connect the audio. The customer's network may be blocking calls.";
 
 export function useAgentCall() {
   const [call, setCall] = useState<AgentCall>(IDLE);
@@ -42,6 +44,11 @@ export function useAgentCall() {
   const timersRef = useRef<{ tick?: number; connect?: number; drop?: number }>({});
   const callIdRef = useRef<string | null>(null);
   const finishedRef = useRef(true);
+  // The offer and network candidates are prepared while the visitor's widget rings, and held here until they
+  // answer (the gateway only relays signalling for an answered call). Sending them the moment they accept
+  // saves the setup round trip that otherwise happened after Accept.
+  const acceptedRef = useRef(false);
+  const outboxRef = useRef<PeerSignal[]>([]);
 
   const clearTimers = () => {
     const timers = timersRef.current;
@@ -77,6 +84,8 @@ export function useAgentCall() {
   const start = useCallback(async (conversationId: string, iceFallback: RTCIceServer[] = []) => {
     if (!finishedRef.current) return;
     finishedRef.current = false;
+    acceptedRef.current = false;
+    outboxRef.current = [];
     setCall({ ...IDLE, phase: "starting", conversationId });
 
     try {
@@ -94,6 +103,35 @@ export function useAgentCall() {
       socketRef.current = socket;
       const iceServers = data.iceServers?.length ? data.iceServers : iceFallback;
 
+      const sendPeerSignal = (signal: PeerSignal) => {
+        if (acceptedRef.current) sendSignal({ type: "call_signal", data: signal });
+        else outboxRef.current.push(signal);
+      };
+      const peer = new CallPeer({
+        role: "caller",
+        iceServers,
+        stream,
+        send: sendPeerSignal,
+        onRemoteStream: (remote) => { stopRemoteAudio(audioRef.current); audioRef.current = playRemoteAudio(remote); },
+        onConnectionState: (state) => {
+          if (state === "connected") {
+            window.clearTimeout(timersRef.current.connect);
+            window.clearTimeout(timersRef.current.drop);
+            setCall((current) => (current.phase === "active" ? current : { ...current, phase: "active", seconds: 0 }));
+            if (!timersRef.current.tick) timersRef.current.tick = window.setInterval(() => setCall((current) => ({ ...current, seconds: current.seconds + 1 })), 1000);
+          } else if (state === "failed") {
+            sendSignal({ type: "call_end" });
+            finish(NETWORK_BLOCKED);
+          } else if (state === "disconnected") {
+            window.clearTimeout(timersRef.current.drop);
+            timersRef.current.drop = window.setTimeout(() => { sendSignal({ type: "call_end" }); finish("The call dropped: the connection was lost."); }, DISCONNECT_GRACE_MS);
+          }
+        },
+      });
+      peerRef.current = peer;
+      // Start gathering now, while it rings.
+      void peer.start().catch(() => finish("Could not set up the call audio in this browser."));
+
       socket.onmessage = (event) => {
         if (finishedRef.current) return;
         let message: { type?: string; callId?: string; state?: string; data?: PeerSignal };
@@ -101,7 +139,7 @@ export function useAgentCall() {
         if (message.callId !== callIdRef.current) return;
 
         if (message.type === "call_signal" && message.data) {
-          void peerRef.current?.handleSignal(message.data).catch(() => finish("The call could not connect."));
+          void peerRef.current?.handleSignal(message.data).catch(() => finish(NETWORK_BLOCKED));
           return;
         }
         if (message.type !== "call_state") return;
@@ -109,38 +147,20 @@ export function useAgentCall() {
         if (message.state === "ringing") {
           setCall((current) => ({ ...current, phase: "ringing" }));
         } else if (message.state === "accepted") {
-          // The visitor said yes: set up the audio path, and give it a deadline.
+          if (acceptedRef.current) return;
+          // The visitor said yes: send what was prepared while it rang, and give the audio a deadline.
+          acceptedRef.current = true;
           setCall((current) => ({ ...current, phase: "connecting" }));
-          const peer = new CallPeer({
-            role: "caller",
-            iceServers,
-            stream,
-            send: (signal) => sendSignal({ type: "call_signal", data: signal }),
-            onRemoteStream: (remote) => { stopRemoteAudio(audioRef.current); audioRef.current = playRemoteAudio(remote); },
-            onConnectionState: (state) => {
-              if (state === "connected") {
-                window.clearTimeout(timersRef.current.connect);
-                window.clearTimeout(timersRef.current.drop);
-                setCall((current) => (current.phase === "active" ? current : { ...current, phase: "active", seconds: 0 }));
-                if (!timersRef.current.tick) timersRef.current.tick = window.setInterval(() => setCall((current) => ({ ...current, seconds: current.seconds + 1 })), 1000);
-              } else if (state === "failed") {
-                sendSignal({ type: "call_end" });
-                finish("The call lost its connection.");
-              } else if (state === "disconnected") {
-                window.clearTimeout(timersRef.current.drop);
-                timersRef.current.drop = window.setTimeout(() => { sendSignal({ type: "call_end" }); finish("The call lost its connection."); }, DISCONNECT_GRACE_MS);
-              }
-            },
-          });
-          peerRef.current = peer;
-          timersRef.current.connect = window.setTimeout(() => { sendSignal({ type: "call_end" }); finish("The call could not connect."); }, CONNECT_TIMEOUT_MS);
-          void peer.start().catch(() => finish("The call could not connect."));
+          for (const signal of outboxRef.current.splice(0)) sendSignal({ type: "call_signal", data: signal });
+          timersRef.current.connect = window.setTimeout(() => { sendSignal({ type: "call_end" }); finish(NETWORK_BLOCKED); }, CONNECT_TIMEOUT_MS);
         } else if (message.state) {
           // declined, missed, cancelled, taken, failed, ended: the server has already recorded how it went.
           finish(message.state === "ended" ? null : endedMessage(message.state));
         }
       };
-      socket.onclose = () => finish("The call connection was lost.");
+      socket.onclose = (event) => finish(event.code === 4001 || event.code === 4004
+        ? "Could not reach the call service. Refresh the page and try again."
+        : "The call dropped: the connection to the call service was lost.");
       socket.onerror = () => undefined;
     } catch (error) {
       finishedRef.current = false;

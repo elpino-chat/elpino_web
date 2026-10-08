@@ -893,27 +893,66 @@ function DashboardContent({ name }: { name: string }) {
     return () => window.removeEventListener("elpino:conversation-joined", onJoined);
   }, [conversationId]);
 
+  // The call panel follows the call, not the open chat: it stays up when no chat is selected, so a call in
+  // progress never disappears from view while it is still ringing or connecting.
+  const callInProgress = call.phase !== "idle" && call.phase !== "ended";
+  const callPanel = call.phase !== "idle" ? (
+      <div role="status" aria-live="polite" className="fixed bottom-24 right-6 z-[90] flex w-[300px] items-center gap-3 rounded-2xl border border-[var(--chat-divider)] bg-[var(--chat-surface)] p-3.5 shadow-[0_18px_48px_rgba(25,39,58,0.28)]">
+        <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${call.phase === "active" ? "bg-[#e6f5ec] text-[#1f8a4c]" : "bg-[var(--chat-customer-bg)]"}`}>
+          <Phone size={17} className={call.phase === "ringing" || call.phase === "starting" ? "animate-pulse" : ""} />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-[13.5px] font-semibold">{calledName || "Customer"}</p>
+          <p className="truncate text-[12px] text-[var(--chat-muted)]">
+            {call.phase === "starting" ? "Starting the call…"
+              : call.phase === "ringing" ? "Ringing…"
+              : call.phase === "connecting" ? "Connecting…"
+              : call.phase === "active" ? `On a call · ${formatTalkTime(call.seconds)}`
+              : call.notice ?? "Call ended"}
+          </p>
+        </div>
+        {call.phase === "active" && (
+          <button type="button" onClick={toggleMute} aria-pressed={call.muted} aria-label={call.muted ? "Unmute" : "Mute"} title={call.muted ? "Unmute" : "Mute"} className="chat-icon-btn">
+            {call.muted ? <MicOff size={15} /> : <Mic size={15} />}
+          </button>
+        )}
+        {callInProgress ? (
+          <button type="button" onClick={hangUp} aria-label={call.phase === "ringing" || call.phase === "starting" ? "Cancel the call" : "End the call"} title={call.phase === "ringing" || call.phase === "starting" ? "Cancel the call" : "End the call"} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#d6453d] text-white hover:bg-[#bd3a33]">
+            <PhoneOff size={16} />
+          </button>
+        ) : (
+          <button type="button" onClick={dismissCall} aria-label="Dismiss" className="shrink-0 rounded-lg p-1.5 opacity-60 hover:opacity-100"><X size={15} /></button>
+        )}
+      </div>
+  ) : null;
+
   if (!conversationId) {
     // A brand-new workspace with zero conversations anywhere gets a real
     // welcome instead of "pick a conversation" pointing at an empty list —
     // that instruction is only useful once there's something to pick.
     if (hasAnyConversations === false) {
       return (
+        <>
+        {callPanel}
         <div className="dashboard-page-surface dashboard-conversation iw-root flex h-full min-w-0 flex-col items-center justify-center px-8 text-center">
           <span className="iw-icon flex size-12 items-center justify-center rounded-xl"><MessageCircle size={22} /></span>
           <h1 className="iw-h mt-4 text-[20px] font-semibold tracking-[-0.02em]">No conversations yet</h1>
           <p className="iw-t mt-1.5 max-w-sm text-[14.5px] leading-6">Chats from your website will show up here.</p>
           <a href="/dashboard/connect" className="iw-btn mt-5 flex h-11 items-center rounded-full border px-6 text-[15px] font-medium transition">Connect your site</a>
         </div>
+        </>
       );
     }
 
     return (
+      <>
+      {callPanel}
       <div className="dashboard-page-surface dashboard-conversation flex h-full min-w-0 flex-col items-center justify-center px-8 text-center">
         <span className="flex size-12 items-center justify-center rounded-xl bg-[var(--chat-customer-bg)] text-[var(--chat-customer-text)]"><MessageCircle size={22} /></span>
         <h1 className="mt-4 text-[20px] font-semibold tracking-[-0.02em]">Pick a conversation</h1>
         <p className="mt-1.5 max-w-sm text-[14.5px] leading-6 text-[var(--chat-muted)]">Select a chat from the list on the left to see the conversation.</p>
       </div>
+      </>
     );
   }
 
@@ -930,7 +969,6 @@ function DashboardContent({ name }: { name: string }) {
   const visitorLeft = Boolean(conversation?.visitorLeft);
   // Calling needs the chat to be yours (the server checks the same) and the visitor to still be reachable.
   const canCall = isMine && !isResolved && !visitorLeft;
-  const callBusy = call.phase !== "idle" && call.phase !== "ended";
   // An automatic handoff stores a log of the thread, not a summary; that is no use as a report.
   const handoffSummary = conversation?.escalationSummary && !looksLikeTranscriptDump(conversation.escalationSummary) ? conversation.escalationSummary : null;
   // A visitor who left with no verified email can't receive a reply at all,
@@ -1083,9 +1121,9 @@ function DashboardContent({ name }: { name: string }) {
               <button
                 type="button"
                 onClick={() => { setCalledName(customerName); void startCall(conversationId!); }}
-                disabled={callBusy}
+                disabled={callInProgress}
                 aria-label="Call the customer"
-                title={callBusy ? "A call is in progress" : "Call the customer through their chat widget"}
+                title={callInProgress ? "A call is in progress" : "Call the customer through their chat widget"}
                 className="chat-icon-btn disabled:opacity-50"
               >
                 <Phone size={15} />
@@ -1196,35 +1234,7 @@ function DashboardContent({ name }: { name: string }) {
               </div>
             )}
             <SecureRequestDialog open={secureOpen} onClose={() => setSecureOpen(false)} onCreate={createSecureRequest} />
-            {call.phase !== "idle" && (
-              <div role="status" aria-live="polite" className="fixed bottom-24 right-6 z-[90] flex w-[300px] items-center gap-3 rounded-2xl border border-[var(--chat-divider)] bg-[var(--chat-surface)] p-3.5 shadow-[0_18px_48px_rgba(25,39,58,0.28)]">
-                <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${call.phase === "active" ? "bg-[#e6f5ec] text-[#1f8a4c]" : "bg-[var(--chat-customer-bg)]"}`}>
-                  <Phone size={17} className={call.phase === "ringing" || call.phase === "starting" ? "animate-pulse" : ""} />
-                </span>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-[13.5px] font-semibold">{calledName || "Customer"}</p>
-                  <p className="truncate text-[12px] text-[var(--chat-muted)]">
-                    {call.phase === "starting" ? "Starting the call…"
-                      : call.phase === "ringing" ? "Ringing…"
-                      : call.phase === "connecting" ? "Connecting…"
-                      : call.phase === "active" ? `On a call · ${formatTalkTime(call.seconds)}`
-                      : call.notice ?? "Call ended"}
-                  </p>
-                </div>
-                {call.phase === "active" && (
-                  <button type="button" onClick={toggleMute} aria-pressed={call.muted} aria-label={call.muted ? "Unmute" : "Mute"} title={call.muted ? "Unmute" : "Mute"} className="chat-icon-btn">
-                    {call.muted ? <MicOff size={15} /> : <Mic size={15} />}
-                  </button>
-                )}
-                {callBusy ? (
-                  <button type="button" onClick={hangUp} aria-label={call.phase === "ringing" || call.phase === "starting" ? "Cancel the call" : "End the call"} title={call.phase === "ringing" || call.phase === "starting" ? "Cancel the call" : "End the call"} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#d6453d] text-white hover:bg-[#bd3a33]">
-                    <PhoneOff size={16} />
-                  </button>
-                ) : (
-                  <button type="button" onClick={dismissCall} aria-label="Dismiss" className="shrink-0 rounded-lg p-1.5 opacity-60 hover:opacity-100"><X size={15} /></button>
-                )}
-              </div>
-            )}
+            {callPanel}
             <TicketDialog
               open={ticketDialogOpen}
               onClose={() => setTicketDialogOpen(false)}
