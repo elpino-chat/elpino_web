@@ -3147,17 +3147,6 @@ function GeneralSettingsPage({ user }: { user: SettingsUser }) {
   );
 }
 
-// The stock icon gallery is served from the backend (see
-// /api/stock-icons and /api/stock-icons/[name]) rather than baked in here,
-// so adding or swapping a PNG in shared/icons/ shows up without a frontend
-// change. Built as an absolute URL (this app's own origin, not a relative
-// path) because it also has to load correctly from the launcher button
-// tag.js injects directly into a customer's website, not just from inside
-// this dashboard.
-function stockIconUrl(id: string) {
-  return `${window.location.origin}/api/stock-icons/${id}.png`;
-}
-
 function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: HTMLDivElement | null }) {
   const [loading, setLoading] = useState(true);
   const [aiName, setAiName] = useState("Elpino AI");
@@ -3175,19 +3164,29 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
   const [error, setError] = useState<string | null>(null);
   const [previewFields, setPreviewFields] = useState<PreChatField[]>([]);
   const [avatarPickerOpen, setAvatarPickerOpen] = useState(false);
-  const [avatarTab, setAvatarTab] = useState<"stock" | "upload">("stock");
-  const [stockIconIds, setStockIconIds] = useState<string[]>([]);
-  const [stockIconsLoading, setStockIconsLoading] = useState(true);
+  // The avatars this workspace has uploaded before, offered again in the picker.
+  const [pastAvatars, setPastAvatars] = useState<Array<{ id: string; url: string }>>([]);
+  const [pastLoading, setPastLoading] = useState(false);
   // What is saved right now, so autosave only fires for a real change (not once on every visit just because the page loaded).
   const savedSnapshot = useRef<string | null>(null);
 
+  // Fetched each time the picker opens, so an avatar uploaded a moment ago is already in the list.
   useEffect(() => {
-    fetch("/api/stock-icons")
-      .then((response) => (response.ok ? response.json() : { icons: [] }))
-      .then((data: { icons?: string[] }) => setStockIconIds(data.icons ?? []))
-      .catch(() => setStockIconIds([]))
-      .finally(() => setStockIconsLoading(false));
-  }, []);
+    if (!avatarPickerOpen) return;
+    let cancelled = false;
+    setPastLoading(true);
+    fetch("/api/workspace/ai-persona/history")
+      .then((response) => (response.ok ? response.json() : { avatars: [] }))
+      .then((data: { avatars?: Array<{ id: string; url: string }> }) => { if (!cancelled) setPastAvatars(data.avatars ?? []); })
+      .catch(() => { if (!cancelled) setPastAvatars([]); })
+      .finally(() => { if (!cancelled) setPastLoading(false); });
+    return () => { cancelled = true; };
+  }, [avatarPickerOpen]);
+
+  async function forgetPastAvatar(id: string) {
+    setPastAvatars((current) => current.filter((avatar) => avatar.id !== id));
+    await fetch(`/api/workspace/ai-persona/history/${encodeURIComponent(id)}`, { method: "DELETE" }).catch(() => undefined);
+  }
 
   useEffect(() => {
     fetch("/api/workspace/ai-persona")
@@ -3472,76 +3471,71 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
             <div className="flex items-start justify-between border-b border-[#E5E9EB] px-7 py-5">
               <div>
                 <h3 className="text-[18px] font-semibold tracking-[-0.02em]">Change avatar</h3>
-                <p className="mt-1 text-[12.5px] text-[#667069]">Pick a stock icon or upload your own — this is what customers see in every conversation, and the icon they'll click to open the chat.</p>
+                <p className="mt-1 text-[12.5px] text-[#667069]">Upload your own image, or pick one you used before — this is what customers see in every conversation, and the icon they'll click to open the chat.</p>
               </div>
               <button type="button" onClick={() => setAvatarPickerOpen(false)} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg hover:bg-[#F0F2F3]"><X size={18} /></button>
             </div>
 
-            <div className="flex shrink-0 gap-2 border-b border-[#E5E9EB] px-7 pt-4">
-              <button
-                type="button"
-                onClick={() => setAvatarTab("stock")}
-                className={`rounded-t-lg px-4 py-2.5 text-[13px] font-semibold transition ${avatarTab === "stock" ? "border-b-2 border-[#11120f] text-black" : "text-[#8a9298] hover:text-black"}`}
-              >
-                Stock icons
-              </button>
-              <button
-                type="button"
-                onClick={() => setAvatarTab("upload")}
-                className={`rounded-t-lg px-4 py-2.5 text-[13px] font-semibold transition ${avatarTab === "upload" ? "border-b-2 border-[#11120f] text-black" : "text-[#8a9298] hover:text-black"}`}
-              >
-                Upload
-              </button>
-            </div>
-
             <div className="min-h-0 flex-1 overflow-y-auto p-7">
-              {avatarTab === "stock" ? (
-                stockIconsLoading ? (
-                  <div role="status" aria-busy="true" aria-label="Loading icons" className="grid grid-cols-4 gap-3 py-4 sm:grid-cols-6">{Array.from({ length: 12 }, (_, i) => <Bone key={i} className="aspect-square w-full" />)}</div>
-                ) : stockIconIds.length === 0 ? (
-                  <p className="py-16 text-center text-[12.5px] text-[#8a9298]">No stock icons available yet.</p>
+              <div className="mx-auto max-w-3xl">
+                <label className="flex h-40 cursor-pointer flex-col items-center justify-center gap-2.5 rounded-2xl border-2 border-dashed border-[#c7cdd1] text-center text-[13px] text-[#667069] transition hover:bg-[#f7f8f8]">
+                  <Upload size={26} />
+                  <span>Click to upload a PNG, JPG, or WebP<br />up to 2MB</span>
+                  <input
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp"
+                    onChange={(event) => { chooseAvatar(event); setAvatarPickerOpen(false); }}
+                    className="sr-only"
+                  />
+                </label>
+
+                <h4 className="mt-7 text-[13px] font-semibold">Used before</h4>
+                {pastLoading ? (
+                  <div role="status" aria-busy="true" aria-label="Loading past avatars" className="mt-3 grid grid-cols-6 gap-4 max-lg:grid-cols-4 max-sm:grid-cols-3">{Array.from({ length: 6 }, (_, i) => <Bone key={i} className="aspect-square w-full" />)}</div>
+                ) : pastAvatars.length === 0 ? (
+                  <p className="mt-3 text-[12.5px] text-[#8a9298]">Images you upload will show up here, so you can switch back to them later.</p>
                 ) : (
-                  <div className="grid grid-cols-6 gap-4 max-lg:grid-cols-4 max-sm:grid-cols-3">
-                    {stockIconIds.map((id) => {
-                      const url = stockIconUrl(id);
-                      const active = aiAvatarUrl === url;
+                  <div className="mt-3 grid grid-cols-6 gap-4 max-lg:grid-cols-4 max-sm:grid-cols-3">
+                    {pastAvatars.map((avatar) => {
+                      const active = aiAvatarUrl === avatar.url;
                       return (
-                        <button
-                          key={id}
-                          type="button"
-                          onClick={() => { setAiAvatarUrl(url); setSaved(false); setAvatarPickerOpen(false); }}
-                          aria-label={`Use ${id} avatar`}
-                          className={`flex aspect-square items-center justify-center overflow-hidden rounded-2xl border border-[#eceeef] transition hover:scale-105 hover:shadow-md ${active ? "ring-2 ring-[#11120f] ring-offset-2" : ""}`}
-                        >
-                          <img src={url} alt="" className="h-full w-full object-cover" />
-                        </button>
+                        <div key={avatar.id} className="group relative">
+                          <button
+                            type="button"
+                            onClick={() => { setAiAvatarUrl(avatar.url); setSaved(false); setAvatarPickerOpen(false); }}
+                            aria-label="Use this avatar"
+                            aria-pressed={active}
+                            className={`flex aspect-square w-full items-center justify-center overflow-hidden rounded-2xl border border-[#eceeef] transition hover:scale-105 hover:shadow-md ${active ? "ring-2 ring-[#11120f] ring-offset-2" : ""}`}
+                          >
+                            <img src={avatar.url} alt="" className="h-full w-full object-cover" />
+                          </button>
+                          {!active && (
+                            <button
+                              type="button"
+                              onClick={() => void forgetPastAvatar(avatar.id)}
+                              aria-label="Remove from the list"
+                              title="Remove from the list"
+                              className="absolute -right-1.5 -top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-[#202225] text-white opacity-0 shadow transition hover:bg-black focus:opacity-100 group-hover:opacity-100 max-sm:opacity-100"
+                            >
+                              <X size={12} />
+                            </button>
+                          )}
+                        </div>
                       );
                     })}
                   </div>
-                )
-              ) : (
-                <div className="mx-auto max-w-md">
-                  <label className="flex h-56 cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-[#c7cdd1] text-center text-[13px] text-[#667069] transition hover:bg-[#f7f8f8]">
-                    <Upload size={28} />
-                    <span>Click to upload a PNG, JPG, or WebP<br />up to 2MB</span>
-                    <input
-                      type="file"
-                      accept="image/png,image/jpeg,image/webp"
-                      onChange={(event) => { chooseAvatar(event); setAvatarPickerOpen(false); }}
-                      className="sr-only"
-                    />
-                  </label>
-                  {aiAvatarUrl.trim() && (
-                    <button
-                      type="button"
-                      onClick={() => { setAiAvatarUrl(""); setSaved(false); setAvatarPickerOpen(false); }}
-                      className="mt-4 w-full text-center text-[13px] font-medium text-[#a5414b] hover:underline"
-                    >
-                      Remove current avatar
-                    </button>
-                  )}
-                </div>
-              )}
+                )}
+
+                {aiAvatarUrl.trim() && (
+                  <button
+                    type="button"
+                    onClick={() => { setAiAvatarUrl(""); setSaved(false); setAvatarPickerOpen(false); }}
+                    className="mt-6 w-full text-center text-[13px] font-medium text-[#a5414b] hover:underline"
+                  >
+                    Remove current avatar
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>

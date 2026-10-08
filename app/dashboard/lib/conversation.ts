@@ -121,5 +121,3 @@ export function formatDevice(userAgent: string | null | undefined): string | nul
   return [browser, platform].filter(Boolean).join(" · ");
 }
 
-/** Mirrors the widget's own fallback so the AI never shows a blank seat. */
-export const DEFAULT_BOT_AVATAR = "/api/stock-icons/widget_5.png";

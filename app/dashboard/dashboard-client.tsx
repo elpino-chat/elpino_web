@@ -52,7 +52,6 @@ import MessageMarkdown from "@/app/components/MessageMarkdown";
 import VoiceNotePlayer from "@/app/dashboard/components/VoiceNotePlayer";
 import TypingDots from "@/app/components/TypingDots";
 import {
-  DEFAULT_BOT_AVATAR,
   formatDevice,
   formatPlace,
   formatTime,
@@ -963,7 +962,7 @@ function DashboardContent({ name }: { name: string }) {
   const aiName = conversation?.aiName?.trim() || "AI";
   // Mirrors the widget's own fallback (api/widget/start) so a workspace that
   // never picked an avatar still shows the icon its visitors actually see.
-  const aiAvatarUrl = conversation?.aiAvatarUrl || DEFAULT_BOT_AVATAR;
+  const aiAvatarUrl = conversation?.aiAvatarUrl || "";
   const isMine = !!myAccountId && conversation?.assignedUserId === myAccountId;
   const assignedElsewhere = !!conversation?.assignedUserId && conversation.assignedUserId !== myAccountId;
   const isResolved = conversation?.status === "resolved";
@@ -1510,7 +1509,11 @@ function DashboardContent({ name }: { name: string }) {
                     {conversation?.escalationReason && <p className="mt-2 text-[13px] font-medium">{conversation.escalationReason}</p>}
                     {handoffSummary && <p className="mt-1.5 whitespace-pre-wrap text-[13px] leading-6">{handoffSummary}</p>}
                   </div>
-                  <img src={aiAvatarUrl} alt={aiName} title={aiName} className="mb-0.5 h-6 w-6 shrink-0 rounded-full object-cover" />
+                  {aiAvatarUrl ? (
+                    <img src={aiAvatarUrl} alt={aiName} title={aiName} className="mb-0.5 h-6 w-6 shrink-0 rounded-full object-cover" />
+                  ) : (
+                    <span title={aiName} className="chat-avatar-team mb-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[9px] font-bold">{aiName.charAt(0).toUpperCase() || "A"}</span>
+                  )}
                 </div>
               )}
               {summary ? (

@@ -11,7 +11,6 @@ import MessageMarkdown from "@/app/components/MessageMarkdown";
 import TypingDots from "@/app/components/TypingDots";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
-  DEFAULT_BOT_AVATAR,
   formatDevice,
   formatPlace,
   formatTime,
@@ -176,7 +175,7 @@ export default function AiAssistPage() {
   // The persona endpoint and the conversation row can each carry an avatar;
   // prefer whatever this thread actually came through, then the workspace
   // persona, then the same stock icon the widget falls back to.
-  const botAvatar = selected?.aiAvatarUrl || aiAvatarUrl || DEFAULT_BOT_AVATAR;
+  const botAvatar = selected?.aiAvatarUrl || aiAvatarUrl || "";
   const place = formatPlace(selected?.location);
   const device = formatDevice(selected?.location?.userAgent);
 

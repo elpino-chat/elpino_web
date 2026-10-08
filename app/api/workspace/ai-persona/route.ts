@@ -1,22 +1,11 @@
 import { ownerGuard } from "@/app/api/_lib/owner-guard";
 import { callGateway, patchGateway } from "@/app/api/auth/_lib/gateway";
 import { requireSession } from "@/app/api/onboarding/_lib/require-user";
-import { getAuthRedirectBaseUrl } from "@/app/api/auth/_lib/redirect-url";
 
 type Organization = { id: string; name: string; role: string };
 type OrganizationsResult = { organizations?: Organization[]; selectedOrganizationId?: string };
 type Persona = { id: string; name: string; aiName: string; aiAvatarUrl: string | null; aiPersona: string | null; chatbotAccent: string; chatbotTheme: string; chatbotReplyLanguage: string; greetingLines: string[] };
 type CompanyResult = { company?: Persona; error?: string };
-
-// Every workspace starts out with this stock icon as its AI teammate's
-// avatar until someone picks something else — same asset the avatar picker
-// offers, served from /api/stock-icons so it works both in this dashboard
-// and from a customer's own site (tag.js needs an absolute, this app's own
-// origin URL, not a relative path).
-const DEFAULT_AVATAR_ICON = "widget_5";
-function defaultAvatarUrl(request: Request) {
-  return `${getAuthRedirectBaseUrl(request)}/api/stock-icons/${DEFAULT_AVATAR_ICON}.png`;
-}
 
 async function resolveSelectedOrg(email: string) {
   const orgResult = await callGateway<OrganizationsResult>(
@@ -44,7 +33,6 @@ export async function GET(request: Request) {
     `/api/workspace/companies/${encodeURIComponent(selected.id)}`,
   );
   if (!result.company) return Response.json({ message: result.error ?? "Not found" }, { status: 404 });
-  if (!result.company.aiAvatarUrl) result.company.aiAvatarUrl = defaultAvatarUrl(request);
 
   return Response.json({ persona: result.company });
 }
