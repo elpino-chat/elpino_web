@@ -2,7 +2,7 @@
 
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { ArrowUp, ChevronDown, ChevronLeft, ChevronRight, CircleHelp, ExternalLink, File as FileIcon, LayoutGrid, Maximize2, MessageCircle, MessageSquarePlus, Minimize2, House, MessageSquare, LogOut, MoreHorizontal, Paperclip, Plus, Search, SendHorizontal, Smile, ThumbsDown, ThumbsUp, Volume2, VolumeX, X } from "lucide-react";
+import { ArrowUp, ChevronDown, ChevronLeft, ChevronRight, CircleHelp, ExternalLink, File as FileIcon, LayoutGrid, Maximize2, MessageCircle, MessageSquarePlus, Minimize2, House, MessageSquare, LogOut, MoreHorizontal, Paperclip, Plus, Search, SendHorizontal, Smile, Volume2, VolumeX, X } from "lucide-react";
 import ArticleMarkdown, { prepareArticle } from "@/app/components/ArticleMarkdown";
 import MessageMarkdown from "@/app/components/MessageMarkdown";
 import TypingDots from "@/app/components/TypingDots";
@@ -101,6 +101,17 @@ const MAX_ATTACHMENT_BYTES = 4 * 1024 * 1024;
 // rate-limited; swap for a real key before any real production usage.
 // Giphy retired its shared demo key (it now answers 403 "BANNED"), so GIF search needs the workspace
 // operator's own key (free at developers.giphy.com). Giphy keys are meant to ship in the browser and are
+// The chat rating: five emoji from worst to best, sent as a score of 1 to 5.
+type ChatScore = 1 | 2 | 3 | 4 | 5;
+const RATING_EMOJI: ReadonlyArray<{ score: ChatScore; emoji: string; label: string }> = [
+  { score: 1, emoji: "😞", label: "Terrible" },
+  { score: 2, emoji: "😕", label: "Bad" },
+  { score: 3, emoji: "😐", label: "Okay" },
+  { score: 4, emoji: "🙂", label: "Good" },
+  { score: 5, emoji: "😍", label: "Amazing" },
+];
+const isChatScore = (value: unknown): value is ChatScore => typeof value === "number" && Number.isInteger(value) && value >= 1 && value <= 5;
+
 // How long "Thanks for your feedback" shows on a resolved chat before the widget returns to the conversation list.
 const RATED_RETURN_MS = 1800;
 // How long the dots stay up after the last "typing" push, when no "stopped" push follows.
@@ -437,25 +448,26 @@ function WidgetContent() {
   // conversation and submits whatever rating (if any) was picked in a single step.
   const [leaveOpen, setLeaveOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
-  const [ratingChoice, setRatingChoice] = useState<1 | -1 | null>(null);
+  const [ratingChoice, setRatingChoice] = useState<ChatScore | null>(null);
   const [leaving, setLeaving] = useState(false);
-  // A chat the team (or the AI) resolved: the message box gives way to a card that asks how it went, and a
-  // visitor with more to say starts a new conversation. `givenRating` is the thumb already given, if any.
+  // A chat the team (or the AI) resolved: the message box goes away, the thread itself asks how it went (five
+  // emoji, like the contact questions are asked in the thread), and a visitor with more to say starts a new
+  // conversation. `givenRating` is the score already given, if any.
   const [chatResolved, setChatResolved] = useState(false);
-  const [givenRating, setGivenRating] = useState<1 | -1 | null>(null);
+  const [givenRating, setGivenRating] = useState<ChatScore | null>(null);
   const [ratingSaving, setRatingSaving] = useState(false);
   useEffect(() => { setChatResolved(false); setGivenRating(null); }, [conversationId]);
-  async function rateResolvedChat(rating: 1 | -1) {
+  async function rateResolvedChat(score: ChatScore) {
     if (ratingSaving || givenRating) return;
     setRatingSaving(true);
     try {
       const response = await fetch("/api/widget/rate", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ key, hostname, visitorToken, conversationId, rating }),
+        body: JSON.stringify({ key, hostname, visitorToken, conversationId, score }),
       });
       if (response.ok) {
-        setGivenRating(rating);
+        setGivenRating(score);
         // The chat is done: the thanks shows for a moment, then the visitor lands on their conversations.
         window.setTimeout(() => {
           setConversationId("");
@@ -463,7 +475,7 @@ function WidgetContent() {
           openChatList();
         }, RATED_RETURN_MS);
       }
-    } catch { /* the thumbs stay tappable for another try */ }
+    } catch { /* the emoji stay tappable for another try */ }
     setRatingSaving(false);
   }
 
@@ -505,7 +517,7 @@ function WidgetContent() {
         await fetch("/api/widget/rate", {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ key, hostname, visitorToken, conversationId, rating: ratingChoice }),
+          body: JSON.stringify({ key, hostname, visitorToken, conversationId, score: ratingChoice }),
         });
       }
     } catch { /* the conversation just stays open/unrated on the team's side */ }
@@ -1083,7 +1095,7 @@ function WidgetContent() {
           }
           setAgentTyping(!!data.agentTyping);
           setChatResolved(data.resolved === true);
-          setGivenRating(data.rating === 1 || data.rating === -1 ? data.rating : null);
+          setGivenRating(isChatScore(data.rating) ? data.rating : null);
           setAgentName(data.agent?.name?.trim() || null);
           // Convert the server's deadline into this device's clock so a wrong
           // local time can't shorten or stretch the countdown.
@@ -2175,6 +2187,37 @@ function WidgetContent() {
                   </div>
                 </div>
               )}
+              {chatResolved && conversationId && (
+                // Asked in the thread, like a message from the AI, the way contact details are asked.
+                <div className="w-full max-w-[85%]">
+                  <div className="rounded-2xl px-3.5 py-3" style={{ backgroundColor: BUBBLE, color: INK }}>
+                    <p className="text-[13.5px] leading-5">
+                      {givenRating ? "Thanks for your feedback!" : "This conversation was resolved. How would you rate it?"}
+                    </p>
+                    <div role="radiogroup" aria-label="Rate this chat" className="mt-2.5 flex items-center justify-between gap-1">
+                      {RATING_EMOJI.map(({ score, emoji, label }) => {
+                        const chosen = givenRating === score;
+                        return (
+                          <button
+                            key={score}
+                            type="button"
+                            role="radio"
+                            aria-checked={chosen}
+                            aria-label={label}
+                            title={label}
+                            onClick={() => void rateResolvedChat(score)}
+                            disabled={ratingSaving || givenRating !== null}
+                            className={`flex h-10 w-10 items-center justify-center rounded-full text-[22px] leading-none transition ${givenRating === null ? "hover:scale-125" : chosen ? "scale-125" : "opacity-35"}`}
+                            style={{ backgroundColor: chosen ? SURFACE : "transparent" }}
+                          >
+                            <span aria-hidden="true">{emoji}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              )}
               {streamingReply && (
                 <div className="flex items-end">
                   <div className="w-fit max-w-[85%] rounded-2xl px-3.5 py-2.5 text-[13.5px] leading-6" style={{ backgroundColor: BUBBLE, color: INK }} aria-live="polite">
@@ -2257,36 +2300,11 @@ function WidgetContent() {
                 <p className="mb-2 px-1 text-[12.5px]" style={{ color: MUTED }}>{contactThanks}</p>
               )}
 
-              {/* A resolved chat has no message box: how it went is asked instead, and a new topic is a new conversation. */}
+              {/* A resolved chat has no message box: the rating is asked in the thread, and a new topic is a new conversation. */}
               {chatResolved && conversationId && (
-                <div className="rounded-[24px] border px-4 py-4 text-center" style={{ borderColor: BORDER, backgroundColor: SURFACE }}>
-                  <p className="text-[14px] font-semibold" style={{ color: INK }}>This conversation was resolved</p>
-                  {givenRating ? (
-                    <p className="mt-1.5 text-[12.5px] leading-5" style={{ color: MUTED }}>Thanks for your feedback.</p>
-                  ) : (
-                    <>
-                      <p className="mt-1.5 text-[12.5px] leading-5" style={{ color: MUTED }}>How was your experience?</p>
-                      <div className="mt-3 flex justify-center gap-3">
-                        {([[1, "Good", ThumbsUp], [-1, "Not good", ThumbsDown]] as const).map(([value, label, Icon]) => (
-                          <button
-                            key={value}
-                            type="button"
-                            onClick={() => void rateResolvedChat(value)}
-                            disabled={ratingSaving}
-                            aria-label={label}
-                            className="flex h-11 w-11 items-center justify-center rounded-full transition hover:opacity-80 disabled:opacity-50"
-                            style={{ backgroundColor: BUBBLE }}
-                          >
-                            <Icon size={20} color={INK} />
-                          </button>
-                        ))}
-                      </div>
-                    </>
-                  )}
-                  <button type="button" onClick={startNewChat} className="mt-4 w-full rounded-full py-2.5 text-[13px] font-semibold text-white" style={{ backgroundColor: ACCENT }}>
-                    Start a new conversation
-                  </button>
-                </div>
+                <button type="button" onClick={startNewChat} className="w-full rounded-full py-3 text-[13.5px] font-semibold text-white" style={{ backgroundColor: ACCENT }}>
+                  Start a new conversation
+                </button>
               )}
 
               {/* While the AI is asking for a detail, the answer field in the conversation is the only input. */}
@@ -2372,27 +2390,22 @@ function WidgetContent() {
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-8 text-center" style={{ backgroundColor: SURFACE, color: INK }}>
           <p className="text-[19px] font-bold leading-6">Did we help you?</p>
           <p className="mt-1.5 text-[13px] leading-5" style={{ color: MUTED }}>Your feedback matters</p>
-          <div className="mt-6 flex justify-center gap-4">
-            <button
-              type="button"
-              onClick={() => setRatingChoice(1)}
-              aria-label="Good"
-              aria-pressed={ratingChoice === 1}
-              className="flex h-14 w-14 items-center justify-center rounded-full transition"
-              style={{ backgroundColor: ratingChoice === 1 ? ACCENT : BUBBLE }}
-            >
-              <ThumbsUp size={22} color={ratingChoice === 1 ? "#fff" : INK} />
-            </button>
-            <button
-              type="button"
-              onClick={() => setRatingChoice(-1)}
-              aria-label="Not good"
-              aria-pressed={ratingChoice === -1}
-              className="flex h-14 w-14 items-center justify-center rounded-full transition"
-              style={{ backgroundColor: ratingChoice === -1 ? ACCENT : BUBBLE }}
-            >
-              <ThumbsDown size={22} color={ratingChoice === -1 ? "#fff" : INK} />
-            </button>
+          <div role="radiogroup" aria-label="Rate this chat" className="mt-6 flex justify-center gap-2">
+            {RATING_EMOJI.map(({ score, emoji, label }) => (
+              <button
+                key={score}
+                type="button"
+                role="radio"
+                aria-checked={ratingChoice === score}
+                aria-label={label}
+                title={label}
+                onClick={() => setRatingChoice(score)}
+                className={`flex h-12 w-12 items-center justify-center rounded-full text-[24px] leading-none transition ${ratingChoice === null ? "hover:scale-110" : ratingChoice === score ? "scale-110" : "opacity-40"}`}
+                style={{ backgroundColor: ratingChoice === score ? BUBBLE : "transparent" }}
+              >
+                <span aria-hidden="true">{emoji}</span>
+              </button>
+            ))}
           </div>
           <div className="mt-8 flex w-full items-center gap-3">
             <button type="button" onClick={goBack} className="flex-1 text-[14px] font-bold" style={{ color: ACCENT }}>

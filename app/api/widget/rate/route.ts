@@ -14,11 +14,14 @@ export async function POST(request: Request) {
     hostname?: string;
     visitorToken?: string;
     conversationId?: string;
+    score?: number;
     rating?: number;
     comment?: string;
   };
-  if (!body.key?.trim() || !body.hostname?.trim() || !body.visitorToken?.trim() || !body.conversationId?.trim() || (body.rating !== 1 && body.rating !== -1)) {
-    return Response.json({ error: "key, hostname, visitorToken, conversationId and rating (1 or -1) are required" }, { status: 400, headers: corsHeaders() });
+  // score: the five-emoji scale, 1 (terrible) to 5 (amazing). rating: the older thumbs (1 / -1), still accepted.
+  const validScore = typeof body.score === "number" && Number.isInteger(body.score) && body.score >= 1 && body.score <= 5;
+  if (!body.key?.trim() || !body.hostname?.trim() || !body.visitorToken?.trim() || !body.conversationId?.trim() || (!validScore && body.rating !== 1 && body.rating !== -1)) {
+    return Response.json({ error: "key, hostname, visitorToken, conversationId and a score from 1 to 5 are required" }, { status: 400, headers: corsHeaders() });
   }
 
   const result = await callGateway<{ ok?: boolean; error?: string }>("/api/workspace/widget/rate", {
@@ -26,7 +29,7 @@ export async function POST(request: Request) {
     hostname: body.hostname.trim(),
     visitorToken: body.visitorToken.trim(),
     conversationId: body.conversationId.trim(),
-    rating: body.rating,
+    ...(validScore ? { score: body.score } : { rating: body.rating }),
     comment: typeof body.comment === "string" ? body.comment.slice(0, 2000) : undefined,
   });
   return Response.json(result, { headers: corsHeaders() });
