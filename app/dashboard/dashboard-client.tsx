@@ -907,7 +907,7 @@ function DashboardContent({ name }: { name: string }) {
             {call.phase === "starting" ? "Starting the call…"
               : call.phase === "ringing" ? "Ringing…"
               : call.phase === "connecting" ? "Connecting…"
-              : call.phase === "active" ? `On a call · ${formatTalkTime(call.seconds)}`
+              : call.phase === "active" ? `On a call · ${formatTalkTime(call.seconds)} · Recording`
               : call.notice ?? "Call ended"}
           </p>
         </div>
@@ -1355,6 +1355,12 @@ function DashboardContent({ name }: { name: string }) {
                           <div className="chat-system-notice flex items-center gap-3 py-1 text-[11px]">
                             <span className="whitespace-nowrap">{group.messages[0].body}</span>
                           </div>
+                          {/* A call recording: team only, played straight from the thread. */}
+                          {group.messages[0].attachmentType === "audio" && group.messages[0].attachmentUrl && (
+                            <audio controls preload="none" src={group.messages[0].attachmentUrl} className="mx-auto block h-9 w-full max-w-[360px]">
+                              <a href={group.messages[0].attachmentUrl}>Download the recording</a>
+                            </audio>
+                          )}
                         </div>
                       );
                     }

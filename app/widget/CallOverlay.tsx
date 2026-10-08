@@ -47,7 +47,8 @@ export function CallOverlay({
             : call.phase === "active" ? formatTalkTime(call.seconds)
             : call.notice ?? "Call ended"}
         </p>
-        {ringing && <p className="mt-6 max-w-[240px] text-[12.5px] leading-5 text-white/45">Tap Accept to talk. Your microphone is used only while the call is open.</p>}
+        {ringing && <p className="mt-6 max-w-[240px] text-[12.5px] leading-5 text-white/45">This call will be recorded. Tap Accept to talk; your microphone is used only while the call is open.</p>}
+        {call.phase === "active" && <p className="mt-2 flex items-center gap-1.5 text-[12px] text-white/55"><span className="h-2 w-2 rounded-full bg-[#e5484d]" aria-hidden="true" />Recording</p>}
       </div>
 
       {ringing ? (

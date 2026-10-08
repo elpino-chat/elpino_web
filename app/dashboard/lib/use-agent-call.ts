@@ -33,6 +33,61 @@ const CONNECT_TIMEOUT_MS = 20_000;
 // A brief drop in the audio path (wifi blip) is waited out before the call is ended.
 const DISCONNECT_GRACE_MS = 8_000;
 // Said when the two browsers could not find a network path for the audio, usually a strict firewall or NAT.
+// Recordings are kept small enough to upload in one request: speech quality at 24 kbps, stopped at 25 minutes.
+const RECORDING_BITRATE = 24_000;
+const MAX_RECORDING_MS = 25 * 60 * 1000;
+
+type Recording = { recorder: MediaRecorder; chunks: Blob[]; context: AudioContext; startedAt: number; limit: number };
+
+// Records both voices (the teammate's microphone and the visitor's audio) into one file.
+function startRecording(local: MediaStream, remote: MediaStream): Recording | null {
+  if (typeof MediaRecorder === "undefined" || typeof AudioContext === "undefined") return null;
+  try {
+    const context = new AudioContext();
+    const mix = context.createMediaStreamDestination();
+    context.createMediaStreamSource(local).connect(mix);
+    context.createMediaStreamSource(remote).connect(mix);
+    const mimeType = ["audio/webm;codecs=opus", "audio/ogg;codecs=opus", "audio/mp4"].find((type) => MediaRecorder.isTypeSupported(type));
+    const recorder = new MediaRecorder(mix.stream, { ...(mimeType ? { mimeType } : {}), audioBitsPerSecond: RECORDING_BITRATE });
+    const recording: Recording = { recorder, chunks: [], context, startedAt: Date.now(), limit: 0 };
+    recorder.ondataavailable = (event) => { if (event.data.size) recording.chunks.push(event.data); };
+    recorder.start(1000);
+    recording.limit = window.setTimeout(() => { if (recorder.state !== "inactive") recorder.stop(); }, MAX_RECORDING_MS);
+    return recording;
+  } catch {
+    return null;
+  }
+}
+
+// Stops the recorder and uploads what it captured; resolves to an error message, or null when saved.
+async function saveRecording(recording: Recording, callId: string): Promise<string | null> {
+  window.clearTimeout(recording.limit);
+  const durationSec = Math.round((Date.now() - recording.startedAt) / 1000);
+  if (recording.recorder.state !== "inactive") {
+    await new Promise<void>((resolve) => {
+      recording.recorder.addEventListener("stop", () => resolve(), { once: true });
+      recording.recorder.stop();
+    });
+  }
+  void recording.context.close().catch(() => undefined);
+  if (!recording.chunks.length) return null;
+  const blob = new Blob(recording.chunks, { type: recording.recorder.mimeType || "audio/webm" });
+  const data = await new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result).split(",")[1] ?? "");
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(blob);
+  });
+  const response = await fetch(`/api/workspace/calls/${encodeURIComponent(callId)}/recording`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ mimeType: blob.type, data, durationSec }),
+  }).catch(() => null);
+  if (response?.ok) return null;
+  const body = (await response?.json().catch(() => null)) as { message?: string } | null;
+  return body?.message ?? "Could not save the recording.";
+}
+
 const NETWORK_BLOCKED = "Couldn't connect the audio. The customer's network may be blocking calls.";
 
 export function useAgentCall() {
@@ -48,6 +103,8 @@ export function useAgentCall() {
   // answer (the gateway only relays signalling for an answered call). Sending them the moment they accept
   // saves the setup round trip that otherwise happened after Accept.
   const acceptedRef = useRef(false);
+  const remoteStreamRef = useRef<MediaStream | null>(null);
+  const recordingRef = useRef<Recording | null>(null);
   const outboxRef = useRef<PeerSignal[]>([]);
 
   const clearTimers = () => {
@@ -63,6 +120,16 @@ export function useAgentCall() {
     if (finishedRef.current) return;
     finishedRef.current = true;
     clearTimers();
+    // The recording is saved after the call has ended; the panel says if that fails.
+    const recording = recordingRef.current;
+    const recordedCallId = callIdRef.current;
+    recordingRef.current = null;
+    remoteStreamRef.current = null;
+    if (recording && recordedCallId) {
+      void saveRecording(recording, recordedCallId).catch(() => "Could not save the recording.").then((problem) => {
+        if (problem) setCall((current) => (current.phase === "ended" ? { ...current, notice: `${current.notice ? `${current.notice} ` : ""}${problem}` } : current));
+      });
+    }
     peerRef.current?.close();
     peerRef.current = null;
     stopRemoteAudio(audioRef.current);
@@ -112,9 +179,10 @@ export function useAgentCall() {
         iceServers,
         stream,
         send: sendPeerSignal,
-        onRemoteStream: (remote) => { stopRemoteAudio(audioRef.current); audioRef.current = playRemoteAudio(remote); },
+        onRemoteStream: (remote) => { stopRemoteAudio(audioRef.current); audioRef.current = playRemoteAudio(remote); remoteStreamRef.current = remote; },
         onConnectionState: (state) => {
           if (state === "connected") {
+            if (!recordingRef.current && remoteStreamRef.current) recordingRef.current = startRecording(stream, remoteStreamRef.current);
             window.clearTimeout(timersRef.current.connect);
             window.clearTimeout(timersRef.current.drop);
             setCall((current) => (current.phase === "active" ? current : { ...current, phase: "active", seconds: 0 }));
