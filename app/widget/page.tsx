@@ -101,6 +101,8 @@ const MAX_ATTACHMENT_BYTES = 4 * 1024 * 1024;
 // rate-limited; swap for a real key before any real production usage.
 // Giphy retired its shared demo key (it now answers 403 "BANNED"), so GIF search needs the workspace
 // operator's own key (free at developers.giphy.com). Giphy keys are meant to ship in the browser and are
+// How long the dots stay up after the last "typing" push, when no "stopped" push follows.
+const TYPING_PUSH_TIMEOUT_MS = 5000;
 // rate limited per key. Without one the GIF button is hidden rather than opening an empty picker.
 const GIPHY_KEY = process.env.NEXT_PUBLIC_GIPHY_API_KEY?.trim() ?? "";
 const EMOJI = [
@@ -1118,6 +1120,7 @@ function WidgetContent() {
     let socket: WebSocket | null = null;
     let reconnectDelay = 1000;
     let reconnectTimer: number | null = null;
+    let typingTimer: number | null = null;
     const epoch = sessionEpochRef.current;
 
     function connect() {
@@ -1127,10 +1130,19 @@ function WidgetContent() {
       socket.onopen = () => { reconnectDelay = 1000; };
       socket.onmessage = (event) => {
         if (closed || epoch !== sessionEpochRef.current) return;
-        let data: { type?: string; message?: WidgetMessage; update?: { streamId?: unknown; seq?: unknown; text?: unknown; state?: unknown } };
+        let data: { type?: string; typing?: unknown; message?: WidgetMessage; update?: { streamId?: unknown; seq?: unknown; text?: unknown; state?: unknown } };
         try {
           data = JSON.parse(event.data as string);
         } catch {
+          return;
+        }
+        // The AI or a teammate started or stopped typing. Pushes repeat every couple of seconds while typing goes
+        // on, so the dots go away by themselves if they stop coming (the socket dropped, a teammate paused).
+        if (data.type === "typing" && typeof data.typing === "boolean") {
+          if (typingTimer) window.clearTimeout(typingTimer);
+          typingTimer = null;
+          setAgentTyping(data.typing);
+          if (data.typing) typingTimer = window.setTimeout(() => setAgentTyping(false), TYPING_PUSH_TIMEOUT_MS);
           return;
         }
         if (data.type === "reply_stream" && data.update && typeof data.update.streamId === "string" && typeof data.update.seq === "number") {
@@ -1172,6 +1184,7 @@ function WidgetContent() {
     return () => {
       closed = true;
       if (reconnectTimer) window.clearTimeout(reconnectTimer);
+      if (typingTimer) window.clearTimeout(typingTimer);
       socket?.close();
     };
   }, [conversationId, visitorToken, tab, chatView, key, hostname]);
