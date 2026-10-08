@@ -101,6 +101,8 @@ const MAX_ATTACHMENT_BYTES = 4 * 1024 * 1024;
 // rate-limited; swap for a real key before any real production usage.
 // Giphy retired its shared demo key (it now answers 403 "BANNED"), so GIF search needs the workspace
 // operator's own key (free at developers.giphy.com). Giphy keys are meant to ship in the browser and are
+// How long "Thanks for your feedback" shows on a resolved chat before the widget returns to the conversation list.
+const RATED_RETURN_MS = 1800;
 // How long the dots stay up after the last "typing" push, when no "stopped" push follows.
 const TYPING_PUSH_TIMEOUT_MS = 5000;
 // rate limited per key. Without one the GIF button is hidden rather than opening an empty picker.
@@ -452,7 +454,15 @@ function WidgetContent() {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ key, hostname, visitorToken, conversationId, rating }),
       });
-      if (response.ok) setGivenRating(rating);
+      if (response.ok) {
+        setGivenRating(rating);
+        // The chat is done: the thanks shows for a moment, then the visitor lands on their conversations.
+        window.setTimeout(() => {
+          setConversationId("");
+          setMessages([]);
+          openChatList();
+        }, RATED_RETURN_MS);
+      }
     } catch { /* the thumbs stay tappable for another try */ }
     setRatingSaving(false);
   }
