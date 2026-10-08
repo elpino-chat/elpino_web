@@ -49,6 +49,7 @@ import { inboxListHref, parseInboxView, shortAge } from "@/app/components/dashbo
 import { useAgentCall } from "@/app/dashboard/lib/use-agent-call";
 import { formatTalkTime } from "@/lib/webrtc-call";
 import MessageMarkdown from "@/app/components/MessageMarkdown";
+import VoiceNotePlayer from "@/app/dashboard/components/VoiceNotePlayer";
 import TypingDots from "@/app/components/TypingDots";
 import {
   DEFAULT_BOT_AVATAR,
@@ -1357,9 +1358,7 @@ function DashboardContent({ name }: { name: string }) {
                           </div>
                           {/* A call recording: team only, played straight from the thread. */}
                           {group.messages[0].attachmentType === "audio" && group.messages[0].attachmentUrl && (
-                            <audio controls preload="none" src={group.messages[0].attachmentUrl} className="mx-auto block h-9 w-full max-w-[360px]">
-                              <a href={group.messages[0].attachmentUrl}>Download the recording</a>
-                            </audio>
+                            <VoiceNotePlayer src={group.messages[0].attachmentUrl} label={group.messages[0].body} fileName={group.messages[0].attachmentName} />
                           )}
                         </div>
                       );
