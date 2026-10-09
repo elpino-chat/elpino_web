@@ -51,6 +51,19 @@ function tList<Item>(t: T, key: string, fallback: Item[]): Item[] {
   return Array.isArray(value) ? (value as Item[]) : fallback;
 }
 
+// Phones get plain, unpinned sections: no scroll-driven scenes.
+function useMobile() {
+  const [m, setM] = useState(false);
+  useEffect(() => {
+    const q = window.matchMedia("(max-width: 767.98px)");
+    const on = () => setM(q.matches);
+    on();
+    q.addEventListener("change", on);
+    return () => q.removeEventListener("change", on);
+  }, []);
+  return m;
+}
+
 function useReduced() {
   const [r, setR] = useState(false);
   useEffect(() => setR(window.matchMedia("(prefers-reduced-motion: reduce)").matches), []);
@@ -471,6 +484,7 @@ function TourVisual({ k, t, p }: { k: string; t: T; p: number }) {
 
 function Tour({ t }: { t: T }) {
   const reduced = useReduced();
+  const mobile = useMobile();
   const outer = useRef<HTMLDivElement>(null);
   const strip = useRef<HTMLDivElement>(null);
   const bar = useRef<HTMLSpanElement>(null);
@@ -483,7 +497,7 @@ function Tour({ t }: { t: T }) {
   useEffect(() => {
     const box = outer.current;
     const row = strip.current;
-    if (!box || !row) return;
+    if (!box || !row || mobile) return;
     let frame = 0;
     const steps = () => row.children.length;
     const lefts = () => { const c = Array.from(row.children) as HTMLElement[]; return c.map((el) => el.offsetLeft - c[0].offsetLeft); };
@@ -515,8 +529,8 @@ function Tour({ t }: { t: T }) {
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onResize);
-    return () => { window.removeEventListener("scroll", onScroll); window.removeEventListener("resize", onResize); if (frame) window.cancelAnimationFrame(frame); };
-  }, []);
+    return () => { window.removeEventListener("scroll", onScroll); window.removeEventListener("resize", onResize); if (frame) window.cancelAnimationFrame(frame); box.style.height = ""; row.style.transform = ""; };
+  }, [mobile]);
   // Prev and next scroll to the start of that step's stretch, so its demo plays from the top.
   function goTo(index: number) {
     const box = outer.current;
@@ -539,21 +553,22 @@ function Tour({ t }: { t: T }) {
     <section id="product-tour" className="scroll-mt-20 bg-white pb-4">
       {/* A pinned stage: the cards sit in one flex row that slides right to left as you scroll down. */}
       <div ref={outer}>
-        <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden pt-20">
+        <div className={mobile ? "flex flex-col py-10" : "sticky top-0 flex h-screen flex-col justify-center overflow-hidden pt-20"}>
           <div className="mb-8 flex flex-wrap items-end justify-between gap-5 px-5 sm:px-8">
             <h2 className="max-w-[22ch] text-[clamp(1.9rem,3.4vw,3rem)] font-normal leading-[1.08] tracking-[-0.035em] text-[#11120f]">{t("home.tour.title3", "Everything a support desk needs, in 3 steps")}</h2>
-            <div className="flex shrink-0 items-center gap-3">
+            <div className={mobile ? "hidden" : "flex shrink-0 items-center gap-3"}>
               <span className="mr-2 font-mono text-sm text-[#11120f]/50" aria-live="polite">{String(current + 1).padStart(2, "0")} / {String(items.length).padStart(2, "0")}</span>
               <button type="button" aria-label={t("home.tour.prev", "Previous")} disabled={current === 0} onClick={() => goTo(current - 1)} className="grid size-12 place-items-center rounded-full border-2 border-[#11120f] bg-white text-[#11120f] transition hover:bg-[#11120f] hover:text-white disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-[#11120f]"><ArrowLeft size={20} /></button>
               <button type="button" aria-label={t("home.tour.next", "Next")} disabled={current === items.length - 1} onClick={() => goTo(current + 1)} className="grid size-12 place-items-center rounded-full border-2 border-[#11120f] bg-white text-[#11120f] transition hover:bg-[#11120f] hover:text-white disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-[#11120f]"><ArrowRight size={20} /></button>
             </div>
           </div>
+          <div className={mobile ? "snap-x snap-mandatory overflow-x-auto" : ""}>
           <div ref={strip} className="flex w-max gap-6 px-5 will-change-transform sm:gap-8 sm:px-8">
             {items.map((it, i) => (
-              <div key={it.title} className="group flex w-[min(86vw,540px)] shrink-0 flex-col overflow-hidden rounded-tl-[2rem] border border-black/20 bg-white">
+              <div key={it.title} className="group flex w-[min(86vw,540px)] shrink-0 snap-center flex-col overflow-hidden rounded-tl-[2rem] border border-black/20 bg-white">
                 {/* The same pastel stage as the product tabs, with the visual sitting on it. */}
                 <div className="relative grid min-h-[300px] place-items-center overflow-hidden border-b border-black/20 p-6 sm:min-h-[340px]">
-                  <div className="relative rounded-2xl border border-black/10 bg-white p-5 shadow-[0_24px_60px_rgba(17,18,15,0.18)]"><TourVisual k={keys[i]} t={t} p={reduced ? 1 : Math.min(1, Math.max(0, story - i))} /></div>
+                  <div className="relative rounded-2xl border border-black/10 bg-white p-5 shadow-[0_24px_60px_rgba(17,18,15,0.18)]"><TourVisual k={keys[i]} t={t} p={reduced || mobile ? 1 : Math.min(1, Math.max(0, story - i))} /></div>
                 </div>
                 <div className="flex flex-1 items-start justify-between gap-6 p-6 sm:p-7">
                   <div>
@@ -567,7 +582,8 @@ function Tour({ t }: { t: T }) {
               </div>
             ))}
           </div>
-          <div aria-hidden="true" className="mx-5 mt-8 h-0.5 overflow-hidden bg-[#11120f]/10 sm:mx-8">
+          </div>
+          <div aria-hidden="true" className={`mx-5 mt-8 h-0.5 overflow-hidden ${mobile ? "hidden" : ""} bg-[#11120f]/10 sm:mx-8`}>
             <span ref={bar} className="block h-full origin-left bg-[#11120f]" style={{ transform: "scaleX(0)" }} />
           </div>
         </div>
@@ -811,7 +827,7 @@ function Teams({ t }: { t: T }) {
         <Rv delay={80}><h2 className="mt-3 max-w-[22ch] text-[clamp(1.9rem,3.4vw,3rem)] font-normal leading-[1.08] tracking-[-0.035em] text-[#11120f]">{t("home.teams.title", "Know who is asking, and see what the AI says")}</h2></Rv>
         <div className="mt-14 space-y-20 lg:mt-20 lg:space-y-28">
           {items.map((it, i) => (
-            <div key={it.tag} className="grid items-center gap-10 lg:grid-cols-2 lg:gap-20">
+            <div key={it.tag} className="grid grid-cols-[minmax(0,1fr)] items-center gap-10 lg:grid-cols-2 lg:gap-20">
               <Rv variant="deal" className={i % 2 === 1 ? "lg:order-2" : ""}>
                 {/* A soft, blurred pastel frame around a dark panel, the preview inside it. */}
                 <div className={`relative rounded-[2rem] p-5 sm:p-7 ${keys[i] === "reply" ? "" : "overflow-hidden"}`} style={{ backgroundColor: "#eeeeec", backgroundImage: ["radial-gradient(60% 55% at 0% 0%, rgba(176,222,196,0.85) 0%, rgba(176,222,196,0) 70%)", "radial-gradient(55% 60% at 100% 10%, rgba(150,142,184,0.8) 0%, rgba(150,142,184,0) 70%)", "radial-gradient(60% 55% at 10% 100%, rgba(238,196,190,0.75) 0%, rgba(238,196,190,0) 70%)", "radial-gradient(55% 55% at 100% 100%, rgba(205,200,216,0.9) 0%, rgba(205,200,216,0) 70%)"].join(", ") }}>
@@ -1440,6 +1456,8 @@ const SCROLL_PER_TAB = 80; // vh of scrolling for each item
 
 function ProductTabs({ t }: { t: T }) {
   const reduced = useReduced();
+  const mobile = useMobile();
+  const [picked, setPicked] = useState(0); // phones: the open item is whichever was tapped
   const track = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0); // 0 to 4: the whole number is the open item, the fraction is how far its demo has played
   const tabs = [
@@ -1449,6 +1467,7 @@ function ProductTabs({ t }: { t: T }) {
     { key: "tickets", Icon: Ticket, label: t("home.tabs.tickets.label", "Tickets"), title: t("home.tabs.tickets.title", "Nothing gets dropped"), body: t("home.tabs.tickets.body", "If nobody is free, a ticket is filed and the customer is told."), points: [t("home.tabs.tickets.p0", "Filed to Asana or Trello"), t("home.tabs.tickets.p1", "The summary travels with the ticket"), t("home.tabs.tickets.p2", "The customer always hears back")], href: "/product/tickets" },
   ];
   useEffect(() => {
+    if (mobile) return;
     let frame = 0;
     const measure = () => {
       frame = 0;
@@ -1464,13 +1483,14 @@ function ProductTabs({ t }: { t: T }) {
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
     return () => { window.removeEventListener("scroll", onScroll); window.removeEventListener("resize", onScroll); if (frame) window.cancelAnimationFrame(frame); };
-  }, [tabs.length]);
+  }, [tabs.length, mobile]);
 
-  const active = Math.min(tabs.length - 1, Math.floor(progress));
-  const fill = active === tabs.length - 1 ? Math.min(1, progress - active) : progress - active;
+  const active = mobile ? picked : Math.min(tabs.length - 1, Math.floor(progress));
+  const fill = mobile ? 1 : active === tabs.length - 1 ? Math.min(1, progress - active) : progress - active;
 
   // Opening an item scrolls to the start of its stretch, so the demo plays from the top.
   function jumpTo(index: number) {
+    if (mobile) { setPicked(index); return; }
     const el = track.current;
     if (!el) return;
     const range = el.offsetHeight - window.innerHeight;
@@ -1481,8 +1501,8 @@ function ProductTabs({ t }: { t: T }) {
 
   return (
     <section className="bg-white px-6 sm:px-12">
-      <div ref={track} style={{ height: `calc(100vh + ${tabs.length * SCROLL_PER_TAB}vh)` }}>
-      <div className="sticky top-0 grid h-screen content-start gap-12 pb-6 pt-28 lg:grid-cols-[1.1fr_0.9fr] lg:gap-24">
+      <div ref={track} style={mobile ? undefined : { height: `calc(100vh + ${tabs.length * SCROLL_PER_TAB}vh)` }}>
+      <div className={`grid content-start gap-12 pb-6 lg:grid-cols-[1.1fr_0.9fr] lg:gap-24 ${mobile ? "py-10" : "sticky top-0 h-screen pt-28"}`}>
         {/* The stage: a pastel wash with the open item's product drawn on it, its top-left corner left square like a folder tab. */}
         <div key={tab.key} className="relative grid min-h-[420px] place-items-center overflow-hidden rounded-tl-[2rem] p-5 sm:min-h-[520px] sm:p-8 lg:self-start" style={{ backgroundImage: STAGE_GRADIENTS[tab.key] }}>
           <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -1490,7 +1510,7 @@ function ProductTabs({ t }: { t: T }) {
             <span className="absolute inset-y-8 left-10 w-[70%] border-l border-t border-dashed border-white/80" />
           </div>
           <div className="relative">
-            {tab.key === "widget" && <div className="pl-10 sm:pl-16"><WidgetMock t={t} progress={fill} /></div>}
+            {tab.key === "widget" && <div className="origin-center scale-[0.88] sm:scale-100 sm:pl-16"><WidgetMock t={t} progress={fill} /></div>}
             {tab.key === "inbox" && <Image src="/inbox_prev.png" alt="The Elpino team inbox" width={1915} height={812} className="h-auto max-h-[38vh] w-auto max-w-full rounded-xl border border-black/10 shadow-[0_24px_60px_rgba(17,18,15,0.22)]" />}
             {tab.key === "kb" && <KnowledgeGraph t={t} progress={fill} />}
             {tab.key === "tickets" && <TicketFlow t={t} progress={fill} />}
