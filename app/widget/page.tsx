@@ -9,6 +9,7 @@ import { plainPreview } from "@/lib/plain-preview";
 import { popupAgo, ReplyPopup, STACK_SIZE } from "@/app/widget/ReplyPopup";
 import { JoinedNotice } from "@/app/widget/JoinedNotice";
 import { ReplyCards, splitAtCards, type ReplyCard } from "@/app/widget/ReplyCards";
+import { useCartBridge } from "@/app/widget/use-cart-bridge";
 import TypingDots from "@/app/components/TypingDots";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { playMessageChime, primeOnFirstInteraction } from "@/lib/notification-sound";
@@ -1067,6 +1068,8 @@ function WidgetContent() {
   // conversation actually gets written once the visitor sends something.
   // A question tapped on Home: a fresh chat is started, and the question is sent as soon as it is ready.
   const [pendingQuestion, setPendingQuestion] = useState<string | null>(null);
+  // The shopper's cart on the page that holds this chat, for the product cards' buttons and the cart cards.
+  const cartBridge = useCartBridge();
   function askFromHome(question: string) {
     setPendingQuestion(question);
     startNewChat();
@@ -2243,7 +2246,7 @@ function WidgetContent() {
                       return (
                         <div key={message.id} className="flex flex-col gap-1">
                           <div className="flex items-start">{bubble}</div>
-                          {message.cards?.length ? <ReplyCards cards={message.cards} /> : null}
+                          {message.cards?.length ? <ReplyCards cards={message.cards} cart={cartBridge} messageId={message.id} /> : null}
                           {after && (
                             <div className="flex items-start">
                               <div className="w-fit max-w-[85%] rounded-2xl rounded-bl-md px-3.5 py-2.5 text-[13.5px] leading-6" style={{ backgroundColor: BUBBLE, color: INK }}>

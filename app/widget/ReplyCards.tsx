@@ -2,16 +2,32 @@
 
 import { useState } from "react";
 import { Check, Copy, ExternalLink, Star, Truck } from "lucide-react";
+import { AddToCartButton, CartChangeCard, LiveCart } from "./CartCards";
 
 // Rich cards under an AI reply: products it recommended, or the order it looked up. The shape is validated by
 // workspace-service (agent/cards.util.ts) before it is saved, so every field here is plain text or a web link.
-export type ProductCard = { name: string; subtitle?: string; rating?: number; ratingCount?: string; price?: string; comparePrice?: string; imageUrl?: string; url?: string; badge?: string; description?: string };
+export type ProductCard = {
+  name: string; subtitle?: string; rating?: number; ratingCount?: string; price?: string; comparePrice?: string; imageUrl?: string; url?: string; badge?: string; description?: string;
+  // The store's own id, and whether one tap can add it (a simple, in-stock product) or options must be chosen first.
+  productId?: number; canAdd?: boolean; hasOptions?: boolean;
+};
+export type CartChange = { action: "add" | "remove"; productId: number; name: string; quantity: number; price?: string; imageUrl?: string; url?: string; options?: { attribute: string; value: string }[] };
+export type CartLine = { key: string; productId: number; name: string; quantity: number; price: string; lineTotal: string; imageUrl: string; url: string; options: string };
+export type CartSnapshot = { items: CartLine[]; count: number; total: string; cartUrl: string; checkoutUrl: string };
+export type CartResult = { ok: boolean; error?: string; cart?: CartSnapshot };
+/** The shopper's cart, on the page that holds the chat. Absent (or not available) where there is no cart to change. */
+export type CartBridge = {
+  available: boolean;
+  cartUrl: string | null;
+  checkoutUrl: string | null;
+  call: (op: "get" | "add" | "remove" | "update", args?: { productId?: number; key?: string; name?: string; quantity?: number; options?: { attribute: string; value: string }[] }) => Promise<CartResult>;
+};
 export type OrderCard = {
   number: string; status: string; stage: number; tone: "ok" | "warn" | "bad";
   placedOn?: string; eta?: string; shipTo?: string; total?: string; items?: string[];
   carrier?: string; trackingNumber?: string; trackingUrl?: string; note?: string; history?: { date: string; event: string }[];
 };
-export type ReplyCard = { type: "products"; items: ProductCard[] } | { type: "order"; order: OrderCard };
+export type ReplyCard = { type: "products"; items: ProductCard[] } | { type: "order"; order: OrderCard } | { type: "cart_change"; change: CartChange } | { type: "cart" };
 
 const INK = "#18181b";
 const MUTED = "rgba(24,24,27,.55)";
@@ -55,7 +71,7 @@ function ProductImage({ product }: { product: ProductCard }) {
   return <span className="flex h-full w-full items-center justify-center text-[34px] font-semibold" style={{ backgroundColor: SOFT, color: MUTED }}>{product.name.charAt(0).toUpperCase()}</span>;
 }
 
-function ProductTile({ product }: { product: ProductCard }) {
+function ProductTile({ product, cart }: { product: ProductCard; cart?: CartBridge }) {
   const off = percentOff(product.price, product.comparePrice);
   const body = (
     <>
@@ -86,9 +102,17 @@ function ProductTile({ product }: { product: ProductCard }) {
     </>
   );
   const className = "block w-[158px] shrink-0 snap-start overflow-hidden rounded-2xl border bg-white text-left transition hover:-translate-y-0.5 hover:shadow-md";
-  return product.url
-    ? <a href={product.url} target="_blank" rel="noopener noreferrer" className={`${className} cursor-pointer`} style={{ borderColor: BORDER, color: INK }} aria-label={`${product.name}, ${product.price ?? ""}`}>{body}</a>
-    : <div className={className} style={{ borderColor: BORDER, color: INK }}>{body}</div>;
+  // A card with a purchase button is a container, not one big link: a button cannot sit inside a link.
+  const link = product.url
+    ? <a href={product.url} target="_blank" rel="noopener noreferrer" className="block cursor-pointer" aria-label={`${product.name}, ${product.price ?? ""}`}>{body}</a>
+    : <div>{body}</div>;
+  const action = cart ? <AddToCartButton product={product} cart={cart} /> : null;
+  return (
+    <div className={className} style={{ borderColor: BORDER, color: INK }}>
+      {link}
+      {action && <div className="px-3 pb-3">{action}</div>}
+    </div>
+  );
 }
 
 function CopyButton({ value, label }: { value: string; label: string }) {
@@ -235,16 +259,20 @@ function OrderTracker({ order }: { order: OrderCard }) {
 }
 
 /** Everything a reply carries, under its text: an order tracker for each order and one carousel of products. */
-export function ReplyCards({ cards }: { cards: ReplyCard[] }) {
+export function ReplyCards({ cards, cart, messageId = "" }: { cards: ReplyCard[]; cart?: CartBridge; messageId?: string }) {
   return (
     <div className="mt-1 space-y-2.5">
-      {cards.map((card, index) => card.type === "order"
-        ? <OrderTracker key={`order-${card.order.number}-${index}`} order={card.order} />
-        : (
+      {cards.map((card, index) => {
+        if (card.type === "order") return <OrderTracker key={`order-${card.order.number}-${index}`} order={card.order} />;
+        // Cart cards only mean something to the shopper in their own widget; the team's inbox view just sees the products.
+        if (card.type === "cart_change") return cart && messageId ? <CartChangeCard key={`change-${index}`} change={card.change} cart={cart} storageId={`${messageId}:${index}`} /> : null;
+        if (card.type === "cart") return cart ? <LiveCart key={`cart-${index}`} cart={cart} /> : null;
+        return (
           <div key={`products-${index}`} className="-mx-1 flex snap-x gap-2.5 overflow-x-auto px-1 pb-1.5 pt-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" role="list" aria-label="Products">
-            {card.items.map((product) => <div key={product.name} role="listitem" className="contents"><ProductTile product={product} /></div>)}
+            {card.items.map((product) => <div key={product.name} role="listitem" className="contents"><ProductTile product={product} cart={cart} /></div>)}
           </div>
-        ))}
+        );
+      })}
     </div>
   );
 }

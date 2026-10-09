@@ -525,9 +525,153 @@ export function GET(request: Request) {
         if (iframe && iframe.contentWindow) iframe.contentWindow.postMessage(message, ORIGIN);
       };
 
+      // ---- cart bridge begin
+      // The shopper's cart (WooCommerce Store API), changed here in their own browser session. The chat frame is a
+      // different site and cannot touch the store's cart, and our servers never see the shopper's session; this
+      // script runs on the store page itself, so it can call the store's own API with the visitor's cookies. It only
+      // answers requests from the chat frame (see the message handler below), and the shopper has pressed a button.
+      var cartNonce = null;
+      var cartAvailable = null;
+
+      function cartApi(path) { return location.origin + '/wp-json/wc/store/v1' + path; }
+
+      function cartFetch(path, method, body, retried) {
+        var headers = { 'Content-Type': 'application/json' };
+        if (cartNonce) headers['Nonce'] = cartNonce;
+        return fetch(cartApi(path), { method: method, credentials: 'same-origin', headers: headers, body: body ? JSON.stringify(body) : undefined })
+          .then(function (res) {
+            var nonce = res.headers.get('Nonce') || res.headers.get('X-WC-Store-API-Nonce');
+            if (nonce) cartNonce = nonce;
+            return res.json().then(
+              function (data) { return { ok: res.ok, status: res.status, data: data }; },
+              function () { return { ok: res.ok, status: res.status, data: null }; }
+            );
+          })
+          .then(function (result) {
+            // A stale page holds an expired one-time token: read the cart once for a fresh one, then try again.
+            if (!result.ok && !retried && result.data && /nonce/i.test(String(result.data.code || ''))) {
+              return cartFetch('/cart', 'GET', null, true).then(function () { return cartFetch(path, method, body, true); });
+            }
+            return result;
+          });
+      }
+
+      // The store words its refusals in HTML ("&ldquo;Sandal&rdquo; is out of stock"): shown as plain text only.
+      function plainText(html) {
+        var text = String(html || '').replace(/<[^>]*>/g, ' ');
+        try {
+          // A textarea reads its content as text, never as markup, so this decodes entities without running anything.
+          var box = document.createElement('textarea');
+          box.innerHTML = text;
+          text = box.value;
+        } catch (e) { /* the tags are already gone */ }
+        // (No backslashes in this script: it is served from a template string, which would eat them.)
+        return text.split(String.fromCharCode(160)).join(' ').replace(/ +/g, ' ').trim().slice(0, 200);
+      }
+
+      function cartPageUrl(kind) {
+        var configured = window.ElpinoSettings && window.ElpinoSettings[kind === 'checkout' ? 'checkoutUrl' : 'cartUrl'];
+        if (typeof configured === 'string' && /^https?:/i.test(configured)) return configured;
+        return location.origin + (kind === 'checkout' ? '/checkout/' : '/cart/');
+      }
+
+      function cartSummary(cart) {
+        var totals = cart.totals || {};
+        var places = typeof totals.currency_minor_unit === 'number' ? totals.currency_minor_unit : 2;
+        var format = function (minor) {
+          try { return new Intl.NumberFormat(undefined, { style: 'currency', currency: totals.currency_code || 'USD' }).format(Number(minor) / Math.pow(10, places)); } catch (e) { return String(minor); }
+        };
+        var items = (cart.items || []).map(function (item) {
+          var picture = item.images && item.images[0] ? (item.images[0].thumbnail || item.images[0].src) : '';
+          return {
+            key: String(item.key), productId: item.id, name: String(item.name || ''), quantity: item.quantity,
+            price: format(item.prices && item.prices.price), lineTotal: format(item.totals && item.totals.line_total),
+            imageUrl: picture || '', url: item.permalink || '',
+            options: (item.variation || []).map(function (v) { return v.attribute + ': ' + v.value; }).join(', ')
+          };
+        });
+        return { items: items, count: typeof cart.items_count === 'number' ? cart.items_count : items.length, total: format(totals.total_price), cartUrl: cartPageUrl('cart'), checkoutUrl: cartPageUrl('checkout') };
+      }
+
+      // Tells the store's own page (mini cart, block cart) that the cart changed, so it redraws itself.
+      function refreshStoreCart() {
+        try {
+          if (window.jQuery) window.jQuery(document.body).trigger('wc_fragment_refresh').trigger('added_to_cart');
+          document.body.dispatchEvent(new CustomEvent('wc-blocks_added_to_cart', { bubbles: true }));
+          if (window.wp && window.wp.data && window.wp.data.dispatch) {
+            var cartStore = window.wp.data.dispatch('wc/store/cart');
+            if (cartStore && cartStore.invalidateResolutionForStore) cartStore.invalidateResolutionForStore();
+          }
+        } catch (e) { /* the page redraws on its next load either way */ }
+      }
+
+      // Only a WordPress page can have this cart, so only then is it worth asking (no stray request on other sites).
+      function detectCart() {
+        if (cartAvailable !== null) return Promise.resolve(cartAvailable);
+        var restLink = null;
+        try { restLink = document.querySelector('link[rel="https://api.w.org/"]'); } catch (e) { restLink = null; }
+        if (!restLink) { cartAvailable = false; return Promise.resolve(false); }
+        return cartFetch('/cart', 'GET').then(
+          function (result) { cartAvailable = Boolean(result.ok && result.data && result.data.items); return cartAvailable; },
+          function () { cartAvailable = false; return false; }
+        );
+      }
+
+      function cartOptions(value) {
+        if (!Array.isArray(value)) return [];
+        return value.slice(0, 5).map(function (o) { return { attribute: String(o && o.attribute || '').slice(0, 60), value: String(o && o.value || '').slice(0, 60) }; }).filter(function (o) { return o.attribute && o.value; });
+      }
+
+      // The cart line a request means: by its key when given, else by product (and size or colour when given).
+      function findCartLine(items, data) {
+        if (data.key) return items.filter(function (item) { return item.key === data.key; })[0] || null;
+        var wanted = cartOptions(data.options);
+        var candidates = items.filter(function (item) {
+          return Number(item.id) === Number(data.productId) || String(item.name).toLowerCase() === String(data.name || '').toLowerCase();
+        });
+        var exact = candidates.filter(function (item) {
+          return wanted.every(function (o) { return (item.variation || []).some(function (v) { return String(v.attribute).toLowerCase() === o.attribute.toLowerCase() && String(v.value).toLowerCase() === o.value.toLowerCase(); }); });
+        });
+        return exact[0] || candidates[0] || null;
+      }
+
+      function handleCartRequest(data) {
+        var reply = function (payload) { payload.type = 'elpino:cart-result'; payload.id = data.id; postToWidget(payload); };
+        var op = data.op;
+        var productId = Number(data.productId);
+        if (['get', 'add', 'remove', 'update'].indexOf(op) < 0 || (op !== 'get' && !data.key && !(productId > 0 && productId < 2147483647))) { reply({ ok: false, error: 'That cart request was not understood.' }); return; }
+        detectCart().then(function (available) {
+          if (!available) throw new Error('The cart is not available on this page.');
+          var quantity = Math.min(20, Math.max(1, parseInt(data.quantity, 10) || 1));
+          if (op === 'get') return cartFetch('/cart', 'GET');
+          if (op === 'add') {
+            var body = { id: productId, quantity: quantity };
+            var options = cartOptions(data.options);
+            if (options.length) body.variation = options;
+            return cartFetch('/cart/add-item', 'POST', body);
+          }
+          return cartFetch('/cart', 'GET').then(function (current) {
+            if (!current.ok) return current;
+            var line = findCartLine(current.data.items || [], data);
+            if (!line) return { ok: false, status: 404, data: { message: 'That item is not in your cart.' } };
+            if (op === 'remove') return cartFetch('/cart/remove-item', 'POST', { key: line.key });
+            return cartFetch('/cart/update-item', 'POST', { key: line.key, quantity: Math.min(20, Math.max(0, parseInt(data.quantity, 10) || 0)) });
+          });
+        }).then(function (result) {
+          if (!result.ok) { reply({ ok: false, error: (result.data && result.data.message) ? plainText(result.data.message) : 'The store would not change the cart.' }); return; }
+          if (op !== 'get') refreshStoreCart();
+          reply({ ok: true, cart: cartSummary(result.data) });
+        }).catch(function (error) {
+          reply({ ok: false, error: error && error.message ? String(error.message).slice(0, 200) : 'The cart is not available here.' });
+        });
+      }
+      // ---- cart bridge end
+
       window.addEventListener('message', function (event) {
         if (!event.data || !iframe || event.source !== iframe.contentWindow || event.origin !== ORIGIN) return;
         if (event.data.type === 'elpino:close' && open) setOpen(false);
+        // A cart change the shopper confirmed in the chat. The request id lets the chat match the answer to the button.
+        if (event.data.type === 'elpino:cart' && typeof event.data.id === 'string' && event.data.id.length <= 64) handleCartRequest(event.data);
         // The iframe asked to fill the screen or shrink back — it can't
         // resize itself since the loader owns the iframe's own CSS.
         if (event.data.type === 'elpino:maximize' && iframe) {
@@ -538,6 +682,8 @@ export function GET(request: Request) {
         // decides a reply deserves a sound.
         if (event.data.type === 'elpino:widget-ready') {
           postToWidget({ type: 'elpino:panel', open: open });
+          // Whether this page has a cart the chat can change, so product cards only offer "Add to cart" where it works.
+          detectCart().then(function (available) { postToWidget({ type: 'elpino:cart-capability', available: available, cartUrl: cartPageUrl('cart'), checkoutUrl: cartPageUrl('checkout') }); });
           // The chat just loaded (or reloaded): tell it where the visitor is.
           lastPageSent = '';
           sendPage();
