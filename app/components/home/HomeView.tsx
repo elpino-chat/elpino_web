@@ -354,7 +354,7 @@ function Hero({ t }: { t: T }) {
   const [widgetRef, widgetSeen] = useSeen<HTMLDivElement>();
   return (
     <section className="relative isolate -mt-16 -mb-8 overflow-hidden bg-white text-[#11120f]">
-      <div className="relative w-full px-12 pb-14 pt-44 lg:pt-52">
+      <div className="relative w-full px-5 pb-12 pt-56 sm:px-8 sm:pb-14 sm:pt-48 lg:px-12 lg:pt-52">
 
         <div className="text-left">
           <Rv delay={80}>
@@ -1134,7 +1134,7 @@ function LogoStepper() {
 
 function ToolsLine({ t }: { t: T }) {
   return (
-    <section className="bg-white px-12 py-16 sm:py-20">
+    <section className="bg-white px-6 sm:px-12 py-16 sm:py-20">
       <Rv><h2 className="mx-auto max-w-4xl text-center text-xl font-normal text-[#11120f]">{t("home.toolsLine.title", "Connects to the payment, store, CRM and ticketing tools you already use, in minutes, not sprints.")}</h2></Rv>
       <Rv delay={120}><LogoStepper /></Rv>
     </section>
@@ -1160,7 +1160,7 @@ function TimeSaved({ t }: { t: T }) {
   const freedTiles = Math.min(tiles, Math.round(saved / tileHours));
   const slider = "mt-2 h-1 w-full cursor-pointer appearance-none rounded-full bg-black/20 accent-black";
   return (
-    <section className="bg-white px-12 py-6 text-[#11120f]">
+    <section className="bg-white px-6 sm:px-12 py-6 text-[#11120f]">
       <div className="border-y border-black/30 py-16 sm:py-20">
         <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
           <div className="flex flex-col justify-between gap-12">
