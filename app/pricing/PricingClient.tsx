@@ -5,7 +5,7 @@ import { Fragment, useState } from 'react';
 import { ArrowUpRight, Check, Users, MessageSquare } from 'lucide-react';
 import { PricingPlanCards } from './PricingPlanCards';
 import { FairBillingSection } from './PricingCalculator';
-import { creditLabel, plans, getPlanPrice } from '../components/PricingCards';
+import { creditLabel, plans, getPlanPrice, FEATURE_LABELS, PLAN_FEATURES, type FeatureKey } from '../components/PricingCards';
 import { PricingFaqSection } from '../components/PricingFaqSection';
 import { useStoredLanguage } from '@/app/hooks/useStoredLanguage';
 import { useTranslation } from '@/app/hooks/useTranslation';
@@ -64,7 +64,32 @@ const VALUE_KEYS: Record<string, string> = {
 function buildComparisonCategories(t: T): FeatureCategory[] {
   const messages = t('pricing.values.messages', 'messages');
   const credit = t('pricing.values.credit', 'credit');
+  // What each plan unlocks, from the same table the server enforces (PLAN_FEATURES mirrors billing/plans.ts).
+  const featureDescriptions: Record<FeatureKey, string> = {
+    teams: 'Group teammates into teams; the AI hands each chat to the right one, and anyone can forward a chat.',
+    productCards: 'The AI searches your store and answers with picture cards: price, sale price and a link.',
+    tickets: 'File a follow-up ticket from a conversation, by hand or when the AI hands off.',
+    aiSummary: 'Summarize a long conversation in one click before you reply.',
+    voiceCalls: 'Call a visitor from the inbox, right inside their chat widget.',
+    ticketIntegrations: 'Send tickets straight to your Trello board or Asana project.',
+    crm: 'Save qualified leads and contacts to HubSpot automatically.',
+    storeActions: 'Let the AI issue refunds and cancel or re-address orders, within the limits you set.',
+    mcp: 'Connect your own systems so the AI can look things up in them.',
+  };
+  const perMonth = t('pricing.values.perMonth', '/ month');
+  const featureCategory: FeatureCategory = {
+    categoryName: t('pricing.comparison.categories.features.name', 'What each plan includes'),
+    rows: (Object.keys(FEATURE_LABELS) as FeatureKey[]).map((key) => ({
+      label: t(`pricing.comparison.categories.features.rows.${key}.label`, FEATURE_LABELS[key]),
+      description: t(`pricing.comparison.categories.features.rows.${key}.description`, featureDescriptions[key]),
+      values: plans.map((plan) => {
+        const access = PLAN_FEATURES[plan.id]?.[key] ?? false;
+        return access === true ? 'Yes' : access === false ? 'No' : `${access} ${perMonth}`;
+      }),
+    })),
+  };
   return [
+    featureCategory,
     {
       categoryName: t('pricing.comparison.categories.aiRules.name', 'What the AI is allowed to do'),
       rows: [

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Check, LoaderCircle, Pencil, Plus, Trash2, Users, X } from "lucide-react";
+import { PlanLock } from "@/app/components/dashboard/PlanLock";
 
 type Person = { id: string; email: string; name: string | null; avatarUrl: string | null };
 type Team = { id: string; name: string; description: string | null; members: Person[] };
@@ -84,9 +85,11 @@ export function TeamsSection({ members, isOwner, onChanged }: { members: Person[
           <p className="mt-0.5 max-w-2xl text-[12.5px] text-[var(--b-muted)]">Group people by what they handle, like Sales or Tech. The AI hands each chat to the team that fits and only alerts them, and anyone can forward a chat to a team.</p>
         </div>
         {isOwner && !creating && (
-          <button type="button" onClick={() => { setCreating(true); setError(null); }} className="inline-flex h-9 items-center gap-2 rounded-full bg-[var(--b-ink)] px-4 text-[13px] font-medium text-[var(--b-ink-text)] transition hover:opacity-85">
+          <PlanLock feature="teams">
+            <button type="button" onClick={() => { setCreating(true); setError(null); }} className="inline-flex h-9 items-center gap-2 rounded-full bg-[var(--b-ink)] px-4 text-[13px] font-medium text-[var(--b-ink-text)] transition hover:opacity-85">
             <Plus size={13} /> New team
           </button>
+          </PlanLock>
         )}
       </div>
 

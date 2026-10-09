@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import posthog from "posthog-js";
 import { AlertTriangle, Globe, KeyRound, LoaderCircle, Lock, Plus, RefreshCw, Server, Trash2, Unplug, X } from "lucide-react";
+import { PlanLock } from "@/app/components/dashboard/PlanLock";
 
 // Customer-connected MCP servers: add one, then choose exactly which of its
 // tools the AI agent may call. Nothing reaches the agent until it is switched
@@ -70,9 +71,11 @@ export function McpServers({ integrations, loading, disconnecting, onDisconnect,
           <h2 className="mcp-h text-[22px] font-semibold tracking-[-0.02em]">Custom MCP servers</h2>
           <p className="mcp-t mt-1 max-w-2xl text-[15px] leading-6">Let your AI query your own systems in real time. You choose which tools it may use.</p>
         </div>
+        <PlanLock feature="mcp">
         <button type="button" disabled={servers.length >= MAX_SERVERS} onClick={() => setAdding(true)} className="mcp-btn flex h-11 w-fit shrink-0 cursor-pointer items-center gap-2 rounded-full border px-5 text-[15px] font-medium transition disabled:cursor-not-allowed disabled:opacity-40">
           <Plus size={16} /> Add MCP server
         </button>
+        </PlanLock>
       </div>
 
       {loading ? (

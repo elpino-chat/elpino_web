@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { LoaderCircle, Lock, PackageX, RotateCcw } from "lucide-react";
+import { PlanLock } from "@/app/components/dashboard/PlanLock";
 
 type Permissions = {
   aiRefunds: { enabled: boolean; maxDays: number; limits: Record<string, number> };
@@ -95,7 +96,7 @@ export function AiPermissions({ integrations, notify }: { integrations: { provid
           <article className="rounded-xl border border-white/10 bg-white/[0.025] p-4">
             <div className="flex items-start justify-between gap-4">
               <div className="flex gap-3"><span className="flex size-9 items-center justify-center rounded-lg bg-white/5 text-white/60"><RotateCcw size={16} /></span><div><h3 className="text-sm font-medium text-white/90">Refunds</h3><p className="mt-1 text-xs leading-5 text-white/45">Refund a completed payment in full when your refund policy allows it. One per conversation.</p></div></div>
-              {saving === "refunds" ? <LoaderCircle size={16} className="animate-spin text-white/50" /> : <Toggle label="Allow AI refunds" checked={permissions.aiRefunds.enabled} disabled={locked} onChange={saveRefunds} />}
+              {saving === "refunds" ? <LoaderCircle size={16} className="animate-spin text-white/50" /> : <PlanLock feature="storeActions"><Toggle label="Allow AI refunds" checked={permissions.aiRefunds.enabled} disabled={locked} onChange={saveRefunds} /></PlanLock>}
             </div>
             <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-white/55">
               <span>Up to</span>
@@ -112,7 +113,7 @@ export function AiPermissions({ integrations, notify }: { integrations: { provid
           <article className="rounded-xl border border-white/10 bg-white/[0.025] p-4">
             <div className="flex items-start justify-between gap-4">
               <div className="flex gap-3"><span className="flex size-9 items-center justify-center rounded-lg bg-white/5 text-white/60"><PackageX size={16} /></span><div><h3 className="text-sm font-medium text-white/90">Order changes</h3><p className="mt-1 text-xs leading-5 text-white/45">Cancel an order that hasn&apos;t shipped, or fix its shipping address before it ships. The store is re-checked live before each change.</p></div></div>
-              {saving === "orders" ? <LoaderCircle size={16} className="animate-spin text-white/50" /> : <Toggle label="Allow AI order changes" checked={permissions.aiOrderActions.enabled} disabled={locked} onChange={(enabled) => void save("orders", { aiOrderActions: { enabled } })} />}
+              {saving === "orders" ? <LoaderCircle size={16} className="animate-spin text-white/50" /> : <PlanLock feature="storeActions"><Toggle label="Allow AI order changes" checked={permissions.aiOrderActions.enabled} disabled={locked} onChange={(enabled) => void save("orders", { aiOrderActions: { enabled } })} /></PlanLock>}
             </div>
           </article>
         )}

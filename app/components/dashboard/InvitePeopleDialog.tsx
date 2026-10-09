@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Check, ChevronDown, LoaderCircle, Mail, Plus, Users, X } from "lucide-react";
 import posthog from "posthog-js";
+import { PlanLock } from "@/app/components/dashboard/PlanLock";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -224,6 +225,7 @@ export function InvitePeopleDialog({
 
             <span className="dashboard-invite-label mt-5 block text-[12.5px] font-semibold text-white/90">Team <span className="font-normal text-white/50">(optional)</span></span>
             <div className="relative mt-2">
+              <PlanLock feature="teams" block>
               <button
                 type="button"
                 onClick={() => setTeamMenuOpen((value) => !value)}
@@ -242,6 +244,7 @@ export function InvitePeopleDialog({
                 </span>
                 <ChevronDown size={14} className={`shrink-0 text-white/50 transition-transform ${teamMenuOpen ? "rotate-180" : ""}`} />
               </button>
+              </PlanLock>
               {teamMenuOpen && (
                 <div className="mt-1.5 overflow-hidden rounded-xl border border-white/[0.18] bg-[#1d2023] p-1.5">
                   {teams.length === 0 && <p className="px-2.5 py-2 text-[12px] text-white/50">No teams yet. Create the first one below.</p>}

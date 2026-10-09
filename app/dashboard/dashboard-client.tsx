@@ -55,6 +55,7 @@ import { ReplyCards } from "@/app/widget/ReplyCards";
 import VoiceNotePlayer from "@/app/dashboard/components/VoiceNotePlayer";
 import TypingDots from "@/app/components/TypingDots";
 import { ForwardChatDialog } from "@/app/components/dashboard/ForwardChatDialog";
+import { PlanLock } from "@/app/components/dashboard/PlanLock";
 import {
   formatDevice,
   formatPlace,
@@ -1126,20 +1127,24 @@ function DashboardContent({ name }: { name: string }) {
             >
               <Search size={15} />
             </button>
-            <button type="button" onClick={openTicketDialog} aria-label="Create a ticket" title="Create a ticket" className="chat-icon-btn">
-              <TicketPlus size={15} />
-            </button>
-            {canCall && (
-              <button
-                type="button"
-                onClick={() => { setCalledName(customerName); void startCall(conversationId!); }}
-                disabled={callInProgress}
-                aria-label="Call the customer"
-                title={callInProgress ? "A call is in progress" : "Call the customer through their chat widget"}
-                className="chat-icon-btn disabled:opacity-50"
-              >
-                <Phone size={15} />
+            <PlanLock feature="tickets" tipBelow>
+              <button type="button" onClick={openTicketDialog} aria-label="Create a ticket" title="Create a ticket" className="chat-icon-btn">
+                <TicketPlus size={15} />
               </button>
+            </PlanLock>
+            {canCall && (
+              <PlanLock feature="voiceCalls" tipBelow>
+                <button
+                  type="button"
+                  onClick={() => { setCalledName(customerName); void startCall(conversationId!); }}
+                  disabled={callInProgress}
+                  aria-label="Call the customer"
+                  title={callInProgress ? "A call is in progress" : "Call the customer through their chat widget"}
+                  className="chat-icon-btn disabled:opacity-50"
+                >
+                  <Phone size={15} />
+                </button>
+              </PlanLock>
             )}
             {conversation?.email && (
               <a href={`mailto:${conversation.email}`} aria-label={`Email ${conversation.email}`} title={`Email ${conversation.email}`} className="chat-icon-btn chat-icon-wide">
@@ -1185,13 +1190,15 @@ function DashboardContent({ name }: { name: string }) {
                       <Lock size={15} /> Request private info
                     </button>
                     {!isResolved && (
-                      <button
-                        type="button"
-                        onClick={() => { setMoreOpen(false); setForwardOpen(true); }}
-                        className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left text-[13px] hover:bg-[var(--chat-customer-bg)]"
-                      >
-                        <Forward size={15} /> Forward chat
-                      </button>
+                      <PlanLock feature="teams" block>
+                        <button
+                          type="button"
+                          onClick={() => { setMoreOpen(false); setForwardOpen(true); }}
+                          className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left text-[13px] hover:bg-[var(--chat-customer-bg)]"
+                        >
+                          <Forward size={15} /> Forward chat
+                        </button>
+                      </PlanLock>
                     )}
                   </div>
                 </>
@@ -1566,15 +1573,17 @@ function DashboardContent({ name }: { name: string }) {
                 // Offered once a teammate has joined: until then the AI is handling the chat and the
                 // handoff notes above already say what happened.
                 <div className="mt-7 flex flex-col items-center gap-1.5">
-                  <button
-                    type="button"
-                    disabled={summarizing || messages.length === 0}
-                    onClick={() => void summarizeConversation()}
-                    className="flex items-center gap-2 rounded-full border border-[var(--chat-divider)] px-3 py-1.5 text-xs font-medium hover:bg-[var(--chat-customer-bg)] disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    {summarizing ? <LoaderCircle size={14} className="animate-spin" /> : <Sparkles size={14} />}
-                    {summarizing ? "Summarizing…" : "Summarize with AI"}
-                  </button>
+                  <PlanLock feature="aiSummary">
+                    <button
+                      type="button"
+                      disabled={summarizing || messages.length === 0}
+                      onClick={() => void summarizeConversation()}
+                      className="flex items-center gap-2 rounded-full border border-[var(--chat-divider)] px-3 py-1.5 text-xs font-medium hover:bg-[var(--chat-customer-bg)] disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {summarizing ? <LoaderCircle size={14} className="animate-spin" /> : <Sparkles size={14} />}
+                      {summarizing ? "Summarizing…" : "Summarize with AI"}
+                    </button>
+                  </PlanLock>
                   {summaryError && <p className="text-[11px] text-[#c0554f]">{summaryError}</p>}
                 </div>
               ) : null}
@@ -1674,15 +1683,17 @@ function DashboardContent({ name }: { name: string }) {
                 >
                   <Smile size={17} />
                 </button>
-                <button
-                  type="button"
-                  onClick={openTicketDialog}
-                  aria-label="Create a ticket about this conversation"
-                  title="Create a ticket"
-                  className="p-1.5 opacity-70 hover:opacity-100"
-                >
-                  <TicketPlus size={17} />
-                </button>
+                <PlanLock feature="tickets">
+                  <button
+                    type="button"
+                    onClick={openTicketDialog}
+                    aria-label="Create a ticket about this conversation"
+                    title="Create a ticket"
+                    className="p-1.5 opacity-70 hover:opacity-100"
+                  >
+                    <TicketPlus size={17} />
+                  </button>
+                </PlanLock>
                 <button
                   type="button"
                   onClick={() => setSecureOpen(true)}
@@ -1895,15 +1906,17 @@ function DashboardContent({ name }: { name: string }) {
               ) : (
                 <>
                   <p className="text-[var(--chat-muted)]">No summary yet.</p>
-                  <button
-                    type="button"
-                    disabled={summarizing || messages.length === 0}
-                    onClick={() => void summarizeConversation()}
-                    className="mt-2 flex items-center gap-2 rounded-full border border-[var(--chat-divider)] px-3 py-1.5 text-xs font-medium hover:bg-[var(--chat-surface)] disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    {summarizing ? <LoaderCircle size={13} className="animate-spin" /> : <Sparkles size={13} />}
-                    {summarizing ? "Summarizing…" : "Summarize with AI"}
-                  </button>
+                  <PlanLock feature="aiSummary">
+                    <button
+                      type="button"
+                      disabled={summarizing || messages.length === 0}
+                      onClick={() => void summarizeConversation()}
+                      className="mt-2 flex items-center gap-2 rounded-full border border-[var(--chat-divider)] px-3 py-1.5 text-xs font-medium hover:bg-[var(--chat-surface)] disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {summarizing ? <LoaderCircle size={13} className="animate-spin" /> : <Sparkles size={13} />}
+                      {summarizing ? "Summarizing…" : "Summarize with AI"}
+                    </button>
+                  </PlanLock>
                   {summaryError && <p className="mt-1.5 text-[11px] text-[#c0554f]">{summaryError}</p>}
                 </>
               )}

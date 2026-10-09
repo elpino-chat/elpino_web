@@ -85,7 +85,7 @@ export const plans: Plan[] = [
       'Unlimited seats',
       '20 MB knowledge base',
       'Website chat widget',
-      'Shared inbox with handoff',
+      'Shared inbox with live chat',
     ],
   },
   {
@@ -103,10 +103,12 @@ export const plans: Plan[] = [
     aiCreditGrantUsdCents: 700,
     features: [
       '$7 AI credit every month',
-      'Unlimited seats',
+      'Text support: AI and live chat',
+      'Teams, smart routing and forwarding',
+      'Product cards from your store',
+      '50 tickets and 50 AI summaries a month',
+      'No "Powered by Elpino" branding',
       '200 MB knowledge base',
-      'Top up credit any time',
-      'Visitor analytics',
     ],
   },
   {
@@ -126,10 +128,12 @@ export const plans: Plan[] = [
     highlighted: true,
     features: [
       '$40 AI credit every month',
-      'Unlimited seats',
+      'Everything in Starter, uncapped',
+      'Voice calls with visitors',
+      'Trello, Asana and HubSpot',
+      'AI refunds and order changes',
+      'Connect your own systems (MCP)',
       '1 GB knowledge base',
-      'Top up credit any time',
-      'Full AI audit trail',
       'Priority support',
     ],
   },
@@ -149,13 +153,34 @@ export const plans: Plan[] = [
     aiCreditGrantUsdCents: 24000,
     features: [
       '$240 AI credit every month',
-      'Unlimited seats',
+      'Everything in Growth',
       '5 GB knowledge base',
       'Top up credit any time',
       'Integrations & API access',
     ],
   },
 ];
+
+/** Mirrors FEATURES and each plan's `features` in apps/workspace-service/src/billing/plans.ts (the server enforces them). */
+export type FeatureKey = 'teams' | 'productCards' | 'tickets' | 'aiSummary' | 'voiceCalls' | 'ticketIntegrations' | 'crm' | 'storeActions' | 'mcp';
+export const FEATURE_LABELS: Record<FeatureKey, string> = {
+  teams: 'Teams, routing and forwarding',
+  productCards: 'Product cards from your store',
+  tickets: 'Tickets',
+  aiSummary: 'AI conversation summary',
+  voiceCalls: 'Voice calls',
+  ticketIntegrations: 'Trello and Asana tickets',
+  crm: 'CRM (HubSpot)',
+  storeActions: 'AI refunds and order changes',
+  mcp: 'Connected systems (MCP)',
+};
+/** true: included; a number: included up to that many a month; false: not included. */
+export const PLAN_FEATURES: Record<string, Record<FeatureKey, boolean | number>> = {
+  free: { teams: false, productCards: false, tickets: false, aiSummary: false, voiceCalls: false, ticketIntegrations: false, crm: false, storeActions: false, mcp: false },
+  starter: { teams: true, productCards: true, tickets: 50, aiSummary: 50, voiceCalls: false, ticketIntegrations: false, crm: false, storeActions: false, mcp: false },
+  growth: { teams: true, productCards: true, tickets: true, aiSummary: true, voiceCalls: true, ticketIntegrations: true, crm: true, storeActions: true, mcp: true },
+  scale: { teams: true, productCards: true, tickets: true, aiSummary: true, voiceCalls: true, ticketIntegrations: true, crm: true, storeActions: true, mcp: true },
+};
 
 function CheckIcon({ className = 'text-[#D9BEF4]' }: { className?: string }) {
   return (
