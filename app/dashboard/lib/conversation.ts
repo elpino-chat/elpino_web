@@ -1,3 +1,4 @@
+import type { ReplyCard } from "@/app/widget/ReplyCards";
 // Shared between the Team Inbox and AI Assist views under /dashboard/inbox.
 // Both render the same conversation from the same API, so the grouping rules,
 // the visitor formatting, and the message shape have to agree — when they
@@ -15,6 +16,8 @@ export type Message = {
   attachmentUrl?: string | null;
   attachmentType?: string | null;
   attachmentName?: string | null;
+  // Products, courses or an order the AI showed the visitor as cards under its reply (see app/widget/ReplyCards).
+  cards?: ReplyCard[] | null;
   createdAt: string;
 };
 

@@ -1,15 +1,6 @@
 import { callGateway } from "@/app/api/auth/_lib/gateway";
+import { ownersOnly, selectedWorkspace } from "@/app/api/teams/_lib/workspace";
 import { requireSession } from "@/app/api/onboarding/_lib/require-user";
-
-type Organization = { id: string; name: string };
-
-async function selectedWorkspace(email: string) {
-  const result = await callGateway<{ organizations?: Organization[]; selectedOrganizationId?: string }>(
-    `/api/auth/organizations?email=${encodeURIComponent(email)}`,
-  );
-  const organizations = result.organizations ?? [];
-  return organizations.find((item) => item.id === result.selectedOrganizationId) ?? organizations[0] ?? null;
-}
 
 export async function GET() {
   const session = await requireSession();
@@ -27,6 +18,7 @@ export async function POST(request: Request) {
   if (!session) return Response.json({ message: "Unauthenticated" }, { status: 401 });
   const workspace = await selectedWorkspace(session.email);
   if (!workspace) return Response.json({ message: "Create a workspace first." }, { status: 400 });
+  if (workspace.role !== "owner") return ownersOnly();
 
   const body = (await request.json().catch(() => ({}))) as { name?: string; description?: string; memberUserIds?: string[] };
   const name = body.name?.trim();

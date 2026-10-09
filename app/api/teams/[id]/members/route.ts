@@ -1,21 +1,13 @@
 import { callGateway } from "@/app/api/auth/_lib/gateway";
+import { ownersOnly, selectedWorkspace } from "@/app/api/teams/_lib/workspace";
 import { requireSession } from "@/app/api/onboarding/_lib/require-user";
-
-type Organization = { id: string; name: string };
-
-async function selectedWorkspace(email: string) {
-  const result = await callGateway<{ organizations?: Organization[]; selectedOrganizationId?: string }>(
-    `/api/auth/organizations?email=${encodeURIComponent(email)}`,
-  );
-  const organizations = result.organizations ?? [];
-  return organizations.find((item) => item.id === result.selectedOrganizationId) ?? organizations[0] ?? null;
-}
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await requireSession();
   if (!session) return Response.json({ message: "Unauthenticated" }, { status: 401 });
   const workspace = await selectedWorkspace(session.email);
   if (!workspace) return Response.json({ message: "Workspace not found." }, { status: 400 });
+  if (workspace.role !== "owner") return ownersOnly();
 
   const { id } = await params;
   const body = (await request.json().catch(() => ({}))) as { userId?: string };
@@ -34,6 +26,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
   if (!session) return Response.json({ message: "Unauthenticated" }, { status: 401 });
   const workspace = await selectedWorkspace(session.email);
   if (!workspace) return Response.json({ message: "Workspace not found." }, { status: 400 });
+  if (workspace.role !== "owner") return ownersOnly();
 
   const { id } = await params;
   const userId = new URL(request.url).searchParams.get("userId");

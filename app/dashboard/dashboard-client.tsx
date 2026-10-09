@@ -15,6 +15,7 @@ import {
   ChevronRight,
   ChevronUp,
   Eye,
+  Forward,
   Globe,
   Globe2,
   Inbox,
@@ -42,6 +43,7 @@ import {
   Sparkles,
   TicketPlus,
   UserRound,
+  Users,
   X,
 } from "lucide-react";
 import { SUPPORTED_LANGUAGES } from "@/app/dashboard/settings/languages";
@@ -49,8 +51,10 @@ import { inboxListHref, parseInboxView, shortAge } from "@/app/components/dashbo
 import { useAgentCall } from "@/app/dashboard/lib/use-agent-call";
 import { formatTalkTime } from "@/lib/webrtc-call";
 import MessageMarkdown from "@/app/components/MessageMarkdown";
+import { ReplyCards } from "@/app/widget/ReplyCards";
 import VoiceNotePlayer from "@/app/dashboard/components/VoiceNotePlayer";
 import TypingDots from "@/app/components/TypingDots";
+import { ForwardChatDialog } from "@/app/components/dashboard/ForwardChatDialog";
 import {
   formatDevice,
   formatPlace,
@@ -72,6 +76,8 @@ type ConversationSummary = {
   escalationReason?: string | null;
   escalationSummary?: string | null;
   assignedUserId?: string | null;
+  /** The team (Sales, Tech…) the AI's handoff or a forward routed it to. */
+  teamName?: string | null;
   /** The visitor left (Leave Chat, or 24 hours quiet) and can't see this thread any more. */
   visitorLeft?: boolean;
   /** A reply can still reach them by email: they have a verified address. */
@@ -399,6 +405,7 @@ function DashboardContent({ name }: { name: string }) {
   // sees "<name> left the chat". Worth one confirmation, since the button
   // sits next to Resolve and the two do very different things.
   const [confirmLeave, setConfirmLeave] = useState(false);
+  const [forwardOpen, setForwardOpen] = useState(false);
   const [summarizing, setSummarizing] = useState(false);
   const [summary, setSummary] = useState<string | null>(null);
   const [summaryError, setSummaryError] = useState<string | null>(null);
@@ -1068,6 +1075,11 @@ function DashboardContent({ name }: { name: string }) {
                   <ShieldCheck size={11} /> Verified
                 </span>
               )}
+              {conversation?.teamName && (
+                <span title={`Routed to the ${conversation.teamName} team`} className="flex shrink-0 items-center gap-1 rounded-full bg-[var(--chat-customer-bg)] px-2 py-0.5 text-[10px] font-semibold text-[var(--chat-muted)]">
+                  <Users size={11} /> {conversation.teamName}
+                </span>
+              )}
             </div>
           </div>
           <div className="ml-auto flex items-center gap-1.5">
@@ -1172,6 +1184,15 @@ function DashboardContent({ name }: { name: string }) {
                     >
                       <Lock size={15} /> Request private info
                     </button>
+                    {!isResolved && (
+                      <button
+                        type="button"
+                        onClick={() => { setMoreOpen(false); setForwardOpen(true); }}
+                        className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left text-[13px] hover:bg-[var(--chat-customer-bg)]"
+                      >
+                        <Forward size={15} /> Forward chat
+                      </button>
+                    )}
                   </div>
                 </>
               )}
@@ -1234,6 +1255,15 @@ function DashboardContent({ name }: { name: string }) {
               </div>
             )}
             <SecureRequestDialog open={secureOpen} onClose={() => setSecureOpen(false)} onCreate={createSecureRequest} />
+            {forwardOpen && <ForwardChatDialog
+              open
+              conversationId={conversationId}
+              myAccountId={myAccountId}
+              onClose={() => setForwardOpen(false)}
+              onForwarded={({ assignedUserId, teamName }) =>
+                setConversation((current) => (current ? { ...current, assignedUserId, handledBy: "human", teamName: teamName ?? current.teamName } : current))
+              }
+            />}
             {callPanel}
             <TicketDialog
               open={ticketDialogOpen}
@@ -1453,6 +1483,12 @@ function DashboardContent({ name }: { name: string }) {
                                     )}
                                   </div>
                                 )}
+                                {/* The same cards the visitor saw under the AI's reply, so the team reads the answer as it was given. */}
+                                {message.cards?.length ? (
+                                  <div className={`max-w-[400px] text-left ${isTeam ? "ml-auto" : ""}`}>
+                                    <ReplyCards cards={message.cards} />
+                                  </div>
+                                ) : null}
                               </div>
                             ))}
                           </div>

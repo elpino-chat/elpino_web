@@ -57,7 +57,7 @@ export function GET(request: Request) {
     var ORIGIN = ${JSON.stringify(origin)};
     var TAG_ORIGIN = ${JSON.stringify(tagOrigin)};
     var WS_ORIGIN = ${JSON.stringify(gatewayWsOrigin())};
-    var ACCENT = '#428ce5';
+    var ACCENT = '#18181b';
     var current = document.currentScript;
     var key = current && current.dataset.siteKey;
     if (!key) return;
@@ -324,7 +324,7 @@ export function GET(request: Request) {
     var PANEL_STYLE = 'position:fixed;bottom:calc(88px + var(--elpino-bottom-offset,0px));right:20px;width:420px;max-width:calc(100vw - 16px);height:640px;max-height:calc(100vh - 104px - var(--elpino-bottom-offset,0px));border:none;border-radius:26px;box-shadow:0 18px 48px rgba(15,23,42,0.24);z-index:2147483000;background:#f7f7f8;';
     // A reply preview is rendered by the cross-origin widget iframe itself.
     // The host page can resize the frame but never receives the reply text.
-    var PREVIEW_STYLE = 'position:fixed;bottom:calc(88px + var(--elpino-bottom-offset,0px));right:20px;width:340px;max-width:calc(100vw - 32px);height:132px;border:none;border-radius:18px;box-shadow:0 16px 40px rgba(15,23,42,0.25);z-index:2147483000;background:transparent;';
+    var PREVIEW_STYLE = 'position:fixed;bottom:calc(88px + var(--elpino-bottom-offset,0px));right:20px;width:340px;max-width:calc(100vw - 32px);height:132px;border:none;z-index:2147483000;background:transparent;';
     var FULLSCREEN_STYLE = 'position:fixed;inset:0;width:100%;height:100%;max-width:100%;max-height:100%;border:none;border-radius:0;box-shadow:none;z-index:2147483000;background:#f7f7f8;';
     var MOBILE_BREAKPOINT = 640;
     function isMobile() {
@@ -457,14 +457,14 @@ export function GET(request: Request) {
       function showGreeting() {
         if (!pathAllowed(config.urlRules) || open || greeting) return;
         greeting = document.createElement('div');
-        greeting.style.cssText = 'position:fixed;bottom:calc(88px + var(--elpino-bottom-offset,0px));right:20px;width:300px;max-width:calc(100vw - 32px);z-index:2147483000;cursor:pointer;font-family:system-ui,-apple-system,sans-serif;display:flex;flex-direction:column;align-items:flex-end;gap:6px;';
+        greeting.style.cssText = 'position:fixed;bottom:calc(88px + var(--elpino-bottom-offset,0px));right:20px;width:fit-content;min-width:180px;max-width:min(300px,calc(100vw - 32px));z-index:2147483000;cursor:pointer;font-family:system-ui,-apple-system,sans-serif;';
 
         // One popup, however the greeting is stored: workspaces saved with several lines get them joined.
         // The message leads, in larger text; the assistant's name and how long ago it "arrived" sit underneath.
         var botName = (config.botName && String(config.botName).trim()) || 'Elpino AI';
         var arrivedAt = greetingArrivedAt();
         var bubbles =
-          '<div style="background:#111214;color:#fff;border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:14px 16px 12px;box-shadow:0 16px 40px rgba(15,23,42,0.4);width:fit-content;min-width:180px;max-width:100%;">' +
+          '<div style="background:#111214;color:#fff;border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:14px 36px 12px 16px;box-shadow:0 16px 40px rgba(15,23,42,0.4);">' +
             '<div style="font-size:15px;line-height:1.5;font-weight:400;color:#fff;">' + escapeHtml(greetingLines.join(' ')) + '</div>' +
             '<div style="display:flex;align-items:baseline;gap:6px;margin-top:8px;font-size:12.5px;line-height:1.3;font-weight:400;color:rgba(255,255,255,0.6);">' +
               '<span style="color:rgba(255,255,255,0.85);">' + escapeHtml(botName) + '</span>' +
@@ -473,23 +473,24 @@ export function GET(request: Request) {
             '</div>' +
           '</div>';
         greeting.innerHTML =
-          '<button aria-label="Dismiss" style="align-self:flex-end;background:rgba(23,25,27,0.9);border-radius:9999px;border:none;color:rgba(255,255,255,.6);cursor:pointer;padding:4px;line-height:0;box-shadow:0 4px 12px rgba(15,23,42,0.24);">' + closeIcon(12) + '</button>' +
-          bubbles;
+          bubbles +
+          // Out of the layout (absolute), so the popup's box is only the bubble with the text: no empty strip around it covers the page.
+          '<button aria-label="Dismiss" style="position:absolute;top:8px;right:8px;background:rgba(255,255,255,0.1);border-radius:9999px;border:none;color:rgba(255,255,255,.6);cursor:pointer;padding:4px;line-height:0;">' + closeIcon(12) + '</button>';
         greeting.querySelector('button').onclick = function (event) {
           event.stopPropagation();
           dismissGreeting();
         };
         greeting.onclick = function () { dismissGreeting(); if (!open) toggle(true); };
         widgetRoot.appendChild(greeting);
-        // "Just now" ages while the popup stays up.
+        // The age label keeps counting while the popup stays up: "Just now", "10s ago", "1 min ago".
         greetingTimer = setInterval(function () {
           var label = greeting && greeting.querySelector('[data-elpino-ago]');
           if (label) label.textContent = timeAgo(arrivedAt);
-        }, 30000);
+        }, 5000);
       }
 
       // When this visitor was first greeted in this browser tab, so the label keeps counting up as
-      // they move between pages ("Just now", then "3 minutes ago") instead of restarting every load.
+      // they move between pages ("Just now", then "3 min ago") instead of restarting every load.
       function greetingArrivedAt() {
         var now = Date.now();
         try {
@@ -502,13 +503,13 @@ export function GET(request: Request) {
 
       function timeAgo(then) {
         var seconds = Math.max(0, Math.floor((Date.now() - then) / 1000));
-        if (seconds < 60) return 'Just now';
+        if (seconds < 5) return 'Just now';
+        if (seconds < 60) return seconds + 's ago';
         var minutes = Math.floor(seconds / 60);
-        if (minutes < 60) return minutes + (minutes === 1 ? ' minute ago' : ' minutes ago');
+        if (minutes < 60) return minutes + ' min ago';
         var hours = Math.floor(minutes / 60);
-        if (hours < 24) return hours + (hours === 1 ? ' hour ago' : ' hours ago');
-        var days = Math.floor(hours / 24);
-        return days + (days === 1 ? ' day ago' : ' days ago');
+        if (hours < 24) return hours + ' hr ago';
+        return Math.floor(hours / 24) + 'd ago';
       }
 
       function dismissGreeting() {
@@ -549,6 +550,10 @@ export function GET(request: Request) {
             iframe.style.cssText = PREVIEW_STYLE;
             iframe.style.display = 'block';
           }
+        }
+        // The reply popup is only as tall as its content, so no empty part of the frame covers the page.
+        if (event.data.type === 'elpino:preview-size' && iframe && !open && typeof event.data.height === 'number' && event.data.height > 0) {
+          iframe.style.height = Math.min(Math.ceil(event.data.height), 240) + 'px';
         }
         if (event.data.type === 'elpino:open' && !open) setOpen(true, false);
         if (event.data.type === 'elpino:preview-dismiss' && iframe && !open) {
@@ -610,7 +615,7 @@ export function GET(request: Request) {
         iframe = document.createElement('iframe');
         iframe.title = 'Chat';
         var view = savedView();
-        iframe.src = ORIGIN + '/widget?key=' + encodeURIComponent(key) + '&host=' + encodeURIComponent(location.hostname)
+        iframe.src = ORIGIN + '/widget?key=' + encodeURIComponent(key) + '&host=' + encodeURIComponent(location.hostname) + siteIconParam()
           + (view ? '&tab=' + view.tab + '&view=' + view.chatView + (view.conversationId ? '&conversation=' + view.conversationId : '') : '');
         iframe.setAttribute('allow', 'microphone');
         iframe.style.cssText = panelStyle(false);
@@ -629,7 +634,11 @@ export function GET(request: Request) {
         if (next === open) return;
         open = next;
         postToWidget({ type: 'elpino:panel', open: open });
-        button.innerHTML = open ? closeIcon(22) : launcherIcon();
+        // Open: a white button with a chevron that tucks the chat away. Closed: the blue launcher.
+        button.innerHTML = open ? collapseIcon(26) : launcherIcon();
+        button.style.background = open ? '#fff' : ACCENT;
+        button.style.boxShadow = open ? '0 10px 28px rgba(15,23,42,0.28), 0 0 0 1px rgba(15,23,42,0.08)' : '0 10px 28px rgba(15,23,42,0.28)';
+        button.setAttribute('aria-label', open ? 'Close chat' : 'Open chat');
         if (open) {
           dismissGreeting();
           clearUnread();
@@ -640,7 +649,7 @@ export function GET(request: Request) {
             // A deliberate "new chat" starts fresh; otherwise pick up where
             // the visitor was on the previous page.
             var view = startNew ? null : savedView();
-            iframe.src = ORIGIN + '/widget?key=' + encodeURIComponent(key) + '&host=' + encodeURIComponent(location.hostname) + (startNew ? '&new=1' : '')
+            iframe.src = ORIGIN + '/widget?key=' + encodeURIComponent(key) + '&host=' + encodeURIComponent(location.hostname) + siteIconParam() + (startNew ? '&new=1' : '')
               + (view ? '&tab=' + view.tab + '&view=' + view.chatView + (view.conversationId ? '&conversation=' + view.conversationId : '') : '');
             iframe.setAttribute('allow', 'microphone');
             iframe.style.cssText = panelStyle(false);
@@ -682,6 +691,18 @@ export function GET(request: Request) {
         }
       }
 
+      // The page's own icon, so the widget can show the site's mark instead of a letter. Read here because only
+      // this script sees the page: the widget's frame cannot, and guessing /favicon.ico misses ports and http.
+      // The larger Apple touch icon first (it stays sharp), then the regular icon, then the conventional path.
+      function siteIconParam() {
+        try {
+          var link = document.querySelector('link[rel="apple-touch-icon"], link[rel="apple-touch-icon-precomposed"]')
+            || document.querySelector('link[rel~="icon"]');
+          var href = link && link.href ? link.href : location.origin + '/favicon.ico';
+          return /^https?:/i.test(href) && href.length <= 1000 ? '&icon=' + encodeURIComponent(href) : '';
+        } catch (e) { return ''; }
+      }
+
       function escapeHtml(text) {
         var div = document.createElement('div');
         div.textContent = text;
@@ -696,6 +717,9 @@ export function GET(request: Request) {
           return '<img src="' + botAvatarUrl + '" alt="" style="width:100%;height:100%;object-fit:cover;" />';
         }
         return chatIcon();
+      }
+      function collapseIcon(size) {
+        return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" stroke="#18181b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
       }
       function closeIcon(size) {
         return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';

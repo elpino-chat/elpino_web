@@ -19,6 +19,7 @@ import { Switch } from "@/components/ui/switch";
 import { Bone } from "@/app/components/dashboard/DashboardSkeleton";
 import { readDashboardTheme, saveDashboardTheme, type DashboardAppearance } from "@/app/components/dashboard/DashboardThemeProvider";
 import { InvitePeopleDialog } from "@/app/components/dashboard/InvitePeopleDialog";
+import { TeamsSection } from "@/app/dashboard/settings/TeamsSection";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import type { PreChatField } from "@/app/dashboard/components/prechat-form-editor";
 import { ContactCollectionSwitch } from "@/app/dashboard/components/contact-collection-switch";
@@ -795,7 +796,7 @@ type CreditsResponse = {
   isOwner?: boolean;
 };
 
-type SeatMember = { id: string; email: string; name: string | null; avatarUrl: string | null; role?: string; presenceStatus?: string; joinedAt?: string };
+type SeatMember = { id: string; email: string; name: string | null; avatarUrl: string | null; role?: string; presenceStatus?: string; joinedAt?: string; teams?: { id: string; name: string }[] };
 
 function memberInitial(member: { name: string | null; email: string }) {
   return (member.name?.trim().charAt(0) || member.email.charAt(0)).toUpperCase();
@@ -1124,6 +1125,7 @@ function TeamsSettingsPage() {
                           ) : (
                             <span className="text-[var(--b-muted)]">Member</span>
                           )}
+                          {member.teams?.length ? <span className="ml-1.5 text-[12px] text-[var(--b-muted)]" title="Teams">· {member.teams.map((team) => team.name).join(", ")}</span> : null}
                         </span>
                         <span className={`${cellClass} text-[var(--b-muted)]`}>{member.joinedAt ? new Date(member.joinedAt).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" }) : "—"}</span>
                         <span className="flex items-center gap-1.5 text-[12.5px]"><span className={`h-2 w-2 rounded-full ${status.dot}`} />{status.label}</span>
@@ -1201,6 +1203,8 @@ function TeamsSettingsPage() {
           </div>
         </div>
       </section>
+
+      <TeamsSection members={members} isOwner={isOwner} onChanged={() => void load()} />
 
       <InvitePeopleDialog open={inviteOpen} onClose={() => setInviteOpen(false)} onInvited={() => void load()} />
       <UpgradeDialog open={upgradeOpen} onClose={() => { setUpgradeOpen(false); void load(); }} />

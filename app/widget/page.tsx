@@ -2,9 +2,13 @@
 
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { ArrowUp, ChevronDown, ChevronLeft, ChevronRight, CircleHelp, ExternalLink, File as FileIcon, LayoutGrid, Maximize2, MessageCircle, MessageSquarePlus, Minimize2, House, MessageSquare, LogOut, MoreHorizontal, Paperclip, Plus, Search, SendHorizontal, Smile, Volume2, VolumeX, X } from "lucide-react";
+import { ArrowUp, ChevronDown, ChevronLeft, ChevronRight, CircleHelp, Clock, Minus, ExternalLink, File as FileIcon, LayoutGrid, Maximize2, MessageCircle, MessageSquarePlus, Minimize2, House, MessageSquare, LogOut, MoreHorizontal, Paperclip, Plus, Search, SendHorizontal, Smile, Volume2, VolumeX, X } from "lucide-react";
 import ArticleMarkdown, { prepareArticle } from "@/app/components/ArticleMarkdown";
 import MessageMarkdown from "@/app/components/MessageMarkdown";
+import { plainPreview } from "@/lib/plain-preview";
+import { popupAgo, ReplyPopup, STACK_SIZE } from "@/app/widget/ReplyPopup";
+import { JoinedNotice } from "@/app/widget/JoinedNotice";
+import { ReplyCards, splitAtCards, type ReplyCard } from "@/app/widget/ReplyCards";
 import TypingDots from "@/app/components/TypingDots";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { playMessageChime, primeOnFirstInteraction } from "@/lib/notification-sound";
@@ -20,6 +24,10 @@ type WidgetMessage = {
   attachmentUrl?: string | null;
   attachmentType?: string | null;
   attachmentName?: string | null;
+  // Products the AI recommended or the order it looked up, shown under its text (see ReplyCards).
+  cards?: ReplyCard[] | null;
+  // How many paragraphs of the text come before the cards; the rest follows them.
+  cardsAt?: number | null;
   createdAt: string;
 };
 /** An article in the Help tab. `id` identifies the whole article, not one stored chunk of it. */
@@ -53,15 +61,17 @@ type PreChatField = {
   multiple?: boolean;
 };
 
-const ACCENT = "#428ce5";
+// The widget has no colour of its own: its buttons, the visitor's bubbles and its launcher are the same near-black as the popups.
+const ACCENT = "#18181b";
 // Ink: the widget's primary text/icon color on its light surface. A few
 // interactive accents (the pre-chat radio dot) key off ACCENT instead so
 // they read as "selected", not just "text".
 // The widget is light: these are its palette. Anything colour-specific added to this page belongs here or in a token like these.
+// (The unread-reply popup in ReplyPopup.tsx is dark on purpose, to match the greeting popup.)
 const INK = "#18181b";
 const BG = "#f7f7f8";
 const SURFACE = "#ffffff";
-// Neutral chip background — the customer's own reply bubble uses ACCENT
+// Neutral bubble background — the visitor's own messages use ACCENT
 // instead; this is for everything else that needs a soft fill (attachment
 // preview, disabled composer state, the typing indicator).
 const BUBBLE = "#eef1f4";
@@ -71,6 +81,9 @@ const ICON_MUTED = "rgba(24,24,27,.62)";
 // The message box toolbar icons (attach, emoji, GIF).
 const COMPOSER_ICON = "rgba(24,24,27,0.72)";
 const POLL_MS = 2000;
+// Elpino's own mark and wordmark, served by this app: the Free plan's AI avatar and the "Powered by" footer.
+const ELPINO_MARK = "/elpino-mark.png";
+const ELPINO_WORDMARK = "/elpino.png";
 // "Just now", "5 minutes ago", "1 hour ago" — same wording as the launcher popup in app/tag.js/route.ts.
 function timeAgo(then: number, now: number): string {
   const seconds = Math.max(0, Math.floor((now - then) / 1000));
@@ -214,12 +227,14 @@ function collectionOf(article: { sourceUrl: string | null }): string {
 
 // The website this widget is on, top-left of the home screen (the AI has its own avatar next to the team's): the
 // workspace's logo if it set one, else the site's own favicon, else the first letter of its domain.
-function SiteMark({ logoUrl, hostname }: { logoUrl: string | null; hostname: string }) {
+// The site's mark: the logo set in Elpino, else the page's own icon (handed over by the tag script), else a guess
+// at /favicon.ico, and only then the first letter of the domain.
+function SiteMark({ logoUrl, iconUrl, hostname }: { logoUrl: string | null; iconUrl: string | null; hostname: string }) {
   const [failed, setFailed] = useState(false);
-  const source = logoUrl || (hostname ? `https://${hostname}/favicon.ico` : "");
+  const source = logoUrl || iconUrl || (hostname ? `https://${hostname}/favicon.ico` : "");
   const letter = (hostname.replace(/^www\./, "").charAt(0) || "?").toUpperCase();
   return (
-    <span className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl border-2 border-[#11120f] bg-white text-[15px] font-bold text-[#11120f]">
+    <span className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-[10px] bg-white text-[15px] font-bold text-[#11120f] shadow-sm">
       {source && !failed ? <img src={source} alt="" onError={() => setFailed(true)} className="h-full w-full object-contain p-1" /> : letter}
     </span>
   );
@@ -229,6 +244,11 @@ function WidgetContent() {
   const searchParams = useSearchParams();
   const key = searchParams.get("key")?.trim() ?? "";
   const hostname = searchParams.get("host")?.trim() ?? "";
+  // The host page's icon, from the tag script. Only a plain web address is used.
+  const siteIconUrl = (() => {
+    const raw = searchParams.get("icon")?.trim() ?? "";
+    try { const url = new URL(raw); return url.protocol === "https:" || url.protocol === "http:" ? url.toString() : null; } catch { return null; }
+  })();
   const startFresh = searchParams.get("new") === "1";
   // Where the visitor was on the previous page, handed over by the loader
   // (see VIEW_KEY in tag.js), so moving around the site doesn't drop them
@@ -255,6 +275,9 @@ function WidgetContent() {
   const [sitePageVersion, setSitePageVersion] = useState(0);
   const [botName, setBotName] = useState("Elpino Support");
   const [botAvatarUrl, setBotAvatarUrl] = useState<string | null>(null);
+  // The AI's face when it has no photo of its own: the site's logo or icon, so it reads as the shop's assistant
+  // rather than a letter. A mark that fails to load falls back to the letter.
+  const [aiMarkFailed, setAiMarkFailed] = useState(false);
   const [greetingLines, setGreetingLines] = useState<string[]>(["Hi there 👋", "How can I help you today?"]);
   // Questions other visitors like this one keep asking, offered as tap-to-send chips in a new chat.
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -273,7 +296,29 @@ function WidgetContent() {
   const [visitorToken, setVisitorToken] = useState("");
   const [conversationId, setConversationId] = useState("");
   const [messages, setMessages] = useState<WidgetMessage[]>([]);
-  const [replyPreview, setReplyPreview] = useState<WidgetMessage | null>(null);
+  // Unread replies while the panel is closed, oldest first. The newest shows in front and the earlier ones
+  // peek out behind it, like stacked phone notifications.
+  const [replyPreviews, setReplyPreviews] = useState<WidgetMessage[]>([]);
+  // Ticks while the popup is up so its "10s ago" label keeps counting.
+  const [popupClock, setPopupClock] = useState(() => Date.now());
+  useEffect(() => {
+    if (!replyPreviews.length) return;
+    setPopupClock(Date.now());
+    const timer = window.setInterval(() => setPopupClock(Date.now()), 5000);
+    return () => window.clearInterval(timer);
+  }, [replyPreviews.length]);
+  // The popup is its own little iframe on the host page, so any empty part of it would swallow clicks meant for
+  // the site underneath. It reports its real height and the tag script sizes the frame to match.
+  useEffect(() => {
+    if (!replyPreviews.length) return;
+    const element = document.getElementById("elpino-reply-preview");
+    if (!element) return;
+    const report = () => window.parent.postMessage({ type: "elpino:preview-size", height: Math.ceil(element.getBoundingClientRect().height) }, "*");
+    report();
+    const observer = new ResizeObserver(report);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [replyPreviews]);
   const [draft, setDraft] = useState("");
   // Step-by-step contact form that takes over the message box when the AI
   // asks for an email "in case we get disconnected". The server decides when
@@ -562,9 +607,9 @@ function WidgetContent() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hostname, tab, chatView, conversationId, messages, leaveOpen]);
 
-  function announceReplies(count: number, latestReply?: WidgetMessage) {
+  function announceReplies(count: number, replies: WidgetMessage[] = []) {
     if (panelOpenRef.current && !document.hidden) return;
-    if (latestReply) setReplyPreview(latestReply);
+    if (replies.length) setReplyPreviews((current) => [...current, ...replies.filter((reply) => !current.some((item) => item.id === reply.id))].slice(-STACK_SIZE));
     if (soundOnRef.current) playMessageChime();
     // A count only, never message content: the host page is a different site.
     window.parent.postMessage({ type: "elpino:unread", count }, "*");
@@ -608,7 +653,7 @@ function WidgetContent() {
       } else if (data.type === "elpino:panel") {
         const isOpen = Boolean((data as { open?: unknown }).open);
         panelOpenRef.current = isOpen;
-        if (isOpen) setReplyPreview(null);
+        if (isOpen) setReplyPreviews([]);
         // Closing always restores the normal size on the loader's side
         // (see tag.js) — mirror that here so reopening doesn't show
         // "Restore size" for a panel that's already back to normal.
@@ -759,7 +804,7 @@ function WidgetContent() {
         setGreetingName(realName || null);
         setHomeName(data.customerName && data.customerName !== "Website visitor" ? data.customerName.trim().split(/\s+/)[0] : null);
         if (Array.isArray(data.greetingLines) && data.greetingLines.length > 0) setGreetingLines(data.greetingLines);
-        setSuggestions(Array.isArray(data.suggestions) ? data.suggestions.filter((item): item is string => typeof item === "string" && item.trim().length > 0).slice(0, 3) : []);
+        setSuggestions(Array.isArray(data.suggestions) ? data.suggestions.filter((item): item is string => typeof item === "string" && item.trim().length > 0).slice(0, 5) : []);
         activeVisitorRef.current = data.visitorToken ?? "";
         // A different person than before (after an expiry that kept the
         // draft): nothing typed for the previous account carries over.
@@ -903,6 +948,8 @@ function WidgetContent() {
   // to this site. Listed once when the tab is first opened; searched as the
   // visitor types, debounced so each keystroke isn't a request.
   const [helpArticles, setHelpArticles] = useState<HelpArticle[] | null>(null);
+  // Which FAQ on the home screen is open.
+  const [openFaq, setOpenFaq] = useState<string | null>(null);
   const [helpQuery, setHelpQuery] = useState("");
   const [helpCollection, setHelpCollection] = useState<string | null>(null);
   const [helpResults, setHelpResults] = useState<HelpArticle[] | null>(null);
@@ -1018,6 +1065,13 @@ function WidgetContent() {
   // Abandons the resumed conversation (if any) so the next message starts a
   // fresh thread — nothing is created here; see sendPayload for where a
   // conversation actually gets written once the visitor sends something.
+  // A question tapped on Home: a fresh chat is started, and the question is sent as soon as it is ready.
+  const [pendingQuestion, setPendingQuestion] = useState<string | null>(null);
+  function askFromHome(question: string) {
+    setPendingQuestion(question);
+    startNewChat();
+  }
+
   function startNewChat() {
     setConversationId("");
     setMessages([]);
@@ -1026,6 +1080,13 @@ function WidgetContent() {
     setChatView("thread");
     setTab("chat");
   }
+  useEffect(() => {
+    if (!pendingQuestion || chatView !== "thread" || conversationId || !visitorToken || sending || loading) return;
+    const question = pendingQuestion;
+    setPendingQuestion(null);
+    void sendPayload(question, null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pendingQuestion, chatView, conversationId, visitorToken, sending, loading]);
 
   useEffect(() => {
     if (joinDeadline === null) return;
@@ -1080,7 +1141,7 @@ function WidgetContent() {
               seenConversationRef.current = conversationId;
             }
             for (const message of data.messages) seenMessageIdsRef.current.add(message.id);
-            if (replies.length) announceReplies(replies.length, replies[replies.length - 1]);
+            if (replies.length) announceReplies(replies.length, replies);
             const polled = data.messages;
             // A reply that reached the thread by polling also ends any stream.
             if (polled.length && polled[polled.length - 1].senderType !== "customer") setStreamingReply(null);
@@ -1192,7 +1253,7 @@ function WidgetContent() {
           // next poll (up to POLL_MS later) to clear it, or the dots sit
           // there under a reply that's already on screen.
           setAgentTyping(false);
-          announceReplies(1, message);
+          announceReplies(1, [message]);
         }
       };
       socket.onclose = (event) => {
@@ -1569,43 +1630,18 @@ function WidgetContent() {
     );
   }
 
-  if (replyPreview && !panelOpenRef.current) {
+  if (replyPreviews.length && !panelOpenRef.current) {
     return (
-      <div className="h-full bg-transparent p-1">
-        <div
-          className="group relative flex h-full cursor-pointer items-start gap-3 overflow-hidden rounded-[16px] border bg-white px-4 py-3.5 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-          style={{ borderColor: BORDER, color: INK }}
-          role="button"
-          tabIndex={0}
-          aria-label="Open new support reply"
-          onClick={() => window.parent.postMessage({ type: "elpino:open" }, "*")}
-          onKeyDown={(event) => {
-            if (event.key === "Enter" || event.key === " ") window.parent.postMessage({ type: "elpino:open" }, "*");
-          }}
-        >
-          <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full text-[12px] font-bold text-white" style={{ backgroundColor: ACCENT }}>
-            {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
-          </span>
-          <div className="min-w-0 flex-1 pr-7">
-            <p className="text-[12px] font-semibold leading-5">{botName}</p>
-            <p className="line-clamp-3 text-[13px] leading-[18px]" style={{ color: "rgba(24,24,27,.76)" }}>
-              {replyPreview.body || "Sent you a new reply"}
-            </p>
-          </div>
-          <button
-            type="button"
-            aria-label="Dismiss reply preview"
-            className="absolute right-2.5 top-2.5 flex h-7 w-7 items-center justify-center rounded-full text-black/40 transition hover:bg-black/5 hover:text-black/70"
-            onClick={(event) => {
-              event.stopPropagation();
-              setReplyPreview(null);
-              window.parent.postMessage({ type: "elpino:preview-dismiss" }, "*");
-            }}
-          >
-            <X size={15} />
-          </button>
-        </div>
-      </div>
+      <ReplyPopup
+        replies={replyPreviews}
+        botName={botName}
+        now={popupClock + serverOffset}
+        onOpen={() => window.parent.postMessage({ type: "elpino:open" }, "*")}
+        onDismiss={() => {
+          setReplyPreviews([]);
+          window.parent.postMessage({ type: "elpino:preview-dismiss" }, "*");
+        }}
+      />
     );
   }
 
@@ -1619,7 +1655,7 @@ function WidgetContent() {
           </button>
           <p className="mt-3 text-[17px] font-semibold leading-6">Please share a few details here so {botName} can connect you with the right person.</p>
         </div>
-        <div className="min-h-0 flex-1 overflow-y-auto rounded-t-[28px] px-5 pb-6 pt-6 shadow-[0_-1px_0_rgba(16,24,40,.04)]" style={{ backgroundColor: SURFACE, color: "#1c1c1e" }}>
+        <div className="min-h-0 flex-1 overflow-y-auto rounded-t-[28px] px-5 pb-6 pt-6 shadow-[0_-1px_0_rgba(16,24,40,.04)]" style={{ backgroundColor: SURFACE, color: INK }}>
           <form className="space-y-3.5" onSubmit={(event) => { event.preventDefault(); void submitPreChat(); }}>
             {preChatFields.map((field) => (
               <PreChatFieldInput
@@ -1655,6 +1691,11 @@ function WidgetContent() {
   // The AI message the open question belongs to; a question raised by the wait itself has none.
   const contactAskedMessage = messages.find((message) => message.id === contactAskId);
 
+  // On the Free plan (the one that shows "Powered by") the AI wears Elpino's mark. A paid workspace's AI wears its own:
+  // the photo set for it, else the workspace logo, else the site's icon.
+  const aiAvatarSrc = showBranding ? ELPINO_MARK : botAvatarUrl ?? (aiMarkFailed ? null : siteLogoUrl ?? siteIconUrl);
+  const aiAvatarIsMark = showBranding || (!botAvatarUrl && Boolean(aiAvatarSrc));
+
   const showTabBar = !preChatNeeded && ((tab === "chat" && (chatView === "home" || chatView === "list")) || (tab === "help" && !openArticle && !articleLoading));
 
   return (
@@ -1673,67 +1714,72 @@ function WidgetContent() {
       )}
       <div className="min-h-0 flex-1 overflow-hidden">
         {tab === "chat" && chatView === "home" ? (
-          <div className="flex h-full flex-col">
-            <div className="px-5 pb-6 pt-5">
+          <div className="flex h-full flex-col overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {/* The greeting sits on a band of the widget's colour; the card below overlaps it. */}
+            <div className="shrink-0 px-5 pb-16 pt-5 text-white" style={{ backgroundColor: ACCENT }}>
               <div className="flex items-center justify-between">
-                <SiteMark key={siteLogoUrl ?? hostname} logoUrl={siteLogoUrl} hostname={hostname} />
-                <div className="flex items-center gap-3">
-                  {/* The AI agent first, then the people on the team: "AI Agent and team can help". */}
-                  <div className="flex -space-x-2.5" aria-label="The AI agent and the team are here to help you">
-                    <span className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full text-[12px] font-bold text-white ring-2" style={{ backgroundColor: ACCENT, ["--tw-ring-color" as string]: BG }} title={botName}>
-                      {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
+                <SiteMark key={siteLogoUrl ?? siteIconUrl ?? hostname} logoUrl={siteLogoUrl} iconUrl={siteIconUrl} hostname={hostname} />
+                <button type="button" aria-label="Close" onClick={() => requestLeave()} className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-white/80 transition hover:bg-white/15 hover:text-white">
+                  <X size={18} />
+                </button>
+              </div>
+              <h1 className="mt-8 text-[28px] font-semibold leading-[34px] tracking-[-0.01em]">{`Hello${homeName ? ` ${homeName}` : ""}`} <span aria-hidden="true">👋</span></h1>
+              <p className="mt-1.5 max-w-[300px] text-[14px] leading-5 text-white/75">We&apos;re here to help. Ask us anything, and you&apos;ll get an answer right away.</p>
+            </div>
+
+            <div className="-mt-11 space-y-3 px-4 pb-5">
+              <div className="rounded-2xl bg-white p-4 shadow-[0_8px_24px_rgba(15,23,42,0.12)]" style={{ color: INK }}>
+                <p className="text-[15px] font-semibold">Start a conversation</p>
+                <div className="mt-3 flex items-center gap-3">
+                  {/* The AI agent first, then the people on the team. */}
+                  <div className="flex shrink-0 -space-x-3" aria-label="The AI agent and the team are here to help you">
+                    <span className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-full text-[13px] font-bold text-white ring-2 ring-white" style={{ backgroundColor: ACCENT }} title={botName}>
+                      {aiAvatarSrc ? <img src={aiAvatarSrc} alt="" onError={() => setAiMarkFailed(true)} className={aiAvatarIsMark ? "h-full w-full bg-white object-contain p-1.5" : "h-full w-full object-cover"} /> : initial}
                     </span>
                     {team.slice(0, 2).map((member) => (
-                      <span key={member.id} className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full text-[12px] font-bold text-white ring-2" style={{ backgroundColor: "#6b7280", ["--tw-ring-color" as string]: BG }}>
+                      <span key={member.id} className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-full text-[13px] font-bold text-white ring-2 ring-white" style={{ backgroundColor: "#6b7280" }} title={member.name ?? undefined}>
                         {member.avatarUrl ? <img src={member.avatarUrl} alt="" className="h-full w-full object-cover" /> : (member.name?.trim().charAt(0).toUpperCase() || "?")}
-                        {member.online && <span className="absolute -bottom-px -right-px h-2.5 w-2.5 rounded-full ring-2" style={{ backgroundColor: "#3ecf6a", ["--tw-ring-color" as string]: BG }} />}
+                        {member.online && <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full ring-2 ring-white" style={{ backgroundColor: "#3ecf6a" }} />}
                       </span>
                     ))}
                   </div>
-                  <button type="button" aria-label="Close" onClick={() => requestLeave()} className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-black/5">
-                    <X size={18} />
-                  </button>
+                  <div className="min-w-0">
+                    <p className="text-[12.5px]" style={{ color: MUTED }}>Our usual reply time</p>
+                    {/* The AI answers straight away, at any hour; the team joins when it is needed. */}
+                    <p className="mt-0.5 flex items-center gap-1.5 text-[14px] font-semibold"><Clock size={15} aria-hidden="true" /> Instantly</p>
+                  </div>
                 </div>
+                <button
+                  type="button"
+                  onClick={startNewChat}
+                  className="mt-4 flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl text-[14px] font-semibold text-white transition hover:opacity-90"
+                  style={{ backgroundColor: ACCENT }}
+                >
+                  <SendHorizontal size={16} /> Start conversation
+                </button>
               </div>
-              <h1 className="mt-12 text-[26px] font-semibold leading-[32px] tracking-[-0.01em]">
-                <span className="block" style={{ color: MUTED }}>{`Hello${homeName ? ` ${homeName}` : ""}.`}</span>
-                <span className="block">How can we help?</span>
-              </h1>
-              <p className="mt-3 text-[13.5px] leading-5" style={{ color: MUTED }}>Our team will reach out to you within 24 hours.</p>
-            </div>
-            <div className="flex-1 space-y-2.5 overflow-y-auto p-4 pt-0">
-              <button
-                type="button"
-                onClick={startNewChat}
-                // Same look as the pricing page: a solid ink border and no shadow, on white.
-                className="flex w-full cursor-pointer items-center gap-3 rounded-2xl border-2 border-[#11120f] p-4 text-left"
-                style={{ backgroundColor: "#ffffff" }}
-              >
-                <span className="min-w-0 flex-1">
-                  <span className="block text-[14px] font-semibold text-[#11120f]">Ask a question</span>
-                  <span className="mt-0.5 block text-[12px] text-[#11120f]/70">AI Agent and team can help</span>
-                </span>
-                <SendHorizontal size={18} className="shrink-0 text-[#11120f]" />
-              </button>
 
               {(() => {
                 // The latest conversation, if there is one: the list when it has loaded, otherwise the open thread.
                 const latest = recent[0];
                 const target = latest?.id ?? conversationId;
                 if (!target) return null;
-                const preview = latest ? latest.preview : messages[messages.length - 1]?.body;
+                // A finished chat has nothing to pick up. Its last line is the "rate this chat" request, and the way
+                // forward is a new question, so the card leaves with it.
+                if (chatResolved && target === conversationId) return null;
+                const preview = latest ? latest.preview : plainPreview(messages[messages.length - 1]?.body);
                 const ago = latest ? compactAgo(latest.time, clock + serverOffset) : "";
                 return (
                   <button
                     type="button"
                     onClick={() => openThread(target)}
-                    className="w-full cursor-pointer rounded-2xl border-2 border-[#11120f] p-4 text-left text-[#11120f]"
-                    style={{ backgroundColor: "#fff8ec" }}
+                    className="w-full cursor-pointer rounded-2xl border p-4 text-left transition hover:bg-black/[0.03]"
+                    style={{ backgroundColor: SURFACE, borderColor: BORDER, color: INK }}
                   >
                     <span className="block text-[14px] font-semibold">Recent message</span>
                     <span className="mt-2.5 flex items-center gap-3">
                       <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full text-[12px] font-bold text-white" style={{ backgroundColor: ACCENT }}>
-                        {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
+                        {aiAvatarSrc ? <img src={aiAvatarSrc} alt="" onError={() => setAiMarkFailed(true)} className={aiAvatarIsMark ? "h-full w-full bg-white object-contain p-1.5" : "h-full w-full object-cover"} /> : initial}
                       </span>
                       <span className="min-w-0 flex-1">
                         <span className="flex items-center justify-between gap-2">
@@ -1744,6 +1790,57 @@ function WidgetContent() {
                       </span>
                     </span>
                   </button>
+                );
+              })()}
+
+              {/* What visitors ask most (pinned first), then the help articles. Tapping a question asks it straight away. */}
+              {(() => {
+                const questions = suggestions.slice(0, 5);
+                const articles = (helpArticles ?? []).slice(0, questions.length ? 3 : 4);
+                if (!articles.length && !questions.length) return null;
+                const row = "flex w-full cursor-pointer items-center gap-3 rounded-xl border bg-white px-4 py-3.5 text-left transition hover:bg-black/[0.02]";
+                return (
+                  <>
+                    {questions.length > 0 && (
+                      <section aria-label="Most asked questions" className="pt-2">
+                        <h2 className="px-1 text-[15px] font-semibold" style={{ color: INK }}>Most asked</h2>
+                        <div className="mt-2.5 space-y-2">
+                          {questions.map((question) => (
+                            <button key={question} type="button" onClick={() => askFromHome(question)} className={row} style={{ borderColor: BORDER, color: INK }}>
+                              <span className="min-w-0 flex-1 text-[13.5px] font-medium">{question}</span>
+                              <ChevronRight size={16} style={{ color: MUTED }} />
+                            </button>
+                          ))}
+                        </div>
+                      </section>
+                    )}
+                    {articles.length > 0 && (
+                      <section aria-label="Frequently asked questions" className="pt-2">
+                        <h2 className="px-1 text-[15px] font-semibold" style={{ color: INK }}>FAQ</h2>
+                        <div className="mt-2.5 space-y-2">
+                          {articles.map((article) => {
+                            const open = openFaq === article.id;
+                            return (
+                              <div key={article.id} className="overflow-hidden rounded-xl border bg-white" style={{ borderColor: BORDER, color: INK }}>
+                                <button type="button" aria-expanded={open} onClick={() => setOpenFaq(open ? null : article.id)} className="flex w-full cursor-pointer items-center gap-3 px-4 py-3.5 text-left">
+                                  <span className="min-w-0 flex-1 text-[13.5px] font-medium">{article.title}</span>
+                                  {open ? <Minus size={16} style={{ color: MUTED }} /> : <Plus size={16} style={{ color: MUTED }} />}
+                                </button>
+                                {open && (
+                                  <div className="px-4 pb-3.5">
+                                    <p className="text-[13px] leading-5" style={{ color: MUTED }}>{article.snippet}</p>
+                                    <button type="button" onClick={() => { setTab("help"); openHelpArticle(article.id); }} className="mt-2 inline-flex cursor-pointer items-center gap-1 text-[12.5px] font-semibold underline-offset-2 hover:underline" style={{ color: INK }}>
+                                      Read more <ChevronRight size={14} />
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </section>
+                    )}
+                  </>
                 );
               })()}
             </div>
@@ -1834,7 +1931,7 @@ function WidgetContent() {
                       onChange={(event) => setHelpQuery(event.target.value)}
                       placeholder="Search for help"
                       maxLength={100}
-                      className="min-w-0 flex-1 bg-transparent text-[13px] outline-none placeholder:text-[#9aa0a6]"
+                      className="min-w-0 flex-1 bg-transparent text-[13px] outline-none placeholder:text-[#777b82]"
                       style={{ color: INK }}
                     />
                   </div>
@@ -1925,7 +2022,7 @@ function WidgetContent() {
                 ))
               ) : recent.length === 0 ? (
                 <div className="rounded-xl border border-dashed px-5 py-8 text-center" style={{ borderColor: "rgba(24,24,27,.3)" }}>
-                  <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-[#ffd84d] text-[#11120f]">
+                  <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl text-white" style={{ backgroundColor: ACCENT }}>
                     <MessageSquare size={18} />
                   </span>
                   <p className="mt-3 text-[14px] font-semibold">No messages yet</p>
@@ -1940,11 +2037,11 @@ function WidgetContent() {
                       key={conversation.id}
                       type="button"
                       onClick={() => openThread(conversation.id)}
-                      className="flex w-full cursor-pointer items-start gap-3 rounded-xl border bg-white p-3 text-left"
-                      style={{ borderColor: BORDER }}
+                      className="flex w-full cursor-pointer items-start gap-3 rounded-xl border p-3 text-left transition hover:bg-black/[0.03]"
+                      style={{ borderColor: BORDER, backgroundColor: SURFACE }}
                     >
                       <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full text-[12px] font-bold text-white" style={{ backgroundColor: ACCENT }}>
-                        {botAvatarUrl ? <img src={botAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
+                        {aiAvatarSrc ? <img src={aiAvatarSrc} alt="" onError={() => setAiMarkFailed(true)} className={aiAvatarIsMark ? "h-full w-full bg-white object-contain p-1.5" : "h-full w-full object-cover"} /> : initial}
                       </span>
                       <span className="min-w-0 flex-1">
                         <span className="flex items-center justify-between gap-2">
@@ -1953,7 +2050,7 @@ function WidgetContent() {
                         </span>
                         <span className="mt-0.5 block truncate text-[12.5px] leading-5" style={{ color: MUTED }}>{conversation.preview || "New conversation"}</span>
                         {label && (
-                          <span className="mt-1.5 inline-block max-w-full truncate rounded-full px-2 py-0.5 text-[10.5px] font-medium text-[#11120f]" style={{ backgroundColor: resolved && !conversation.topic ? "#f1f1ee" : "#ffe680" }}>
+                          <span className="mt-1.5 inline-block max-w-full truncate rounded-full px-2 py-0.5 text-[10.5px] font-medium" style={{ backgroundColor: resolved && !conversation.topic ? "#f1f1ee" : "#eceef0", color: resolved && !conversation.topic ? MUTED : INK }}>
                             {label}
                           </span>
                         )}
@@ -1967,7 +2064,7 @@ function WidgetContent() {
               <button
                 type="button"
                 onClick={startNewChat}
-                className="flex h-10 cursor-pointer items-center justify-center gap-2 rounded-md border border-[#11120f] bg-white px-5 text-[13px] font-semibold text-[#11120f]"
+                className="flex h-10 cursor-pointer items-center justify-center gap-2 rounded-full px-5 text-[13px] font-semibold text-white transition hover:opacity-90" style={{ backgroundColor: ACCENT }}
               >
                 <CircleHelp size={15} />
                 Ask a question
@@ -2039,12 +2136,12 @@ function WidgetContent() {
                   ))}
                   {greetingReady && !sending && draft.trim() === "" && suggestions.length > 0 && (
                     <div className="flex flex-wrap gap-2 pt-3" role="group" aria-label="Suggested questions">
-                      {suggestions.map((question) => (
+                      {suggestions.slice(0, 3).map((question) => (
                         <button
                           key={question}
                           type="button"
                           onClick={() => void sendPayload(question, null)}
-                          className="rounded-full border px-3.5 py-2 text-left text-[13px] transition hover:bg-black/[0.04]"
+                          className="rounded-full border px-3.5 py-2 text-left text-[13px] transition hover:bg-black/[0.035]"
                           style={{ borderColor: BORDER, backgroundColor: SURFACE, color: INK }}
                         >
                           {question}
@@ -2063,6 +2160,19 @@ function WidgetContent() {
                 // message from anyone, so it must not read as one.
                 if (group.kind === "system") {
                   const message = group.message;
+                  // A teammate taking over gets a card with their photo; other thread events stay a quiet divider.
+                  const joined = /^(.+) joined the chat$/.exec(message.body);
+                  if (joined) {
+                    const member = team.find((item) => item.id === message.senderId) ?? team.find((item) => item.name?.trim() === joined[1]);
+                    return (
+                      <JoinedNotice
+                        key={message.id}
+                        name={member?.name?.trim() || joined[1]}
+                        avatarUrl={member?.avatarUrl ?? null}
+                        ago={popupAgo(Date.parse(message.createdAt) || clock + serverOffset, clock + serverOffset)}
+                      />
+                    );
+                  }
                   return (
                     <div key={message.id} className="flex items-center gap-2 py-0.5">
                       <span className="h-px flex-1" style={{ backgroundColor: BORDER }} />
@@ -2085,7 +2195,9 @@ function WidgetContent() {
                     {groupMessages.map((message, messageIndex) => {
                       const hasImage = message.attachmentUrl && (message.attachmentType === "image" || message.attachmentType === "gif");
                       const hasFile = message.attachmentUrl && message.attachmentType === "file";
-                      const displayBody = message.body;
+                      // An intro, then the cards, then the closing line: the text splits where the cards go.
+                      const { before, after } = splitAtCards(message.body, message.cards?.length ? message.cardsAt : null);
+                      const displayBody = fromVisitor ? message.body : before;
 
                       const bubble = (
                         <div className="w-fit max-w-[85%] space-y-1">
@@ -2103,33 +2215,43 @@ function WidgetContent() {
                               <span className="min-w-0 truncate">{message.attachmentName ?? "Attachment"}</span>
                             </a>
                           )}
-                          {message.body && (
+                          {displayBody && (
                             fromVisitor ? (
-                              // No background: the visitor's own words sit on the plain widget, right-aligned.
-                              <div className="px-0.5 py-1 text-[13px] leading-5" style={{ color: INK }}>
+                              <div className="rounded-2xl rounded-br-md px-3.5 py-2.5 text-[13.5px] leading-6 text-white" style={{ backgroundColor: ACCENT }}>
                                 <MessageMarkdown text={displayBody} />
                               </div>
                             ) : (
-                              <div className="rounded-2xl px-3.5 py-2.5 text-[13.5px] leading-6" style={{ backgroundColor: BUBBLE, color: INK }}>
+                              <div className="rounded-2xl rounded-bl-md px-3.5 py-2.5 text-[13.5px] leading-6" style={{ backgroundColor: BUBBLE, color: INK }}>
                                 <MessageMarkdown text={displayBody} />
                               </div>
                             )
                           )}
-                          {!fromVisitor && messageIndex === groupMessages.length - 1 && !(contactActive && message.id === contactAskId) && (
-                            <p className="px-1 text-[11px] leading-4" style={{ color: MUTED }}>
-                              {/* So a visitor can tell an AI answer from a teammate's: "AI agent" vs the person's name. */}
-                              {message.senderType === "ai" ? "AI agent" : `${agentName ?? "Support team"} · Support team`} · {timeAgo(Date.parse(message.createdAt) || clock + serverOffset, clock + serverOffset)}
-                            </p>
-                          )}
                         </div>
+                      );
+
+                      // Under the last message of a run, after any cards: so a visitor can tell an AI answer from a
+                      // teammate's, "AI agent" vs the person's name.
+                      const attribution = !fromVisitor && messageIndex === groupMessages.length - 1 && !(contactActive && message.id === contactAskId) && (
+                        <p className="px-1 text-[11px] leading-4" style={{ color: MUTED }}>
+                          {message.senderType === "ai" ? "AI agent" : `${agentName ?? "Support team"} · Support team`} · {timeAgo(Date.parse(message.createdAt) || clock + serverOffset, clock + serverOffset)}
+                        </p>
                       );
 
                       if (fromVisitor) {
                         return <div key={message.id} className="flex justify-end">{bubble}</div>;
                       }
                       return (
-                        <div key={message.id} className="flex items-start">
-                          {bubble}
+                        <div key={message.id} className="flex flex-col gap-1">
+                          <div className="flex items-start">{bubble}</div>
+                          {message.cards?.length ? <ReplyCards cards={message.cards} /> : null}
+                          {after && (
+                            <div className="flex items-start">
+                              <div className="w-fit max-w-[85%] rounded-2xl rounded-bl-md px-3.5 py-2.5 text-[13.5px] leading-6" style={{ backgroundColor: BUBBLE, color: INK }}>
+                                <MessageMarkdown text={after} />
+                              </div>
+                            </div>
+                          )}
+                          {attribution}
                         </div>
                       );
                     })}
@@ -2207,7 +2329,7 @@ function WidgetContent() {
                             title={label}
                             onClick={() => void rateResolvedChat(score)}
                             disabled={ratingSaving || givenRating !== null}
-                            className={`flex h-10 w-10 items-center justify-center rounded-full text-[22px] leading-none transition ${givenRating === null ? "hover:scale-125" : chosen ? "scale-125" : "opacity-35"}`}
+                            className={`flex h-10 w-10 items-center justify-center rounded-full text-[22px] leading-none transition enabled:cursor-pointer ${givenRating === null ? "hover:scale-125" : chosen ? "scale-125" : "opacity-35"}`}
                             style={{ backgroundColor: chosen ? SURFACE : "transparent" }}
                           >
                             <span aria-hidden="true">{emoji}</span>
@@ -2260,7 +2382,7 @@ function WidgetContent() {
                         onChange={(event) => setGifQuery(event.target.value)}
                         onKeyDown={(event) => { if (event.key === "Enter") void searchGifs(gifQuery); }}
                         placeholder="Search GIFs…"
-                        className="min-w-0 flex-1 bg-transparent text-[12px] outline-none placeholder:text-[#9aa0a6]"
+                        className="min-w-0 flex-1 bg-transparent text-[12px] outline-none placeholder:text-[#777b82]"
                         style={{ color: INK }}
                       />
                     </div>
@@ -2360,7 +2482,7 @@ function WidgetContent() {
       {/* Home, Messages and Help. Not shown inside a conversation, where the message box needs the room,
           or while reading a help article. */}
       {showTabBar && (
-        <nav aria-label="Widget sections" className="flex shrink-0 border-t-2 border-[#11120f]" style={{ backgroundColor: SURFACE }}>
+        <nav aria-label="Widget sections" className="flex shrink-0 border-t" style={{ backgroundColor: SURFACE, borderColor: BORDER }}>
           {([
             { id: "home", label: "Home", Icon: House, active: tab === "chat" && chatView === "home", go: () => { setTab("chat"); setChatView("home"); } },
             { id: "messages", label: "Messages", Icon: MessageSquare, active: tab === "chat" && chatView === "list", go: openChatList },
@@ -2371,10 +2493,10 @@ function WidgetContent() {
               type="button"
               onClick={go}
               aria-current={active ? "page" : undefined}
-              className="flex flex-1 flex-col items-center gap-1 pb-2 pt-2.5 text-[11px] transition hover:opacity-80"
+              className="flex flex-1 cursor-pointer flex-col items-center gap-0.5 pb-1 pt-1.5 text-[10px] transition hover:opacity-80"
               style={{ color: active ? INK : MUTED, fontWeight: active ? 600 : 400 }}
             >
-              <Icon size={20} strokeWidth={active ? 2.2 : 1.8} />
+              <Icon size={17} strokeWidth={active ? 2.2 : 1.8} />
               {label}
             </button>
           ))}
@@ -2382,8 +2504,10 @@ function WidgetContent() {
       )}
 
       {showBranding && (
-        <a href="https://elpino.chat" target="_blank" rel="noreferrer" className="block shrink-0 pb-2 pt-0 text-center text-[10px] font-medium transition hover:text-[#18181b]" style={{ color: MUTED, backgroundColor: showTabBar ? SURFACE : BG }}>
-          Powered by <span className="underline underline-offset-2">elpino.chat</span>
+        <a href="https://elpino.chat" target="_blank" rel="noreferrer" aria-label="Powered by Elpino" className="flex shrink-0 items-center justify-center gap-1.5 pb-2 pt-1 text-[10.5px] font-medium transition hover:opacity-80" style={{ color: MUTED, backgroundColor: showTabBar ? SURFACE : BG }}>
+          Powered by
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={ELPINO_WORDMARK} alt="Elpino" className="h-[13px] w-auto" />
         </a>
       )}
       {leaveOpen && (
@@ -2400,7 +2524,7 @@ function WidgetContent() {
                 aria-label={label}
                 title={label}
                 onClick={() => setRatingChoice(score)}
-                className={`flex h-12 w-12 items-center justify-center rounded-full text-[24px] leading-none transition ${ratingChoice === null ? "hover:scale-110" : ratingChoice === score ? "scale-110" : "opacity-40"}`}
+                className={`flex h-12 w-12 cursor-pointer items-center justify-center rounded-full text-[24px] leading-none transition ${ratingChoice === null ? "hover:scale-110" : ratingChoice === score ? "scale-110" : "opacity-40"}`}
                 style={{ backgroundColor: ratingChoice === score ? BUBBLE : "transparent" }}
               >
                 <span aria-hidden="true">{emoji}</span>
@@ -2408,14 +2532,14 @@ function WidgetContent() {
             ))}
           </div>
           <div className="mt-8 flex w-full items-center gap-3">
-            <button type="button" onClick={goBack} className="flex-1 text-[14px] font-bold" style={{ color: ACCENT }}>
+            <button type="button" onClick={goBack} className="flex-1 cursor-pointer text-[14px] font-bold" style={{ color: ACCENT }}>
               Go Back
             </button>
             <button
               type="button"
               disabled={leaving}
               onClick={() => void leaveChat()}
-              className="flex-[1.4] rounded-full py-3 text-[14px] font-bold text-white disabled:opacity-60"
+              className="flex-[1.4] cursor-pointer rounded-full py-3 text-[14px] font-bold text-white disabled:cursor-default disabled:opacity-60"
               style={{ backgroundColor: ACCENT }}
             >
               {leaving ? "Leaving…" : "Leave Chat"}
@@ -2468,7 +2592,7 @@ function PreChatFieldInput({
             onChange={(event) => onChange(event.target.value)}
             placeholder={field.placeholder || "555 000 0000"}
             required={field.required}
-            className="min-w-0 flex-1 bg-transparent px-4 py-3 text-[13px] text-[#1c1c1e] outline-none placeholder:text-[#9aa0a6]"
+            className="min-w-0 flex-1 bg-transparent px-4 py-3 text-[13px] text-[#1c1c1e] outline-none placeholder:text-[#777b82]"
           />
         </div>
       </label>
@@ -2485,7 +2609,7 @@ function PreChatFieldInput({
           placeholder={field.placeholder}
           required={field.required}
           rows={3}
-          className="w-full resize-none rounded-2xl border border-[#e1e3e6] px-4 py-3 text-[13px] text-[#1c1c1e] outline-none placeholder:text-[#9aa0a6] focus:border-[#18181b]"
+          className="w-full resize-none rounded-2xl border border-[#e1e3e6] px-4 py-3 text-[13px] text-[#1c1c1e] outline-none placeholder:text-[#777b82] focus:border-[#18181b]"
         />
       </label>
     );
@@ -2521,7 +2645,7 @@ function PreChatFieldInput({
         <p className="mb-2 text-[13px] font-bold">{field.label}</p>
         <div className="space-y-0.5">
           {options.map((option) => (
-            <label key={option} className="flex cursor-pointer items-center gap-2.5 rounded-lg px-1 py-2 hover:bg-black/[0.03]">
+            <label key={option} className="flex cursor-pointer items-center gap-2.5 rounded-lg px-1 py-2 hover:bg-black/[0.035]">
               <span
                 className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2"
                 style={{ borderColor: value === option ? ACCENT : "#c7cbd1" }}
@@ -2549,7 +2673,7 @@ function PreChatFieldInput({
         <p className="mb-2 text-[13px] font-bold">{field.label}</p>
         <div className="space-y-0.5">
           {options.map((option) => (
-            <label key={option} className="flex cursor-pointer items-center gap-2.5 rounded-lg px-1 py-2 hover:bg-black/[0.03]">
+            <label key={option} className="flex cursor-pointer items-center gap-2.5 rounded-lg px-1 py-2 hover:bg-black/[0.035]">
               <input type="checkbox" checked={selected.includes(option)} onChange={() => toggleOption(option)} className="h-4 w-4 shrink-0 rounded border-[#c7cbd1]" />
               <span className="text-[13px]">{option}</span>
             </label>
@@ -2583,7 +2707,7 @@ function PreChatFieldInput({
         onChange={(event) => onChange(event.target.value)}
         placeholder={field.placeholder}
         required={field.required}
-        className="w-full rounded-full border border-[#e1e3e6] px-4 py-3 text-[13px] text-[#1c1c1e] outline-none placeholder:text-[#9aa0a6] focus:border-[#18181b]"
+        className="w-full rounded-full border border-[#e1e3e6] px-4 py-3 text-[13px] text-[#1c1c1e] outline-none placeholder:text-[#777b82] focus:border-[#18181b]"
       />
     </label>
   );

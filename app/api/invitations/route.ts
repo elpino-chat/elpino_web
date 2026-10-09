@@ -29,8 +29,10 @@ export async function POST(request: Request) {
   const workspace = await selectedWorkspace(session.email);
   if (!workspace) return Response.json({ message: "Create a workspace first." }, { status: 400 });
 
-  const body = (await request.json().catch(() => ({}))) as { emails?: string[] };
+  const body = (await request.json().catch(() => ({}))) as { emails?: string[]; teamIds?: string[] };
   const emails = (body.emails ?? []).map((email) => email.trim()).filter(Boolean);
+  // Teams (Sales, Tech…) they join on accepting; auth-service drops any that aren't this workspace's.
+  const teamIds = Array.isArray(body.teamIds) ? body.teamIds.filter((id): id is string => typeof id === "string" && id.trim().length > 0) : [];
   if (!emails.length) return Response.json({ message: "Add at least one email." }, { status: 400 });
 
   // Public origin, not request.url's — on Cloud Run that resolves to the
@@ -39,7 +41,7 @@ export async function POST(request: Request) {
   const origin = getAuthRedirectBaseUrl(request);
   const result = await callGateway<{ invited?: string[]; skipped?: { email: string; reason: string }[]; error?: string }>(
     "/api/auth/invitations",
-    { organizationId: workspace.id, emails, invitedByEmail: session.email, origin },
+    { organizationId: workspace.id, emails, invitedByEmail: session.email, origin, teamIds },
   );
   return Response.json(result.error ? { message: result.error } : result, { status: result.error ? 400 : 201 });
 }

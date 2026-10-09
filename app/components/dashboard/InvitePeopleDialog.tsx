@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { Check, LoaderCircle, Mail, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Check, ChevronDown, LoaderCircle, Mail, Plus, Users, X } from "lucide-react";
 import posthog from "posthog-js";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+type Team = { id: string; name: string };
 
 /**
  * The compose-and-send invite modal — shared by the dashboard header's
@@ -32,6 +34,54 @@ export function InvitePeopleDialog({
   const [sending, setSending] = useState(false);
   const [result, setResult] = useState<{ invited: string[]; skipped: { email: string; reason: string; seatLimitReached?: boolean }[] } | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // Teams (Sales, Tech…) the invitees join on accepting — what the AI's
+  // handoffs and the Forward action route by.
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [teamIds, setTeamIds] = useState<string[]>([]);
+  const [teamMenuOpen, setTeamMenuOpen] = useState(false);
+  const [newTeamName, setNewTeamName] = useState("");
+  const [creatingTeam, setCreatingTeam] = useState(false);
+  const [teamError, setTeamError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    fetch("/api/teams", { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: { teams?: Team[] } | null) => setTeams((data?.teams ?? []).map((team) => ({ id: team.id, name: team.name }))))
+      .catch(() => setTeams([]));
+  }, [open]);
+
+  function toggleTeam(id: string) {
+    setTeamIds((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]));
+  }
+
+  /** Makes a team on the spot when the right one doesn't exist yet, and picks it. */
+  async function createTeam() {
+    const name = newTeamName.trim();
+    if (!name || creatingTeam) return;
+    const existing = teams.find((team) => team.name.toLowerCase() === name.toLowerCase());
+    if (existing) {
+      if (!teamIds.includes(existing.id)) toggleTeam(existing.id);
+      setNewTeamName("");
+      return;
+    }
+    setCreatingTeam(true);
+    setTeamError(null);
+    try {
+      const response = await fetch("/api/teams", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ name }) });
+      const data = (await response.json().catch(() => ({}))) as { team?: Team; message?: string };
+      if (!response.ok || !data.team) {
+        setTeamError(data.message ?? "Could not create that team.");
+        return;
+      }
+      const team = { id: data.team.id, name: data.team.name };
+      setTeams((current) => [...current, team]);
+      setTeamIds((current) => [...current, team.id]);
+      setNewTeamName("");
+    } finally {
+      setCreatingTeam(false);
+    }
+  }
 
   function addChipsFrom(raw: string) {
     const candidates = raw.split(/[\s,;]+/).map((value) => value.trim()).filter(Boolean);
@@ -81,6 +131,10 @@ export function InvitePeopleDialog({
     setInvalidDraft(false);
     setResult(null);
     setError(null);
+    setTeamIds([]);
+    setTeamMenuOpen(false);
+    setNewTeamName("");
+    setTeamError(null);
   }
 
   async function sendInvites() {
@@ -95,7 +149,7 @@ export function InvitePeopleDialog({
       const response = await fetch("/api/invitations", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ emails: pending }),
+        body: JSON.stringify({ emails: pending, teamIds }),
       });
       const data = (await response.json().catch(() => ({}))) as { invited?: string[]; skipped?: { email: string; reason: string }[]; message?: string };
       if (!response.ok) {
@@ -167,6 +221,57 @@ export function InvitePeopleDialog({
             </div>
             <p className="mt-1.5 max-w-[360px] text-[12.5px] font-normal leading-5 text-white/50">Type an email and press Enter, comma, or Tab to add it. You can add several at once.</p>
             {invalidDraft && <p className="mt-1.5 text-[11px] text-[#f0838f]">That doesn&apos;t look like a valid email.</p>}
+
+            <span className="dashboard-invite-label mt-5 block text-[12.5px] font-semibold text-white/90">Team <span className="font-normal text-white/50">(optional)</span></span>
+            <div className="relative mt-2">
+              <button
+                type="button"
+                onClick={() => setTeamMenuOpen((value) => !value)}
+                aria-expanded={teamMenuOpen}
+                className="dashboard-invite-input-shell flex min-h-[44px] w-full items-center gap-2 rounded-xl border border-white/[0.18] bg-transparent px-3 py-2 text-left text-[13px] transition hover:bg-white/[0.08]"
+              >
+                <Users size={14} className="shrink-0 text-white/50" />
+                <span className="flex min-w-0 flex-1 flex-wrap gap-1.5">
+                  {teamIds.length ? (
+                    teams.filter((team) => teamIds.includes(team.id)).map((team) => (
+                      <span key={team.id} className="dashboard-invite-chip rounded-full border border-white/10 bg-white/10 px-2.5 py-0.5 text-[12px] font-medium text-white/90">{team.name}</span>
+                    ))
+                  ) : (
+                    <span className="text-white/35">Choose a team, like Sales or Tech</span>
+                  )}
+                </span>
+                <ChevronDown size={14} className={`shrink-0 text-white/50 transition-transform ${teamMenuOpen ? "rotate-180" : ""}`} />
+              </button>
+              {teamMenuOpen && (
+                <div className="mt-1.5 overflow-hidden rounded-xl border border-white/[0.18] bg-[#1d2023] p-1.5">
+                  {teams.length === 0 && <p className="px-2.5 py-2 text-[12px] text-white/50">No teams yet. Create the first one below.</p>}
+                  {teams.map((team) => {
+                    const checked = teamIds.includes(team.id);
+                    return (
+                      <button key={team.id} type="button" role="checkbox" aria-checked={checked} onClick={() => toggleTeam(team.id)} className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-[13px] text-white/90 transition hover:bg-white/[0.08]">
+                        <span className={`flex size-4 shrink-0 items-center justify-center rounded border ${checked ? "border-[#428CE5] bg-[#428CE5] text-white" : "border-white/[0.18]"}`}>{checked && <Check size={11} strokeWidth={3} />}</span>
+                        {team.name}
+                      </button>
+                    );
+                  })}
+                  <div className="mt-1 flex items-center gap-2 border-t border-white/[0.08] px-1 pt-2">
+                    <input
+                      value={newTeamName}
+                      onChange={(event) => { setNewTeamName(event.target.value); setTeamError(null); }}
+                      onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); void createTeam(); } }}
+                      maxLength={60}
+                      placeholder="New team name"
+                      className="dashboard-invite-input h-8 min-w-0 flex-1 rounded-lg bg-transparent px-2 text-[13px] text-white/90 outline-none placeholder:text-white/35"
+                    />
+                    <button type="button" onClick={() => void createTeam()} disabled={!newTeamName.trim() || creatingTeam} className="flex h-8 items-center gap-1 rounded-lg px-2.5 text-[12.5px] font-semibold text-white/90 transition hover:bg-white/[0.08] disabled:opacity-40">
+                      {creatingTeam ? <LoaderCircle size={13} className="animate-spin" /> : <Plus size={13} />} Create
+                    </button>
+                  </div>
+                  {teamError && <p className="px-2.5 pb-1 pt-1.5 text-[11.5px] text-[#f0838f]">{teamError}</p>}
+                </div>
+              )}
+            </div>
+            <p className="mt-1.5 text-[12.5px] leading-5 text-white/50">They join these teams when they accept. The AI sends chats to the right team, and teammates can forward to it.</p>
 
             {error && <p className="mt-4 text-[12px] text-[#f0838f]">{error}</p>}
             {result && (
