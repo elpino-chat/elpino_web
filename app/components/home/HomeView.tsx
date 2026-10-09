@@ -1114,12 +1114,15 @@ const TOOL_LOGOS: Node[] = [
 // Five logos in a bordered box with a divider between each. Every 3 seconds the row slides one cell to
 // the left and the next connector comes in on the right, forever. Six cells are rendered (the five in view
 // plus the incoming one); after each slide the window moves on by one and the track snaps back unseen.
-const VISIBLE = 5;
+const VISIBLE_DESKTOP = 5;
+const VISIBLE_MOBILE = 3;
 const STEP_MS = 7000;
 const SLIDE_MS = 500;
 
 function LogoStepper() {
   const reduced = useReduced();
+  const mobile = useMobile();
+  const VISIBLE = mobile ? VISIBLE_MOBILE : VISIBLE_DESKTOP;
   const [start, setStart] = useState(0);
   const [sliding, setSliding] = useState(false);
   useEffect(() => {
@@ -1129,18 +1132,18 @@ function LogoStepper() {
   }, [start, reduced]);
   const cells = Array.from({ length: VISIBLE + 1 }, (_, i) => TOOL_LOGOS[(start + i) % TOOL_LOGOS.length]);
   return (
-    <div className="mt-8 w-full overflow-hidden rounded-none border-2 border-black/100">
+    <div className="mt-8 w-full overflow-hidden rounded-none border border-black/100 sm:border-2">
       <ul
         className="flex"
         style={{ width: `${((VISIBLE + 1) / VISIBLE) * 100}%`, transform: sliding ? `translateX(-${100 / (VISIBLE + 1)}%)` : "none", transition: sliding ? `transform ${SLIDE_MS}ms ease-in-out` : "none" }}
         onTransitionEnd={() => { setSliding(false); setStart((v) => (v + 1) % TOOL_LOGOS.length); }}
       >
         {cells.map((n, i) => (
-          <li key={`${start}-${i}`} aria-hidden={i === VISIBLE} className="flex h-36 flex-1 flex-col items-center justify-center gap-3 border-l-2 border-black/100 first:border-l-0">
+          <li key={`${start}-${i}`} aria-hidden={i === VISIBLE} className="flex h-32 flex-1 flex-col items-center justify-center gap-3 border-l border-black/100 first:border-l-0 sm:h-36 sm:border-l-2">
             <span className="grid size-14 place-items-center overflow-hidden">
               {n.icon ?? <ConnectorLogo provider={n.logo} alt="" className="size-full object-contain" fallback={<span className="text-3xl font-black" style={{ color: n.c }}>{n.name[0]}</span>} />}
             </span>
-            <span className="text-[11px] text-[#11120f]/60">{n.name}</span>
+            <span className="max-w-full truncate px-1 text-[11px] text-[#11120f]/60">{n.name}</span>
           </li>
         ))}
       </ul>
@@ -1180,7 +1183,7 @@ function TimeSaved({ t }: { t: T }) {
       <div className="border-y border-black/30 py-16 sm:py-20">
         <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
           <div className="flex flex-col justify-between gap-12">
-            <Rv><h2 className="text-[clamp(2.4rem,4.6vw,4rem)] font-normal leading-[1.05] tracking-[-0.03em]">{t("home.saved.title", "Give your team its hours back.")}</h2></Rv>
+            <Rv><h2 className="text-[clamp(2rem,4.6vw,4rem)] font-normal leading-[1.05] tracking-[-0.03em]">{t("home.saved.title", "Give your team its hours back.")}</h2></Rv>
             <Rv delay={120}>
               <div className="max-w-sm space-y-5 text-lg leading-7 text-[#11120f]/70">
                 <p>{t("home.saved.p1", "Elpino answers the repeat questions and looks up payments and orders itself, so your people keep the conversations that need them.")}</p>
@@ -1193,7 +1196,7 @@ function TimeSaved({ t }: { t: T }) {
             <div className="relative">
               <div className="relative grid gap-8 p-2 sm:grid-cols-[1fr_0.8fr] sm:p-4">
                 <div className="flex flex-col justify-between gap-8">
-                  <p className="text-[clamp(2.6rem,5vw,4.2rem)] font-normal leading-none tracking-[-0.03em]" style={{ color: GREEN_INK }}>{t("home.saved.save", "Save")} {saved.toLocaleString()} {t("home.saved.hours", "hours")}</p>
+                  <p className="text-[clamp(2.2rem,5vw,4.2rem)] font-normal leading-none tracking-[-0.03em]" style={{ color: GREEN_INK }}>{t("home.saved.save", "Save")} {saved.toLocaleString()} {t("home.saved.hours", "hours")}</p>
                   <p className="text-base text-[#11120f]/70">{t("home.saved.per", "of your team's time, given back")}</p>
                 </div>
                 <div className="space-y-6">
