@@ -5575,12 +5575,14 @@ body:has(.dashboard-ai-usage-page) .dashboard-add-credits-dialog [class*="hover:
 .elpino-stamp {
   animation: elpino-slam 0.55s cubic-bezier(0.3, 1.4, 0.5, 1) both;
 }
+@media (min-width: 768px) {
 @supports (animation-timeline: view()) {
   .elpino-stamp {
     animation: elpino-slam linear both;
     animation-timeline: view();
     animation-range: entry 25% entry 85%;
   }
+}
 }
 
 /* The 30-day ring draws itself. */
@@ -5593,12 +5595,14 @@ body:has(.dashboard-ai-usage-page) .dashboard-add-credits-dialog [class*="hover:
   stroke-dashoffset: 0;
   animation: elpino-ring 1.4s ease-out both;
 }
+@media (min-width: 768px) {
 @supports (animation-timeline: view()) {
   .elpino-ring {
     animation: elpino-ring linear both;
     animation-timeline: view();
     animation-range: entry 10% entry 100%;
   }
+}
 }
 
 /* A liked heart, repost spin (kept for any page that wants them). */
@@ -5658,12 +5662,14 @@ body:has(.dashboard-ai-usage-page) .dashboard-add-credits-dialog [class*="hover:
   stroke-dashoffset: 20;
   animation: elpino-draw 0.55s ease-out 0.15s forwards;
 }
+@media (min-width: 768px) {
 @supports (animation-timeline: view()) {
   .elpino-check-path {
     animation: elpino-draw linear both;
     animation-timeline: view();
     animation-range: entry 15% entry 90%;
   }
+}
 }
 
 /* AI credit: spent by conversations, then refilled for the new month. */
@@ -5929,11 +5935,13 @@ body:has(.dashboard-ai-usage-page) .dashboard-add-credits-dialog [class*="hover:
 [data-fx-on] main section [class*="rounded-[10px]"][class*="border-black/40"][data-fx="seen"]:hover { translate: 0 -4px; transition: translate 0.25s ease; }
 [data-fx-mag] { transition: translate 0.15s ease-out; }
 /* large images drift against the scroll */
+@media (min-width: 768px) {
 @supports (animation-timeline: view()) {
   [data-fx-on] main section img[width], [data-fx-on] main section img[class*="object-cover"] {
     animation: elpino-drift linear both; animation-timeline: view(); animation-range: cover 0% cover 100%;
   }
   @keyframes elpino-drift { from { translate: 0 18px; } to { translate: 0 -18px; } }
+}
 }
 @media (prefers-reduced-motion: reduce) {
   [data-fx-on] [data-fx]:not([data-fx-in]) { opacity: 1 !important; translate: none !important; filter: none !important; }
@@ -7162,3 +7170,14 @@ body:has([data-dashboard-theme="dark"]) .knowledge-popover :is(button, a)[class*
 /* The ticket list sits on the same background as the sidebars beside it; the details drawer stays on white. */
 [data-dashboard-theme] #dashboard-tickets > .ticket-card.il-root { background: var(--space-sidebar-bg) !important; }
 [data-dashboard-theme="light"] #dashboard-tickets > .ticket-card.il-root :is(.ticket-chip, .ticket-tab-count) { background: rgb(0 0 0 / 0.07) !important; }
+
+
+/* Mobile: no scroll-driven motion. Content is simply there. */
+@media (max-width: 767.98px) {
+  [data-rv]:not([data-in]), [data-rv="words"] .w, [data-rv]:not([data-in]) .rv-item { opacity: 1; }
+  [data-rv][data-in], [data-rv="words"][data-in] .w, [data-rv][data-in] .rv-item { animation: none !important; }
+  .hl { background-size: 100% 100%; transition: none; }
+  .elpino-stamp, .elpino-ring, .elpino-check-path { animation: none; }
+  .elpino-check-path { stroke-dashoffset: 0; }
+  #elpino-progress { display: none; }
+}
