@@ -359,6 +359,7 @@ function Statement({ t }: { t: T }) {
       const vh = window.innerHeight;
       setP(Math.min(1, Math.max(0, (vh * 0.85 - r.top) / (r.height + vh * 0.2))));
     };
+    if (window.matchMedia("(max-width: 767.98px)").matches) { setP(1); return; }
     on();
     window.addEventListener("scroll", on, { passive: true });
     window.addEventListener("resize", on);

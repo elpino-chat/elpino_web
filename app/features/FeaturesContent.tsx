@@ -474,6 +474,7 @@ function Day({ t }: { t: T }) {
       const vh = window.innerHeight;
       setP(Math.min(1, Math.max(0, (vh * 0.6 - r.top) / r.height)));
     };
+    if (window.matchMedia("(max-width: 767.98px)").matches) { setP(1); return; }
     on();
     window.addEventListener("scroll", on, { passive: true });
     window.addEventListener("resize", on);

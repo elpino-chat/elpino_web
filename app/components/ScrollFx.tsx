@@ -41,6 +41,8 @@ export function ScrollFx() {
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // Phones: no scroll-driven motion at all.
+    if (window.matchMedia("(max-width: 767.98px)").matches) return;
     const root = document.documentElement;
     root.setAttribute("data-fx-on", "");
 
