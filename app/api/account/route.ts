@@ -10,7 +10,7 @@ type ProfileResult = {
 };
 
 type AccountResult = {
-  account?: { id: string; email: string; name: string | null; avatarUrl: string | null; emailVerified: boolean; twoFactorEnabled: boolean; presenceStatus: string };
+  account?: { id: string; email: string; name: string | null; avatarUrl: string | null; emailVerified: boolean; twoFactorEnabled: boolean; presenceStatus: string; notificationsMuted?: boolean; hasPassword?: boolean; googleLinked?: boolean };
   error?: string;
 };
 

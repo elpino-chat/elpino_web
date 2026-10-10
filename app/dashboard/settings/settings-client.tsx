@@ -1,5 +1,6 @@
 "use client";
 
+import { GoogleIcon } from "@/app/components/auth/AuthShared";
 import { UpgradeDialog, useUpgradeDialog } from "@/app/components/dashboard/UpgradeDialog";
 import { normalizePath, type UrlRules } from "./url-rules";
 import { HighlightedCode, HighlightedCsp } from "@/app/components/code-highlight";
@@ -1834,7 +1835,7 @@ const DEFAULT_GREETING = "Hi there 👋 How can I help you today?";
 const GREETING_MAX_LENGTH = 300;
 type AiPersona = { id: string; name: string; aiName: string; aiAvatarUrl: string | null; aiPersona: string | null; chatbotAccent: string; chatbotTheme: "light" | "dark" | "auto"; chatbotReplyLanguage: string; greetingLines: string[] };
 
-type Account = { email: string; name: string | null; avatarUrl: string | null; emailVerified: boolean; twoFactorEnabled: boolean };
+type Account = { email: string; name: string | null; avatarUrl: string | null; emailVerified: boolean; twoFactorEnabled: boolean; hasPassword?: boolean; googleLinked?: boolean };
 
 type WorkspaceRef = { id: string; name: string };
 type DeletionPlan = { canDelete: boolean; blocked: WorkspaceRef[]; soloOwned: WorkspaceRef[]; memberOf: WorkspaceRef[] };
@@ -2761,6 +2762,9 @@ function GeneralSettingsPage({ user }: { user: SettingsUser }) {
   const [avatarUrl, setAvatarUrl] = useState("");
   const [emailVerified, setEmailVerified] = useState(false);
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
+  // How this account signs in: Google, a password, or both.
+  const [hasPassword, setHasPassword] = useState(true);
+  const [googleLinked, setGoogleLinked] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -2797,6 +2801,8 @@ function GeneralSettingsPage({ user }: { user: SettingsUser }) {
         setAvatarUrl(data.account.avatarUrl ?? "");
         setEmailVerified(data.account.emailVerified);
         setTwoFactorEnabled(data.account.twoFactorEnabled);
+        setHasPassword(data.account.hasPassword ?? true);
+        setGoogleLinked(data.account.googleLinked ?? false);
       })
       .catch(() => undefined)
       .finally(() => setLoading(false));
@@ -3006,10 +3012,10 @@ function GeneralSettingsPage({ user }: { user: SettingsUser }) {
 
   return (
     <>
-      <div className="mx-auto w-full max-w-[1120px] px-8 pb-6 pt-9 sm:px-10 lg:px-12">
-        <h2 className="text-[26px] font-semibold tracking-[-0.025em] text-[#121315]">My Settings</h2>
+      <div className="mx-auto w-full max-w-[1120px] px-4 pb-6 pt-6 sm:px-10 sm:pt-9 lg:px-12">
+        <h2 className="text-[24px] font-semibold tracking-[-0.025em] text-[#121315] sm:text-[26px]">My Settings</h2>
 
-        <div className="mt-9 grid grid-cols-[310px_minmax(0,1fr)] gap-10 max-xl:grid-cols-[270px_minmax(0,1fr)] max-lg:grid-cols-1 max-lg:gap-5">
+        <div className="mt-6 grid sm:mt-9 grid-cols-[310px_minmax(0,1fr)] gap-10 max-xl:grid-cols-[270px_minmax(0,1fr)] max-lg:grid-cols-1 max-lg:gap-5">
           <div>
             <h3 className="dashboard-settings-heading text-base font-semibold">Profile</h3>
             <p className="dashboard-settings-subdesc mt-1 max-w-[280px] text-sm leading-[1.55] text-[#858585]">Your personal information and account security settings.</p>
@@ -3056,11 +3062,37 @@ function GeneralSettingsPage({ user }: { user: SettingsUser }) {
               )}
             </div>
 
-            <label className="mt-5 block text-[12px] font-medium" htmlFor="settings-password">Password</label>
-            <div className="relative mt-2">
-              <LockKeyhole size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#6f7073]" />
-              <input id="settings-password" type="password" disabled placeholder="Enter New Password" title="Password updates are not available yet" className="h-11 w-full cursor-not-allowed rounded-xl border border-[#d3d3d3] bg-[#fcfcfc] pl-10 pr-3 text-[13px] outline-none placeholder:text-[#898989] disabled:opacity-100" />
-            </div>
+            {/* How this account signs in. Shown as facts, not a form: there is no password to type for a Google account, and password
+                changes go through the reset email. */}
+            <p className="mt-6 text-[12px] font-medium">Sign-in methods</p>
+            <ul className="mt-2 divide-y divide-[#e7e7e7] overflow-hidden rounded-xl border border-[#d3d3d3]">
+              <li className="flex items-center gap-3 px-3.5 py-3">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-white shadow-[0_0_0_1px_rgba(0,0,0,0.08)]">
+                  <span className="flex size-[18px] items-center justify-center"><GoogleIcon /></span>
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-[14px] font-medium">Google</span>
+                  <span className="dashboard-settings-subdesc block truncate text-[12px] text-[#858585]">{googleLinked ? user.email : "Not connected. Use Continue with Google on the login page to connect it."}</span>
+                </span>
+                {googleLinked ? (
+                  <span className="flex shrink-0 items-center gap-1 rounded-full bg-[#EAF5EE] px-2 py-1 text-[11px] font-semibold text-[#257A4D]"><CheckCircle2 size={12} /> Connected</span>
+                ) : (
+                  <span className="shrink-0 rounded-full bg-[#F2F3F3] px-2 py-1 text-[11px] font-medium text-[#6f7073]">Not connected</span>
+                )}
+              </li>
+              <li className="flex items-center gap-3 px-3.5 py-3">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#F2F3F3] text-[#6f7073]"><LockKeyhole size={16} /></span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-[14px] font-medium">Email and password</span>
+                  <span className="dashboard-settings-subdesc block text-[12px] leading-5 text-[#858585]">
+                    {hasPassword
+                      ? <>Password sign-in is on. To change it, <a href="/forgot-password" className="font-medium underline underline-offset-2">send yourself a reset link</a>.</>
+                      : "No password set. You sign in with Google, so you don't need one."}
+                  </span>
+                </span>
+                <span className={`shrink-0 rounded-full px-2 py-1 text-[11px] font-semibold ${hasPassword ? "bg-[#EAF5EE] text-[#257A4D]" : "bg-[#F2F3F3] font-medium text-[#6f7073]"}`}>{hasPassword ? "Set" : "Not set"}</span>
+              </li>
+            </ul>
             {error && <p className="mt-2 text-[11px] text-[#b8444f]">{error}</p>}
           </div>
         </div>

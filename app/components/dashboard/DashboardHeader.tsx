@@ -60,6 +60,17 @@ type SearchPerson = { id: string; email: string };
 const SPACE_ROUTES = ["/dashboard", "/dashboard/notifications", "/dashboard/issues"];
 const SETTINGS_ROUTE_PREFIX = "/dashboard/settings";
 
+/** One row of the account menu: icon, label, and an optional trailing mark. Taller on phones, where the menu is a sheet. */
+function AccountMenuItem({ icon: Icon, label, onClick, trailing }: { icon: typeof Bell; label: string; onClick: () => void; trailing?: React.ReactNode }) {
+  return (
+    <button type="button" onClick={onClick} className="flex h-11 w-full items-center gap-3 rounded-xl px-3 text-left text-[14px] hover:bg-[#f1f2f3] sm:h-10">
+      <Icon size={18} className="text-[#686d73]" />
+      <span className="flex-1 truncate">{label}</span>
+      {trailing}
+    </button>
+  );
+}
+
 export default function DashboardHeader({ user }: { user: HeaderUser }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -155,22 +166,35 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
   }, [refreshSpaceBadge, pathname]);
 
   function toggleNotificationsMuted() {
-    setNotificationsMuted((current) => {
-      const next = !current;
-      try {
-        window.localStorage.setItem(NOTIFICATIONS_MUTED_KEY, next ? "1" : "0");
-      } catch {
-        // Nothing to persist to — the toggle still works for this tab.
-      }
-      return next;
-    });
+    const next = !notificationsMuted;
+    setNotificationsMuted(next);
+    try {
+      window.localStorage.setItem(NOTIFICATIONS_MUTED_KEY, next ? "1" : "0");
+    } catch {
+      // Nothing to persist to here; the account still gets it below.
+    }
+    // Saved on the account so the switch follows the person to every browser. Put back if the save fails.
+    void fetch("/api/account/notifications-muted", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ muted: next }),
+    }).then((response) => {
+      if (response.ok) return;
+      setNotificationsMuted(!next);
+      try { window.localStorage.setItem(NOTIFICATIONS_MUTED_KEY, !next ? "1" : "0"); } catch { /* ignore */ }
+    }).catch(() => undefined);
   }
 
   useEffect(() => {
     fetch("/api/account")
       .then((response) => (response.ok ? response.json() : null))
-      .then((data: { account?: { id: string; avatarUrl: string | null; presenceStatus?: string } } | null) => {
+      .then((data: { account?: { id: string; avatarUrl: string | null; presenceStatus?: string; notificationsMuted?: boolean } } | null) => {
         setAvatarUrl(data?.account?.avatarUrl ?? "");
+        // The account is the source of truth, so the switch is the same in every browser; this browser's copy just follows it.
+        if (typeof data?.account?.notificationsMuted === "boolean") {
+          setNotificationsMuted(data.account.notificationsMuted);
+          try { window.localStorage.setItem(NOTIFICATIONS_MUTED_KEY, data.account.notificationsMuted ? "1" : "0"); } catch { /* storage off: the account value still applies */ }
+        }
         setAccountId(data?.account?.id ?? "");
         const status = data?.account?.presenceStatus;
         if (status === "online" || status === "away" || status === "brb") setPresenceStatus(status);
@@ -673,105 +697,86 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
           </button>
 
           {accountOpen && (
-            <div className={`dashboard-account-menu absolute right-0 top-11 flex max-h-[calc(100vh-60px)] w-[360px] flex-col overflow-hidden rounded-2xl border border-[#d9dde2] bg-white text-[#24272c] shadow-[0_18px_48px_rgba(25,39,58,0.2)] ${compact ? "xl:bottom-0 xl:left-12 xl:right-auto xl:top-auto xl:max-h-[calc(100vh-130px)]" : ""}`}>
-              <div className="overflow-y-auto p-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <>
+            {/* Phones: the menu is a sheet from the bottom edge, with the page dimmed behind it. */}
+            <div aria-hidden="true" onClick={() => setAccountOpen(false)} className="fixed inset-0 z-[60] bg-black/45 sm:hidden" />
+            <div className={`dashboard-account-menu max-sm:fixed max-sm:inset-x-0 max-sm:bottom-0 max-sm:top-auto max-sm:z-[61] max-sm:max-h-[86dvh] max-sm:w-full max-sm:rounded-b-none max-sm:rounded-t-3xl sm:absolute sm:right-0 sm:top-11 sm:max-h-[calc(100vh-60px)] sm:w-[360px] flex flex-col overflow-hidden rounded-2xl border border-[#d9dde2] bg-white text-[#24272c] shadow-[0_18px_48px_rgba(25,39,58,0.2)] ${compact ? "xl:bottom-0 xl:left-12 xl:right-auto xl:top-auto xl:max-h-[calc(100vh-130px)]" : ""}`}>
+              <div aria-hidden="true" className="mx-auto mt-2.5 h-1 w-10 shrink-0 rounded-full bg-[#d3d7db] sm:hidden" />
+              <div className="overflow-y-auto overscroll-contain px-3 pb-2 pt-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {/* Who you are, and how you appear to the team: the status is one tap here, not a menu inside the menu. */}
                 <button
                   type="button"
-                  onClick={() => router.push("/dashboard#account")}
-                  className="flex w-full items-center gap-3 rounded-xl px-2 py-2 text-left hover:bg-[#f3f4f5]"
+                  onClick={() => { setAccountOpen(false); router.push("/dashboard/settings"); }}
+                  className="flex w-full items-center gap-3.5 rounded-2xl px-2 py-2 text-left hover:bg-[#f3f4f5]"
                 >
-                  <span className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
-                    <span className="dashboard-account-avatar flex h-10 w-10 items-center justify-center overflow-hidden rounded-full text-[15px] font-normal">
+                  <span className="relative flex size-12 shrink-0 items-center justify-center rounded-full">
+                    <span className="dashboard-account-avatar flex size-12 items-center justify-center overflow-hidden rounded-full text-[17px] font-normal">
                       {avatarUrl ? <img src={avatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
                     </span>
-                    <span className={`absolute -bottom-0.5 -right-0.5 z-10 h-3.5 w-3.5 rounded-full border-2 border-white ${displayStatus.dot}`} />
+                    <span className={`absolute -bottom-0.5 -right-0.5 z-10 size-3.5 rounded-full border-2 border-white ${displayStatus.dot}`} />
                   </span>
-                  <span className="min-w-0">
+                  <span className="min-w-0 flex-1">
                     <span className="flex min-w-0 items-center gap-1.5">
-                      <span className="truncate text-[15px] font-semibold">{displayName}</span>
+                      <span className="truncate text-[16px] font-semibold">{displayName}</span>
                       {selected?.role && (
                         <span className="dashboard-role-badge shrink-0 rounded-full bg-[#F0F2F3] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-[#556070]">
                           {selected.role}
                         </span>
                       )}
                     </span>
-                    <span className="mt-0.5 block text-xs text-[#7d8289]">{displayStatus.label}</span>
+                    <span className="mt-0.5 block truncate text-[12.5px] text-[#7d8289]">{user.email}</span>
                   </span>
                 </button>
 
-                <Popover open={statusOpen} onOpenChange={setStatusOpen}>
-                  <PopoverTrigger className="dashboard-status-trigger mt-1 flex h-9 w-full items-center gap-2 rounded-xl border border-[#e1e3e6] px-3 text-left text-sm text-[#696e75] hover:bg-[#f7f7f8]">
-                    <CircleHelp size={16} className="text-[#8b9097]" />
-                    Set status
-                  </PopoverTrigger>
-                  <PopoverContent align="start" className="dashboard-status-menu w-[220px]">
-                    {busy && <p className="px-2.5 pb-1.5 pt-1 text-[11px] leading-4 text-[#8a9298]">You&apos;re shown as busy while assigned to an open conversation.</p>}
-                    {statusOptions.map((option) => (
+                <div className="mt-2 grid grid-cols-3 gap-1.5" role="radiogroup" aria-label="Your status">
+                  {statusOptions.map((option) => {
+                    const active = presenceStatus === option.value && !busy;
+                    return (
                       <button
                         key={option.value}
                         type="button"
+                        role="radio"
+                        aria-checked={active}
                         disabled={statusSaving}
                         onClick={() => void updateStatus(option.value)}
-                        className={`flex h-9 w-full items-center gap-2.5 rounded-lg px-2.5 text-left text-[13px] font-medium disabled:opacity-60 ${presenceStatus === option.value ? "dashboard-status-active bg-[#f0f2f3]" : "hover:bg-[#f7f8f8]"}`}
+                        className={`dashboard-status-trigger flex h-10 items-center justify-center gap-1.5 rounded-xl border px-1.5 text-[12.5px] font-medium transition disabled:opacity-60 ${active ? "dashboard-status-active border-[#11120f]/70 bg-[#f0f2f3]" : "border-[#e1e3e6] text-[#696e75] hover:bg-[#f7f7f8]"}`}
                       >
-                        <span className={`h-2 w-2 rounded-full ${option.dot}`} /> {option.label}
-                        {presenceStatus === option.value && <Check size={14} className="ml-auto text-[#11120f]" />}
+                        <span className={`size-2 shrink-0 rounded-full ${option.dot}`} />
+                        <span className="truncate">{option.value === "brb" ? "Back soon" : option.label}</span>
                       </button>
-                    ))}
-                  </PopoverContent>
-                </Popover>
+                    );
+                  })}
+                </div>
+                {busy && <p className="mt-1.5 px-1 text-[11.5px] leading-4 text-[#8a9298]">You&apos;re shown as busy while assigned to an open conversation.</p>}
 
-                <button
-                  type="button"
-                  onClick={toggleNotificationsMuted}
-                  aria-pressed={notificationsMuted}
-                  className="dashboard-mute-notifications mt-2 flex h-10 w-full items-center gap-3 rounded-lg bg-transparent px-3 text-left text-sm hover:bg-[#e8e9ea]"
-                >
-                  <VolumeX size={17} />
-                  <span className="flex-1">{notificationsMuted ? "Unmute notifications" : "Mute notifications"}</span>
-                  {notificationsMuted && <Check size={15} className="text-[#3a7a4e]" />}
-                </button>
+                <div className="mt-3 space-y-0.5">
+                  <AccountMenuItem
+                    icon={Bell}
+                    label="Notifications"
+                    onClick={() => { setAccountOpen(false); setNotificationsOpen(true); }}
+                  />
+                  <button
+                    type="button"
+                    onClick={toggleNotificationsMuted}
+                    aria-pressed={notificationsMuted}
+                    className="dashboard-mute-notifications flex h-11 w-full items-center gap-3 rounded-xl bg-transparent px-3 text-left text-[14px] hover:bg-[#e8e9ea] sm:h-10"
+                  >
+                    <VolumeX size={18} className="text-[#686d73]" />
+                    <span className="flex-1">{notificationsMuted ? "Unmute notifications" : "Mute notifications"}</span>
+                    <span aria-hidden="true" className={`relative h-5 w-9 shrink-0 rounded-full transition ${notificationsMuted ? "bg-[#35b92c]" : "bg-[#d3d7db]"}`}>
+                      <span className={`absolute top-0.5 size-4 rounded-full bg-white shadow transition-all ${notificationsMuted ? "left-[18px]" : "left-0.5"}`} />
+                    </span>
+                  </button>
+                </div>
 
                 <div className="my-2 border-t border-[#eceef0]" />
 
-                <button
-                  type="button"
-                  onClick={() => {
-                    setAccountOpen(false);
-                    setNotificationsOpen(true);
-                  }}
-                  className="flex h-9 w-full items-center gap-3 rounded-lg px-3 text-left text-sm hover:bg-[#f1f2f3]"
-                >
-                  <Bell size={17} className="text-[#686d73]" />
-                  Notifications
-                </button>
-
-                {/* Same actions the header itself carries from sm up — below
-                    that width they live here instead of as extra header
-                    buttons, so nothing is lost, just relocated. */}
-                <div className="sm:hidden">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setAccountOpen(false);
-                      setInviteOpen(true);
-                    }}
-                    className="flex h-9 w-full items-center gap-3 rounded-lg px-3 text-left text-sm hover:bg-[#f1f2f3]"
-                  >
-                    <UserPlus size={17} className="text-[#686d73]" />
-                    Invite team
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setAccountOpen(false);
-                      router.push("/dashboard/settings/ai-usage");
-                    }}
-                    className="flex h-9 w-full items-center gap-3 rounded-lg px-3 text-left text-sm hover:bg-[#f1f2f3]"
-                  >
-                    <Gauge size={17} className="text-[#686d73]" />
-                    Usage
-                  </button>
+                <p className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#8a8e94]">Workspace</p>
+                <div className="space-y-0.5">
+                  <AccountMenuItem icon={Settings} label="Settings" onClick={() => { setAccountOpen(false); router.push("/dashboard/settings"); }} />
+                  <AccountMenuItem icon={UserPlus} label="Invite team" onClick={() => { setAccountOpen(false); setInviteOpen(true); }} />
+                  <AccountMenuItem icon={Gauge} label="Usage" onClick={() => { setAccountOpen(false); router.push("/dashboard/settings/ai-usage"); }} />
+                  <AccountMenuItem icon={Palette} label="Themes" onClick={() => { setAccountOpen(false); router.push("/dashboard/settings"); }} />
                 </div>
 
                 {/* With no top bar on the inbox, the workspace switcher and the Usage / Invite shortcuts live here. */}
@@ -809,74 +814,40 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
                   </div>
                 )}
 
-                {[
-                  { Icon: Settings, label: "Settings", href: "/dashboard/settings" },
-                  { Icon: Palette, label: "Themes", href: "/dashboard#themes" },
-                  { Icon: CircleHelp, label: "Help", href: "/contact" },
-                ].map(({ Icon, label, href }) => (
-                  <button
-                    key={label}
-                    type="button"
-                    onClick={() => {
-                      setAccountOpen(false);
-                      router.push(href);
-                    }}
-                    className="flex h-9 w-full items-center gap-3 rounded-lg px-3 text-left text-sm hover:bg-[#f1f2f3]"
-                  >
-                    <Icon size={17} className="text-[#686d73]" />
-                    {label}
-                  </button>
-                ))}
+                <div className="my-2 border-t border-[#eceef0]" />
 
-                {/* Only while `npm run dev` is running: a pretend customer site with your workspace's own widget on it. */}
-                {process.env.NODE_ENV === "development" && (
-                  <button
-                    type="button"
-                    onClick={() => { setAccountOpen(false); window.open("/dev/widget", "_blank", "noopener"); }}
-                    className="flex h-9 w-full items-center gap-3 rounded-lg px-3 text-left text-sm hover:bg-[#f1f2f3]"
-                  >
-                    <MessageCircle size={17} className="text-[#686d73]" />
-                    <span className="flex-1">Test widget on localhost</span>
-                    <span className="rounded bg-[#fff4d6] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-[#8a5a00]">Dev</span>
-                  </button>
-                )}
-
-                <div className="mx-[-8px] my-3 border-t border-[#e5e7ea]" />
-                <p className="px-3 pb-1.5 text-xs font-medium text-[#8a8e94]">AI Support Tools</p>
-
-                {[
-                  { Icon: Inbox, label: "My inbox", href: "/dashboard", pin: false },
-                  { Icon: Users, label: "Contacts", href: "/dashboard#contacts", pin: false },
-                  { Icon: BookOpen, label: "Knowledge base", href: "/dashboard/knowledge", pin: true },
-                  { Icon: Clock3, label: "Conversation history", href: "/dashboard#history", pin: false },
-                ].map(({ Icon, label, href, pin }) => (
-                  <button
-                    key={label}
-                    type="button"
-                    onClick={() => {
-                      setAccountOpen(false);
-                      router.push(href);
-                    }}
-                    className="flex h-9 w-full items-center gap-3 rounded-lg px-3 text-left text-sm hover:bg-[#f1f2f3]"
-                  >
-                    <Icon size={17} className="text-[#686d73]" />
-                    <span className="flex-1">{label}</span>
-                    {pin && <Pin size={14} className="rotate-45 text-[#969aa0]" />}
-                  </button>
-                ))}
+                <p className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#8a8e94]">Shortcuts</p>
+                <div className="space-y-0.5">
+                  {[
+                    { Icon: Inbox, label: "My inbox", href: "/dashboard/inbox", pin: false },
+                    { Icon: Users, label: "Contacts", href: "/dashboard/contacts", pin: false },
+                    { Icon: BookOpen, label: "Knowledge base", href: "/dashboard/knowledge", pin: true },
+                    { Icon: Clock3, label: "All conversations", href: "/dashboard/inbox?list=1", pin: false },
+                    { Icon: CircleHelp, label: "Help", href: "/contact", pin: false },
+                  ].map(({ Icon, label, href, pin }) => (
+                    <AccountMenuItem
+                      key={label}
+                      icon={Icon}
+                      label={label}
+                      trailing={pin ? <Pin size={14} className="rotate-45 text-[#969aa0]" /> : undefined}
+                      onClick={() => { setAccountOpen(false); router.push(href); }}
+                    />
+                  ))}
+                </div>
               </div>
 
-              <div className="border-t border-[#e5e7ea] p-2">
+              <div className="border-t border-[#e5e7ea] p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
                 <button
                   type="button"
                   disabled={signingOut}
                   onClick={() => void signOut()}
-                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-[#c63f4d] hover:bg-[#fff2f3] disabled:opacity-60"
+                  className="flex h-11 w-full items-center gap-3 rounded-xl px-3 text-[14px] font-medium text-[#c63f4d] hover:bg-[#fff2f3] disabled:opacity-60 sm:h-10"
                 >
                   <LogOut size={17} /> {signingOut ? "Signing out..." : "Sign out"}
                 </button>
               </div>
             </div>
+            </>
           )}
         </div>
       <div className="dashboard-header-keep contents"><InvitePeopleDialog open={inviteOpen} onClose={() => setInviteOpen(false)} /></div>
