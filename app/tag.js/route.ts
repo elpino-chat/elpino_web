@@ -738,7 +738,7 @@ export function GET(request: Request) {
       // press, or a "Stay" answer) and hands off to the iframe rather than
       // closing outright itself. See elpino:back-pressed in the widget page.
       window.addEventListener('popstate', function () {
-        if (ignoreNextPop) { ignoreNextPop = false; return; }
+        if (ignoreNextPop) { ignoreNextPop = false; keepScroll(); return; }
         if (!open) return;
         pushedHistory = false;
         try {
@@ -751,6 +751,25 @@ export function GET(request: Request) {
         }
         postToWidget({ type: 'elpino:back-pressed' });
       });
+
+      // Stepping back over our own history entry makes the browser restore the scroll position saved with the
+      // entry before it, i.e. where the page was when the chat opened, so closing the chat jumped the page. The
+      // visitor's current position is held across that step and put back, and the page's own scroll restoration
+      // setting is returned untouched.
+      var heldScroll = null;
+      function holdScroll() {
+        heldScroll = { x: window.scrollX, y: window.scrollY, restoration: null };
+        try {
+          if ('scrollRestoration' in history) { heldScroll.restoration = history.scrollRestoration; history.scrollRestoration = 'manual'; }
+        } catch (error) { /* read-only in some contexts */ }
+      }
+      function keepScroll() {
+        if (!heldScroll) return;
+        var held = heldScroll;
+        heldScroll = null;
+        try { if (held.restoration) history.scrollRestoration = held.restoration; } catch (error) { /* left as it was */ }
+        if (window.scrollX !== held.x || window.scrollY !== held.y) window.scrollTo(held.x, held.y);
+      }
 
       function toggle(startNew) {
         setOpen(!open, startNew);
@@ -830,7 +849,8 @@ export function GET(request: Request) {
           if (pushedHistory && history.state && history.state.elpinoWidget === true) {
             pushedHistory = false;
             ignoreNextPop = true;
-            try { history.back(); } catch (error) { ignoreNextPop = false; }
+            holdScroll();
+            try { history.back(); } catch (error) { ignoreNextPop = false; keepScroll(); }
           } else {
             pushedHistory = false;
           }
