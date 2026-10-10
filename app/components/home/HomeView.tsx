@@ -1274,7 +1274,7 @@ function WidgetMock({ t, progress }: { t: T; progress: number }) {
   const clamp = (v: number) => Math.min(1, Math.max(0, v));
   const bubble = "rounded-2xl px-3.5 py-2.5 text-[13.5px] leading-[1.5]";
   return (
-    <div className="flex h-[420px] w-[330px] flex-col rounded-[26px] border border-black/10 bg-white text-[#11120f] shadow-[0_24px_60px_rgba(17,18,15,0.22)]">
+    <div className="flex min-h-[420px] w-[min(330px,calc(100vw-5.5rem))] flex-col rounded-[26px] sm:h-[420px] sm:w-[330px] border border-black/10 bg-white text-[#11120f] shadow-[0_24px_60px_rgba(17,18,15,0.22)]">
       <div className="flex items-center gap-3 rounded-t-[26px] border-b border-black/10 px-4 py-3">
         <span className="grid size-8 place-items-center rounded-full bg-black/5"><ChevronLeft size={16} /></span>
         <div className="leading-tight"><p className="text-[14px]">{t("home.widgetMock.name", "Elpino AI")}</p><p className="text-[11.5px] text-[#11120f]/50">{t("home.widgetMock.role", "AI Assistant")}</p></div>
@@ -1282,7 +1282,7 @@ function WidgetMock({ t, progress }: { t: T; progress: number }) {
       </div>
       <div className="flex flex-1 flex-col justify-start gap-2.5 rounded-b-[26px] bg-[#ffffff] p-3.5">
         <div className={`${bubble} max-w-[85%] self-end bg-[#11120f] text-white transition-all duration-300`} style={{ opacity: progress >= ASKED_AT ? 1 : 0, transform: progress >= ASKED_AT ? "none" : "translateY(6px)" }}>{t("home.widgetMock.question", "I purchased a plan but it's still not active")}</div>
-        <div className={`${bubble} -ml-[100px] w-[290px] self-start border border-white/70 bg-white/40 shadow-[0_14px_36px_rgba(17,18,15,0.16)] ring-1 ring-black/5 backdrop-blur-xl backdrop-saturate-150 transition-opacity duration-300`} style={{ opacity: progress >= nodes[0].appear ? 1 : 0 }}>
+        <div className={`${bubble} w-full self-start sm:-ml-[100px] sm:w-[290px] border border-white/70 bg-white/40 shadow-[0_14px_36px_rgba(17,18,15,0.16)] ring-1 ring-black/5 backdrop-blur-xl backdrop-saturate-150 transition-opacity duration-300`} style={{ opacity: progress >= nodes[0].appear ? 1 : 0 }}>
           {/* What the AI does before it replies, drawn as a graph: every step is a node that gets a blue tick once
               it is done, and the edge to the next node fills in as you scroll. The reply is the last node. */}
           <ol>
@@ -1513,7 +1513,7 @@ function ProductTabs({ t }: { t: T }) {
             <span className="absolute inset-y-8 left-10 w-[70%] border-l border-t border-dashed border-white/80" />
           </div>
           <div className="relative">
-            {tab.key === "widget" && <div className="origin-center scale-[0.88] sm:scale-100 sm:pl-16"><WidgetMock t={t} progress={fill} /></div>}
+            {tab.key === "widget" && <div className="sm:pl-16"><WidgetMock t={t} progress={fill} /></div>}
             {tab.key === "inbox" && <Image src="/inbox_prev.png" alt="The Elpino team inbox" width={1915} height={812} className="h-auto max-h-[38vh] w-auto max-w-full rounded-xl border border-black/10 shadow-[0_24px_60px_rgba(17,18,15,0.22)]" />}
             {tab.key === "kb" && <KnowledgeGraph t={t} progress={fill} />}
             {tab.key === "tickets" && <TicketFlow t={t} progress={fill} />}
