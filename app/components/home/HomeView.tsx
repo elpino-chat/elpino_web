@@ -488,6 +488,7 @@ function Tour({ t }: { t: T }) {
   const outer = useRef<HTMLDivElement>(null);
   const strip = useRef<HTMLDivElement>(null);
   const bar = useRef<HTMLSpanElement>(null);
+  const scroller = useRef<HTMLDivElement>(null); // phones: the row you swipe through
   const [current, setCurrent] = useState(0); // the card nearest the left edge
   const [story, setStory] = useState(0); // 0 to the number of cards: the whole number is the step, the fraction is how far its demo has played
   const reach = useRef(0); // px of scrolling for the whole story
@@ -531,6 +532,28 @@ function Tour({ t }: { t: T }) {
     window.addEventListener("resize", onResize);
     return () => { window.removeEventListener("scroll", onScroll); window.removeEventListener("resize", onResize); if (frame) window.cancelAnimationFrame(frame); box.style.height = ""; row.style.transform = ""; };
   }, [mobile]);
+  // Phones: the row is a plain swipeable strip; keep `current` in step with the card at the left edge.
+  useEffect(() => {
+    const box = scroller.current;
+    if (!mobile || !box) return;
+    const onSwipe = () => {
+      const cards = Array.from(box.children[0].children) as HTMLElement[];
+      const at = box.scrollLeft;
+      let best = 0;
+      cards.forEach((c, i) => { if (Math.abs(c.offsetLeft - cards[0].offsetLeft - at) < Math.abs(cards[best].offsetLeft - cards[0].offsetLeft - at)) best = i; });
+      setCurrent(best);
+    };
+    onSwipe();
+    box.addEventListener("scroll", onSwipe, { passive: true });
+    return () => box.removeEventListener("scroll", onSwipe);
+  }, [mobile]);
+  function swipeTo(index: number) {
+    const box = scroller.current;
+    if (!box) return;
+    const cards = Array.from(box.children[0].children) as HTMLElement[];
+    const card = cards[Math.min(cards.length - 1, Math.max(0, index))];
+    box.scrollTo({ left: card.offsetLeft - cards[0].offsetLeft, behavior: reduced ? "auto" : "smooth" });
+  }
   // Prev and next scroll to the start of that step's stretch, so its demo plays from the top.
   function goTo(index: number) {
     const box = outer.current;
@@ -556,19 +579,19 @@ function Tour({ t }: { t: T }) {
         <div className={mobile ? "flex flex-col py-10" : "sticky top-0 flex h-screen flex-col justify-center overflow-hidden pt-20"}>
           <div className="mb-8 flex flex-wrap items-end justify-between gap-5 px-5 sm:px-8">
             <h2 className="max-w-[22ch] text-[clamp(1.9rem,3.4vw,3rem)] font-normal leading-[1.08] tracking-[-0.035em] text-[#11120f]">{t("home.tour.title3", "Everything a support desk needs, in 3 steps")}</h2>
-            <div className={mobile ? "hidden" : "flex shrink-0 items-center gap-3"}>
-              <span className="mr-2 font-mono text-sm text-[#11120f]/50" aria-live="polite">{String(current + 1).padStart(2, "0")} / {String(items.length).padStart(2, "0")}</span>
-              <button type="button" aria-label={t("home.tour.prev", "Previous")} disabled={current === 0} onClick={() => goTo(current - 1)} className="grid size-12 place-items-center rounded-full border-2 border-[#11120f] bg-white text-[#11120f] transition hover:bg-[#11120f] hover:text-white disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-[#11120f]"><ArrowLeft size={20} /></button>
-              <button type="button" aria-label={t("home.tour.next", "Next")} disabled={current === items.length - 1} onClick={() => goTo(current + 1)} className="grid size-12 place-items-center rounded-full border-2 border-[#11120f] bg-white text-[#11120f] transition hover:bg-[#11120f] hover:text-white disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-[#11120f]"><ArrowRight size={20} /></button>
+            <div className="flex shrink-0 items-center gap-3">
+              <span className="mr-2 hidden font-mono sm:inline text-sm text-[#11120f]/50" aria-live="polite">{String(current + 1).padStart(2, "0")} / {String(items.length).padStart(2, "0")}</span>
+              <button type="button" aria-label={t("home.tour.prev", "Previous")} disabled={current === 0} onClick={() => (mobile ? swipeTo(current - 1) : goTo(current - 1))} className="grid size-12 place-items-center rounded-full border-2 border-[#11120f] bg-white text-[#11120f] transition hover:bg-[#11120f] hover:text-white disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-[#11120f]"><ArrowLeft size={20} /></button>
+              <button type="button" aria-label={t("home.tour.next", "Next")} disabled={current === items.length - 1} onClick={() => (mobile ? swipeTo(current + 1) : goTo(current + 1))} className="grid size-12 place-items-center rounded-full border-2 border-[#11120f] bg-white text-[#11120f] transition hover:bg-[#11120f] hover:text-white disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-[#11120f]"><ArrowRight size={20} /></button>
             </div>
           </div>
-          <div className={mobile ? "snap-x snap-mandatory overflow-x-auto" : ""}>
-          <div ref={strip} className="flex w-max gap-6 px-5 will-change-transform sm:gap-8 sm:px-8">
+          <div ref={scroller} className={mobile ? "snap-x snap-mandatory scroll-px-5 overflow-x-auto overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" : ""}>
+          <div ref={strip} className="flex w-max gap-4 px-5 will-change-transform sm:gap-8 sm:px-8">
             {items.map((it, i) => (
-              <div key={it.title} className="group flex w-[min(86vw,540px)] shrink-0 snap-center flex-col overflow-hidden rounded-tl-[2rem] border border-black/20 bg-white">
+              <div key={it.title} className="group flex w-[80vw] shrink-0 snap-start flex-col sm:w-[min(86vw,540px)] overflow-hidden rounded-tl-[2rem] border border-black/20 bg-white">
                 {/* The same pastel stage as the product tabs, with the visual sitting on it. */}
-                <div className="relative grid min-h-[300px] place-items-center overflow-hidden border-b border-black/20 p-6 sm:min-h-[340px]">
-                  <div className="relative rounded-2xl border border-black/10 bg-white p-5 shadow-[0_24px_60px_rgba(17,18,15,0.18)]"><TourVisual k={keys[i]} t={t} p={reduced || mobile ? 1 : Math.min(1, Math.max(0, story - i))} /></div>
+                <div className="relative grid min-h-[300px] grid-cols-[minmax(0,1fr)] place-items-center overflow-hidden border-b border-black/20 p-5 sm:min-h-[340px] sm:p-6">
+                  <div className="relative w-full rounded-2xl border border-black/10 bg-white p-4 shadow-[0_24px_60px_rgba(17,18,15,0.18)] sm:w-auto sm:p-5"><TourVisual k={keys[i]} t={t} p={reduced || mobile ? 1 : Math.min(1, Math.max(0, story - i))} /></div>
                 </div>
                 <div className="flex flex-1 items-start justify-between gap-6 p-6 sm:p-7">
                   <div>
@@ -583,6 +606,13 @@ function Tour({ t }: { t: T }) {
             ))}
           </div>
           </div>
+          {mobile && (
+            <div className="mt-5 flex justify-center gap-2" role="tablist" aria-label={t("home.tour.stepsAria", "Steps")}>
+              {items.map((it, i) => (
+                <button key={it.title} type="button" role="tab" aria-selected={i === current} aria-label={`${it.tag}`} onClick={() => swipeTo(i)} className={`h-2 rounded-full transition-all duration-300 ${i === current ? "w-6 bg-[#11120f]" : "w-2 bg-[#11120f]/25"}`} />
+              ))}
+            </div>
+          )}
           <div aria-hidden="true" className={`mx-5 mt-8 h-0.5 overflow-hidden ${mobile ? "hidden" : ""} bg-[#11120f]/10 sm:mx-8`}>
             <span ref={bar} className="block h-full origin-left bg-[#11120f]" style={{ transform: "scaleX(0)" }} />
           </div>
