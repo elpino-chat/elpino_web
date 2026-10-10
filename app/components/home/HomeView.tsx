@@ -404,7 +404,7 @@ function Hero({ t }: { t: T }) {
               phones, where it would cover most of the screenshot. */}
           {/* The story it tells is the headline's: the AI settles the routine question itself, with a real check behind
               the answer, and hands the one that needs a person to the team. */}
-          <ChatWidgetPreview large seen={widgetSeen} className="hidden sm:-bottom-6 sm:right-8 sm:flex lg:-bottom-8 lg:right-12" lines={[
+          <ChatWidgetPreview large seen={widgetSeen} className="hidden sm:absolute sm:-bottom-6 sm:right-8 sm:flex lg:-bottom-8 lg:right-12" lines={[
             { ai: false, text: t("home.hero.chat.q1", "I paid for Growth but my account still says Free") },
             { ai: true, meta: t("home.hero.chat.m1", "AI agent · Payment verified"), text: t("home.hero.chat.a1", "Found it: your ₹4,999 payment from this morning went through. Growth is now active, so refresh and you'll see it.") },
             { ai: false, text: t("home.hero.chat.q2", "Thanks! Can I get a refund for last month?") },
@@ -649,9 +649,9 @@ function ChatWidgetPreview({ seen, lines, className, large = false }: { seen: bo
   const msg = (ms: number) => ({ opacity: seen ? 1 : 0, transform: seen ? "none" : "translateY(8px)", transition: `opacity 450ms ease ${ms}ms, transform 450ms ease ${ms}ms` });
   const z = large
     ? { box: "aspect-[511/779] w-[34%] min-w-[260px] max-w-[340px] p-4", icon: "size-8", iconPx: 15, name: "text-[14px]", role: "text-[11.5px]", body: "mt-4 space-y-3 text-[13px] leading-[1.5]", bubble: "rounded-2xl px-3 py-2", meta: "mt-1 text-[10px]", box2: "mt-3 px-3 pb-2 pt-2.5", hint: "text-[12.5px]", tool: 14, send: "size-7", sendPx: 13, foot: "mt-2 text-[10px]" }
-    : { box: "w-[38%] min-w-[200px] max-w-[290px] p-3", icon: "size-6", iconPx: 12, name: "text-[11px]", role: "text-[9.5px]", body: "mt-3 space-y-2 text-[10.5px] leading-[1.45]", bubble: "rounded-xl px-2.5 py-1.5", meta: "mt-0.5 text-[8.5px]", box2: "mt-2.5 px-2.5 pb-1.5 pt-2", hint: "text-[10px]", tool: 11, send: "size-5", sendPx: 10, foot: "mt-1.5 text-[8px]" };
+    : { box: "sm:w-[38%] sm:min-w-[200px] sm:max-w-[290px] p-3", icon: "size-6", iconPx: 12, name: "text-[11px]", role: "text-[9.5px]", body: "mt-3 space-y-2 text-[10.5px] leading-[1.45]", bubble: "rounded-xl px-2.5 py-1.5", meta: "mt-0.5 text-[8.5px]", box2: "mt-2.5 px-2.5 pb-1.5 pt-2", hint: "text-[10px]", tool: 11, send: "size-5", sendPx: 10, foot: "mt-1.5 text-[8px]" };
   return (
-    <div aria-hidden="true" className={`absolute z-10 flex-col rounded-2xl bg-[#fafafa] text-[#11120f] shadow-[0_30px_80px_rgba(15,22,41,0.55)] ring-4 ring-[#8b7cf6]/60 ${z.box} ${className}`}>
+    <div aria-hidden="true" className={`z-10 flex-col rounded-2xl bg-[#fafafa] text-[#11120f] shadow-[0_30px_80px_rgba(15,22,41,0.55)] ring-4 ring-[#8b7cf6]/60 ${z.box} ${className}`}>
       <div className="flex items-center gap-2">
         <span className={`grid ${z.icon} shrink-0 place-items-center rounded-full bg-black/5`}><ChevronLeft size={z.iconPx} /></span>
         <span className="min-w-0 flex-1"><span className={`block ${z.name} font-semibold leading-tight`}>Elpino AI</span><span className={`block ${z.role} leading-tight text-[#11120f]/50`}>AI Assistant</span></span>
@@ -744,7 +744,7 @@ function TeamPreview({ k, t }: { k: string; t: T }) {
       <div ref={ref} className="relative">
         <Image src="/images/ai_repli.png" alt="The Elpino inbox: the AI replying to a visitor while the team watches" width={1462} height={877} className="h-auto w-full rounded-2xl" sizes="(min-width: 1024px) 560px, 90vw" />
         {/* The visitor's side of the same chat as the inbox screenshot, drawn in code so the two always agree. */}
-        <ChatWidgetPreview seen={seen} className="-bottom-10 right-4 flex sm:right-8" lines={[
+        <ChatWidgetPreview seen={seen} className="relative -mt-8 ml-auto mr-3 flex w-[82%] sm:absolute sm:-bottom-10 sm:right-8 sm:mt-0 sm:mr-0" lines={[
           { ai: true, text: "Hi there 👋 How can I help you today?" },
           { ai: false, text: "Hi" },
           { ai: true, text: "Hey! What can I help you with today?" },
@@ -863,7 +863,7 @@ function Teams({ t }: { t: T }) {
               <Rv variant="deal" className={i % 2 === 1 ? "lg:order-2" : ""}>
                 {/* A soft, blurred pastel frame around a dark panel, the preview inside it. */}
                 <div className={`relative rounded-[2rem] p-5 sm:p-7 ${keys[i] === "reply" ? "" : "overflow-hidden"}`} style={{ backgroundColor: "#eeeeec", backgroundImage: ["radial-gradient(60% 55% at 0% 0%, rgba(176,222,196,0.85) 0%, rgba(176,222,196,0) 70%)", "radial-gradient(55% 60% at 100% 10%, rgba(150,142,184,0.8) 0%, rgba(150,142,184,0) 70%)", "radial-gradient(60% 55% at 10% 100%, rgba(238,196,190,0.75) 0%, rgba(238,196,190,0) 70%)", "radial-gradient(55% 55% at 100% 100%, rgba(205,200,216,0.9) 0%, rgba(205,200,216,0) 70%)"].join(", ") }}>
-                  {keys[i] === "contacts" || keys[i] === "plugins" ? <TeamPreview k={keys[i]} t={t} /> : <div className={`relative rounded-2xl bg-[#0f1629] shadow-[0_24px_60px_rgba(15,22,41,0.35)] ${keys[i] === "reply" ? "" : "overflow-hidden"}`}><TeamPreview k={keys[i]} t={t} /></div>}
+                  {keys[i] === "contacts" || keys[i] === "plugins" ? <TeamPreview k={keys[i]} t={t} /> : <div className={`relative rounded-2xl shadow-[0_24px_60px_rgba(15,22,41,0.35)] ${keys[i] === "reply" ? "bg-transparent shadow-none sm:bg-[#0f1629] sm:shadow-[0_24px_60px_rgba(15,22,41,0.35)]" : "overflow-hidden bg-[#0f1629]"}`}><TeamPreview k={keys[i]} t={t} /></div>}
                 </div>
               </Rv>
               <Rv delay={120} className={i % 2 === 1 ? "lg:order-1" : ""}>
