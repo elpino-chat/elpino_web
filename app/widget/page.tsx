@@ -149,6 +149,11 @@ const COUNTRIES = [
 ];
 
 // Per visitor and site: whether new replies make a sound.
+// A reply that came after another reply, not after the visitor's own message: nobody asked for it just now.
+function isUnprompted(previous: WidgetMessage | undefined) {
+  return previous !== undefined && previous.senderType !== "customer";
+}
+
 function soundKey(publicKey: string) {
   return `elpino_sound_${publicKey}`;
 }
@@ -297,6 +302,9 @@ function WidgetContent() {
   const [visitorToken, setVisitorToken] = useState("");
   const [conversationId, setConversationId] = useState("");
   const [messages, setMessages] = useState<WidgetMessage[]>([]);
+  // The thread as last rendered, for the socket handler (a closure that would otherwise see a stale list).
+  const messagesRef = useRef<WidgetMessage[]>([]);
+  useEffect(() => { messagesRef.current = messages; }, [messages]);
   // Unread replies while the panel is closed, oldest first. The newest shows in front and the earlier ones
   // peek out behind it, like stacked phone notifications.
   const [replyPreviews, setReplyPreviews] = useState<WidgetMessage[]>([]);
@@ -608,8 +616,14 @@ function WidgetContent() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hostname, tab, chatView, conversationId, messages, leaveOpen]);
 
-  function announceReplies(count: number, replies: WidgetMessage[] = []) {
-    if (panelOpenRef.current && !document.hidden) return;
+  // `unprompted`: the visitor wasn't waiting for it (the AI checking in, asking for a rating, a teammate writing
+  // after the AI). Those chime even while the panel is open, since the visitor has usually stopped watching by
+  // then. A reply to what they just sent stays silent when they can see it arrive.
+  function announceReplies(count: number, replies: WidgetMessage[] = [], unprompted = false) {
+    if (panelOpenRef.current && !document.hidden) {
+      if (unprompted && soundOnRef.current) playMessageChime();
+      return;
+    }
     if (replies.length) setReplyPreviews((current) => [...current, ...replies.filter((reply) => !current.some((item) => item.id === reply.id))].slice(-STACK_SIZE));
     if (soundOnRef.current) playMessageChime();
     // A count only, never message content: the host page is a different site.
@@ -1144,7 +1158,10 @@ function WidgetContent() {
               seenConversationRef.current = conversationId;
             }
             for (const message of data.messages) seenMessageIdsRef.current.add(message.id);
-            if (replies.length) announceReplies(replies.length, replies);
+            if (replies.length) {
+              const before = data.messages[data.messages.findIndex((message) => message.id === replies[0].id) - 1];
+              announceReplies(replies.length, replies, isUnprompted(before));
+            }
             const polled = data.messages;
             // A reply that reached the thread by polling also ends any stream.
             if (polled.length && polled[polled.length - 1].senderType !== "customer") setStreamingReply(null);
@@ -1248,6 +1265,7 @@ function WidgetContent() {
         if (seenMessageIdsRef.current.has(message.id)) return;
         seenMessageIdsRef.current.add(message.id);
         const isReply = message.senderType === "agent" || message.senderType === "ai";
+        const unprompted = isUnprompted(messagesRef.current.filter((item) => item.senderType !== "system").at(-1));
         setMessages((prev) => (prev.some((existing) => existing.id === message.id) ? prev : [...prev, message]));
         if (isReply) {
           // The saved reply takes the place of the text that was streaming.
@@ -1256,7 +1274,7 @@ function WidgetContent() {
           // next poll (up to POLL_MS later) to clear it, or the dots sit
           // there under a reply that's already on screen.
           setAgentTyping(false);
-          announceReplies(1, [message]);
+          announceReplies(1, [message], unprompted);
         }
       };
       socket.onclose = (event) => {
@@ -1439,10 +1457,15 @@ function WidgetContent() {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ key, hostname, visitorToken, conversationId: conversationId || undefined, [contactField]: value }),
       });
-      const data = (await response.json().catch(() => ({}))) as { error?: string; aiWillReply?: boolean };
+      const data = (await response.json().catch(() => ({}))) as { error?: string; aiWillReply?: boolean; handoffStarted?: boolean };
+      // The server checks the email properly (validator's isEmail), so its reason is shown as is.
+      if (data.error === "That doesn't look like an email address.") { setContactError(data.error); return; }
       if (!response.ok || data.error) { setContactError("Couldn't save that. Try again."); return; }
       if (contactField === "name") setHomeName(value.split(/\s+/)[0]);
-      if (data.aiWillReply) {
+      if (data.handoffStarted) {
+        // The handoff was waiting for this email: the AI's "finding someone for you" message and the countdown say the rest.
+        finishContact();
+      } else if (data.aiWillReply) {
         // The AI answers it like any reply (greeting them by name and carrying on with their question), so the
         // typing dots show straight away instead of after the next poll, and no separate note is needed.
         setAgentTyping(true);

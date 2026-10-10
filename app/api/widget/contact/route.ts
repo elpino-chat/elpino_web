@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     return Response.json({ error: "key, hostname, visitorToken and a contact detail are required" }, { status: 400, headers: corsHeaders() });
   }
 
-  const result = await callGateway<{ ok?: boolean; aiWillReply?: boolean; error?: string }>("/api/workspace/widget/contact", {
+  const result = await callGateway<{ ok?: boolean; aiWillReply?: boolean; handoffStarted?: boolean; error?: string }>("/api/workspace/widget/contact", {
     publicKey: body.key.trim(),
     hostname: body.hostname.trim(),
     visitorToken: body.visitorToken.trim(),
