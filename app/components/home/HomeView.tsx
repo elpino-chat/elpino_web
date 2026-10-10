@@ -404,7 +404,7 @@ function Hero({ t }: { t: T }) {
               phones, where it would cover most of the screenshot. */}
           {/* The story it tells is the headline's: the AI settles the routine question itself, with a real check behind
               the answer, and hands the one that needs a person to the team. */}
-          <ChatWidgetPreview large seen={widgetSeen} className="hidden sm:-bottom-6 sm:right-8 sm:flex lg:-bottom-8 lg:right-12" lines={[
+          <ChatWidgetPreview large seen={widgetSeen} className="hidden sm:absolute sm:-bottom-6 sm:right-8 sm:flex lg:-bottom-8 lg:right-12" lines={[
             { ai: false, text: t("home.hero.chat.q1", "I paid for Growth but my account still says Free") },
             { ai: true, meta: t("home.hero.chat.m1", "AI agent · Payment verified"), text: t("home.hero.chat.a1", "Found it: your ₹4,999 payment from this morning went through. Growth is now active, so refresh and you'll see it.") },
             { ai: false, text: t("home.hero.chat.q2", "Thanks! Can I get a refund for last month?") },
@@ -488,6 +488,7 @@ function Tour({ t }: { t: T }) {
   const outer = useRef<HTMLDivElement>(null);
   const strip = useRef<HTMLDivElement>(null);
   const bar = useRef<HTMLSpanElement>(null);
+  const scroller = useRef<HTMLDivElement>(null); // phones: the row you swipe through
   const [current, setCurrent] = useState(0); // the card nearest the left edge
   const [story, setStory] = useState(0); // 0 to the number of cards: the whole number is the step, the fraction is how far its demo has played
   const reach = useRef(0); // px of scrolling for the whole story
@@ -531,6 +532,28 @@ function Tour({ t }: { t: T }) {
     window.addEventListener("resize", onResize);
     return () => { window.removeEventListener("scroll", onScroll); window.removeEventListener("resize", onResize); if (frame) window.cancelAnimationFrame(frame); box.style.height = ""; row.style.transform = ""; };
   }, [mobile]);
+  // Phones: the row is a plain swipeable strip; keep `current` in step with the card at the left edge.
+  useEffect(() => {
+    const box = scroller.current;
+    if (!mobile || !box) return;
+    const onSwipe = () => {
+      const cards = Array.from(box.children[0].children) as HTMLElement[];
+      const at = box.scrollLeft;
+      let best = 0;
+      cards.forEach((c, i) => { if (Math.abs(c.offsetLeft - cards[0].offsetLeft - at) < Math.abs(cards[best].offsetLeft - cards[0].offsetLeft - at)) best = i; });
+      setCurrent(best);
+    };
+    onSwipe();
+    box.addEventListener("scroll", onSwipe, { passive: true });
+    return () => box.removeEventListener("scroll", onSwipe);
+  }, [mobile]);
+  function swipeTo(index: number) {
+    const box = scroller.current;
+    if (!box) return;
+    const cards = Array.from(box.children[0].children) as HTMLElement[];
+    const card = cards[Math.min(cards.length - 1, Math.max(0, index))];
+    box.scrollTo({ left: card.offsetLeft - cards[0].offsetLeft, behavior: reduced ? "auto" : "smooth" });
+  }
   // Prev and next scroll to the start of that step's stretch, so its demo plays from the top.
   function goTo(index: number) {
     const box = outer.current;
@@ -556,19 +579,19 @@ function Tour({ t }: { t: T }) {
         <div className={mobile ? "flex flex-col py-10" : "sticky top-0 flex h-screen flex-col justify-center overflow-hidden pt-20"}>
           <div className="mb-8 flex flex-wrap items-end justify-between gap-5 px-5 sm:px-8">
             <h2 className="max-w-[22ch] text-[clamp(1.9rem,3.4vw,3rem)] font-normal leading-[1.08] tracking-[-0.035em] text-[#11120f]">{t("home.tour.title3", "Everything a support desk needs, in 3 steps")}</h2>
-            <div className={mobile ? "hidden" : "flex shrink-0 items-center gap-3"}>
-              <span className="mr-2 font-mono text-sm text-[#11120f]/50" aria-live="polite">{String(current + 1).padStart(2, "0")} / {String(items.length).padStart(2, "0")}</span>
-              <button type="button" aria-label={t("home.tour.prev", "Previous")} disabled={current === 0} onClick={() => goTo(current - 1)} className="grid size-12 place-items-center rounded-full border-2 border-[#11120f] bg-white text-[#11120f] transition hover:bg-[#11120f] hover:text-white disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-[#11120f]"><ArrowLeft size={20} /></button>
-              <button type="button" aria-label={t("home.tour.next", "Next")} disabled={current === items.length - 1} onClick={() => goTo(current + 1)} className="grid size-12 place-items-center rounded-full border-2 border-[#11120f] bg-white text-[#11120f] transition hover:bg-[#11120f] hover:text-white disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-[#11120f]"><ArrowRight size={20} /></button>
+            <div className="flex shrink-0 items-center gap-3">
+              <span className="mr-2 hidden font-mono sm:inline text-sm text-[#11120f]/50" aria-live="polite">{String(current + 1).padStart(2, "0")} / {String(items.length).padStart(2, "0")}</span>
+              <button type="button" aria-label={t("home.tour.prev", "Previous")} disabled={current === 0} onClick={() => (mobile ? swipeTo(current - 1) : goTo(current - 1))} className="grid size-12 place-items-center rounded-full border-2 border-[#11120f] bg-white text-[#11120f] transition hover:bg-[#11120f] hover:text-white disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-[#11120f]"><ArrowLeft size={20} /></button>
+              <button type="button" aria-label={t("home.tour.next", "Next")} disabled={current === items.length - 1} onClick={() => (mobile ? swipeTo(current + 1) : goTo(current + 1))} className="grid size-12 place-items-center rounded-full border-2 border-[#11120f] bg-white text-[#11120f] transition hover:bg-[#11120f] hover:text-white disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-[#11120f]"><ArrowRight size={20} /></button>
             </div>
           </div>
-          <div className={mobile ? "snap-x snap-mandatory overflow-x-auto" : ""}>
-          <div ref={strip} className="flex w-max gap-6 px-5 will-change-transform sm:gap-8 sm:px-8">
+          <div ref={scroller} className={mobile ? "snap-x snap-mandatory scroll-px-5 overflow-x-auto overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" : ""}>
+          <div ref={strip} className="flex w-max gap-4 px-5 will-change-transform sm:gap-8 sm:px-8">
             {items.map((it, i) => (
-              <div key={it.title} className="group flex w-[min(86vw,540px)] shrink-0 snap-center flex-col overflow-hidden rounded-tl-[2rem] border border-black/20 bg-white">
+              <div key={it.title} className="group flex w-[80vw] shrink-0 snap-start flex-col sm:w-[min(86vw,540px)] overflow-hidden rounded-tl-[2rem] border border-black/20 bg-white">
                 {/* The same pastel stage as the product tabs, with the visual sitting on it. */}
-                <div className="relative grid min-h-[300px] place-items-center overflow-hidden border-b border-black/20 p-6 sm:min-h-[340px]">
-                  <div className="relative rounded-2xl border border-black/10 bg-white p-5 shadow-[0_24px_60px_rgba(17,18,15,0.18)]"><TourVisual k={keys[i]} t={t} p={reduced || mobile ? 1 : Math.min(1, Math.max(0, story - i))} /></div>
+                <div className="relative grid min-h-[300px] grid-cols-[minmax(0,1fr)] place-items-center overflow-hidden border-b border-black/20 p-5 sm:min-h-[340px] sm:p-6">
+                  <div className="relative w-full rounded-2xl border border-black/10 bg-white p-4 shadow-[0_24px_60px_rgba(17,18,15,0.18)] sm:w-auto sm:p-5"><TourVisual k={keys[i]} t={t} p={reduced || mobile ? 1 : Math.min(1, Math.max(0, story - i))} /></div>
                 </div>
                 <div className="flex flex-1 items-start justify-between gap-6 p-6 sm:p-7">
                   <div>
@@ -583,6 +606,13 @@ function Tour({ t }: { t: T }) {
             ))}
           </div>
           </div>
+          {mobile && (
+            <div className="mt-5 flex justify-center gap-2" role="tablist" aria-label={t("home.tour.stepsAria", "Steps")}>
+              {items.map((it, i) => (
+                <button key={it.title} type="button" role="tab" aria-selected={i === current} aria-label={`${it.tag}`} onClick={() => swipeTo(i)} className={`h-2 rounded-full transition-all duration-300 ${i === current ? "w-6 bg-[#11120f]" : "w-2 bg-[#11120f]/25"}`} />
+              ))}
+            </div>
+          )}
           <div aria-hidden="true" className={`mx-5 mt-8 h-0.5 overflow-hidden ${mobile ? "hidden" : ""} bg-[#11120f]/10 sm:mx-8`}>
             <span ref={bar} className="block h-full origin-left bg-[#11120f]" style={{ transform: "scaleX(0)" }} />
           </div>
@@ -619,9 +649,9 @@ function ChatWidgetPreview({ seen, lines, className, large = false }: { seen: bo
   const msg = (ms: number) => ({ opacity: seen ? 1 : 0, transform: seen ? "none" : "translateY(8px)", transition: `opacity 450ms ease ${ms}ms, transform 450ms ease ${ms}ms` });
   const z = large
     ? { box: "aspect-[511/779] w-[34%] min-w-[260px] max-w-[340px] p-4", icon: "size-8", iconPx: 15, name: "text-[14px]", role: "text-[11.5px]", body: "mt-4 space-y-3 text-[13px] leading-[1.5]", bubble: "rounded-2xl px-3 py-2", meta: "mt-1 text-[10px]", box2: "mt-3 px-3 pb-2 pt-2.5", hint: "text-[12.5px]", tool: 14, send: "size-7", sendPx: 13, foot: "mt-2 text-[10px]" }
-    : { box: "w-[38%] min-w-[200px] max-w-[290px] p-3", icon: "size-6", iconPx: 12, name: "text-[11px]", role: "text-[9.5px]", body: "mt-3 space-y-2 text-[10.5px] leading-[1.45]", bubble: "rounded-xl px-2.5 py-1.5", meta: "mt-0.5 text-[8.5px]", box2: "mt-2.5 px-2.5 pb-1.5 pt-2", hint: "text-[10px]", tool: 11, send: "size-5", sendPx: 10, foot: "mt-1.5 text-[8px]" };
+    : { box: "sm:w-[38%] sm:min-w-[200px] sm:max-w-[290px] p-3", icon: "size-6", iconPx: 12, name: "text-[11px]", role: "text-[9.5px]", body: "mt-3 space-y-2 text-[10.5px] leading-[1.45]", bubble: "rounded-xl px-2.5 py-1.5", meta: "mt-0.5 text-[8.5px]", box2: "mt-2.5 px-2.5 pb-1.5 pt-2", hint: "text-[10px]", tool: 11, send: "size-5", sendPx: 10, foot: "mt-1.5 text-[8px]" };
   return (
-    <div aria-hidden="true" className={`absolute z-10 flex-col rounded-2xl bg-[#fafafa] text-[#11120f] shadow-[0_30px_80px_rgba(15,22,41,0.55)] ring-4 ring-[#8b7cf6]/60 ${z.box} ${className}`}>
+    <div aria-hidden="true" className={`z-10 flex-col rounded-2xl bg-[#fafafa] text-[#11120f] shadow-[0_30px_80px_rgba(15,22,41,0.55)] ring-4 ring-[#8b7cf6]/60 ${z.box} ${className}`}>
       <div className="flex items-center gap-2">
         <span className={`grid ${z.icon} shrink-0 place-items-center rounded-full bg-black/5`}><ChevronLeft size={z.iconPx} /></span>
         <span className="min-w-0 flex-1"><span className={`block ${z.name} font-semibold leading-tight`}>Elpino AI</span><span className={`block ${z.role} leading-tight text-[#11120f]/50`}>AI Assistant</span></span>
@@ -649,6 +679,7 @@ function ChatWidgetPreview({ seen, lines, className, large = false }: { seen: bo
 // The four previews: a reply with the checks behind it, the numbers, the contacts it collects, the plugins it uses.
 function TeamPreview({ k, t }: { k: string; t: T }) {
   const [ref, seen] = useSeen<HTMLDivElement>();
+  const mobile = useMobile();
   // The contacts story, in the widget's own order: the AI asks for the email (1), the answer field fills in (2),
   // it is sent and the contact appears (3). The typed value never shows as a visitor bubble, as in the real widget.
   const [stage, setStage] = useState(0);
@@ -680,7 +711,7 @@ function TeamPreview({ k, t }: { k: string; t: T }) {
     const open = stage >= 4;
     const pop = (on: boolean) => ({ opacity: on ? 1 : 0, transform: on ? "none" : "translateY(8px)", transition: "opacity 450ms ease, transform 450ms ease" });
     return (
-      <div ref={ref} className="grid min-h-[460px] w-full place-items-center p-6 sm:p-10">
+      <div ref={ref} className="grid min-h-[460px] w-full grid-cols-[minmax(0,1fr)] place-items-center p-4 sm:p-10">
         <div className="w-full max-w-[400px] space-y-3 text-white">
           <div className="ml-auto w-fit max-w-[88%] rounded-2xl bg-[#6c5ce7] px-4 py-2.5 text-[14px] leading-[1.5]" style={pop(stage >= 1)}>{t("home.teams.verify.claim", "I'm Alex Morgan. Show me my invoices.")}</div>
           <div className="w-fit max-w-[92%] rounded-2xl bg-white/10 px-4 py-2.5 text-[14px] leading-[1.5]" style={pop(stage >= 2)}>{open ? t("home.teams.verify.ok", "Thanks, Alex. You're signed in, so here are your invoices.") : t("home.teams.verify.ask", "I can't share account details with a guest. Sign in on the site and I'll check it's really you.")}</div>
@@ -713,7 +744,7 @@ function TeamPreview({ k, t }: { k: string; t: T }) {
       <div ref={ref} className="relative">
         <Image src="/images/ai_repli.png" alt="The Elpino inbox: the AI replying to a visitor while the team watches" width={1462} height={877} className="h-auto w-full rounded-2xl" sizes="(min-width: 1024px) 560px, 90vw" />
         {/* The visitor's side of the same chat as the inbox screenshot, drawn in code so the two always agree. */}
-        <ChatWidgetPreview seen={seen} className="-bottom-10 right-4 flex sm:right-8" lines={[
+        <ChatWidgetPreview seen={seen} className="relative -mt-8 ml-auto mr-3 flex w-[82%] sm:absolute sm:-bottom-10 sm:right-8 sm:mt-0 sm:mr-0" lines={[
           { ai: true, text: "Hi there 👋 How can I help you today?" },
           { ai: false, text: "Hi" },
           { ai: true, text: "Hey! What can I help you with today?" },
@@ -728,12 +759,13 @@ function TeamPreview({ k, t }: { k: string; t: T }) {
   if (k === "plugins") {
     // A fan of plugins around the Elpino hub: arcs, spokes with a pulse running out to each one, icons popping in.
     const W = 560, H = 460, HUB = [280, 470] as const;
+    const fan = mobile ? 0.8 : 1; // phones: a tighter fan so the outer icons stay inside the frame
     // The integrations Elpino actually has, nine in two arcs: payments and stores nearest the hub, the rest outside.
     const nodes = [
       { id: "stripe", name: "Stripe", r: 255, a: 165 }, { id: "razorpay", name: "Razorpay", r: 255, a: 135 }, { id: "cashfree", name: "Cashfree", r: 255, a: 105 },
       { id: "paystack", name: "Paystack", r: 255, a: 75 }, { id: "asana", name: "Asana", r: 255, a: 45 }, { id: "trello", name: "Trello", r: 255, a: 15 },
       { id: "shopify", name: "Shopify", r: 165, a: 135 }, { id: "woocommerce", name: "WooCommerce", r: 165, a: 90 }, { id: "hubspot", name: "HubSpot", r: 165, a: 45 },
-    ].map((n) => ({ ...n, x: HUB[0] + n.r * Math.cos((n.a * Math.PI) / 180), y: HUB[1] - n.r * Math.sin((n.a * Math.PI) / 180) }));
+    ].map((n) => ({ ...n, x: HUB[0] + n.r * fan * Math.cos((n.a * Math.PI) / 180), y: HUB[1] - n.r * fan * Math.sin((n.a * Math.PI) / 180) }));
     return (
       <div ref={ref} className="relative aspect-[560/460] w-full overflow-hidden rounded-2xl border border-black/10 bg-white shadow-[0_24px_60px_rgba(15,22,41,0.12)]" style={{ backgroundImage: "radial-gradient(60% 55% at 50% 100%, rgba(55,132,255,0.09) 0%, rgba(55,132,255,0) 70%), radial-gradient(rgba(17,18,15,0.07) 1px, transparent 1px)", backgroundSize: "auto, 18px 18px" }}>
         <style>{`@keyframes elp-spoke { from { stroke-dashoffset: 12 } to { stroke-dashoffset: -100 } } @keyframes elp-halo { from { transform: translate(-50%,-50%) scale(1); opacity: .35 } to { transform: translate(-50%,-50%) scale(1.55); opacity: 0 } } @media (prefers-reduced-motion: reduce) { .elp-spoke, .elp-halo { animation: none !important } }`}</style>
@@ -741,7 +773,7 @@ function TeamPreview({ k, t }: { k: string; t: T }) {
           <span className="size-1.5 rounded-full bg-[#1aa37a]" />{t("home.teams.plugins.live", "9 plugins connected")}
         </span>
         <svg aria-hidden="true" viewBox={`0 0 ${W} ${H}`} className="absolute inset-0 size-full">
-          {[100, 165, 255].map((r) => <circle key={r} cx={HUB[0]} cy={HUB[1]} r={r} fill="none" stroke="#e3e7f1" strokeWidth="1.2" strokeDasharray={r === 100 ? "3 5" : undefined} />)}
+          {[100, 165, 255].map((r) => <circle key={r} cx={HUB[0]} cy={HUB[1]} r={r * fan} fill="none" stroke="#e3e7f1" strokeWidth="1.2" strokeDasharray={r === 100 ? "3 5" : undefined} />)}
           {nodes.map((n, i) => (
             <g key={n.id} style={{ opacity: seen ? 1 : 0, transition: `opacity 500ms ease ${300 + i * 110}ms` }}>
               <line x1={HUB[0]} y1={HUB[1]} x2={n.x} y2={n.y} stroke="#e3e7f1" strokeWidth="1.2" />
@@ -754,7 +786,7 @@ function TeamPreview({ k, t }: { k: string; t: T }) {
             <span className="grid size-[clamp(40px,10.5vw,58px)] place-items-center rounded-2xl border border-black/[0.07] bg-white p-[22%] shadow-[0_8px_22px_rgba(15,22,41,0.1)] sm:size-[58px]">
               <ConnectorLogo provider={n.id} alt={n.name} className="size-full object-contain" fallback={<span className="text-sm font-semibold">{n.name[0]}</span>} />
             </span>
-            <span className="absolute top-full mt-1.5 whitespace-nowrap text-[11px] font-medium text-[#11120f]/55">{n.name}</span>
+            <span className="absolute top-full mt-1.5 hidden whitespace-nowrap text-[11px] sm:block font-medium text-[#11120f]/55">{n.name}</span>
           </span>
         ))}
         {/* The hub, half out of view at the bottom: the Elpino mark with a soft halo that keeps pulsing out. */}
@@ -768,22 +800,22 @@ function TeamPreview({ k, t }: { k: string; t: T }) {
   if (k === "contacts")
     body = (
       // A dark contacts table behind, a frosted chat in front: the chat is where the lead is captured.
-      <div className="relative min-h-[430px] w-full max-w-[560px]">
-        <div className="w-[88%] rounded-xl border border-white/10 bg-[#1b2236] p-3 text-white shadow-[0_20px_50px_rgba(15,22,41,0.35)]">
+      <div className="relative w-full max-w-[560px] sm:min-h-[430px]">
+        <div className="w-full rounded-xl sm:w-[88%] border border-white/10 bg-[#1b2236] p-3 text-white shadow-[0_20px_50px_rgba(15,22,41,0.35)]">
           <p className="border-b border-white/15 px-2 pb-2 text-[15px]">{t("home.teams.contacts.label", "Contacts")}</p>
           <div className="mt-3 overflow-hidden rounded-md border border-white/10 text-[12px]">
-            <div className="grid grid-cols-[1.1fr_1.5fr_0.8fr] bg-white/[0.04] px-3 py-2 font-semibold"><span>{t("home.teams.contacts.name", "Name")}</span><span>{t("home.teams.contacts.contact", "Email or phone")}</span><span>{t("home.teams.contacts.status", "Status")}</span></div>
+            <div className="grid grid-cols-[1fr_1.4fr_auto] sm:grid-cols-[1.1fr_1.5fr_0.8fr] bg-white/[0.04] px-3 py-2 font-semibold"><span>{t("home.teams.contacts.name", "Name")}</span><span>{t("home.teams.contacts.contact", "Email or phone")}</span><span>{t("home.teams.contacts.status", "Status")}</span></div>
             <div className="grid transition-[grid-template-rows,opacity] duration-500 ease-out" style={{ gridTemplateRows: stage >= 3 ? "1fr" : "0fr", opacity: stage >= 3 ? 1 : 0 }}>
               <div className="overflow-hidden">
-                <div className="grid grid-cols-[1.1fr_1.5fr_0.8fr] items-center border-t border-[#8b7cf6] bg-[#6c5ce7]/25 px-3 py-2.5"><span>Maya Chen</span><span className="truncate text-white/75">maya@brightly.co</span><span><span className="rounded-full bg-[#6c5ce7] px-2 py-0.5 text-[10.5px]">{t("home.teams.contacts.new", "New lead")}</span></span></div>
+                <div className="grid grid-cols-[1fr_1.4fr_auto] sm:grid-cols-[1.1fr_1.5fr_0.8fr] items-center border-t border-[#8b7cf6] bg-[#6c5ce7]/25 px-3 py-2.5"><span>Maya Chen</span><span className="truncate text-white/75">maya@brightly.co</span><span><span className="rounded-full bg-[#6c5ce7] px-2 py-0.5 text-[10.5px]">{t("home.teams.contacts.new", "New lead")}</span></span></div>
               </div>
             </div>
             {[["Tom Ruiz", "+1 415 555 0142", "Customer"], ["Aisha Khan", "aisha@northwind.io", "Customer"], ["Daniel Cole", "daniel@fernhill.com", "Customer"], ["Priya Nair", "+44 20 7946 0123", "Customer"]].map(([name, detail, tag], i) => (
-              <div key={name} className="grid grid-cols-[1.1fr_1.5fr_0.8fr] items-center border-t border-white/10 px-3 py-2.5 text-white/80" style={rise(i * 0.4)}><span>{name}</span><span className="truncate">{detail}</span><span>{tag}</span></div>
+              <div key={name} className="grid grid-cols-[1fr_1.4fr_auto] sm:grid-cols-[1.1fr_1.5fr_0.8fr] items-center border-t border-white/10 px-3 py-2.5 text-white/80" style={rise(i * 0.4)}><span>{name}</span><span className="truncate">{detail}</span><span>{tag}</span></div>
             ))}
           </div>
         </div>
-        <div className="absolute bottom-0 right-0 w-[80%] rounded-xl border border-white/60 bg-white/55 p-4 text-[#11120f] shadow-[0_24px_60px_rgba(15,22,41,0.3)] backdrop-blur-xl">
+        <div className="relative mt-3 w-full rounded-xl border border-white/60 sm:absolute sm:bottom-0 sm:right-0 sm:mt-0 sm:w-[80%] bg-white/55 p-4 text-[#11120f] shadow-[0_24px_60px_rgba(15,22,41,0.3)] backdrop-blur-xl">
           <div style={{ opacity: stage >= 1 ? 1 : 0, transform: stage >= 1 ? "none" : "translateY(8px)", transition: "opacity 450ms ease, transform 450ms ease" }}>
             <p className="w-fit max-w-[92%] rounded-xl bg-black/10 px-3 py-2 text-[13.5px] leading-[1.45]">{t("home.teams.contacts.ask", "What's your email, just in case we get disconnected?")}</p>
           </div>
@@ -805,7 +837,7 @@ function TeamPreview({ k, t }: { k: string; t: T }) {
         </div>
       </div>
     );
-  return <div ref={ref} className="grid min-h-[460px] w-full place-items-center p-6 sm:p-10">{body}</div>;
+  return <div ref={ref} className="grid min-h-[460px] w-full grid-cols-[minmax(0,1fr)] place-items-center p-4 sm:p-10">{body}</div>;
 }
 
 // Four things a team does with Elpino. Each is a row: a preview on a soft frame, with the explanation beside it,
@@ -831,7 +863,7 @@ function Teams({ t }: { t: T }) {
               <Rv variant="deal" className={i % 2 === 1 ? "lg:order-2" : ""}>
                 {/* A soft, blurred pastel frame around a dark panel, the preview inside it. */}
                 <div className={`relative rounded-[2rem] p-5 sm:p-7 ${keys[i] === "reply" ? "" : "overflow-hidden"}`} style={{ backgroundColor: "#eeeeec", backgroundImage: ["radial-gradient(60% 55% at 0% 0%, rgba(176,222,196,0.85) 0%, rgba(176,222,196,0) 70%)", "radial-gradient(55% 60% at 100% 10%, rgba(150,142,184,0.8) 0%, rgba(150,142,184,0) 70%)", "radial-gradient(60% 55% at 10% 100%, rgba(238,196,190,0.75) 0%, rgba(238,196,190,0) 70%)", "radial-gradient(55% 55% at 100% 100%, rgba(205,200,216,0.9) 0%, rgba(205,200,216,0) 70%)"].join(", ") }}>
-                  {keys[i] === "contacts" || keys[i] === "plugins" ? <TeamPreview k={keys[i]} t={t} /> : <div className={`relative rounded-2xl bg-[#0f1629] shadow-[0_24px_60px_rgba(15,22,41,0.35)] ${keys[i] === "reply" ? "" : "overflow-hidden"}`}><TeamPreview k={keys[i]} t={t} /></div>}
+                  {keys[i] === "contacts" || keys[i] === "plugins" ? <TeamPreview k={keys[i]} t={t} /> : <div className={`relative rounded-2xl shadow-[0_24px_60px_rgba(15,22,41,0.35)] ${keys[i] === "reply" ? "bg-transparent shadow-none sm:bg-[#0f1629] sm:shadow-[0_24px_60px_rgba(15,22,41,0.35)]" : "overflow-hidden bg-[#0f1629]"}`}><TeamPreview k={keys[i]} t={t} /></div>}
                 </div>
               </Rv>
               <Rv delay={120} className={i % 2 === 1 ? "lg:order-1" : ""}>
@@ -1274,7 +1306,7 @@ function WidgetMock({ t, progress }: { t: T; progress: number }) {
   const clamp = (v: number) => Math.min(1, Math.max(0, v));
   const bubble = "rounded-2xl px-3.5 py-2.5 text-[13.5px] leading-[1.5]";
   return (
-    <div className="flex h-[420px] w-[330px] flex-col rounded-[26px] border border-black/10 bg-white text-[#11120f] shadow-[0_24px_60px_rgba(17,18,15,0.22)]">
+    <div className="flex min-h-[420px] w-[min(330px,calc(100vw-5.5rem))] flex-col rounded-[26px] sm:h-[420px] sm:w-[330px] border border-black/10 bg-white text-[#11120f] shadow-[0_24px_60px_rgba(17,18,15,0.22)]">
       <div className="flex items-center gap-3 rounded-t-[26px] border-b border-black/10 px-4 py-3">
         <span className="grid size-8 place-items-center rounded-full bg-black/5"><ChevronLeft size={16} /></span>
         <div className="leading-tight"><p className="text-[14px]">{t("home.widgetMock.name", "Elpino AI")}</p><p className="text-[11.5px] text-[#11120f]/50">{t("home.widgetMock.role", "AI Assistant")}</p></div>
@@ -1282,7 +1314,7 @@ function WidgetMock({ t, progress }: { t: T; progress: number }) {
       </div>
       <div className="flex flex-1 flex-col justify-start gap-2.5 rounded-b-[26px] bg-[#ffffff] p-3.5">
         <div className={`${bubble} max-w-[85%] self-end bg-[#11120f] text-white transition-all duration-300`} style={{ opacity: progress >= ASKED_AT ? 1 : 0, transform: progress >= ASKED_AT ? "none" : "translateY(6px)" }}>{t("home.widgetMock.question", "I purchased a plan but it's still not active")}</div>
-        <div className={`${bubble} -ml-[100px] w-[290px] self-start border border-white/70 bg-white/40 shadow-[0_14px_36px_rgba(17,18,15,0.16)] ring-1 ring-black/5 backdrop-blur-xl backdrop-saturate-150 transition-opacity duration-300`} style={{ opacity: progress >= nodes[0].appear ? 1 : 0 }}>
+        <div className={`${bubble} w-full self-start sm:-ml-[100px] sm:w-[290px] border border-white/70 bg-white/40 shadow-[0_14px_36px_rgba(17,18,15,0.16)] ring-1 ring-black/5 backdrop-blur-xl backdrop-saturate-150 transition-opacity duration-300`} style={{ opacity: progress >= nodes[0].appear ? 1 : 0 }}>
           {/* What the AI does before it replies, drawn as a graph: every step is a node that gets a blue tick once
               it is done, and the edge to the next node fills in as you scroll. The reply is the last node. */}
           <ol>
@@ -1513,7 +1545,7 @@ function ProductTabs({ t }: { t: T }) {
             <span className="absolute inset-y-8 left-10 w-[70%] border-l border-t border-dashed border-white/80" />
           </div>
           <div className="relative">
-            {tab.key === "widget" && <div className="origin-center scale-[0.88] sm:scale-100 sm:pl-16"><WidgetMock t={t} progress={fill} /></div>}
+            {tab.key === "widget" && <div className="sm:pl-16"><WidgetMock t={t} progress={fill} /></div>}
             {tab.key === "inbox" && <Image src="/inbox_prev.png" alt="The Elpino team inbox" width={1915} height={812} className="h-auto max-h-[38vh] w-auto max-w-full rounded-xl border border-black/10 shadow-[0_24px_60px_rgba(17,18,15,0.22)]" />}
             {tab.key === "kb" && <KnowledgeGraph t={t} progress={fill} />}
             {tab.key === "tickets" && <TicketFlow t={t} progress={fill} />}
