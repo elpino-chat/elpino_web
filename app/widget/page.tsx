@@ -1440,7 +1440,7 @@ function WidgetContent() {
         body: JSON.stringify({ key, hostname, visitorToken, conversationId: conversationId || undefined, [contactField]: value }),
       });
       const data = (await response.json().catch(() => ({}))) as { error?: string; aiWillReply?: boolean };
-      if (!response.ok || data.error) { setContactError("Couldn't save that. Try again or skip."); return; }
+      if (!response.ok || data.error) { setContactError("Couldn't save that. Try again."); return; }
       if (contactField === "name") setHomeName(value.split(/\s+/)[0]);
       if (data.aiWillReply) {
         // The AI answers it like any reply (greeting them by name and carrying on with their question), so the
@@ -1456,15 +1456,10 @@ function WidgetContent() {
         );
       }
     } catch {
-      setContactError("Couldn't save that. Try again or skip.");
+      setContactError("Couldn't save that. Try again.");
     } finally {
       setContactSaving(false);
     }
-  }
-
-  // Skipping dismisses just this question; the normal message box comes back and the AI won't ask again.
-  function skipContactStep() {
-    finishContact();
   }
 
   async function sendMessage() {
@@ -2275,8 +2270,8 @@ function WidgetContent() {
                 );
               })()}
               {contactActive && contactField && (
-                // The answer to the AI's question above, in the conversation itself, like a reply. The message
-                // box below stays usable, so typing there instead is simply not answering.
+                // The answer to the AI's question above, in the conversation itself, like a reply. It's required:
+                // the message box stays hidden until the visitor answers.
                 <div className="w-full max-w-[85%]">
                   {!contactAskedMessage && <p className="mb-1.5 px-1 text-[13.5px] leading-5">{CONTACT_PROMPTS[contactField].label}</p>}
                   <div className="flex items-center rounded-md border py-1.5 pl-3 pr-2" style={{ borderColor: contactError ? "#e5626a" : "rgba(24,24,27,0.28)", backgroundColor: SURFACE }}>
@@ -2308,7 +2303,6 @@ function WidgetContent() {
                   {/* The attribution that would sit under the question, moved below the field so the two read as one block. */}
                   <div className="mt-1.5 flex items-center justify-between px-1 text-[11px] leading-4" style={{ color: MUTED }}>
                     <span>{contactAskedMessage ? `AI agent · ${timeAgo(Date.parse(contactAskedMessage.createdAt) || clock + serverOffset, clock + serverOffset)}` : "For the team"}</span>
-                    <button type="button" onClick={skipContactStep} className="underline underline-offset-2 hover:opacity-80">Skip</button>
                   </div>
                 </div>
               )}

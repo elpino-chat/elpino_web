@@ -826,7 +826,7 @@ function TeamPreview({ k, t }: { k: string; t: T }) {
                 <span className="h-7 min-w-0 flex-1 truncate text-[13.5px] leading-7">{chars > 0 ? CONTACT_EMAIL.slice(0, chars) : <span className="text-[#11120f]/40">you@example.com</span>}</span>
                 <span className="grid size-7 shrink-0 place-items-center rounded-full transition-colors duration-300" style={{ backgroundColor: chars > 0 ? "#18181b" : "#eceef0", color: chars > 0 ? "#fff" : "#b5b8bd" }}><ArrowUp size={14} strokeWidth={2.2} /></span>
               </div>
-              <div className="mt-1.5 flex items-center justify-between px-1 text-[11px] text-[#11120f]/55"><span>{t("home.teams.contacts.agent", "AI agent · Just now")}</span><span className="underline underline-offset-2">{t("home.teams.contacts.skip", "Skip")}</span></div>
+              <div className="mt-1.5 flex items-center justify-between px-1 text-[11px] text-[#11120f]/55"><span>{t("home.teams.contacts.agent", "AI agent · Just now")}</span></div>
             </div>
           ) : (
             <div className="mt-2.5" style={{ animation: "elpino-rv-up 0.5s ease both" }}>
