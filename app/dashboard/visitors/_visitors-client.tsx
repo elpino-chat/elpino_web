@@ -317,7 +317,7 @@ export function VisitorsClient({ view }: { view: VisitorView }) {
   return (
     <div className="dashboard-analytics-shell flex h-full min-h-0 overflow-hidden bg-[#262626] text-white">
       <main className="dashboard-page-surface dashboard-visitors-main-surface flex min-h-0 flex-1 flex-col overflow-y-auto bg-[#262626] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <div className="dashboard-analytics-canvas relative mx-auto min-h-full w-full max-w-[1440px] px-4 pb-16 pt-6 sm:px-8">
+        <div className="dashboard-analytics-canvas relative mx-auto min-h-full w-full shrink-0 max-w-[1440px] px-4 pb-[calc(128px+env(safe-area-inset-bottom))] pt-6 sm:px-8 md:pb-16">
           {/* When the plan has no analytics the whole canvas — title included — is blurred and inert,
               with the upgrade card floating over it. */}
           <div aria-hidden={locked || undefined} inert={locked || undefined} className={locked ? "pointer-events-none select-none blur-[7px]" : undefined}>

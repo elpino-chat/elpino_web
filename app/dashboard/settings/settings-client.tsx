@@ -3151,6 +3151,9 @@ function GeneralSettingsPage({ user }: { user: SettingsUser }) {
   );
 }
 
+// What visitors see when no avatar is chosen: the stock blue chat mark, same as the widget launcher on customer sites.
+const DEFAULT_BOT_AVATAR = "/api/stock-icons/widget_1.png";
+
 function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: HTMLDivElement | null }) {
   const [loading, setLoading] = useState(true);
   const [aiName, setAiName] = useState("Elpino AI");
@@ -3161,8 +3164,15 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
   const [theme, setTheme] = useState<"light" | "dark" | "auto">("light");
   const [replyLanguage, setReplyLanguage] = useState("auto");
   const [replyLanguageOpen, setReplyLanguageOpen] = useState(false);
-  // One greeting message. Workspaces saved with several lines are shown joined into one.
+  // Phones and tablets have no side preview panel, so the preview opens inline instead.
+  const [mobilePreviewOpen, setMobilePreviewOpen] = useState(false);
+  // One greeting message. Workspaces saved with several lines are shown joined into one. `greeting` is what the field shows: the greeting
+  // as written (`baseGreeting`) on Auto, or the saved translation for the chosen reply language, which is made once and then reused.
   const [greeting, setGreeting] = useState(DEFAULT_GREETING);
+  const [baseGreeting, setBaseGreeting] = useState(DEFAULT_GREETING);
+  const [translations, setTranslations] = useState<Record<string, string>>({});
+  const [translating, setTranslating] = useState(false);
+  const savedTranslationsRef = useRef<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -3203,13 +3213,24 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
         setTheme(data.persona.chatbotTheme ?? "light");
         setReplyLanguage(data.persona.chatbotReplyLanguage ?? "auto");
         const saved = Array.isArray(data.persona.greetingLines) ? data.persona.greetingLines.map((line) => line.trim()).filter(Boolean).join(" ") : "";
-        setGreeting(saved || DEFAULT_GREETING);
+        const savedBase = saved || DEFAULT_GREETING;
+        const savedTranslated: Record<string, string> = {};
+        for (const [code, lines] of Object.entries((data.persona as { greetingTranslations?: Record<string, string[]> }).greetingTranslations ?? {})) {
+          const text = Array.isArray(lines) ? lines.map((line) => line.trim()).filter(Boolean).join(" ") : "";
+          if (text) savedTranslated[code] = text;
+        }
+        const language = data.persona.chatbotReplyLanguage ?? "auto";
+        const shown = language !== "auto" && savedTranslated[language] ? savedTranslated[language] : savedBase;
+        setBaseGreeting(savedBase);
+        setTranslations(savedTranslated);
+        savedTranslationsRef.current = savedTranslated;
+        setGreeting(shown);
         savedSnapshot.current = JSON.stringify([
           data.persona.aiName ?? "Elpino AI",
           data.persona.aiAvatarUrl ?? "",
           data.persona.chatbotTheme ?? "light",
-          data.persona.chatbotReplyLanguage ?? "auto",
-          saved || DEFAULT_GREETING,
+          language,
+          shown,
         ]);
       })
       .catch(() => undefined)
@@ -3219,6 +3240,49 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
   const cleanGreetingLines = greeting.trim() ? [greeting.trim()] : [];
 
   const currentSnapshot = JSON.stringify([aiName, aiAvatarUrl, theme, replyLanguage, greeting]);
+
+  // Typing changes the greeting for the language being shown: the written one on Auto, otherwise that language's saved translation.
+  function editGreeting(value: string) {
+    setGreeting(value);
+    setSaved(false);
+    if (replyLanguage === "auto") {
+      setBaseGreeting(value);
+      // Rewriting the greeting makes the saved translations out of date; the server drops them too, and they are remade on demand.
+      setTranslations({});
+      savedTranslationsRef.current = {};
+    } else {
+      setTranslations((current) => ({ ...current, [replyLanguage]: value }));
+    }
+  }
+
+  // Picking a reply language shows the greeting in it. Translated once with a small model and saved; picking the language again, or
+  // switching back and forth, uses the saved text. Auto goes back to the greeting as written.
+  async function chooseReplyLanguage(code: string, force = false) {
+    setReplyLanguage(code);
+    setReplyLanguageOpen(false);
+    setSaved(false);
+    setError(null);
+    if (code === "auto") { setGreeting(baseGreeting); return; }
+    if (translations[code] && !force) { setGreeting(translations[code]); return; }
+    setTranslating(true);
+    try {
+      // Translate what is written now, not what was last saved.
+      if (savedSnapshot.current !== currentSnapshot) await save();
+      const response = await fetch("/api/workspace/ai-persona/greeting-translate", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ language: code, force }),
+      });
+      const data = (await response.json().catch(() => ({}))) as { lines?: string[]; message?: string };
+      if (!response.ok || !data.lines) { setError(data.message ?? "Could not translate the greeting."); setGreeting(baseGreeting); return; }
+      const text = data.lines.map((line) => line.trim()).filter(Boolean).join(" ");
+      setTranslations((current) => ({ ...current, [code]: text }));
+      savedTranslationsRef.current = { ...savedTranslationsRef.current, [code]: text };
+      setGreeting(text);
+    } finally {
+      setTranslating(false);
+    }
+  }
 
   async function save() {
     if (!aiName.trim() || cleanGreetingLines.length === 0 || saving) return;
@@ -3234,7 +3298,13 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
           aiAvatarUrl: aiAvatarUrl.trim(),
           chatbotTheme: theme,
           chatbotReplyLanguage: replyLanguage,
-          greetingLines: cleanGreetingLines,
+          // Always the greeting as written; a translation travels separately, and only when it was edited here.
+          greetingLines: [baseGreeting.trim() || DEFAULT_GREETING],
+          // Only a translation that exists and was edited here: while one is still being made the field holds the written greeting,
+          // which must never be saved as the translation.
+          ...(replyLanguage !== "auto" && translations[replyLanguage] && translations[replyLanguage] === greeting.trim() && savedTranslationsRef.current[replyLanguage] !== greeting.trim()
+            ? { greetingTranslations: { [replyLanguage]: [greeting.trim()] } }
+            : {}),
         }),
       });
       const data = (await response.json().catch(() => ({}))) as { persona?: AiPersona; message?: string };
@@ -3243,6 +3313,7 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
         return;
       }
       savedSnapshot.current = currentSnapshot;
+      if (replyLanguage !== "auto" && translations[replyLanguage]) savedTranslationsRef.current = { ...savedTranslationsRef.current, [replyLanguage]: translations[replyLanguage] };
       setSaved(true);
       window.setTimeout(() => setSaved(false), 2200);
     } finally {
@@ -3259,19 +3330,20 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
   }
 
   useEffect(() => {
-    if (loading || !aiName.trim() || cleanGreetingLines.length === 0) return;
+    if (loading || translating || !aiName.trim() || cleanGreetingLines.length === 0) return;
     // Nothing to save until the person actually changes something.
     if (savedSnapshot.current === currentSnapshot) return;
     const timer = window.setTimeout(() => { void save(); }, 700);
     return () => window.clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [theme, replyLanguage, aiName, aiAvatarUrl, greeting, loading]);
+  }, [theme, replyLanguage, aiName, aiAvatarUrl, greeting, loading, translating]);
 
   return (
-    <div className="dashboard-chatbot-settings-page mx-auto w-full max-w-[1280px] px-7 pb-20 pt-8 text-white/90 sm:px-9 lg:px-10">
+    <div className="dashboard-chatbot-settings-page mx-auto w-full max-w-[1280px] px-4 pb-24 pt-5 text-white/90 sm:px-9 sm:pb-20 sm:pt-8 lg:px-10">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-[32px] font-medium tracking-[-0.04em] text-white/90">Chatbot Interface</h2>
+          <h2 className="text-[26px] font-medium tracking-[-0.04em] text-white/90 sm:text-[32px]">Chatbot Interface</h2>
+          <p className="mt-1 text-[14px] leading-6 text-white/60 sm:hidden">How your chat looks and greets visitors. Changes save automatically.</p>
         </div>
         {/* Every field here autosaves 700ms after the last edit (see the
             debounced effect above) — there's no Save button, so without this
@@ -3311,23 +3383,36 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
           </div>
         </div>
       ) : (
-        <div className="mt-7">
+        <div className="mt-5 sm:mt-7">
+          {/* No side panel below xl, so the live preview folds out here instead. */}
+          <div className="xl:hidden">
+            <button
+              type="button"
+              onClick={() => setMobilePreviewOpen((open) => !open)}
+              aria-expanded={mobilePreviewOpen}
+              className="flex h-12 w-full items-center justify-between rounded-2xl border border-white/10 bg-white/[0.04] px-4 text-[14px] font-medium"
+            >
+              <span className="flex items-center gap-2.5"><MessageCircle size={16} /> Preview your chat</span>
+              <ChevronDown size={16} className={`transition-transform ${mobilePreviewOpen ? "rotate-180" : ""}`} />
+            </button>
+            {mobilePreviewOpen && (
+              <div className="mt-3 flex h-[520px] flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#262626]">
+                <WidgetPreviewCard accent={accent} aiName={aiName} aiAvatarUrl={aiAvatarUrl} greetingLines={cleanGreetingLines.length > 0 ? cleanGreetingLines : [DEFAULT_GREETING]} fields={previewFields} />
+              </div>
+            )}
+          </div>
           <div className="min-w-0">
-            <div data-tour="widget-identity" className="overflow-hidden py-5">
-              <div className="grid gap-6 sm:grid-cols-[220px_minmax(0,1fr)]">
+            <div data-tour="widget-identity" className="overflow-hidden py-5 max-sm:mt-4 max-sm:rounded-2xl max-sm:border max-sm:border-white/10 max-sm:px-4">
+              <div className="grid gap-4 sm:grid-cols-[220px_minmax(0,1fr)] sm:gap-6">
                 <div>
                   <h3 className="text-[16px] font-semibold">General information</h3>
-                  <p className="mt-1 max-w-[200px] text-[12px] leading-5 text-[#667069]">The name and avatar shown to customers in chat.</p>
+                  <p className="mt-1 text-[12px] leading-5 text-[#667069] sm:max-w-[200px]">The name and avatar shown to customers in chat.</p>
                 </div>
                 <div className="w-full min-w-0">
                   <span className="block text-[12px] font-semibold text-[#17233A]">Avatar</span>
                   <div className="relative mt-2 inline-block">
                     <span className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full text-[22px] font-bold text-white" style={{ backgroundColor: accent }}>
-                      {aiAvatarUrl.trim() ? (
-                        <img src={aiAvatarUrl} alt="AI avatar preview" className="h-full w-full object-cover" />
-                      ) : (
-                        (aiName.trim() || "R").charAt(0).toUpperCase()
-                      )}
+                      <img src={aiAvatarUrl.trim() || DEFAULT_BOT_AVATAR} alt="AI avatar preview" className="h-full w-full object-cover" />
                     </span>
                     <button
                       type="button"
@@ -3340,7 +3425,7 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
                   </div>
                   <p className="mt-2 text-[11px] text-[#8b8d90]">PNG, JPG, or WebP — up to 2 MB</p>
 
-                  <label className="mt-5 block w-1/2">
+                  <label className="mt-5 block w-full sm:w-1/2">
                     <span className="text-[12px] font-semibold text-[#17233A]">Chatbot name</span>
                     <div className="relative mt-2">
                       <UserRound size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#8b8d90]" />
@@ -3348,7 +3433,7 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
                         value={aiName}
                         onChange={(event) => { setAiName(event.target.value); setSaved(false); }}
                         placeholder="Elpino AI"
-                        className="h-11 w-full rounded-xl border border-[#DDE4E8] pl-9 pr-3 text-[13px] outline-none transition focus:border-[#11120f] focus:ring-2 focus:ring-[#11120f]/8"
+                        className="h-12 w-full rounded-xl border border-[#DDE4E8] pl-9 pr-3 text-[16px] outline-none transition focus:border-[#11120f] focus:ring-2 focus:ring-[#11120f]/8 sm:h-11 sm:text-[13px]"
                       />
                     </div>
                   </label>
@@ -3358,11 +3443,11 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
 
             {error && <p className="mt-4 text-[12px] text-[#c63f4d]">{error}</p>}
 
-            <div data-tour="widget-greeting" className="overflow-hidden border-t border-white/10 py-5">
-              <div className="grid gap-6 sm:grid-cols-[220px_minmax(0,1fr)]">
+            <div data-tour="widget-greeting" className="overflow-hidden border-t border-white/10 py-5 max-sm:mt-3 max-sm:rounded-2xl max-sm:border max-sm:px-4">
+              <div className="grid gap-4 sm:grid-cols-[220px_minmax(0,1fr)] sm:gap-6">
                 <div>
                   <h3 className="text-[16px] font-semibold">Greeting message</h3>
-                  <p className="mt-1 max-w-[200px] text-[12px] leading-5 text-[#667069]">Shown before a visitor starts chatting, on the launcher and at the top of a new conversation.</p>
+                  <p className="mt-1 text-[12px] leading-5 text-[#667069] sm:max-w-[200px]">Shown before a visitor starts chatting, on the launcher and at the top of a new conversation.</p>
                 </div>
                 <div className="w-full min-w-0">
                   <div className="flex w-full items-center gap-2">
@@ -3371,21 +3456,36 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
                       aria-label="Greeting message"
                       value={greeting}
                       maxLength={GREETING_MAX_LENGTH}
-                      onChange={(event) => { setGreeting(event.target.value); setSaved(false); }}
+                      disabled={translating}
+                      onChange={(event) => editGreeting(event.target.value)}
                       placeholder={DEFAULT_GREETING}
-                      className="h-9 w-full rounded-lg border border-[#DDE4E8] px-3 text-[13px] outline-none transition focus:border-[#11120f] focus:ring-2 focus:ring-[#11120f]/8"
+                      className="h-11 w-full rounded-lg border border-[#DDE4E8] px-3 text-[16px] outline-none transition focus:border-[#11120f] focus:ring-2 focus:ring-[#11120f]/8 sm:h-9 sm:text-[13px]"
                     />
                   </div>
-                  <p className="mt-1.5 text-[11px] text-[#8b8d90]">{greeting.length}/{GREETING_MAX_LENGTH}</p>
+                  <div className="mt-1.5 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-[11px] text-[#8b8d90]">
+                    <span>
+                      {translating
+                        ? <span className="inline-flex items-center gap-1.5"><LoaderCircle size={11} className="animate-spin" /> Translating to {SUPPORTED_LANGUAGES.find((item) => item.code === replyLanguage)?.name ?? "that language"}…</span>
+                        : replyLanguage === "auto"
+                          ? "On Auto, visitors from other countries are greeted in their own language."
+                          : `Shown to visitors in ${SUPPORTED_LANGUAGES.find((item) => item.code === replyLanguage)?.name ?? "this language"}. Translated once and saved.`}
+                    </span>
+                    <span className="flex items-center gap-3">
+                      {replyLanguage !== "auto" && !translating && (
+                        <button type="button" onClick={() => void chooseReplyLanguage(replyLanguage, true)} className="font-medium underline underline-offset-2 hover:text-white/80">Translate again</button>
+                      )}
+                      <span>{greeting.length}/{GREETING_MAX_LENGTH}</span>
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="border-t border-white/10 py-5">
-              <div className="grid gap-6 sm:grid-cols-[220px_minmax(0,1fr)]">
+            <div className="border-t border-white/10 py-5 max-sm:mt-3 max-sm:rounded-2xl max-sm:border max-sm:px-4">
+              <div className="grid gap-4 sm:grid-cols-[220px_minmax(0,1fr)] sm:gap-6">
                 <div>
                   <h3 className="text-[16px] font-semibold">Reply language</h3>
-                  <p className="mt-1 max-w-[200px] text-[12px] leading-5 text-[#667069]">Auto matches whatever language the customer writes in. Forcing one replies in it regardless of what they type.</p>
+                  <p className="mt-1 text-[12px] leading-5 text-[#667069] sm:max-w-[200px]">Auto matches whatever language the customer writes in. Forcing one replies in it regardless of what they type.</p>
                 </div>
                 <div className="relative w-full min-w-0 sm:w-1/2">
                   <button
@@ -3393,7 +3493,7 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
                     onClick={() => setReplyLanguageOpen((open) => !open)}
                     aria-expanded={replyLanguageOpen}
                     aria-haspopup="listbox"
-                    className="flex h-11 w-full items-center gap-2.5 rounded-xl border border-[#DDE4E8] px-3 text-[13px] outline-none transition focus:border-[#11120f] focus:ring-2 focus:ring-[#11120f]/8"
+                    className="flex h-12 w-full items-center gap-2.5 rounded-xl border border-[#DDE4E8] px-3 text-[14px] outline-none transition focus:border-[#11120f] focus:ring-2 focus:ring-[#11120f]/8 sm:h-11 sm:text-[13px]"
                   >
                     {replyLanguage === "auto" ? (
                       <span className="flex h-4 w-5 shrink-0 items-center justify-center text-[13px]">🌐</span>
@@ -3416,7 +3516,7 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
                             type="button"
                             role="option"
                             aria-selected={replyLanguage === "auto"}
-                            onClick={() => { setReplyLanguage("auto"); setReplyLanguageOpen(false); setSaved(false); }}
+                            onClick={() => void chooseReplyLanguage("auto")}
                             className={`flex w-full items-center gap-3 rounded-[9px] px-3 py-2.5 text-left text-[13px] transition ${replyLanguage === "auto" ? "bg-[#eff6ff] font-semibold text-[#1d4ed8]" : "text-[#404653] hover:bg-[#f5f6f7]"}`}
                           >
                             <span className="flex h-4 w-5 shrink-0 items-center justify-center text-[13px]">🌐</span>
@@ -3429,7 +3529,7 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
                               type="button"
                               role="option"
                               aria-selected={replyLanguage === item.code}
-                              onClick={() => { setReplyLanguage(item.code); setReplyLanguageOpen(false); setSaved(false); }}
+                              onClick={() => void chooseReplyLanguage(item.code)}
                               className={`flex w-full items-center gap-3 rounded-[9px] px-3 py-2.5 text-left text-[13px] transition ${replyLanguage === item.code ? "bg-[#eff6ff] font-semibold text-[#1d4ed8]" : "text-[#404653] hover:bg-[#f5f6f7]"}`}
                             >
                               <LanguageFlag countryCode={LANGUAGE_COUNTRY_CODES[item.code] ?? "gb"} />
@@ -3445,11 +3545,11 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
               </div>
             </div>
 
-            <div className="border-t border-white/10 py-5">
-              <div className="grid gap-6 sm:grid-cols-[220px_minmax(0,1fr)]">
+            <div className="border-t border-white/10 py-5 max-sm:mt-3 max-sm:rounded-2xl max-sm:border max-sm:px-4">
+              <div className="grid gap-4 sm:grid-cols-[220px_minmax(0,1fr)] sm:gap-6">
                 <div>
                   <h3 className="text-[16px] font-semibold">Collect contact details</h3>
-                  <p className="mt-1 max-w-[200px] text-[12px] leading-5 text-[#667069]">Choose which contact details the chat widget asks visitors to share.</p>
+                  <p className="mt-1 text-[12px] leading-5 text-[#667069] sm:max-w-[200px]">Choose which contact details the chat widget asks visitors to share.</p>
                 </div>
                 <div className="w-full min-w-0">
                   <ContactCollectionSwitch onFieldsChange={setPreviewFields} />
@@ -3467,12 +3567,12 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
 
       {avatarPickerOpen && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/35 p-4 backdrop-blur-[2px]"
+          className="fixed inset-0 z-[100] flex items-end justify-center bg-black/35 backdrop-blur-[2px] sm:items-center sm:p-4"
           role="presentation"
           onMouseDown={(event) => { if (event.target === event.currentTarget) setAvatarPickerOpen(false); }}
         >
-          <div role="dialog" aria-modal="true" aria-label="Change avatar" className="dashboard-avatar-picker flex h-[80vh] w-[60vw] max-w-none flex-col overflow-hidden rounded-[24px] border border-white/10 bg-[#2d2d2d] text-white/90 shadow-[0_28px_80px_rgba(0,0,0,0.38)] max-lg:h-[85vh] max-lg:w-[92vw]">
-            <div className="flex items-start justify-between border-b border-[#E5E9EB] px-7 py-5">
+          <div role="dialog" aria-modal="true" aria-label="Change avatar" className="dashboard-avatar-picker flex h-[88dvh] w-full max-w-none flex-col overflow-hidden rounded-t-[24px] sm:h-[80vh] sm:w-[60vw] sm:rounded-[24px] border border-white/10 bg-[#2d2d2d] text-white/90 shadow-[0_28px_80px_rgba(0,0,0,0.38)] max-lg:h-[85vh] max-lg:w-[92vw]">
+            <div className="flex items-start justify-between gap-3 border-b border-[#E5E9EB] px-5 py-4 sm:px-7 sm:py-5">
               <div>
                 <h3 className="text-[18px] font-semibold tracking-[-0.02em]">Change avatar</h3>
                 <p className="mt-1 text-[12.5px] text-[#667069]">Upload your own image, or pick one you used before — this is what customers see in every conversation, and the icon they'll click to open the chat.</p>
@@ -3480,7 +3580,7 @@ function ChatbotInterfaceSettingsPage({ previewContainer }: { previewContainer: 
               <button type="button" onClick={() => setAvatarPickerOpen(false)} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg hover:bg-[#F0F2F3]"><X size={18} /></button>
             </div>
 
-            <div className="min-h-0 flex-1 overflow-y-auto p-7">
+            <div className="min-h-0 flex-1 overflow-y-auto p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:p-7">
               <div className="mx-auto max-w-3xl">
                 <label className="flex h-40 cursor-pointer flex-col items-center justify-center gap-2.5 rounded-2xl border-2 border-dashed border-[#c7cdd1] text-center text-[13px] text-[#667069] transition hover:bg-[#f7f8f8]">
                   <Upload size={26} />
@@ -3736,7 +3836,7 @@ function WidgetPreviewCard({
                   <div className="flex h-full flex-col">
                     <div className="px-4 pb-4 pt-6">
                       <span className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full text-[14px] font-bold" style={{ backgroundColor: accent }}>
-                        {aiAvatarUrl.trim() ? <img src={aiAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
+                        <img src={aiAvatarUrl.trim() || DEFAULT_BOT_AVATAR} alt="" className="h-full w-full object-cover" />
                       </span>
                       <h3 className="mt-3 text-[16px] font-semibold leading-6">{lines[0]}</h3>
                       {lines.length > 1 && (
@@ -3784,7 +3884,7 @@ function WidgetPreviewCard({
                     <div className="flex items-center gap-2 border-b px-3 py-2.5" style={{ borderColor: PREVIEW_BORDER }}>
                       <button type="button" aria-label="Back to chats" onClick={() => setScreen("home")} className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full hover:bg-white/10"><ChevronLeft size={15} /></button>
                       <span className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full text-[11px] font-bold" style={{ backgroundColor: accent }}>
-                        {aiAvatarUrl.trim() ? <img src={aiAvatarUrl} alt="" className="h-full w-full object-cover" /> : initial}
+                        <img src={aiAvatarUrl.trim() || DEFAULT_BOT_AVATAR} alt="" className="h-full w-full object-cover" />
                       </span>
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-[12px] font-semibold">{displayName}</p>
@@ -3887,10 +3987,8 @@ function WidgetPreviewCard({
         >
           {open ? (
             <X size={20} />
-          ) : aiAvatarUrl.trim() ? (
-            <img src={aiAvatarUrl} alt="" className="h-full w-full object-cover" />
           ) : (
-            <MessageCircle size={20} />
+            <img src={aiAvatarUrl.trim() || DEFAULT_BOT_AVATAR} alt="" className="h-full w-full object-cover" />
           )}
         </button>
       </div>
@@ -4368,12 +4466,12 @@ function SecuritySettingsPage() {
   const toggleDisabled = loading || saving || !isOwner || !settings;
 
   return (
-    <div className="dashboard-security-page mx-auto w-full max-w-[980px] px-7 pb-16 pt-8 text-white sm:px-9 lg:px-10">
-      <header className="flex flex-wrap items-start justify-between gap-5">
+    <div className="dashboard-security-page mx-auto w-full max-w-[980px] px-4 pb-16 pt-5 text-white sm:px-9 sm:pt-8 lg:px-10">
+      <header className="flex flex-col items-start gap-4 sm:flex-row sm:flex-wrap sm:justify-between sm:gap-5">
         <div>
-          <p className="text-xs font-normal uppercase tracking-[0.16em] text-white/80">Workspace security</p>
-          <h2 className="mt-2 text-3xl font-normal tracking-[-0.03em] text-white">Security & permissions</h2>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-white/80">Control how people sign in, what members can access, and how your workspace responds to security events.</p>
+          <p className="text-[11px] font-normal uppercase tracking-[0.16em] text-white/80 sm:text-xs">Workspace security</p>
+          <h2 className="mt-1.5 text-[26px] font-normal leading-tight tracking-[-0.03em] text-white sm:mt-2 sm:text-3xl">Security & permissions</h2>
+          <p className="mt-2 max-w-2xl text-[14px] leading-6 text-white/80 sm:text-sm">Control how people sign in, what members can access, and how your workspace responds to security events.</p>
         </div>
         <div className="flex items-center gap-2 rounded-lg border border-[#428ce5]/25 bg-[#428ce5]/10 px-3 py-2 text-xs font-medium text-[#b8d9ff]"><ShieldCheck size={15} /> Protected</div>
       </header>
@@ -4450,14 +4548,14 @@ function ActiveSessionsSection() {
   const others = (sessions ?? []).filter((row) => !row.current);
 
   return (
-    <section className="mt-7 overflow-hidden rounded-xl border border-white/10 bg-white/[0.025]">
-      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-white/10 px-5 py-4">
+    <section className="mt-6 overflow-hidden rounded-xl border border-white/10 bg-white/[0.025] sm:mt-7">
+      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-white/10 px-4 py-4 sm:px-5">
         <div>
           <h3 className="text-base font-medium text-white">Where you&apos;re signed in</h3>
           <p className="mt-1 text-xs text-white/80">Browsers and devices signed in to your account. Sign out any you don&apos;t recognise.</p>
         </div>
         {others.length > 0 && (
-          <button type="button" disabled={busyId !== null} onClick={() => void signOut("others")} className="flex h-9 items-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-3 text-xs font-medium text-white transition hover:bg-white/[0.08] disabled:opacity-50">
+          <button type="button" disabled={busyId !== null} onClick={() => void signOut("others")} className="flex h-10 w-full items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-3 text-[13px] font-medium text-white transition hover:bg-white/[0.08] disabled:opacity-50 sm:h-9 sm:w-auto sm:text-xs">
             {busyId === "others" ? <LoaderCircle size={13} className="animate-spin" /> : <LogOut size={13} />} Sign out all other devices
           </button>
         )}
@@ -4471,7 +4569,7 @@ function ActiveSessionsSection() {
           {sessions?.map((row) => {
             const Icon = row.mobile ? Smartphone : Monitor;
             return (
-              <li key={row.id} className="flex items-center gap-4 px-5 py-4">
+              <li key={row.id} className="flex flex-wrap items-center gap-x-3 gap-y-2 px-4 py-4 sm:flex-nowrap sm:gap-4 sm:px-5">
                 <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-white/[0.05] text-[#5ca5fa]"><Icon size={17} /></span>
                 <div className="min-w-0 flex-1">
                   <p className="flex flex-wrap items-center gap-2 text-sm font-semibold text-white">
@@ -4484,7 +4582,7 @@ function ActiveSessionsSection() {
                   </p>
                 </div>
                 {!row.current && (
-                  <button type="button" disabled={busyId !== null} onClick={() => void signOut(row.id)} className="flex h-8 shrink-0 items-center gap-1.5 rounded-lg px-3 text-xs font-medium text-[#e0707c] transition hover:bg-white/[0.06] disabled:opacity-50">
+                  <button type="button" disabled={busyId !== null} onClick={() => void signOut(row.id)} className="flex h-9 shrink-0 items-center gap-1.5 rounded-lg px-3 text-xs font-medium text-[#e0707c] transition hover:bg-white/[0.06] disabled:opacity-50 max-sm:w-full max-sm:justify-center max-sm:border max-sm:border-white/10 sm:h-8">
                     {busyId === row.id ? <LoaderCircle size={12} className="animate-spin" /> : <LogOut size={12} />} Sign out
                   </button>
                 )}
@@ -4502,17 +4600,17 @@ function ActiveSessionsSection() {
 }
 
 function SecuritySection({ title, description, children }: { title: string; description: string; children: React.ReactNode }) {
-  return <section className="mt-5 overflow-hidden rounded-xl border border-white/10 bg-white/[0.025]">
-    <div className="border-b border-white/10 px-5 py-4"><h3 className="text-base font-medium text-white">{title}</h3><p className="mt-1 text-xs text-white/80">{description}</p></div>
+  return <section className="mt-4 overflow-hidden rounded-xl border border-white/10 bg-white/[0.025] sm:mt-5">
+    <div className="border-b border-white/10 px-4 py-4 sm:px-5"><h3 className="text-base font-medium text-white">{title}</h3><p className="mt-1 text-xs text-white/80">{description}</p></div>
     <div className="divide-y divide-white/10">{children}</div>
   </section>;
 }
 
 function SecurityRow({ icon: Icon, title, description, badge, children }: { icon?: typeof ShieldCheck; title: string; description: string; badge?: string; children: React.ReactNode }) {
-  return <div className="flex items-start gap-4 px-5 py-4">
+  return <div className="flex items-center gap-3 px-4 py-4 sm:items-start sm:gap-4 sm:px-5">
     {Icon && <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-white/[0.05] text-[#5ca5fa]"><Icon size={17} /></span>}
-    <div className="min-w-0 flex-1"><div className="flex flex-wrap items-center gap-2"><p className="text-sm font-semibold text-white">{title}</p>{badge && <span className="rounded-md bg-[#428ce5]/15 px-2 py-0.5 text-[10px] font-medium text-[#b8d9ff]">{badge}</span>}</div><p className="mt-1 text-xs leading-5 text-white/80">{description}</p></div>
-    <div className="shrink-0 pt-0.5">{children}</div>
+    <div className="min-w-0 flex-1"><div className="flex flex-wrap items-center gap-2"><p className="text-sm font-semibold text-white">{title}</p>{badge && <span className="rounded-md bg-[#428ce5]/15 px-2 py-0.5 text-[10px] font-medium text-[#b8d9ff]">{badge}</span>}</div><p className="mt-1 text-[13px] leading-5 text-white/80 sm:text-xs">{description}</p></div>
+    <div className="shrink-0 sm:pt-0.5">{children}</div>
   </div>;
 }
 

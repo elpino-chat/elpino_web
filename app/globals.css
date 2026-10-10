@@ -6814,6 +6814,9 @@ body:has([data-dashboard-theme="dark"]) .knowledge-popover :is(button, a)[class*
 [data-dashboard-theme="dark"] #dashboard-knowledge-page .kn-btn-primary:hover { background: #ffffff !important; border-color: #ffffff !important; color: #111111 !important; }
 [data-dashboard-theme="light"] #dashboard-knowledge-page .kn-btn-primary,
 [data-dashboard-theme="light"] #dashboard-knowledge-page .kn-btn-primary:hover { background: #17191b !important; border-color: #17191b !important; color: #ffffff !important; }
+/* The icon follows the button text; a blanket svg colour rule had turned it black on the black button. */
+[data-dashboard-theme="light"] #dashboard-knowledge-page .kn-btn-primary svg { color: #ffffff !important; stroke: #ffffff !important; }
+[data-dashboard-theme="dark"] #dashboard-knowledge-page .kn-btn-primary svg { color: #111111 !important; stroke: #111111 !important; }
 
 /* Knowledge page, light theme: the page area is #f5f6f7. The blanket rule above that whitens every `bg-[#262626]` element inside the page
    was also catching the page area itself (it has that class), so it came out white. This repeats its selector parts so it is stronger. */
@@ -7131,6 +7134,8 @@ body:has([data-dashboard-theme="dark"]) .knowledge-popover :is(button, a)[class*
 
 /* Inbox → Tickets: the selected ticket sits in the same white card as an open conversation. */
 #dashboard-tickets .ticket-card { margin: 8px 8px 8px 0; border: 1px solid; border-radius: 10px; }
+/* Phones: the card is as wide as the header above it (8px each side); the left gap only closes up beside a sidebar. */
+@media (max-width: 1023px) { #dashboard-tickets .ticket-card { margin: 4px 8px 8px; } }
 [data-dashboard-theme="light"] #dashboard-tickets .ticket-card { background: #ffffff !important; border-color: rgb(0 0 0 / 0.2) !important; color: rgba(0, 0, 0, 0.88) !important; }
 [data-dashboard-theme="dark"] #dashboard-tickets .ticket-card { background: #262626 !important; border-color: rgb(255 255 255 / 0.2) !important; color: rgb(255 255 255 / 0.88) !important; }
 [data-dashboard-theme="light"] #dashboard-tickets .ticket-card :is(h1, h3, p, span, dt, dd, li, a, button, svg) { color: rgba(0, 0, 0, 0.85); }
@@ -7170,6 +7175,17 @@ body:has([data-dashboard-theme="dark"]) .knowledge-popover :is(button, a)[class*
 /* The ticket list sits on the same background as the sidebars beside it; the details drawer stays on white. */
 [data-dashboard-theme] #dashboard-tickets > .ticket-card.il-root { background: var(--space-sidebar-bg) !important; }
 [data-dashboard-theme="light"] #dashboard-tickets > .ticket-card.il-root :is(.ticket-chip, .ticket-tab-count) { background: rgb(0 0 0 / 0.07) !important; }
+/* Ticket badges: a tint per category, and amber for an open ticket (closed keeps its green). */
+[data-dashboard-theme="light"] #dashboard-tickets .ticket-card .ticket-chip[data-category="technical"] { background: #e6eeff !important; color: #2a5bd7 !important; }
+[data-dashboard-theme="dark"] #dashboard-tickets .ticket-card .ticket-chip[data-category="technical"] { background: rgb(96 150 255 / 0.16) !important; color: rgb(96 150 255) !important; }
+[data-dashboard-theme="light"] #dashboard-tickets .ticket-card .ticket-chip[data-category="billing"] { background: #fff2d4 !important; color: #9a6200 !important; }
+[data-dashboard-theme="dark"] #dashboard-tickets .ticket-card .ticket-chip[data-category="billing"] { background: rgb(251 191 36 / 0.16) !important; color: rgb(251 191 36) !important; }
+[data-dashboard-theme="light"] #dashboard-tickets .ticket-card .ticket-chip[data-category="sales"] { background: #f0e7ff !important; color: #7637cf !important; }
+[data-dashboard-theme="dark"] #dashboard-tickets .ticket-card .ticket-chip[data-category="sales"] { background: rgb(167 122 255 / 0.16) !important; color: rgb(167 122 255) !important; }
+[data-dashboard-theme="light"] #dashboard-tickets .ticket-card .ticket-chip[data-category="support"] { background: #dff4f1 !important; color: #11766f !important; }
+[data-dashboard-theme="dark"] #dashboard-tickets .ticket-card .ticket-chip[data-category="support"] { background: rgb(45 212 191 / 0.16) !important; color: rgb(45 212 191) !important; }
+[data-dashboard-theme="light"] #dashboard-tickets .ticket-card .ticket-chip[data-state="open"] { background: #ffeadb !important; color: #b4540a !important; }
+[data-dashboard-theme="dark"] #dashboard-tickets .ticket-card .ticket-chip[data-state="open"] { background: rgb(251 146 60 / 0.16) !important; color: #fb923c !important; }
 
 
 /* Mobile: no scroll-driven motion. Content is simply there. */

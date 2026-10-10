@@ -3,7 +3,7 @@
 import { fetchConversations } from "@/app/lib/fetch-conversations";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import posthog from "posthog-js";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { connectPresenceSocket } from "@/lib/presence-socket";
@@ -22,6 +22,7 @@ import {
   Bot,
   Check,
   ChevronDown,
+  ChevronLeft,
   ChevronRight,
   CircleHelp,
   Clock3,
@@ -63,6 +64,7 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
   const router = useRouter();
   const pathname = usePathname();
   const { toggle: toggleDrawer } = useMobileDrawer();
+  const searchParams = useSearchParams();
   const isSpaceRoute = SPACE_ROUTES.includes(pathname);
   const isSettingsRoute = pathname === SETTINGS_ROUTE_PREFIX || pathname.startsWith(`${SETTINGS_ROUTE_PREFIX}/`);
   // Live notifications (unread activity, escalations, secure requests) plus
@@ -70,8 +72,14 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
   // so this stays accurate without a separate "seen it" flag to maintain.
   const [spaceBadgeCount, setSpaceBadgeCount] = useState(0);
   // The Inbox sidebar only fits beside the list and the open chat from xl up; below that it is a drawer.
+  // On phones the Inbox is a stack of pages (menu, then a list, then a chat). The burger would open the same options as
+  // the menu page, so it is hidden there; each page carries its own "Inbox" back row.
+  const inInboxFlow = pathname === "/dashboard/inbox" || pathname === "/dashboard/tickets";
   const hamburgerBreakpoint =
-    isSpaceRoute || isSettingsRoute ? "md:hidden" : pathname === "/dashboard/inbox" || pathname === "/dashboard/tickets" ? "xl:hidden" : null;
+    isSpaceRoute || isSettingsRoute ? "md:hidden" : inInboxFlow ? "max-lg:hidden xl:hidden" : null;
+  // Back to the Inbox menu from one of its lists or from Tickets (phones only; the open chat has its own back arrow).
+  const showInboxBack =
+    pathname === "/dashboard/tickets" || (pathname === "/dashboard/inbox" && Boolean(searchParams.get("list")) && !searchParams.get("conversation"));
   // On wide screens the inbox has no top bar: only the avatar menu stays, in the corner of the icon
   // rail. The header itself stays mounted, because it owns presence, notification sounds and the
   // invite dialog.
@@ -459,14 +467,23 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
           )}
         </button>
       )}
-      <div ref={switcherRef} className="relative">
+      {showInboxBack && (
+        <Link
+          href="/dashboard/inbox"
+          aria-label="Back to Inbox"
+          className="mr-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-white/80 transition hover:bg-white/[0.07] lg:hidden"
+        >
+          <ChevronLeft size={22} />
+        </Link>
+      )}
+      <div ref={switcherRef} className="relative min-w-0 shrink">
         <button
           type="button"
           onClick={() => setOpen((value) => !value)}
-          className="dashboard-workspace-switcher flex h-10 items-center gap-2 rounded-md border border-transparent bg-transparent px-2.5 transition-colors hover:bg-black/5"
+          className="dashboard-workspace-switcher flex h-10 max-w-full items-center gap-1.5 rounded-md border border-transparent bg-transparent px-1.5 transition-colors hover:bg-black/5 sm:gap-2 sm:px-2.5"
           aria-expanded={open}
         >
-          <span className="max-w-[110px] truncate text-[15px] font-normal text-white sm:max-w-52">{workspaceName}&apos;s Workspace</span>
+          <span className="max-w-[18vw] truncate text-[15px] font-normal text-white sm:max-w-52">{workspaceName}&apos;s Workspace</span>
           <ChevronDown size={15} className={`text-white/70 transition-transform ${open ? "rotate-180" : ""}`} />
         </button>
 
@@ -596,7 +613,7 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
         )}
       </div>
 
-      <div className="ml-auto flex shrink-0 items-center gap-1.5">
+      <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-1.5">
         {/* Usage is always one tap away (icon-only on phones). On phones the search icon opens the search bar as a row below the header.
             Invite team is hidden below sm to leave room; it is also on the Members page. */}
         <button type="button" onClick={() => setInviteOpen(true)} className="hidden h-9 items-center gap-2 rounded-lg border border-white/10 px-3 text-[13px] font-normal text-white/90 transition hover:bg-white/[0.07] hover:text-white sm:flex">
@@ -606,7 +623,7 @@ export default function DashboardHeader({ user }: { user: HeaderUser }) {
         <button type="button" onClick={() => { setMobileSearchOpen((open) => !open); loadSearchData(); }} aria-label="Search" aria-expanded={mobileSearchOpen} className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-white/10 text-white/90 transition hover:bg-white/[0.07] hover:text-white md:hidden">
           <Search size={17} strokeWidth={1.7} />
         </button>
-        <Link href="/dashboard/settings/ai-usage" aria-label="Usage" className="flex h-9 items-center gap-2 rounded-lg border border-white/10 px-3 text-[13px] font-normal text-white/90 transition hover:bg-white/[0.07] hover:text-white">
+        <Link href="/dashboard/settings/ai-usage" aria-label="Usage" className="flex h-9 items-center gap-2 rounded-lg border border-white/10 px-2.5 sm:px-3 text-[13px] font-normal text-white/90 transition hover:bg-white/[0.07] hover:text-white">
           <Gauge size={17} strokeWidth={1.7} />
           <span className="hidden lg:inline">Usage</span>
         </Link>

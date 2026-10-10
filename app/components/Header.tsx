@@ -155,6 +155,19 @@ export function Header({
     return () => observer.disconnect();
   }, [showOffer, scrolled]);
 
+  // Lock page scroll behind the open mobile menu; Escape closes it.
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setIsMobileMenuOpen(false); };
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [isMobileMenuOpen]);
+
   // The strip is transparent; the nav inside it is the visible bar, hanging
   // from the top edge with only its bottom corners rounded.
   const headerClassName = 'w-full';
@@ -208,11 +221,11 @@ export function Header({
         }`}
     >
       {onHome && (
-        <div className="bg-black px-5 py-2 text-left text-[13px] text-white sm:px-8 lg:px-12">
-          <Link href="/signup" className="inline-flex items-center gap-2 hover:underline">
-            <span className="rounded-[2px] bg-white px-1.5 py-0.5 text-[11px] uppercase tracking-wide text-black">{t('nav.offer.tag', 'Offer')}</span>
-            {t('nav.offer.text', 'Start free today: 100 AI messages a month, no card required, and you can be live on your own site in an afternoon')}
-            <span aria-hidden="true">→</span>
+        <div className="bg-black px-4 py-2.5 text-left text-[12px] leading-[1.35] text-white sm:px-8 sm:py-2 sm:text-[13px] lg:px-12">
+          <Link href="/signup" className="flex items-start gap-2 hover:underline sm:inline-flex sm:items-center">
+            <span className="mt-px shrink-0 rounded-[2px] bg-white px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-black sm:mt-0 sm:text-[11px]">{t('nav.offer.tag', 'Offer')}</span>
+            <span className="min-w-0">{t('nav.offer.text', 'Start free today: 100 AI messages a month, no card required, and you can be live on your own site in an afternoon')}</span>
+            <span aria-hidden="true" className="shrink-0">→</span>
           </Link>
         </div>
       )}
@@ -317,45 +330,37 @@ export function Header({
           </div>
         </nav>
 
-        {/* Mobile Navigation Drawer */}
+        {/* Mobile Navigation Drawer: a full-height white sheet under the header. Groups are an accordion; the sign-in actions stay pinned at the bottom. */}
         {isMobileMenuOpen && (
-          <div className="absolute inset-x-3 top-full z-40 mt-2 max-h-[80dvh] overflow-y-auto rounded-3xl border-2 border-[#11120f] bg-[#fff8ec] p-4 text-[#11120f] shadow-xl lg:hidden">
-            <nav className="flex flex-col gap-2" aria-label="Mobile navigation">
+          <div className="fixed inset-x-0 bottom-0 top-[var(--elpino-header-h,76px)] z-40 flex flex-col bg-white text-[#11120f] lg:hidden">
+            <nav className="flex-1 overflow-y-auto overscroll-contain px-5 pb-6 pt-2" aria-label="Mobile navigation">
               {navGroups.map((group) => {
                 const open = openMobileGroup === group.label;
                 return (
-                  <div key={group.label} className="rounded-2xl border-2 border-[#11120f] bg-white">
+                  <div key={group.label} className="border-b border-black/10">
                     <button
                       type="button"
                       aria-expanded={open}
                       onClick={() => setOpenMobileGroup(open ? null : group.label)}
-                      className="flex w-full items-center justify-between px-4 py-3.5 text-left text-[17px] font-semibold"
+                      className="flex w-full items-center justify-between py-4 text-left text-[22px] font-medium tracking-[-0.02em]"
                     >
                       {tGroupLabel(t, group.label)}
-                      <span className="grid size-7 place-items-center rounded-full border-2 border-[#11120f] transition-transform duration-300" style={{ backgroundColor: open ? '#ffd84d' : '#fff', transform: open ? 'rotate(45deg)' : 'none' }}>
-                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 1v10M1 6h10" stroke="#11120f" strokeWidth="2" strokeLinecap="round" /></svg>
-                      </span>
+                      <Chevron className={`h-3 w-3 text-black/50 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
                     </button>
                     {open && (
-                      <div className="space-y-4 border-t-2 border-dashed border-[#11120f]/25 px-4 pb-4 pt-3">
-                        {group.sections.map((sec) => (
-                          <div key={sec.title}>
-                            <p className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[#11120f]/45">{tSectionTitle(t, sec.title)}</p>
-                            <div className="mt-2 flex flex-wrap gap-2">
-                              {sec.items.map((item) => (
-                                <Link
-                                  key={item.label}
-                                  onClick={() => setIsMobileMenuOpen(false)}
-                                  href={item.href}
-                                  className="rounded-full border-2 border-[#11120f] bg-[#fffdf5] px-3.5 py-2 text-[14.5px] font-medium transition active:bg-[#ffd84d]"
-                                >
-                                  {tNavItem(t, item)}
-                                </Link>
-                              ))}
-                            </div>
-                          </div>
+                      <ul className="pb-4">
+                        {group.sections.flatMap((sec) => sec.items).map((item) => (
+                          <li key={item.label}>
+                            <Link
+                              onClick={() => setIsMobileMenuOpen(false)}
+                              href={item.href}
+                              className="block py-2.5 text-[16px] text-black/80 transition-colors active:text-black"
+                            >
+                              {tNavItem(t, item)}
+                            </Link>
+                          </li>
                         ))}
-                      </div>
+                      </ul>
                     )}
                   </div>
                 );
@@ -364,39 +369,40 @@ export function Header({
               <Link
                 onClick={() => setIsMobileMenuOpen(false)}
                 href="/pricing"
-                className="rounded-2xl border-2 border-[#11120f] bg-white px-4 py-3.5 text-[17px] font-semibold"
+                className="block border-b border-black/10 py-4 text-[22px] font-medium tracking-[-0.02em]"
               >
                 {t('nav.pricing', 'Pricing')}
               </Link>
+            </nav>
 
+            <div className="border-t border-black/10 bg-white px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4">
               {session ? (
                 <Link
                   onClick={() => setIsMobileMenuOpen(false)}
                   href="/dashboard"
-                  className="mt-2 flex h-12 items-center justify-center rounded-full border-2 border-[#11120f] bg-[#3784ff] text-[15px] font-semibold text-white"
+                  className="flex h-12 items-center justify-center rounded-[2px] bg-[#11120f] text-[15px] font-medium text-white"
                 >
                   {t('nav.goToDashboard', 'Go to dashboard')}
                 </Link>
               ) : (
-                <div className="mt-2 grid grid-cols-2 gap-2.5">
+                <div className="grid grid-cols-2 gap-2.5">
                   <Link
                     onClick={() => setIsMobileMenuOpen(false)}
                     href="/login"
-                    className="flex h-12 items-center justify-center rounded-full border-2 border-[#11120f] bg-white text-[15px] font-semibold"
+                    className="flex h-12 items-center justify-center rounded-[2px] border border-black/30 text-[15px] font-medium"
                   >
                     {t('nav.login', 'Log in')}
                   </Link>
                   <Link
                     onClick={() => setIsMobileMenuOpen(false)}
                     href="/signup"
-                    className="flex h-12 items-center justify-center rounded-full border-2 border-[#11120f] bg-[#3784ff] text-[15px] font-semibold text-white"
+                    className="flex h-12 items-center justify-center rounded-[2px] bg-[#11120f] text-[15px] font-medium text-white"
                   >
-                    {t('nav.getStarted', 'Sign up')}
+                    {t('nav.startFreeTrial', 'Start free')}
                   </Link>
                 </div>
               )}
-
-              <div className="mt-2 border-t-2 border-dashed border-[#11120f]/25 pt-3">
+              <div className="mt-3">
                 <LanguageSwitcher
                   language={language}
                   onChange={setStoredLanguage}
@@ -405,7 +411,7 @@ export function Header({
                   onOpenChange={setLanguageOpen}
                 />
               </div>
-            </nav>
+            </div>
           </div>
         )}
       </header>

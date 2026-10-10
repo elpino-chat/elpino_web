@@ -1,4 +1,5 @@
 import { callGateway } from "@/app/api/auth/_lib/gateway";
+import { clientGeo } from "@/app/api/_lib/client-geo";
 
 type WidgetConfig = {
   botName?: string;
@@ -32,7 +33,7 @@ export async function GET(request: Request) {
     );
   }
 
-  const result = await callGateway<{ allowed?: boolean; config?: WidgetConfig }>(`/api/workspace/sites/resolve/${encodeURIComponent(key)}?hostname=${encodeURIComponent(hostname)}`);
+  const result = await callGateway<{ allowed?: boolean; config?: WidgetConfig }>(`/api/workspace/sites/resolve/${encodeURIComponent(key)}?hostname=${encodeURIComponent(hostname)}&country=${encodeURIComponent(clientGeo(request).country ?? "")}`);
   if (result.allowed) {
     await callGateway<{ allowed?: boolean }>("/api/workspace/sites/collect", { publicKey: key, hostname });
   }

@@ -54,6 +54,7 @@ export async function PATCH(request: Request) {
     chatbotTheme?: string;
     chatbotReplyLanguage?: string;
     greetingLines?: string[];
+    greetingTranslations?: Record<string, string[]>;
   };
 
   const { payload: result } = await patchGateway<CompanyResult>(

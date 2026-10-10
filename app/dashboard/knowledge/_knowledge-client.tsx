@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import posthog from "posthog-js";
-import { ArrowLeft, CheckCircle2, FileText, Folder, Globe2, Link2, ListChecks, LoaderCircle, Search, Sparkles, Trash2, Upload, X } from "lucide-react";
+import { ArrowLeft, Check, CheckCircle2, FileText, Folder, Globe2, Link2, ListChecks, LoaderCircle, Search, Sparkles, Trash2, Upload, X } from "lucide-react";
 import { NotionImportButton, NotionPagesList } from "./_notion-import";
 
 export type KnowledgeView = "overview" | "articles" | "sources";
@@ -193,28 +193,28 @@ export function KnowledgeClient({ view }: { view: KnowledgeView }) {
     // Keep the address matching the tab without navigating: a refresh or a copied link then opens the same one.
     window.history.replaceState(null, "", next === "sources" ? "/dashboard/knowledge/sources" : "/dashboard/knowledge");
   }
-  const tabClass = (active: boolean) => `kn-tab ${active ? "kn-tab-active" : ""} -mb-px inline-flex h-11 shrink-0 items-center gap-2 border-b-2 text-[15px] font-medium transition`;
+  const tabClass = (active: boolean) => `kn-tab ${active ? "kn-tab-active" : ""} -mb-px inline-flex h-11 shrink-0 items-center justify-center gap-2 max-sm:flex-1 border-b-2 text-[15px] font-medium transition`;
 
   return <div id="dashboard-knowledge-page" className="dashboard-knowledge-shell h-full min-h-0 overflow-hidden bg-[#262626] text-white">
     <main className="dashboard-page-surface dashboard-knowledge-main-surface h-full min-w-0 overflow-y-auto bg-[#262626] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-      <div className="mx-auto w-full max-w-[1120px] px-6 pb-16 pt-7 sm:px-9 lg:px-10">
-        <header className="flex flex-wrap items-end justify-between gap-4">
+      <div className="mx-auto w-full max-w-[1120px] px-4 pb-16 pt-5 sm:px-9 sm:pt-7 lg:px-10">
+        <header className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
           <div>
-            <h1 className="kn-heading text-[30px] font-normal tracking-[-0.04em]">Knowledge</h1>
-            <p className="kn-text mt-1.5 max-w-xl text-[16px] leading-7">{pagesActive ? "Create and manage the answers your AI can use." : "Add website addresses and keep their content searchable."}</p>
+            <h1 className="kn-heading text-[28px] font-normal tracking-[-0.04em] sm:text-[30px]">Knowledge</h1>
+            <p className="kn-text mt-1 max-w-xl text-[14.5px] leading-6 sm:mt-1.5 sm:text-[16px] sm:leading-7">{pagesActive ? "Create and manage the answers your AI can use." : "Add website addresses and keep their content searchable."}</p>
           </div>
           {/* Import from Notion works whether or not a website is connected, so it is in the header on both tabs. */}
-          <div className="flex flex-wrap items-center gap-2.5">
-            <NotionImportButton onImported={load} />
+          <div className="grid grid-cols-2 gap-2.5 sm:flex sm:flex-wrap sm:items-center [&>button]:max-sm:h-11 [&>button]:max-sm:w-full [&>button:only-child]:max-sm:col-span-2">
+            <NotionImportButton onImported={load} importedUrls={items.filter((item) => item.sourceType === "notion" && item.sourceUrl).map((item) => item.sourceUrl as string)} />
             {pagesActive && (
-              <button type="button" data-tour="knowledge-add" onClick={() => openEditor()} className="kn-btn kn-btn-primary flex h-10 cursor-pointer items-center gap-2 rounded-full border px-5 text-[15px] font-medium transition">
+              <button type="button" data-tour="knowledge-add" onClick={() => openEditor()} className="kn-btn kn-btn-primary flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full border px-5 text-[15px] font-medium transition max-sm:order-first sm:h-10">
                 <FileText size={16} /> Create page
               </button>
             )}
           </div>
         </header>
 
-        <nav role="tablist" aria-label="Knowledge sections" className="kn-tabs mt-6 flex gap-6 overflow-x-auto border-b [scrollbar-width:none]">
+        <nav role="tablist" aria-label="Knowledge sections" className="kn-tabs mt-5 flex gap-6 overflow-x-auto max-sm:gap-0 sm:mt-6 border-b [scrollbar-width:none]">
           <button type="button" role="tab" aria-selected={pagesActive} onClick={() => switchTab("articles")} className={tabClass(pagesActive)}>
             Pages
             {!loading && items.length > 0 && <span className="kn-count rounded-full px-2 py-0.5 text-[12px] leading-none">{items.length}</span>}
@@ -319,9 +319,9 @@ function AddContentPanel({
   }
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/35 p-4 backdrop-blur-[2px]" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/35 backdrop-blur-[2px] sm:p-4" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
       <aside role="dialog" aria-modal="true" aria-label="Knowledge page editor" className="dashboard-knowledge-add-panel flex h-full w-full flex-col overflow-hidden bg-[#262626] text-white">
-        <div className="flex items-start justify-between px-7 py-6">
+        <div className="flex items-start justify-between px-5 pb-3 pt-[max(1rem,env(safe-area-inset-top))] sm:px-7 sm:py-6">
           <div>
             {chosen && (
               <button type="button" aria-label="Back" onClick={() => setChosen(false)} className="mb-3 flex h-8 w-8 items-center justify-center rounded-lg text-[#5f686d] hover:bg-[#f1f2f3]"><ArrowLeft size={16} /></button>
@@ -333,7 +333,7 @@ function AddContentPanel({
         </div>
 
         {!chosen ? (
-          <div className="flex flex-row gap-3 p-7">
+          <div className="flex flex-row gap-3 p-5 sm:p-7">
             {ADD_TABS.map((tab) => {
               const Icon = tab.icon;
               return (
@@ -352,14 +352,14 @@ function AddContentPanel({
           </div>
         ) : (
           <>
-            <div className="min-h-0 w-full max-w-[900px] flex-1 self-center overflow-y-auto px-7 py-8">
+            <div className="min-h-0 w-full max-w-[900px] flex-1 self-center overflow-y-auto px-5 py-5 sm:px-7 sm:py-8">
               {addTab === "text" && (
                 <>
                   <label className="block text-[12px] font-semibold">Title
-                    <input autoFocus value={title} onChange={(event) => setTitle(event.target.value)} placeholder="Untitled page" className="mt-2 h-16 w-full border-0 border-b border-white/10 bg-transparent px-0 text-3xl font-normal outline-none placeholder:text-white/25" />
+                    <input autoFocus value={title} onChange={(event) => setTitle(event.target.value)} placeholder="Untitled page" className="mt-1 h-14 w-full border-0 border-b border-white/10 bg-transparent px-0 text-2xl sm:mt-2 sm:h-16 sm:text-3xl font-normal outline-none placeholder:text-white/25" />
                   </label>
                   <label className="mt-5 block text-[12px] font-semibold">Content
-                    <textarea value={content} onChange={(event) => setContent(event.target.value)} placeholder="Start writing…" className="mt-2 min-h-[52vh] w-full resize-none border-0 bg-transparent px-0 py-3 text-[15px] leading-7 text-white/85 outline-none placeholder:text-white/25" />
+                    <textarea value={content} onChange={(event) => setContent(event.target.value)} placeholder="Start writing…" className="mt-2 min-h-[44vh] w-full resize-none border-0 bg-transparent px-0 py-3 text-[16px] sm:min-h-[52vh] sm:text-[15px] leading-7 text-white/85 outline-none placeholder:text-white/25" />
                   </label>
                 </>
               )}
@@ -367,7 +367,7 @@ function AddContentPanel({
               {addTab === "file" && (
                 <>
                   <label className="block text-[12px] font-semibold">Title
-                    <input autoFocus value={title} onChange={(event) => setTitle(event.target.value)} placeholder="Defaults to the file name" className="mt-2 h-11 w-full rounded-xl border border-[#dce1e4] px-3.5 text-[13px] outline-none focus:border-[#8f989e]" />
+                    <input autoFocus value={title} onChange={(event) => setTitle(event.target.value)} placeholder="Defaults to the file name" className="mt-2 h-12 w-full rounded-xl border border-[#dce1e4] px-3.5 text-[16px] outline-none focus:border-[#8f989e] sm:h-11 sm:text-[13px]" />
                   </label>
                   <label className="mt-5 block text-[12px] font-semibold">File</label>
                   <label className="mt-2 flex min-h-[140px] cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#c7cdd1] text-center hover:bg-[#f7f8f8]">
@@ -380,7 +380,7 @@ function AddContentPanel({
               )}
 
               <label className="mt-5 block text-[12px] font-semibold">Website scope
-                <select value={siteId} onChange={(event) => setSiteId(event.target.value)} className="mt-2 h-11 w-full rounded-xl border border-[#dce1e4] bg-white px-3.5 text-[13px] outline-none">
+                <select value={siteId} onChange={(event) => setSiteId(event.target.value)} className="mt-2 h-12 w-full rounded-xl border border-[#dce1e4] bg-white px-3.5 text-[16px] outline-none sm:h-11 sm:text-[13px]">
                   <option value="">All websites</option>
                   {sites.map((site) => <option key={site.id} value={site.id}>{site.name} — {site.domain}</option>)}
                 </select>
@@ -395,9 +395,9 @@ function AddContentPanel({
               </div>
             </div>
 
-            <div className="flex gap-3 px-7 py-5">
-              <button type="button" onClick={onClose} className="h-10 flex-1 rounded-lg border border-[#dce1e4] text-[12px] font-semibold">Cancel</button>
-              <button type="button" disabled={!canSubmit || saving} onClick={submit} className="flex h-10 flex-1 items-center justify-center gap-2 rounded-lg bg-[#17191b] text-[12px] font-semibold text-white disabled:opacity-40">
+            <div className="flex gap-3 border-t border-white/10 px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 sm:border-0 sm:px-7 sm:py-5">
+              <button type="button" onClick={onClose} className="h-11 flex-1 rounded-lg border border-[#dce1e4] text-[13px] font-semibold sm:h-10 sm:text-[12px]">Cancel</button>
+              <button type="button" disabled={!canSubmit || saving} onClick={submit} className="flex h-11 flex-1 items-center justify-center gap-2 rounded-lg bg-[#17191b] text-[13px] font-semibold text-white disabled:opacity-40 sm:h-10 sm:text-[12px]">
                 {saving && <LoaderCircle size={14} className="animate-spin" />} {editingItem ? "Save changes" : "Create page"}
               </button>
             </div>
@@ -594,11 +594,11 @@ function PagesList({ items, sites, query, setQuery, onDelete, onNew, onOpen, onT
   return (
     <div className="mt-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <label className="kn-field flex h-11 w-full max-w-md items-center gap-2.5 rounded-full border px-4">
+        <label className="kn-field flex h-12 w-full max-w-md sm:h-11 items-center gap-2.5 rounded-full border px-4">
           <Search size={16} className="kn-text shrink-0" aria-hidden="true" />
-          <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search pages" aria-label="Search pages" className="kn-input min-w-0 flex-1 bg-transparent text-[15px] outline-none" />
+          <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search pages" aria-label="Search pages" className="kn-input min-w-0 flex-1 bg-transparent text-[16px] outline-none sm:text-[15px]" />
         </label>
-        {sortedItems.length > 0 && <p className="kn-text text-[14px]">{sortedItems.length} {sortedItems.length === 1 ? "page" : "pages"}, newest first</p>}
+        {sortedItems.length > 0 && <p className="kn-text text-[13px] sm:text-[14px]">{sortedItems.length} {sortedItems.length === 1 ? "page" : "pages"}, newest first</p>}
       </div>
 
       {sortedItems.length ? (
@@ -608,12 +608,15 @@ function PagesList({ items, sites, query, setQuery, onDelete, onNew, onOpen, onT
               <button type="button" onClick={() => onOpen(item)} className="flex min-w-0 flex-1 cursor-pointer items-center gap-4 text-left">
                 <span className="kn-icon flex size-11 shrink-0 items-center justify-center rounded-xl"><FileText size={19} /></span>
                 <span className="min-w-0 flex-1">
-                  <span className="kn-heading block truncate text-[16px] font-medium">{item.title}</span>
+                  <span className="flex items-center gap-2">
+                    <span className="kn-heading min-w-0 truncate text-[16px] font-medium">{item.title}</span>
+                    {item.sourceType === "notion" && <span className="kn-count inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium leading-none"><Check size={11} strokeWidth={3} /> Imported</span>}
+                  </span>
                   <span className="kn-text mt-0.5 block truncate text-[14px]">{item.content}</span>
                   <span className="kn-text mt-1 block truncate text-[13px]">{SOURCE_LABEL[item.sourceType] ?? "Page"} · {sites.find((site) => site.id === item.siteId)?.domain ?? "All websites"} · {new Date(item.createdAt).toLocaleDateString()}</span>
                 </span>
               </button>
-              <div className="flex shrink-0 items-center gap-3 pl-[60px] sm:pl-0">
+              <div className="flex shrink-0 items-center gap-3 max-sm:w-full max-sm:justify-between max-sm:pl-[60px] sm:pl-0">
                 <HelpTabToggle item={item} onToggle={onToggleVisible} />
                 <button type="button" aria-label={`Delete ${item.title}`} title="Delete" onClick={() => onDelete(item)} className="kn-delete flex size-10 cursor-pointer items-center justify-center rounded-full transition"><Trash2 size={17} /></button>
               </div>
@@ -730,9 +733,9 @@ function Sources({ sites, items, defaultSiteId, onReload }: { sites: Site[]; ite
         </div>
       )}
 
-      <div className="mt-5 flex flex-wrap gap-2.5">
-        <button type="button" onClick={() => { setAddError(null); setUrlOpen(true); }} className="kn-btn kn-btn-outline flex h-10 cursor-pointer items-center gap-2 rounded-full border px-5 text-[15px] font-medium transition"><Link2 size={16} /> Add URL</button>
-        <button type="button" onClick={() => { setSitemapError(null); setSitemapResult(null); setSitemapOpen(true); }} className="kn-btn kn-btn-outline flex h-10 cursor-pointer items-center gap-2 rounded-full border px-5 text-[15px] font-medium transition"><ListChecks size={16} /> Add sitemap</button>
+      <div className="mt-5 grid grid-cols-2 gap-2.5 sm:flex sm:flex-wrap">
+        <button type="button" onClick={() => { setAddError(null); setUrlOpen(true); }} className="kn-btn kn-btn-outline flex h-11 justify-center sm:h-10 cursor-pointer items-center gap-2 rounded-full border px-5 text-[15px] font-medium transition"><Link2 size={16} /> Add URL</button>
+        <button type="button" onClick={() => { setSitemapError(null); setSitemapResult(null); setSitemapOpen(true); }} className="kn-btn kn-btn-outline flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full border px-4 text-[15px] font-medium transition sm:h-10 sm:px-5"><ListChecks size={16} /> Add sitemap</button>
       </div>
 
       {importing && (

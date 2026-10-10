@@ -371,7 +371,7 @@ function Hero({ t }: { t: T }) {
 
         <div className="text-left">
           <Rv delay={80}>
-            <h1 className="max-w-5xl font-[family-name:var(--font-bricolage)] text-[clamp(1.6rem,3.1vw,2.9rem)] font-normal leading-[1.25]">{t("home.hero.headLead", "Let AI answer the repeated questions,")}{" "}
+            <h1 className="max-w-5xl text-[1.725rem] sm:text-[clamp(1.6rem,3.1vw,2.9rem)] font-normal leading-[1.25]">{t("home.hero.headLead", "Let AI answer the repeated questions,")}{" "}
               {t("home.hero.headEmphasis", "so your team handles the ones that matter.")}</h1>
           </Rv>
           <Rv delay={240}>

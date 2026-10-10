@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Check, ExternalLink, LoaderCircle, MessageSquare, Sparkles, Ticket, X } from "lucide-react";
+import { ArrowLeft, Check, ExternalLink, LoaderCircle, MessageSquare, Sparkles, Ticket, X } from "lucide-react";
 import { MenuSelect, shortAge } from "@/app/components/dashboard/inbox-list-ui";
 import { fetchConversations } from "@/app/lib/fetch-conversations";
 
@@ -155,8 +155,8 @@ function TicketDetailPane({ ticket, onBack, onToggleResolved }: { ticket: InboxT
         <div className="min-w-0 flex-1">
           <h1 className={`break-words text-[18px] font-semibold leading-6 ${ticket.resolved ? "ticket-muted line-through" : ""}`}>{ticket.title}</h1>
           <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11.5px]">
-            <span className="ticket-chip rounded-full px-2 py-0.5 font-medium">{categoryLabel(categoryOf(ticket))}</span>
-            <span className={`ticket-chip rounded-full px-2 py-0.5 font-medium ${ticket.resolved ? "ticket-chip-done" : ""}`}>{ticket.resolved ? "Closed" : "Open"}</span>
+            <span data-category={categoryOf(ticket)} className="ticket-chip rounded-full px-2 py-0.5 font-medium">{categoryLabel(categoryOf(ticket))}</span>
+            <span data-state={ticket.resolved ? "closed" : "open"} className={`ticket-chip rounded-full px-2 py-0.5 font-medium ${ticket.resolved ? "ticket-chip-done" : ""}`}>{ticket.resolved ? "Closed" : "Open"}</span>
             <span className="ticket-muted">Created {formatDateTime(ticket.createdAt)}</span>
           </div>
         </div>
@@ -314,6 +314,10 @@ export default function TicketsInbox() {
   return (
     <div id="dashboard-tickets" className="flex h-full min-h-0 flex-col">
       <div className="ticket-card il-root flex min-h-0 flex-1 flex-col overflow-hidden">
+        {/* Phones: tickets are one step below the Inbox menu, so this row takes you back to it. */}
+        <Link href="/dashboard/inbox" className="ticket-muted flex h-10 shrink-0 items-center gap-1.5 px-4 text-[13px] lg:hidden">
+          <ArrowLeft size={15} /> Inbox
+        </Link>
         <div className="il-head px-4 pb-2 pt-2">
           <div className="flex h-[52px] items-center gap-2">
             <Ticket size={16} className="il-name shrink-0" />
@@ -367,8 +371,11 @@ export default function TicketsInbox() {
                 <span className={`min-w-0 truncate text-[13.5px] font-medium ${ticket.resolved ? "ticket-muted line-through" : ""}`}>{ticket.title}</span>
                 <span className="ticket-muted truncate text-right text-[12px] md:hidden">{shortAge(ticket.createdAt)}</span>
                 <span className="ticket-muted col-span-2 truncate text-[12.5px] md:col-span-1">{ticket.customerName || names[ticket.conversationId] || "—"}</span>
-                <span className="col-span-2 md:col-span-1"><span className="ticket-chip inline-block rounded-full px-2 py-0.5 text-[11.5px] font-medium">{categoryLabel(categoryOf(ticket))}</span></span>
-                <span className="col-span-2 md:col-span-1"><span className={`ticket-chip inline-block rounded-full px-2 py-0.5 text-[11.5px] font-medium ${ticket.resolved ? "ticket-chip-done" : ""}`}>{ticket.resolved ? "Closed" : "Open"}</span></span>
+                {/* One row of chips on a phone; from md up they are separate columns again. */}
+                <span className="col-span-2 flex items-center gap-2 md:contents">
+                  <span className="md:col-span-1"><span data-category={categoryOf(ticket)} className="ticket-chip inline-block rounded-full px-2 py-0.5 text-[11.5px] font-medium">{categoryLabel(categoryOf(ticket))}</span></span>
+                  <span className="md:col-span-1"><span data-state={ticket.resolved ? "closed" : "open"} className={`ticket-chip inline-block rounded-full px-2 py-0.5 text-[11.5px] font-medium ${ticket.resolved ? "ticket-chip-done" : ""}`}>{ticket.resolved ? "Closed" : "Open"}</span></span>
+                </span>
                 <span className="ticket-muted hidden text-right text-[12px] tabular-nums md:block">{shortAge(ticket.createdAt)}</span>
               </button>
             );

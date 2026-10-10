@@ -19,7 +19,10 @@ function NotionMark({ className = "size-3.5" }: { className?: string }) {
   return <img src="/connector-logos/notion-transparent.webp" alt="" aria-hidden="true" className={`knowledge-notion-mark ${className} object-contain`} />;
 }
 
-export function NotionImportButton({ onImported }: { onImported: () => void }) {
+// A Notion page's 32-character id, whether it comes from a page id or from any form of its URL.
+const notionKey = (value: string | null | undefined) => value?.replace(/-/g, "").match(/[0-9a-f]{32}/i)?.[0].toLowerCase() ?? null;
+
+export function NotionImportButton({ onImported, importedUrls = [] }: { onImported: () => void; importedUrls?: string[] }) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [connected, setConnected] = useState<boolean | null>(null);
@@ -30,6 +33,10 @@ export function NotionImportButton({ onImported }: { onImported: () => void }) {
   const [error, setError] = useState<string | null>(null);
   const [importing, setImporting] = useState(false);
   const [result, setResult] = useState<{ done: number; failed: { id: string; error: string }[] } | null>(null);
+  // Pages imported before (found by their Notion link) plus the ones imported while this dialog was open.
+  const [justImported, setJustImported] = useState<Set<string>>(new Set());
+  const importedKeys = new Set(importedUrls.map(notionKey).filter((key): key is string => Boolean(key)));
+  const isImported = (page: NotionPage) => justImported.has(page.id) || importedKeys.has(notionKey(page.id) ?? "") || importedKeys.has(notionKey(page.url) ?? "");
 
   async function load(query: string, cursor?: string) {
     setLoading(true); setError(null);
@@ -87,6 +94,8 @@ export function NotionImportButton({ onImported }: { onImported: () => void }) {
       const failed = data.failed ?? [];
       const done = data.imported?.length ?? 0;
       if (done) { posthog.capture("knowledge_item_created", { source_type: "notion", count: done }); onImported(); }
+      const failedIds = new Set(failed.map((item) => item.id));
+      setJustImported((current) => new Set([...current, ...[...selected].filter((id) => !failedIds.has(id))]));
       setResult({ done, failed });
       setSelected(new Set(failed.map((item) => item.id)));
     }
@@ -97,8 +106,8 @@ export function NotionImportButton({ onImported }: { onImported: () => void }) {
 
   return (
     <>
-      <button type="button" onClick={openDialog} className="knowledge-notion-trigger kn-btn kn-btn-outline flex h-10 cursor-pointer items-center justify-center gap-2 rounded-full border px-5 text-[15px] font-medium transition">
-        <NotionMark className="size-[18px]" /> Import from Notion
+      <button type="button" onClick={openDialog} className="knowledge-notion-trigger kn-btn kn-btn-outline flex h-10 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-full border px-5 text-[15px] font-medium transition">
+        <NotionMark className="size-[18px] shrink-0" /> <span className="sm:hidden">Notion</span><span className="hidden sm:inline">Import from Notion</span>
       </button>
 
       {open && (
@@ -149,7 +158,10 @@ export function NotionImportButton({ onImported }: { onImported: () => void }) {
                               <input type="checkbox" checked={checked} onChange={() => toggle(page.id)} className="sr-only" />
                               <span className={`nimp-box flex size-5 shrink-0 items-center justify-center rounded-md border ${checked ? "nimp-box-on" : ""}`} aria-hidden="true">{checked && <Check size={13} strokeWidth={3} />}</span>
                               <span className="min-w-0 flex-1">
-                                <span className="nimp-heading block truncate text-[15px] font-medium">{page.title}</span>
+                                <span className="flex items-center gap-2">
+                                  <span className="nimp-heading min-w-0 truncate text-[15px] font-medium">{page.title}</span>
+                                  {isImported(page) && <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#2FA266]/15 px-2 py-0.5 text-[11px] font-semibold text-[#2FA266]"><Check size={11} strokeWidth={3} /> Imported</span>}
+                                </span>
                                 {page.lastEdited && <span className="nimp-text block text-[13px]">Edited {new Date(page.lastEdited).toLocaleDateString()}</span>}
                               </span>
                             </label>
