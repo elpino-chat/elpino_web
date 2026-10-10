@@ -208,7 +208,7 @@ export function Header({
         }`}
     >
       {onHome && (
-        <div className="bg-black px-6 py-2 text-left text-[13px] text-white sm:px-12">
+        <div className="bg-black px-5 py-2 text-left text-[13px] text-white sm:px-8 lg:px-12">
           <Link href="/signup" className="inline-flex items-center gap-2 hover:underline">
             <span className="rounded-[2px] bg-white px-1.5 py-0.5 text-[11px] uppercase tracking-wide text-black">{t('nav.offer.tag', 'Offer')}</span>
             {t('nav.offer.text', 'Start free today: 100 AI messages a month, no card required, and you can be live on your own site in an afternoon')}
@@ -218,7 +218,7 @@ export function Header({
       )}
       <header className={headerClassName}>
         <nav
-          className={`relative flex h-16 w-full items-center justify-between ${onHome ? 'border-b' : 'border-b'} transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300 px-10 ${onHome ? (scrolled ? 'border-black/10 bg-white shadow-[0_8px_30px_rgba(15,23,42,0.06)]' : 'border-transparent bg-white') : scrolled ? `backdrop-blur-xl backdrop-saturate-150 ${light ? 'border-white/70 bg-white/45 shadow-[0_8px_30px_rgba(15,23,42,0.06)]' : 'border-white/15 bg-black/40'}` : 'border-transparent bg-transparent'}`}
+          className={`relative flex h-16 w-full items-center justify-between ${onHome ? 'border-b' : 'border-b'} transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300 px-5 sm:px-8 lg:px-10 ${onHome ? (scrolled ? 'border-black/10 bg-white shadow-[0_8px_30px_rgba(15,23,42,0.06)]' : 'border-transparent bg-white') : scrolled ? `backdrop-blur-xl backdrop-saturate-150 ${light ? 'border-white/70 bg-white/45 shadow-[0_8px_30px_rgba(15,23,42,0.06)]' : 'border-white/15 bg-black/40'}` : 'border-transparent bg-transparent'}`}
           aria-label="Main navigation"
         >
           {/* Logo & Navigation Links */}
