@@ -679,6 +679,7 @@ function ChatWidgetPreview({ seen, lines, className, large = false }: { seen: bo
 // The four previews: a reply with the checks behind it, the numbers, the contacts it collects, the plugins it uses.
 function TeamPreview({ k, t }: { k: string; t: T }) {
   const [ref, seen] = useSeen<HTMLDivElement>();
+  const mobile = useMobile();
   // The contacts story, in the widget's own order: the AI asks for the email (1), the answer field fills in (2),
   // it is sent and the contact appears (3). The typed value never shows as a visitor bubble, as in the real widget.
   const [stage, setStage] = useState(0);
@@ -710,7 +711,7 @@ function TeamPreview({ k, t }: { k: string; t: T }) {
     const open = stage >= 4;
     const pop = (on: boolean) => ({ opacity: on ? 1 : 0, transform: on ? "none" : "translateY(8px)", transition: "opacity 450ms ease, transform 450ms ease" });
     return (
-      <div ref={ref} className="grid min-h-[460px] w-full place-items-center p-6 sm:p-10">
+      <div ref={ref} className="grid min-h-[460px] w-full grid-cols-[minmax(0,1fr)] place-items-center p-4 sm:p-10">
         <div className="w-full max-w-[400px] space-y-3 text-white">
           <div className="ml-auto w-fit max-w-[88%] rounded-2xl bg-[#6c5ce7] px-4 py-2.5 text-[14px] leading-[1.5]" style={pop(stage >= 1)}>{t("home.teams.verify.claim", "I'm Alex Morgan. Show me my invoices.")}</div>
           <div className="w-fit max-w-[92%] rounded-2xl bg-white/10 px-4 py-2.5 text-[14px] leading-[1.5]" style={pop(stage >= 2)}>{open ? t("home.teams.verify.ok", "Thanks, Alex. You're signed in, so here are your invoices.") : t("home.teams.verify.ask", "I can't share account details with a guest. Sign in on the site and I'll check it's really you.")}</div>
@@ -758,12 +759,13 @@ function TeamPreview({ k, t }: { k: string; t: T }) {
   if (k === "plugins") {
     // A fan of plugins around the Elpino hub: arcs, spokes with a pulse running out to each one, icons popping in.
     const W = 560, H = 460, HUB = [280, 470] as const;
+    const fan = mobile ? 0.8 : 1; // phones: a tighter fan so the outer icons stay inside the frame
     // The integrations Elpino actually has, nine in two arcs: payments and stores nearest the hub, the rest outside.
     const nodes = [
       { id: "stripe", name: "Stripe", r: 255, a: 165 }, { id: "razorpay", name: "Razorpay", r: 255, a: 135 }, { id: "cashfree", name: "Cashfree", r: 255, a: 105 },
       { id: "paystack", name: "Paystack", r: 255, a: 75 }, { id: "asana", name: "Asana", r: 255, a: 45 }, { id: "trello", name: "Trello", r: 255, a: 15 },
       { id: "shopify", name: "Shopify", r: 165, a: 135 }, { id: "woocommerce", name: "WooCommerce", r: 165, a: 90 }, { id: "hubspot", name: "HubSpot", r: 165, a: 45 },
-    ].map((n) => ({ ...n, x: HUB[0] + n.r * Math.cos((n.a * Math.PI) / 180), y: HUB[1] - n.r * Math.sin((n.a * Math.PI) / 180) }));
+    ].map((n) => ({ ...n, x: HUB[0] + n.r * fan * Math.cos((n.a * Math.PI) / 180), y: HUB[1] - n.r * fan * Math.sin((n.a * Math.PI) / 180) }));
     return (
       <div ref={ref} className="relative aspect-[560/460] w-full overflow-hidden rounded-2xl border border-black/10 bg-white shadow-[0_24px_60px_rgba(15,22,41,0.12)]" style={{ backgroundImage: "radial-gradient(60% 55% at 50% 100%, rgba(55,132,255,0.09) 0%, rgba(55,132,255,0) 70%), radial-gradient(rgba(17,18,15,0.07) 1px, transparent 1px)", backgroundSize: "auto, 18px 18px" }}>
         <style>{`@keyframes elp-spoke { from { stroke-dashoffset: 12 } to { stroke-dashoffset: -100 } } @keyframes elp-halo { from { transform: translate(-50%,-50%) scale(1); opacity: .35 } to { transform: translate(-50%,-50%) scale(1.55); opacity: 0 } } @media (prefers-reduced-motion: reduce) { .elp-spoke, .elp-halo { animation: none !important } }`}</style>
@@ -771,7 +773,7 @@ function TeamPreview({ k, t }: { k: string; t: T }) {
           <span className="size-1.5 rounded-full bg-[#1aa37a]" />{t("home.teams.plugins.live", "9 plugins connected")}
         </span>
         <svg aria-hidden="true" viewBox={`0 0 ${W} ${H}`} className="absolute inset-0 size-full">
-          {[100, 165, 255].map((r) => <circle key={r} cx={HUB[0]} cy={HUB[1]} r={r} fill="none" stroke="#e3e7f1" strokeWidth="1.2" strokeDasharray={r === 100 ? "3 5" : undefined} />)}
+          {[100, 165, 255].map((r) => <circle key={r} cx={HUB[0]} cy={HUB[1]} r={r * fan} fill="none" stroke="#e3e7f1" strokeWidth="1.2" strokeDasharray={r === 100 ? "3 5" : undefined} />)}
           {nodes.map((n, i) => (
             <g key={n.id} style={{ opacity: seen ? 1 : 0, transition: `opacity 500ms ease ${300 + i * 110}ms` }}>
               <line x1={HUB[0]} y1={HUB[1]} x2={n.x} y2={n.y} stroke="#e3e7f1" strokeWidth="1.2" />
@@ -784,7 +786,7 @@ function TeamPreview({ k, t }: { k: string; t: T }) {
             <span className="grid size-[clamp(40px,10.5vw,58px)] place-items-center rounded-2xl border border-black/[0.07] bg-white p-[22%] shadow-[0_8px_22px_rgba(15,22,41,0.1)] sm:size-[58px]">
               <ConnectorLogo provider={n.id} alt={n.name} className="size-full object-contain" fallback={<span className="text-sm font-semibold">{n.name[0]}</span>} />
             </span>
-            <span className="absolute top-full mt-1.5 whitespace-nowrap text-[11px] font-medium text-[#11120f]/55">{n.name}</span>
+            <span className="absolute top-full mt-1.5 hidden whitespace-nowrap text-[11px] sm:block font-medium text-[#11120f]/55">{n.name}</span>
           </span>
         ))}
         {/* The hub, half out of view at the bottom: the Elpino mark with a soft halo that keeps pulsing out. */}
@@ -798,22 +800,22 @@ function TeamPreview({ k, t }: { k: string; t: T }) {
   if (k === "contacts")
     body = (
       // A dark contacts table behind, a frosted chat in front: the chat is where the lead is captured.
-      <div className="relative min-h-[430px] w-full max-w-[560px]">
-        <div className="w-[88%] rounded-xl border border-white/10 bg-[#1b2236] p-3 text-white shadow-[0_20px_50px_rgba(15,22,41,0.35)]">
+      <div className="relative w-full max-w-[560px] sm:min-h-[430px]">
+        <div className="w-full rounded-xl sm:w-[88%] border border-white/10 bg-[#1b2236] p-3 text-white shadow-[0_20px_50px_rgba(15,22,41,0.35)]">
           <p className="border-b border-white/15 px-2 pb-2 text-[15px]">{t("home.teams.contacts.label", "Contacts")}</p>
           <div className="mt-3 overflow-hidden rounded-md border border-white/10 text-[12px]">
-            <div className="grid grid-cols-[1.1fr_1.5fr_0.8fr] bg-white/[0.04] px-3 py-2 font-semibold"><span>{t("home.teams.contacts.name", "Name")}</span><span>{t("home.teams.contacts.contact", "Email or phone")}</span><span>{t("home.teams.contacts.status", "Status")}</span></div>
+            <div className="grid grid-cols-[1fr_1.4fr_auto] sm:grid-cols-[1.1fr_1.5fr_0.8fr] bg-white/[0.04] px-3 py-2 font-semibold"><span>{t("home.teams.contacts.name", "Name")}</span><span>{t("home.teams.contacts.contact", "Email or phone")}</span><span>{t("home.teams.contacts.status", "Status")}</span></div>
             <div className="grid transition-[grid-template-rows,opacity] duration-500 ease-out" style={{ gridTemplateRows: stage >= 3 ? "1fr" : "0fr", opacity: stage >= 3 ? 1 : 0 }}>
               <div className="overflow-hidden">
-                <div className="grid grid-cols-[1.1fr_1.5fr_0.8fr] items-center border-t border-[#8b7cf6] bg-[#6c5ce7]/25 px-3 py-2.5"><span>Maya Chen</span><span className="truncate text-white/75">maya@brightly.co</span><span><span className="rounded-full bg-[#6c5ce7] px-2 py-0.5 text-[10.5px]">{t("home.teams.contacts.new", "New lead")}</span></span></div>
+                <div className="grid grid-cols-[1fr_1.4fr_auto] sm:grid-cols-[1.1fr_1.5fr_0.8fr] items-center border-t border-[#8b7cf6] bg-[#6c5ce7]/25 px-3 py-2.5"><span>Maya Chen</span><span className="truncate text-white/75">maya@brightly.co</span><span><span className="rounded-full bg-[#6c5ce7] px-2 py-0.5 text-[10.5px]">{t("home.teams.contacts.new", "New lead")}</span></span></div>
               </div>
             </div>
             {[["Tom Ruiz", "+1 415 555 0142", "Customer"], ["Aisha Khan", "aisha@northwind.io", "Customer"], ["Daniel Cole", "daniel@fernhill.com", "Customer"], ["Priya Nair", "+44 20 7946 0123", "Customer"]].map(([name, detail, tag], i) => (
-              <div key={name} className="grid grid-cols-[1.1fr_1.5fr_0.8fr] items-center border-t border-white/10 px-3 py-2.5 text-white/80" style={rise(i * 0.4)}><span>{name}</span><span className="truncate">{detail}</span><span>{tag}</span></div>
+              <div key={name} className="grid grid-cols-[1fr_1.4fr_auto] sm:grid-cols-[1.1fr_1.5fr_0.8fr] items-center border-t border-white/10 px-3 py-2.5 text-white/80" style={rise(i * 0.4)}><span>{name}</span><span className="truncate">{detail}</span><span>{tag}</span></div>
             ))}
           </div>
         </div>
-        <div className="absolute bottom-0 right-0 w-[80%] rounded-xl border border-white/60 bg-white/55 p-4 text-[#11120f] shadow-[0_24px_60px_rgba(15,22,41,0.3)] backdrop-blur-xl">
+        <div className="relative mt-3 w-full rounded-xl border border-white/60 sm:absolute sm:bottom-0 sm:right-0 sm:mt-0 sm:w-[80%] bg-white/55 p-4 text-[#11120f] shadow-[0_24px_60px_rgba(15,22,41,0.3)] backdrop-blur-xl">
           <div style={{ opacity: stage >= 1 ? 1 : 0, transform: stage >= 1 ? "none" : "translateY(8px)", transition: "opacity 450ms ease, transform 450ms ease" }}>
             <p className="w-fit max-w-[92%] rounded-xl bg-black/10 px-3 py-2 text-[13.5px] leading-[1.45]">{t("home.teams.contacts.ask", "What's your email, just in case we get disconnected?")}</p>
           </div>
@@ -835,7 +837,7 @@ function TeamPreview({ k, t }: { k: string; t: T }) {
         </div>
       </div>
     );
-  return <div ref={ref} className="grid min-h-[460px] w-full place-items-center p-6 sm:p-10">{body}</div>;
+  return <div ref={ref} className="grid min-h-[460px] w-full grid-cols-[minmax(0,1fr)] place-items-center p-4 sm:p-10">{body}</div>;
 }
 
 // Four things a team does with Elpino. Each is a row: a preview on a soft frame, with the explanation beside it,
